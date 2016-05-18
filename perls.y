@@ -121,13 +121,26 @@ int yylex(void)
         buf_ptr++;
         continue;
       
+      // Addition
       case '+':
         buf_ptr++;
         return '+';
       
+      // Multiply
       case '*':
         buf_ptr++;
         return '*';
+      
+      // Comment
+      case '#':
+        buf_ptr++;
+        while(1) {
+          if (*buf_ptr == '\r' || *buf_ptr == '\n' || *buf_ptr == EOF || *buf_ptr == '\0') {
+            break;
+          }
+          buf_ptr++;
+        }
+        continue;
       
       default:
         // Variable
