@@ -73,8 +73,6 @@ term
     { printf("term + term -> term\n"); }
   | term '*' term
     { printf("term * term -> term\n"); }
-  | term term
-    { printf("term term -> term\n"); }
   | MY term
     { printf("MY term -> term\n"); }
   | INT
