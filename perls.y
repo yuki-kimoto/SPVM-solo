@@ -47,8 +47,12 @@ statements
 statement
   : expression
     { printf("expression -> statement\n"); }
-  | SUB '{' expressions '}'
-    { printf("sub { expressions } -> statement\n"); }
+  | SUB subname '{' expressions '}'
+    { printf("sub subname { expressions } -> statement\n"); }
+
+subname :
+  WORD
+    { printf("WORD -> subname\n"); }
 
 expressions
   : expression
