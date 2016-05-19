@@ -39,10 +39,10 @@ program
     { printf("statements -> program\n"); }
 
 statements
-  : statement
-    { printf("statement -> statements\n"); }
-  | statement statements
-    { printf("statement statements -> statements\n"); }
+  : /* Empty */
+    { printf("Empty -> statements\n"); }
+  | statements statement 
+    { printf("statements statement -> statements\n"); }
 
 statement
   : expression
