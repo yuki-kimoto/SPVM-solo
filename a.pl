@@ -4,5 +4,5 @@ sub sum {
   bbb ;
 }
 1 + 12 * 3;
-my $title;
+my $title = 1;
 

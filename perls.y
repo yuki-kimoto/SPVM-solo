@@ -77,6 +77,8 @@ term
     { printf("MY term -> term\n"); }
   | INT
     { printf("INT -> term (%d)\n", ((OP*)$1)->ival); }
+  | term '=' term
+    { printf("term = term -> term\n"); }
 %%
 
 /* まず単語を切り分けられるようになろう */
