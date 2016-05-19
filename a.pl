@@ -1,3 +1,5 @@
+(1, 4);
+
 # subroutine
 sub sum {
   aaa ;
@@ -6,3 +8,4 @@ sub sum {
 1 + 12 * 3;
 my $title = 1;
 
+sum(34);

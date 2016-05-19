@@ -79,6 +79,21 @@ term
     { printf("INT -> term (%d)\n", ((OP*)$1)->ival); }
   | term '=' term
     { printf("term = term -> term\n"); }
+  | subname '(' term ')'
+    { printf("subname ( term )\n"); }
+  | list
+
+list
+  : '(' terms ')'
+      { printf("( terms )\n"); }
+
+terms
+  : term
+    { printf("term -> terms\n"); }
+  
+  | terms ',' term
+    { printf("terms , term -> terms\n"); }
+
 %%
 
 /* まず単語を切り分けられるようになろう */
