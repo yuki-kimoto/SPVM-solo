@@ -47,7 +47,7 @@ statements
 statement
   : expression
     { printf("expression -> statement\n"); }
-  | SUB subname '{' expressions '}'
+  | SUB subname '(' ')' '{' expressions '}'
     { printf("sub subname { expressions } -> statement\n"); }
 
 subname :
@@ -82,6 +82,9 @@ term
   | subname '(' terms ')'
     { printf("subname ( terms )\n"); }
   | list
+
+type
+  : WORD
 
 list
   : '(' terms ')'
