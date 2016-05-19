@@ -1,3 +1,6 @@
+sum();
+sum(1, 3, 5);
+
 (1, 4);
 
 # subroutine

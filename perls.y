@@ -79,8 +79,8 @@ term
     { printf("INT -> term (%d)\n", ((OP*)$1)->ival); }
   | term '=' term
     { printf("term = term -> term\n"); }
-  | subname '(' term ')'
-    { printf("subname ( term )\n"); }
+  | subname '(' terms ')'
+    { printf("subname ( terms )\n"); }
   | list
 
 list
@@ -88,7 +88,9 @@ list
       { printf("( terms )\n"); }
 
 terms
-  : term
+  : /* Empty */
+    { printf("Empty -> terms\n"); }
+  | term
     { printf("term -> terms\n"); }
   
   | terms ',' term
