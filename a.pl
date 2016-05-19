@@ -1,3 +1,6 @@
+sub sum ($foo : int, $bar : float) {
+
+}
 sum();
 sum(1, 3, 5);
 

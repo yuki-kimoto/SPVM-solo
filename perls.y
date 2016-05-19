@@ -93,11 +93,11 @@ subdefargs
 
 subdefarg
   : VAR ':' type
-    { printf("VAR : type -> subdefarg\n"); }
+    { printf("VAR : type -> subdefarg (%s)\n", ((OP*)$1)->pvval); }
 
 type
   : WORD
-    { printf("WORD -> type\n"); }
+    { printf("WORD -> type (%s)\n", ((OP*)$1)->pvval); }
 
 list
   : '(' terms ')'
