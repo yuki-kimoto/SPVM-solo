@@ -4,7 +4,6 @@
   #include <stdlib.h>
   #include <string.h>
 
-
   int yylex(void);
   void yyerror(const char* s);
 
@@ -26,7 +25,7 @@
   int	ival;
 }
 
-%token <ival> MY SUB
+%token <ival> MY SUB PACKAGE
 %token <opval> WORD VAR INT
 
 %left '+'
@@ -78,6 +77,9 @@ term
   | subname '(' terms ')'
     { printf("subname ( terms )\n"); }
   | list
+    { printf("list -> term\n"); }
+  | PACKAGE WORD
+    { printf("PACKAGE WORD -> term\n"); }
 
 subname
   : WORD
@@ -254,6 +256,9 @@ int yylex(void)
           }
           else if (memcmp(keyword, "sub", str_len) == 0) {
             return SUB;
+          }
+          else if (memcmp(keyword, "package", str_len) == 0) {
+            return PACKAGE;
           }
           
           OP* op = malloc(sizeof(OP));
