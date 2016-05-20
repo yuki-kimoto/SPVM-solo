@@ -33,10 +33,6 @@
 
 %%
 
-program
-  : statements
-    { printf("statements -> program\n"); }
-
 statements
   : /* Empty */
     { printf("Empty -> statements\n"); }
