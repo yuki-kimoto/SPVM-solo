@@ -40,21 +40,11 @@ statements
     { printf("statements statement -> statements\n"); }
 
 statement
-  : expression
-    { printf("expression -> statement\n"); }
-  | SUB subname '(' subdefargs ')' '{' expressions '}'
-    { printf("sub subname { expressions } -> statement\n"); }
-
-expressions
-  : /* Empty */
-    { printf("Empty -> expressions\n"); }
-  | expressions expression
-    { printf("expressions expression -> expressions\n"); }
-
-expression
-  : term ';'
-    { printf("term ; -> expression\n") }
-
+  : SUB subname '(' subdefargs ')' '{' statements '}'
+    { printf("sub subname { statements } -> statement\n"); }
+  | term ';'
+    { printf("term ; -> statement\n") }
+  
 term
   : WORD
     { printf("WORD -> term (%s)\n", ((OP*)$1)->pvval); }
@@ -99,7 +89,7 @@ type
 
 list
   : '(' terms ')'
-      { printf("( terms )\n"); }
+    { printf("( terms )\n"); }
 
 terms
   : /* Empty */
