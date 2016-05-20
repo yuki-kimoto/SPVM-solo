@@ -1,7 +1,9 @@
 package Point;
 
 sub sum ($foo : int, $bar : float) {
-
+  if (3) {
+    
+  }
 }
 sum();
 sum(1, 3, 5);
@@ -14,8 +16,8 @@ sub sum () {
   bbb ;
 }
 
-
 1 + 12 * 3;
 my $title = 1;
 
 sum(34);
+

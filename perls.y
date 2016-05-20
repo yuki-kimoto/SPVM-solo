@@ -25,7 +25,7 @@
   int	ival;
 }
 
-%token <ival> MY SUB PACKAGE
+%token <ival> MY SUB PACKAGE IF ELSIF ELSE
 %token <opval> WORD VAR INT
 
 %left '+'
@@ -44,7 +44,23 @@ statement
     { printf("sub subname { statements } -> statement\n"); }
   | term ';'
     { printf("term ; -> statement\n") }
-  
+  | IF '(' term ')' '{' statements '}'
+    { printf("if ( term ) { statements }"); }
+
+elsifs
+  : /* Empty */
+    { printf("Empty -> elsifs"); }
+  | elsifs elsif
+    { printf("elsifs elsif -> elsifs"); }
+
+elsif
+  : ELSIF '(' term ')' '{' statements '}'
+    { printf("elsif ( term ) { statements }"); }
+
+else
+  : ELSE '{' statements '}'
+    { printf("else { statements }"); }
+
 term
   : WORD
     { printf("WORD -> term (%s)\n", ((OP*)$1)->pvval); }
@@ -101,24 +117,22 @@ terms
 
 %%
 
-/* まず単語を切り分けられるようになろう */
-
-// 解析する文章全体
+// Source data
 char* linestr = NULL;
 
-// 解析する文章が格納されてるデータのバッファサイズ
+// Source buffer size
 size_t linestr_buf_len = 0;
 
-// 解析する文章が格納されているデータのサイズ
+// Source size
 size_t linestr_len = 0;
 
-// 現在のバッファのポジション
+// Current buffer position
 char* buf_ptr = NULL;
 
-// 現在のトークンの開始位置
+// Current token start position
 char* cur_token_ptr = NULL;
 
-// 一つ前のトークンの開始位置
+// Before token start position
 char* bef_token_ptr = NULL;
 
 /* Get token */
@@ -246,6 +260,15 @@ int yylex(void)
           else if (memcmp(keyword, "package", str_len) == 0) {
             return PACKAGE;
           }
+          else if (memcmp(keyword, "if", str_len) == 0) {
+            return IF;
+          }
+          else if (memcmp(keyword, "elsif", str_len) == 0) {
+            return ELSIF;
+          }
+          else if (memcmp(keyword, "else", str_len) == 0) {
+            return ELSE;
+          }
           
           OP* op = malloc(sizeof(OP));
           op->type = 1;
@@ -262,7 +285,7 @@ int yylex(void)
   }
 }
 
-/* エラー表示関数 */
+/* Function for error */
 void yyerror(const char* s)
 {
   fprintf(stderr, "error: %s\n", s);
@@ -270,23 +293,23 @@ void yyerror(const char* s)
 
 int main(void)
 {
-  /* ファイルから文字を読み込む */
+  /* Source file */
   char* file = "a.pl";
   
-  /* ファイルオープン */
+  /* Open source file */
   FILE* fp = fopen(file, "r");
   if (fp == NULL) {
     printf("Can't open file %s\n", file);
     return -1;
   }
   
-  /* ファイル全体をバッファに読み込み */
+  /* Read source file */
   linestr_len = getdelim(&linestr, &linestr_buf_len, EOF, fp);
   
-  /* ファイルクローズ */
+  /* Close file */
   fclose(fp);
   
-  /* パーサーの情報の初期化 */
+  /* Initialize parser information */
   buf_ptr = linestr;
   cur_token_ptr = linestr;
   bef_token_ptr = linestr;
