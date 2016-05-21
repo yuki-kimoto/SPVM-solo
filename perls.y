@@ -81,18 +81,16 @@ term
     { printf("INT -> term (%d)\n", ((OP*)$1)->ival); }
   | term '=' term
     { printf("term = term -> term\n"); }
-  | subname '(' terms ')'
-    { printf("subname ( terms )\n"); }
   | PACKAGE WORD
     { printf("PACKAGE WORD -> term\n"); }
   | '(' ')'
-    { printf("( )\n"); }
+    { printf("( ) -> term\n"); }
   | '(' terms ')'
-    { printf("( terms )\n"); }
+    { printf("( terms ) -> term\n"); }
   | subname '(' ')'
-    { printf("subname ( )\n"); }
+    { printf("subname ( ) -> term\n"); }
   | subname '(' terms ')'
-    { printf("( terms )\n"); }
+    { printf("subname( terms ) -> term\n"); }
 
 subname
   : WORD
