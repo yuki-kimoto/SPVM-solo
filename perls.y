@@ -44,22 +44,21 @@ statement
     { printf("sub subname { statements } -> statement\n"); }
   | term ';'
     { printf("term ; -> statement\n") }
-  | IF '(' term ')' '{' statements '}'
-    { printf("if ( term ) { statements }"); }
+  | if
+    { printf("if -> statement\n"); }
 
-elsifs
-  : /* Empty */
-    { printf("Empty -> elsifs"); }
-  | elsifs elsif
-    { printf("elsifs elsif -> elsifs"); }
-
-elsif
-  : ELSIF '(' term ')' '{' statements '}'
-    { printf("elsif ( term ) { statements }"); }
+if
+  : IF '(' term ')' '{' statements '}'
+    { printf("if ( term ) { statements }\n"); }
+  | if else
+    { printf("if else -> if"); }
 
 else
-  : ELSE '{' statements '}'
+  : /* NULL */
+  | ELSE '{' statements '}'
     { printf("else { statements }"); }
+  | ELSIF '(' term ')' '{' statements '}' else
+    { printf("elsif ( term ) { statements } else"); }
 
 term
   : WORD
