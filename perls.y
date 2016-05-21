@@ -52,10 +52,8 @@ block
     { printf("{ statements } -> block\n"); }
 
 statement
-  : SUB subname '(' ')' block
-    { printf("sub subname () block -> statement\n"); }
-  | SUB subname '(' subdefargs ')' block
-    { printf("sub subname (subdefargs) block -> statement\n"); }
+  : SUB subname subdefargslist block
+    { printf("sub subname subdefargslist block -> statement\n"); }
   | term ';'
     { printf("term ; -> statement\n") }
   | ';'
@@ -98,18 +96,26 @@ term
     { printf("term = term -> term\n"); }
   | PACKAGE WORD
     { printf("PACKAGE WORD -> term\n"); }
-  | '(' ')'
-    { printf("( ) -> term\n"); }
-  | '(' terms ')'
-    { printf("( terms ) -> term\n"); }
-  | subname '(' ')'
-    { printf("subname ( ) -> term\n"); }
-  | subname '(' terms ')'
-    { printf("subname( terms ) -> term\n"); }
+  | list
+    { printf("list -> term\n"); }
+  | subname list
+    { printf("subname list -> term\n"); }
 
 subname
   : WORD
     { printf("WORD -> subname\n"); }
+
+list
+  :  '(' ')'
+    { printf("( ) -> list\n"); }
+  | '(' terms ')'
+    { printf("( terms ) -> list\n"); }
+
+subdefargslist
+  : '(' ')'
+    { printf("( ) -> subdefargslist\n"); }
+  | '(' subdefargs ')'
+    { printf("( subdefargs ) -> subdefargslist\n"); }
 
 subdefargs
   : subdefarg
