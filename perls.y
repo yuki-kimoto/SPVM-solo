@@ -33,32 +33,48 @@
 
 %%
 
+grammar
+  : /* NULL */
+    { printf("NULL -> grammar\n"); }
+  | statements
+    { printf("statements -> grammar\n"); }
+
 statements
-  : /* Empty */
-    { printf("Empty -> statements\n"); }
+  : statement
+    { printf("statement -> statements\n"); }
   | statements statement 
     { printf("statements statement -> statements\n"); }
 
+block 
+  : '{' '}'
+    { printf("{ } -> block\n"); }
+  | '{' statements '}'
+    { printf("{ statements } -> block\n"); }
+
 statement
-  : SUB subname '(' subdefargs ')' '{' statements '}'
-    { printf("sub subname { statements } -> statement\n"); }
+  : SUB subname '(' ')' block
+    { printf("sub subname () block -> statement\n"); }
+  | SUB subname '(' subdefargs ')' block
+    { printf("sub subname (subdefargs) block -> statement\n"); }
   | term ';'
     { printf("term ; -> statement\n") }
+  | ';'
+    { printf("; -> statement\n") }
   | if
     { printf("if -> statement\n"); }
 
 if
-  : IF '(' term ')' '{' statements '}'
-    { printf("if ( term ) { statements }\n"); }
+  : IF '(' term ')' block
+    { printf("if ( term ) block\n"); }
   | if else
-    { printf("if else -> if"); }
+    { printf("if else -> if\n"); }
 
 else
   : /* NULL */
-  | ELSE '{' statements '}'
-    { printf("else { statements }"); }
-  | ELSIF '(' term ')' '{' statements '}' else
-    { printf("elsif ( term ) { statements } else\n"); }
+  | ELSE block
+    { printf("else block"); }
+  | ELSIF '(' term ')' block else
+    { printf("elsif ( term ) block else\n"); }
 
 terms
   : term
@@ -97,9 +113,7 @@ subname
     { printf("WORD -> subname\n"); }
 
 subdefargs
-  : /* Empty */
-    { printf("Empty -> subdefargs\n"); }
-  | subdefarg
+  : subdefarg
     { printf("subdefarg -> subdefargs\n"); }
   | subdefargs ',' subdefarg
     { printf("subdefargs , subdefarg\n"); }

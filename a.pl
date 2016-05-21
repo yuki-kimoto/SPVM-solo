@@ -1,3 +1,4 @@
+;
 package Point;
 
 sub sum ($foo : int, $bar : float) {
