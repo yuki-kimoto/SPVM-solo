@@ -60,14 +60,8 @@ else
   | ELSIF '(' term ')' '{' statements '}' else
     { printf("elsif ( term ) { statements } else\n"); }
 
-list
-  : '(' terms ')'
-    { printf("( terms )\n"); }
-
 terms
-  : /* Empty */
-    { printf("Empty -> terms\n"); }
-  | term
+  : term
     { printf("term -> terms\n"); }
   | terms ',' term
     { printf("terms , term -> terms\n"); }
@@ -89,10 +83,16 @@ term
     { printf("term = term -> term\n"); }
   | subname '(' terms ')'
     { printf("subname ( terms )\n"); }
-  | list
-    { printf("list -> term\n"); }
   | PACKAGE WORD
     { printf("PACKAGE WORD -> term\n"); }
+  | '(' ')'
+    { printf("( )\n"); }
+  | '(' terms ')'
+    { printf("( terms )\n"); }
+  | subname '(' ')'
+    { printf("subname ( )\n"); }
+  | subname '(' terms ')'
+    { printf("( terms )\n"); }
 
 subname
   : WORD
