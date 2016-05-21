@@ -70,8 +70,7 @@ if
     { printf("if else -> if\n"); }
 
 else
-  : /* NULL */
-  | ELSE block
+  : ELSE block
     { printf("else block"); }
   | ELSIF '(' term ')' block else
     { printf("elsif ( term ) block else\n"); }
