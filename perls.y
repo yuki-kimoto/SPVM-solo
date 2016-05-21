@@ -58,7 +58,19 @@ else
   | ELSE '{' statements '}'
     { printf("else { statements }"); }
   | ELSIF '(' term ')' '{' statements '}' else
-    { printf("elsif ( term ) { statements } else"); }
+    { printf("elsif ( term ) { statements } else\n"); }
+
+list
+  : '(' terms ')'
+    { printf("( terms )\n"); }
+
+terms
+  : /* Empty */
+    { printf("Empty -> terms\n"); }
+  | term
+    { printf("term -> terms\n"); }
+  | terms ',' term
+    { printf("terms , term -> terms\n"); }
 
 term
   : WORD
@@ -101,18 +113,6 @@ subdefarg
 type
   : WORD
     { printf("WORD -> type (%s)\n", ((OP*)$1)->pvval); }
-
-list
-  : '(' terms ')'
-    { printf("( terms )\n"); }
-
-terms
-  : /* Empty */
-    { printf("Empty -> terms\n"); }
-  | term
-    { printf("term -> terms\n"); }
-  | terms ',' term
-    { printf("terms , term -> terms\n"); }
 
 %%
 
