@@ -24,7 +24,7 @@
   int	ival;
 }
 
-%token <ival> MY SUB PACKAGE IF ELSIF ELSE RETURN
+%token <ival> MY SUB PACKAGE IF ELSIF ELSE RETURN FOR
 %token <opval> WORD VAR INT
 
 %left '+'
@@ -59,7 +59,8 @@ statement
     { printf("; -> statement\n") }
   | if
     { printf("if -> statement\n"); }
-
+  | FOR '(' term ';' term ';' term ')' '{' statements '}'
+    { printf("FOR ( term ; term ; term ) { statements }\n"); }
 if
   : IF '(' term ')' block
     { printf("if ( term ) block\n"); }
@@ -288,6 +289,9 @@ int yylex(void)
           }
           else if (memcmp(keyword, "return", str_len) == 0) {
             return RETURN;
+          }
+          else if (memcmp(keyword, "for", str_len) == 0) {
+            return FOR;
           }
           
           OP* op = malloc(sizeof(OP));
