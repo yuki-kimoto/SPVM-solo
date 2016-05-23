@@ -96,12 +96,13 @@ term
     { printf("term = term -> term\n"); }
   | PACKAGE WORD
     { printf("PACKAGE WORD -> term\n"); }
-  | list
-    { printf("list -> term\n"); }
   | subname list
     { printf("subname list -> term\n"); }
   | RETURN term
     { printf("RETURN term -> term\n"); }
+  | RETURN list
+    { printf("RETURN list -> term\n"); }
+    
 
 subname
   : WORD
