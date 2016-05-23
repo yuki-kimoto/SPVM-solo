@@ -19,13 +19,12 @@
   typedef struct op OP;
 %}
 
-
 %union {
   OP* opval;
   int	ival;
 }
 
-%token <ival> MY SUB PACKAGE IF ELSIF ELSE
+%token <ival> MY SUB PACKAGE IF ELSIF ELSE RETURN
 %token <opval> WORD VAR INT
 
 %left '+'
@@ -100,6 +99,8 @@ term
     { printf("list -> term\n"); }
   | subname list
     { printf("subname list -> term\n"); }
+  | RETURN term
+    { printf("RETURN term -> term\n"); }
 
 subname
   : WORD
@@ -284,6 +285,9 @@ int yylex(void)
           }
           else if (memcmp(keyword, "else", str_len) == 0) {
             return ELSE;
+          }
+          else if (memcmp(keyword, "return", str_len) == 0) {
+            return RETURN;
           }
           
           OP* op = malloc(sizeof(OP));
