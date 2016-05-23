@@ -38,6 +38,6 @@ sub sum ($foo : int, $bar : float) {
   return 1;
 }
 
-for (my $i = 1; $i; $i) {
+for (my $i = 1; $i; $i = $i + 1) {
   1;
 }

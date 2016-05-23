@@ -9,22 +9,25 @@
 
   struct op {
     int type;
-    struct node *left;
-    struct node *right;
-    char* pvval;
-    int ival;
-    double dval;
+    char* pv;
+    int iv;
+    double nv;
   };
-  
   typedef struct op OP;
+  
+  
+
+#define OP_CONST_INT 1
+
+
 %}
 
 %union {
   OP* opval;
-  int	ival;
+  int	iv;
 }
 
-%token <ival> MY SUB PACKAGE IF ELSIF ELSE RETURN FOR
+%token <iv> MY SUB PACKAGE IF ELSIF ELSE RETURN FOR
 %token <opval> WORD VAR INT
 
 %left '+'
@@ -81,9 +84,9 @@ terms
 
 term
   : WORD
-    { printf("WORD -> term (%s)\n", ((OP*)$1)->pvval); }
+    { printf("WORD -> term (%s)\n", ((OP*)$1)->pv); }
   | VAR
-    { printf("VAR -> term (%s)\n", ((OP*)$1)->pvval); }
+    { printf("VAR -> term (%s)\n", ((OP*)$1)->pv); }
   | term '+' term
     { printf("term + term -> term\n"); }
   | term '*' term
@@ -91,7 +94,7 @@ term
   | MY term
     { printf("MY term -> term\n"); }
   | INT
-    { printf("INT -> term (%d)\n", ((OP*)$1)->ival); }
+    { printf("INT -> term (%d)\n", ((OP*)$1)->iv); }
   | term '=' term
     { printf("term = term -> term\n"); }
   | PACKAGE WORD
@@ -128,11 +131,11 @@ subdefargs
 
 subdefarg
   : VAR ':' type
-    { printf("VAR : type -> subdefarg (%s)\n", ((OP*)$1)->pvval); }
+    { printf("VAR : type -> subdefarg (%s)\n", ((OP*)$1)->pv); }
 
 type
   : WORD
-    { printf("WORD -> type (%s)\n", ((OP*)$1)->pvval); }
+    { printf("WORD -> type (%s)\n", ((OP*)$1)->pv); }
 
 %%
 
@@ -217,7 +220,7 @@ int yylex(void)
           
           OP* op = malloc(sizeof(OP));
           op->type = 2;
-          op->pvval = var;
+          op->pv = var;
           
           yylval.opval = op;
           return VAR;
@@ -248,7 +251,7 @@ int yylex(void)
           
           OP* op = malloc(sizeof(OP));
           op->type = 3;
-          op->ival = num;
+          op->iv = num;
           
           yylval.opval = op;
           return INT;
@@ -297,7 +300,7 @@ int yylex(void)
           
           OP* op = malloc(sizeof(OP));
           op->type = 1;
-          op->pvval = keyword;
+          op->pv = keyword;
           
           yylval.opval = op;
           return WORD;
