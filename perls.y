@@ -7,27 +7,50 @@
   int yylex(void);
   void yyerror(const char* s);
 
+  #define BASEOP int type;
+  
   struct op {
-    int type;
-    char* pv;
-    int iv;
-    double nv;
+    BASEOP
   };
   typedef struct op OP;
   
-  
+  struct svop {
+    BASEOP
+    union {
+      char* pv;
+      int iv;
+      double nv;
+    } uv
+  };
+  typedef struct svop SVOP;
 
-#define OP_CONST_INT 1
+  struct unop {
+      BASEOP
+      OP *	op_first;
+  };
+  typedef struct unop UNOP;
 
+  struct binop {
+      BASEOP
+      OP *	op_first;
+      OP *	op_last;
+  };
+  typedef struct binop BINOP;
 
+  struct listop {
+      BASEOP
+      OP *	op_first;
+      OP *	op_last;
+  };
+  typedef struct binop LISTOP;
 %}
 
 %union {
   OP* opval;
-  int	iv;
+  int	ival;
 }
 
-%token <iv> MY SUB PACKAGE IF ELSIF ELSE RETURN FOR
+%token <ival> MY SUB PACKAGE IF ELSIF ELSE RETURN FOR
 %token <opval> WORD VAR INT
 
 %left '+'
@@ -84,9 +107,9 @@ terms
 
 term
   : WORD
-    { printf("WORD -> term (%s)\n", ((OP*)$1)->pv); }
+    { printf("WORD -> term (%s)\n", ((SVOP*)$1)->uv.pv); }
   | VAR
-    { printf("VAR -> term (%s)\n", ((OP*)$1)->pv); }
+    { printf("VAR -> term (%s)\n", ((SVOP*)$1)->uv.pv); }
   | term '+' term
     { printf("term + term -> term\n"); }
   | term '*' term
@@ -94,7 +117,7 @@ term
   | MY term
     { printf("MY term -> term\n"); }
   | INT
-    { printf("INT -> term (%d)\n", ((OP*)$1)->iv); }
+    { printf("INT -> term (%d)\n", ((SVOP*)$1)->uv.iv); }
   | term '=' term
     { printf("term = term -> term\n"); }
   | PACKAGE WORD
@@ -131,11 +154,11 @@ subdefargs
 
 subdefarg
   : VAR ':' type
-    { printf("VAR : type -> subdefarg (%s)\n", ((OP*)$1)->pv); }
+    { printf("VAR : type -> subdefarg (%s)\n", ((SVOP*)$1)->uv.pv); }
 
 type
   : WORD
-    { printf("WORD -> type (%s)\n", ((OP*)$1)->pv); }
+    { printf("WORD -> type (%s)\n", ((SVOP*)$1)->uv.pv); }
 
 %%
 
@@ -218,11 +241,11 @@ int yylex(void)
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
-          OP* op = malloc(sizeof(OP));
+          SVOP* op = malloc(sizeof(SVOP));
           op->type = 2;
-          op->pv = var;
+          op->uv.pv = var;
           
-          yylval.opval = op;
+          yylval.opval = (OP*)op;
           return VAR;
         }
         // Number
@@ -249,11 +272,11 @@ int yylex(void)
           int num = atoi(num_str);
           free(num_str);
           
-          OP* op = malloc(sizeof(OP));
+          SVOP* op = malloc(sizeof(SVOP));
           op->type = 3;
-          op->iv = num;
+          op->uv.iv = num;
           
-          yylval.opval = op;
+          yylval.opval = (OP*)op;
           return INT;
         }
         // Keyword or word
@@ -298,11 +321,11 @@ int yylex(void)
             return FOR;
           }
           
-          OP* op = malloc(sizeof(OP));
+          SVOP* op = malloc(sizeof(SVOP));
           op->type = 1;
-          op->pv = keyword;
+          op->uv.pv = keyword;
           
-          yylval.opval = op;
+          yylval.opval = (OP*)op;
           return WORD;
         }
         
