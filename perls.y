@@ -7,6 +7,10 @@
   int yylex(void);
   void yyerror(const char* s);
 
+  #define OP_CONST_INT 1
+  #define OP_CONST_FLOAT 2
+  #define OP_CONST_STRING 3
+
   #define BASEOP int type;
   
   struct op {
@@ -242,7 +246,7 @@ int yylex(void)
           var[str_len] = '\0';
           
           SVOP* op = malloc(sizeof(SVOP));
-          op->type = 2;
+          op->type = OP_CONST_STRING;
           op->uv.pv = var;
           
           yylval.opval = (OP*)op;
@@ -273,7 +277,7 @@ int yylex(void)
           free(num_str);
           
           SVOP* op = malloc(sizeof(SVOP));
-          op->type = 3;
+          op->type = OP_CONST_INT;
           op->uv.iv = num;
           
           yylval.opval = (OP*)op;
@@ -322,7 +326,7 @@ int yylex(void)
           }
           
           SVOP* op = malloc(sizeof(SVOP));
-          op->type = 1;
+          op->type = OP_CONST_STRING;
           op->uv.pv = keyword;
           
           yylval.opval = (OP*)op;
