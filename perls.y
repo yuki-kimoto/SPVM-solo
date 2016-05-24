@@ -59,7 +59,7 @@
 }
 
 %token <ival> MY SUB PACKAGE IF ELSIF ELSE RETURN FOR
-%token <ival> RELOP
+%token <ival> RELOP ASSIGNOP EQOP
 %token <opval> WORD VAR INT
 
 %left '+'
@@ -127,8 +127,6 @@ term
     { printf("MY term -> term\n"); }
   | INT
     { printf("INT -> term (%d)\n", ((SVOP*)$1)->uv.iv); }
-  | term '=' term
-    { printf("term = term -> term\n"); }
   | PACKAGE WORD
     { printf("PACKAGE WORD -> term\n"); }
   | subname list
@@ -139,6 +137,10 @@ term
     { printf("RETURN list -> term\n"); }
   | term RELOP term
     { printf("term RELOP term%d\n", $2); }
+  | term EQOP term
+    { printf("term EQOP term\n"); }
+  | term ASSIGNOP term
+    { printf("term ASSIGNOP term\n"); }
     
 subname
   : WORD
@@ -233,10 +235,24 @@ int yylex(void)
         }
         continue;
       
-      /* <, <= */
+      case '=':
+        buf_ptr++;
+        
+        /* == */
+        if (*buf_ptr == '=') {
+          buf_ptr++;
+          
+          return EQOP;
+        }
+        /* = */
+        else {
+          return ASSIGNOP;
+        }
+        
       case '<':
         buf_ptr++;
         
+        /* <= */
         if (*buf_ptr == '=') {
           buf_ptr++;
           
@@ -244,16 +260,17 @@ int yylex(void)
           
           return RELOP;
         }
+        /* < */
         else {
           yylval.ival = OP_LT;
           
           return RELOP;
         }
       
-      /* >, >= */
       case '>':
         buf_ptr++;
         
+        /* >= */
         if (*buf_ptr == '=') {
           buf_ptr++;
           
@@ -261,6 +278,7 @@ int yylex(void)
           
           return RELOP;
         }
+        /* < */
         else {
           yylval.ival = OP_GT;
           
