@@ -10,6 +10,10 @@
   #define OP_CONST_INT 1
   #define OP_CONST_FLOAT 2
   #define OP_CONST_STRING 3
+  #define OP_LT 4
+  #define OP_LE 5
+  #define OP_GT 6
+  #define OP_GE 7
 
   #define BASEOP int type;
   
@@ -24,7 +28,7 @@
       char* pv;
       int iv;
       double nv;
-    } uv
+    } uv;
   };
   typedef struct svop SVOP;
 
@@ -55,6 +59,7 @@
 }
 
 %token <ival> MY SUB PACKAGE IF ELSIF ELSE RETURN FOR
+%token <ival> RELOP
 %token <opval> WORD VAR INT
 
 %left '+'
@@ -132,8 +137,9 @@ term
     { printf("RETURN term -> term\n"); }
   | RETURN list
     { printf("RETURN list -> term\n"); }
+  | term RELOP term
+    { printf("term RELOP term%d\n", $2); }
     
-
 subname
   : WORD
     { printf("WORD -> subname\n"); }
@@ -166,38 +172,38 @@ type
 
 %%
 
-// Source data
+/* Source data */
 char* linestr = NULL;
 
-// Source buffer size
+/* Source buffer size */
 size_t linestr_buf_len = 0;
 
-// Source size
+/* Source size */
 size_t linestr_len = 0;
 
-// Current buffer position
+/* Current buffer position */
 char* buf_ptr = NULL;
 
-// Current token start position
+/* Current token start position */
 char* cur_token_ptr = NULL;
 
-// Before token start position
+/* Before token start position */
 char* bef_token_ptr = NULL;
 
 /* Get token */
 int yylex(void)
 {
   while(1) {
-    // Get current character
+    /* Get current character */
     char c = *buf_ptr;
     
-    // line end
+    /* line end */
     switch(c) {
-      // End
+      /* End */
       case '\0':
         return 0;
       
-      // Skip space character
+      /* Skip space character */
       case ' ':
       case '\t':
       case '\n':
@@ -206,17 +212,17 @@ int yylex(void)
         buf_ptr++;
         continue;
       
-      // Addition
+      /* Addition */
       case '+':
         buf_ptr++;
         return '+';
       
-      // Multiply
+      /* Multiply */
       case '*':
         buf_ptr++;
         return '*';
       
-      // Comment
+      /* Comment */
       case '#':
         buf_ptr++;
         while(1) {
@@ -227,15 +233,49 @@ int yylex(void)
         }
         continue;
       
+      /* <, <= */
+      case '<':
+        buf_ptr++;
+        
+        if (*buf_ptr == '=') {
+          buf_ptr++;
+          
+          yylval.ival = OP_LE;
+          
+          return RELOP;
+        }
+        else {
+          yylval.ival = OP_LT;
+          
+          return RELOP;
+        }
+      
+      /* >, >= */
+      case '>':
+        buf_ptr++;
+        
+        if (*buf_ptr == '=') {
+          buf_ptr++;
+          
+          yylval.ival = OP_GE;
+          
+          return RELOP;
+        }
+        else {
+          yylval.ival = OP_GT;
+          
+          return RELOP;
+        }
+      
       default:
-        // Variable
+        /* Variable */
         if (c == '$') {
-          // Save current position
+          /* Save current position */
           cur_token_ptr = buf_ptr;
           
           buf_ptr++;
 
-          // Next is graph
+          /* Next is graph */
           while(isalnum(*buf_ptr)) {
             buf_ptr++;
           }
@@ -252,13 +292,13 @@ int yylex(void)
           yylval.opval = (OP*)op;
           return VAR;
         }
-        // Number
+        /* Number */
         else if (isdigit(c)) {
           cur_token_ptr = buf_ptr;
           
           buf_ptr++;
           
-          // Scan number
+          /* Scan number */
           while(isdigit(*buf_ptr)) {
             buf_ptr++;
           }
@@ -268,7 +308,7 @@ int yylex(void)
             exit(1);
           }
           
-          // Convert to integer
+          /* Convert to integer */
           size_t str_len = buf_ptr - cur_token_ptr;
           char* num_str = malloc(str_len + 1);
           memcpy(num_str, cur_token_ptr, str_len);
@@ -283,14 +323,14 @@ int yylex(void)
           yylval.opval = (OP*)op;
           return INT;
         }
-        // Keyword or word
+        /* Keyword or word */
         else if (isalnum(c)) {
-          // Save current position
+          /* Save current position */
           cur_token_ptr = buf_ptr;
           
           buf_ptr++;
           
-          // Next is graph
+          /* Next is graph */
           while(isalnum(*buf_ptr)) {
             buf_ptr++;
           }
