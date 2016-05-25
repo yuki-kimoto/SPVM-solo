@@ -1,6 +1,8 @@
 ;
 package Point;
 
+our $title = 2;
+
 sum();
 sum(1, 3, 5);
 

@@ -58,7 +58,7 @@
   int	ival;
 }
 
-%token <ival> MY SUB PACKAGE IF ELSIF ELSE RETURN FOR
+%token <ival> MY OUR SUB PACKAGE IF ELSIF ELSE RETURN FOR
 %token <ival> RELOP ASSIGNOP EQOP
 %token <opval> WORD VAR INT
 
@@ -101,14 +101,20 @@ statement
     { printf("PACKAGE WORD ; -> statement\n"); }
 
 declaration
-  : MY VAR ';'
-    { printf("MY term ; -> declaration\n"); }
-  | MY VAR ASSIGNOP term ';'
-    { printf("MY VAR = term ; -> declaration\n"); }
-  | MY VAR ':' type ';'
-    { printf("MY VAR : type ; -> declaration\n"); }
-  | MY VAR ':' type ASSIGNOP term ';'
-    { printf("MY VAR : type ASSIGNOP term ; -> declaration\n"); }
+  : declword VAR ';'
+    { printf("declword term ; -> declaration\n"); }
+  | declword VAR ASSIGNOP term ';'
+    { printf("declword VAR = term ; -> declaration\n"); }
+  | declword VAR ':' type ';'
+    { printf("declword VAR : type ; -> declaration\n"); }
+  | declword VAR ':' type ASSIGNOP term ';'
+    { printf("declword VAR : type ASSIGNOP term ; -> declaration\n"); }
+
+declword
+  : MY
+    { printf("MY -> declword\n"); }
+  | OUR
+    { printf("OUR -> declword\n"); }
 
 if
   : IF '(' term ')' block
@@ -370,6 +376,9 @@ int yylex(void)
           
           if (memcmp(keyword, "my", str_len) == 0) {
             return MY;
+          }
+          else if (memcmp(keyword, "our", str_len) == 0) {
+            return OUR;
           }
           else if (memcmp(keyword, "sub", str_len) == 0) {
             return SUB;
