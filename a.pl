@@ -1,10 +1,13 @@
-;
 package Point;
+
+has x;
 
 our $title = 2;
 
 sum();
 sum(1, 3, 5);
+
+;
 
 # subroutine
 sub sum () {
