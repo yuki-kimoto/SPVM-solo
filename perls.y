@@ -445,10 +445,15 @@ void yyerror(const char* s)
   fprintf(stderr, "error: %s\n", s);
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
+  if (argc < 2) {
+    fprintf(stderr, "Not script\n");
+    exit(1);
+  }
+  
   /* Source file */
-  char* file = "a.pl";
+  char* file = argv[1];
   
   /* Open source file */
   FILE* fp = fopen(file, "r");
