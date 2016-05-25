@@ -44,3 +44,8 @@ for (my $i; $i < 5; $i = $i + 1) {
 
 1 == 1;
 1 = 1;
+
+my $title;
+my $title = 1;
+my $title : int;
+my $title : int = 4;

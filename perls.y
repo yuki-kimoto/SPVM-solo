@@ -94,10 +94,21 @@ statement
     { printf("; -> statement\n") }
   | if
     { printf("if -> statement\n"); }
-  | FOR '(' term ';' term ';' term ')' '{' statements '}'
-    { printf("FOR ( term ; term ; term ) { statements }\n"); }
+  | declaration
+  | FOR '(' declaration term ';' term ')' '{' statements '}'
+    { printf("FOR ( declaration term ; term ) { statements }\n"); }
   | PACKAGE WORD ';'
     { printf("PACKAGE WORD ; -> statement\n"); }
+
+declaration
+  : MY VAR ';'
+    { printf("MY term ; -> declaration\n"); }
+  | MY VAR ASSIGNOP term ';'
+    { printf("MY VAR = term ; -> declaration\n"); }
+  | MY VAR ':' type ';'
+    { printf("MY VAR : type ; -> declaration\n"); }
+  | MY VAR ':' type ASSIGNOP term ';'
+    { printf("MY VAR : type ASSIGNOP term ; -> declaration\n"); }
 
 if
   : IF '(' term ')' block
@@ -126,8 +137,6 @@ term
     { printf("term + term -> term\n"); }
   | term '*' term
     { printf("term * term -> term\n"); }
-  | MY term
-    { printf("MY term -> term\n"); }
   | INT
     { printf("INT -> term (%d)\n", ((SVOP*)$1)->uv.iv); }
   | subname list
