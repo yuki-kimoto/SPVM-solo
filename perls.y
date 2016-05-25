@@ -60,6 +60,7 @@
 
 %token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR
 %token <ival> RELOP ASSIGNOP EQOP
+%token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT
 
 %left '+'
@@ -99,7 +100,11 @@ statement
     { printf("FOR ( declaration term ; term ) { statements }\n"); }
   | PACKAGE WORD ';'
     { printf("PACKAGE WORD ; -> statement\n"); }
-
+  | LAST ';'
+    { printf("LAST ; -> statement\n"); }
+  | CONTINUE ';'
+    { printf("CONTINUE ; -> statement\n"); }
+  
 declaration
   : declword declvar ';'
     { printf("declword declvar ; -> declaration\n"); }
@@ -411,6 +416,12 @@ int yylex(void)
           }
           else if (memcmp(keyword, "for", str_len) == 0) {
             return FOR;
+          }
+          else if (memcmp(keyword, "last", str_len) == 0) {
+            return LAST;
+          }
+          else if (memcmp(keyword, "continue", str_len) == 0) {
+            return CONTINUE;
           }
           
           SVOP* op = malloc(sizeof(SVOP));

@@ -40,6 +40,8 @@ sub sum ($foo : int, $bar : float) {
 
 for (my $i; $i < 5; $i = $i + 1) {
   1;
+  last;
+  continue;
 }
 
 1 > 2;
