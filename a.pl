@@ -10,11 +10,6 @@ sub sum () {
   bbb ;
 }
 
-1 + 12 * 3;
-my $title = 1;
-
-sum(34);
-
 sub sum ($foo : int, $bar : float) {
   if (3) {
     1;
@@ -38,7 +33,7 @@ sub sum ($foo : int, $bar : float) {
   return 1;
 }
 
-for (my $i = 1; $i < 5; $i = $i + 1) {
+for (my $i; $i < 5; $i = $i + 1) {
   1;
 }
 

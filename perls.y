@@ -96,6 +96,9 @@ statement
     { printf("if -> statement\n"); }
   | FOR '(' term ';' term ';' term ')' '{' statements '}'
     { printf("FOR ( term ; term ; term ) { statements }\n"); }
+  | PACKAGE WORD ';'
+    { printf("PACKAGE WORD ; -> statement\n"); }
+
 if
   : IF '(' term ')' block
     { printf("if ( term ) block\n"); }
@@ -127,8 +130,6 @@ term
     { printf("MY term -> term\n"); }
   | INT
     { printf("INT -> term (%d)\n", ((SVOP*)$1)->uv.iv); }
-  | PACKAGE WORD
-    { printf("PACKAGE WORD -> term\n"); }
   | subname list
     { printf("subname list -> term\n"); }
   | RETURN term
