@@ -201,6 +201,8 @@ term
     { printf("term BITANDOP term -> term\n"); }
   | term BITOROP term
     { printf("term BITOROP term -> term\n"); }
+  | SUB subdefargslist block
+    { printf("SUB subdefargslist block -> term\n"); }
     
 subname
   : WORD

@@ -64,3 +64,6 @@ my $title : int = 4;
 
 1 && 2;
 1 & 3;
+
+my $title = sub () { };
+
