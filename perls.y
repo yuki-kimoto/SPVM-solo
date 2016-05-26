@@ -606,6 +606,7 @@ int main(int argc, char *argv[])
   int parse_success = yyparse();
   
   free(parser->linestr);
+  free(parser);
   
   return parse_success;
 }
