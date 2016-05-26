@@ -71,7 +71,6 @@
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT
 
-/* %right <ival> NOTOP */
 /* %nonassoc LSTOP LSTOPSUB */
 /* %left <ival> ',' */
 %right <ival> ASSIGNOP
