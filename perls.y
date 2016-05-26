@@ -38,9 +38,6 @@
     /* Current buffer position */
     char* buf_ptr;
 
-    /* Current token start position */
-    char* cur_token_ptr;
-
     /* Before token start position */
     char* bef_token_ptr;
   };
@@ -253,27 +250,13 @@ type
 
 %%
 
-/* Source data */
-char* linestr = NULL;
-
-/* Source buffer size */
-size_t linestr_buf_len = 0;
-
-/* Source size */
-size_t linestr_len = 0;
-
-/* Current buffer position */
-char* buf_ptr = NULL;
-
-/* Current token start position */
-char* cur_token_ptr = NULL;
-
-/* Before token start position */
-char* bef_token_ptr = NULL;
+struct yy_parser* parser;
 
 /* Get token */
 int yylex(void)
 {
+  char* buf_ptr = parser->buf_ptr;
+  
   while(1) {
     /* Get current character */
     char c = *buf_ptr;
@@ -291,6 +274,7 @@ int yylex(void)
       case '\r':
       case EOF :
         buf_ptr++;
+        parser->buf_ptr = buf_ptr;
         continue;
       
       /* Addition */
@@ -299,10 +283,12 @@ int yylex(void)
         
         if (*buf_ptr == '=') {
           buf_ptr++;
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_ADD;
           return ASSIGNOP;
         }
         else {
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_ADD;
           return ADDOP;
         }
@@ -312,10 +298,12 @@ int yylex(void)
         buf_ptr++;
         if (*buf_ptr == '=') {
           buf_ptr++;
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_SUBTRACT;
           return ASSIGNOP;
         }
         else {
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_SUBTRACT;
           return ADDOP;
         }
@@ -324,10 +312,12 @@ int yylex(void)
         buf_ptr++;
         if (*buf_ptr == '=') {
           buf_ptr++;
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_MULTIPLY;
           return ASSIGNOP;
         }
         else {
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_MULTIPLY;
           return MULOP;
         }
@@ -337,10 +327,12 @@ int yylex(void)
         buf_ptr++;
         if (*buf_ptr == '=') {
           buf_ptr++;
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_DIVIDE;
           return ASSIGNOP;
         }
         else {
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_DIVIDE;
           return MULOP;
         }
@@ -350,11 +342,13 @@ int yylex(void)
         /* Or */
         if (*buf_ptr == '|') {
           buf_ptr++;
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_OR;
           return OROP;
         }
         /* Bit or */
         else {
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_BIT_OR;
           return BITOROP;
         }
@@ -364,11 +358,13 @@ int yylex(void)
         /* Or */
         if (*buf_ptr == '&') {
           buf_ptr++;
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_AND;
           return ANDOP;
         }
         /* Bit and */
         else {
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_BIT_AND;
           return BITANDOP;
         }
@@ -382,6 +378,7 @@ int yylex(void)
           }
           buf_ptr++;
         }
+        parser->buf_ptr = buf_ptr;
         continue;
       
       case '=':
@@ -391,10 +388,12 @@ int yylex(void)
         if (*buf_ptr == '=') {
           buf_ptr++;
           
+          parser->buf_ptr = buf_ptr;
           return EQOP;
         }
         /* = */
         else {
+          parser->buf_ptr = buf_ptr;
           yylval.ival = 0;
           return ASSIGNOP;
         }
@@ -406,14 +405,14 @@ int yylex(void)
         if (*buf_ptr == '=') {
           buf_ptr++;
           
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_LE;
-          
           return RELOP;
         }
         /* < */
         else {
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_LT;
-          
           return RELOP;
         }
       
@@ -424,14 +423,14 @@ int yylex(void)
         if (*buf_ptr == '=') {
           buf_ptr++;
           
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_GE;
-          
           return RELOP;
         }
         /* < */
         else {
+          parser->buf_ptr = buf_ptr;
           yylval.ival = OP_GT;
-          
           return RELOP;
         }
       
@@ -439,7 +438,7 @@ int yylex(void)
         /* Variable */
         if (c == '$') {
           /* Save current position */
-          cur_token_ptr = buf_ptr;
+          char* cur_token_ptr = buf_ptr;
           
           buf_ptr++;
 
@@ -457,12 +456,13 @@ int yylex(void)
           op->type = OP_CONST_STRING;
           op->uv.pv = var;
           
+          parser->buf_ptr = buf_ptr;
           yylval.opval = (OP*)op;
           return VAR;
         }
         /* Number */
         else if (isdigit(c)) {
-          cur_token_ptr = buf_ptr;
+          char* cur_token_ptr = buf_ptr;
           
           buf_ptr++;
           
@@ -488,13 +488,14 @@ int yylex(void)
           op->type = OP_CONST_INT;
           op->uv.iv = num;
           
+          parser->buf_ptr = buf_ptr;
           yylval.opval = (OP*)op;
           return INT;
         }
         /* Keyword or word */
         else if (isalnum(c)) {
           /* Save current position */
-          cur_token_ptr = buf_ptr;
+          char* cur_token_ptr = buf_ptr;
           
           buf_ptr++;
           
@@ -509,39 +510,51 @@ int yylex(void)
           keyword[str_len] = '\0';
           
           if (memcmp(keyword, "my", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return MY;
           }
           else if (memcmp(keyword, "our", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return OUR;
           }
           else if (memcmp(keyword, "has", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return HAS;
           }
           else if (memcmp(keyword, "sub", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return SUB;
           }
           else if (memcmp(keyword, "package", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return PACKAGE;
           }
           else if (memcmp(keyword, "if", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return IF;
           }
           else if (memcmp(keyword, "elsif", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return ELSIF;
           }
           else if (memcmp(keyword, "else", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return ELSE;
           }
           else if (memcmp(keyword, "return", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return RETURN;
           }
           else if (memcmp(keyword, "for", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return FOR;
           }
           else if (memcmp(keyword, "last", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return LAST;
           }
           else if (memcmp(keyword, "continue", str_len) == 0) {
+            parser->buf_ptr = buf_ptr;
             return CONTINUE;
           }
           
@@ -549,12 +562,14 @@ int yylex(void)
           op->type = OP_CONST_STRING;
           op->uv.pv = keyword;
           
+          parser->buf_ptr = buf_ptr;
           yylval.opval = (OP*)op;
           return WORD;
         }
         
         /* Return character */
         buf_ptr++;
+        parser->buf_ptr = buf_ptr;
         return c;
     }
   }
@@ -583,21 +598,23 @@ int main(int argc, char *argv[])
     return -1;
   }
   
+  /* initialize parser */
+  parser = malloc(sizeof(struct yy_parser));
+
   /* Read source file */
-  linestr_len = getdelim(&linestr, &linestr_buf_len, EOF, fp);
+  parser->linestr_len = getdelim(&(parser->linestr), &(parser->linestr_buf_len), EOF, fp);
   
   /* Close file */
   fclose(fp);
   
   /* Initialize parser information */
-  buf_ptr = linestr;
-  cur_token_ptr = linestr;
-  bef_token_ptr = linestr;
+  parser->buf_ptr = parser->linestr;
+  parser->bef_token_ptr = parser->linestr;
   
   /* call yyparse */
   int parse_success = yyparse();
   
-  free(linestr);
+  free(parser->linestr);
   
   return parse_success;
 }
