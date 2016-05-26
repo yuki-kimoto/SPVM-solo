@@ -11,8 +11,8 @@ sum(1, 3, 5);
 
 # subroutine
 sub sum () {
-  aaa ;
-  bbb ;
+  2;
+  4;
 }
 
 sub sum ($foo : int, $bar : float) {

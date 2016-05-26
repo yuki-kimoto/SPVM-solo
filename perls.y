@@ -173,9 +173,7 @@ terms
     { printf("terms , term -> terms\n"); }
 
 term
-  : WORD
-    { printf("WORD -> term (%s)\n", ((SVOP*)$1)->uv.pv); }
-  | VAR
+  : VAR
     { printf("VAR -> term (%s)\n", ((SVOP*)$1)->uv.pv); }
   | term ADDOP term
     { printf("term + term -> term\n"); }
