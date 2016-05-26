@@ -59,12 +59,37 @@
 }
 
 %token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR
-%token <ival> RELOP ASSIGNOP EQOP
+%token <ival> RELOP EQOP
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT
 
-%left '+'
-%left '*'
+/* %left <ival> OROP DOROP */
+/* %left <ival> ANDOP */
+/* %right <ival> NOTOP */
+/* %nonassoc LSTOP LSTOPSUB */
+/* %left <ival> ',' */
+%right <ival> ASSIGNOP
+/* %right <ival> '?' ':' */
+/* %nonassoc DOTDOT YADAYADA */
+/* %left <ival> OROR DORDOR */
+/* %left <ival> ANDAND */
+/* %left <ival> BITOROP */
+/* %left <ival> BITANDOP */
+/* %nonassoc EQOP */
+/* %nonassoc RELOP */
+/* %nonassoc UNIOP UNIOPSUB */
+/* %nonassoc REQUIRE */
+/* %left <ival> SHIFTOP */
+%left ADDOP
+%left MULOP
+/* %left <ival> MATCHOP */
+/* %right <ival> '!' '~' UMINUS REFGEN */
+/* %right <ival> POWOP */
+/* %nonassoc <ival> PREINC PREDEC POSTINC POSTDEC POSTJOIN */
+/* %left <ival> ARROW */
+/* %nonassoc <ival> ')' */
+/* %left <ival> '(' */
+/* %left '[' '{' */
 
 %%
 
@@ -152,9 +177,9 @@ term
     { printf("WORD -> term (%s)\n", ((SVOP*)$1)->uv.pv); }
   | VAR
     { printf("VAR -> term (%s)\n", ((SVOP*)$1)->uv.pv); }
-  | term '+' term
+  | term ADDOP term
     { printf("term + term -> term\n"); }
-  | term '*' term
+  | term MULOP term
     { printf("term * term -> term\n"); }
   | INT
     { printf("INT -> term (%d)\n", ((SVOP*)$1)->uv.iv); }
@@ -246,12 +271,12 @@ int yylex(void)
       /* Addition */
       case '+':
         buf_ptr++;
-        return '+';
+        return ADDOP;
       
       /* Multiply */
       case '*':
         buf_ptr++;
-        return '*';
+        return MULOP;
       
       /* Comment */
       case '#':
