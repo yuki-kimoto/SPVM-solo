@@ -14,6 +14,8 @@
   #define OP_LE 5
   #define OP_GT 6
   #define OP_GE 7
+  #define OP_ADD 8
+  #define OP_SUBTRACT 9
 
   #define BASEOP int type;
   
@@ -75,17 +77,15 @@
 /* %left <ival> ANDAND */
 /* %left <ival> BITOROP */
 /* %left <ival> BITANDOP */
-/* %nonassoc EQOP */
-/* %nonassoc RELOP */
+%nonassoc EQOP
+%nonassoc RELOP
 /* %nonassoc UNIOP UNIOPSUB */
 /* %nonassoc REQUIRE */
 /* %left <ival> SHIFTOP */
-%left ADDOP
+%left ADDOP /* "+" or "-" */
 %left MULOP
-/* %left <ival> MATCHOP */
 /* %right <ival> '!' '~' UMINUS REFGEN */
-/* %right <ival> POWOP */
-/* %nonassoc <ival> PREINC PREDEC POSTINC POSTDEC POSTJOIN */
+/* %nonassoc <ival> PREINC PREDEC POSTINC POSTDEC */
 /* %left <ival> ARROW */
 /* %nonassoc <ival> ')' */
 /* %left <ival> '(' */
@@ -271,6 +271,13 @@ int yylex(void)
       /* Addition */
       case '+':
         buf_ptr++;
+        yylval.ival = OP_ADD;
+        return ADDOP;
+      
+      /* Subtract */
+      case '-':
+        buf_ptr++;
+        yylval.ival = OP_SUBTRACT;
         return ADDOP;
       
       /* Multiply */

@@ -56,3 +56,5 @@ my $title;
 my $title = 1;
 my $title : int;
 my $title : int = 4;
+
+1 - 4;
