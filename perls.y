@@ -71,8 +71,6 @@
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT
 
-/* %nonassoc LSTOP LSTOPSUB */
-/* %left <ival> ',' */
 %right <ival> ASSIGNOP
 /* %right <ival> '?' ':' */
 /* %nonassoc DOTDOT YADAYADA */
