@@ -16,7 +16,13 @@
   #define OP_GE 7
   #define OP_ADD 8
   #define OP_SUBTRACT 9
-
+  #define OP_MULTIPLY 10
+  #define OP_DIVIDE 11
+  #define OP_AND 12
+  #define OP_OR 13
+  #define OP_BIT_AND 14
+  #define OP_BIT_OR 15
+  
   #define BASEOP int type;
   
   struct op {
@@ -65,22 +71,19 @@
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT
 
-/* %left <ival> OROP DOROP */
-/* %left <ival> ANDOP */
 /* %right <ival> NOTOP */
 /* %nonassoc LSTOP LSTOPSUB */
 /* %left <ival> ',' */
 %right <ival> ASSIGNOP
 /* %right <ival> '?' ':' */
 /* %nonassoc DOTDOT YADAYADA */
-/* %left <ival> OROR DORDOR */
-/* %left <ival> ANDAND */
-/* %left <ival> BITOROP */
-/* %left <ival> BITANDOP */
+%left <ival> OROP
+%left <ival> ANDOP
+%left <ival> BITOROP
+%left <ival> BITANDOP
 %nonassoc EQOP
 %nonassoc RELOP
 /* %nonassoc UNIOP UNIOPSUB */
-/* %nonassoc REQUIRE */
 /* %left <ival> SHIFTOP */
 %left ADDOP /* "+" or "-" */
 %left MULOP
@@ -195,6 +198,14 @@ term
     { printf("term EQOP term\n"); }
   | term ASSIGNOP term
     { printf("term ASSIGNOP term\n"); }
+  | term ANDOP term
+    { printf("term ANDOP term -> term\n"); }
+  | term OROP term
+    { printf("term OROP term -> term\n"); }
+  | term BITANDOP term
+    { printf("term BITANDOP term -> term\n"); }
+  | term BITOROP term
+    { printf("term BITOROP term -> term\n"); }
     
 subname
   : WORD
@@ -283,7 +294,42 @@ int yylex(void)
       /* Multiply */
       case '*':
         buf_ptr++;
+        yylval.ival = OP_MULTIPLY;
         return MULOP;
+
+      /* Divide */
+      case '/':
+        buf_ptr++;
+        yylval.ival = OP_DIVIDE;
+        return MULOP;
+      
+      case '|':
+        buf_ptr++;
+        /* Or */
+        if (*buf_ptr == '|') {
+          buf_ptr++;
+          yylval.ival = OP_OR;
+          return OROP;
+        }
+        /* Bit or */
+        else {
+          yylval.ival = OP_BIT_OR;
+          return BITOROP;
+        }
+
+      case '&':
+        buf_ptr++;
+        /* Or */
+        if (*buf_ptr == '&') {
+          buf_ptr++;
+          yylval.ival = OP_AND;
+          return ANDOP;
+        }
+        /* Bit and */
+        else {
+          yylval.ival = OP_BIT_AND;
+          return BITANDOP;
+        }
       
       /* Comment */
       case '#':
