@@ -1,11 +1,12 @@
+%pure-parser
+%parse-param	{ yy_parser* parser }
+%lex-param	{ yy_parser* parser }
+
 %{
   #include <stdio.h>
   #include <ctype.h>
   #include <stdlib.h>
   #include <string.h>
-  
-  #define YYPARSE_PARAM parser
-  #define YYLEX_PARAM parser
 
   #define OP_CONST_INT 1
   #define OP_CONST_FLOAT 2
@@ -24,7 +25,7 @@
   #define OP_BIT_OR 15
   
   #define BASEOP int type;
-  
+
   typedef struct yy_parser {
     /* Source data */
     char* linestr;
@@ -33,8 +34,7 @@
     char* bufptr;
   } yy_parser;
 
-  int yylex(yy_parser* parser);
-  void yyerror(const char* s);
+  void yyerror(yy_parser* parser, const char* s);
   
   struct op {
     BASEOP
@@ -71,6 +71,7 @@
   };
   typedef struct binop LISTOP;
 %}
+
 
 %union {
   OP* opval;
@@ -245,7 +246,7 @@ type
 %%
 
 /* Get token */
-int yylex(yy_parser* parser)
+int yylex(YYSTYPE* yylvalp, yy_parser* parser)
 {
   char* bufptr = parser->bufptr;
   
@@ -276,12 +277,12 @@ int yylex(yy_parser* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylval.ival = OP_ADD;
+          yylvalp->ival = OP_ADD;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylval.ival = OP_ADD;
+          yylvalp->ival = OP_ADD;
           return ADDOP;
         }
       
@@ -291,12 +292,12 @@ int yylex(yy_parser* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylval.ival = OP_SUBTRACT;
+          yylvalp->ival = OP_SUBTRACT;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylval.ival = OP_SUBTRACT;
+          yylvalp->ival = OP_SUBTRACT;
           return ADDOP;
         }
       /* Multiply */
@@ -305,12 +306,12 @@ int yylex(yy_parser* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylval.ival = OP_MULTIPLY;
+          yylvalp->ival = OP_MULTIPLY;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylval.ival = OP_MULTIPLY;
+          yylvalp->ival = OP_MULTIPLY;
           return MULOP;
         }
       
@@ -320,12 +321,12 @@ int yylex(yy_parser* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylval.ival = OP_DIVIDE;
+          yylvalp->ival = OP_DIVIDE;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylval.ival = OP_DIVIDE;
+          yylvalp->ival = OP_DIVIDE;
           return MULOP;
         }
       
@@ -335,13 +336,13 @@ int yylex(yy_parser* parser)
         if (*bufptr == '|') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylval.ival = OP_OR;
+          yylvalp->ival = OP_OR;
           return OROP;
         }
         /* Bit or */
         else {
           parser->bufptr = bufptr;
-          yylval.ival = OP_BIT_OR;
+          yylvalp->ival = OP_BIT_OR;
           return BITOROP;
         }
 
@@ -351,13 +352,13 @@ int yylex(yy_parser* parser)
         if (*bufptr == '&') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylval.ival = OP_AND;
+          yylvalp->ival = OP_AND;
           return ANDOP;
         }
         /* Bit and */
         else {
           parser->bufptr = bufptr;
-          yylval.ival = OP_BIT_AND;
+          yylvalp->ival = OP_BIT_AND;
           return BITANDOP;
         }
       
@@ -386,7 +387,7 @@ int yylex(yy_parser* parser)
         /* = */
         else {
           parser->bufptr = bufptr;
-          yylval.ival = 0;
+          yylvalp->ival = 0;
           return ASSIGNOP;
         }
         
@@ -398,13 +399,13 @@ int yylex(yy_parser* parser)
           bufptr++;
           
           parser->bufptr = bufptr;
-          yylval.ival = OP_LE;
+          yylvalp->ival = OP_LE;
           return RELOP;
         }
         /* < */
         else {
           parser->bufptr = bufptr;
-          yylval.ival = OP_LT;
+          yylvalp->ival = OP_LT;
           return RELOP;
         }
       
@@ -416,13 +417,13 @@ int yylex(yy_parser* parser)
           bufptr++;
           
           parser->bufptr = bufptr;
-          yylval.ival = OP_GE;
+          yylvalp->ival = OP_GE;
           return RELOP;
         }
         /* < */
         else {
           parser->bufptr = bufptr;
-          yylval.ival = OP_GT;
+          yylvalp->ival = OP_GT;
           return RELOP;
         }
       
@@ -449,7 +450,7 @@ int yylex(yy_parser* parser)
           op->uv.pv = var;
           
           parser->bufptr = bufptr;
-          yylval.opval = (OP*)op;
+          yylvalp->opval = (OP*)op;
           return VAR;
         }
         /* Number */
@@ -481,7 +482,7 @@ int yylex(yy_parser* parser)
           op->uv.iv = num;
           
           parser->bufptr = bufptr;
-          yylval.opval = (OP*)op;
+          yylvalp->opval = (OP*)op;
           return INT;
         }
         /* Keyword or word */
@@ -555,7 +556,7 @@ int yylex(yy_parser* parser)
           op->uv.pv = keyword;
           
           parser->bufptr = bufptr;
-          yylval.opval = (OP*)op;
+          yylvalp->opval = (OP*)op;
           return WORD;
         }
         
@@ -568,7 +569,7 @@ int yylex(yy_parser* parser)
 }
 
 /* Function for error */
-void yyerror(const char* s)
+void yyerror(yy_parser* parser, const char* s)
 {
   fprintf(stderr, "error: %s\n", s);
 }
@@ -604,7 +605,7 @@ int main(int argc, char *argv[])
   parser->bufptr = parser->linestr;
   
   /* call yyparse */
-  int parse_success = yyparse(YYPARSE_PARAM);
+  int parse_success = yyparse(parser);
   
   free(parser->linestr);
   free(parser);
