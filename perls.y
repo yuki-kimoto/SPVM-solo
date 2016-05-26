@@ -3,9 +3,9 @@
   #include <ctype.h>
   #include <stdlib.h>
   #include <string.h>
-
-  int yylex(void);
-  void yyerror(const char* s);
+  
+  #define YYPARSE_PARAM parser
+  #define YYLEX_PARAM parser
 
   #define OP_CONST_INT 1
   #define OP_CONST_FLOAT 2
@@ -25,13 +25,16 @@
   
   #define BASEOP int type;
   
-  struct yy_parser {
+  typedef struct yy_parser {
     /* Source data */
     char* linestr;
 
     /* Current buffer position */
     char* bufptr;
-  };
+  } yy_parser;
+
+  int yylex(yy_parser* parser);
+  void yyerror(const char* s);
   
   struct op {
     BASEOP
@@ -241,10 +244,8 @@ type
 
 %%
 
-struct yy_parser* parser;
-
 /* Get token */
-int yylex(void)
+int yylex(yy_parser* parser)
 {
   char* bufptr = parser->bufptr;
   
@@ -590,7 +591,7 @@ int main(int argc, char *argv[])
   }
   
   /* initialize parser */
-  parser = malloc(sizeof(struct yy_parser));
+  struct yy_parser* parser = malloc(sizeof(yy_parser));
 
   /* Read source file */
   size_t linestr_buf_len;
@@ -603,7 +604,7 @@ int main(int argc, char *argv[])
   parser->bufptr = parser->linestr;
   
   /* call yyparse */
-  int parse_success = yyparse();
+  int parse_success = yyparse(YYPARSE_PARAM);
   
   free(parser->linestr);
   free(parser);
