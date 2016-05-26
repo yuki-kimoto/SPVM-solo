@@ -591,7 +591,7 @@ int main(int argc, char *argv[])
   }
   
   /* initialize parser */
-  struct yy_parser* parser = malloc(sizeof(yy_parser));
+  yy_parser* parser = malloc(sizeof(yy_parser));
 
   /* Read source file */
   size_t linestr_buf_len;
