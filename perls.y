@@ -36,10 +36,7 @@
     size_t linestr_len;
 
     /* Current buffer position */
-    char* buf_ptr;
-
-    /* Before token start position */
-    char* bef_token_ptr;
+    char* bufptr;
   };
   
   struct op {
@@ -255,11 +252,11 @@ struct yy_parser* parser;
 /* Get token */
 int yylex(void)
 {
-  char* buf_ptr = parser->buf_ptr;
+  char* bufptr = parser->bufptr;
   
   while(1) {
     /* Get current character */
-    char c = *buf_ptr;
+    char c = *bufptr;
     
     /* line end */
     switch(c) {
@@ -273,163 +270,163 @@ int yylex(void)
       case '\n':
       case '\r':
       case EOF :
-        buf_ptr++;
-        parser->buf_ptr = buf_ptr;
+        bufptr++;
+        parser->bufptr = bufptr;
         continue;
       
       /* Addition */
       case '+':
-        buf_ptr++;
+        bufptr++;
         
-        if (*buf_ptr == '=') {
-          buf_ptr++;
-          parser->buf_ptr = buf_ptr;
+        if (*bufptr == '=') {
+          bufptr++;
+          parser->bufptr = bufptr;
           yylval.ival = OP_ADD;
           return ASSIGNOP;
         }
         else {
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = OP_ADD;
           return ADDOP;
         }
       
       /* Subtract */
       case '-':
-        buf_ptr++;
-        if (*buf_ptr == '=') {
-          buf_ptr++;
-          parser->buf_ptr = buf_ptr;
+        bufptr++;
+        if (*bufptr == '=') {
+          bufptr++;
+          parser->bufptr = bufptr;
           yylval.ival = OP_SUBTRACT;
           return ASSIGNOP;
         }
         else {
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = OP_SUBTRACT;
           return ADDOP;
         }
       /* Multiply */
       case '*':
-        buf_ptr++;
-        if (*buf_ptr == '=') {
-          buf_ptr++;
-          parser->buf_ptr = buf_ptr;
+        bufptr++;
+        if (*bufptr == '=') {
+          bufptr++;
+          parser->bufptr = bufptr;
           yylval.ival = OP_MULTIPLY;
           return ASSIGNOP;
         }
         else {
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = OP_MULTIPLY;
           return MULOP;
         }
       
       /* Divide */
       case '/':
-        buf_ptr++;
-        if (*buf_ptr == '=') {
-          buf_ptr++;
-          parser->buf_ptr = buf_ptr;
+        bufptr++;
+        if (*bufptr == '=') {
+          bufptr++;
+          parser->bufptr = bufptr;
           yylval.ival = OP_DIVIDE;
           return ASSIGNOP;
         }
         else {
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = OP_DIVIDE;
           return MULOP;
         }
       
       case '|':
-        buf_ptr++;
+        bufptr++;
         /* Or */
-        if (*buf_ptr == '|') {
-          buf_ptr++;
-          parser->buf_ptr = buf_ptr;
+        if (*bufptr == '|') {
+          bufptr++;
+          parser->bufptr = bufptr;
           yylval.ival = OP_OR;
           return OROP;
         }
         /* Bit or */
         else {
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = OP_BIT_OR;
           return BITOROP;
         }
 
       case '&':
-        buf_ptr++;
+        bufptr++;
         /* Or */
-        if (*buf_ptr == '&') {
-          buf_ptr++;
-          parser->buf_ptr = buf_ptr;
+        if (*bufptr == '&') {
+          bufptr++;
+          parser->bufptr = bufptr;
           yylval.ival = OP_AND;
           return ANDOP;
         }
         /* Bit and */
         else {
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = OP_BIT_AND;
           return BITANDOP;
         }
       
       /* Comment */
       case '#':
-        buf_ptr++;
+        bufptr++;
         while(1) {
-          if (*buf_ptr == '\r' || *buf_ptr == '\n' || *buf_ptr == EOF || *buf_ptr == '\0') {
+          if (*bufptr == '\r' || *bufptr == '\n' || *bufptr == EOF || *bufptr == '\0') {
             break;
           }
-          buf_ptr++;
+          bufptr++;
         }
-        parser->buf_ptr = buf_ptr;
+        parser->bufptr = bufptr;
         continue;
       
       case '=':
-        buf_ptr++;
+        bufptr++;
         
         /* == */
-        if (*buf_ptr == '=') {
-          buf_ptr++;
+        if (*bufptr == '=') {
+          bufptr++;
           
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           return EQOP;
         }
         /* = */
         else {
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = 0;
           return ASSIGNOP;
         }
         
       case '<':
-        buf_ptr++;
+        bufptr++;
         
         /* <= */
-        if (*buf_ptr == '=') {
-          buf_ptr++;
+        if (*bufptr == '=') {
+          bufptr++;
           
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = OP_LE;
           return RELOP;
         }
         /* < */
         else {
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = OP_LT;
           return RELOP;
         }
       
       case '>':
-        buf_ptr++;
+        bufptr++;
         
         /* >= */
-        if (*buf_ptr == '=') {
-          buf_ptr++;
+        if (*bufptr == '=') {
+          bufptr++;
           
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = OP_GE;
           return RELOP;
         }
         /* < */
         else {
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.ival = OP_GT;
           return RELOP;
         }
@@ -438,16 +435,16 @@ int yylex(void)
         /* Variable */
         if (c == '$') {
           /* Save current position */
-          char* cur_token_ptr = buf_ptr;
+          char* cur_token_ptr = bufptr;
           
-          buf_ptr++;
+          bufptr++;
 
           /* Next is graph */
-          while(isalnum(*buf_ptr)) {
-            buf_ptr++;
+          while(isalnum(*bufptr)) {
+            bufptr++;
           }
 
-          size_t str_len = buf_ptr - cur_token_ptr;
+          size_t str_len = bufptr - cur_token_ptr;
           char* var = malloc(str_len + 1);
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
@@ -456,28 +453,28 @@ int yylex(void)
           op->type = OP_CONST_STRING;
           op->uv.pv = var;
           
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.opval = (OP*)op;
           return VAR;
         }
         /* Number */
         else if (isdigit(c)) {
-          char* cur_token_ptr = buf_ptr;
+          char* cur_token_ptr = bufptr;
           
-          buf_ptr++;
+          bufptr++;
           
           /* Scan number */
-          while(isdigit(*buf_ptr)) {
-            buf_ptr++;
+          while(isdigit(*bufptr)) {
+            bufptr++;
           }
           
-          if (isalpha(*buf_ptr)) {
+          if (isalpha(*bufptr)) {
             fprintf(stderr, "syntax error: invalid variable name\n");
             exit(1);
           }
           
           /* Convert to integer */
-          size_t str_len = buf_ptr - cur_token_ptr;
+          size_t str_len = bufptr - cur_token_ptr;
           char* num_str = malloc(str_len + 1);
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
@@ -488,73 +485,73 @@ int yylex(void)
           op->type = OP_CONST_INT;
           op->uv.iv = num;
           
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.opval = (OP*)op;
           return INT;
         }
         /* Keyword or word */
         else if (isalnum(c)) {
           /* Save current position */
-          char* cur_token_ptr = buf_ptr;
+          char* cur_token_ptr = bufptr;
           
-          buf_ptr++;
+          bufptr++;
           
           /* Next is graph */
-          while(isalnum(*buf_ptr)) {
-            buf_ptr++;
+          while(isalnum(*bufptr)) {
+            bufptr++;
           }
           
-          size_t str_len = buf_ptr - cur_token_ptr;
+          size_t str_len = bufptr - cur_token_ptr;
           char* keyword = malloc(str_len + 1);
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
           
           if (memcmp(keyword, "my", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return MY;
           }
           else if (memcmp(keyword, "our", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return OUR;
           }
           else if (memcmp(keyword, "has", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return HAS;
           }
           else if (memcmp(keyword, "sub", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return SUB;
           }
           else if (memcmp(keyword, "package", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return PACKAGE;
           }
           else if (memcmp(keyword, "if", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return IF;
           }
           else if (memcmp(keyword, "elsif", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return ELSIF;
           }
           else if (memcmp(keyword, "else", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return ELSE;
           }
           else if (memcmp(keyword, "return", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return RETURN;
           }
           else if (memcmp(keyword, "for", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return FOR;
           }
           else if (memcmp(keyword, "last", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return LAST;
           }
           else if (memcmp(keyword, "continue", str_len) == 0) {
-            parser->buf_ptr = buf_ptr;
+            parser->bufptr = bufptr;
             return CONTINUE;
           }
           
@@ -562,14 +559,14 @@ int yylex(void)
           op->type = OP_CONST_STRING;
           op->uv.pv = keyword;
           
-          parser->buf_ptr = buf_ptr;
+          parser->bufptr = bufptr;
           yylval.opval = (OP*)op;
           return WORD;
         }
         
         /* Return character */
-        buf_ptr++;
-        parser->buf_ptr = buf_ptr;
+        bufptr++;
+        parser->bufptr = bufptr;
         return c;
     }
   }
@@ -608,8 +605,7 @@ int main(int argc, char *argv[])
   fclose(fp);
   
   /* Initialize parser information */
-  parser->buf_ptr = parser->linestr;
-  parser->bef_token_ptr = parser->linestr;
+  parser->bufptr = parser->linestr;
   
   /* call yyparse */
   int parse_success = yyparse();
