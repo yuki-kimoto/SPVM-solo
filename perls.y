@@ -25,6 +25,26 @@
   
   #define BASEOP int type;
   
+  struct yy_parser {
+    /* Source data */
+    char* linestr;
+
+    /* Source buffer size */
+    size_t linestr_buf_len;
+
+    /* Source size */
+    size_t linestr_len;
+
+    /* Current buffer position */
+    char* buf_ptr;
+
+    /* Current token start position */
+    char* cur_token_ptr;
+
+    /* Before token start position */
+    char* bef_token_ptr;
+  };
+  
   struct op {
     BASEOP
   };
@@ -72,19 +92,16 @@
 %token <opval> WORD VAR INT
 
 %right <ival> ASSIGNOP
-/* %right <ival> '?' ':' */
-/* %nonassoc DOTDOT YADAYADA */
 %left <ival> OROP
 %left <ival> ANDOP
 %left <ival> BITOROP
 %left <ival> BITANDOP
 %nonassoc EQOP
 %nonassoc RELOP
-/* %nonassoc UNIOP UNIOPSUB */
 /* %left <ival> SHIFTOP */
 %left ADDOP /* "+" or "-" */
 %left MULOP
-/* %right <ival> '!' '~' UMINUS REFGEN */
+/* %right <ival> '!' '~' UMINUS */
 /* %nonassoc <ival> PREINC PREDEC POSTINC POSTDEC */
 /* %left <ival> ARROW */
 /* %nonassoc <ival> ')' */
@@ -279,26 +296,54 @@ int yylex(void)
       /* Addition */
       case '+':
         buf_ptr++;
-        yylval.ival = OP_ADD;
-        return ADDOP;
+        
+        if (*buf_ptr == '=') {
+          buf_ptr++;
+          yylval.ival = OP_ADD;
+          return ASSIGNOP;
+        }
+        else {
+          yylval.ival = OP_ADD;
+          return ADDOP;
+        }
       
       /* Subtract */
       case '-':
         buf_ptr++;
-        yylval.ival = OP_SUBTRACT;
-        return ADDOP;
-      
+        if (*buf_ptr == '=') {
+          buf_ptr++;
+          yylval.ival = OP_SUBTRACT;
+          return ASSIGNOP;
+        }
+        else {
+          yylval.ival = OP_SUBTRACT;
+          return ADDOP;
+        }
       /* Multiply */
       case '*':
         buf_ptr++;
-        yylval.ival = OP_MULTIPLY;
-        return MULOP;
-
+        if (*buf_ptr == '=') {
+          buf_ptr++;
+          yylval.ival = OP_MULTIPLY;
+          return ASSIGNOP;
+        }
+        else {
+          yylval.ival = OP_MULTIPLY;
+          return MULOP;
+        }
+      
       /* Divide */
       case '/':
         buf_ptr++;
-        yylval.ival = OP_DIVIDE;
-        return MULOP;
+        if (*buf_ptr == '=') {
+          buf_ptr++;
+          yylval.ival = OP_DIVIDE;
+          return ASSIGNOP;
+        }
+        else {
+          yylval.ival = OP_DIVIDE;
+          return MULOP;
+        }
       
       case '|':
         buf_ptr++;
@@ -350,6 +395,7 @@ int yylex(void)
         }
         /* = */
         else {
+          yylval.ival = 0;
           return ASSIGNOP;
         }
         

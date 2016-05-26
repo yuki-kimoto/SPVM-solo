@@ -67,3 +67,10 @@ my $title : int = 4;
 
 my $title = sub () { };
 
+$title += 1;
+
+$title -= 1;
+
+$title *= 1;
+$title /= 2;
+
