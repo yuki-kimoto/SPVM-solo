@@ -29,12 +29,6 @@
     /* Source data */
     char* linestr;
 
-    /* Source buffer size */
-    size_t linestr_buf_len;
-
-    /* Source size */
-    size_t linestr_len;
-
     /* Current buffer position */
     char* bufptr;
   };
@@ -599,7 +593,8 @@ int main(int argc, char *argv[])
   parser = malloc(sizeof(struct yy_parser));
 
   /* Read source file */
-  parser->linestr_len = getdelim(&(parser->linestr), &(parser->linestr_buf_len), EOF, fp);
+  size_t linestr_buf_len;
+  getdelim(&(parser->linestr), &linestr_buf_len, EOF, fp);
   
   /* Close file */
   fclose(fp);
