@@ -1,11 +1,9 @@
-# Try static perl
+# Static Perl
 
 This is my experiment to create static perl implementation.
 
-## Studying bison(yacc)
+Perlish syntax, fast compile, fast runtime, fast culculation, parallel, GC.
 
-I'm studying bison. bison is a parser generator.
+## Run
 
-## Run bison
-
-    bison perls.y && gcc -O -o perls perls.tab.c && ./perls a.pl
+    bison sperl.y && gcc -O -o sperl sperl.tab.c && ./sperl test.spl

@@ -1,8 +1,0 @@
-bison rpn.y
-
-gcc -O -o rpn rpn.tab.c -lm
-
-bison perls.y
-gcc -O -o perls perls.tab.c
-
-bison perls.y && gcc -O -o perls perls.tab.c
