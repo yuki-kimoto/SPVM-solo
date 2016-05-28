@@ -13,6 +13,7 @@
 #define OP_OR 13
 #define OP_BIT_AND 14
 #define OP_BIT_OR 15
+#define OP_MODULO 16
 
 #define BASEOP int type;
 

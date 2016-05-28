@@ -89,6 +89,20 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           yylvalp->ival = OP_DIVIDE;
           return MULOP;
         }
+
+      case '%':
+        bufptr++;
+        if (*bufptr == '=') {
+          bufptr++;
+          parser->bufptr = bufptr;
+          yylvalp->ival = OP_MODULO;
+          return ASSIGNOP;
+        }
+        else {
+          parser->bufptr = bufptr;
+          yylvalp->ival = OP_MODULO;
+          return MULOP;
+        }
       
       case '|':
         bufptr++;
