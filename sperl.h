@@ -60,6 +60,6 @@ typedef union
 {
   OP* opval;
   int ival;
-} YYSTYPE;
+} yystype;
 
-#define YYSTYPE_IS_DECLARED
+#define YYSTYPE yystype
