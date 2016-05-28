@@ -49,7 +49,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         else {
           parser->bufptr = bufptr;
           yylvalp->ival = OP_ADD;
-          return ADDOP;
+          return '+';
         }
       
       /* Subtract */
@@ -71,7 +71,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         else {
           parser->bufptr = bufptr;
           yylvalp->ival = OP_SUBTRACT;
-          return ADDOP;
+          return '-';
         }
       /* Multiply */
       case '*':

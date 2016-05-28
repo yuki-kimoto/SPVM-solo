@@ -11,6 +11,7 @@
   #include "sperl.h"
 %}
 
+%token <ival> '+' '-'
 %token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR
 %token <ival> RELOP EQOP
 %token <ival> LAST CONTINUE
@@ -135,8 +136,10 @@ term
     { printf("DECOP term\n") }
   | term DECOP
     { printf("term DECOP\n") }
-  | term ADDOP term
+  | term '+' term
     { printf("term + term -> term\n"); }
+  | term '-' term
+    { printf("term - term -> term\n"); }
   | term MULOP term
     { printf("term * term -> term\n"); }
   | INT
