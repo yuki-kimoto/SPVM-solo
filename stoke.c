@@ -329,7 +329,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           bufptr++;
 
           /* Next is graph */
-          while(isalnum(*bufptr)) {
+          while(isalnum(*bufptr) || (*bufptr) == '_' || (*bufptr) == ':') {
             bufptr++;
           }
 
@@ -346,7 +346,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           yylvalp->opval = (OP*)op;
           return VAR;
         }
-        /* Number */
+        /* Number literal */
         else if (isdigit(c)) {
           char* cur_token_ptr = bufptr;
           
@@ -379,13 +379,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           return INT;
         }
         /* Keyword or word */
-        else if (isalnum(c) || c == '_') {
+        else if (isalpha(c) || c == '_') {
           /* Save current position */
           char* cur_token_ptr = bufptr;
           
           bufptr++;
           
-          while(isalnum(*bufptr) || (*bufptr) == '_') {
+          while(isalnum(*bufptr) || (*bufptr) == '_' || (*bufptr) == ':') {
             bufptr++;
           }
           

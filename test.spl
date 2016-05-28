@@ -134,3 +134,7 @@ while (1) {
 
 _sum();
 sum_foo();
+sum::foo();
+
+$sum_::foo;
+
