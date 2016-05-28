@@ -405,6 +405,10 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
             parser->bufptr = bufptr;
             return CONTINUE;
           }
+          else if (memcmp(keyword, "use", str_len) == 0) {
+            parser->bufptr = bufptr;
+            return USE;
+          }
           
           SVOP* op = malloc(sizeof(SVOP));
           op->type = OP_CONST_STRING;

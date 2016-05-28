@@ -12,7 +12,7 @@
 %}
 
 %token <ival> '+' '-'
-%token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR
+%token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR USE
 %token <ival> RELOP EQOP
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT
@@ -74,10 +74,10 @@ statement
     { printf("LAST ; -> statement\n"); }
   | CONTINUE ';'
     { printf("CONTINUE ; -> statement\n"); }
-  | RETURN term
-    { printf("RETURN term -> statement\n"); }
-  | RETURN '(' terms ')'
-    { printf("RETURN '(' terms ')' -> statement\n"); }
+  | RETURN term ';'
+    { printf("RETURN term ; -> statement\n"); }
+  | RETURN '(' terms ')' ';'
+    { printf("RETURN ( terms ) ; -> statement\n"); }
   
 declaration
   : declword declvar ';'
