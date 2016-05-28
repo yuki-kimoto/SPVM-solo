@@ -198,8 +198,15 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
       case '<':
         bufptr++;
         
+        if (*bufptr == '<') {
+          bufptr++;
+          
+          parser->bufptr = bufptr;
+          yylvalp->ival = OP_LEFT_SHIFT;
+          return SHIFTOP;
+        }
         /* <= */
-        if (*bufptr == '=') {
+        else if (*bufptr == '=') {
           bufptr++;
           
           parser->bufptr = bufptr;
@@ -216,8 +223,15 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
       case '>':
         bufptr++;
         
+        if (*bufptr == '>') {
+          bufptr++;
+          
+          parser->bufptr = bufptr;
+          yylvalp->ival = OP_RIGHT_SHIFT;
+          return SHIFTOP;
+        }
         /* >= */
-        if (*bufptr == '=') {
+        else if (*bufptr == '=') {
           bufptr++;
           
           parser->bufptr = bufptr;

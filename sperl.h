@@ -16,7 +16,8 @@
 #define OP_MODULO 16
 #define OP_BIT_XOR 17
 #define OP_NOT 18
-
+#define OP_LEFT_SHIFT 19
+#define OP_RIGHT_SHIFT 20
 
 #define BASEOP int type;
 

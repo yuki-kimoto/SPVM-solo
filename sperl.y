@@ -23,7 +23,7 @@
 %left <ival> BITANDOP
 %nonassoc EQOP
 %nonassoc RELOP
-/* %left <ival> SHIFTOP */
+%left <ival> SHIFTOP
 %left ADDOP /* "+" or "-" */
 %left MULOP
 %right <ival> '!' '~' UMINUS
@@ -151,6 +151,8 @@ term
     { printf("term BITANDOP term -> term\n"); }
   | term BITOROP term
     { printf("term BITOROP term -> term\n"); }
+  | term SHIFTOP term
+    { printf("term SHIFTOP term\n"); }
   | SUB '(' ')' block
     { printf("SUB () block -> term\n"); }
   | SUB '(' subdefargs ')' block

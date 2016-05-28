@@ -1,7 +1,5 @@
 package Point;
 
-1 + (2 - 3);
-
 has x;
 
 our $title = 2;
@@ -90,3 +88,6 @@ $title ^= $title;
 
 $title ||= 1;
 $title &&= 2;
+
+$title << 2;
+$title >> 2;
