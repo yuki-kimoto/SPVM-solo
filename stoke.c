@@ -123,9 +123,17 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         /* Or */
         if (*bufptr == '|') {
           bufptr++;
-          parser->bufptr = bufptr;
-          yylvalp->ival = OP_OR;
-          return OROP;
+          if (*bufptr == '=') {
+            bufptr++;
+            parser->bufptr = bufptr;
+            yylvalp->ival = OP_OR;
+            return ASSIGNOP;
+          }
+          else {
+            parser->bufptr = bufptr;
+            yylvalp->ival = OP_OR;
+            return OROP;
+          }
         }
         /* Bit or */
         else {
@@ -139,9 +147,17 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         /* Or */
         if (*bufptr == '&') {
           bufptr++;
-          parser->bufptr = bufptr;
-          yylvalp->ival = OP_AND;
-          return ANDOP;
+          if (*bufptr == '=') {
+            bufptr++;
+            parser->bufptr = bufptr;
+            yylvalp->ival = OP_AND;
+            return ASSIGNOP;
+          }
+          else {
+            parser->bufptr = bufptr;
+            yylvalp->ival = OP_AND;
+            return ANDOP;
+          }
         }
         /* Bit and */
         else {
