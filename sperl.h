@@ -16,7 +16,7 @@
 
 #define BASEOP int type;
 
-typedef struct yy_parser {
+typedef struct {
   /* Source data */
   char* linestr;
 
@@ -26,44 +26,40 @@ typedef struct yy_parser {
 
 void yyerror(yy_parser* parser, const char* s);
 
-struct op {
+typedef struct {
   BASEOP
-};
-typedef struct op OP;
+} OP;
 
-struct svop {
+typedef struct {
   BASEOP
   union {
     char* pv;
     int iv;
     double nv;
   } uv;
-};
-typedef struct svop SVOP;
+} SVOP;
 
-struct unop {
+typedef struct {
     BASEOP
     OP *	op_first;
-};
-typedef struct unop UNOP;
+} UNOP;
 
-struct binop {
-    BASEOP
-    OP *	op_first;
-    OP *	op_last;
-};
-typedef struct binop BINOP;
-
-struct listop {
+typedef struct {
     BASEOP
     OP *	op_first;
     OP *	op_last;
-};
-typedef struct binop LISTOP;
+} BINOP;
+
+typedef struct {
+    BASEOP
+    OP *	op_first;
+    OP *	op_last;
+} LISTOP;
 
 typedef union
 {
   OP* opval;
   int ival;
 } YYSTYPE;
+
 #define YYSTYPE_IS_DECLARED
