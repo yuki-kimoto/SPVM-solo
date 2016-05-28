@@ -220,6 +220,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         parser->bufptr = bufptr;
         return '!';
       
+      case '~':
+        bufptr++;
+        
+        parser->bufptr = bufptr;
+        return '~';
+      
       default:
         /* Variable */
         if (c == '$') {

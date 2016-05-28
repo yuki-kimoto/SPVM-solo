@@ -125,6 +125,8 @@ term
     { printf("VAR -> term (%s)\n", ((SVOP*)$1)->uv.pv); }
   | '!' term
     { printf("! term -> term\n"); }
+  | '~' term
+    { printf("~ term -> term\n"); }
   | term ADDOP term
     { printf("term + term -> term\n"); }
   | term MULOP term
