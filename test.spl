@@ -112,3 +112,5 @@ Test->x;
 Test->sum();
 Test->sum(1, 2);
 
+$test->x = 3;
+
