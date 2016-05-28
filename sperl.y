@@ -29,8 +29,8 @@
 /* %right <ival> '!' '~' UMINUS */
 /* %nonassoc <ival> PREINC PREDEC POSTINC POSTDEC */
 /* %left <ival> ARROW */
-/* %nonassoc <ival> ')' */
-/* %left <ival> '(' */
+%nonassoc <ival> ')'
+%left <ival> '('
 /* %left '[' '{' */
 
 %%
@@ -123,8 +123,10 @@ term
     { printf("term * term -> term\n"); }
   | INT
     { printf("INT -> term (%d)\n", ((SVOP*)$1)->uv.iv); }
-  | subname list
-    { printf("subname list -> term\n"); }
+  | subname '(' ')'
+    { printf("subname () -> term\n"); }
+  | subname '(' terms  ')'
+    { printf("subname (terms) -> term\n"); }
   | RETURN term
     { printf("RETURN term -> term\n"); }
   | RETURN list
