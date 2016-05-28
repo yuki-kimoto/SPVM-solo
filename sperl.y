@@ -56,9 +56,13 @@ block
 
 statement
   : SUB subname '(' ')' block
-    { printf("sub subname ( ) block -> statement\n"); }
+    { printf("SUB subname ( ) block -> statement\n"); }
   | SUB subname '(' subdefargs ')' block
-    { printf("sub subname ( subdefargs ) block -> statement\n"); }
+    { printf("SUB subname ( subdefargs ) block -> statement\n"); }
+  | OUR SUB subname '(' ')' block
+    { printf("OUR SUB subname ( ) block -> statement\n"); }
+  | OUR SUB subname '(' subdefargs ')' block
+    { printf("OUR SUB subname ( subdefargs ) block -> statement\n"); }
   | term ';'
     { printf("term ; -> statement\n") }
   | ';'

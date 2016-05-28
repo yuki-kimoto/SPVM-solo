@@ -117,3 +117,11 @@ $test->x = 3;
 use Point;
 use Point ();
 use Point (foo, bar);
+
+our sub sum () {
+  2;
+}
+
+our sub sum ($foo : int, $bar : float) {
+  1;
+}
