@@ -114,3 +114,6 @@ Test->sum(1, 2);
 
 $test->x = 3;
 
+use Point;
+use Point ();
+use Point (foo, bar);

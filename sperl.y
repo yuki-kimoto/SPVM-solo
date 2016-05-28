@@ -78,7 +78,17 @@ statement
     { printf("RETURN term ; -> statement\n"); }
   | RETURN '(' terms ')' ';'
     { printf("RETURN ( terms ) ; -> statement\n"); }
-  
+  | USE WORD ';'
+    { printf("USE WORD ; -> statement\n"); }
+  | USE WORD '(' ')' ';'
+    { printf("USE WORD ( ) ; -> statement\n"); }
+  | USE WORD '(' words ')' ';'
+    { printf("USE WORD ( words ) ; -> statement\n"); }
+
+words
+  : WORD
+  | words ',' WORD
+
 declaration
   : declword declvar ';'
     { printf("declword declvar ; -> declaration\n"); }
