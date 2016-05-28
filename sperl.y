@@ -70,6 +70,7 @@ statement
   | if
     { printf("if -> statement\n"); }
   | declaration
+    { printf("declaration -> statement\n"); }
   | FOR '(' declaration term ';' term ')' '{' statements '}'
     { printf("FOR ( declaration term ; term ) { statements }\n"); }
   | PACKAGE WORD ';'
