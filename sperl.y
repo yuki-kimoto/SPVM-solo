@@ -151,6 +151,8 @@ term
     { printf("SUB () block -> term\n"); }
   | SUB '(' subdefargs ')' block
     { printf("SUB ( subdefargs ) block -> term\n"); }
+  | '(' term ')'
+    { printf("( term ) -> term\n"); }
     
 subname
   : WORD
