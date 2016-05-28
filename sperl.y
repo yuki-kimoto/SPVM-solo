@@ -26,7 +26,7 @@
 %left <ival> SHIFTOP
 %left ADDOP
 %left MULOP
-%right <ival> '!' '~' UMINUS
+%right <ival> NOTOP BITNOTOP UMINUS
 %nonassoc <ival> INCOP DECOP
 /* %left <ival> ARROW */
 %nonassoc <ival> ')'
@@ -123,10 +123,10 @@ terms
 term
   : VAR
     { printf("VAR -> term (%s)\n", ((SVOP*)$1)->uv.pv); }
-  | '!' term
-    { printf("! term -> term\n"); }
-  | '~' term
-    { printf("~ term -> term\n"); }
+  | NOTOP term
+    { printf("NOTOP term -> term\n"); }
+  | BITNOTOP term
+    { printf("BITNOTOP term -> term\n"); }
   | INCOP term
     { printf("INCOP term\n") }
   | term INCOP

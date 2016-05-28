@@ -263,19 +263,21 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = '!';
+          yylvalp->ival = OP_NOT;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          return '!';
+          yylvalp->ival = OP_NOT;
+          return NOTOP;
         }
         
       case '~':
         bufptr++;
         
         parser->bufptr = bufptr;
-        return '~';
+        yylvalp->ival = OP_BIT_NOT;
+        return BITNOTOP;
       
       default:
         /* Variable */
