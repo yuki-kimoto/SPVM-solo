@@ -15,7 +15,7 @@
 %token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP EQOP
 %token <ival> LAST CONTINUE
-%token <opval> WORD VAR INT
+%token <opval> WORD VAR INT STRING
 
 %right <ival> ASSIGNOP
 %left <ival> OROP
@@ -91,7 +91,9 @@ statement
     { printf("USE WORD ( ) ; -> statement\n"); }
   | USE WORD '(' words ')' ';'
     { printf("USE WORD ( words ) ; -> statement\n"); }
-
+  | STRING
+    { printf("STRING(%s) -> statement\n", ((SVOP*)$1)->uv.pv); }
+    
 words
   : WORD
   | words ',' WORD

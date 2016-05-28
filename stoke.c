@@ -282,6 +282,44 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         yylvalp->ival = OP_BIT_NOT;
         return BITNOTOP;
       
+      case '"':
+        bufptr++;
+        
+        /* Save current position */
+        char* cur_token_ptr = bufptr;
+        
+        char* str;
+        if (*(bufptr + 1) == '"') {
+          str = malloc(1);
+          str[0] = '\0';
+          bufptr++;
+          bufptr++;
+        }
+        else {
+          while(*bufptr != '"' && *bufptr != '\0') {
+            bufptr++;
+          }
+          if (*bufptr == '\0') {
+            fprintf(stderr, "syntax error: string don't finish\n");
+            exit(1);
+          }
+          
+          size_t str_len = bufptr - cur_token_ptr;
+          str = malloc(str_len + 1);
+          memcpy(str, cur_token_ptr, str_len);
+          str[str_len] = '\0';
+
+          bufptr++;
+        }
+        
+        SVOP* op = malloc(sizeof(SVOP));
+        op->type = OP_CONST_STRING;
+        op->uv.pv = str;
+        
+        parser->bufptr = bufptr;
+        yylvalp->opval = (OP*)op;
+        return STRING;
+      
       default:
         /* Variable */
         if (c == '$') {
