@@ -71,6 +71,10 @@ statement
     { printf("LAST ; -> statement\n"); }
   | CONTINUE ';'
     { printf("CONTINUE ; -> statement\n"); }
+  | RETURN term
+    { printf("RETURN term -> statement\n"); }
+  | RETURN '(' terms ')'
+    { printf("RETURN '(' terms ')' -> statement\n"); }
   
 declaration
   : declword declvar ';'
@@ -127,10 +131,6 @@ term
     { printf("subname () -> term\n"); }
   | subname '(' terms  ')'
     { printf("subname (terms) -> term\n"); }
-  | RETURN term
-    { printf("RETURN term -> term\n"); }
-  | RETURN list
-    { printf("RETURN list -> term\n"); }
   | term RELOP term
     { printf("term RELOP term%d\n", $2); }
   | term EQOP term
