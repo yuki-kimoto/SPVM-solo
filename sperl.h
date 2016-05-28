@@ -14,6 +14,8 @@
 #define OP_BIT_AND 14
 #define OP_BIT_OR 15
 #define OP_MODULO 16
+#define OP_BIT_XOR 17
+
 
 #define BASEOP int type;
 

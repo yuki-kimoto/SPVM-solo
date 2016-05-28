@@ -103,7 +103,21 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           yylvalp->ival = OP_MODULO;
           return MULOP;
         }
-      
+
+      case '^':
+        bufptr++;
+        if (*bufptr == '=') {
+          bufptr++;
+          parser->bufptr = bufptr;
+          yylvalp->ival = OP_BIT_XOR;
+          return ASSIGNOP;
+        }
+        else {
+          parser->bufptr = bufptr;
+          yylvalp->ival = OP_BIT_XOR;
+          return MULOP;
+        }
+            
       case '|':
         bufptr++;
         /* Or */
