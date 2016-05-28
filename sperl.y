@@ -152,12 +152,6 @@ subname
   : WORD
     { printf("WORD -> subname\n"); }
 
-list
-  :  '(' ')'
-    { printf("( ) -> list\n"); }
-  | '(' terms ')'
-    { printf("( terms ) -> list\n"); }
-
 subdefargslist
   : '(' ')'
     { printf("( ) -> subdefargslist\n"); }
