@@ -54,8 +54,10 @@ block
     { printf("{ statements } -> block\n"); }
 
 statement
-  : SUB subname subdefargslist block
-    { printf("sub subname subdefargslist block -> statement\n"); }
+  : SUB subname '(' ')' block
+    { printf("sub subname ( ) block -> statement\n"); }
+  | SUB subname '(' subdefargs ')' block
+    { printf("sub subname ( subdefargs ) block -> statement\n"); }
   | term ';'
     { printf("term ; -> statement\n") }
   | ';'
@@ -145,18 +147,14 @@ term
     { printf("term BITANDOP term -> term\n"); }
   | term BITOROP term
     { printf("term BITOROP term -> term\n"); }
-  | SUB subdefargslist block
-    { printf("SUB subdefargslist block -> term\n"); }
+  | SUB '(' ')' block
+    { printf("SUB () block -> term\n"); }
+  | SUB '(' subdefargs ')' block
+    { printf("SUB ( subdefargs ) block -> term\n"); }
     
 subname
   : WORD
     { printf("WORD -> subname\n"); }
-
-subdefargslist
-  : '(' ')'
-    { printf("( ) -> subdefargslist\n"); }
-  | '(' subdefargs ')'
-    { printf("( subdefargs ) -> subdefargslist\n"); }
 
 subdefargs
   : subdefarg

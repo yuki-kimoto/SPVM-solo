@@ -66,6 +66,7 @@ my $title : int = 4;
 1 & 3;
 
 my $title = sub () { };
+my $title = sub ($p : int) { };
 
 $title += 1;
 
