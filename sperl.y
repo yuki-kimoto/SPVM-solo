@@ -26,7 +26,7 @@
 /* %left <ival> SHIFTOP */
 %left ADDOP /* "+" or "-" */
 %left MULOP
-/* %right <ival> '!' '~' UMINUS */
+%right <ival> '!' '~' UMINUS
 /* %nonassoc <ival> PREINC PREDEC POSTINC POSTDEC */
 /* %left <ival> ARROW */
 %nonassoc <ival> ')'
@@ -123,6 +123,8 @@ terms
 term
   : VAR
     { printf("VAR -> term (%s)\n", ((SVOP*)$1)->uv.pv); }
+  | '!' term
+    { printf("! term -> term\n"); }
   | term ADDOP term
     { printf("term + term -> term\n"); }
   | term MULOP term

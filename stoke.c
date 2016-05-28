@@ -214,6 +214,11 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           yylvalp->ival = OP_GT;
           return RELOP;
         }
+      case '!':
+        bufptr++;
+        
+        parser->bufptr = bufptr;
+        return '!';
       
       default:
         /* Variable */
