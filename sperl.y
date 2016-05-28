@@ -136,9 +136,13 @@ term
     { printf("DECOP term\n") }
   | term DECOP
     { printf("term DECOP\n") }
-  | term '+' term
+  | '+' term %prec UMINUS
+    { printf("+ term -> term\n"); }
+  | '-' term %prec UMINUS
+    { printf("- term -> term\n"); }
+  | term '+' term %prec ASSIGNOP
     { printf("term + term -> term\n"); }
-  | term '-' term
+  | term '-' term %prec ASSIGNOP
     { printf("term - term -> term\n"); }
   | term MULOP term
     { printf("term * term -> term\n"); }

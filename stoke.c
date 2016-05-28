@@ -48,7 +48,6 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_ADD;
           return '+';
         }
       
@@ -70,7 +69,6 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_SUBTRACT;
           return '-';
         }
       /* Multiply */
