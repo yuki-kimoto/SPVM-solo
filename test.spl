@@ -131,3 +131,6 @@ while (1) {
 }
 "abcde";
 "";
+
+_sum();
+sum_foo();

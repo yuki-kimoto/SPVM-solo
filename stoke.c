@@ -379,14 +379,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           return INT;
         }
         /* Keyword or word */
-        else if (isalnum(c)) {
+        else if (isalnum(c) || c == '_') {
           /* Save current position */
           char* cur_token_ptr = bufptr;
           
           bufptr++;
           
-          /* Next is graph */
-          while(isalnum(*bufptr)) {
+          while(isalnum(*bufptr) || (*bufptr) == '_') {
             bufptr++;
           }
           
