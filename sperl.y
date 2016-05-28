@@ -24,10 +24,10 @@
 %nonassoc EQOP
 %nonassoc RELOP
 %left <ival> SHIFTOP
-%left ADDOP /* "+" or "-" */
+%left ADDOP
 %left MULOP
 %right <ival> '!' '~' UMINUS
-/* %nonassoc <ival> PREINC PREDEC POSTINC POSTDEC */
+%nonassoc <ival> INCOP DECOP
 /* %left <ival> ARROW */
 %nonassoc <ival> ')'
 %left <ival> '('
@@ -127,6 +127,14 @@ term
     { printf("! term -> term\n"); }
   | '~' term
     { printf("~ term -> term\n"); }
+  | INCOP term
+    { printf("INCOP term\n") }
+  | term INCOP
+    { printf("term INCOP\n") }
+  | DECOP term
+    { printf("DECOP term\n") }
+  | term DECOP
+    { printf("term DECOP\n") }
   | term ADDOP term
     { printf("term + term -> term\n"); }
   | term MULOP term

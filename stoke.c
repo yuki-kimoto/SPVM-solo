@@ -34,7 +34,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
       case '+':
         bufptr++;
         
-        if (*bufptr == '=') {
+        if (*bufptr == '+') {
+          bufptr++;
+          parser->bufptr = bufptr;
+          yylvalp->ival = OP_INC;
+          return INCOP;
+        }
+        else if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
           yylvalp->ival = OP_ADD;
@@ -49,7 +55,14 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
       /* Subtract */
       case '-':
         bufptr++;
-        if (*bufptr == '=') {
+        
+        if (*bufptr == '-') {
+          bufptr++;
+          parser->bufptr = bufptr;
+          yylvalp->ival = OP_DEC;
+          return DECOP;
+        }
+        else if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
           yylvalp->ival = OP_SUBTRACT;

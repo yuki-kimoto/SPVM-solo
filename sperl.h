@@ -18,6 +18,8 @@
 #define OP_NOT 18
 #define OP_LEFT_SHIFT 19
 #define OP_RIGHT_SHIFT 20
+#define OP_INC 21
+#define OP_DEC 22
 
 #define BASEOP int type;
 
