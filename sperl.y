@@ -29,7 +29,7 @@
 %left MULOP
 %right <ival> NOTOP BITNOTOP UMINUS
 %nonassoc <ival> INCOP DECOP
-/* %left <ival> ARROW */
+%left <ival> ARROW
 %nonassoc <ival> ')'
 %left <ival> '('
 %left '[' '{'
@@ -174,6 +174,12 @@ term
     { printf("SUB ( subdefargs ) block -> term\n"); }
   | '(' term ')'
     { printf("( term ) -> term\n"); }
+  | VAR ARROW WORD
+    { printf("VAR ARROW WORD -> term\n"); }
+  | VAR ARROW WORD '(' ')'
+    { printf("VAR ARROW WORD ( )\n"); }
+  | VAR ARROW WORD '(' terms ')'
+    { printf("VAR ARROW WORD ( term )\n"); }
     
 subname
   : WORD

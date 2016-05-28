@@ -55,7 +55,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
       case '-':
         bufptr++;
         
-        if (*bufptr == '-') {
+        if (*bufptr == '>') {
+          bufptr++;
+          parser->bufptr = bufptr;
+          return ARROW;
+        }
+        else if (*bufptr == '-') {
           bufptr++;
           parser->bufptr = bufptr;
           yylvalp->ival = OP_DEC;
