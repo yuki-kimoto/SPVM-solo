@@ -12,7 +12,7 @@
 %}
 
 %token <ival> '+' '-'
-%token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR USE
+%token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP EQOP
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT
@@ -73,6 +73,8 @@ statement
     { printf("declaration -> statement\n"); }
   | FOR '(' declaration term ';' term ')' '{' statements '}'
     { printf("FOR ( declaration term ; term ) { statements }\n"); }
+  | WHILE '(' term ')' block
+    { printf("WHILE ( term ) block\n"); }
   | PACKAGE WORD ';'
     { printf("PACKAGE WORD ; -> statement\n"); }
   | LAST ';'
