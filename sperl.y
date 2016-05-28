@@ -180,6 +180,12 @@ term
     { printf("VAR ARROW WORD ( )\n"); }
   | VAR ARROW WORD '(' terms ')'
     { printf("VAR ARROW WORD ( term )\n"); }
+  | WORD ARROW WORD
+    { printf("VAR ARROW WORD -> term\n"); }
+  | WORD ARROW WORD '(' ')'
+    { printf("VAR ARROW WORD ( )\n"); }
+  | WORD ARROW WORD '(' terms ')'
+    { printf("VAR ARROW WORD ( term )\n"); }
     
 subname
   : WORD

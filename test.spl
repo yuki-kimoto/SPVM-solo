@@ -108,3 +108,7 @@ $test->x;
 $test->sum();
 $test->sum(1, 2);
 
+Test->x;
+Test->sum();
+Test->sum(1, 2);
+
