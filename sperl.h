@@ -60,3 +60,10 @@ struct listop {
     OP *	op_last;
 };
 typedef struct binop LISTOP;
+
+typedef union
+{
+  OP* opval;
+  int ival;
+} YYSTYPE;
+#define YYSTYPE_IS_DECLARED
