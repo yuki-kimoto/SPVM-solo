@@ -247,9 +247,17 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
       case '!':
         bufptr++;
         
-        parser->bufptr = bufptr;
-        return '!';
-      
+        if (*bufptr == '=') {
+          bufptr++;
+          parser->bufptr = bufptr;
+          yylvalp->ival = '!';
+          return ASSIGNOP;
+        }
+        else {
+          parser->bufptr = bufptr;
+          return '!';
+        }
+        
       case '~':
         bufptr++;
         
