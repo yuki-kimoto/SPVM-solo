@@ -159,9 +159,9 @@ term
     { printf("+ term -> term\n"); }
   | '-' term %prec UMINUS
     { printf("- term -> term\n"); }
-  | term '+' term %prec ASSIGNOP
+  | term '+' term %prec ADDOP
     { printf("term + term -> term\n"); }
-  | term '-' term %prec ASSIGNOP
+  | term '-' term %prec ADDOP
     { printf("term - term -> term\n"); }
   | term MULOP term
     { printf("term * term -> term\n"); }

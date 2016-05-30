@@ -2,3 +2,4 @@ sperl
 sperl.tab.c
 sperl.tab.h
 core.*
+sperl.output

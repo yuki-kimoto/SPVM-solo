@@ -1,4 +1,4 @@
-package Point;
+package Point3D;
 
 has x;
 
@@ -137,4 +137,3 @@ sum_foo();
 sum::foo();
 
 $sum_::foo;
-
