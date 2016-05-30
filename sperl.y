@@ -209,7 +209,9 @@ term
     { printf("VAR ARROW WORD ( )\n"); }
   | WORD ARROW WORD '(' terms ')'
     { printf("VAR ARROW WORD ( terms )\n"); }
-    
+  | VAR ARROW '[' term ']'
+    { printf("VAR ARROW [ term ]\n"); }
+
 subname
   : WORD
     { printf("WORD -> subname\n"); }

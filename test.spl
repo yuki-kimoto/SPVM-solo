@@ -137,3 +137,5 @@ sum_foo();
 sum::foo();
 
 $sum_::foo;
+
+$title->[3];
