@@ -140,3 +140,5 @@ $sum_::foo;
 
 $title->[3];
 
+my $title = true;
+my $title = false;

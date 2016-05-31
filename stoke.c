@@ -450,6 +450,26 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
             parser->bufptr = bufptr;
             return WHILE;
           }
+          else if (memcmp(keyword, "true", str_len) == 0) {
+            SVOP* op = malloc(sizeof(SVOP));
+            op->type = OP_CONST_BOOL;
+            op->uv.iv = 1;
+
+            parser->bufptr = bufptr;
+            yylvalp->opval = (OP*)op;
+
+            return BOOL;
+          }
+          else if (memcmp(keyword, "false", str_len) == 0) {
+            SVOP* op = malloc(sizeof(SVOP));
+            op->type = OP_CONST_BOOL;
+            op->uv.iv = 0;
+
+            parser->bufptr = bufptr;
+            yylvalp->opval = (OP*)op;
+
+            return BOOL;
+          }
           
           SVOP* op = malloc(sizeof(SVOP));
           op->type = OP_CONST_STRING;

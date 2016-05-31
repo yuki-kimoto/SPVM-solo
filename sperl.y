@@ -15,7 +15,7 @@
 %token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP EQOP
 %token <ival> LAST CONTINUE
-%token <opval> WORD VAR INT STRING
+%token <opval> WORD VAR INT STRING BOOL
 
 %right <ival> ASSIGNOP
 %left <ival> OROP
@@ -167,6 +167,8 @@ term
     { printf("term * term -> term\n"); }
   | INT
     { printf("INT -> term (%d)\n", ((SVOP*)$1)->uv.iv); }
+  | BOOL
+    { printf("BOOL -> term (%d)\n", ((SVOP*)$1)->uv.iv); }
   | subname '(' ')'
     { printf("subname () -> term\n"); }
   | subname '(' terms  ')'

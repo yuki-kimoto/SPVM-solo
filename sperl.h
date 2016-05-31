@@ -21,6 +21,7 @@
 #define OP_INC 21
 #define OP_DEC 22
 #define OP_BIT_NOT 23
+#define OP_CONST_BOOL 24
 
 #define BASEOP int type;
 
