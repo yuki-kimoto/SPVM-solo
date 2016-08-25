@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "sperl.h"
+#include "static_perl.h"
 
 int main(int argc, char *argv[])
 {

@@ -1,5 +1,5 @@
 sperl
-sperl.tab.c
-sperl.tab.h
+static_perl.tab.c
+static_perl.tab.h
 core.*
-sperl.output
+static_perl.output

@@ -6,7 +6,7 @@ Perlish syntax, fast compile, fast runtime, fast culculation, parallel, GC.
 
 ## Run
 
-    bison -d sperl.y && gcc -O -o sperl sperl.tab.c sperlmain.c stoke.c && ./sperl test.spl
+    bison -d static_perl.y && gcc -O -o sperl static_perl.tab.c static_perlmain.c static_toke.c && ./sperl test.spl
 
 I only created syntax rule. This command ouput ruduce result.
 

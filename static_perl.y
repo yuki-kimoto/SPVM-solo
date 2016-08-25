@@ -8,7 +8,7 @@
   #include <stdlib.h>
   #include <string.h>
   
-  #include "sperl.h"
+  #include "static_perl.h"
 %}
 
 %token <ival> '+' '-'

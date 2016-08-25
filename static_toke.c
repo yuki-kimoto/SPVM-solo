@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sperl.h"
-#include "sperl.tab.h"
+#include "static_perl.h"
+#include "static_perl.tab.h"
 
 /* Get token */
 int yylex(YYSTYPE* yylvalp, yy_parser* parser)
