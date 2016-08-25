@@ -29,6 +29,12 @@ enum STATIC_OP_ID {
 /* Token(OP) type */
 #define STATIC_BASEOP int type;
 
+/* Token(OP) expect ID */
+enum STATIC_OP_EXPECT {
+  STATIC_OP_EXPECT_NORMAL,
+  STATIC_OP_EXPECT_WORD
+};
+
 typedef struct {
   STATIC_BASEOP
 } STATIC_OP;
@@ -66,6 +72,9 @@ typedef struct {
 
   /* Current buffer position */
   char* bufptr;
+  
+  /* Expect next */
+  int expect;
 } static_yy_parser;
 
 typedef union

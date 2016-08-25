@@ -75,6 +75,7 @@ Test->sum();
 Test->sum(1, 2);
 
 $test->x = 3;
+$test->last;
 
 use Point;
 use Point ();
@@ -98,6 +99,7 @@ my $title : int = true;
 my $title : int = false;
 
 has x : int;
+has last : int;
 
 our $title : int = 2;
 
@@ -133,6 +135,8 @@ sub sum : int ($foo : int, $bar : float) {
   
   return 1;
 }
+
+sub last : int ($foo : int) { }
 
 package Point3D;
 

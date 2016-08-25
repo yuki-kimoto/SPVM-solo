@@ -9,6 +9,8 @@
 int static_yylex(YYSTYPE* static_yylvalp, static_yy_parser* parser)
 {
   char* bufptr = parser->bufptr;
+  enum STATIC_OP_EXPECT expect = parser->expect;
+  parser->expect = STATIC_OP_EXPECT_NORMAL;
   
   while(1) {
     /* Get current character */
@@ -58,6 +60,7 @@ int static_yylex(YYSTYPE* static_yylvalp, static_yy_parser* parser)
         if (*bufptr == '>') {
           bufptr++;
           parser->bufptr = bufptr;
+          parser->expect = STATIC_OP_EXPECT_WORD;
           return ARROW;
         }
         else if (*bufptr == '-') {
@@ -394,81 +397,85 @@ int static_yylex(YYSTYPE* static_yylvalp, static_yy_parser* parser)
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
           
-          if (memcmp(keyword, "my", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return MY;
-          }
-          else if (memcmp(keyword, "our", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return OUR;
-          }
-          else if (memcmp(keyword, "has", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return HAS;
-          }
-          else if (memcmp(keyword, "sub", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return SUB;
-          }
-          else if (memcmp(keyword, "package", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return PACKAGE;
-          }
-          else if (memcmp(keyword, "if", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return IF;
-          }
-          else if (memcmp(keyword, "elsif", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return ELSIF;
-          }
-          else if (memcmp(keyword, "else", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return ELSE;
-          }
-          else if (memcmp(keyword, "return", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return RETURN;
-          }
-          else if (memcmp(keyword, "for", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return FOR;
-          }
-          else if (memcmp(keyword, "last", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return LAST;
-          }
-          else if (memcmp(keyword, "continue", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return CONTINUE;
-          }
-          else if (memcmp(keyword, "use", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return USE;
-          }
-          else if (memcmp(keyword, "while", str_len) == 0) {
-            parser->bufptr = bufptr;
-            return WHILE;
-          }
-          else if (memcmp(keyword, "true", str_len) == 0) {
-            STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
-            op->type = STATIC_OP_CONST_BOOL;
-            op->uv.iv = 1;
+          if (expect != STATIC_OP_EXPECT_WORD) {
+            if (memcmp(keyword, "my", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return MY;
+            }
+            else if (memcmp(keyword, "our", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return OUR;
+            }
+            else if (memcmp(keyword, "has", str_len) == 0) {
+              parser->bufptr = bufptr;
+              parser->expect = STATIC_OP_EXPECT_WORD;
+              return HAS;
+            }
+            else if (memcmp(keyword, "sub", str_len) == 0) {
+              parser->bufptr = bufptr;
+              parser->expect = STATIC_OP_EXPECT_WORD;
+              return SUB;
+            }
+            else if (memcmp(keyword, "package", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return PACKAGE;
+            }
+            else if (memcmp(keyword, "if", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return IF;
+            }
+            else if (memcmp(keyword, "elsif", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return ELSIF;
+            }
+            else if (memcmp(keyword, "else", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return ELSE;
+            }
+            else if (memcmp(keyword, "return", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return RETURN;
+            }
+            else if (memcmp(keyword, "for", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return FOR;
+            }
+            else if (memcmp(keyword, "last", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return LAST;
+            }
+            else if (memcmp(keyword, "continue", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return CONTINUE;
+            }
+            else if (memcmp(keyword, "use", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return USE;
+            }
+            else if (memcmp(keyword, "while", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return WHILE;
+            }
+            else if (memcmp(keyword, "true", str_len) == 0) {
+              STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
+              op->type = STATIC_OP_CONST_BOOL;
+              op->uv.iv = 1;
 
-            parser->bufptr = bufptr;
-            static_yylvalp->opval = (STATIC_OP*)op;
+              parser->bufptr = bufptr;
+              static_yylvalp->opval = (STATIC_OP*)op;
 
-            return BOOL;
-          }
-          else if (memcmp(keyword, "false", str_len) == 0) {
-            STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
-            op->type = STATIC_OP_CONST_BOOL;
-            op->uv.iv = 0;
+              return BOOL;
+            }
+            else if (memcmp(keyword, "false", str_len) == 0) {
+              STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
+              op->type = STATIC_OP_CONST_BOOL;
+              op->uv.iv = 0;
 
-            parser->bufptr = bufptr;
-            static_yylvalp->opval = (STATIC_OP*)op;
+              parser->bufptr = bufptr;
+              static_yylvalp->opval = (STATIC_OP*)op;
 
-            return BOOL;
+              return BOOL;
+            }
           }
           
           STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
