@@ -1,4 +1,4 @@
-// Token ID
+/* Token ID */
 #define STATIC_OP_CONST_INT 1
 #define STATIC_OP_CONST_FLOAT 2
 #define STATIC_OP_CONST_STRING 3
@@ -24,18 +24,8 @@
 #define STATIC_OP_BIT_NOT 23
 #define STATIC_OP_CONST_BOOL 24
 
-// Token type
+/* Token type */
 #define BASEOP_STATIC int type;
-
-typedef struct {
-  /* Source data */
-  char* linestr;
-
-  /* Current buffer position */
-  char* bufptr;
-} yy_parser;
-
-void yyerror(yy_parser* parser, const char* s);
 
 typedef struct {
   BASEOP_STATIC
@@ -72,5 +62,16 @@ typedef union
   OP_STATIC* opval;
   int ival;
 } yystype;
+
+/* Parser type */
+typedef struct {
+  /* Source data */
+  char* linestr;
+
+  /* Current buffer position */
+  char* bufptr;
+} yy_parser;
+
+void yyerror(yy_parser* parser, const char* s);
 
 #define YYSTYPE yystype
