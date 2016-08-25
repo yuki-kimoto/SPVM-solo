@@ -33,8 +33,8 @@ int main(int argc, char *argv[])
   /* Initialize parser information */
   parser->bufptr = parser->linestr;
   
-  /* call yyparse */
-  int parse_success = yyparse(parser);
+  /* call static_yyparse */
+  int parse_success = static_yyparse(parser);
   
   free(parser->linestr);
   free(parser);

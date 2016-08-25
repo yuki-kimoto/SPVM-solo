@@ -6,7 +6,7 @@
 #include "static_perl.tab.h"
 
 /* Get token */
-int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
+int static_yylex(YYSTYPE* static_yylvalp, yy_parser_static* parser)
 {
   char* bufptr = parser->bufptr;
   
@@ -37,13 +37,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
         if (*bufptr == '+') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_INC;
+          static_yylvalp->ival = STATIC_OP_INC;
           return INCOP;
         }
         else if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_ADD;
+          static_yylvalp->ival = STATIC_OP_ADD;
           return ASSIGNOP;
         }
         else {
@@ -63,13 +63,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
         else if (*bufptr == '-') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_DEC;
+          static_yylvalp->ival = STATIC_OP_DEC;
           return DECOP;
         }
         else if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_SUBTRACT;
+          static_yylvalp->ival = STATIC_OP_SUBTRACT;
           return ASSIGNOP;
         }
         else {
@@ -82,12 +82,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_MULTIPLY;
+          static_yylvalp->ival = STATIC_OP_MULTIPLY;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_MULTIPLY;
+          static_yylvalp->ival = STATIC_OP_MULTIPLY;
           return MULOP;
         }
       
@@ -97,12 +97,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_DIVIDE;
+          static_yylvalp->ival = STATIC_OP_DIVIDE;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_DIVIDE;
+          static_yylvalp->ival = STATIC_OP_DIVIDE;
           return MULOP;
         }
 
@@ -111,12 +111,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_MODULO;
+          static_yylvalp->ival = STATIC_OP_MODULO;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_MODULO;
+          static_yylvalp->ival = STATIC_OP_MODULO;
           return MULOP;
         }
 
@@ -125,12 +125,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_BIT_XOR;
+          static_yylvalp->ival = STATIC_OP_BIT_XOR;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_BIT_XOR;
+          static_yylvalp->ival = STATIC_OP_BIT_XOR;
           return MULOP;
         }
             
@@ -142,19 +142,19 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
           if (*bufptr == '=') {
             bufptr++;
             parser->bufptr = bufptr;
-            yylvalp->ival = STATIC_OP_OR;
+            static_yylvalp->ival = STATIC_OP_OR;
             return ASSIGNOP;
           }
           else {
             parser->bufptr = bufptr;
-            yylvalp->ival = STATIC_OP_OR;
+            static_yylvalp->ival = STATIC_OP_OR;
             return OROP;
           }
         }
         /* Bit or */
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_BIT_OR;
+          static_yylvalp->ival = STATIC_OP_BIT_OR;
           return BITOROP;
         }
 
@@ -166,19 +166,19 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
           if (*bufptr == '=') {
             bufptr++;
             parser->bufptr = bufptr;
-            yylvalp->ival = STATIC_OP_AND;
+            static_yylvalp->ival = STATIC_OP_AND;
             return ASSIGNOP;
           }
           else {
             parser->bufptr = bufptr;
-            yylvalp->ival = STATIC_OP_AND;
+            static_yylvalp->ival = STATIC_OP_AND;
             return ANDOP;
           }
         }
         /* Bit and */
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_BIT_AND;
+          static_yylvalp->ival = STATIC_OP_BIT_AND;
           return BITANDOP;
         }
       
@@ -207,7 +207,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
         /* = */
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = 0;
+          static_yylvalp->ival = 0;
           return ASSIGNOP;
         }
         
@@ -218,7 +218,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
           bufptr++;
           
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_LEFT_SHIFT;
+          static_yylvalp->ival = STATIC_OP_LEFT_SHIFT;
           return SHIFTOP;
         }
         /* <= */
@@ -226,13 +226,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
           bufptr++;
           
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_LE;
+          static_yylvalp->ival = STATIC_OP_LE;
           return RELOP;
         }
         /* < */
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_LT;
+          static_yylvalp->ival = STATIC_OP_LT;
           return RELOP;
         }
       
@@ -243,7 +243,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
           bufptr++;
           
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_RIGHT_SHIFT;
+          static_yylvalp->ival = STATIC_OP_RIGHT_SHIFT;
           return SHIFTOP;
         }
         /* >= */
@@ -251,13 +251,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
           bufptr++;
           
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_GE;
+          static_yylvalp->ival = STATIC_OP_GE;
           return RELOP;
         }
         /* < */
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_GT;
+          static_yylvalp->ival = STATIC_OP_GT;
           return RELOP;
         }
       case '!':
@@ -266,12 +266,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_NOT;
+          static_yylvalp->ival = STATIC_OP_NOT;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = STATIC_OP_NOT;
+          static_yylvalp->ival = STATIC_OP_NOT;
           return NOTOP;
         }
         
@@ -279,7 +279,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
         bufptr++;
         
         parser->bufptr = bufptr;
-        yylvalp->ival = STATIC_OP_BIT_NOT;
+        static_yylvalp->ival = STATIC_OP_BIT_NOT;
         return BITNOTOP;
       
       case '"':
@@ -317,7 +317,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
         op->uv.pv = str;
         
         parser->bufptr = bufptr;
-        yylvalp->opval = (OP_STATIC*)op;
+        static_yylvalp->opval = (OP_STATIC*)op;
         return STRING;
       
       default:
@@ -343,7 +343,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
           op->uv.pv = var;
           
           parser->bufptr = bufptr;
-          yylvalp->opval = (OP_STATIC*)op;
+          static_yylvalp->opval = (OP_STATIC*)op;
           return VAR;
         }
         /* Number literal */
@@ -375,7 +375,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
           op->uv.iv = num;
           
           parser->bufptr = bufptr;
-          yylvalp->opval = (OP_STATIC*)op;
+          static_yylvalp->opval = (OP_STATIC*)op;
           return INT;
         }
         /* Keyword or word */
@@ -456,7 +456,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
             op->uv.iv = 1;
 
             parser->bufptr = bufptr;
-            yylvalp->opval = (OP_STATIC*)op;
+            static_yylvalp->opval = (OP_STATIC*)op;
 
             return BOOL;
           }
@@ -466,7 +466,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
             op->uv.iv = 0;
 
             parser->bufptr = bufptr;
-            yylvalp->opval = (OP_STATIC*)op;
+            static_yylvalp->opval = (OP_STATIC*)op;
 
             return BOOL;
           }
@@ -476,7 +476,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
           op->uv.pv = keyword;
           
           parser->bufptr = bufptr;
-          yylvalp->opval = (OP_STATIC*)op;
+          static_yylvalp->opval = (OP_STATIC*)op;
           return WORD;
         }
         
@@ -489,7 +489,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
 }
 
 /* Function for error */
-void yyerror(yy_parser_static* parser, const char* s)
+void static_yyerror(yy_parser_static* parser, const char* s)
 {
   fprintf(stderr, "error: %s\n", s);
 }

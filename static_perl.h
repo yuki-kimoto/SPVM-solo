@@ -72,6 +72,6 @@ typedef union
   int ival;
 } yystype_static;
 
-void yyerror(yy_parser_static* parser, const char* s);
+void static_yyerror(yy_parser_static* parser, const char* s);
 
 #define YYSTYPE yystype_static
