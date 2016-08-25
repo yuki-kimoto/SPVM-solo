@@ -317,7 +317,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         op->uv.pv = str;
         
         parser->bufptr = bufptr;
-        yylvalp->opval = (OP*)op;
+        yylvalp->opval = (OP_STATIC*)op;
         return STRING;
       
       default:
@@ -343,7 +343,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           op->uv.pv = var;
           
           parser->bufptr = bufptr;
-          yylvalp->opval = (OP*)op;
+          yylvalp->opval = (OP_STATIC*)op;
           return VAR;
         }
         /* Number literal */
@@ -375,7 +375,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           op->uv.iv = num;
           
           parser->bufptr = bufptr;
-          yylvalp->opval = (OP*)op;
+          yylvalp->opval = (OP_STATIC*)op;
           return INT;
         }
         /* Keyword or word */
@@ -456,7 +456,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
             op->uv.iv = 1;
 
             parser->bufptr = bufptr;
-            yylvalp->opval = (OP*)op;
+            yylvalp->opval = (OP_STATIC*)op;
 
             return BOOL;
           }
@@ -466,7 +466,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
             op->uv.iv = 0;
 
             parser->bufptr = bufptr;
-            yylvalp->opval = (OP*)op;
+            yylvalp->opval = (OP_STATIC*)op;
 
             return BOOL;
           }
@@ -476,7 +476,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           op->uv.pv = keyword;
           
           parser->bufptr = bufptr;
-          yylvalp->opval = (OP*)op;
+          yylvalp->opval = (OP_STATIC*)op;
           return WORD;
         }
         

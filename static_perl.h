@@ -39,7 +39,7 @@ void yyerror(yy_parser* parser, const char* s);
 
 typedef struct {
   BASEOP_STATIC
-} OP;
+} OP_STATIC;
 
 typedef struct {
   BASEOP_STATIC
@@ -52,24 +52,24 @@ typedef struct {
 
 typedef struct {
     BASEOP_STATIC
-    OP *	op_first;
+    OP_STATIC*	op_first;
 } UNOP_STATIC;
 
 typedef struct {
     BASEOP_STATIC
-    OP *	op_first;
-    OP *	op_last;
+    OP_STATIC *	op_first;
+    OP_STATIC *	op_last;
 } BINOP_STATIC;
 
 typedef struct {
     BASEOP_STATIC
-    OP *	op_first;
-    OP *	op_last;
+    OP_STATIC*	op_first;
+    OP_STATIC*	op_last;
 } LISTOP_STATIC;
 
 typedef union
 {
-  OP* opval;
+  OP_STATIC* opval;
   int ival;
 } yystype;
 
