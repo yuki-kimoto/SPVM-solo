@@ -57,13 +57,7 @@ typedef struct {
     OP_STATIC*	op_last;
 } LISTOP_STATIC;
 
-typedef union
-{
-  OP_STATIC* opval;
-  int ival;
-} yystype;
-
-/* Parser type */
+/* Parser information */
 typedef struct {
   /* Source data */
   char* linestr;
@@ -71,6 +65,12 @@ typedef struct {
   /* Current buffer position */
   char* bufptr;
 } yy_parser;
+
+typedef union
+{
+  OP_STATIC* opval;
+  int ival;
+} yystype;
 
 void yyerror(yy_parser* parser, const char* s);
 
