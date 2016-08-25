@@ -93,12 +93,12 @@ words
   | words ',' WORD
 
 declvar
-  : MY VAR ':' type
-    { printf("MY VAR -> declvar\n"); }
-  | OUR VAR ':' type
-    { printf("OUR VAR -> declvar\n"); }
-  | HAS WORD ':' type
-    { printf("HAS WORD -> declvar\n"); }
+  : MY VAR ':' modiftype
+    { printf("MY VAR : modiftype -> declvar\n"); }
+  | OUR VAR ':' modiftype
+    { printf("OUR VAR : modiftype -> declvar\n"); }
+  | HAS WORD ':' modiftype
+    { printf("HAS WORD : modiftype -> declvar\n"); }
 
 if
   : IF '(' term ')' block
@@ -205,12 +205,23 @@ subargs
     { printf("subargs , subarg\n"); }
 
 subarg
-  : VAR ':' type
-    { printf("VAR : type -> subarg (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
+  : VAR ':' modiftype
+    { printf("VAR : modiftype -> subarg (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
 
+modiftype
+  : type
+    { printf("type -> modiftype\n"); }
+  | modifier type
+    { printf("modifier type -> modiftype"); }
+    
 type
   : WORD
     { printf("WORD -> type (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
+
+modifier
+  : WORD
+    { printf("WORD -> modifier\n"); }
+  | modifier WORD
 
 %%
 
