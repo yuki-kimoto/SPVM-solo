@@ -95,24 +95,18 @@ words
   | words ',' WORD
 
 declaration
-  : declword declvar ';'
-    { printf("declword declvar ; -> declaration\n"); }
-  | declword declvar ASSIGNOP term ';'
-    { printf("declword declvar = term ; -> declaration\n"); }
+  : declword ';'
+    { printf("declword ; -> declaration\n"); }
+  | declword ASSIGNOP term ';'
+    { printf("declword = term ; -> declaration\n"); }
 
 declword
-  : MY
+  : MY VAR ':' type
     { printf("MY -> declword\n"); }
-  | OUR
+  | OUR VAR ':' type
     { printf("OUR -> declword\n"); }
-  | HAS
+  | HAS WORD ':' type
     { printf("HAS -> declword\n"); }
-
-declvar
-  : VAR ':' type
-    { printf("VAR -> declvar\n"); } /* my, our */
-  | WORD ':' type
-    { printf("VAR -> declvar\n"); } /* has */
 
 if
   : IF '(' term ')' block
