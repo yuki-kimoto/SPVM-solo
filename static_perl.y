@@ -115,7 +115,7 @@ declword
 declvar
   : VAR
     { printf("VAR -> declvar\n"); } /* my, our */
-  | WORD
+  | WORD ':' type
     { printf("VAR -> declvar\n"); } /* has */
 
 if

@@ -1,6 +1,6 @@
 package Point3D;
 
-has x;
+has x : int;
 
 our $title = 2;
 
