@@ -55,10 +55,10 @@ block
     { printf("{ statements } -> block\n"); }
 
 statement
-  : SUB subname '(' ')' block
-    { printf("SUB subname ( ) block -> statement\n"); }
-  | SUB subname '(' subargs ')' block
-    { printf("SUB subname ( subargs ) block -> statement\n"); }
+  : SUB subname ':' modiftype '(' ')' block
+    { printf("SUB subname : modiftype ( ) block -> statement\n"); }
+  | SUB subname ':' modiftype '(' subargs ')' block
+    { printf("SUB subname : modiftype ( subargs ) block -> statement\n"); }
   | term ';'
     { printf("term ; -> statement\n") }
   | ';'
@@ -167,10 +167,10 @@ term
     { printf("term BITOROP term -> term\n"); }
   | term SHIFTOP term
     { printf("term SHIFTOP term\n"); }
-  | SUB '(' ')' block
-    { printf("SUB () block -> term\n"); }
-  | SUB '(' subargs ')' block
-    { printf("SUB ( subargs ) block -> term\n"); }
+  | SUB ':' modiftype '(' ')' block
+    { printf("SUB : modiftype () block -> term\n"); }
+  | SUB ':' modiftype '(' subargs ')' block
+    { printf("SUB : modiftype ( subargs ) block -> term\n"); }
   | '(' term ')'
     { printf("( term ) -> term\n"); }
   | VAR ARROW WORD
