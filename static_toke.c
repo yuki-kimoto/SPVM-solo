@@ -6,7 +6,7 @@
 #include "static_perl.tab.h"
 
 /* Get token */
-int yylex(YYSTYPE* yylvalp, yy_parser* parser)
+int yylex(YYSTYPE* yylvalp, yy_parser_static* parser)
 {
   char* bufptr = parser->bufptr;
   
@@ -489,7 +489,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
 }
 
 /* Function for error */
-void yyerror(yy_parser* parser, const char* s)
+void yyerror(yy_parser_static* parser, const char* s)
 {
   fprintf(stderr, "error: %s\n", s);
 }

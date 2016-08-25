@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
   }
   
   /* initialize parser */
-  yy_parser* parser = malloc(sizeof(yy_parser));
+  yy_parser_static* parser = malloc(sizeof(yy_parser_static));
 
   /* Read source file */
   size_t linestr_buf_len;

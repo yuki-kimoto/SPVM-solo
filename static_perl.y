@@ -1,6 +1,6 @@
 %pure-parser
-%parse-param	{ yy_parser* parser }
-%lex-param	{ yy_parser* parser }
+%parse-param	{ yy_parser_static* parser }
+%lex-param	{ yy_parser_static* parser }
 
 %{
   #include <stdio.h>

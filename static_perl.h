@@ -64,7 +64,7 @@ typedef struct {
 
   /* Current buffer position */
   char* bufptr;
-} yy_parser;
+} yy_parser_static;
 
 typedef union
 {
@@ -72,6 +72,6 @@ typedef union
   int ival;
 } yystype;
 
-void yyerror(yy_parser* parser, const char* s);
+void yyerror(yy_parser_static* parser, const char* s);
 
 #define YYSTYPE yystype
