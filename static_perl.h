@@ -25,37 +25,37 @@
 #define STATIC_OP_CONST_BOOL 24
 
 /* Token type */
-#define BASEOP_STATIC int type;
+#define STATIC_BASEOP int type;
 
 typedef struct {
-  BASEOP_STATIC
-} OP_STATIC;
+  STATIC_BASEOP
+} STATIC_OP;
 
 typedef struct {
-  BASEOP_STATIC
+  STATIC_BASEOP
   union {
     char* pv;
     int iv;
     double nv;
   } uv;
-} SVOP_STATIC;
+} STATIC_SVOP;
 
 typedef struct {
-    BASEOP_STATIC
-    OP_STATIC*	op_first;
-} UNOP_STATIC;
+    STATIC_BASEOP
+    STATIC_OP*	op_first;
+} STATIC_UNOP;
 
 typedef struct {
-    BASEOP_STATIC
-    OP_STATIC *	op_first;
-    OP_STATIC *	op_last;
-} BINOP_STATIC;
+    STATIC_BASEOP
+    STATIC_OP *	op_first;
+    STATIC_OP *	op_last;
+} STATIC_BINOP;
 
 typedef struct {
-    BASEOP_STATIC
-    OP_STATIC*	op_first;
-    OP_STATIC*	op_last;
-} LISTOP_STATIC;
+    STATIC_BASEOP
+    STATIC_OP*	op_first;
+    STATIC_OP*	op_last;
+} STATIC_LISTOP;
 
 /* Parser information */
 typedef struct {
@@ -64,14 +64,14 @@ typedef struct {
 
   /* Current buffer position */
   char* bufptr;
-} yy_parser_static;
+} static_yy_parser;
 
 typedef union
 {
-  OP_STATIC* opval;
+  STATIC_OP* opval;
   int ival;
-} yystype_static;
+} static_yystype;
 
-void static_yyerror(yy_parser_static* parser, const char* s);
+void static_yyerror(static_yy_parser* parser, const char* s);
 
-#define YYSTYPE yystype_static
+#define YYSTYPE static_yystype

@@ -6,7 +6,7 @@
 #include "static_perl.tab.h"
 
 /* Get token */
-int static_yylex(YYSTYPE* static_yylvalp, yy_parser_static* parser)
+int static_yylex(YYSTYPE* static_yylvalp, static_yy_parser* parser)
 {
   char* bufptr = parser->bufptr;
   
@@ -312,12 +312,12 @@ int static_yylex(YYSTYPE* static_yylvalp, yy_parser_static* parser)
           bufptr++;
         }
         
-        SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
+        STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
         op->type = STATIC_OP_CONST_STRING;
         op->uv.pv = str;
         
         parser->bufptr = bufptr;
-        static_yylvalp->opval = (OP_STATIC*)op;
+        static_yylvalp->opval = (STATIC_OP*)op;
         return STRING;
       
       default:
@@ -338,12 +338,12 @@ int static_yylex(YYSTYPE* static_yylvalp, yy_parser_static* parser)
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
-          SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
+          STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
           op->type = STATIC_OP_CONST_STRING;
           op->uv.pv = var;
           
           parser->bufptr = bufptr;
-          static_yylvalp->opval = (OP_STATIC*)op;
+          static_yylvalp->opval = (STATIC_OP*)op;
           return VAR;
         }
         /* Number literal */
@@ -370,12 +370,12 @@ int static_yylex(YYSTYPE* static_yylvalp, yy_parser_static* parser)
           int num = atoi(num_str);
           free(num_str);
           
-          SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
+          STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
           op->type = STATIC_OP_CONST_INT;
           op->uv.iv = num;
           
           parser->bufptr = bufptr;
-          static_yylvalp->opval = (OP_STATIC*)op;
+          static_yylvalp->opval = (STATIC_OP*)op;
           return INT;
         }
         /* Keyword or word */
@@ -451,32 +451,32 @@ int static_yylex(YYSTYPE* static_yylvalp, yy_parser_static* parser)
             return WHILE;
           }
           else if (memcmp(keyword, "true", str_len) == 0) {
-            SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
+            STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
             op->type = STATIC_OP_CONST_BOOL;
             op->uv.iv = 1;
 
             parser->bufptr = bufptr;
-            static_yylvalp->opval = (OP_STATIC*)op;
+            static_yylvalp->opval = (STATIC_OP*)op;
 
             return BOOL;
           }
           else if (memcmp(keyword, "false", str_len) == 0) {
-            SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
+            STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
             op->type = STATIC_OP_CONST_BOOL;
             op->uv.iv = 0;
 
             parser->bufptr = bufptr;
-            static_yylvalp->opval = (OP_STATIC*)op;
+            static_yylvalp->opval = (STATIC_OP*)op;
 
             return BOOL;
           }
           
-          SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
+          STATIC_SVOP* op = malloc(sizeof(STATIC_SVOP));
           op->type = STATIC_OP_CONST_STRING;
           op->uv.pv = keyword;
           
           parser->bufptr = bufptr;
-          static_yylvalp->opval = (OP_STATIC*)op;
+          static_yylvalp->opval = (STATIC_OP*)op;
           return WORD;
         }
         
@@ -489,7 +489,7 @@ int static_yylex(YYSTYPE* static_yylvalp, yy_parser_static* parser)
 }
 
 /* Function for error */
-void static_yyerror(yy_parser_static* parser, const char* s)
+void static_yyerror(static_yy_parser* parser, const char* s)
 {
   fprintf(stderr, "error: %s\n", s);
 }

@@ -1,6 +1,6 @@
 %pure-parser
-%parse-param	{ yy_parser_static* parser }
-%lex-param	{ yy_parser_static* parser }
+%parse-param	{ static_yy_parser* parser }
+%lex-param	{ static_yy_parser* parser }
 
 %{
   #include <stdio.h>
@@ -92,7 +92,7 @@ statement
   | USE WORD '(' words ')' ';'
     { printf("USE WORD ( words ) ; -> statement\n"); }
   | STRING
-    { printf("STRING(%s) -> statement\n", ((SVOP_STATIC*)$1)->uv.pv); }
+    { printf("STRING(%s) -> statement\n", ((STATIC_SVOP*)$1)->uv.pv); }
     
 words
   : WORD
@@ -142,7 +142,7 @@ terms
 
 term
   : VAR
-    { printf("VAR -> term (%s)\n", ((SVOP_STATIC*)$1)->uv.pv); }
+    { printf("VAR -> term (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
   | NOTOP term
     { printf("NOTOP term -> term\n"); }
   | BITNOTOP term
@@ -166,9 +166,9 @@ term
   | term MULOP term
     { printf("term * term -> term\n"); }
   | INT
-    { printf("INT -> term (%d)\n", ((SVOP_STATIC*)$1)->uv.iv); }
+    { printf("INT -> term (%d)\n", ((STATIC_SVOP*)$1)->uv.iv); }
   | BOOL
-    { printf("BOOL -> term (%d)\n", ((SVOP_STATIC*)$1)->uv.iv); }
+    { printf("BOOL -> term (%d)\n", ((STATIC_SVOP*)$1)->uv.iv); }
   | subname '(' ')'
     { printf("subname () -> term\n"); }
   | subname '(' terms  ')'
@@ -226,11 +226,11 @@ subdefargs
 
 subdefarg
   : VAR ':' type
-    { printf("VAR : type -> subdefarg (%s)\n", ((SVOP_STATIC*)$1)->uv.pv); }
+    { printf("VAR : type -> subdefarg (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
 
 type
   : WORD
-    { printf("WORD -> type (%s)\n", ((SVOP_STATIC*)$1)->uv.pv); }
+    { printf("WORD -> type (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
 
 %%
 
