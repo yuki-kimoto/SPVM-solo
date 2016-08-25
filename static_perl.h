@@ -1,3 +1,4 @@
+// Token ID
 #define STATIC_OP_CONST_INT 1
 #define STATIC_OP_CONST_FLOAT 2
 #define STATIC_OP_CONST_STRING 3
@@ -23,6 +24,7 @@
 #define STATIC_OP_BIT_NOT 23
 #define STATIC_OP_CONST_BOOL 24
 
+// Token type
 #define BASEOP int type;
 
 typedef struct {
