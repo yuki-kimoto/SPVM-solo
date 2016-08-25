@@ -57,12 +57,12 @@ block
 statement
   : SUB subname '(' ')' block
     { printf("SUB subname ( ) block -> statement\n"); }
-  | SUB subname '(' subdefargs ')' block
-    { printf("SUB subname ( subdefargs ) block -> statement\n"); }
+  | SUB subname '(' subargs ')' block
+    { printf("SUB subname ( subargs ) block -> statement\n"); }
   | OUR SUB subname '(' ')' block
     { printf("OUR SUB subname ( ) block -> statement\n"); }
-  | OUR SUB subname '(' subdefargs ')' block
-    { printf("OUR SUB subname ( subdefargs ) block -> statement\n"); }
+  | OUR SUB subname '(' subargs ')' block
+    { printf("OUR SUB subname ( subargs ) block -> statement\n"); }
   | term ';'
     { printf("term ; -> statement\n") }
   | ';'
@@ -191,8 +191,8 @@ term
     { printf("term SHIFTOP term\n"); }
   | SUB '(' ')' block
     { printf("SUB () block -> term\n"); }
-  | SUB '(' subdefargs ')' block
-    { printf("SUB ( subdefargs ) block -> term\n"); }
+  | SUB '(' subargs ')' block
+    { printf("SUB ( subargs ) block -> term\n"); }
   | '(' term ')'
     { printf("( term ) -> term\n"); }
   | VAR ARROW WORD
@@ -218,15 +218,15 @@ subname
   : WORD
     { printf("WORD -> subname\n"); }
 
-subdefargs
-  : subdefarg
-    { printf("subdefarg -> subdefargs\n"); }
-  | subdefargs ',' subdefarg
-    { printf("subdefargs , subdefarg\n"); }
+subargs
+  : subarg
+    { printf("subarg -> subargs\n"); }
+  | subargs ',' subarg
+    { printf("subargs , subarg\n"); }
 
-subdefarg
+subarg
   : VAR ':' type
-    { printf("VAR : type -> subdefarg (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
+    { printf("VAR : type -> subarg (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
 
 type
   : WORD
