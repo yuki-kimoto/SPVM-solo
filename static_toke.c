@@ -37,13 +37,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         if (*bufptr == '+') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_INC;
+          yylvalp->ival = STATIC_OP_INC;
           return INCOP;
         }
         else if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_ADD;
+          yylvalp->ival = STATIC_OP_ADD;
           return ASSIGNOP;
         }
         else {
@@ -63,13 +63,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         else if (*bufptr == '-') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_DEC;
+          yylvalp->ival = STATIC_OP_DEC;
           return DECOP;
         }
         else if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_SUBTRACT;
+          yylvalp->ival = STATIC_OP_SUBTRACT;
           return ASSIGNOP;
         }
         else {
@@ -82,12 +82,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_MULTIPLY;
+          yylvalp->ival = STATIC_OP_MULTIPLY;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_MULTIPLY;
+          yylvalp->ival = STATIC_OP_MULTIPLY;
           return MULOP;
         }
       
@@ -97,12 +97,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_DIVIDE;
+          yylvalp->ival = STATIC_OP_DIVIDE;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_DIVIDE;
+          yylvalp->ival = STATIC_OP_DIVIDE;
           return MULOP;
         }
 
@@ -111,12 +111,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_MODULO;
+          yylvalp->ival = STATIC_OP_MODULO;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_MODULO;
+          yylvalp->ival = STATIC_OP_MODULO;
           return MULOP;
         }
 
@@ -125,12 +125,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_BIT_XOR;
+          yylvalp->ival = STATIC_OP_BIT_XOR;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_BIT_XOR;
+          yylvalp->ival = STATIC_OP_BIT_XOR;
           return MULOP;
         }
             
@@ -142,19 +142,19 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           if (*bufptr == '=') {
             bufptr++;
             parser->bufptr = bufptr;
-            yylvalp->ival = OP_OR;
+            yylvalp->ival = STATIC_OP_OR;
             return ASSIGNOP;
           }
           else {
             parser->bufptr = bufptr;
-            yylvalp->ival = OP_OR;
+            yylvalp->ival = STATIC_OP_OR;
             return OROP;
           }
         }
         /* Bit or */
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_BIT_OR;
+          yylvalp->ival = STATIC_OP_BIT_OR;
           return BITOROP;
         }
 
@@ -166,19 +166,19 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           if (*bufptr == '=') {
             bufptr++;
             parser->bufptr = bufptr;
-            yylvalp->ival = OP_AND;
+            yylvalp->ival = STATIC_OP_AND;
             return ASSIGNOP;
           }
           else {
             parser->bufptr = bufptr;
-            yylvalp->ival = OP_AND;
+            yylvalp->ival = STATIC_OP_AND;
             return ANDOP;
           }
         }
         /* Bit and */
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_BIT_AND;
+          yylvalp->ival = STATIC_OP_BIT_AND;
           return BITANDOP;
         }
       
@@ -218,7 +218,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           bufptr++;
           
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_LEFT_SHIFT;
+          yylvalp->ival = STATIC_OP_LEFT_SHIFT;
           return SHIFTOP;
         }
         /* <= */
@@ -226,13 +226,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           bufptr++;
           
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_LE;
+          yylvalp->ival = STATIC_OP_LE;
           return RELOP;
         }
         /* < */
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_LT;
+          yylvalp->ival = STATIC_OP_LT;
           return RELOP;
         }
       
@@ -243,7 +243,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           bufptr++;
           
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_RIGHT_SHIFT;
+          yylvalp->ival = STATIC_OP_RIGHT_SHIFT;
           return SHIFTOP;
         }
         /* >= */
@@ -251,13 +251,13 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           bufptr++;
           
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_GE;
+          yylvalp->ival = STATIC_OP_GE;
           return RELOP;
         }
         /* < */
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_GT;
+          yylvalp->ival = STATIC_OP_GT;
           return RELOP;
         }
       case '!':
@@ -266,12 +266,12 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_NOT;
+          yylvalp->ival = STATIC_OP_NOT;
           return ASSIGNOP;
         }
         else {
           parser->bufptr = bufptr;
-          yylvalp->ival = OP_NOT;
+          yylvalp->ival = STATIC_OP_NOT;
           return NOTOP;
         }
         
@@ -279,7 +279,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         bufptr++;
         
         parser->bufptr = bufptr;
-        yylvalp->ival = OP_BIT_NOT;
+        yylvalp->ival = STATIC_OP_BIT_NOT;
         return BITNOTOP;
       
       case '"':
@@ -313,7 +313,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
         }
         
         SVOP* op = malloc(sizeof(SVOP));
-        op->type = OP_CONST_STRING;
+        op->type = STATIC_OP_CONST_STRING;
         op->uv.pv = str;
         
         parser->bufptr = bufptr;
@@ -339,7 +339,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           var[str_len] = '\0';
           
           SVOP* op = malloc(sizeof(SVOP));
-          op->type = OP_CONST_STRING;
+          op->type = STATIC_OP_CONST_STRING;
           op->uv.pv = var;
           
           parser->bufptr = bufptr;
@@ -371,7 +371,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           free(num_str);
           
           SVOP* op = malloc(sizeof(SVOP));
-          op->type = OP_CONST_INT;
+          op->type = STATIC_OP_CONST_INT;
           op->uv.iv = num;
           
           parser->bufptr = bufptr;
@@ -452,7 +452,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           }
           else if (memcmp(keyword, "true", str_len) == 0) {
             SVOP* op = malloc(sizeof(SVOP));
-            op->type = OP_CONST_BOOL;
+            op->type = STATIC_OP_CONST_BOOL;
             op->uv.iv = 1;
 
             parser->bufptr = bufptr;
@@ -462,7 +462,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           }
           else if (memcmp(keyword, "false", str_len) == 0) {
             SVOP* op = malloc(sizeof(SVOP));
-            op->type = OP_CONST_BOOL;
+            op->type = STATIC_OP_CONST_BOOL;
             op->uv.iv = 0;
 
             parser->bufptr = bufptr;
@@ -472,7 +472,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           }
           
           SVOP* op = malloc(sizeof(SVOP));
-          op->type = OP_CONST_STRING;
+          op->type = STATIC_OP_CONST_STRING;
           op->uv.pv = keyword;
           
           parser->bufptr = bufptr;
