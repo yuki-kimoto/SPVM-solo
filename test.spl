@@ -104,14 +104,12 @@ our $title : int = 2;
 sum();
 sum(1, 3, 5);
 
-;
-
 # subroutine
 sub sum : int () {
   2;
   4;
 }
-sub sum : const int () { }
+sub sum : const int ($foo : const int, $bar : const int) { }
 
 sub sum : int ($foo : int, $bar : float) {
   if (3) {
