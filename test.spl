@@ -2,7 +2,7 @@ package Point3D;
 
 has x : int;
 
-our $title = 2;
+our $title : int = 2;
 
 sum();
 sum(1, 3, 5);
@@ -38,7 +38,7 @@ sub sum ($foo : int, $bar : float) {
   return 1;
 }
 
-for (my $i; $i < 5; $i = $i + 1) {
+for (my $i : int; $i < 5; $i = $i + 1) {
   1;
   last;
   continue;
@@ -52,8 +52,8 @@ for (my $i; $i < 5; $i = $i + 1) {
 1 == 1;
 1 = 1;
 
-my $title;
-my $title = 1;
+my $title : int;
+my $title : int = 1;
 my $title : int;
 my $title : int = 4;
 
@@ -65,8 +65,8 @@ my $title : int = 4;
 1 && 2;
 1 & 3;
 
-my $title = sub () { };
-my $title = sub ($p : int) { };
+my $title : int = sub () { };
+my $title : int = sub ($p : int) { };
 
 $title += 1;
 
@@ -132,5 +132,5 @@ $sum_::foo;
 
 $title->[3];
 
-my $title = true;
-my $title = false;
+my $title : int = true;
+my $title : int = false;

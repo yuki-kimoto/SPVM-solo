@@ -99,10 +99,6 @@ declaration
     { printf("declword declvar ; -> declaration\n"); }
   | declword declvar ASSIGNOP term ';'
     { printf("declword declvar = term ; -> declaration\n"); }
-  | declword declvar ':' type ';'
-    { printf("declword declvar : type ; -> declaration\n"); }
-  | declword declvar ':' type ASSIGNOP term ';'
-    { printf("declword declvar : type ASSIGNOP term ; -> declaration\n"); }
 
 declword
   : MY
@@ -113,7 +109,7 @@ declword
     { printf("HAS -> declword\n"); }
 
 declvar
-  : VAR
+  : VAR ':' type
     { printf("VAR -> declvar\n"); } /* my, our */
   | WORD ':' type
     { printf("VAR -> declvar\n"); } /* has */
