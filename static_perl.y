@@ -65,10 +65,8 @@ statement
     { printf("; -> statement\n") }
   | if
     { printf("if -> statement\n"); }
-  | declaration
-    { printf("declaration -> statement\n"); }
-  | FOR '(' declaration term ';' term ')' '{' statements '}'
-    { printf("FOR ( declaration term ; term ) { statements }\n"); }
+  | FOR '(' term ';' term ';' term ')' '{' statements '}'
+    { printf("FOR ( term ; term ; term ) { statements }\n"); }
   | WHILE '(' term ')' block
     { printf("WHILE ( term ) block\n"); }
   | PACKAGE WORD ';'
@@ -94,19 +92,13 @@ words
   : WORD
   | words ',' WORD
 
-declaration
-  : declword ';'
-    { printf("declword ; -> declaration\n"); }
-  | declword ASSIGNOP term ';'
-    { printf("declword = term ; -> declaration\n"); }
-
-declword
+declvar
   : MY VAR ':' type
-    { printf("MY -> declword\n"); }
+    { printf("MY VAR -> declvar\n"); }
   | OUR VAR ':' type
-    { printf("OUR -> declword\n"); }
+    { printf("OUR VAR -> declvar\n"); }
   | HAS WORD ':' type
-    { printf("HAS -> declword\n"); }
+    { printf("HAS WORD -> declvar\n"); }
 
 if
   : IF '(' term ')' block
@@ -160,11 +152,11 @@ term
   | subname '(' terms  ')'
     { printf("subname (terms) -> term\n"); }
   | term RELOP term
-    { printf("term RELOP term%d\n", $2); }
+    { printf("term RELOP term -> term %d\n", $2); }
   | term EQOP term
-    { printf("term EQOP term\n"); }
+    { printf("term EQOP term -> term\n"); }
   | term ASSIGNOP term
-    { printf("term ASSIGNOP term\n"); }
+    { printf("term ASSIGNOP term -> term\n"); }
   | term ANDOP term
     { printf("term ANDOP term -> term\n"); }
   | term OROP term
@@ -199,6 +191,8 @@ term
     { printf("VAR ARROW WORD ( terms )\n"); }
   | VAR ARROW '[' term ']'
     { printf("VAR ARROW [ term ]\n"); }
+  | declvar
+    { printf("declvar -> term\n"); }
 
 subname
   : WORD
