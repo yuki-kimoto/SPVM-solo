@@ -70,8 +70,8 @@ typedef union
 {
   OP_STATIC* opval;
   int ival;
-} yystype;
+} yystype_static;
 
 void yyerror(yy_parser_static* parser, const char* s);
 
-#define YYSTYPE yystype
+#define YYSTYPE yystype_static
