@@ -25,7 +25,7 @@
 #define STATIC_OP_CONST_BOOL 24
 
 // Token type
-#define BASEOP int type;
+#define BASEOP_STATIC int type;
 
 typedef struct {
   /* Source data */
@@ -38,34 +38,34 @@ typedef struct {
 void yyerror(yy_parser* parser, const char* s);
 
 typedef struct {
-  BASEOP
+  BASEOP_STATIC
 } OP;
 
 typedef struct {
-  BASEOP
+  BASEOP_STATIC
   union {
     char* pv;
     int iv;
     double nv;
   } uv;
-} SVOP;
+} SVOP_STATIC;
 
 typedef struct {
-    BASEOP
+    BASEOP_STATIC
     OP *	op_first;
-} UNOP;
+} UNOP_STATIC;
 
 typedef struct {
-    BASEOP
-    OP *	op_first;
-    OP *	op_last;
-} BINOP;
-
-typedef struct {
-    BASEOP
+    BASEOP_STATIC
     OP *	op_first;
     OP *	op_last;
-} LISTOP;
+} BINOP_STATIC;
+
+typedef struct {
+    BASEOP_STATIC
+    OP *	op_first;
+    OP *	op_last;
+} LISTOP_STATIC;
 
 typedef union
 {

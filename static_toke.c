@@ -312,7 +312,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           bufptr++;
         }
         
-        SVOP* op = malloc(sizeof(SVOP));
+        SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
         op->type = STATIC_OP_CONST_STRING;
         op->uv.pv = str;
         
@@ -338,7 +338,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
-          SVOP* op = malloc(sizeof(SVOP));
+          SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
           op->type = STATIC_OP_CONST_STRING;
           op->uv.pv = var;
           
@@ -370,7 +370,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
           int num = atoi(num_str);
           free(num_str);
           
-          SVOP* op = malloc(sizeof(SVOP));
+          SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
           op->type = STATIC_OP_CONST_INT;
           op->uv.iv = num;
           
@@ -451,7 +451,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
             return WHILE;
           }
           else if (memcmp(keyword, "true", str_len) == 0) {
-            SVOP* op = malloc(sizeof(SVOP));
+            SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
             op->type = STATIC_OP_CONST_BOOL;
             op->uv.iv = 1;
 
@@ -461,7 +461,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
             return BOOL;
           }
           else if (memcmp(keyword, "false", str_len) == 0) {
-            SVOP* op = malloc(sizeof(SVOP));
+            SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
             op->type = STATIC_OP_CONST_BOOL;
             op->uv.iv = 0;
 
@@ -471,7 +471,7 @@ int yylex(YYSTYPE* yylvalp, yy_parser* parser)
             return BOOL;
           }
           
-          SVOP* op = malloc(sizeof(SVOP));
+          SVOP_STATIC* op = malloc(sizeof(SVOP_STATIC));
           op->type = STATIC_OP_CONST_STRING;
           op->uv.pv = keyword;
           
