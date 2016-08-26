@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "static_perl.h"
+#include "static_op.h"
 #include "static_perl.tab.h"
 
 /* Get token */
