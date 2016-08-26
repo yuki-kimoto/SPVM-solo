@@ -1,5 +1,6 @@
-/* Token(OP) ID */
-enum STATIC_OP_ID {
+/* Operation code */
+enum STATIC_OP_CODE {
+  STATIC_OP_NULL,
   STATIC_OP_CONST_INT,
   STATIC_OP_CONST_FLOAT,
   STATIC_OP_CONST_STRING,
