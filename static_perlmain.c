@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "static_perl.h"
+#include "static_parser.h"
 
 int main(int argc, char *argv[])
 {
