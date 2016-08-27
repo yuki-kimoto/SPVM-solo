@@ -41,34 +41,44 @@ enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_WORD
 };
 
-typedef struct SPerl_op {
+struct SPerl_op;
+typedef struct SPerl_op SPerl_OP;
+struct SPerl_op {
   SPerl_BASEOP
-} SPerl_OP;
+};
 
-typedef struct {
+struct SPerl_svop;
+typedef struct SPerl_svop SPerl_SVOP;
+struct SPerl_svop {
   SPerl_BASEOP
   union {
     char* pv;
     int iv;
     double nv;
   } uv;
-} SPerl_SVOP;
+};
 
-typedef struct {
-    SPerl_BASEOP
-    SPerl_OP*	op_first;
-} SPerl_UNOP;
+struct SPerl_unop;
+typedef struct SPerl_unop SPerl_UNOP;
+struct SPerl_unop {
+  SPerl_BASEOP
+  SPerl_OP*	op_first;
+};
 
-typedef struct {
-    SPerl_BASEOP
-    SPerl_OP *	op_first;
-    SPerl_OP *	op_last;
-} SPerl_BINOP;
+struct SPerl_binop;
+typedef struct SPerl_binop SPerl_BINOP;
+struct SPerl_binop {
+  SPerl_BASEOP
+  SPerl_OP *	op_first;
+  SPerl_OP *	op_last;
+};
 
-typedef struct {
-    SPerl_BASEOP
-    SPerl_OP*	op_first;
-    SPerl_OP*	op_last;
-} SPerl_LISTOP;
+struct SPerl_listop;
+typedef struct SPerl_listop SPerl_LISTOP;
+struct SPerl_listop {
+  SPerl_BASEOP
+  SPerl_OP*	op_first;
+  SPerl_OP*	op_last;
+};
 
 #endif
