@@ -19,7 +19,7 @@ SPerl_OP* SPerl_newOP(I32 type, I32 flags) {
   return o;;
 }
 
-SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last)
+SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last)
 {
   SPerl_BINOP *binop;
 

@@ -119,7 +119,10 @@ terms
 
 term
   : VAR
-    { printf("VAR -> term (%s)\n", ((SPerl_SVOP*)$1)->uv.pv); }
+    {
+      $<opval>$ = $1;
+      printf("VAR -> term (%s)\n", ((SPerl_SVOP*)$1)->uv.pv)
+    }
   | NOTOP term
     { printf("NOTOP term -> term\n"); }
   | BITNOTOP term
@@ -138,15 +141,13 @@ term
     { printf("- term -> term\n"); }
   | term '+' term %prec ADDOP
     {
-      /* $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $1, $3); */
+      $<opval>$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $<opval>1, $<opval>3);
       printf("term + term -> term\n");
     }
   | term '-' term %prec ADDOP
     { printf("term - term -> term\n"); }
   | term MULOP term
     { printf("term * term -> term\n"); }
-  | INT
-    { printf("INT -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv); }
   | BOOL
     { printf("BOOL -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv); }
   | subname '(' ')'
@@ -195,8 +196,16 @@ term
     { printf("VAR ARROW [ term ]\n"); }
   | declvar
     { printf("declvar -> term\n"); }
+  | INT
+    {
+      $<opval>$ = $1;
+      printf("INT -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv);
+    }
   | STRING
-    { printf("STRING(%s) -> statement\n", ((SPerl_SVOP*)$1)->uv.pv); }
+    {
+      $<opval>$ = $1;
+      printf("STRING(%s) -> statement\n", ((SPerl_SVOP*)$1)->uv.pv);
+    }
 
 subname
   : WORD
@@ -216,7 +225,7 @@ modiftype
   : type
     { printf("type -> modiftype\n"); }
   | modifier type
-    { printf("modifier type -> modiftype"); }
+    { printf("modifier type -> modiftype\n"); }
     
 type
   : WORD

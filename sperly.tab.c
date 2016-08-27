@@ -471,9 +471,9 @@ static const yytype_uint16 yyprhs[] =
       35,    38,    40,    42,    54,    60,    64,    67,    70,    74,
       80,    84,    90,    97,    99,   103,   108,   113,   118,   124,
      127,   130,   137,   139,   143,   145,   148,   151,   154,   157,
-     160,   163,   166,   169,   173,   177,   181,   183,   185,   189,
-     194,   198,   202,   206,   210,   214,   218,   222,   226,   233,
-     241,   245,   249,   255,   261,   268,   272,   278,   284,   291,
+     160,   163,   166,   169,   173,   177,   181,   183,   187,   192,
+     196,   200,   204,   208,   212,   216,   220,   224,   231,   239,
+     243,   247,   253,   259,   266,   270,   276,   282,   289,   295,
      297,   299,   301,   303,   305,   309,   313,   315,   318,   320,
      322
 };
@@ -499,18 +499,18 @@ static const yytype_int8 yyrhs[] =
       -1,    38,    59,    -1,    59,    38,    -1,    37,    59,    -1,
       59,    37,    -1,     3,    59,    -1,     4,    59,    -1,    59,
        3,    59,    -1,    59,     4,    59,    -1,    59,    33,    59,
-      -1,    23,    -1,    25,    -1,    60,    41,    40,    -1,    60,
-      41,    58,    40,    -1,    59,    17,    59,    -1,    59,    18,
-      59,    -1,    59,    26,    59,    -1,    59,    28,    59,    -1,
-      59,    27,    59,    -1,    59,    30,    59,    -1,    59,    29,
-      59,    -1,    59,    31,    59,    -1,     8,    45,    63,    41,
-      40,    52,    -1,     8,    45,    63,    41,    61,    40,    52,
-      -1,    41,    59,    40,    -1,    22,    39,    21,    -1,    22,
-      39,    21,    26,    59,    -1,    22,    39,    21,    41,    40,
-      -1,    22,    39,    21,    41,    58,    40,    -1,    21,    39,
-      21,    -1,    21,    39,    21,    26,    59,    -1,    21,    39,
-      21,    41,    40,    -1,    21,    39,    21,    41,    58,    40,
-      -1,    22,    39,    42,    59,    48,    -1,    55,    -1,    24,
+      -1,    25,    -1,    60,    41,    40,    -1,    60,    41,    58,
+      40,    -1,    59,    17,    59,    -1,    59,    18,    59,    -1,
+      59,    26,    59,    -1,    59,    28,    59,    -1,    59,    27,
+      59,    -1,    59,    30,    59,    -1,    59,    29,    59,    -1,
+      59,    31,    59,    -1,     8,    45,    63,    41,    40,    52,
+      -1,     8,    45,    63,    41,    61,    40,    52,    -1,    41,
+      59,    40,    -1,    22,    39,    21,    -1,    22,    39,    21,
+      26,    59,    -1,    22,    39,    21,    41,    40,    -1,    22,
+      39,    21,    41,    58,    40,    -1,    21,    39,    21,    -1,
+      21,    39,    21,    26,    59,    -1,    21,    39,    21,    41,
+      40,    -1,    21,    39,    21,    41,    58,    40,    -1,    22,
+      39,    42,    59,    48,    -1,    55,    -1,    23,    -1,    24,
       -1,    21,    -1,    62,    -1,    61,    47,    62,    -1,    22,
       45,    63,    -1,    64,    -1,    65,    64,    -1,    21,    -1,
       21,    -1,    65,    21,    -1
@@ -522,12 +522,12 @@ static const yytype_uint8 yyrline[] =
        0,    42,    42,    43,    47,    49,    53,    55,    59,    61,
       63,    65,    67,    69,    71,    73,    75,    77,    79,    81,
       83,    85,    87,    91,    92,    95,    97,    99,   103,   105,
-     109,   111,   115,   117,   121,   123,   125,   127,   129,   131,
-     133,   135,   137,   139,   144,   146,   148,   150,   152,   154,
-     156,   158,   160,   162,   164,   166,   168,   170,   172,   174,
-     176,   178,   180,   182,   184,   186,   188,   190,   192,   194,
-     196,   198,   202,   206,   208,   212,   216,   218,   222,   226,
-     228
+     109,   111,   115,   117,   121,   126,   128,   130,   132,   134,
+     136,   138,   140,   142,   147,   149,   151,   153,   155,   157,
+     159,   161,   163,   165,   167,   169,   171,   173,   175,   177,
+     179,   181,   183,   185,   187,   189,   191,   193,   195,   197,
+     199,   204,   211,   215,   217,   221,   225,   227,   231,   235,
+     237
 };
 #endif
 
@@ -582,9 +582,9 @@ static const yytype_uint8 yyr2[] =
        2,     1,     1,    11,     5,     3,     2,     2,     3,     5,
        3,     5,     6,     1,     3,     4,     4,     4,     5,     2,
        2,     6,     1,     3,     1,     2,     2,     2,     2,     2,
-       2,     2,     2,     3,     3,     3,     1,     1,     3,     4,
-       3,     3,     3,     3,     3,     3,     3,     3,     6,     7,
-       3,     3,     5,     5,     6,     3,     5,     5,     6,     5,
+       2,     2,     2,     3,     3,     3,     1,     3,     4,     3,
+       3,     3,     3,     3,     3,     3,     3,     6,     7,     3,
+       3,     5,     5,     6,     3,     5,     5,     6,     5,     1,
        1,     1,     1,     1,     3,     3,     1,     2,     1,     1,
        2
 };
@@ -595,23 +595,23 @@ static const yytype_uint8 yyr2[] =
 static const yytype_uint8 yydefact[] =
 {
        2,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    72,    34,    46,    71,    47,
-       0,     0,     0,     0,     0,    11,     0,     3,     4,    70,
+       0,     0,     0,     0,     0,    72,    34,    70,    71,    46,
+       0,     0,     0,     0,     0,    11,     0,     3,     4,    69,
       12,     0,     0,     0,    41,    42,     0,     0,     0,    72,
        0,     0,     0,     0,     0,     0,     0,     0,     0,    16,
       17,     0,     0,    36,    35,    39,    37,     0,     1,     5,
        0,     0,    29,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,    40,    38,    10,     0,     0,     0,
        0,    78,     0,    76,     0,     0,    15,     0,     0,    32,
-      18,     0,     0,     0,    20,    65,    61,     0,    60,     0,
-       0,    30,    43,    44,    50,    51,    52,    54,    53,    56,
-      55,    57,    45,    48,     0,    32,    25,    26,    27,     0,
+      18,     0,     0,     0,    20,    64,    60,     0,    59,     0,
+       0,    30,    43,    44,    49,    50,    51,    53,    52,    55,
+      54,    56,    45,    47,     0,    32,    25,    26,    27,     0,
       78,    77,     0,     0,     0,     0,     0,     0,    23,     0,
-       0,     0,     0,     0,     0,     0,     0,     6,     0,    49,
+       0,     0,     0,     0,     0,     0,     0,     6,     0,    48,
        0,     0,     0,    73,     0,    28,    19,    33,     0,    14,
-      21,     0,     0,    66,    67,     0,    62,    63,     0,    69,
-       0,     7,     0,    58,     0,     0,     0,     0,     0,    22,
-      24,    68,    64,     0,    75,    59,    74,     8,     0,     0,
+      21,     0,     0,    65,    66,     0,    61,    62,     0,    68,
+       0,     7,     0,    57,     0,     0,     0,     0,     0,    22,
+      24,    67,    63,     0,    75,    58,    74,     8,     0,     0,
       31,     9,     0,     0,     0,    13
 };
 
@@ -1814,240 +1814,249 @@ yyreduce:
 
   case 34:
 #line 122 "sperly.y"
-    { printf("VAR -> term (%s)\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.pv); ;}
+    {
+      (yyval.opval) = (yyvsp[(1) - (1)].opval);
+      printf("VAR -> term (%s)\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.pv)
+    ;}
     break;
 
   case 35:
-#line 124 "sperly.y"
+#line 127 "sperly.y"
     { printf("NOTOP term -> term\n"); ;}
     break;
 
   case 36:
-#line 126 "sperly.y"
+#line 129 "sperly.y"
     { printf("BITNOTOP term -> term\n"); ;}
     break;
 
   case 37:
-#line 128 "sperly.y"
+#line 131 "sperly.y"
     { printf("INCOP term\n") ;}
     break;
 
   case 38:
-#line 130 "sperly.y"
+#line 133 "sperly.y"
     { printf("term INCOP\n") ;}
     break;
 
   case 39:
-#line 132 "sperly.y"
+#line 135 "sperly.y"
     { printf("DECOP term\n") ;}
     break;
 
   case 40:
-#line 134 "sperly.y"
+#line 137 "sperly.y"
     { printf("term DECOP\n") ;}
     break;
 
   case 41:
-#line 136 "sperly.y"
+#line 139 "sperly.y"
     {printf("+ term -> term\n"); ;}
     break;
 
   case 42:
-#line 138 "sperly.y"
+#line 141 "sperly.y"
     { printf("- term -> term\n"); ;}
     break;
 
   case 43:
-#line 140 "sperly.y"
+#line 143 "sperly.y"
     {
-      /* $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $1, $3); */
+      (yyval.opval) = SPerl_newBINOP(SPerl_OP_ADD, 0, (yyvsp[(1) - (3)].opval), (yyvsp[(3) - (3)].opval));
       printf("term + term -> term\n");
     ;}
     break;
 
   case 44:
-#line 145 "sperly.y"
+#line 148 "sperly.y"
     { printf("term - term -> term\n"); ;}
     break;
 
   case 45:
-#line 147 "sperly.y"
+#line 150 "sperly.y"
     { printf("term * term -> term\n"); ;}
     break;
 
   case 46:
-#line 149 "sperly.y"
-    { printf("INT -> term (%d)\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.iv); ;}
-    break;
-
-  case 47:
-#line 151 "sperly.y"
+#line 152 "sperly.y"
     { printf("BOOL -> term (%d)\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.iv); ;}
     break;
 
-  case 48:
-#line 153 "sperly.y"
+  case 47:
+#line 154 "sperly.y"
     { printf("subname () -> term\n"); ;}
     break;
 
-  case 49:
-#line 155 "sperly.y"
+  case 48:
+#line 156 "sperly.y"
     { printf("subname (terms) -> term\n"); ;}
     break;
 
-  case 50:
-#line 157 "sperly.y"
+  case 49:
+#line 158 "sperly.y"
     { printf("term RELOP term -> term %d\n", (yyvsp[(2) - (3)].ival)); ;}
     break;
 
-  case 51:
-#line 159 "sperly.y"
+  case 50:
+#line 160 "sperly.y"
     { printf("term EQOP term -> term\n"); ;}
     break;
 
-  case 52:
-#line 161 "sperly.y"
+  case 51:
+#line 162 "sperly.y"
     { printf("term ASSIGNOP term -> term\n"); ;}
     break;
 
-  case 53:
-#line 163 "sperly.y"
+  case 52:
+#line 164 "sperly.y"
     { printf("term ANDOP term -> term\n"); ;}
     break;
 
-  case 54:
-#line 165 "sperly.y"
+  case 53:
+#line 166 "sperly.y"
     { printf("term OROP term -> term\n"); ;}
     break;
 
-  case 55:
-#line 167 "sperly.y"
+  case 54:
+#line 168 "sperly.y"
     { printf("term BITANDOP term -> term\n"); ;}
     break;
 
-  case 56:
-#line 169 "sperly.y"
+  case 55:
+#line 170 "sperly.y"
     { printf("term BITOROP term -> term\n"); ;}
     break;
 
-  case 57:
-#line 171 "sperly.y"
+  case 56:
+#line 172 "sperly.y"
     { printf("term SHIFTOP term\n"); ;}
     break;
 
-  case 58:
-#line 173 "sperly.y"
+  case 57:
+#line 174 "sperly.y"
     { printf("SUB : modiftype () block -> term\n"); ;}
     break;
 
-  case 59:
-#line 175 "sperly.y"
+  case 58:
+#line 176 "sperly.y"
     { printf("SUB : modiftype ( subargs ) block -> term\n"); ;}
     break;
 
-  case 60:
-#line 177 "sperly.y"
+  case 59:
+#line 178 "sperly.y"
     { printf("( term ) -> term\n"); ;}
     break;
 
-  case 61:
-#line 179 "sperly.y"
+  case 60:
+#line 180 "sperly.y"
     { printf("VAR ARROW WORD -> term\n"); ;}
+    break;
+
+  case 61:
+#line 182 "sperly.y"
+    { printf("VAR ARROW WORD ASSIGNOP term -> term\n"); ;}
     break;
 
   case 62:
-#line 181 "sperly.y"
-    { printf("VAR ARROW WORD ASSIGNOP term -> term\n"); ;}
+#line 184 "sperly.y"
+    { printf("VAR ARROW WORD ( )\n"); ;}
     break;
 
   case 63:
-#line 183 "sperly.y"
-    { printf("VAR ARROW WORD ( )\n"); ;}
+#line 186 "sperly.y"
+    { printf("VAR ARROW WORD ( terms )\n"); ;}
     break;
 
   case 64:
-#line 185 "sperly.y"
-    { printf("VAR ARROW WORD ( terms )\n"); ;}
-    break;
-
-  case 65:
-#line 187 "sperly.y"
+#line 188 "sperly.y"
     { printf("VAR ARROW WORD -> term\n"); ;}
     break;
 
-  case 66:
-#line 189 "sperly.y"
+  case 65:
+#line 190 "sperly.y"
     { printf("VAR ARROW WORD ASSIGNOP term -> term\n"); ;}
     break;
 
-  case 67:
-#line 191 "sperly.y"
+  case 66:
+#line 192 "sperly.y"
     { printf("VAR ARROW WORD ( )\n"); ;}
     break;
 
-  case 68:
-#line 193 "sperly.y"
+  case 67:
+#line 194 "sperly.y"
     { printf("VAR ARROW WORD ( terms )\n"); ;}
     break;
 
-  case 69:
-#line 195 "sperly.y"
+  case 68:
+#line 196 "sperly.y"
     { printf("VAR ARROW [ term ]\n"); ;}
     break;
 
-  case 70:
-#line 197 "sperly.y"
+  case 69:
+#line 198 "sperly.y"
     { printf("declvar -> term\n"); ;}
     break;
 
+  case 70:
+#line 200 "sperly.y"
+    {
+      (yyval.opval) = (yyvsp[(1) - (1)].opval);
+      printf("INT -> term (%d)\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.iv);
+    ;}
+    break;
+
   case 71:
-#line 199 "sperly.y"
-    { printf("STRING(%s) -> statement\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.pv); ;}
+#line 205 "sperly.y"
+    {
+      (yyval.opval) = (yyvsp[(1) - (1)].opval);
+      printf("STRING(%s) -> statement\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.pv);
+    ;}
     break;
 
   case 72:
-#line 203 "sperly.y"
+#line 212 "sperly.y"
     { printf("WORD -> subname\n"); ;}
     break;
 
   case 73:
-#line 207 "sperly.y"
+#line 216 "sperly.y"
     { printf("subarg -> subargs\n"); ;}
     break;
 
   case 74:
-#line 209 "sperly.y"
+#line 218 "sperly.y"
     { printf("subargs , subarg\n"); ;}
     break;
 
   case 75:
-#line 213 "sperly.y"
+#line 222 "sperly.y"
     { printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_SVOP*)(yyvsp[(1) - (3)].opval))->uv.pv); ;}
     break;
 
   case 76:
-#line 217 "sperly.y"
+#line 226 "sperly.y"
     { printf("type -> modiftype\n"); ;}
     break;
 
   case 77:
-#line 219 "sperly.y"
-    { printf("modifier type -> modiftype"); ;}
+#line 228 "sperly.y"
+    { printf("modifier type -> modiftype\n"); ;}
     break;
 
   case 78:
-#line 223 "sperly.y"
+#line 232 "sperly.y"
     { printf("WORD -> type (%s)\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.pv); ;}
     break;
 
   case 79:
-#line 227 "sperly.y"
+#line 236 "sperly.y"
     { printf("WORD -> modifier\n"); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 2051 "sperly.tab.c"
+#line 2060 "sperly.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2261,7 +2270,7 @@ yyreturn:
 }
 
 
-#line 230 "sperly.y"
+#line 239 "sperly.y"
 
 
 
