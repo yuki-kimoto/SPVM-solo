@@ -523,11 +523,11 @@ static const yytype_uint8 yyrline[] =
       63,    65,    67,    69,    71,    73,    75,    77,    79,    81,
       83,    85,    87,    89,    93,    94,    97,    99,   101,   105,
      107,   111,   113,   117,   119,   123,   125,   127,   129,   131,
-     133,   135,   137,   139,   141,   143,   145,   147,   149,   151,
-     153,   155,   157,   159,   161,   163,   165,   167,   169,   171,
-     173,   175,   177,   179,   181,   183,   185,   187,   189,   191,
-     193,   195,   199,   203,   205,   209,   213,   215,   219,   223,
-     225
+     133,   135,   137,   139,   141,   146,   148,   150,   152,   154,
+     156,   158,   160,   162,   164,   166,   168,   170,   172,   174,
+     176,   178,   180,   182,   184,   186,   188,   190,   192,   194,
+     196,   198,   202,   206,   208,   212,   216,   218,   222,   226,
+     228
 };
 #endif
 
@@ -1854,7 +1854,7 @@ yyreduce:
 
   case 42:
 #line 138 "sperly.y"
-    { printf("+ term -> term\n"); ;}
+    {printf("+ term -> term\n"); ;}
     break;
 
   case 43:
@@ -1864,187 +1864,190 @@ yyreduce:
 
   case 44:
 #line 142 "sperly.y"
-    { printf("term + term -> term\n"); ;}
+    {
+      /* $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $1, $3); */
+      printf("term + term -> term\n");
+    ;}
     break;
 
   case 45:
-#line 144 "sperly.y"
+#line 147 "sperly.y"
     { printf("term - term -> term\n"); ;}
     break;
 
   case 46:
-#line 146 "sperly.y"
+#line 149 "sperly.y"
     { printf("term * term -> term\n"); ;}
     break;
 
   case 47:
-#line 148 "sperly.y"
+#line 151 "sperly.y"
     { printf("INT -> term (%d)\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.iv); ;}
     break;
 
   case 48:
-#line 150 "sperly.y"
+#line 153 "sperly.y"
     { printf("BOOL -> term (%d)\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.iv); ;}
     break;
 
   case 49:
-#line 152 "sperly.y"
+#line 155 "sperly.y"
     { printf("subname () -> term\n"); ;}
     break;
 
   case 50:
-#line 154 "sperly.y"
+#line 157 "sperly.y"
     { printf("subname (terms) -> term\n"); ;}
     break;
 
   case 51:
-#line 156 "sperly.y"
+#line 159 "sperly.y"
     { printf("term RELOP term -> term %d\n", (yyvsp[(2) - (3)].ival)); ;}
     break;
 
   case 52:
-#line 158 "sperly.y"
+#line 161 "sperly.y"
     { printf("term EQOP term -> term\n"); ;}
     break;
 
   case 53:
-#line 160 "sperly.y"
+#line 163 "sperly.y"
     { printf("term ASSIGNOP term -> term\n"); ;}
     break;
 
   case 54:
-#line 162 "sperly.y"
+#line 165 "sperly.y"
     { printf("term ANDOP term -> term\n"); ;}
     break;
 
   case 55:
-#line 164 "sperly.y"
+#line 167 "sperly.y"
     { printf("term OROP term -> term\n"); ;}
     break;
 
   case 56:
-#line 166 "sperly.y"
+#line 169 "sperly.y"
     { printf("term BITANDOP term -> term\n"); ;}
     break;
 
   case 57:
-#line 168 "sperly.y"
+#line 171 "sperly.y"
     { printf("term BITOROP term -> term\n"); ;}
     break;
 
   case 58:
-#line 170 "sperly.y"
+#line 173 "sperly.y"
     { printf("term SHIFTOP term\n"); ;}
     break;
 
   case 59:
-#line 172 "sperly.y"
+#line 175 "sperly.y"
     { printf("SUB : modiftype () block -> term\n"); ;}
     break;
 
   case 60:
-#line 174 "sperly.y"
+#line 177 "sperly.y"
     { printf("SUB : modiftype ( subargs ) block -> term\n"); ;}
     break;
 
   case 61:
-#line 176 "sperly.y"
+#line 179 "sperly.y"
     { printf("( term ) -> term\n"); ;}
     break;
 
   case 62:
-#line 178 "sperly.y"
+#line 181 "sperly.y"
     { printf("VAR ARROW WORD -> term\n"); ;}
     break;
 
   case 63:
-#line 180 "sperly.y"
+#line 183 "sperly.y"
     { printf("VAR ARROW WORD ASSIGNOP term -> term\n"); ;}
     break;
 
   case 64:
-#line 182 "sperly.y"
+#line 185 "sperly.y"
     { printf("VAR ARROW WORD ( )\n"); ;}
     break;
 
   case 65:
-#line 184 "sperly.y"
+#line 187 "sperly.y"
     { printf("VAR ARROW WORD ( terms )\n"); ;}
     break;
 
   case 66:
-#line 186 "sperly.y"
+#line 189 "sperly.y"
     { printf("VAR ARROW WORD -> term\n"); ;}
     break;
 
   case 67:
-#line 188 "sperly.y"
+#line 191 "sperly.y"
     { printf("VAR ARROW WORD ASSIGNOP term -> term\n"); ;}
     break;
 
   case 68:
-#line 190 "sperly.y"
+#line 193 "sperly.y"
     { printf("VAR ARROW WORD ( )\n"); ;}
     break;
 
   case 69:
-#line 192 "sperly.y"
+#line 195 "sperly.y"
     { printf("VAR ARROW WORD ( terms )\n"); ;}
     break;
 
   case 70:
-#line 194 "sperly.y"
+#line 197 "sperly.y"
     { printf("VAR ARROW [ term ]\n"); ;}
     break;
 
   case 71:
-#line 196 "sperly.y"
+#line 199 "sperly.y"
     { printf("declvar -> term\n"); ;}
     break;
 
   case 72:
-#line 200 "sperly.y"
+#line 203 "sperly.y"
     { printf("WORD -> subname\n"); ;}
     break;
 
   case 73:
-#line 204 "sperly.y"
+#line 207 "sperly.y"
     { printf("subarg -> subargs\n"); ;}
     break;
 
   case 74:
-#line 206 "sperly.y"
+#line 209 "sperly.y"
     { printf("subargs , subarg\n"); ;}
     break;
 
   case 75:
-#line 210 "sperly.y"
+#line 213 "sperly.y"
     { printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_SVOP*)(yyvsp[(1) - (3)].opval))->uv.pv); ;}
     break;
 
   case 76:
-#line 214 "sperly.y"
+#line 217 "sperly.y"
     { printf("type -> modiftype\n"); ;}
     break;
 
   case 77:
-#line 216 "sperly.y"
+#line 219 "sperly.y"
     { printf("modifier type -> modiftype"); ;}
     break;
 
   case 78:
-#line 220 "sperly.y"
+#line 223 "sperly.y"
     { printf("WORD -> type (%s)\n", ((SPerl_SVOP*)(yyvsp[(1) - (1)].opval))->uv.pv); ;}
     break;
 
   case 79:
-#line 224 "sperly.y"
+#line 227 "sperly.y"
     { printf("WORD -> modifier\n"); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 2048 "sperly.tab.c"
+#line 2051 "sperly.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2258,7 +2261,7 @@ yyreturn:
 }
 
 
-#line 227 "sperly.y"
+#line 230 "sperly.y"
 
 
 

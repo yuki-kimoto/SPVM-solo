@@ -135,11 +135,14 @@ term
   | term DECOP
     { printf("term DECOP\n") }
   | '+' term %prec UMINUS
-    { printf("+ term -> term\n"); }
+    {printf("+ term -> term\n"); }
   | '-' term %prec UMINUS
     { printf("- term -> term\n"); }
   | term '+' term %prec ADDOP
-    { printf("term + term -> term\n"); }
+    {
+      /* $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $1, $3); */
+      printf("term + term -> term\n");
+    }
   | term '-' term %prec ADDOP
     { printf("term - term -> term\n"); }
   | term MULOP term
