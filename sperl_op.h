@@ -98,4 +98,7 @@ enum SPerl_OP_EXPECT {
     /* o->op_ppaddr = PL_ppaddr[type]; */\
   } STMT_END
 
+#define SPerl_NewOp(var, c, type)	\
+  (var = (type *) Perl_Slab_Alloc(c*sizeof(type)))
+
 #endif
