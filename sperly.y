@@ -1,6 +1,6 @@
 %pure-parser
-%parse-param	{ static_yy_parser* parser }
-%lex-param	{ static_yy_parser* parser }
+%parse-param	{ SPerl_yy_parser* parser }
+%lex-param	{ SPerl_yy_parser* parser }
 
 %{
   #include <stdio.h>
@@ -8,8 +8,8 @@
   #include <stdlib.h>
   #include <string.h>
   
-  #include "static_parser.h"
-  #include "static_op.h"
+  #include "sperl_parser.h"
+  #include "sperl_op.h"
 %}
 
 %token <ival> '+' '-'
@@ -87,7 +87,7 @@ statement
   | USE WORD '(' words ')' ';'
     { printf("USE WORD ( words ) ; -> statement\n"); }
   | STRING
-    { printf("STRING(%s) -> statement\n", ((STATIC_SVOP*)$1)->uv.pv); }
+    { printf("STRING(%s) -> statement\n", ((SPerl_SVOP*)$1)->uv.pv); }
     
 words
   : WORD
@@ -121,7 +121,7 @@ terms
 
 term
   : VAR
-    { printf("VAR -> term (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
+    { printf("VAR -> term (%s)\n", ((SPerl_SVOP*)$1)->uv.pv); }
   | NOTOP term
     { printf("NOTOP term -> term\n"); }
   | BITNOTOP term
@@ -145,9 +145,9 @@ term
   | term MULOP term
     { printf("term * term -> term\n"); }
   | INT
-    { printf("INT -> term (%d)\n", ((STATIC_SVOP*)$1)->uv.iv); }
+    { printf("INT -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv); }
   | BOOL
-    { printf("BOOL -> term (%d)\n", ((STATIC_SVOP*)$1)->uv.iv); }
+    { printf("BOOL -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv); }
   | subname '(' ')'
     { printf("subname () -> term\n"); }
   | subname '(' terms  ')'
@@ -207,7 +207,7 @@ subargs
 
 subarg
   : VAR ':' modiftype
-    { printf("VAR : modiftype -> subarg (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
+    { printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_SVOP*)$1)->uv.pv); }
 
 modiftype
   : type
@@ -217,7 +217,7 @@ modiftype
     
 type
   : WORD
-    { printf("WORD -> type (%s)\n", ((STATIC_SVOP*)$1)->uv.pv); }
+    { printf("WORD -> type (%s)\n", ((SPerl_SVOP*)$1)->uv.pv); }
 
 modifier
   : WORD

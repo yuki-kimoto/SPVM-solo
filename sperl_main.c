@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "static_parser.h"
+#include "sperl_parser.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
   }
   
   /* initialize parser */
-  static_yy_parser* parser = malloc(sizeof(static_yy_parser));
+  SPerl_yy_parser* parser = malloc(sizeof(SPerl_yy_parser));
 
   /* Read source file */
   size_t linestr_buf_len;
@@ -33,8 +33,8 @@ int main(int argc, char *argv[])
   /* Initialize parser information */
   parser->bufptr = parser->linestr;
   
-  /* call static_yyparse */
-  int parse_success = static_yyparse(parser);
+  /* call SPerl_yyparse */
+  int parse_success = SPerl_yyparse(parser);
   
   free(parser->linestr);
   free(parser);

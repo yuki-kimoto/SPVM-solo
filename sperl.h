@@ -1,5 +1,5 @@
-#ifndef STATIC_PERL_H
-#define STATIC_PERL_H
+#ifndef SPERL_H
+#define SPERL_H
 
 typedef char U8;
 typedef long I32;
