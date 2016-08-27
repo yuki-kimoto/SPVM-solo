@@ -317,7 +317,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
         }
         
         SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
-        op->type = SPerl_OP_CONST_STRING;
+        op->op_type = SPerl_OP_CONST_STRING;
         op->uv.pv = str;
         
         parser->bufptr = bufptr;
@@ -343,7 +343,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
           var[str_len] = '\0';
           
           SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
-          op->type = SPerl_OP_CONST_STRING;
+          op->op_type = SPerl_OP_CONST_STRING;
           op->uv.pv = var;
           
           parser->bufptr = bufptr;
@@ -375,7 +375,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
           free(num_str);
           
           SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
-          op->type = SPerl_OP_CONST_INT;
+          op->op_type = SPerl_OP_CONST_INT;
           op->uv.iv = num;
           
           parser->bufptr = bufptr;
@@ -459,7 +459,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
               SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
-              op->type = SPerl_OP_CONST_BOOL;
+              op->op_type = SPerl_OP_CONST_BOOL;
               op->uv.iv = 1;
 
               parser->bufptr = bufptr;
@@ -469,7 +469,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
               SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
-              op->type = SPerl_OP_CONST_BOOL;
+              op->op_type = SPerl_OP_CONST_BOOL;
               op->uv.iv = 0;
 
               parser->bufptr = bufptr;
@@ -480,7 +480,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
           }
           
           SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
-          op->type = SPerl_OP_CONST_STRING;
+          op->op_type = SPerl_OP_CONST_STRING;
           op->uv.pv = keyword;
           
           parser->bufptr = bufptr;

@@ -32,21 +32,23 @@ enum SPerl_OP_CODE {
   SPerl_OP_CONST_BOOL,
 };
 
-/* Token(OP) type */
-#define SPerl_BASEOP I32 type;
+/* Base Operation */
+#define SPerl_BASEOP \
+  SPerl_OP* op_next; \
+  SPerl_OP* op_sibparent; \
+  SPerl_OP* (*op_ppaddr)(); \
+  U8 op_type; \
+  U8 op_flags; \
+  U8 op_moresib;
 
-/* Token(OP) expect ID */
-enum SPerl_OP_EXPECT {
-  SPerl_OP_EXPECT_NORMAL,
-  SPerl_OP_EXPECT_WORD
-};
-
+/* Operation */
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 struct SPerl_op {
   SPerl_BASEOP
 };
 
+/* SV operation */
 struct SPerl_svop;
 typedef struct SPerl_svop SPerl_SVOP;
 struct SPerl_svop {
@@ -58,27 +60,36 @@ struct SPerl_svop {
   } uv;
 };
 
+/* Unary operation */
 struct SPerl_unop;
 typedef struct SPerl_unop SPerl_UNOP;
 struct SPerl_unop {
   SPerl_BASEOP
-  SPerl_OP*	op_first;
+  SPerl_OP* op_first;
 };
 
+/* Binary operation */
 struct SPerl_binop;
 typedef struct SPerl_binop SPerl_BINOP;
 struct SPerl_binop {
   SPerl_BASEOP
-  SPerl_OP *	op_first;
-  SPerl_OP *	op_last;
+  SPerl_OP * op_first;
+  SPerl_OP * op_last;
 };
 
+/* List operation */
 struct SPerl_listop;
 typedef struct SPerl_listop SPerl_LISTOP;
 struct SPerl_listop {
   SPerl_BASEOP
-  SPerl_OP*	op_first;
-  SPerl_OP*	op_last;
+  SPerl_OP* op_first;
+  SPerl_OP* op_last;
+};
+
+/* Expected token */
+enum SPerl_OP_EXPECT {
+  SPerl_OP_EXPECT_NORMAL,
+  SPerl_OP_EXPECT_WORD
 };
 
 #endif
