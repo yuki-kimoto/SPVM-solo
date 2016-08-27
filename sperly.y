@@ -144,7 +144,7 @@ term
     { printf("- term -> term\n"); }
   | term '+' term %prec ADDOP
     {
-      $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $<opval>1, $<opval>3);
+      $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $1, $3);
       printf("term + term -> term\n");
     }
   | term '-' term %prec ADDOP
