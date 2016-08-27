@@ -99,6 +99,9 @@ enum SPerl_OP_EXPECT {
   } STMT_END
 
 #define SPerl_NewOp(var, c, type)	\
-  (var = (type *) Perl_Slab_Alloc(c*sizeof(type)))
+  (var = (type *) SPerl_Slab_Alloc(c*sizeof(type)))
+
+SPerl_OP* SPerl_newOP(I32 type, I32 flags);
+SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
 
 #endif
