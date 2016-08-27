@@ -39,6 +39,7 @@ enum SPerl_OP_CODE {
   SPerl_OP* (*op_ppaddr)(); \
   U8 op_type; \
   U8 op_flags; \
+  U8 op_private; \
   U8 op_moresib;
 
 /* Operation */
@@ -100,6 +101,32 @@ enum SPerl_OP_EXPECT {
 
 #define SPerl_NewOp(var, c, type)	\
   (var = (type *) SPerl_Slab_Alloc(c*sizeof(type)))
+
+/* Define bool */
+#ifndef HAS_BOOL
+# ifdef bool
+#  undef bool
+# endif
+# define bool char
+# define HAS_BOOL 1
+#endif
+
+/* cast-to-bool.  A simple (bool) cast may not do the right thing: if bool is
+ * defined as char for example, then the cast from int is
+ * implementation-defined (bool)!!(cbool) in a ternary triggers a bug in xlc on
+ * AIX */
+#define SPerl_cBOOL(cbool) ((cbool) ? (bool)1 : (bool)0)
+
+
+#define SPerl_OpHAS_SIBLING(o) (SPerl_cBOOL((o)->op_moresib))
+#define SPerl_OpSIBLING(o) (0 + (o)->op_moresib ? (o)->op_sibparent : NULL)
+#define SPerl_OpMORESIB_set(o, sib) ((o)->op_moresib = 1, (o)->op_sibparent = (sib))
+#define SPerl_OpLASTSIB_set(o, parent) \
+   ((o)->op_moresib = 0, (o)->op_sibparent = (parent))
+#define SPerl_OpMAYBESIB_set(o, sib, parent) \
+   ((o)->op_sibparent = ((o)->op_moresib = SPerl_cBOOL(sib)) ? (sib) : (parent))
+
+#define SPerl_OPf_KIDS 4 /* There is a firstborn child. */
 
 SPerl_OP* SPerl_newOP(I32 type, I32 flags);
 SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
