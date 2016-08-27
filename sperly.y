@@ -18,6 +18,9 @@
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT STRING BOOL
 
+%type <opval> grammar statements block statement words declvar if else terms
+%type <opval> term subname subargs subarg modiftype type modifier
+
 %right <ival> ASSIGNOP
 %left <ival> OROP
 %left <ival> ANDOP
@@ -120,7 +123,7 @@ terms
 term
   : VAR
     {
-      $<opval>$ = $1;
+      $$ = $1;
       printf("VAR -> term (%s)\n", ((SPerl_SVOP*)$1)->uv.pv)
     }
   | NOTOP term
@@ -141,7 +144,7 @@ term
     { printf("- term -> term\n"); }
   | term '+' term %prec ADDOP
     {
-      $<opval>$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $<opval>1, $<opval>3);
+      $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $<opval>1, $<opval>3);
       printf("term + term -> term\n");
     }
   | term '-' term %prec ADDOP
@@ -198,12 +201,12 @@ term
     { printf("declvar -> term\n"); }
   | INT
     {
-      $<opval>$ = $1;
+      $$ = $1;
       printf("INT -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv);
     }
   | STRING
     {
-      $<opval>$ = $1;
+      $$ = $1;
       printf("STRING(%s) -> statement\n", ((SPerl_SVOP*)$1)->uv.pv);
     }
 
