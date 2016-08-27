@@ -86,8 +86,6 @@ statement
     { printf("USE WORD ( ) ; -> statement\n"); }
   | USE WORD '(' words ')' ';'
     { printf("USE WORD ( words ) ; -> statement\n"); }
-  | STRING
-    { printf("STRING(%s) -> statement\n", ((SPerl_SVOP*)$1)->uv.pv); }
     
 words
   : WORD
@@ -197,6 +195,8 @@ term
     { printf("VAR ARROW [ term ]\n"); }
   | declvar
     { printf("declvar -> term\n"); }
+  | STRING
+    { printf("STRING(%s) -> statement\n", ((SPerl_SVOP*)$1)->uv.pv); }
 
 subname
   : WORD
