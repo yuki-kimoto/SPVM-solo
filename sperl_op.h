@@ -35,6 +35,15 @@ enum SPerl_OP_CODE {
 /* Token(OP) type */
 #define SPerl_BASEOP I32 type;
 
+#define BASEOP\
+  OP* op_next;\
+  OP* op_sibparent;\
+  OP* (*op_ppaddr)();\
+  U8 op_type;\
+  bool op_moresib;\
+  U8 op_flags;\
+#endif
+
 /* Token(OP) expect ID */
 enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_NORMAL,
