@@ -1,6 +1,8 @@
 #ifndef STATIC_OP_H
 #define STATIC_OP_H
 
+#include "static_perl.h"
+
 /* Operation code */
 enum STATIC_OP_CODE {
   STATIC_OP_NULL,
@@ -31,7 +33,7 @@ enum STATIC_OP_CODE {
 };
 
 /* Token(OP) type */
-#define STATIC_BASEOP int type;
+#define STATIC_BASEOP I32 type;
 
 /* Token(OP) expect ID */
 enum STATIC_OP_EXPECT {
