@@ -203,7 +203,7 @@ term
   | INT
     {
       $$ = $1;
-      printf("INT -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv);
+      printf("INT(%d) -> term \n", ((SPerl_SVOP*)$1)->uv.iv);
     }
   | STRING
     {
