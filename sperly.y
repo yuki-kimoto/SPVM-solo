@@ -145,10 +145,8 @@ term
   | term ADDOP term
     {
       $$ = SPerl_newBINOP($2, 0, $1, $3);
-      printf("term + term -> term\n");
+      printf("term ADDOP(%d) term -> term\n", $2);
     }
-  | term '-' term %prec ADDOP
-    { printf("term - term -> term\n"); }
   | term MULOP term
     { printf("term * term -> term\n"); }
   | BOOL

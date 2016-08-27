@@ -80,7 +80,8 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
         }
         else {
           parser->bufptr = bufptr;
-          return '-';
+          SPerl_yylvalp->ival = SPerl_OP_SUBTRACT;
+          return ADDOP;
         }
       /* Multiply */
       case '*':
