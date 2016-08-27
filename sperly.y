@@ -30,7 +30,7 @@
 %nonassoc RELOP
 %left <ival> SHIFTOP
 %left <ival> ADDOP
-%left MULOP
+%left <ival> MULOP
 %right <ival> NOTOP BITNOTOP UMINUS
 %nonassoc <ival> INCOP DECOP
 %left <ival> ARROW
@@ -124,7 +124,7 @@ term
   : VAR
     {
       $$ = $1;
-      printf("VAR -> term (%s)\n", ((SPerl_SVOP*)$1)->uv.pv)
+      printf("VAR(%s) -> term \n", ((SPerl_SVOP*)$1)->uv.pv)
     }
   | NOTOP term
     { printf("NOTOP term -> term\n"); }
@@ -148,7 +148,10 @@ term
       printf("term ADDOP(%d) term -> term\n", $2);
     }
   | term MULOP term
-    { printf("term * term -> term\n"); }
+    {
+      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      printf("term MULOP(%d) term -> term\n", $2);
+    }
   | BOOL
     { printf("BOOL -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv); }
   | subname '(' ')'
