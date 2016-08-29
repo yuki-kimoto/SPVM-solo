@@ -186,11 +186,20 @@ term
       printf("INCOP term -> term\n");
     }
   | term INCOP
-    { printf("term INCOP\n") }
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_POSTINC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTINC));
+      printf("term INCOP\n");
+    }
   | DECOP term
-    { printf("DECOP term\n") }
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_PREDEC, 0, SPerl_op_lvalue($2, SPerl_OP_PREDEC));
+      printf("DECOP term -> term\n");
+    }
   | term DECOP
-    { printf("term DECOP\n") }
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_POSTDEC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTDEC));
+      printf("term DECOP -> term\n");
+    }
   | '+' term %prec UMINUS
     {printf("+ term -> term\n"); }
   | '-' term %prec UMINUS

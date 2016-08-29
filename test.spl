@@ -1,4 +1,12 @@
+++$test;
+$test++;
+
+--$test;
+$test--;
+
 +$test;
+-$test;
++$test - -$test;
 
 1 + 2;
 
@@ -60,15 +68,6 @@ $title >> 2;
 
 $title != 2;
 
-++$test;
-$test++;
-
---$test;
-$test--;
-
-+$test;
--$test;
-+$test - -$test;
 
 $test->x;
 $test->sum();
