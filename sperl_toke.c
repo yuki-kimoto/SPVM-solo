@@ -285,8 +285,8 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
         bufptr++;
         
         parser->bufptr = bufptr;
-        SPerl_yylvalp->ival = SPerl_OP_BIT_NOT;
-        return BITNOTOP;
+        SPerl_yylvalp->ival = SPerl_OP_COMPLEMENT;
+        return '~';
       
       case '"':
         bufptr++;

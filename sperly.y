@@ -31,7 +31,7 @@
 %left <ival> SHIFTOP
 %left <ival> ADDOP
 %left <ival> MULOP
-%right <ival> NOTOP BITNOTOP UMINUS
+%right <ival> NOTOP '~' UMINUS
 %nonassoc <ival> INCOP DECOP
 %left <ival> ARROW
 %nonassoc <ival> ')'
@@ -206,8 +206,11 @@ term
       $$ = SPerl_newBINOP($2, 0, $1, $3);
       printf("term SHIFTOP term -> term\n");
     }
-  | BITNOTOP term
-    { printf("BITNOTOP term -> term\n"); }
+  | '~' term
+    {
+      $$ = SPerl_newUNOP($1, 0, $2);
+      printf("~ term -> term\n");
+    }
   | '+' term %prec UMINUS
     {printf("+ term -> term\n"); }
   | '-' term %prec UMINUS
