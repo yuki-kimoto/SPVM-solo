@@ -161,6 +161,11 @@ term
       $$ = SPerl_newUNOP(SPerl_OP_POSTDEC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTDEC));
       printf("term DECOP -> term\n");
     }
+  | NOTOP term
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_NOT, 0, $2);
+      printf("NOTOP term -> term\n");
+    }
   | term '+' term %prec ADDOP
     {
       $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $1, $3);
@@ -201,8 +206,6 @@ term
       $$ = SPerl_newBINOP($2, 0, $1, $3);
       printf("term SHIFTOP term -> term\n");
     }
-  | NOTOP term
-    { printf("NOTOP term -> term\n"); }
   | BITNOTOP term
     { printf("BITNOTOP term -> term\n"); }
   | '+' term %prec UMINUS
