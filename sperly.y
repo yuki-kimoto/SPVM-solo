@@ -181,7 +181,10 @@ term
   | BITNOTOP term
     { printf("BITNOTOP term -> term\n"); }
   | INCOP term
-    { printf("INCOP term\n") }
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_PREINC, 0, SPerl_op_lvalue($2, SPerl_OP_PREINC));
+      printf("INCOP term -> term\n");
+    }
   | term INCOP
     { printf("term INCOP\n") }
   | DECOP term

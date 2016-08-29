@@ -31,6 +31,7 @@ enum SPerl_OP_CODE {
   SPerl_OP_DEC,
   SPerl_OP_BIT_NOT,
   SPerl_OP_CONST_BOOL,
+  SPerl_OP_PREINC
 };
 
 /* Base Operation */
@@ -101,7 +102,10 @@ enum SPerl_OP_EXPECT {
   } STMT_END
 
 #define SPerl_NewOp(var, c, type)	\
-  (var = (type *) SPerl_Slab_Alloc(c*sizeof(type)))
+  (var = (type *) SPerl_Slab_Alloc(c * sizeof(type)))
+
+/* TODO */
+#define SPerl_op_lvalue(op, t) op
 
 /* Define bool */
 #ifndef HAS_BOOL
