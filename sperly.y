@@ -141,6 +141,11 @@ term
       $$ = $1;
       printf("BOOL -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv);
     }
+  | '+' term %prec UMINUS
+    {
+      $$ = $2;
+      printf("+ term -> term\n");
+    }
   | INCOP term
     {
       $$ = SPerl_newUNOP(SPerl_OP_PREINC, 0, SPerl_op_lvalue($2, SPerl_OP_PREINC));
@@ -165,6 +170,16 @@ term
     {
       $$ = SPerl_newUNOP(SPerl_OP_NOT, 0, $2);
       printf("NOTOP term -> term\n");
+    }
+  | '~' term
+    {
+      $$ = SPerl_newUNOP($1, 0, $2);
+      printf("~ term -> term\n");
+    }
+  | '-' term %prec UMINUS
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_NEGATE, 0, $2);
+      printf("- term -> term\n");
     }
   | term '+' term %prec ADDOP
     {
@@ -205,21 +220,6 @@ term
     {
       $$ = SPerl_newBINOP($2, 0, $1, $3);
       printf("term SHIFTOP term -> term\n");
-    }
-  | '~' term
-    {
-      $$ = SPerl_newUNOP($1, 0, $2);
-      printf("~ term -> term\n");
-    }
-  | '+' term %prec UMINUS
-    {
-      $$ = $2;
-      printf("+ term -> term\n");
-    }
-  | '-' term %prec UMINUS
-    {
-      $$ = SPerl_newUNOP(SPerl_OP_NEGATE, 0, $2);
-      printf("- term -> term\n");
     }
   | subname '(' ')'
     { printf("subname () -> term\n"); }
