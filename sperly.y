@@ -254,7 +254,7 @@ term
   | WORD ARROW WORD '(' optlistexpr ')'
     { printf("VAR ARROW WORD ( optlistexpr )\n"); }
   | VAR ARROW '[' term ']'
-    { printf("VAR ARROW [ term ]\n"); }
+    { printf("VAR ARROW [ term ] -> term\n"); }
   | declvar
     { printf("declvar -> term\n"); }
 
