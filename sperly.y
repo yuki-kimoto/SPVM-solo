@@ -212,9 +212,15 @@ term
       printf("~ term -> term\n");
     }
   | '+' term %prec UMINUS
-    {printf("+ term -> term\n"); }
+    {
+      $$ = $2;
+      printf("+ term -> term\n");
+    }
   | '-' term %prec UMINUS
-    { printf("- term -> term\n"); }
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_NEGATE, 0, $2);
+      printf("- term -> term\n");
+    }
   | subname '(' ')'
     { printf("subname () -> term\n"); }
   | subname '(' terms  ')'

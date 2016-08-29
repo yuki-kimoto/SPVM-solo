@@ -35,7 +35,8 @@ enum SPerl_OP_CODE {
   SPerl_OP_POSTINC,
   SPerl_OP_PREDEC,
   SPerl_OP_POSTDEC,
-  SPerl_OP_COMPLEMENT
+  SPerl_OP_COMPLEMENT,
+  SPerl_OP_NEGATE
 };
 
 /* Base Operation */
