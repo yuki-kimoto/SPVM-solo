@@ -6,6 +6,7 @@
 /* Operation code */
 enum SPerl_OP_CODE {
   SPerl_OP_NULL,
+  SPerl_OP_STUB,
   SPerl_OP_CONST_INT,
   SPerl_OP_CONST_FLOAT,
   SPerl_OP_CONST_STRING,
@@ -129,6 +130,7 @@ enum SPerl_OP_EXPECT {
 #define SPerl_OPf_KIDS 4 /* There is a firstborn child. */
 
 SPerl_OP* SPerl_newOP(I32 type, I32 flags);
+SPerl_OP* SPerl_newUNOP(I32 type, I32 flags, SPerl_OP *first);
 SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
 
 #endif

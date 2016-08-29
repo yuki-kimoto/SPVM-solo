@@ -124,7 +124,52 @@ term
   : VAR
     {
       $$ = $1;
-      printf("VAR(%s) -> term \n", ((SPerl_SVOP*)$1)->uv.pv)
+      printf("VAR(%s) -> term\n", ((SPerl_SVOP*)$1)->uv.pv)
+    }
+  | INT
+    {
+      $$ = $1;
+      printf("INT(%d) -> term\n", ((SPerl_SVOP*)$1)->uv.iv);
+    }
+  | STRING
+    {
+      $$ = $1;
+      printf("STRING(%s) -> term\n", ((SPerl_SVOP*)$1)->uv.pv);
+    }
+  | term ADDOP term
+    {
+      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      printf("term ADDOP(%d) term -> term\n", $2);
+    }
+  | term MULOP term
+    {
+      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      printf("term MULOP(%d) term -> term\n", $2);
+    }
+  | term RELOP term
+    {
+      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      printf("term RELOP term -> term %d\n", $2);
+    }
+  | term EQOP term
+    {
+      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      printf("term EQOP term -> term\n");
+    }
+  | term BITANDOP term
+    {
+      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      printf("term BITANDOP term -> term\n");
+    }
+  | term BITOROP term
+    {
+      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      printf("term BITOROP term -> term\n");
+    }
+  | term SHIFTOP term
+    {
+      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      printf("term SHIFTOP term -> term\n");
     }
   | NOTOP term
     { printf("NOTOP term -> term\n"); }
@@ -142,38 +187,18 @@ term
     {printf("+ term -> term\n"); }
   | '-' term %prec UMINUS
     { printf("- term -> term\n"); }
-  | term ADDOP term
-    {
-      $$ = SPerl_newBINOP($2, 0, $1, $3);
-      printf("term ADDOP(%d) term -> term\n", $2);
-    }
-  | term MULOP term
-    {
-      $$ = SPerl_newBINOP($2, 0, $1, $3);
-      printf("term MULOP(%d) term -> term\n", $2);
-    }
   | BOOL
     { printf("BOOL -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv); }
   | subname '(' ')'
     { printf("subname () -> term\n"); }
   | subname '(' terms  ')'
     { printf("subname (terms) -> term\n"); }
-  | term RELOP term
-    { printf("term RELOP term -> term %d\n", $2); }
-  | term EQOP term
-    { printf("term EQOP term -> term\n"); }
   | term ASSIGNOP term
     { printf("term ASSIGNOP term -> term\n"); }
   | term ANDOP term
     { printf("term ANDOP term -> term\n"); }
   | term OROP term
     { printf("term OROP term -> term\n"); }
-  | term BITANDOP term
-    { printf("term BITANDOP term -> term\n"); }
-  | term BITOROP term
-    { printf("term BITOROP term -> term\n"); }
-  | term SHIFTOP term
-    { printf("term SHIFTOP term\n"); }
   | SUB ':' modiftype '(' ')' block
     { printf("SUB : modiftype () block -> term\n"); }
   | SUB ':' modiftype '(' subargs ')' block
@@ -200,16 +225,6 @@ term
     { printf("VAR ARROW [ term ]\n"); }
   | declvar
     { printf("declvar -> term\n"); }
-  | INT
-    {
-      $$ = $1;
-      printf("INT(%d) -> term \n", ((SPerl_SVOP*)$1)->uv.iv);
-    }
-  | STRING
-    {
-      $$ = $1;
-      printf("STRING(%s) -> statement\n", ((SPerl_SVOP*)$1)->uv.pv);
-    }
 
 subname
   : WORD
