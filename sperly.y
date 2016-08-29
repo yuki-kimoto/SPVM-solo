@@ -18,7 +18,7 @@
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT STRING BOOL
 
-%type <opval> grammar statements block statement words declvar if else terms
+%type <opval> grammar statements block statement words declvar if else listexpr
 %type <opval> term subname subargs subarg modiftype type modifier
 
 %right <ival> ASSIGNOP
@@ -81,8 +81,8 @@ statement
     { printf("CONTINUE ; -> statement\n"); }
   | RETURN term ';'
     { printf("RETURN term ; -> statement\n"); }
-  | RETURN '(' terms ')' ';'
-    { printf("RETURN ( terms ) ; -> statement\n"); }
+  | RETURN '(' listexpr ')' ';'
+    { printf("RETURN ( listexpr ) ; -> statement\n"); }
   | USE WORD ';'
     { printf("USE WORD ; -> statement\n"); }
   | USE WORD '(' ')' ';'
@@ -114,11 +114,11 @@ else
   | ELSIF '(' term ')' block else
     { printf("elsif ( term ) block else\n"); }
 
-terms
+listexpr
   : term
-    { printf("term -> terms\n"); }
-  | terms ',' term
-    { printf("terms , term -> terms\n"); }
+    { printf("term -> listexpr\n"); }
+  | listexpr ',' term
+    { printf("listexpr , term -> listexpr\n"); }
 
 term
   : VAR
@@ -223,8 +223,8 @@ term
     }
   | subname '(' ')'
     { printf("subname () -> term\n"); }
-  | subname '(' terms  ')'
-    { printf("subname (terms) -> term\n"); }
+  | subname '(' listexpr  ')'
+    { printf("subname (listexpr) -> term\n"); }
   | term ASSIGNOP term
     { printf("term ASSIGNOP term -> term\n"); }
   | term ANDOP term
@@ -243,16 +243,16 @@ term
     { printf("VAR ARROW WORD ASSIGNOP term -> term\n"); }
   | VAR ARROW WORD '(' ')'
     { printf("VAR ARROW WORD ( )\n"); }
-  | VAR ARROW WORD '(' terms ')'
-    { printf("VAR ARROW WORD ( terms )\n"); }
+  | VAR ARROW WORD '(' listexpr ')'
+    { printf("VAR ARROW WORD ( listexpr )\n"); }
   | WORD ARROW WORD
     { printf("VAR ARROW WORD -> term\n"); }
   | WORD ARROW WORD ASSIGNOP term
     { printf("VAR ARROW WORD ASSIGNOP term -> term\n"); }
   | WORD ARROW WORD '(' ')'
     { printf("VAR ARROW WORD ( )\n"); }
-  | WORD ARROW WORD '(' terms ')'
-    { printf("VAR ARROW WORD ( terms )\n"); }
+  | WORD ARROW WORD '(' listexpr ')'
+    { printf("VAR ARROW WORD ( listexpr )\n"); }
   | VAR ARROW '[' term ']'
     { printf("VAR ARROW [ term ]\n"); }
   | declvar
