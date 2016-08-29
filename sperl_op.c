@@ -2,9 +2,44 @@
 #include "sperl_op.h"
 #include <malloc.h>
 
+
 void* SPerl_Slab_Alloc(size_t sz) {
   /* TODO */
   return malloc(sizeof(char) * sz);
+}
+
+SPerl_OP* SPerl_newLISTOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last) {
+  SPerl_LISTOP* listop;
+
+  SPerl_NewOp(listop, 1, SPerl_LISTOP);
+
+  SPerl_OpTYPE_set(listop, type);
+  if (first || last)
+    flags |= SPerl_OPf_KIDS;
+  listop->op_flags = (U8)flags;
+
+  if (!last && first)
+    last = first;
+  else if (!first && last)
+    first = last;
+  else if (first)
+    SPerl_OpMORESIB_set(first, last);
+
+  listop->op_first = first;
+  listop->op_last = last;
+
+  if (type == SPerl_OP_LIST) {
+    SPerl_OP* const pushop = SPerl_newOP(SPerl_OP_PUSHMARK, 0);
+    SPerl_OpMORESIB_set(pushop, first);
+    listop->op_first = pushop;
+    listop->op_flags |= SPerl_OPf_KIDS;
+    if (!last)
+      listop->op_last = pushop;
+  }
+  if (listop->op_last)
+    SPerl_OpLASTSIB_set(listop->op_last, (SPerl_OP*)listop);
+
+  return (SPerl_OP*)listop;
 }
 
 SPerl_OP* SPerl_newOP(I32 type, I32 flags) {

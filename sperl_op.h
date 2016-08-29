@@ -36,7 +36,9 @@ enum SPerl_OP_CODE {
   SPerl_OP_PREDEC,
   SPerl_OP_POSTDEC,
   SPerl_OP_COMPLEMENT,
-  SPerl_OP_NEGATE
+  SPerl_OP_NEGATE,
+  SPerl_OP_LIST,
+  SPerl_OP_PUSHMARK
 };
 
 /* Base Operation */
@@ -137,9 +139,12 @@ enum SPerl_OP_EXPECT {
    ((o)->op_sibparent = ((o)->op_moresib = SPerl_cBOOL(sib)) ? (sib) : (parent))
 
 #define SPerl_OPf_KIDS 4 /* There is a firstborn child. */
+#define SPerl_OPf_PARENS 8 /* This operator was parenthesized. */
 
 SPerl_OP* SPerl_newOP(I32 type, I32 flags);
 SPerl_OP* SPerl_newUNOP(I32 type, I32 flags, SPerl_OP *first);
 SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
+SPerl_OP* SPerl_newLISTOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
+
 
 #endif
