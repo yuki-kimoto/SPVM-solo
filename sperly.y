@@ -136,6 +136,31 @@ term
       $$ = $1;
       printf("STRING(%s) -> term\n", ((SPerl_SVOP*)$1)->uv.pv);
     }
+  | BOOL
+    {
+      $$ = $1;
+      printf("BOOL -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv);
+    }
+  | INCOP term
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_PREINC, 0, SPerl_op_lvalue($2, SPerl_OP_PREINC));
+      printf("INCOP term -> term\n");
+    }
+  | term INCOP
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_POSTINC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTINC));
+      printf("term INCOP\n");
+    }
+  | DECOP term
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_PREDEC, 0, SPerl_op_lvalue($2, SPerl_OP_PREDEC));
+      printf("DECOP term -> term\n");
+    }
+  | term DECOP
+    {
+      $$ = SPerl_newUNOP(SPerl_OP_POSTDEC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTDEC));
+      printf("term DECOP -> term\n");
+    }
   | term '+' term %prec ADDOP
     {
       $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $1, $3);
@@ -180,32 +205,10 @@ term
     { printf("NOTOP term -> term\n"); }
   | BITNOTOP term
     { printf("BITNOTOP term -> term\n"); }
-  | INCOP term
-    {
-      $$ = SPerl_newUNOP(SPerl_OP_PREINC, 0, SPerl_op_lvalue($2, SPerl_OP_PREINC));
-      printf("INCOP term -> term\n");
-    }
-  | term INCOP
-    {
-      $$ = SPerl_newUNOP(SPerl_OP_POSTINC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTINC));
-      printf("term INCOP\n");
-    }
-  | DECOP term
-    {
-      $$ = SPerl_newUNOP(SPerl_OP_PREDEC, 0, SPerl_op_lvalue($2, SPerl_OP_PREDEC));
-      printf("DECOP term -> term\n");
-    }
-  | term DECOP
-    {
-      $$ = SPerl_newUNOP(SPerl_OP_POSTDEC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTDEC));
-      printf("term DECOP -> term\n");
-    }
   | '+' term %prec UMINUS
     {printf("+ term -> term\n"); }
   | '-' term %prec UMINUS
     { printf("- term -> term\n"); }
-  | BOOL
-    { printf("BOOL -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv); }
   | subname '(' ')'
     { printf("subname () -> term\n"); }
   | subname '(' terms  ')'
