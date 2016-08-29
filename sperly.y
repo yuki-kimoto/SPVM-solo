@@ -136,10 +136,15 @@ term
       $$ = $1;
       printf("STRING(%s) -> term\n", ((SPerl_SVOP*)$1)->uv.pv);
     }
-  | term ADDOP term
+  | term '+' term %prec ADDOP
     {
-      $$ = SPerl_newBINOP($2, 0, $1, $3);
-      printf("term ADDOP(%d) term -> term\n", $2);
+      $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $1, $3);
+      printf("term + term -> term\n", $2);
+    }
+  | term '-' term %prec ADDOP
+    {
+      $$ = SPerl_newBINOP(SPerl_OP_SUBTRACT, 0, $1, $3);
+      printf("term - term -> term\n", $2);
     }
   | term MULOP term
     {

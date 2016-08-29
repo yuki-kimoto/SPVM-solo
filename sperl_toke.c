@@ -51,9 +51,8 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
         }
         else {
           parser->bufptr = bufptr;
-          SPerl_yylvalp->ival = SPerl_OP_ADD;
           
-          return ADDOP;
+          return '+';
         }
       
       /* Subtract */
@@ -80,8 +79,8 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
         }
         else {
           parser->bufptr = bufptr;
-          SPerl_yylvalp->ival = SPerl_OP_SUBTRACT;
-          return ADDOP;
+
+          return '-';
         }
       /* Multiply */
       case '*':
