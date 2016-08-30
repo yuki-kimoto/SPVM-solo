@@ -18,7 +18,7 @@
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT STRING BOOL
 
-%type <opval> grammar statements block statement words declvar if else listexpr optlistexpr
+%type <opval> grammar statements block statement declvar if else listexpr optlistexpr
 %type <opval> term subname subargs subarg modiftype type modifier optsubargs
 
 %right <ival> ASSIGNOP
@@ -81,17 +81,9 @@ statement
     { printf("RETURN term ; -> statement\n"); }
   | RETURN '(' listexpr ')' ';'
     { printf("RETURN ( listexpr ) ; -> statement\n"); }
-  | USE WORD ';'
-    { printf("USE WORD ; -> statement\n"); }
-  | USE WORD '(' ')' ';'
-    { printf("USE WORD ( ) ; -> statement\n"); }
-  | USE WORD '(' words ')' ';'
-    { printf("USE WORD ( words ) ; -> statement\n"); }
+  | USE WORD optlistexpr';'
+    { printf("USE WORD optlistexpr ; -> statement\n"); }
     
-words
-  : WORD
-  | words ',' WORD
-
 declvar
   : MY VAR ':' modiftype
     { printf("MY VAR : modiftype -> declvar\n"); }

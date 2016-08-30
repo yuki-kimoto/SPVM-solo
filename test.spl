@@ -81,8 +81,7 @@ $test->x = 3;
 $test->last;
 
 use Point;
-use Point ();
-use Point (foo, bar);
+use Point "foo", "bar";
 
 while (1) {
   1;
