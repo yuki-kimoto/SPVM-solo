@@ -38,7 +38,8 @@ enum SPerl_OP_CODE {
   SPerl_OP_COMPLEMENT,
   SPerl_OP_NEGATE,
   SPerl_OP_LIST,
-  SPerl_OP_PUSHMARK
+  SPerl_OP_PUSHMARK,
+  SPerl_OP_AELEM
 };
 
 /* Base Operation */
