@@ -129,6 +129,35 @@ listexpr
   | term
     { printf("term -> listexpr\n"); }
 
+subname
+  : WORD
+    { printf("WORD -> subname\n"); }
+
+subargs
+  : subarg
+    { printf("subarg -> subargs\n"); }
+  | subargs ',' subarg
+    { printf("subargs , subarg\n"); }
+
+subarg
+  : VAR ':' modiftype
+    { printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_SVOP*)$1)->uv.pv); }
+
+modiftype
+  : type
+    { printf("type -> modiftype\n"); }
+  | modifier type
+    { printf("modifier type -> modiftype\n"); }
+    
+type
+  : WORD
+    { printf("WORD -> type (%s)\n", ((SPerl_SVOP*)$1)->uv.pv); }
+
+modifier
+  : WORD
+    { printf("WORD -> modifier\n"); }
+  | modifier WORD
+
 term
   : VAR
     {
@@ -262,35 +291,6 @@ term
     { printf("WORD ARROW WORD ( optlistexpr )\n"); }
   | declvar
     { printf("declvar -> term\n"); }
-
-subname
-  : WORD
-    { printf("WORD -> subname\n"); }
-
-subargs
-  : subarg
-    { printf("subarg -> subargs\n"); }
-  | subargs ',' subarg
-    { printf("subargs , subarg\n"); }
-
-subarg
-  : VAR ':' modiftype
-    { printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_SVOP*)$1)->uv.pv); }
-
-modiftype
-  : type
-    { printf("type -> modiftype\n"); }
-  | modifier type
-    { printf("modifier type -> modiftype\n"); }
-    
-type
-  : WORD
-    { printf("WORD -> type (%s)\n", ((SPerl_SVOP*)$1)->uv.pv); }
-
-modifier
-  : WORD
-    { printf("WORD -> modifier\n"); }
-  | modifier WORD
 
 %%
 
