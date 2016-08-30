@@ -18,7 +18,7 @@
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT STRING BOOL
 
-%type <opval> grammar statements block statement declvar if else listexpr optlistexpr
+%type <opval> grammar statements block statement declvar if else terms optterms
 %type <opval> term subname subargs subarg modiftype type modifier optsubargs
 
 %right <ival> ASSIGNOP
@@ -79,10 +79,10 @@ statement
     { printf("CONTINUE ; -> statement\n"); }
   | RETURN term ';'
     { printf("RETURN term ; -> statement\n"); }
-  | RETURN '(' listexpr ')' ';'
-    { printf("RETURN ( listexpr ) ; -> statement\n"); }
-  | USE WORD optlistexpr';'
-    { printf("USE WORD optlistexpr ; -> statement\n"); }
+  | RETURN '(' terms ')' ';'
+    { printf("RETURN ( terms ) ; -> statement\n"); }
+  | USE WORD optterms';'
+    { printf("USE WORD optterms ; -> statement\n"); }
     
 declvar
   : MY VAR ':' modiftype
@@ -104,20 +104,20 @@ else
   | ELSIF '(' term ')' block else
     { printf("elsif ( term ) block else\n"); }
 
-optlistexpr
+optterms
   :	/* NULL */
     { $$ = (SPerl_OP*)NULL; }
-  |	listexpr
+  |	terms
     { $$ = $1; }
 
-listexpr
-  : listexpr ',' term
+terms
+  : terms ',' term
     {
       
-      printf("listexpr , term -> listexpr\n");
+      printf("terms , term -> terms\n");
     }
   | term
-    { printf("term -> listexpr\n"); }
+    { printf("term -> terms\n"); }
 
 subname
   : WORD
@@ -265,8 +265,8 @@ term
       SPerl_newBINOP(SPerl_OP_ATTR, 0, $1, $3);
       printf("VAR ARROW WORD -> term\n");
     }
-  | subname '(' optlistexpr  ')'
-    { printf("subname (optlistexpr) -> term\n"); }
+  | subname '(' optterms  ')'
+    { printf("subname (optterms) -> term\n"); }
   | term ASSIGNOP term
     { printf("term ASSIGNOP term -> term\n"); }
   | term ANDOP term
@@ -277,12 +277,12 @@ term
     { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
   | '(' term ')'
     { printf("( term ) -> term\n"); }
-  | VAR ARROW WORD '(' optlistexpr ')'
-    { printf("VAR ARROW WORD ( optlistexpr )\n"); }
+  | VAR ARROW WORD '(' optterms ')'
+    { printf("VAR ARROW WORD ( optterms )\n"); }
   | WORD ARROW WORD
     { printf("WORD ARROW WORD -> term\n"); }
-  | WORD ARROW WORD '(' optlistexpr ')'
-    { printf("WORD ARROW WORD ( optlistexpr )\n"); }
+  | WORD ARROW WORD '(' optterms ')'
+    { printf("WORD ARROW WORD ( optterms )\n"); }
   | declvar
     { printf("declvar -> term\n"); }
 
