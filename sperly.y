@@ -254,8 +254,6 @@ term
     { printf("SUB : modiftype ( subargs ) block -> term\n"); }
   | '(' term ')'
     { printf("( term ) -> term\n"); }
-  | VAR ARROW WORD ASSIGNOP term
-    { printf("VAR ARROW WORD ASSIGNOP term -> term\n"); }
   | VAR ARROW WORD '(' optlistexpr ')'
     { printf("VAR ARROW WORD ( optlistexpr )\n"); }
   | WORD ARROW WORD

@@ -97,6 +97,7 @@ sum::foo();
 $sum_::foo;
 
 $title->[3];
+$title->[3] = 4;
 
 my $title : int = true;
 my $title : int = false;
