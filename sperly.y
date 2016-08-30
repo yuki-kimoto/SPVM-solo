@@ -19,7 +19,7 @@
 %token <opval> WORD VAR INT STRING BOOL
 
 %type <opval> grammar statements block statement words declvar if else listexpr optlistexpr
-%type <opval> term subname subargs subarg modiftype type modifier
+%type <opval> term subname subargs subarg modiftype type modifier optsubargs
 
 %right <ival> ASSIGNOP
 %left <ival> OROP
@@ -59,9 +59,7 @@ block
     { printf("{ statements } -> block\n"); }
 
 statement
-  : SUB subname ':' modiftype '(' ')' block
-    { printf("SUB subname : modiftype ( ) block -> statement\n"); }
-  | SUB subname ':' modiftype '(' subargs ')' block
+  : SUB subname ':' modiftype '(' optsubargs ')' block
     { printf("SUB subname : modiftype ( subargs ) block -> statement\n"); }
   | term ';'
     { printf("term ; -> statement\n") }
@@ -132,6 +130,12 @@ listexpr
 subname
   : WORD
     { printf("WORD -> subname\n"); }
+
+optsubargs
+  :	/* NULL */
+    { $$ = (SPerl_OP*)NULL; }
+  |	subargs
+    { $$ = $1; }
 
 subargs
   : subarg
@@ -277,10 +281,8 @@ term
     { printf("term ANDOP term -> term\n"); }
   | term OROP term
     { printf("term OROP term -> term\n"); }
-  | SUB ':' modiftype '(' ')' block
-    { printf("SUB : modiftype () block -> term\n"); }
-  | SUB ':' modiftype '(' subargs ')' block
-    { printf("SUB : modiftype ( subargs ) block -> term\n"); }
+  | SUB ':' modiftype '(' optsubargs ')' block
+    { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
   | '(' term ')'
     { printf("( term ) -> term\n"); }
   | VAR ARROW WORD '(' optlistexpr ')'
