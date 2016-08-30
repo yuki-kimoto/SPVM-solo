@@ -275,8 +275,6 @@ term
     { printf("term OROP term -> term\n"); }
   | SUB ':' modiftype '(' optsubargs ')' block
     { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
-  | '(' term ')'
-    { printf("( term ) -> term\n"); }
   | VAR ARROW WORD '(' optterms ')'
     { printf("VAR ARROW WORD ( optterms )\n"); }
   | WORD ARROW WORD
