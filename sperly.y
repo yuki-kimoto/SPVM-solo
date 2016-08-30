@@ -258,8 +258,6 @@ term
     { printf("VAR ARROW WORD ( optlistexpr )\n"); }
   | WORD ARROW WORD
     { printf("VAR ARROW WORD -> term\n"); }
-  | WORD ARROW WORD ASSIGNOP term
-    { printf("VAR ARROW WORD ASSIGNOP term -> term\n"); }
   | WORD ARROW WORD '(' optlistexpr ')'
     { printf("VAR ARROW WORD ( optlistexpr )\n"); }
   | declvar
