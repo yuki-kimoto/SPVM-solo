@@ -235,6 +235,11 @@ term
       $$ = SPerl_newBINOP(SPerl_OP_AELEM, 0, $1, $4);
       printf("VAR ARROW [ term ] -> term\n");
     }
+  | VAR ARROW WORD
+    {
+      SPerl_newBINOP(SPerl_OP_ATTR, 0, $1, $3);
+      printf("VAR ARROW WORD -> term\n");
+    }
   | subname '(' optlistexpr  ')'
     { printf("subname (optlistexpr) -> term\n"); }
   | term ASSIGNOP term
@@ -249,8 +254,6 @@ term
     { printf("SUB : modiftype ( subargs ) block -> term\n"); }
   | '(' term ')'
     { printf("( term ) -> term\n"); }
-  | VAR ARROW WORD
-    { printf("VAR ARROW WORD -> term\n"); }
   | VAR ARROW WORD ASSIGNOP term
     { printf("VAR ARROW WORD ASSIGNOP term -> term\n"); }
   | VAR ARROW WORD '(' optlistexpr ')'
