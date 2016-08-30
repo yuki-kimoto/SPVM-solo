@@ -277,8 +277,6 @@ term
     { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
   | VAR ARROW WORD '(' optterms ')'
     { printf("VAR ARROW WORD ( optterms )\n"); }
-  | WORD ARROW WORD
-    { printf("WORD ARROW WORD -> term\n"); }
   | WORD ARROW WORD '(' optterms ')'
     { printf("WORD ARROW WORD ( optterms )\n"); }
   | declvar
