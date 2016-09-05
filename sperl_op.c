@@ -7,11 +7,6 @@ SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
         
   SPerl_OP *op;
 
-  if (!first) {
-    first = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1 );
-    SPerl_OpTYPE_set(first, SPerl_OP_NULL);
-  }
-  
   op = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1);
   SPerl_OpTYPE_set(op, type);
   op->op_first = first;
@@ -19,6 +14,11 @@ SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
   op->op_private = (U8)(1 | (flags >> 8));
   
   if (last) {
+    if (!first) {
+      first = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1 );
+      SPerl_OpTYPE_set(first, SPerl_OP_NULL);
+    }
+    
     op->op_last = last;
     SPerl_OpMORESIB_set(first, last);
     if (op->op_last)

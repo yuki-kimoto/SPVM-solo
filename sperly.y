@@ -137,7 +137,7 @@ subargs
 
 subarg
   : VAR ':' modiftype
-    { printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_SVOP*)$1)->uv.pv); }
+    { printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.pv); }
 
 modiftype
   : type
@@ -147,7 +147,7 @@ modiftype
     
 type
   : WORD
-    { printf("WORD -> type (%s)\n", ((SPerl_SVOP*)$1)->uv.pv); }
+    { printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.pv); }
 
 modifier
   : WORD
@@ -158,22 +158,22 @@ term
   : VAR
     {
       $$ = $1;
-      printf("VAR(%s) -> term\n", ((SPerl_SVOP*)$1)->uv.pv)
+      printf("VAR(%s) -> term\n", ((SPerl_OP*)$1)->uv.pv)
     }
   | INT
     {
       $$ = $1;
-      printf("INT(%d) -> term\n", ((SPerl_SVOP*)$1)->uv.iv);
+      printf("INT(%d) -> term\n", ((SPerl_OP*)$1)->uv.iv);
     }
   | STRING
     {
       $$ = $1;
-      printf("STRING(%s) -> term\n", ((SPerl_SVOP*)$1)->uv.pv);
+      printf("STRING(%s) -> term\n", ((SPerl_OP*)$1)->uv.pv);
     }
   | BOOL
     {
       $$ = $1;
-      printf("BOOL -> term (%d)\n", ((SPerl_SVOP*)$1)->uv.iv);
+      printf("BOOL -> term (%d)\n", ((SPerl_OP*)$1)->uv.iv);
     }
   | '+' term %prec UMINUS
     {

@@ -318,7 +318,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
           bufptr++;
         }
         
-        SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
+        SPerl_OP* op = malloc(sizeof(SPerl_OP));
         op->op_type = SPerl_OP_CONST_STRING;
         op->uv.pv = str;
         
@@ -344,7 +344,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
-          SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
+          SPerl_OP* op = malloc(sizeof(SPerl_OP));
           op->op_type = SPerl_OP_CONST_STRING;
           op->uv.pv = var;
           
@@ -376,7 +376,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
           int num = atoi(num_str);
           free(num_str);
           
-          SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
+          SPerl_OP* op = malloc(sizeof(SPerl_OP));
           op->op_type = SPerl_OP_CONST_INT;
           op->uv.iv = num;
           
@@ -460,7 +460,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
               return WHILE;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
-              SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
+              SPerl_OP* op = malloc(sizeof(SPerl_OP));
               op->op_type = SPerl_OP_CONST_BOOL;
               op->uv.iv = 1;
 
@@ -470,7 +470,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
               return BOOL;
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
-              SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
+              SPerl_OP* op = malloc(sizeof(SPerl_OP));
               op->op_type = SPerl_OP_CONST_BOOL;
               op->uv.iv = 0;
 
@@ -481,7 +481,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
             }
           }
           
-          SPerl_SVOP* op = malloc(sizeof(SPerl_SVOP));
+          SPerl_OP* op = malloc(sizeof(SPerl_OP));
           op->op_type = SPerl_OP_CONST_STRING;
           op->uv.pv = keyword;
           

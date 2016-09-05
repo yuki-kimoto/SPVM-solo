@@ -6,7 +6,6 @@
 /* Operation code */
 enum SPerl_OP_CODE {
   SPerl_OP_NULL,
-  SPerl_OP_STUB,
   SPerl_OP_CONST_INT,
   SPerl_OP_CONST_FLOAT,
   SPerl_OP_CONST_STRING,
@@ -43,43 +42,23 @@ enum SPerl_OP_CODE {
   SPerl_OP_ATTR
 };
 
-/* Base Operation */
-#define SPerl_BASEOP \
-  SPerl_OP* op_next; \
-  SPerl_OP* op_sibparent; \
-  SPerl_OP* (*op_ppaddr)(); \
-  U8 op_type; \
-  U8 op_flags; \
-  U8 op_private; \
-  U8 op_moresib;
-
 /* Binary operation */
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 struct SPerl_op {
-  SPerl_BASEOP
+  U8 op_type;
+  U8 op_flags;
+  U8 op_private;
+  U8 op_moresib;
   SPerl_OP* op_first;
   SPerl_OP* op_last;
+  SPerl_OP* op_sibparent;
   union {
     char* pv;
     int iv;
     double nv;
   } uv;
 };
-
-/* SV operation */
-struct SPerl_svop;
-typedef struct SPerl_svop SPerl_SVOP;
-struct SPerl_svop {
-  SPerl_BASEOP
-  union {
-    char* pv;
-    int iv;
-    double nv;
-  } uv;
-};
-
-
 
 /* Expected token */
 enum SPerl_OP_EXPECT {
