@@ -113,11 +113,14 @@ optterms
 terms
   : terms ',' term
     {
-      
+      $$ = SPerl_op_append_elem(SPerl_OP_LIST, $1, $3);
       printf("terms , term -> terms\n");
     }
   | term
-    { printf("term -> terms\n"); }
+    {
+      $$ = $1;
+      printf("term -> terms\n");
+    }
 
 subname
   : WORD

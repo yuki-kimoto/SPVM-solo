@@ -65,6 +65,22 @@ SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_cou
     exit(1);
 }
 
+SPerl_OP* SPerl_op_append_elem(I32 type, SPerl_OP *first, SPerl_OP *last)
+{
+  if (!first)
+    return last;
+
+  if (!last)
+    return first;
+  
+  if (first->op_type != SPerl_OP_LIST) {
+    return SPerl_newOP(SPerl_OP_LIST, 0, first, last);
+  }
+  
+  SPerl_op_sibling_splice(first, first->op_last, 0, last);
+  return first;
+}
+
 SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
         
   SPerl_OP *op;
@@ -86,7 +102,7 @@ SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
     if (op->op_last)
       SPerl_OpLASTSIB_set(op->op_last, (SPerl_OP*)op);
   }
-  else {
+  else if (first) {
     SPerl_OpLASTSIB_set(op->op_first, (SPerl_OP*)op);
   }
 
