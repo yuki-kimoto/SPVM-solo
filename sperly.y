@@ -182,22 +182,22 @@ term
     }
   | INCOP term
     {
-      $$ = SPerl_newOP(SPerl_OP_PREINC, 0, SPerl_op_lvalue($2, SPerl_OP_PREINC), 0);
+      $$ = SPerl_newOP(SPerl_OP_PREINC, 0, $2, 0);
       printf("INCOP term -> term\n");
     }
   | term INCOP
     {
-      $$ = SPerl_newOP(SPerl_OP_POSTINC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTINC), 0);
+      $$ = SPerl_newOP(SPerl_OP_POSTINC, 0, $1, 0);
       printf("term INCOP\n");
     }
   | DECOP term
     {
-      $$ = SPerl_newOP(SPerl_OP_PREDEC, 0, SPerl_op_lvalue($2, SPerl_OP_PREDEC), 0);
+      $$ = SPerl_newOP(SPerl_OP_PREDEC, 0, $2, 0);
       printf("DECOP term -> term\n");
     }
   | term DECOP
     {
-      $$ = SPerl_newOP(SPerl_OP_POSTDEC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTDEC), 0);
+      $$ = SPerl_newOP(SPerl_OP_POSTDEC, 0, $1, 0);
       printf("term DECOP -> term\n");
     }
   | NOTOP term

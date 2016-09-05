@@ -66,9 +66,6 @@ enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_WORD
 };
 
-/* TODO */
-#define SPerl_op_lvalue(op, t) op
-
 /* Define bool */
 #ifndef HAS_BOOL
 # ifdef bool
