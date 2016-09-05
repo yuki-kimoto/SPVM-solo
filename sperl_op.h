@@ -72,14 +72,6 @@ struct SPerl_svop {
   } uv;
 };
 
-/* Unary operation */
-struct SPerl_unop;
-typedef struct SPerl_unop SPerl_UNOP;
-struct SPerl_unop {
-  SPerl_BASEOP
-  SPerl_OP* op_first;
-};
-
 /* Binary operation */
 struct SPerl_binop;
 typedef struct SPerl_binop SPerl_BINOP;

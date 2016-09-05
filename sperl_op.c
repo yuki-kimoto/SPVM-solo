@@ -21,35 +21,30 @@ SPerl_OP* SPerl_newOP(I32 type, I32 flags) {
 
 SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
         
-  SPerl_UNOP *unop;
   SPerl_BINOP *binop;
+
+  if (!first)
+    first = SPerl_newOP(SPerl_OP_NULL, 0);
   
   if (!last) {
 
-    if (!first)
-      first = SPerl_newOP(SPerl_OP_STUB, 0);
-
-    SPerl_NewOp(unop, 1, SPerl_UNOP);
-    SPerl_OpTYPE_set(unop, type);
-    unop->op_first = first;
-    unop->op_flags = (U8)(flags | SPerl_OPf_KIDS);
-    unop->op_private = (U8)(1 | (flags >> 8));
+    SPerl_NewOp(binop, 1, SPerl_BINOP);
+    SPerl_OpTYPE_set(binop, type);
+    binop->op_flags = (U8)(flags | SPerl_OPf_KIDS);
+    binop->op_private = (U8)(1 | (flags >> 8));
 
     if (!SPerl_OpHAS_SIBLING(first)) /* true unless weird syntax error */
-      SPerl_OpLASTSIB_set(first, (SPerl_OP*)unop);
+      SPerl_OpLASTSIB_set(first, (SPerl_OP*)binop);
 
-    if (unop->op_next)
-      return (SPerl_OP*)unop;
+    if (binop->op_next)
+      return (SPerl_OP*)binop;
 
-    return (SPerl_OP *)unop;
+    return (SPerl_OP *)binop;
   }
   else {
 
 
     SPerl_NewOp(binop, 1, SPerl_BINOP);
-
-    if (!first)
-      first = SPerl_newOP(SPerl_OP_NULL, 0);
 
     SPerl_OpTYPE_set(binop, type);
     binop->op_first = first;
