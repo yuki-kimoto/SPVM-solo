@@ -93,9 +93,6 @@ enum SPerl_OP_EXPECT {
     /* o->op_ppaddr = PL_ppaddr[type]; */\
   } STMT_END
 
-#define SPerl_NewOp(var, c, type) \
-  (var = (type *) SPerl_Slab_Alloc(c * sizeof(type)))
-
 /* TODO */
 #define SPerl_op_lvalue(op, t) op
 
