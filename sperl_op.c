@@ -1,4 +1,5 @@
 #include "sperl.h"
+
 #include "sperl_op.h"
 #include <malloc.h>
 
@@ -7,23 +8,13 @@ void* SPerl_Slab_Alloc(size_t sz) {
   return malloc(sizeof(char) * sz);
 }
 
-SPerl_OP* SPerl_newOP(I32 type, I32 flags) {
-  SPerl_OP *o;
-  
-  SPerl_NewOp(o, 1, SPerl_OP);
-  
-  SPerl_OpTYPE_set(o, type);
-  o->op_flags = (U8)flags;
-
-  return o;;
-}
-
 SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
         
   SPerl_BINOP *binop;
 
   if (!first) {
-    first = SPerl_newOP(SPerl_OP_NULL, 0);
+    SPerl_NewOp(first, 1, SPerl_BINOP);
+    SPerl_OpTYPE_set(first, SPerl_OP_NULL);
   }
   
   SPerl_NewOp(binop, 1, SPerl_BINOP);
