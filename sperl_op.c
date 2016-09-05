@@ -30,10 +30,10 @@ SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
   SPerl_OpTYPE_set(binop, type);
   binop->op_first = first;
   binop->op_flags = (U8)(flags | SPerl_OPf_KIDS);
+  binop->op_private = (U8)(1 | (flags >> 8));
   
   if (!last) {
 
-    binop->op_private = (U8)(1 | (flags >> 8));
 
     if (!SPerl_OpHAS_SIBLING(first)) /* true unless weird syntax error */
       SPerl_OpLASTSIB_set(first, (SPerl_OP*)binop);
@@ -44,10 +44,8 @@ SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
   else {
     if (!last) {
       last = first;
-      binop->op_private = (U8)(1 | (flags >> 8));
     }
     else {
-      binop->op_private = (U8)(2 | (flags >> 8));
         SPerl_OpMORESIB_set(first, last);
     }
 
