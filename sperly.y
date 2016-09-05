@@ -182,37 +182,37 @@ term
     }
   | INCOP term
     {
-      $$ = SPerl_newUNOP(SPerl_OP_PREINC, 0, SPerl_op_lvalue($2, SPerl_OP_PREINC), 0);
+      $$ = SPerl_newBINOP(SPerl_OP_PREINC, 0, SPerl_op_lvalue($2, SPerl_OP_PREINC), 0);
       printf("INCOP term -> term\n");
     }
   | term INCOP
     {
-      $$ = SPerl_newUNOP(SPerl_OP_POSTINC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTINC), 0);
+      $$ = SPerl_newBINOP(SPerl_OP_POSTINC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTINC), 0);
       printf("term INCOP\n");
     }
   | DECOP term
     {
-      $$ = SPerl_newUNOP(SPerl_OP_PREDEC, 0, SPerl_op_lvalue($2, SPerl_OP_PREDEC), 0);
+      $$ = SPerl_newBINOP(SPerl_OP_PREDEC, 0, SPerl_op_lvalue($2, SPerl_OP_PREDEC), 0);
       printf("DECOP term -> term\n");
     }
   | term DECOP
     {
-      $$ = SPerl_newUNOP(SPerl_OP_POSTDEC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTDEC), 0);
+      $$ = SPerl_newBINOP(SPerl_OP_POSTDEC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTDEC), 0);
       printf("term DECOP -> term\n");
     }
   | NOTOP term
     {
-      $$ = SPerl_newUNOP(SPerl_OP_NOT, 0, $2, 0);
+      $$ = SPerl_newBINOP(SPerl_OP_NOT, 0, $2, 0);
       printf("NOTOP term -> term\n");
     }
   | '~' term
     {
-      $$ = SPerl_newUNOP($1, 0, $2, 0);
+      $$ = SPerl_newBINOP($1, 0, $2, 0);
       printf("~ term -> term\n");
     }
   | '-' term %prec UMINUS
     {
-      $$ = SPerl_newUNOP(SPerl_OP_NEGATE, 0, $2, 0);
+      $$ = SPerl_newBINOP(SPerl_OP_NEGATE, 0, $2, 0);
       printf("- term -> term\n");
     }
   | term '+' term %prec ADDOP
