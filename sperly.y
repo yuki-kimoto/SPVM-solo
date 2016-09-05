@@ -270,9 +270,15 @@ term
   | term ASSIGNOP term
     { printf("term ASSIGNOP term -> term\n"); }
   | term ANDOP term
-    { printf("term ANDOP term -> term\n"); }
+    {
+      SPerl_newOP(SPerl_OP_AND, 0, $1, $3);
+      printf("term ANDOP term -> term\n");
+    }
   | term OROP term
-    { printf("term OROP term -> term\n"); }
+    {
+      SPerl_newOP(SPerl_OP_OR, 0, $1, $3);
+      printf("term OROP term -> term\n");
+    }
   | SUB ':' modiftype '(' optsubargs ')' block
     { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
   | VAR ARROW WORD '(' optterms ')'
