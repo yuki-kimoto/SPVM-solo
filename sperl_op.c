@@ -19,7 +19,7 @@ SPerl_OP* SPerl_newOP(I32 type, I32 flags) {
   return o;;
 }
 
-SPerl_OP* SPerl_newUNOP(I32 type, I32 flags, SPerl_OP* first) {
+SPerl_OP* SPerl_newUNOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
   SPerl_UNOP *unop;
 
   if (!first)
@@ -41,6 +41,10 @@ SPerl_OP* SPerl_newUNOP(I32 type, I32 flags, SPerl_OP* first) {
 }
 
 SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
+        
+  if (!last) {
+    return SPerl_newUNOP(type, flags, first, 0);
+  }
   SPerl_BINOP *binop;
 
   SPerl_NewOp(binop, 1, SPerl_BINOP);

@@ -137,7 +137,7 @@ enum SPerl_OP_EXPECT {
 #define SPerl_OPf_PARENS 8 /* This operator was parenthesized. */
 
 SPerl_OP* SPerl_newOP(I32 type, I32 flags);
-SPerl_OP* SPerl_newUNOP(I32 type, I32 flags, SPerl_OP *first);
+SPerl_OP* SPerl_newUNOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last);
 SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
 
 
