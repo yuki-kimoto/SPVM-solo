@@ -5,14 +5,14 @@
 
 SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
         
-  SPerl_BINOP *op;
+  SPerl_OP *op;
 
   if (!first) {
-    first = (SPerl_BINOP*)malloc(sizeof(SPerl_BINOP) * 1 );
+    first = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1 );
     SPerl_OpTYPE_set(first, SPerl_OP_NULL);
   }
   
-  op = (SPerl_BINOP*)malloc(sizeof(SPerl_BINOP) * 1);
+  op = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1);
   SPerl_OpTYPE_set(op, type);
   op->op_first = first;
   op->op_flags = (U8)(flags | SPerl_OPf_KIDS);

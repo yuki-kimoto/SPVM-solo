@@ -53,11 +53,18 @@ enum SPerl_OP_CODE {
   U8 op_private; \
   U8 op_moresib;
 
-/* Operation */
+/* Binary operation */
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 struct SPerl_op {
   SPerl_BASEOP
+  SPerl_OP* op_first;
+  SPerl_OP* op_last;
+  union {
+    char* pv;
+    int iv;
+    double nv;
+  } uv;
 };
 
 /* SV operation */
@@ -72,19 +79,7 @@ struct SPerl_svop {
   } uv;
 };
 
-/* Binary operation */
-struct SPerl_binop;
-typedef struct SPerl_binop SPerl_BINOP;
-struct SPerl_binop {
-  SPerl_BASEOP
-  SPerl_OP * op_first;
-  SPerl_OP * op_last;
-  union {
-    char* pv;
-    int iv;
-    double nv;
-  } uv;
-};
+
 
 /* Expected token */
 enum SPerl_OP_EXPECT {
