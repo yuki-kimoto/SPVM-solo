@@ -271,7 +271,10 @@ term
   | subname '(' optterms  ')'
     { printf("subname (optterms) -> term\n"); }
   | term ASSIGNOP term
-    { printf("term ASSIGNOP term -> term\n"); }
+    {
+      SPerl_newOP(SPerl_OP_ASSIGN, 0, $1, $3);
+      printf("term ASSIGNOP term -> term\n");
+    }
   | term ANDOP term
     {
       SPerl_newOP(SPerl_OP_AND, 0, $1, $3);
