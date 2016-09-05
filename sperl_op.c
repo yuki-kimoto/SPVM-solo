@@ -10,7 +10,7 @@ SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
   op = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1);
   op->op_type = type;
   op->op_first = first;
-  op->op_flags = (U8)(flags | SPerl_OPf_KIDS);
+  op->op_flags = (U8)flags;
   op->op_private = (U8)(1 | (flags >> 8));
   
   if (last) {

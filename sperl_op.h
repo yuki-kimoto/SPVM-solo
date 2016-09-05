@@ -86,10 +86,6 @@ enum SPerl_OP_EXPECT {
 #define SPerl_OpMORESIB_set(o, sib) ((o)->op_moresib = 1, (o)->op_sibparent = (sib))
 #define SPerl_OpLASTSIB_set(o, parent) \
    ((o)->op_moresib = 0, (o)->op_sibparent = (parent))
-#define SPerl_OpMAYBESIB_set(o, sib, parent) \
-   ((o)->op_sibparent = ((o)->op_moresib = SPerl_cBOOL(sib)) ? (sib) : (parent))
-
-#define SPerl_OPf_KIDS 4 /* There is a firstborn child. */
 
 SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
 
