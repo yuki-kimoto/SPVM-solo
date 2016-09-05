@@ -124,7 +124,10 @@ terms
 
 subname
   : WORD
-    { printf("WORD -> subname\n"); }
+    {
+      $$ = $1;
+      printf("WORD -> subname\n");
+    }
 
 optsubargs
   :	/* NULL */
@@ -269,7 +272,10 @@ term
       printf("VAR ARROW WORD -> term\n");
     }
   | subname '(' optterms  ')'
-    { printf("subname (optterms) -> term\n"); }
+    {
+      $$ = SPerl_newOP(SPerl_OP_FUNC, 0, $1, $3);
+      printf("subname (optterms) -> term\n");
+    }
   | term ASSIGNOP term
     {
       SPerl_newOP(SPerl_OP_ASSIGN, 0, $1, $3);
