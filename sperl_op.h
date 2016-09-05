@@ -66,12 +66,6 @@ enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_WORD
 };
 
-#define SPerl_OpTYPE_set(o, type) \
-  STMT_START {\
-    o->op_type = (SPerl_OPCODE)type;\
-    /* o->op_ppaddr = PL_ppaddr[type]; */\
-  } STMT_END
-
 /* TODO */
 #define SPerl_op_lvalue(op, t) op
 
