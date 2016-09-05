@@ -89,15 +89,6 @@ struct SPerl_binop {
   SPerl_OP * op_last;
 };
 
-/* List operation */
-struct SPerl_listop;
-typedef struct SPerl_listop SPerl_LISTOP;
-struct SPerl_listop {
-  SPerl_BASEOP
-  SPerl_OP* op_first;
-  SPerl_OP* op_last;
-};
-
 /* Expected token */
 enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_NORMAL,
@@ -110,7 +101,7 @@ enum SPerl_OP_EXPECT {
     /* o->op_ppaddr = PL_ppaddr[type]; */\
   } STMT_END
 
-#define SPerl_NewOp(var, c, type)	\
+#define SPerl_NewOp(var, c, type) \
   (var = (type *) SPerl_Slab_Alloc(c * sizeof(type)))
 
 /* TODO */
@@ -131,6 +122,8 @@ enum SPerl_OP_EXPECT {
  * AIX */
 #define SPerl_cBOOL(cbool) ((cbool) ? (bool)1 : (bool)0)
 
+#define SPerl_cLISTOPx(o)	((SPerl_LISTOP*)(o))
+
 
 #define SPerl_OpHAS_SIBLING(o) (SPerl_cBOOL((o)->op_moresib))
 #define SPerl_OpSIBLING(o) (0 + (o)->op_moresib ? (o)->op_sibparent : NULL)
@@ -146,7 +139,6 @@ enum SPerl_OP_EXPECT {
 SPerl_OP* SPerl_newOP(I32 type, I32 flags);
 SPerl_OP* SPerl_newUNOP(I32 type, I32 flags, SPerl_OP *first);
 SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
-SPerl_OP* SPerl_newLISTOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
 
 
 #endif
