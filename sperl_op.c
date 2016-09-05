@@ -2,6 +2,68 @@
 
 #include "sperl_op.h"
 #include <malloc.h>
+#include <stdio.h>
+
+SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_count, SPerl_OP* insert) {
+  SPerl_OP *first;
+  SPerl_OP *rest;
+  SPerl_OP *last_del = NULL;
+  SPerl_OP *last_ins = NULL;
+
+  if (start)
+    first = SPerl_OpSIBLING(start);
+  else if (!parent)
+    goto no_parent;
+  else
+    first = parent->op_first;
+
+  if (del_count && first) {
+    last_del = first;
+    while (--del_count && SPerl_OpHAS_SIBLING(last_del))
+      last_del = SPerl_OpSIBLING(last_del);
+    rest = SPerl_OpSIBLING(last_del);
+    SPerl_OpLASTSIB_set(last_del, NULL);
+  }
+  else
+    rest = first;
+
+  if (insert) {
+    last_ins = insert;
+    while (SPerl_OpHAS_SIBLING(last_ins))
+      last_ins = SPerl_OpSIBLING(last_ins);
+    SPerl_OpMAYBESIB_set(last_ins, rest, NULL);
+  }
+  else
+    insert = rest;
+
+  if (start) {
+    SPerl_OpMAYBESIB_set(start, insert, NULL);
+  }
+  else {
+    if (!parent)
+      goto no_parent;
+    parent->op_first = insert;
+  }
+
+  if (!rest) {
+    /* update op_last etc */
+    SPerl_OP *lastop;
+
+    if (!parent)
+      goto no_parent;
+
+    lastop = last_ins ? last_ins : start ? start : NULL;
+    parent->op_last = lastop;
+
+    if (lastop)
+      SPerl_OpLASTSIB_set(lastop, parent);
+  }
+  return last_del ? first : NULL;
+
+  no_parent:
+    fprintf(stderr, "panic: op_sibling_splice(): NULL parent");
+    exit(1);
+}
 
 SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
         
