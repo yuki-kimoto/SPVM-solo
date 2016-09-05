@@ -79,6 +79,11 @@ struct SPerl_binop {
   SPerl_BASEOP
   SPerl_OP * op_first;
   SPerl_OP * op_last;
+  union {
+    char* pv;
+    int iv;
+    double nv;
+  } uv;
 };
 
 /* Expected token */
@@ -111,9 +116,6 @@ enum SPerl_OP_EXPECT {
  * AIX */
 #define SPerl_cBOOL(cbool) ((cbool) ? (bool)1 : (bool)0)
 
-#define SPerl_cLISTOPx(o)	((SPerl_LISTOP*)(o))
-
-
 #define SPerl_OpHAS_SIBLING(o) (SPerl_cBOOL((o)->op_moresib))
 #define SPerl_OpSIBLING(o) (0 + (o)->op_moresib ? (o)->op_sibparent : NULL)
 #define SPerl_OpMORESIB_set(o, sib) ((o)->op_moresib = 1, (o)->op_sibparent = (sib))
@@ -123,10 +125,8 @@ enum SPerl_OP_EXPECT {
    ((o)->op_sibparent = ((o)->op_moresib = SPerl_cBOOL(sib)) ? (sib) : (parent))
 
 #define SPerl_OPf_KIDS 4 /* There is a firstborn child. */
-#define SPerl_OPf_PARENS 8 /* This operator was parenthesized. */
 
-SPerl_OP* SPerl_newOP(I32 type, I32 flags);
-SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
+SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
 
 
 #endif

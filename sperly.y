@@ -182,87 +182,87 @@ term
     }
   | INCOP term
     {
-      $$ = SPerl_newBINOP(SPerl_OP_PREINC, 0, SPerl_op_lvalue($2, SPerl_OP_PREINC), 0);
+      $$ = SPerl_newOP(SPerl_OP_PREINC, 0, SPerl_op_lvalue($2, SPerl_OP_PREINC), 0);
       printf("INCOP term -> term\n");
     }
   | term INCOP
     {
-      $$ = SPerl_newBINOP(SPerl_OP_POSTINC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTINC), 0);
+      $$ = SPerl_newOP(SPerl_OP_POSTINC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTINC), 0);
       printf("term INCOP\n");
     }
   | DECOP term
     {
-      $$ = SPerl_newBINOP(SPerl_OP_PREDEC, 0, SPerl_op_lvalue($2, SPerl_OP_PREDEC), 0);
+      $$ = SPerl_newOP(SPerl_OP_PREDEC, 0, SPerl_op_lvalue($2, SPerl_OP_PREDEC), 0);
       printf("DECOP term -> term\n");
     }
   | term DECOP
     {
-      $$ = SPerl_newBINOP(SPerl_OP_POSTDEC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTDEC), 0);
+      $$ = SPerl_newOP(SPerl_OP_POSTDEC, 0, SPerl_op_lvalue($1, SPerl_OP_POSTDEC), 0);
       printf("term DECOP -> term\n");
     }
   | NOTOP term
     {
-      $$ = SPerl_newBINOP(SPerl_OP_NOT, 0, $2, 0);
+      $$ = SPerl_newOP(SPerl_OP_NOT, 0, $2, 0);
       printf("NOTOP term -> term\n");
     }
   | '~' term
     {
-      $$ = SPerl_newBINOP($1, 0, $2, 0);
+      $$ = SPerl_newOP($1, 0, $2, 0);
       printf("~ term -> term\n");
     }
   | '-' term %prec UMINUS
     {
-      $$ = SPerl_newBINOP(SPerl_OP_NEGATE, 0, $2, 0);
+      $$ = SPerl_newOP(SPerl_OP_NEGATE, 0, $2, 0);
       printf("- term -> term\n");
     }
   | term '+' term %prec ADDOP
     {
-      $$ = SPerl_newBINOP(SPerl_OP_ADD, 0, $1, $3);
+      $$ = SPerl_newOP(SPerl_OP_ADD, 0, $1, $3);
       printf("term + term -> term\n", $2);
     }
   | term '-' term %prec ADDOP
     {
-      $$ = SPerl_newBINOP(SPerl_OP_SUBTRACT, 0, $1, $3);
+      $$ = SPerl_newOP(SPerl_OP_SUBTRACT, 0, $1, $3);
       printf("term - term -> term\n", $2);
     }
   | term MULOP term
     {
-      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      $$ = SPerl_newOP($2, 0, $1, $3);
       printf("term MULOP(%d) term -> term\n", $2);
     }
   | term RELOP term
     {
-      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      $$ = SPerl_newOP($2, 0, $1, $3);
       printf("term RELOP term -> term %d\n", $2);
     }
   | term EQOP term
     {
-      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      $$ = SPerl_newOP($2, 0, $1, $3);
       printf("term EQOP term -> term\n");
     }
   | term BITANDOP term
     {
-      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      $$ = SPerl_newOP($2, 0, $1, $3);
       printf("term BITANDOP term -> term\n");
     }
   | term BITOROP term
     {
-      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      $$ = SPerl_newOP($2, 0, $1, $3);
       printf("term BITOROP term -> term\n");
     }
   | term SHIFTOP term
     {
-      $$ = SPerl_newBINOP($2, 0, $1, $3);
+      $$ = SPerl_newOP($2, 0, $1, $3);
       printf("term SHIFTOP term -> term\n");
     }
   | VAR ARROW '[' term ']'
     {
-      $$ = SPerl_newBINOP(SPerl_OP_AELEM, 0, $1, $4);
+      $$ = SPerl_newOP(SPerl_OP_AELEM, 0, $1, $4);
       printf("VAR ARROW [ term ] -> term\n");
     }
   | VAR ARROW WORD
     {
-      SPerl_newBINOP(SPerl_OP_ATTR, 0, $1, $3);
+      SPerl_newOP(SPerl_OP_ATTR, 0, $1, $3);
       printf("VAR ARROW WORD -> term\n");
     }
   | subname '(' optterms  ')'

@@ -3,30 +3,30 @@
 #include "sperl_op.h"
 #include <malloc.h>
 
-SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
+SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
         
-  SPerl_BINOP *binop;
+  SPerl_BINOP *op;
 
   if (!first) {
     first = (SPerl_BINOP*)malloc(sizeof(SPerl_BINOP) * 1 );
     SPerl_OpTYPE_set(first, SPerl_OP_NULL);
   }
   
-  binop = (SPerl_BINOP*)malloc(sizeof(SPerl_BINOP) * 1);
-  SPerl_OpTYPE_set(binop, type);
-  binop->op_first = first;
-  binop->op_flags = (U8)(flags | SPerl_OPf_KIDS);
-  binop->op_private = (U8)(1 | (flags >> 8));
+  op = (SPerl_BINOP*)malloc(sizeof(SPerl_BINOP) * 1);
+  SPerl_OpTYPE_set(op, type);
+  op->op_first = first;
+  op->op_flags = (U8)(flags | SPerl_OPf_KIDS);
+  op->op_private = (U8)(1 | (flags >> 8));
   
   if (last) {
-    binop->op_last = last;
+    op->op_last = last;
     SPerl_OpMORESIB_set(first, last);
-    if (binop->op_last)
-      SPerl_OpLASTSIB_set(binop->op_last, (SPerl_OP*)binop);
+    if (op->op_last)
+      SPerl_OpLASTSIB_set(op->op_last, (SPerl_OP*)op);
   }
   else {
-    SPerl_OpLASTSIB_set(binop->op_first, (SPerl_OP*)binop);
+    SPerl_OpLASTSIB_set(op->op_first, (SPerl_OP*)op);
   }
 
-  return (SPerl_OP *)binop;
+  return (SPerl_OP *)op;
 }
