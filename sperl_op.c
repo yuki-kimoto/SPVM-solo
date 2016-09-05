@@ -32,21 +32,12 @@ SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
   binop->op_flags = (U8)(flags | SPerl_OPf_KIDS);
   binop->op_private = (U8)(1 | (flags >> 8));
   
-  if (!last) {
-
-
-    if (!SPerl_OpHAS_SIBLING(first)) /* true unless weird syntax error */
-      SPerl_OpLASTSIB_set(first, (SPerl_OP*)binop);
-
-    if (binop->op_next)
-      return (SPerl_OP*)binop;
-  }
-  else {
+  if (last) {
     if (!last) {
       last = first;
     }
     else {
-        SPerl_OpMORESIB_set(first, last);
+      SPerl_OpMORESIB_set(first, last);
     }
 
     if (!SPerl_OpHAS_SIBLING(last)) /* true unless weird syntax error */
@@ -57,6 +48,13 @@ SPerl_OP* SPerl_newBINOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
       SPerl_OpLASTSIB_set(binop->op_last, (SPerl_OP*)binop);
 
     if (binop->op_next || binop->op_type != (SPerl_OPCODE)type)
+      return (SPerl_OP*)binop;
+  }
+  else {
+    if (!SPerl_OpHAS_SIBLING(first)) /* true unless weird syntax error */
+      SPerl_OpLASTSIB_set(first, (SPerl_OP*)binop);
+
+    if (binop->op_next)
       return (SPerl_OP*)binop;
   }
 
