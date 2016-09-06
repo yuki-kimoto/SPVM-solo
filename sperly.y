@@ -317,7 +317,7 @@ term
         
       }
       else {
-        
+        $$ = SPerl_newOP(SPerl_OP_FUNC, 0, $3, $1);
       }
       
       printf("VAR ARROW subname ( optterms )\n");
