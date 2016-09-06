@@ -108,9 +108,15 @@ declvar
 
 optterms
   :	/* NULL */
-    { $$ = (SPerl_OP*)NULL; }
+    {
+      $$ = (SPerl_OP*)NULL;
+      printf("NULL -> optterms\n");
+    }
   |	terms
-    { $$ = $1; }
+    {
+      $$ = $1;
+      printf("terms -> optterms\n");
+    }
 
 terms
   : terms ',' term
@@ -298,19 +304,34 @@ term
 
 optsubargs
   :	/* NULL */
-    { $$ = (SPerl_OP*)NULL; }
+    {
+      $$ = (SPerl_OP*)NULL;
+      printf("NULL -> optsubargs\n");
+    }
   |	subargs
-    { $$ = $1; }
+    {
+      $$ = $1;
+      printf("subargs -> optsubargs\n");
+    }
 
 subargs
-  : subarg
-    { printf("subarg -> subargs\n"); }
-  | subargs ',' subarg
-    { printf("subargs , subarg\n"); }
+  : subargs ',' subarg
+    {
+      $$ = SPerl_op_append_elem($1, $3);
+      printf("subargs , subarg\n");
+    }
+  | subarg
+    {
+      $$ = $1;
+      printf("subarg -> subargs\n");
+    }
 
 subarg
   : VAR ':' modiftype
-    { printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.pv); }
+    {
+      $$ = SPerl_newOP(SPerl_OP_SUBARG, 0, $1, $3);
+      printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.pv);
+    }
 
 modiftype
   : type
