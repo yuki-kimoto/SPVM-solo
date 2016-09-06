@@ -66,7 +66,15 @@ void SPerl_dump_abstract_tree(SPerl_OP* op, I32 depth) {
   for (i = 0; i < depth; i++) {
     printf(" ");
   }
-  printf("%s\n", SPerl_op_name[op->op_type]);
+  I32 type = op->op_type;
+  printf("%s", SPerl_op_name[type]);
+  if (type == SPerl_OP_CONST_INT) {
+    printf(" %d", op->uv.iv);
+  }
+  else if (type == SPerl_OP_CONST_STRING) {
+    printf(" \"%s\"", op->uv.pv);
+  }
+  printf("\n");
   
   if (op->op_first) {
     depth++;
