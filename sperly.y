@@ -293,12 +293,14 @@ term
     }
   | SUB ':' modiftype '(' optsubargs ')' block
     { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
-  | VAR ARROW WORD '(' optterms ')'
-    { printf("VAR ARROW WORD ( optterms )\n"); }
+  | VAR ARROW subname '(' optterms ')'
+    {
+      printf("VAR ARROW subname ( optterms )\n");
+    }
   | VAR ARROW '(' optterms ')'
     { printf("VAR ARROW ( optterms )\n"); }
-  | WORD ARROW WORD '(' optterms ')'
-    { printf("WORD ARROW WORD ( optterms )\n"); }
+  | WORD ARROW subname '(' optterms ')'
+    { printf("WORD ARROW subname ( optterms )\n"); }
   | declvar
     { printf("declvar -> term\n"); }
 
