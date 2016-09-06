@@ -81,14 +81,14 @@ statement
     { printf("USE pkgname optterms ; -> statement\n"); }
 
 if
-  : IF '(' term ')' block
+  : IF '(' term ')' block else
     { printf("if ( term ) block\n"); }
-  | if else
-    { printf("if else -> if\n"); }
 
 else
-  : ELSE block
-    { printf("else block"); }
+  : /* NULL */
+    { printf("NULL -> else\n") };
+  | ELSE block
+    { printf("else block\n"); }
   | ELSIF '(' term ')' block else
     { printf("elsif ( term ) block else\n"); }
 
@@ -100,7 +100,7 @@ declvar
     }
   | OUR VAR ':' modiftype
     {
-      $$ = SPerl_newOP(SPerl_OP_VAR, 0, $2, $4);
+      $$ = SPerl_newOP(SPerl_OP_OUR, 0, $2, $4);
       printf("OUR VAR : modiftype -> declvar\n");
     }
   | HAS attrname ':' modiftype
