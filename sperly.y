@@ -82,10 +82,20 @@ statement
       printf("SUB subname : modiftype ( optsubargs ) block -> statement\n");
     }
   | FOR '(' term ';' term ';' term ')' block
-    { printf("FOR ( term ; term ; term ) block\n"); }
+    {
+      printf("FOR ( term ; term ; term ) block\n");
+    }
   | WHILE '(' term ')' block
     {
-      // $$ = SPerl_newOP(SPerl_OP_LOOP, 
+      SPerl_OP* op = SPerl_newOP(
+        SPerl_OP_LOOP,
+        0,
+        SPerl_newOP(SPerl_OP_NULL, 0, 0, 0),
+        $3
+      );
+      SPerl_op_sibling_splice(op, $3, 0, $5);
+      $$ = op;
+      
       printf("WHILE ( term ) block\n");
     }
   | term ';'
@@ -121,20 +131,6 @@ statement
     {
       $$ = SPerl_newOP(SPerl_OP_LIST, 0, $2, 0);
       printf("RETURN term ; -> statement\n");
-    }
-  | RETURN '(' terms ')' ';'
-    {
-      SPerl_OP* op;
-      SPerl_OP* terms_op = $3;
-      if (terms_op->op_type == SPerl_OP_LIST) {
-        op = terms_op;
-      }
-      else {
-        op = SPerl_newOP(SPerl_OP_LIST, 0, terms_op, 0);
-      }
-      $$ = op;
-      
-      printf("RETURN ( terms ) ; -> statement\n");
     }
   | USE pkgname';'
     {

@@ -158,8 +158,6 @@ sub sum : int ($foo : int, $bar : float) {
     
   }
   
-  return (1, 2, 3);
-  
   return 1;
 }
 
