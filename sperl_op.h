@@ -93,9 +93,8 @@ struct SPerl_op {
 
 SPerl_OP* SPerl_OpSIBLING(SPerl_OP* o);
 void SPerl_OpMORESIB_set(SPerl_OP* o, SPerl_OP* sib);
+void SPerl_OpLASTSIB_set(SPerl_OP* o, SPerl_OP* parent);
 
-#define SPerl_OpLASTSIB_set(o, parent) \
-   ((o)->op_moresib = 0, (o)->op_sibparent = (parent))
 #define SPerl_OpMAYBESIB_set(o, sib, parent) \
    ((o)->op_sibparent = ((o)->op_moresib = SPerl_cBOOL(sib)) ? (sib) : (parent))
 

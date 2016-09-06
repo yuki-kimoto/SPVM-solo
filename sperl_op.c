@@ -14,6 +14,11 @@ void SPerl_OpMORESIB_set(SPerl_OP* o, SPerl_OP* sib) {
   o->op_sibparent = sib;
 }
 
+void SPerl_OpLASTSIB_set(SPerl_OP* o, SPerl_OP* parent) {
+  o->op_moresib = 0;
+  o->op_sibparent = parent;
+}
+
 SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_count, SPerl_OP* insert) {
   SPerl_OP *first;
   SPerl_OP *rest;
