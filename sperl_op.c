@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void SPerl_dump_abstract_tree(SPerl_OP* op) {
+  printf("aaaaaaaaaaaaaaaa");
+}
+
 SPerl_OP* SPerl_OpSIBLING(SPerl_OP* o) {
   return o->op_moresib ? o->op_sibparent : NULL;
 }

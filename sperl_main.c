@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "sperl_parser.h"
+#include "sperl_op.h"
 
 int main(int argc, char *argv[])
 {
@@ -35,6 +36,9 @@ int main(int argc, char *argv[])
   
   /* call SPerl_yyparse */
   int parse_success = SPerl_yyparse(parser);
+  
+  SPerl_dump_abstract_tree(parser->main_root);
+  
   
   free(parser->linestr);
   free(parser);
