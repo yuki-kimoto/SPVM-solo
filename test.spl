@@ -1,3 +1,10 @@
+my $title : int;
+my $title : const int;
+my $title : static const int;
+my $title : int = 1;
+my $title : int;
+my $title : int = 4;
+
 $title->();
 $title->(1);
 $title->(1, 2);
@@ -28,12 +35,6 @@ for (my $i : int = 0; $i < 5; $i = $i + 1) {
 1 == 1;
 1 = 1;
 
-my $title : int;
-my $title : const int;
-my $title : static const int;
-my $title : int = 1;
-my $title : int;
-my $title : int = 4;
 
 1 - 4;
 

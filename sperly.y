@@ -18,9 +18,10 @@
 %token <ival> LAST CONTINUE
 %token <opval> WORD VAR INT STRING BOOL
 
-%type <opval> grammar statements block statement declvar if else terms optterms
-%type <opval> term subname subargs subarg modiftype type modifier optsubargs
-%type <opval> pkgname attrname
+%type <opval> grammar statements statement declvar if else block
+%type <opval> optterms terms term subargs subarg optsubargs
+%type <opval> modiftype modifiers modifier
+%type <opval> type pkgname attrname subname
 
 %right <ival> ASSIGNOP
 %left <ival> OROP
@@ -314,17 +315,31 @@ subarg
 modiftype
   : type
     { printf("type -> modiftype\n"); }
-  | modifier type
-    { printf("modifier type -> modiftype\n"); }
+  | modifiers type
+    { printf("modifiers type -> modiftype\n"); }
     
 type
   : WORD
     { printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.pv); }
 
+modifiers
+  : modifiers  modifier
+    {
+      $$ = SPerl_op_append_elem($1, $2);
+      printf("modifiers modifier -> modifiers\n");
+    }
+  | modifier
+    {
+      $$ = $1;
+      printf("modifier -> modifiers\n");
+    }
+
 modifier
   : WORD
-    { printf("WORD -> modifier\n"); }
-  | modifier WORD
+    {
+      $$ = $1;
+      printf("WORD -> modifier\n");
+    }
 
 attrname
   : WORD
