@@ -44,25 +44,48 @@
 
 grammar
   : /* NULL */
-    { printf("NULL -> grammar\n"); }
+    {
+      $$ = (SPerl_OP*)NULL;
+      printf("NULL -> grammar\n");
+    }
   | statements
-    { printf("statements -> grammar\n"); }
+    {
+      $$ = $1;
+      printf("statements -> grammar\n");
+    }
 
 statements
-  : statement
-    { printf("statement -> statements\n"); }
-  | statements statement 
-    { printf("statements statement -> statements\n"); }
+  : statements statement 
+    {
+      $$ = SPerl_op_append_elem($1, $2);
+      printf("statements statement -> statements\n");
+    }
+  | statement
+    {
+      $$ = $1;
+      printf("statement -> statements\n");
+    }
 
 statement
   : SUB subname ':' modiftype '(' optsubargs ')' block
-    { printf("SUB subname : modiftype ( subargs ) block -> statement\n"); }
+    {
+      printf("SUB subname : modiftype ( optsubargs ) block -> statement\n");
+    }
   | term ';'
-    { printf("term ; -> statement\n") }
+    {
+      $$ = $1;
+      printf("term ; -> statement\n")
+    }
   | ';'
-    { printf("; -> statement\n") }
+    {
+      $$ = (SPerl_OP*)NULL;
+      printf("; -> statement\n")
+    }
   | if
-    { printf("if -> statement\n"); }
+    {
+      $$ = $1;
+      printf("if -> statement\n");
+    }
   | FOR '(' term ';' term ';' term ')' block
     { printf("FOR ( term ; term ; term ) block\n"); }
   | WHILE '(' term ')' block
