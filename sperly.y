@@ -342,7 +342,10 @@ term
       printf("pkgname ARROW subname ( optterms )\n");
     }
   | declvar
-    { printf("declvar -> term\n"); }
+    {
+      $$ = (SPerl_OP*)NULL;
+      printf("declvar -> term\n");
+    }
 
 %%
 
