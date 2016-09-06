@@ -20,6 +20,7 @@
 
 %type <opval> grammar statements block statement declvar if else terms optterms
 %type <opval> term subname subargs subarg modiftype type modifier optsubargs
+%type <opval> pkgname attrname
 
 %right <ival> ASSIGNOP
 %left <ival> OROP
@@ -71,8 +72,8 @@ statement
     { printf("FOR ( term ; term ; term ) { statements }\n"); }
   | WHILE '(' term ')' block
     { printf("WHILE ( term ) block\n"); }
-  | PACKAGE WORD ';'
-    { printf("PACKAGE WORD ; -> statement\n"); }
+  | PACKAGE pkgname ';'
+    { printf("PACKAGE pkgname ; -> statement\n"); }
   | LAST ';'
     { printf("LAST ; -> statement\n"); }
   | CONTINUE ';'
@@ -81,16 +82,16 @@ statement
     { printf("RETURN term ; -> statement\n"); }
   | RETURN '(' terms ')' ';'
     { printf("RETURN ( terms ) ; -> statement\n"); }
-  | USE WORD optterms';'
-    { printf("USE WORD optterms ; -> statement\n"); }
+  | USE pkgname optterms';'
+    { printf("USE pkgname optterms ; -> statement\n"); }
     
 declvar
   : MY VAR ':' modiftype
     { printf("MY VAR : modiftype -> declvar\n"); }
   | OUR VAR ':' modiftype
     { printf("OUR VAR : modiftype -> declvar\n"); }
-  | HAS WORD ':' modiftype
-    { printf("HAS WORD : modiftype -> declvar\n"); }
+  | HAS attrname ':' modiftype
+    { printf("HAS attrname : modiftype -> declvar\n"); }
 
 if
   : IF '(' term ')' block
@@ -122,11 +123,25 @@ terms
       printf("term -> terms\n");
     }
 
+attrname
+  : WORD
+    {
+      $$ = $1;
+      printf("WORD -> attrname\n");
+    }
+
 subname
   : WORD
     {
       $$ = $1;
       printf("WORD -> subname\n");
+    }
+
+pkgname
+  : WORD
+    {
+      $$ = $1;
+      printf("WORD -> pkgname\n");
     }
 
 optsubargs
@@ -266,10 +281,10 @@ term
       $$ = SPerl_newOP(SPerl_OP_AELEM, 0, $1, $4);
       printf("VAR ARROW [ term ] -> term\n");
     }
-  | VAR ARROW WORD
+  | VAR ARROW subname
     {
       SPerl_newOP(SPerl_OP_ATTR, 0, $1, $3);
-      printf("VAR ARROW WORD -> term\n");
+      printf("VAR ARROW subname -> term\n");
     }
   | subname '(' optterms  ')'
     {
@@ -299,8 +314,8 @@ term
     }
   | VAR ARROW '(' optterms ')'
     { printf("VAR ARROW ( optterms )\n"); }
-  | WORD ARROW subname '(' optterms ')'
-    { printf("WORD ARROW subname ( optterms )\n"); }
+  | pkgname ARROW subname '(' optterms ')'
+    { printf("pkgname ARROW subname ( optterms )\n"); }
   | declvar
     { printf("declvar -> term\n"); }
 
