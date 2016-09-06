@@ -29,7 +29,7 @@ $test--;
 for (my $i : int = 0; $i < 5; $i = $i + 1) {
   1;
   last;
-  continue;
+  next;
 }
 
 1 > 2;

@@ -446,9 +446,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               parser->bufptr = bufptr;
               return LAST;
             }
-            else if (memcmp(keyword, "continue", str_len) == 0) {
+            else if (memcmp(keyword, "next", str_len) == 0) {
               parser->bufptr = bufptr;
-              return CONTINUE;
+              return NEXT;
             }
             else if (memcmp(keyword, "use", str_len) == 0) {
               parser->bufptr = bufptr;
