@@ -82,15 +82,36 @@ statement
 
 if
   : IF '(' term ')' block else
-    { printf("if ( term ) block\n"); }
+    {
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_COND, 0, $3, $4);
+      if ($6) {
+        SPerl_op_sibling_splice(op, $4, 0, $6);
+      }
+      $$ = op;
+      printf("IF ( term ) block -> if\n");
+    }
 
 else
   : /* NULL */
-    { printf("NULL -> else\n") };
+    {
+      $$ = (SPerl_OP*)0;
+      printf("NULL -> else\n")
+    };
   | ELSE block
-    { printf("else block\n"); }
+    {
+      $$ = $2;
+      printf("ELSE block -> else\n");
+    }
   | ELSIF '(' term ')' block else
-    { printf("elsif ( term ) block else\n"); }
+    {
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_COND, 0, $3, $4);
+      if ($6) {
+        SPerl_op_sibling_splice(op, $4, 0, $6);
+      }
+      $$ = op;
+      
+      printf("ELSIF ( term ) block else -> else\n");
+    }
 
 declvar
   : MY VAR ':' modiftype
