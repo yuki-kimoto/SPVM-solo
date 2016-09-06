@@ -9,6 +9,11 @@ SPerl_OP* SPerl_OpSIBLING(SPerl_OP* o) {
   return o->op_moresib ? o->op_sibparent : NULL;
 }
 
+void SPerl_OpMORESIB_set(SPerl_OP* o, SPerl_OP* sib) {
+  o->op_moresib = 1;
+  o->op_sibparent = sib;
+}
+
 SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_count, SPerl_OP* insert) {
   SPerl_OP *first;
   SPerl_OP *rest;
