@@ -1,3 +1,8 @@
+use Point as pt;
+
+
+use Point;
+
 my $title : int;
 my $title : const int;
 my $title : static const int;
@@ -84,8 +89,6 @@ Test->sum(1, 2);
 $test->x = 3;
 $test->last;
 
-use Point;
-use Point "foo", "bar";
 
 while (1) {
   1;

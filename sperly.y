@@ -15,8 +15,8 @@
 %token <ival> '+' '-'
 %token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP EQOP
-%token <ival> LAST CONTINUE
-%token <opval> WORD VAR INT STRING BOOL AS
+%token <ival> LAST CONTINUE AS
+%token <opval> WORD VAR INT STRING BOOL 
 
 %type <opval> grammar statements statement declvar if else block
 %type <opval> optterms terms term subargs subarg optsubargs
@@ -77,8 +77,10 @@ statement
     { printf("RETURN term ; -> statement\n"); }
   | RETURN '(' terms ')' ';'
     { printf("RETURN ( terms ) ; -> statement\n"); }
-  | USE pkgname optterms';'
-    { printf("USE pkgname optterms ; -> statement\n"); }
+  | USE pkgname';'
+    { printf("USE pkgname; -> statement\n"); }
+  | USE pkgname AS WORD';'
+    { printf("USE pkgname AS WORD; -> statement\n"); }
 
 if
   : IF '(' term ')' block else
