@@ -331,7 +331,16 @@ term
       printf("VAR ARROW ( optterms )\n");
     }
   | pkgname ARROW subname '(' optterms ')'
-    { printf("pkgname ARROW subname ( optterms )\n"); }
+    {
+      $$ = SPerl_newOP(
+        SPerl_OP_FUNC,
+        0,
+        SPerl_op_append_elem($1, $3),
+        $5
+      );
+      
+      printf("pkgname ARROW subname ( optterms )\n");
+    }
   | declvar
     { printf("declvar -> term\n"); }
 
