@@ -317,8 +317,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           bufptr++;
         }
         
-        SPerl_OP* op = malloc(sizeof(SPerl_OP));
-        op->op_type = SPerl_OP_CONST_STRING;
+        SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_STRING, 0, 0, 0);
         op->uv.pv = str;
         
         parser->bufptr = bufptr;
@@ -343,8 +342,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
-          SPerl_OP* op = malloc(sizeof(SPerl_OP));
-          op->op_type = SPerl_OP_CONST_STRING;
+          SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_STRING, 0, 0, 0);
           op->uv.pv = var;
           
           parser->bufptr = bufptr;
@@ -375,8 +373,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           int num = atoi(num_str);
           free(num_str);
           
-          SPerl_OP* op = malloc(sizeof(SPerl_OP));
-          op->op_type = SPerl_OP_CONST_INT;
+          SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_INT, 0, 0, 0);
           op->uv.iv = num;
           
           parser->bufptr = bufptr;
@@ -459,8 +456,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               return WHILE;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
-              SPerl_OP* op = malloc(sizeof(SPerl_OP));
-              op->op_type = SPerl_OP_CONST_BOOL;
+              SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_BOOL, 0, 0, 0);
               op->uv.iv = 1;
 
               parser->bufptr = bufptr;
@@ -469,8 +465,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               return BOOL;
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
-              SPerl_OP* op = malloc(sizeof(SPerl_OP));
-              op->op_type = SPerl_OP_CONST_BOOL;
+              SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_BOOL, 0, 0, 0);
               op->uv.iv = 0;
 
               parser->bufptr = bufptr;
@@ -484,8 +479,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             }
           }
           
-          SPerl_OP* op = malloc(sizeof(SPerl_OP));
-          op->op_type = SPerl_OP_CONST_STRING;
+          SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_STRING, 0, 0, 0);
           op->uv.pv = keyword;
           
           parser->bufptr = bufptr;

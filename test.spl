@@ -1,3 +1,5 @@
+package Point3D;
+
 use Point as pt;
 
 
@@ -163,5 +165,4 @@ sub sum : int ($foo : int, $bar : float) {
 
 sub last : int ($foo : int) { }
 
-package Point3D;
 
