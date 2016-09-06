@@ -83,6 +83,15 @@ statement
     }
   | FOR '(' term ';' term ';' term ')' block
     {
+      SPerl_OP* op = SPerl_newOP(
+        SPerl_OP_LOOP,
+        0,
+        $3,
+        $5
+      );
+      SPerl_op_sibling_splice(op, $5, 0, $9);
+      SPerl_op_sibling_splice(op, $9, 0, $7);
+      $$ = op;
       printf("FOR ( term ; term ; term ) block\n");
     }
   | WHILE '(' term ')' block
