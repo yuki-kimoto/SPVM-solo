@@ -91,12 +91,14 @@ struct SPerl_op {
  * AIX */
 #define SPerl_cBOOL(cbool) ((cbool) ? (bool)1 : (bool)0)
 
-#define SPerl_OpSIBLING(o) (0 + (o)->op_moresib ? (o)->op_sibparent : NULL)
+SPerl_OP* SPerl_OpSIBLING(SPerl_OP* o);
+
 #define SPerl_OpMORESIB_set(o, sib) ((o)->op_moresib = 1, (o)->op_sibparent = (sib))
 #define SPerl_OpLASTSIB_set(o, parent) \
    ((o)->op_moresib = 0, (o)->op_sibparent = (parent))
 #define SPerl_OpMAYBESIB_set(o, sib, parent) \
    ((o)->op_sibparent = ((o)->op_moresib = SPerl_cBOOL(sib)) ? (sib) : (parent))
+
 
 SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
 SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_count, SPerl_OP *insert);

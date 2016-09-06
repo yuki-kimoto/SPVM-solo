@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+SPerl_OP* SPerl_OpSIBLING(SPerl_OP* o) {
+  return o->op_moresib ? o->op_sibparent : NULL;
+}
+
 SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_count, SPerl_OP* insert) {
   SPerl_OP *first;
   SPerl_OP *rest;
