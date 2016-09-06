@@ -65,7 +65,7 @@ SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_cou
     exit(1);
 }
 
-SPerl_OP* SPerl_op_append_elem(I32 type, SPerl_OP *first, SPerl_OP *last)
+SPerl_OP* SPerl_op_append_elem(SPerl_OP *first, SPerl_OP *last)
 {
   if (!first)
     return last;

@@ -114,7 +114,7 @@ optterms
 terms
   : terms ',' term
     {
-      $$ = SPerl_op_append_elem(SPerl_OP_LIST, $1, $3);
+      $$ = SPerl_op_append_elem($1, $3);
       printf("terms , term -> terms\n");
     }
   | term
@@ -313,13 +313,13 @@ term
       SPerl_OP* op_var = $1;
       SPerl_OP* op_optterms = $5;
       
-      if (op_optterms) {
-        
-      }
-      else {
-        $$ = SPerl_newOP(SPerl_OP_FUNC, 0, $3, $1);
-      }
-      
+      $$ = SPerl_newOP(
+        SPerl_OP_FUNC,
+        0,
+        $3,
+        SPerl_op_append_elem($1, $5)
+      );
+
       printf("VAR ARROW subname ( optterms )\n");
     }
   | VAR ARROW '(' optterms ')'
