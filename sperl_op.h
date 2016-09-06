@@ -76,21 +76,6 @@ struct SPerl_op {
   } uv;
 };
 
-/* Define bool */
-#ifndef HAS_BOOL
-# ifdef bool
-#  undef bool
-# endif
-# define bool char
-# define HAS_BOOL 1
-#endif
-
-/* cast-to-bool.  A simple (bool) cast may not do the right thing: if bool is
- * defined as char for example, then the cast from int is
- * implementation-defined (bool)!!(cbool) in a ternary triggers a bug in xlc on
- * AIX */
-#define SPerl_cBOOL(cbool) ((cbool) ? (bool)1 : (bool)0)
-
 SPerl_OP* SPerl_OpSIBLING(SPerl_OP* o);
 void SPerl_OpMORESIB_set(SPerl_OP* o, SPerl_OP* sib);
 void SPerl_OpLASTSIB_set(SPerl_OP* o, SPerl_OP* parent);
@@ -99,6 +84,5 @@ void SPerl_OpMAYBESIB_set(SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
 SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP *first, SPerl_OP *last);
 SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_op_append_elem(SPerl_OP *first, SPerl_OP *last);
-
 
 #endif

@@ -20,7 +20,7 @@ void SPerl_OpLASTSIB_set(SPerl_OP* o, SPerl_OP* parent) {
 }
 
 void SPerl_OpMAYBESIB_set(SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent) {
-  o->op_moresib = SPerl_cBOOL(sib);
+  o->op_moresib = sib ? 1 : 0;
   o->op_sibparent = o->op_moresib ? sib : parent;
 }
 
