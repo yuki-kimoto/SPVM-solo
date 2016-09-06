@@ -94,11 +94,20 @@ else
 
 declvar
   : MY VAR ':' modiftype
-    { printf("MY VAR : modiftype -> declvar\n"); }
+    {
+      $$ = SPerl_newOP(SPerl_OP_MY, 0, $2, $4);
+      printf("MY VAR : modiftype -> declvar\n");
+    }
   | OUR VAR ':' modiftype
-    { printf("OUR VAR : modiftype -> declvar\n"); }
+    {
+      $$ = SPerl_newOP(SPerl_OP_VAR, 0, $2, $4);
+      printf("OUR VAR : modiftype -> declvar\n");
+    }
   | HAS attrname ':' modiftype
-    { printf("HAS attrname : modiftype -> declvar\n"); }
+    {
+      $$ = SPerl_newOP(SPerl_OP_HAS, 0, $2, $4);
+      printf("HAS attrname : modiftype -> declvar\n");
+    }
 
 optterms
   :	/* NULL */

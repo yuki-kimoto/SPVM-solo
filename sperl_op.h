@@ -44,7 +44,10 @@ enum SPerl_OP_CODE {
   SPerl_OP_FUNC,
   SPerl_OP_SUBARG,
   SPerl_OP_ANONSUB,
-  SPerl_OP_BLOCK
+  SPerl_OP_BLOCK,
+  SPerl_OP_MY,
+  SPerl_OP_OUR,
+  SPerl_OP_HAS
 };
 
 /* Binary operation */
