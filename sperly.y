@@ -53,12 +53,6 @@ statements
   | statements statement 
     { printf("statements statement -> statements\n"); }
 
-block 
-  : '{' '}'
-    { printf("{ } -> block\n"); }
-  | '{' statements '}'
-    { printf("{ statements } -> block\n"); }
-
 statement
   : SUB subname ':' modiftype '(' optsubargs ')' block
     { printf("SUB subname : modiftype ( subargs ) block -> statement\n"); }
@@ -84,14 +78,6 @@ statement
     { printf("RETURN ( terms ) ; -> statement\n"); }
   | USE pkgname optterms';'
     { printf("USE pkgname optterms ; -> statement\n"); }
-    
-declvar
-  : MY VAR ':' modiftype
-    { printf("MY VAR : modiftype -> declvar\n"); }
-  | OUR VAR ':' modiftype
-    { printf("OUR VAR : modiftype -> declvar\n"); }
-  | HAS attrname ':' modiftype
-    { printf("HAS attrname : modiftype -> declvar\n"); }
 
 if
   : IF '(' term ')' block
@@ -104,6 +90,20 @@ else
     { printf("else block"); }
   | ELSIF '(' term ')' block else
     { printf("elsif ( term ) block else\n"); }
+
+block 
+  : '{' '}'
+    { printf("{ } -> block\n"); }
+  | '{' statements '}'
+    { printf("{ statements } -> block\n"); }
+
+declvar
+  : MY VAR ':' modiftype
+    { printf("MY VAR : modiftype -> declvar\n"); }
+  | OUR VAR ':' modiftype
+    { printf("OUR VAR : modiftype -> declvar\n"); }
+  | HAS attrname ':' modiftype
+    { printf("HAS attrname : modiftype -> declvar\n"); }
 
 optterms
   :	/* NULL */
@@ -122,58 +122,6 @@ terms
       $$ = $1;
       printf("term -> terms\n");
     }
-
-attrname
-  : WORD
-    {
-      $$ = $1;
-      printf("WORD -> attrname\n");
-    }
-
-subname
-  : WORD
-    {
-      $$ = $1;
-      printf("WORD -> subname\n");
-    }
-
-pkgname
-  : WORD
-    {
-      $$ = $1;
-      printf("WORD -> pkgname\n");
-    }
-
-optsubargs
-  :	/* NULL */
-    { $$ = (SPerl_OP*)NULL; }
-  |	subargs
-    { $$ = $1; }
-
-subargs
-  : subarg
-    { printf("subarg -> subargs\n"); }
-  | subargs ',' subarg
-    { printf("subargs , subarg\n"); }
-
-subarg
-  : VAR ':' modiftype
-    { printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.pv); }
-
-modiftype
-  : type
-    { printf("type -> modiftype\n"); }
-  | modifier type
-    { printf("modifier type -> modiftype\n"); }
-    
-type
-  : WORD
-    { printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.pv); }
-
-modifier
-  : WORD
-    { printf("WORD -> modifier\n"); }
-  | modifier WORD
 
 term
   : VAR
@@ -306,8 +254,6 @@ term
       SPerl_newOP(SPerl_OP_OR, 0, $1, $3);
       printf("term OROP term -> term\n");
     }
-  | SUB ':' modiftype '(' optsubargs ')' block
-    { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
   | VAR ARROW subname '(' optterms ')'
     {
       $$ = SPerl_newOP(
@@ -346,6 +292,59 @@ term
       $$ = (SPerl_OP*)NULL;
       printf("declvar -> term\n");
     }
+  | SUB ':' modiftype '(' optsubargs ')' block
+    { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
 
+optsubargs
+  :	/* NULL */
+    { $$ = (SPerl_OP*)NULL; }
+  |	subargs
+    { $$ = $1; }
+
+subargs
+  : subarg
+    { printf("subarg -> subargs\n"); }
+  | subargs ',' subarg
+    { printf("subargs , subarg\n"); }
+
+subarg
+  : VAR ':' modiftype
+    { printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.pv); }
+
+modiftype
+  : type
+    { printf("type -> modiftype\n"); }
+  | modifier type
+    { printf("modifier type -> modiftype\n"); }
+    
+type
+  : WORD
+    { printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.pv); }
+
+modifier
+  : WORD
+    { printf("WORD -> modifier\n"); }
+  | modifier WORD
+
+attrname
+  : WORD
+    {
+      $$ = $1;
+      printf("WORD -> attrname\n");
+    }
+
+subname
+  : WORD
+    {
+      $$ = $1;
+      printf("WORD -> subname\n");
+    }
+
+pkgname
+  : WORD
+    {
+      $$ = $1;
+      printf("WORD -> pkgname\n");
+    }
 %%
 
