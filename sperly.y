@@ -92,12 +92,6 @@ else
   | ELSIF '(' term ')' block else
     { printf("elsif ( term ) block else\n"); }
 
-block 
-  : '{' '}'
-    { printf("{ } -> block\n"); }
-  | '{' statements '}'
-    { printf("{ statements } -> block\n"); }
-
 declvar
   : MY VAR ':' modiftype
     { printf("MY VAR : modiftype -> declvar\n"); }
@@ -300,7 +294,29 @@ term
       printf("declvar -> term\n");
     }
   | SUB ':' modiftype '(' optsubargs ')' block
-    { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
+    {
+      SPerl_OP* op_optsubargs = $5;
+      if (!op_optsubargs) {
+        op_optsubargs = SPerl_newOP(SPerl_OP_NULL, 0, 0, 0);
+      }
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_ANONSUB, 0, $3, op_optsubargs);
+      SPerl_op_sibling_splice(op, op_optsubargs, 0, $7);
+      $$ = op;
+      
+      printf("SUB : modiftype ( optsubargs ) block -> term\n");
+    }
+
+block 
+  : '{' '}'
+    {
+      $$ = SPerl_newOP(SPerl_OP_BLOCK, 0, 0, 0);
+      printf("{ } -> block\n");
+    }
+  | '{' statements '}'
+    {
+      $$ = SPerl_newOP(SPerl_OP_BLOCK, 0, $2, 0);
+      printf("{ statements } -> block\n");
+    }
 
 optsubargs
   :	/* NULL */
