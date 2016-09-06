@@ -342,7 +342,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
-          SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_STRING, 0, 0, 0);
+          SPerl_OP* op = SPerl_newOP(SPerl_OP_VAR, 0, 0, 0);
           op->uv.pv = var;
           
           parser->bufptr = bufptr;

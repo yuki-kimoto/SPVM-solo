@@ -56,7 +56,8 @@ char* const SPerl_op_name[] = {
   "next",
   "package",
   "loop",
-  "sub"
+  "sub",
+  "var"
 };
 
 void SPerl_dump_abstract_tree(SPerl_OP* op, I32 depth) {
@@ -68,14 +69,13 @@ void SPerl_dump_abstract_tree(SPerl_OP* op, I32 depth) {
   printf("%s\n", SPerl_op_name[op->op_type]);
   
   if (op->op_first) {
-    printf("aaaaaaaaaaaaaaaaaaaaaaa\n");
     depth++;
     SPerl_dump_abstract_tree(op->op_first, depth);
     depth--;
   }
-  else if (op->op_moresib) {
+  
+  if (op->op_moresib) {
     SPerl_dump_abstract_tree(SPerl_OpSIBLING(op), depth);
-    printf("bbbbbbbbbbbbbbbbbbbbbbbbbb\n");
   }
 }
 

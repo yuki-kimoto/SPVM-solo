@@ -55,7 +55,8 @@ enum SPerl_OP_CODE {
   SPerl_OP_NEXT,
   SPerl_OP_PACKAGE,
   SPerl_OP_LOOP,
-  SPerl_OP_SUB
+  SPerl_OP_SUB,
+  SPerl_OP_VAR
 };
 
 extern char* const SPerl_op_name[];
