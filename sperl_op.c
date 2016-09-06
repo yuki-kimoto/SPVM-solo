@@ -60,7 +60,7 @@ char* const SPerl_op_name[] = {
   "var"
 };
 
-void SPerl_dump_abstract_tree(SPerl_OP* op, I32 depth) {
+void SPerl_dump_ast(SPerl_OP* op, I32 depth) {
   
   I32 i;
   for (i = 0; i < depth; i++) {
@@ -78,12 +78,12 @@ void SPerl_dump_abstract_tree(SPerl_OP* op, I32 depth) {
   
   if (op->op_first) {
     depth++;
-    SPerl_dump_abstract_tree(op->op_first, depth);
+    SPerl_dump_ast(op->op_first, depth);
     depth--;
   }
   
   if (op->op_moresib) {
-    SPerl_dump_abstract_tree(SPerl_OpSIBLING(op), depth);
+    SPerl_dump_ast(SPerl_OpSIBLING(op), depth);
   }
 }
 
