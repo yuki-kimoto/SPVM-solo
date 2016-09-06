@@ -74,13 +74,34 @@ statement
   | CONTINUE ';'
     { printf("CONTINUE ; -> statement\n"); }
   | RETURN term ';'
-    { printf("RETURN term ; -> statement\n"); }
+    {
+      $$ = SPerl_newOP(SPerl_OP_LIST, 0, $2, 0);
+      printf("RETURN term ; -> statement\n");
+    }
   | RETURN '(' terms ')' ';'
-    { printf("RETURN ( terms ) ; -> statement\n"); }
+    {
+      SPerl_OP* op;
+      SPerl_OP* terms_op = $3;
+      if (terms_op->op_type == SPerl_OP_LIST) {
+        op = terms_op;
+      }
+      else {
+        op = SPerl_newOP(SPerl_OP_LIST, 0, terms_op, 0);
+      }
+      $$ = op;
+      
+      printf("RETURN ( terms ) ; -> statement\n");
+    }
   | USE pkgname';'
-    { printf("USE pkgname; -> statement\n"); }
+    {
+      $$ = SPerl_newOP(SPerl_OP_USE, 0, $2, 0);
+      printf("USE pkgname; -> statement\n");
+    }
   | USE pkgname AS WORD';'
-    { printf("USE pkgname AS WORD; -> statement\n"); }
+    {
+      $$ = SPerl_newOP(SPerl_OP_USE, 0, $2, $4);
+      printf("USE pkgname AS WORD; -> statement\n");
+    }
 
 if
   : IF '(' term ')' block else
