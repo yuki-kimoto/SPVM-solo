@@ -20,7 +20,7 @@ SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_cou
 
   if (del_count && first) {
     last_del = first;
-    while (--del_count && SPerl_OpHAS_SIBLING(last_del))
+    while (--del_count && last_del->op_moresib)
       last_del = SPerl_OpSIBLING(last_del);
     rest = SPerl_OpSIBLING(last_del);
     SPerl_OpLASTSIB_set(last_del, NULL);
@@ -30,7 +30,7 @@ SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_cou
 
   if (insert) {
     last_ins = insert;
-    while (SPerl_OpHAS_SIBLING(last_ins))
+    while (last_ins->op_moresib)
       last_ins = SPerl_OpSIBLING(last_ins);
     SPerl_OpMAYBESIB_set(last_ins, rest, NULL);
   }

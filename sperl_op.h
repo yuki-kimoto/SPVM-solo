@@ -91,7 +91,6 @@ struct SPerl_op {
  * AIX */
 #define SPerl_cBOOL(cbool) ((cbool) ? (bool)1 : (bool)0)
 
-#define SPerl_OpHAS_SIBLING(o) (SPerl_cBOOL((o)->op_moresib))
 #define SPerl_OpSIBLING(o) (0 + (o)->op_moresib ? (o)->op_sibparent : NULL)
 #define SPerl_OpMORESIB_set(o, sib) ((o)->op_moresib = 1, (o)->op_sibparent = (sib))
 #define SPerl_OpLASTSIB_set(o, parent) \
