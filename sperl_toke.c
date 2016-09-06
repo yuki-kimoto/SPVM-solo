@@ -7,8 +7,7 @@
 #include "sperly.tab.h"
 
 /* Get token */
-int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
-{
+int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
   char* bufptr = parser->bufptr;
   enum SPerl_OP_EXPECT expect = parser->expect;
   parser->expect = SPerl_OP_EXPECT_NORMAL;
@@ -478,6 +477,10 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser)
               SPerl_yylvalp->opval = (SPerl_OP*)op;
 
               return BOOL;
+            }
+            else if (memcmp(keyword, "as", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return AS;
             }
           }
           

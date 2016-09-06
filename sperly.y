@@ -16,7 +16,7 @@
 %token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP EQOP
 %token <ival> LAST CONTINUE
-%token <opval> WORD VAR INT STRING BOOL
+%token <opval> WORD VAR INT STRING BOOL AS
 
 %type <opval> grammar statements statement declvar if else block
 %type <opval> optterms terms term subargs subarg optsubargs
@@ -83,9 +83,9 @@ statement
 if
   : IF '(' term ')' block else
     {
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_COND, 0, $3, $4);
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_COND, 0, $3, $5);
       if ($6) {
-        SPerl_op_sibling_splice(op, $4, 0, $6);
+        SPerl_op_sibling_splice(op, $5, 0, $6);
       }
       $$ = op;
       printf("IF ( term ) block -> if\n");
@@ -104,9 +104,9 @@ else
     }
   | ELSIF '(' term ')' block else
     {
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_COND, 0, $3, $4);
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_COND, 0, $3, $5);
       if ($6) {
-        SPerl_op_sibling_splice(op, $4, 0, $6);
+        SPerl_op_sibling_splice(op, $5, 0, $6);
       }
       $$ = op;
       
