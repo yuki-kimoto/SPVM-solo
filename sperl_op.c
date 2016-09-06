@@ -5,8 +5,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void SPerl_dump_abstract_tree(SPerl_OP* op) {
-  printf("aaaaaaaaaaaaaaaa");
+void SPerl_dump_abstract_tree(SPerl_OP* op, I32 depth) {
+  
+  I32 i;
+  for (i = 0; i < depth; i++) {
+    printf(" ");
+  }
+  printf("%d\n", op->op_type);
+  
+  if (op->op_first) {
+    depth++;
+    SPerl_dump_abstract_tree(op->op_first, depth);
+    depth--;
+  }
+  else if (op->op_moresib) {
+    SPerl_dump_abstract_tree(SPerl_OpSIBLING(op), depth);
+  }
 }
 
 SPerl_OP* SPerl_OpSIBLING(SPerl_OP* o) {

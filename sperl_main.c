@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
   /* call SPerl_yyparse */
   int parse_success = SPerl_yyparse(parser);
   
-  SPerl_dump_abstract_tree(parser->main_root);
+  SPerl_dump_abstract_tree(parser->main_root, 0);
   
   
   free(parser->linestr);
