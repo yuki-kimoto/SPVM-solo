@@ -314,13 +314,22 @@ subarg
 
 modiftype
   : type
-    { printf("type -> modiftype\n"); }
+    {
+      $$ = $1;
+      printf("type -> modiftype\n");
+    }
   | modifiers type
-    { printf("modifiers type -> modiftype\n"); }
+    {
+      $$ = SPerl_op_append_elem($2, $1);
+      printf("modifiers type -> modiftype\n");
+    }
     
 type
   : WORD
-    { printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.pv); }
+    {
+      $$ = $1;
+      printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.pv);
+    }
 
 modifiers
   : modifiers  modifier
