@@ -58,6 +58,8 @@ enum SPerl_OP_CODE {
   SPerl_OP_SUB
 };
 
+extern char* const SPerl_op_name[];
+
 /* Binary operation */
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
