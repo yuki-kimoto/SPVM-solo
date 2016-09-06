@@ -23,6 +23,12 @@ typedef union
 
 void SPerl_yyerror(SPerl_yy_parser* parser, const char* s);
 
+/* Expected token */
+enum SPerl_OP_EXPECT {
+  SPerl_OP_EXPECT_NORMAL,
+  SPerl_OP_EXPECT_WORD
+};
+
 #define YYSTYPE SPerl_yystype
 
 #endif

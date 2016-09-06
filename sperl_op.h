@@ -76,12 +76,6 @@ struct SPerl_op {
   } uv;
 };
 
-/* Expected token */
-enum SPerl_OP_EXPECT {
-  SPerl_OP_EXPECT_NORMAL,
-  SPerl_OP_EXPECT_WORD
-};
-
 /* Define bool */
 #ifndef HAS_BOOL
 # ifdef bool
