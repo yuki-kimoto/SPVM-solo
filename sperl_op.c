@@ -131,12 +131,14 @@ SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_cou
 
   if (insert) {
     last_ins = insert;
-    while (last_ins->op_moresib)
+    while (last_ins->op_moresib) {
       last_ins = SPerl_OpSIBLING(last_ins);
+    }
     SPerl_OpMAYBESIB_set(last_ins, rest, NULL);
   }
-  else
+  else {
     insert = rest;
+  }
 
   if (start) {
     SPerl_OpMAYBESIB_set(start, insert, NULL);
@@ -146,7 +148,7 @@ SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_cou
       goto no_parent;
     parent->op_first = insert;
   }
-
+  
   if (!rest) {
     /* update op_last etc */
     SPerl_OP *lastop;
@@ -188,6 +190,8 @@ SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
   SPerl_OP *op;
 
   op = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1);
+  memset(op, 0, sizeof(SPerl_OP));
+  
   op->op_type = type;
   op->op_first = first;
   op->op_flags = (U8)flags;
