@@ -310,9 +310,6 @@ term
     { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
   | VAR ARROW subname '(' optterms ')'
     {
-      SPerl_OP* op_var = $1;
-      SPerl_OP* op_optterms = $5;
-      
       $$ = SPerl_newOP(
         SPerl_OP_FUNC,
         0,
@@ -323,7 +320,16 @@ term
       printf("VAR ARROW subname ( optterms )\n");
     }
   | VAR ARROW '(' optterms ')'
-    { printf("VAR ARROW ( optterms )\n"); }
+    {
+      $$ = SPerl_newOP(
+        SPerl_OP_FUNC,
+        0,
+        $1,
+        $4
+      );
+      
+      printf("VAR ARROW ( optterms )\n");
+    }
   | pkgname ARROW subname '(' optterms ')'
     { printf("pkgname ARROW subname ( optterms )\n"); }
   | declvar
