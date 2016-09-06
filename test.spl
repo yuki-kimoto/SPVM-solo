@@ -1,4 +1,5 @@
 $title->();
+$title->(1);
 $title->(1, 2);
 
 ++$test;
@@ -72,9 +73,11 @@ $title != 2;
 
 $test->x;
 $test->sum();
+$test->sum(1);
 $test->sum(1, 2);
 
 Test->sum();
+Test->sum(1);
 Test->sum(1, 2);
 
 $test->x = 3;

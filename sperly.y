@@ -310,6 +310,16 @@ term
     { printf("SUB : modiftype ( optsubargs ) block -> term\n"); }
   | VAR ARROW subname '(' optterms ')'
     {
+      SPerl_OP* op_var = $1;
+      SPerl_OP* op_optterms = $5;
+      
+      if (op_optterms) {
+        
+      }
+      else {
+        
+      }
+      
       printf("VAR ARROW subname ( optterms )\n");
     }
   | VAR ARROW '(' optterms ')'
