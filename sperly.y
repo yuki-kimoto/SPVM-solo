@@ -50,6 +50,7 @@ grammar
     }
   | statements
     {
+      parser->main_root = $1;
       $$ = $1;
       printf("statements -> grammar\n");
     }

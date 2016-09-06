@@ -13,6 +13,8 @@ typedef struct {
   
   /* Expect next */
   int expect;
+  
+  SPerl_OP* main_root;
 } SPerl_yy_parser;
 
 typedef union
