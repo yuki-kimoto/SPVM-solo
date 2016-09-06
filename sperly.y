@@ -63,12 +63,18 @@ statement
     { printf("; -> statement\n") }
   | if
     { printf("if -> statement\n"); }
-  | FOR '(' term ';' term ';' term ')' '{' statements '}'
-    { printf("FOR ( term ; term ; term ) { statements }\n"); }
+  | FOR '(' term ';' term ';' term ')' block
+    { printf("FOR ( term ; term ; term ) block\n"); }
   | WHILE '(' term ')' block
-    { printf("WHILE ( term ) block\n"); }
+    {
+      // $$ = SPerl_newOP(SPerl_OP_LOOP, 
+      printf("WHILE ( term ) block\n");
+    }
   | PACKAGE pkgname ';'
-    { printf("PACKAGE pkgname ; -> statement\n"); }
+    {
+      $$ = SPerl_newOP(SPerl_OP_PACKAGE, 0, $1, 0);
+      printf("PACKAGE pkgname ; -> statement\n");
+    }
   | LAST ';'
     {
       $$ = SPerl_newOP(SPerl_OP_LAST, 0, 0, 0);

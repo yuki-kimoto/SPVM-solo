@@ -53,6 +53,8 @@ enum SPerl_OP_CODE {
   SPerl_OP_RETURN,
   SPerl_OP_LAST,
   SPerl_OP_NEXT,
+  SPerl_OP_PACKAGE,
+  SPerl_OP_LOOP
 };
 
 /* Binary operation */
