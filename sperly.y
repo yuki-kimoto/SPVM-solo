@@ -69,7 +69,24 @@ statements
 statement
   : SUB subname ':' modiftype '(' optsubargs ')' block
     {
+      SPerl_OP* optsubargs_op = $6;
+      if (!optsubargs_op) {
+        optsubargs_op = SPerl_newOP(SPerl_OP_NULL, 0, 0, 0);
+      }
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_SUB, 0, $2, $4);
+      SPerl_op_sibling_splice(op, $4, 0, optsubargs_op);
+      SPerl_op_sibling_splice(op, optsubargs_op, 0, $8);
+      
+      $$ = op;
+      
       printf("SUB subname : modiftype ( optsubargs ) block -> statement\n");
+    }
+  | FOR '(' term ';' term ';' term ')' block
+    { printf("FOR ( term ; term ; term ) block\n"); }
+  | WHILE '(' term ')' block
+    {
+      // $$ = SPerl_newOP(SPerl_OP_LOOP, 
+      printf("WHILE ( term ) block\n");
     }
   | term ';'
     {
@@ -85,13 +102,6 @@ statement
     {
       $$ = $1;
       printf("if -> statement\n");
-    }
-  | FOR '(' term ';' term ';' term ')' block
-    { printf("FOR ( term ; term ; term ) block\n"); }
-  | WHILE '(' term ')' block
-    {
-      // $$ = SPerl_newOP(SPerl_OP_LOOP, 
-      printf("WHILE ( term ) block\n");
     }
   | PACKAGE pkgname ';'
     {
