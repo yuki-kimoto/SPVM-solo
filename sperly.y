@@ -125,7 +125,7 @@ statement
     }
   | PACKAGE pkgname ';'
     {
-      $$ = SPerl_newOP(SPerl_OP_PACKAGE, 0, $1, 0);
+      $$ = SPerl_newOP(SPerl_OP_PACKAGE, 0, $2, 0);
       printf("PACKAGE pkgname ; -> statement\n");
     }
   | LAST ';'
