@@ -1,8 +1,10 @@
 # Static Perl
 
+Perlish syntax, fast compile, fast runtime, fast culculation, parallel, GC, VM, byte code.
+
 This is my experiment to create static perl implementation.
 
-Perlish syntax, fast compile, fast runtime, fast culculation, parallel, GC.
+From now, I have implmented parts of tokenizer and abstract syntax tree generator.
 
 ```
 package main;
@@ -30,20 +32,13 @@ sub sum : int ($num1 : int, $num2 : int) {
 
 I only created syntax rule. This command ouput ruduce result.
 
-## Files
+## Source files
 
-**stoke.c**
-
-Tokenizer
-
-**sperl.y**
-
-Parser
-
-**sperl.h**
-
-Header
-
-**sperlmain.c**
-
-Program entry point
+- **sperl.h** - Main header
+- **sperl_parser.h** - Parser header
+- **sperl_op.h** - Create OP tree header
+- **sperl_main.c** - Program entry point
+- **sperl_toke.c** - Tokenizer
+- **sperly.y** - Parser generator
+- **sperl_op.c** - Create OP tree
+- **test.spl** - Test script
