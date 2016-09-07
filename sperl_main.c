@@ -35,8 +35,10 @@ int main(int argc, char *argv[])
   parser->bufptr = parser->linestr;
   
   /* call SPerl_yyparse */
+  printf("[Token reduction]\n");
   int parse_success = SPerl_yyparse(parser);
   
+  printf("\n[Abstract Syntax Tree]\n");
   SPerl_dump_ast(parser->main_root, 0);
   
   

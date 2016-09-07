@@ -72,7 +72,7 @@ void SPerl_dump_ast(SPerl_OP* op, I32 depth) {
   if (type == SPerl_OP_CONST_INT) {
     printf(" %d", op->uv.iv);
   }
-  else if (type == SPerl_OP_CONST_STRING) {
+  else if (type == SPerl_OP_CONST_STRING || type == SPerl_OP_VAR) {
     printf(" \"%s\"", op->uv.pv);
   }
   printf("\n");
