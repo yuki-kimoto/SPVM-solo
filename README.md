@@ -1,10 +1,17 @@
-# Static Perl
+# Static Perl - Fast culculation, parallel process, GC, static typing, VM with  perlish syntax
 
-Perlish syntax, fast compile, fast runtime, fast culculation, parallel, GC, VM, byte code.
+Do you need **fast** Perl? Static Perl provide fast culculation system on Perl.
 
-This is my experiment to create static perl implementation.
+- **Fast culculation** - Perl biggest weekpoint is culculation performance. Static Perl provide fast culculation.
+- **Paralel process** - Support paralel process to process array fast
+- **GC** - You don't need to think about freeing memory
+- **Static typing** - Static typing for performance
+- **VM** - Byte code is created and you can run it by Static Perl VM
+- **Perlish syntax** - syntax is very similar with Perl
 
-From now, I have implmented parts of tokenizer and abstract syntax tree generator.
+This is now **developping**.
+
+I have implmented only parts of **tokenizer** and **abstract syntax tree generator**.
 
 ```
 package main;
@@ -30,7 +37,7 @@ sub sum : int ($num1 : int, $num2 : int) {
 
     bison -p SPerl_yy -d sperly.y && gcc -O -o sperl sperly.tab.c sperl_main.c sperl_toke.c sperl_op.c && ./sperl test.spl
 
-I only created syntax rule. This command ouput ruduce result.
+Now I only print the result of **tokenizing** and **creating abstract syntax tree**.
 
 ## Source files
 
