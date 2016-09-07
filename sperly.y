@@ -44,13 +44,14 @@
 grammar
   : /* NULL */
     {
-      $$ = (SPerl_OP*)NULL;
+      $$ = SPerl_newOP(SPerl_OP_GRAMMER, 0, 0, 0);;
       printf("NULL -> grammar\n");
     }
   | statements
     {
-      parser->main_root = $1;
-      $$ = $1;
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_GRAMMER, 0, $1, 0);
+      parser->main_root = op;
+      $$ = op;
       printf("statements -> grammar\n");
     }
 

@@ -61,7 +61,8 @@ char* const SPerl_op_name[] = {
   "var",
   "eq",
   "ne",
-  "statement"
+  "statement",
+  "grammer"
 };
 
 void SPerl_dump_ast(SPerl_OP* op, I32 depth) {
