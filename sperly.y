@@ -152,6 +152,11 @@ statement
       $$ = SPerl_newOP(SPerl_OP_USE, 0, $2, $4);
       printf("USE pkgname AS WORD; -> statement\n");
     }
+  | block
+    {
+      $$ = $1;
+      printf("block -> statement\n");
+    }
 
 if
   : IF '(' term ')' block else
