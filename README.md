@@ -1,6 +1,6 @@
 # Static Perl - Fast culculation, parallel process, GC, static typing, VM with  perlish syntax
 
-Do you need **fast** Perl? Static Perl provide fast culculation system on Perl.
+Do you need **fast Perl**? Static Perl provide fast culculation system on Perl.
 
 - **Fast culculation** - Perl biggest weekpoint is culculation performance. Static Perl provide fast culculation.
 - **Paralel process** - Support paralel process to process array fast
@@ -38,7 +38,7 @@ sub sum : int ($num1 : int, $num2 : int) {
 
 Now I only print the result of **token reduction** and **abstract syntax tree**.
 
-The following source code output:
+The above source code output:
 
 ```
 [Token reduction]
