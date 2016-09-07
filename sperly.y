@@ -398,7 +398,7 @@ term
     }
   | declvar
     {
-      $$ = (SPerl_OP*)NULL;
+      $$ = $1;
       printf("declvar -> term\n");
     }
   | SUB ':' modiftype '(' optsubargs ')' block
