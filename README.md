@@ -38,6 +38,146 @@ sub sum : int ($num1 : int, $num2 : int) {
 
 Now I only print the result of **token reduction** and **abstract syntax tree**.
 
+The following source code output:
+
+```
+[Token reduction]
+WORD -> pkgname
+PACKAGE pkgname ; -> statement
+statement -> statements
+WORD -> subname
+WORD -> type (int)
+type -> modiftype
+NULL -> optsubargs
+WORD -> type (int)
+type -> modiftype
+MY VAR : modiftype -> declvar
+declvar -> term
+INT(2) -> term
+term ASSIGNOP term -> term
+term ; -> statement
+statement -> statements
+WORD -> type (int)
+type -> modiftype
+MY VAR : modiftype -> declvar
+declvar -> term
+INT(5) -> term
+term ASSIGNOP term -> term
+term ; -> statement
+statements statement -> statements
+WORD -> type (int)
+type -> modiftype
+MY VAR : modiftype -> declvar
+declvar -> term
+WORD -> subname
+VAR($num1) -> term
+term -> terms
+VAR($num3) -> term
+terms , term -> terms
+terms -> optterms
+subname (optterms) -> term
+term ASSIGNOP term -> term
+term ; -> statement
+statements statement -> statements
+{ statements } -> block
+SUB subname : modiftype ( optsubargs ) block -> statement
+statements statement -> statements
+WORD -> subname
+WORD -> type (int)
+type -> modiftype
+WORD -> type (int)
+type -> modiftype
+VAR : modiftype -> subarg ($num1)
+subarg -> subargs
+WORD -> type (int)
+type -> modiftype
+VAR : modiftype -> subarg ($num2)
+subargs , subarg
+subargs -> optsubargs
+WORD -> type (int)
+type -> modiftype
+MY VAR : modiftype -> declvar
+declvar -> term
+term ; -> statement
+statement -> statements
+VAR($num3) -> term
+VAR($num1) -> term
+VAR($num1) -> term
+term + term -> term
+term ASSIGNOP term -> term
+term ; -> statement
+statements statement -> statements
+VAR($num3) -> term
+RETURN term ; -> statement
+statements statement -> statements
+{ statements } -> block
+SUB subname : modiftype ( optsubargs ) block -> statement
+statements statement -> statements
+statements -> grammar
+
+[Abstract Syntax Tree]
+grammer
+ list
+  statement
+   package
+    const_string "main"
+  statement
+   sub
+    const_string "main"
+    const_string "int"
+    null
+    block
+     list
+      statement
+       assign
+        my
+         var "$num1"
+         const_string "int"
+        const_int 2
+      statement
+       assign
+        my
+         var "$num2"
+         const_string "int"
+        const_int 5
+      statement
+       assign
+        my
+         var "$num3"
+         const_string "int"
+        func
+         const_string "sum"
+         list
+          var "$num1"
+          var "$num3"
+  statement
+   sub
+    const_string "sum"
+    const_string "int"
+    list
+     subarg
+      var "$num1"
+      const_string "int"
+     subarg
+      var "$num2"
+      const_string "int"
+    block
+     list
+      statement
+       my
+        var "$num3"
+        const_string "int"
+      statement
+       assign
+        var "$num3"
+        add
+         var "$num1"
+         var "$num1"
+      statement
+       return
+        var "$num3"
+```
+
 ## Source files
 
 - **sperl.h** - Main header
