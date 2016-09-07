@@ -19,25 +19,24 @@ package main;
 sub main : int () {
   my $num1 : int = 2;
   my $num2 : int = 5;
-  
-  my $num3 = sum($num1, $num3);
+
+  my $num3 : int = sum($num1, $num3);
 }
 
 sub sum : int ($num1 : int, $num2 : int) {
   my $num3 : int;
-  
+
   $num3 = $num1 + $num1;
-  
+
   return $num3;
 }
-
 ```
 
 ## Run
 
     bison -p SPerl_yy -d sperly.y && gcc -O -o sperl sperly.tab.c sperl_main.c sperl_toke.c sperl_op.c && ./sperl test.spl
 
-Now I only print the result of **tokenizing** and **creating abstract syntax tree**.
+Now I only print the result of **token reduction** and **abstract syntax tree**.
 
 ## Source files
 

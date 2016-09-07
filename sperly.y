@@ -57,12 +57,15 @@ grammar
 statements
   : statements statement 
     {
-      $$ = SPerl_op_append_elem($1, $2);
+      $$ = SPerl_op_append_elem(
+        $1,
+        SPerl_newOP(SPerl_OP_STATEMENT, 0, $2, 0)
+      );
       printf("statements statement -> statements\n");
     }
   | statement
     {
-      $$ = $1;
+      $$ = SPerl_newOP(SPerl_OP_STATEMENT, 0, $1, 0);
       printf("statement -> statements\n");
     }
 
