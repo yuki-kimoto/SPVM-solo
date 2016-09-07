@@ -138,7 +138,7 @@ statement
     }
   | RETURN term ';'
     {
-      $$ = SPerl_newOP(SPerl_OP_LIST, 0, $2, 0);
+      $$ = SPerl_newOP(SPerl_OP_RETURN, 0, $2, 0);
       printf("RETURN term ; -> statement\n");
     }
   | USE pkgname';'
