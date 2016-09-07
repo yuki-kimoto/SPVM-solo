@@ -334,7 +334,7 @@ term
     }
   | VAR ARROW subname
     {
-      SPerl_newOP(SPerl_OP_ATTR, 0, $1, $3);
+      $$ = SPerl_newOP(SPerl_OP_ATTR, 0, $1, $3);
       printf("VAR ARROW subname -> term\n");
     }
   | subname '(' optterms  ')'
@@ -344,17 +344,17 @@ term
     }
   | term ASSIGNOP term
     {
-      SPerl_newOP(SPerl_OP_ASSIGN, 0, $1, $3);
+      $$ = SPerl_newOP(SPerl_OP_ASSIGN, 0, $1, $3);
       printf("term ASSIGNOP term -> term\n");
     }
   | term ANDOP term
     {
-      SPerl_newOP(SPerl_OP_AND, 0, $1, $3);
+      $$ = SPerl_newOP(SPerl_OP_AND, 0, $1, $3);
       printf("term ANDOP term -> term\n");
     }
   | term OROP term
     {
-      SPerl_newOP(SPerl_OP_OR, 0, $1, $3);
+      $$ = SPerl_newOP(SPerl_OP_OR, 0, $1, $3);
       printf("term OROP term -> term\n");
     }
   | VAR ARROW subname '(' optterms ')'
