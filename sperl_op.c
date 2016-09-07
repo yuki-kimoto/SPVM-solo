@@ -58,7 +58,9 @@ char* const SPerl_op_name[] = {
   "package",
   "loop",
   "sub",
-  "var"
+  "var",
+  "eq",
+  "ne"
 };
 
 void SPerl_dump_ast(SPerl_OP* op, I32 depth) {

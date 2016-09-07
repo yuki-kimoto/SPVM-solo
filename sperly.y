@@ -14,7 +14,7 @@
 
 %token <ival> '+' '-'
 %token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <ival> RELOP EQOP
+%token <ival> RELOP
 %token <ival> LAST NEXT AS
 %token <opval> WORD VAR INT STRING BOOL 
 
@@ -28,7 +28,6 @@
 %left <ival> ANDOP
 %left <ival> BITOROP
 %left <ival> BITANDOP
-%nonassoc EQOP
 %nonassoc RELOP
 %left <ival> SHIFTOP
 %left <ival> ADDOP
@@ -312,11 +311,6 @@ term
     {
       $$ = SPerl_newOP($2, 0, $1, $3);
       printf("term RELOP term -> term %d\n", $2);
-    }
-  | term EQOP term
-    {
-      $$ = SPerl_newOP($2, 0, $1, $3);
-      printf("term EQOP term -> term\n");
     }
   | term BITANDOP term
     {

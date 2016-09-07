@@ -207,7 +207,8 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           bufptr++;
           
           parser->bufptr = bufptr;
-          return EQOP;
+          SPerl_yylvalp->ival = SPerl_OP_EQ;
+          return RELOP;
         }
         /* = */
         else {
@@ -271,8 +272,8 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         if (*bufptr == '=') {
           bufptr++;
           parser->bufptr = bufptr;
-          SPerl_yylvalp->ival = SPerl_OP_NOT;
-          return ASSIGNOP;
+          SPerl_yylvalp->ival = SPerl_OP_NE;
+          return RELOP;
         }
         else {
           parser->bufptr = bufptr;
