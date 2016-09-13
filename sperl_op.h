@@ -6,8 +6,14 @@
 /* Operation code */
 enum SPerl_OP_CODE {
   SPerl_OP_NULL,
+  SPerl_OP_CONST_BOOLEAN,
+  SPerl_OP_CONST_CHAR,
+  SPerl_OP_CONST_BYTE,
+  SPerl_OP_CONST_SHORT,
   SPerl_OP_CONST_INT,
+  SPerl_OP_CONST_LONG,
   SPerl_OP_CONST_FLOAT,
+  SPerl_OP_CONST_DOUBLE,
   SPerl_OP_CONST_STRING,
   SPerl_OP_LT,
   SPerl_OP_LE,

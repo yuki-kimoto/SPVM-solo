@@ -8,8 +8,14 @@
 
 char* const SPerl_op_name[] = {
   "null",
+  "const_boolean",
+  "const_char",
+  "const_byte",
+  "const_short",
   "const_int",
+  "const_long",
   "const_float",
+  "const_double",
   "const_string",
   "lt",
   "le",
