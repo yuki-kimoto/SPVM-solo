@@ -1,3 +1,5 @@
+my $title : double = 4.1567;
+
 package Point3D;
 
 use Point as pt;

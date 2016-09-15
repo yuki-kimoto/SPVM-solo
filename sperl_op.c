@@ -10,7 +10,6 @@
 int8_t* const SPerl_op_name[] = {
   "null",
   "const_boolean",
-  "const_char",
   "const_byte",
   "const_short",
   "const_int",
@@ -82,6 +81,9 @@ void SPerl_dump_ast(SPerl_OP* op, int32_t depth) {
   printf("%s", SPerl_op_name[type]);
   if (type == SPerl_OP_CONST_INT) {
     printf(" %d", op->uv.iv);
+  }
+  else if (type == SPerl_OP_CONST_DOUBLE) {
+    printf(" %f", op->uv.nv);
   }
   else if (type == SPerl_OP_CONST_STRING || type == SPerl_OP_VAR) {
     printf(" \"%s\"", op->uv.pv);

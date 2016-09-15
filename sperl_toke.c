@@ -389,7 +389,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             parser->bufptr = bufptr;
             SPerl_yylvalp->opval = (SPerl_OP*)op;
             
-            return INT;
+            return DOUBLE;
           }
           // Convert to integer
           else {
