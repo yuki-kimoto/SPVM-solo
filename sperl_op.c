@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stdint.h>
 
-char* const SPerl_op_name[] = {
+int8_t* const SPerl_op_name[] = {
   "null",
   "const_boolean",
   "const_char",

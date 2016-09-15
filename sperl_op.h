@@ -70,7 +70,7 @@ enum SPerl_OP_CODE {
   SPerl_OP_GRAMMER
 };
 
-extern char* const SPerl_op_name[];
+extern int8_t* const SPerl_op_name[];
 
 /*
 boolean	1bit
@@ -94,7 +94,7 @@ struct SPerl_op {
   SPerl_OP* op_last;
   SPerl_OP* op_sibparent;
   union {
-    char* pv;
+    int8_t* pv;
     int32_t iv;
     double nv;
   } uv;

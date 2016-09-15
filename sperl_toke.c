@@ -8,13 +8,13 @@
 
 /* Get token */
 int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
-  char* bufptr = parser->bufptr;
+  int8_t* bufptr = parser->bufptr;
   enum SPerl_OP_EXPECT expect = parser->expect;
   parser->expect = SPerl_OP_EXPECT_NORMAL;
   
   while(1) {
     /* Get current character */
-    char c = *bufptr;
+    int8_t c = *bufptr;
     
     /* line end */
     switch(c) {
@@ -292,9 +292,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         bufptr++;
         
         /* Save current position */
-        char* cur_token_ptr = bufptr;
+        int8_t* cur_token_ptr = bufptr;
         
-        char* str;
+        int8_t* str;
         if (*(bufptr + 1) == '"') {
           str = malloc(1);
           str[0] = '\0';
@@ -329,7 +329,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         /* Variable */
         if (c == '$') {
           /* Save current position */
-          char* cur_token_ptr = bufptr;
+          int8_t* cur_token_ptr = bufptr;
           
           bufptr++;
 
@@ -339,7 +339,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           }
 
           size_t str_len = bufptr - cur_token_ptr;
-          char* var = malloc(str_len + 1);
+          int8_t* var = malloc(str_len + 1);
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
@@ -352,7 +352,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         }
         /* Number literal */
         else if (isdigit(c)) {
-          char* cur_token_ptr = bufptr;
+          int8_t* cur_token_ptr = bufptr;
           
           int32_t point_count = 0;
           
@@ -373,13 +373,13 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           
           // Number literal
           size_t str_len = bufptr - cur_token_ptr;
-          char* num_str = malloc(str_len + 1);
+          int8_t* num_str = malloc(str_len + 1);
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
           
           // Convert to double
           if (point_count) {
-            char *ends;
+            int8_t *ends;
             double num = strtod(num_str, &ends);
             SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_DOUBLE, 0, 0, 0);
             op->uv.nv = num;
@@ -408,7 +408,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         /* Keyword or word */
         else if (isalpha(c) || c == '_') {
           /* Save current position */
-          char* cur_token_ptr = bufptr;
+          int8_t* cur_token_ptr = bufptr;
           
           bufptr++;
           
@@ -417,7 +417,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           }
           
           size_t str_len = bufptr - cur_token_ptr;
-          char* keyword = malloc(str_len + 1);
+          int8_t* keyword = malloc(str_len + 1);
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
           
@@ -521,7 +521,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
 }
 
 /* Function for error */
-void SPerl_yyerror(SPerl_yy_parser* parser, const char* s)
+void SPerl_yyerror(SPerl_yy_parser* parser, const int8_t* s)
 {
   fprintf(stderr, "error: %s\n", s);
 }
