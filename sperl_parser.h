@@ -12,7 +12,7 @@ typedef struct {
   char* bufptr;
   
   /* Expect next */
-  int8_t expect;
+  int32_t expect;
   
   SPerl_OP* main_root;
 } SPerl_yy_parser;
@@ -20,7 +20,7 @@ typedef struct {
 typedef union
 {
   SPerl_OP* opval;
-  int8_t ival;
+  int32_t ival;
 } SPerl_yystype;
 
 void SPerl_yyerror(SPerl_yy_parser* parser, const char* s);

@@ -206,8 +206,8 @@ SPerl_OP* SPerl_newOP(int32_t type, int32_t flags, SPerl_OP* first, SPerl_OP* la
   
   op->op_type = type;
   op->op_first = first;
-  op->op_flags = (uint8_t)flags;
-  op->op_private = (uint8_t)(1 | (flags >> 8));
+  op->op_flags = (int32_t)flags;
+  op->op_private = (int32_t)(1 | (flags >> 8));
   
   if (last) {
     if (!first) {
