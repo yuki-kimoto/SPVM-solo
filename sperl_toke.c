@@ -379,7 +379,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           
           // Convert to double
           if (point_count) {
-            int8_t *ends;
+            char* ends;
             double num = strtod(num_str, &ends);
             SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_DOUBLE, 0, 0, 0);
             op->uv.nv = num;
