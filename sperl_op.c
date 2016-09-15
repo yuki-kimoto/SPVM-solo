@@ -190,44 +190,14 @@ SPerl_OP* SPerl_op_append_elem(SPerl_OP *first, SPerl_OP *last)
     return first;
   
   if (first->op_type != SPerl_OP_LIST) {
-    return SPerl_newOP(SPerl_OP_LIST, 0, first, last);
+    return SPerl_newOP(SPerl_OP_LIST, first, last);
   }
   
   SPerl_op_sibling_splice(first, first->op_last, 0, last);
   return first;
 }
 
-SPerl_OP* SPerl_newOP(int32_t type, int32_t flags, SPerl_OP* first, SPerl_OP* last) {
-        
-  SPerl_OP *op;
-
-  op = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1);
-  memset(op, 0, sizeof(SPerl_OP));
-  
-  op->op_type = type;
-  op->op_first = first;
-  op->op_flags = (int32_t)flags;
-  op->op_private = (int32_t)(1 | (flags >> 8));
-  
-  if (last) {
-    if (!first) {
-      first = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1 );
-      first->op_type = SPerl_OP_NULL;
-    }
-    
-    op->op_last = last;
-    SPerl_OpMORESIB_set(first, last);
-    if (op->op_last)
-      SPerl_OpLASTSIB_set(op->op_last, (SPerl_OP*)op);
-  }
-  else if (first) {
-    SPerl_OpLASTSIB_set(op->op_first, (SPerl_OP*)op);
-  }
-
-  return (SPerl_OP *)op;
-}
-
-SPerl_OP* SPerl_newOP_tmp(int8_t type, SPerl_OP* first, SPerl_OP* last) {
+SPerl_OP* SPerl_newOP(int8_t type, SPerl_OP* first, SPerl_OP* last) {
   return SPerl_newOP_flag(type, first, last, 0, 0);
 }
 
