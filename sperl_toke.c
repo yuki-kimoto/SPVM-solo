@@ -354,32 +354,56 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         else if (isdigit(c)) {
           char* cur_token_ptr = bufptr;
           
+          int point_count = 0;
+          
           bufptr++;
           
-          /* Scan number */
-          while(isdigit(*bufptr)) {
+          // Scan number
+          while(isdigit(*bufptr) || *bufptr == '.') {
+            if (*bufptr == '.') {
+              point_count++;
+            }
             bufptr++;
           }
           
-          if (isalpha(*bufptr)) {
-            fprintf(stderr, "syntax error: invalid variable name\n");
+          if (point_count >= 2) {
+            fprintf(stderr, "Invalid number literal\n");
             exit(1);
           }
           
-          /* Convert to integer */
+          // Number literal
           size_t str_len = bufptr - cur_token_ptr;
           char* num_str = malloc(str_len + 1);
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
-          int num = atoi(num_str);
-          free(num_str);
           
-          SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_INT, 0, 0, 0);
-          op->uv.iv = num;
-          
-          parser->bufptr = bufptr;
-          SPerl_yylvalp->opval = (SPerl_OP*)op;
-          return INT;
+          // Convert to double
+          if (point_count) {
+            char *ends;
+            double num = strtod(num_str, &ends);
+            SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_DOUBLE, 0, 0, 0);
+            op->uv.nv = num;
+            
+            free(num_str);
+            
+            parser->bufptr = bufptr;
+            SPerl_yylvalp->opval = (SPerl_OP*)op;
+            
+            return INT;
+          }
+          // Convert to integer
+          else {
+            int num = atoi(num_str);
+            SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_INT, 0, 0, 0);
+            op->uv.iv = num;
+
+            free(num_str);
+            
+            parser->bufptr = bufptr;
+            SPerl_yylvalp->opval = (SPerl_OP*)op;
+            
+            return INT;
+          }
         }
         /* Keyword or word */
         else if (isalpha(c) || c == '_') {
