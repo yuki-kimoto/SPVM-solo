@@ -1,16 +1,6 @@
 #ifndef SPERL_H
 #define SPERL_H
 
-#include <stdint.h>
-
-typedef unsigned short U16;
-typedef long I32;
-
-typedef U16 SPerl_OPCODE;
-
-#define STMT_START do
-#define STMT_END while(0)
-
 /* bool is built-in for g++-2.6.3 and later, which might be used
    for extensions.  <_G_config.h> defines _G_HAVE_BOOL, but we can't
    be sure _G_config.h will be included before this file.  _G_config.h

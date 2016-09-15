@@ -72,13 +72,13 @@ char* const SPerl_op_name[] = {
   "grammer"
 };
 
-void SPerl_dump_ast(SPerl_OP* op, I32 depth) {
+void SPerl_dump_ast(SPerl_OP* op, int32_t depth) {
   
-  I32 i;
+  int32_t i;
   for (i = 0; i < depth; i++) {
     printf(" ");
   }
-  I32 type = op->op_type;
+  int32_t type = op->op_type;
   printf("%s", SPerl_op_name[type]);
   if (type == SPerl_OP_CONST_INT) {
     printf(" %d", op->uv.iv);
@@ -197,7 +197,7 @@ SPerl_OP* SPerl_op_append_elem(SPerl_OP *first, SPerl_OP *last)
   return first;
 }
 
-SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
+SPerl_OP* SPerl_newOP(int32_t type, int32_t flags, SPerl_OP* first, SPerl_OP* last) {
         
   SPerl_OP *op;
 
