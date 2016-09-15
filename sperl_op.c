@@ -226,3 +226,33 @@ SPerl_OP* SPerl_newOP(int32_t type, int32_t flags, SPerl_OP* first, SPerl_OP* la
 
   return (SPerl_OP *)op;
 }
+
+SPerl_OP* SPerl_newOP_flag(int8_t type, SPerl_OP* first, SPerl_OP* last, int8_t flags, int8_t private) {
+        
+  SPerl_OP *op;
+
+  op = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1);
+  memset(op, 0, sizeof(SPerl_OP));
+  
+  op->op_type = type;
+  op->op_first = first;
+  op->op_flags = (int32_t)flags;
+  op->op_private = (int32_t)(1 | (flags >> 8));
+  
+  if (last) {
+    if (!first) {
+      first = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1 );
+      first->op_type = SPerl_OP_NULL;
+    }
+    
+    op->op_last = last;
+    SPerl_OpMORESIB_set(first, last);
+    if (op->op_last)
+      SPerl_OpLASTSIB_set(op->op_last, (SPerl_OP*)op);
+  }
+  else if (first) {
+    SPerl_OpLASTSIB_set(op->op_first, (SPerl_OP*)op);
+  }
+
+  return (SPerl_OP *)op;
+}
