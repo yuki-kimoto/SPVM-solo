@@ -112,7 +112,7 @@ void SPerl_OpLASTSIB_set(SPerl_OP* o, SPerl_OP* parent);
 void SPerl_OpMAYBESIB_set(SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
 
 SPerl_OP* SPerl_newOP(int32_t type, int32_t flags, SPerl_OP *first, SPerl_OP *last);
-SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_count, SPerl_OP *insert);
+SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, uint64_t del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_op_append_elem(SPerl_OP* first, SPerl_OP* last);
 
 void SPerl_dump_ast(SPerl_OP* op, int32_t depth);

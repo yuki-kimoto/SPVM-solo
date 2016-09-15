@@ -118,7 +118,7 @@ void SPerl_OpMAYBESIB_set(SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent) {
   o->op_sibparent = o->op_moresib ? sib : parent;
 }
 
-SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int del_count, SPerl_OP* insert) {
+SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, uint64_t del_count, SPerl_OP* insert) {
   SPerl_OP *first;
   SPerl_OP *rest;
   SPerl_OP *last_del = NULL;
