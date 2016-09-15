@@ -44,12 +44,12 @@
 grammar
   : /* NULL */
     {
-      $$ = SPerl_newOP(SPerl_OP_GRAMMER, 0, 0, 0);;
+      $$ = SPerl_newOP_tmp(SPerl_OP_GRAMMER, NULL, NULL);;
       printf("NULL -> grammar\n");
     }
   | statements
     {
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_GRAMMER, 0, $1, 0);
+      SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_GRAMMER, $1, NULL);
       parser->main_root = op;
       $$ = op;
       printf("statements -> grammar\n");
@@ -60,13 +60,13 @@ statements
     {
       $$ = SPerl_op_append_elem(
         $1,
-        SPerl_newOP(SPerl_OP_STATEMENT, 0, $2, 0)
+        SPerl_newOP_tmp(SPerl_OP_STATEMENT, $2, NULL)
       );
       printf("statements statement -> statements\n");
     }
   | statement
     {
-      $$ = SPerl_newOP(SPerl_OP_STATEMENT, 0, $1, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_STATEMENT, $1, NULL);
       printf("statement -> statements\n");
     }
 
@@ -75,9 +75,9 @@ statement
     {
       SPerl_OP* optsubargs_op = $6;
       if (!optsubargs_op) {
-        optsubargs_op = SPerl_newOP(SPerl_OP_NULL, 0, 0, 0);
+        optsubargs_op = SPerl_newOP_tmp(SPerl_OP_NULL, NULL, NULL);
       }
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_SUB, 0, $2, $4);
+      SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_SUB, $2, $4);
       SPerl_op_sibling_splice(op, $4, 0, optsubargs_op);
       SPerl_op_sibling_splice(op, optsubargs_op, 0, $8);
       
@@ -87,9 +87,8 @@ statement
     }
   | FOR '(' term ';' term ';' term ')' block
     {
-      SPerl_OP* op = SPerl_newOP(
+      SPerl_OP* op = SPerl_newOP_tmp(
         SPerl_OP_LOOP,
-        0,
         $3,
         $5
       );
@@ -100,10 +99,9 @@ statement
     }
   | WHILE '(' term ')' block
     {
-      SPerl_OP* op = SPerl_newOP(
+      SPerl_OP* op = SPerl_newOP_tmp(
         SPerl_OP_LOOP,
-        0,
-        SPerl_newOP(SPerl_OP_NULL, 0, 0, 0),
+        SPerl_newOP_tmp(SPerl_OP_NULL, NULL, NULL),
         $3
       );
       SPerl_op_sibling_splice(op, $3, 0, $5);
@@ -128,31 +126,31 @@ statement
     }
   | PACKAGE pkgname ';'
     {
-      $$ = SPerl_newOP(SPerl_OP_PACKAGE, 0, $2, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_PACKAGE, $2, NULL);
       printf("PACKAGE pkgname ; -> statement\n");
     }
   | LAST ';'
     {
-      $$ = SPerl_newOP(SPerl_OP_LAST, 0, 0, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_LAST, NULL, NULL);
       printf("LAST ; -> statement\n"); }
   | NEXT ';'
     {
-      $$ = SPerl_newOP(SPerl_OP_NEXT, 0, 0, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_NEXT, NULL, NULL);
       printf("NEXT ; -> statement\n");
     }
   | RETURN term ';'
     {
-      $$ = SPerl_newOP(SPerl_OP_RETURN, 0, $2, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_RETURN, $2, NULL);
       printf("RETURN term ; -> statement\n");
     }
   | USE pkgname';'
     {
-      $$ = SPerl_newOP(SPerl_OP_USE, 0, $2, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_USE, $2, NULL);
       printf("USE pkgname; -> statement\n");
     }
   | USE pkgname AS WORD';'
     {
-      $$ = SPerl_newOP(SPerl_OP_USE, 0, $2, $4);
+      $$ = SPerl_newOP_tmp(SPerl_OP_USE, $2, $4);
       printf("USE pkgname AS WORD; -> statement\n");
     }
   | block
@@ -164,7 +162,7 @@ statement
 if
   : IF '(' term ')' block else
     {
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_COND, 0, $3, $5);
+      SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_COND, $3, $5);
       if ($6) {
         SPerl_op_sibling_splice(op, $5, 0, $6);
       }
@@ -185,7 +183,7 @@ else
     }
   | ELSIF '(' term ')' block else
     {
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_COND, 0, $3, $5);
+      SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_COND, $3, $5);
       if ($6) {
         SPerl_op_sibling_splice(op, $5, 0, $6);
       }
@@ -197,17 +195,17 @@ else
 declvar
   : MY VAR ':' modiftype
     {
-      $$ = SPerl_newOP(SPerl_OP_MY, 0, $2, $4);
+      $$ = SPerl_newOP_tmp(SPerl_OP_MY, $2, $4);
       printf("MY VAR : modiftype -> declvar\n");
     }
   | OUR VAR ':' modiftype
     {
-      $$ = SPerl_newOP(SPerl_OP_OUR, 0, $2, $4);
+      $$ = SPerl_newOP_tmp(SPerl_OP_OUR, $2, $4);
       printf("OUR VAR : modiftype -> declvar\n");
     }
   | HAS attrname ':' modiftype
     {
-      $$ = SPerl_newOP(SPerl_OP_HAS, 0, $2, $4);
+      $$ = SPerl_newOP_tmp(SPerl_OP_HAS, $2, $4);
       printf("HAS attrname : modiftype -> declvar\n");
     }
 
@@ -263,109 +261,108 @@ term
     }
   | INCOP term
     {
-      $$ = SPerl_newOP(SPerl_OP_PREINC, 0, $2, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_PREINC, $2, NULL);
       printf("INCOP term -> term\n");
     }
   | term INCOP
     {
-      $$ = SPerl_newOP(SPerl_OP_POSTINC, 0, $1, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_POSTINC, $1, NULL);
       printf("term INCOP\n");
     }
   | DECOP term
     {
-      $$ = SPerl_newOP(SPerl_OP_PREDEC, 0, $2, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_PREDEC, $2, NULL);
       printf("DECOP term -> term\n");
     }
   | term DECOP
     {
-      $$ = SPerl_newOP(SPerl_OP_POSTDEC, 0, $1, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_POSTDEC, $1, NULL);
       printf("term DECOP -> term\n");
     }
   | NOTOP term
     {
-      $$ = SPerl_newOP(SPerl_OP_NOT, 0, $2, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_NOT, $2, NULL);
       printf("NOTOP term -> term\n");
     }
   | '~' term
     {
-      $$ = SPerl_newOP($1, 0, $2, 0);
+      $$ = SPerl_newOP_tmp($1, $2, NULL);
       printf("~ term -> term\n");
     }
   | '-' term %prec UMINUS
     {
-      $$ = SPerl_newOP(SPerl_OP_NEGATE, 0, $2, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_NEGATE, $2, NULL);
       printf("- term -> term\n");
     }
   | term '+' term %prec ADDOP
     {
-      $$ = SPerl_newOP(SPerl_OP_ADD, 0, $1, $3);
+      $$ = SPerl_newOP_tmp(SPerl_OP_ADD, $1, $3);
       printf("term + term -> term\n", $2);
     }
   | term '-' term %prec ADDOP
     {
-      $$ = SPerl_newOP(SPerl_OP_SUBTRACT, 0, $1, $3);
+      $$ = SPerl_newOP_tmp(SPerl_OP_SUBTRACT, $1, $3);
       printf("term - term -> term\n", $2);
     }
   | term MULOP term
     {
-      $$ = SPerl_newOP($2, 0, $1, $3);
+      $$ = SPerl_newOP_tmp($2, $1, $3);
       printf("term MULOP(%d) term -> term\n", $2);
     }
   | term RELOP term
     {
-      $$ = SPerl_newOP($2, 0, $1, $3);
+      $$ = SPerl_newOP_tmp($2, $1, $3);
       printf("term RELOP term -> term %d\n", $2);
     }
   | term BITANDOP term
     {
-      $$ = SPerl_newOP($2, 0, $1, $3);
+      $$ = SPerl_newOP_tmp($2, $1, $3);
       printf("term BITANDOP term -> term\n");
     }
   | term BITOROP term
     {
-      $$ = SPerl_newOP($2, 0, $1, $3);
+      $$ = SPerl_newOP_tmp($2, $1, $3);
       printf("term BITOROP term -> term\n");
     }
   | term SHIFTOP term
     {
-      $$ = SPerl_newOP($2, 0, $1, $3);
+      $$ = SPerl_newOP_tmp($2, $1, $3);
       printf("term SHIFTOP term -> term\n");
     }
   | VAR ARROW '[' term ']'
     {
-      $$ = SPerl_newOP(SPerl_OP_AELEM, 0, $1, $4);
+      $$ = SPerl_newOP_tmp(SPerl_OP_AELEM, $1, $4);
       printf("VAR ARROW [ term ] -> term\n");
     }
   | VAR ARROW subname
     {
-      $$ = SPerl_newOP(SPerl_OP_ATTR, 0, $1, $3);
+      $$ = SPerl_newOP_tmp(SPerl_OP_ATTR, $1, $3);
       printf("VAR ARROW subname -> term\n");
     }
   | subname '(' optterms  ')'
     {
-      $$ = SPerl_newOP(SPerl_OP_FUNC, 0, $1, $3);
+      $$ = SPerl_newOP_tmp(SPerl_OP_FUNC, $1, $3);
       printf("subname (optterms) -> term\n");
     }
   | term ASSIGNOP term
     {
-      $$ = SPerl_newOP(SPerl_OP_ASSIGN, 0, $1, $3);
+      $$ = SPerl_newOP_tmp(SPerl_OP_ASSIGN, $1, $3);
       printf("term ASSIGNOP term -> term\n");
     }
   | term ANDOP term
     {
-      $$ = SPerl_newOP(SPerl_OP_AND, 0, $1, $3);
+      $$ = SPerl_newOP_tmp(SPerl_OP_AND, $1, $3);
       printf("term ANDOP term -> term\n");
     }
   | term OROP term
     {
-      $$ = SPerl_newOP(SPerl_OP_OR, 0, $1, $3);
+      $$ = SPerl_newOP_tmp(SPerl_OP_OR, $1, $3);
       printf("term OROP term -> term\n");
     }
   | VAR ARROW subname '(' optterms ')'
     {
-      $$ = SPerl_newOP(
+      $$ = SPerl_newOP_tmp(
         SPerl_OP_FUNC,
-        0,
         $3,
         SPerl_op_append_elem($1, $5)
       );
@@ -374,9 +371,8 @@ term
     }
   | VAR ARROW '(' optterms ')'
     {
-      $$ = SPerl_newOP(
+      $$ = SPerl_newOP_tmp(
         SPerl_OP_FUNC,
-        0,
         $1,
         $4
       );
@@ -385,9 +381,8 @@ term
     }
   | pkgname ARROW subname '(' optterms ')'
     {
-      $$ = SPerl_newOP(
+      $$ = SPerl_newOP_tmp(
         SPerl_OP_FUNC,
-        0,
         SPerl_op_append_elem($1, $3),
         $5
       );
@@ -403,9 +398,9 @@ term
     {
       SPerl_OP* op_optsubargs = $5;
       if (!op_optsubargs) {
-        op_optsubargs = SPerl_newOP(SPerl_OP_NULL, 0, 0, 0);
+        op_optsubargs = SPerl_newOP_tmp(SPerl_OP_NULL, NULL, NULL);
       }
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_ANONSUB, 0, $3, op_optsubargs);
+      SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_ANONSUB, $3, op_optsubargs);
       SPerl_op_sibling_splice(op, op_optsubargs, 0, $7);
       $$ = op;
       
@@ -415,12 +410,12 @@ term
 block 
   : '{' '}'
     {
-      $$ = SPerl_newOP(SPerl_OP_BLOCK, 0, 0, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_BLOCK, NULL, NULL);
       printf("{ } -> block\n");
     }
   | '{' statements '}'
     {
-      $$ = SPerl_newOP(SPerl_OP_BLOCK, 0, $2, 0);
+      $$ = SPerl_newOP_tmp(SPerl_OP_BLOCK, $2, NULL);
       printf("{ statements } -> block\n");
     }
 
@@ -451,7 +446,7 @@ subargs
 subarg
   : VAR ':' modiftype
     {
-      $$ = SPerl_newOP(SPerl_OP_SUBARG, 0, $1, $3);
+      $$ = SPerl_newOP_tmp(SPerl_OP_SUBARG, $1, $3);
       printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.pv);
     }
 

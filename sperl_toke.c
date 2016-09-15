@@ -318,7 +318,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           bufptr++;
         }
         
-        SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_STRING, 0, 0, 0);
+        SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_CONST_STRING, NULL, NULL);
         op->uv.pv = str;
         
         parser->bufptr = bufptr;
@@ -343,7 +343,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
-          SPerl_OP* op = SPerl_newOP(SPerl_OP_VAR, 0, 0, 0);
+          SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_VAR, NULL, NULL);
           op->uv.pv = var;
           
           parser->bufptr = bufptr;
@@ -381,7 +381,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           if (point_count) {
             char* ends;
             double num = strtod(num_str, &ends);
-            SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_DOUBLE, 0, 0, 0);
+            SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_CONST_DOUBLE, NULL, NULL);
             op->uv.nv = num;
             
             free(num_str);
@@ -394,7 +394,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           // Convert to integer
           else {
             int32_t num = atoi(num_str);
-            SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_INT, 0, 0, 0);
+            SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_CONST_INT, NULL, NULL);
             op->uv.iv = num;
 
             free(num_str);
@@ -481,7 +481,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               return WHILE;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
-              SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_BOOL, 0, 0, 0);
+              SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_CONST_BOOL, NULL, NULL);
               op->uv.iv = 1;
 
               parser->bufptr = bufptr;
@@ -490,7 +490,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               return BOOL;
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
-              SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_BOOL, 0, 0, 0);
+              SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_CONST_BOOL, NULL, NULL);
               op->uv.iv = 0;
 
               parser->bufptr = bufptr;
@@ -504,7 +504,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             }
           }
           
-          SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_STRING, 0, 0, 0);
+          SPerl_OP* op = SPerl_newOP_tmp(SPerl_OP_CONST_STRING, NULL, NULL);
           op->uv.pv = keyword;
           
           parser->bufptr = bufptr;
