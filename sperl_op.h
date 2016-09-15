@@ -2,6 +2,7 @@
 #define SPERL_OP_H
 
 #include "sperl.h"
+#include <stdint.h>
 
 /* Operation code */
 enum SPerl_OP_CODE {
@@ -71,6 +72,22 @@ enum SPerl_OP_CODE {
 
 extern char* const SPerl_op_name[];
 
+/*
+boolean	1bit
+byte	8bit
+char	16bit
+short	16bit
+int	32bit
+float	32bit
+long	64bit
+double	64bit
+
+int8_t/uint8_t 8bit (1byte)
+int16_t/uint16_t 16bit (2byte)
+int32_t/uint32_t 32bit (4byte)
+int64_t/uint64_t 64bit (8byte)
+*/
+
 /* Binary operation */
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
@@ -84,7 +101,7 @@ struct SPerl_op {
   SPerl_OP* op_sibparent;
   union {
     char* pv;
-    int iv;
+    int64_t iv;
     double nv;
   } uv;
 };
