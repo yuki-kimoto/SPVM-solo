@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 char* const SPerl_op_name[] = {
   "null",
@@ -205,8 +206,8 @@ SPerl_OP* SPerl_newOP(I32 type, I32 flags, SPerl_OP* first, SPerl_OP* last) {
   
   op->op_type = type;
   op->op_first = first;
-  op->op_flags = (U8)flags;
-  op->op_private = (U8)(1 | (flags >> 8));
+  op->op_flags = (uint8_t)flags;
+  op->op_private = (uint8_t)(1 | (flags >> 8));
   
   if (last) {
     if (!first) {

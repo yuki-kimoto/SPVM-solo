@@ -1,7 +1,8 @@
 #ifndef SPERL_H
 #define SPERL_H
 
-typedef char U8;
+#include <stdint.h>
+
 typedef unsigned short U16;
 typedef long I32;
 

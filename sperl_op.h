@@ -92,10 +92,10 @@ int64_t/uint64_t 64bit (8byte)
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 struct SPerl_op {
-  U8 op_type;
-  U8 op_flags;
-  U8 op_private;
-  U8 op_moresib;
+  uint8_t op_type;
+  uint8_t op_flags;
+  uint8_t op_private;
+  uint8_t op_moresib;
   SPerl_OP* op_first;
   SPerl_OP* op_last;
   SPerl_OP* op_sibparent;
