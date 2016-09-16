@@ -116,7 +116,7 @@ my $title : int = false;
 has x : int;
 has last : int;
 
-our $title : int = 2;
+has title : static int = 2;
 
 sum();
 sum(1, 3, 5);

@@ -54,7 +54,6 @@ int8_t* const SPerl_op_name[] = {
   "anonsub",
   "block",
   "my",
-  "our",
   "has",
   "cond",
   "use",

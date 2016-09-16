@@ -13,7 +13,7 @@
 %}
 
 %token <ival> '+' '-'
-%token <ival> MY OUR HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
+%token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP
 %token <ival> LAST NEXT AS
 %token <opval> WORD VAR INT DOUBLE STRING BOOL 
@@ -197,11 +197,6 @@ declvar
     {
       $$ = SPerl_newOP(SPerl_OP_MY, $2, $4);
       printf("MY VAR : modiftype -> declvar\n");
-    }
-  | OUR VAR ':' modiftype
-    {
-      $$ = SPerl_newOP(SPerl_OP_OUR, $2, $4);
-      printf("OUR VAR : modiftype -> declvar\n");
     }
   | HAS attrname ':' modiftype
     {

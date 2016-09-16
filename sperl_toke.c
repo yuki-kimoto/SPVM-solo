@@ -426,10 +426,6 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               parser->bufptr = bufptr;
               return MY;
             }
-            else if (memcmp(keyword, "our", str_len) == 0) {
-              parser->bufptr = bufptr;
-              return OUR;
-            }
             else if (memcmp(keyword, "has", str_len) == 0) {
               parser->bufptr = bufptr;
               parser->expect = SPerl_OP_EXPECT_WORD;

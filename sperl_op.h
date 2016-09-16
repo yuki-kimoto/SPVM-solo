@@ -52,7 +52,6 @@ enum SPerl_OP_CODE {
   SPerl_OP_ANONSUB,
   SPerl_OP_BLOCK,
   SPerl_OP_MY,
-  SPerl_OP_OUR,
   SPerl_OP_HAS,
   SPerl_OP_COND,
   SPerl_OP_USE,
