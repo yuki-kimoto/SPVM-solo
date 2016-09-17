@@ -15,9 +15,17 @@ struct SPerl_field_info {
 // Argument information
 struct SPerl_argument_info;
 typedef struct SPerl_argument_info SPerl_ARGUMENT_INFO;
-struct SPerl_SIGNATURE_INFO {
+struct SPerl_argument_info {
   int16_t desc_flag;
   int8_t* type;
+};
+
+// Local variable
+struct SPerl_local_variable;
+typedef struct SPerl_local_variable SPerl_LOCAL_VARIABLE;
+struct SPerl_local_variable {
+  uint8_t* name;
+  int32_t offset;
 };
 
 // Method information
