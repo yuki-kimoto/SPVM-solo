@@ -31,15 +31,26 @@ struct SPerl_METHOD_INFO {
   int32_t argument_count;
 };
 
+// Constant pool tag
+enum SPerl_constant_tag {
+  SPerl_CONSTANT_BYTE,
+  SPerl_CONSTANT_SHORT,
+  SPerl_CONSTANT_INT,
+  SPerl_CONSTANT_LONG,
+  SPerl_CONSTANT_FLOAT,
+  SPerl_CONSTANT_STRING
+};
+
 // Constant pool
 struct SPerl_constant_pool;
 typedef struct SPerl_constant_pool SPerl_CONSTANT_POOL;
-struct SPerl_CONSTANT_POOL {
+struct SPerl_constant_pool {
   int8_t tag;
   union {
     int8_t byte_data;
     int16_t short_data;
     int32_t int_data;
+    int64_t long_data;
     float float_data;
     double double_data;
     int8_t* string_data;
