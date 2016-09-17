@@ -237,12 +237,12 @@ term
   | INT
     {
       $$ = $1;
-      printf("INT(%d) -> term\n", ((SPerl_OP*)$1)->uv.iv);
+      printf("INT(%d) -> term\n", ((SPerl_OP*)$1)->uv.int_value);
     }
   | DOUBLE
     {
       $$ = $1;
-      printf("DOUBLE(%f) -> term\n", ((SPerl_OP*)$1)->uv.nv);
+      printf("DOUBLE(%f) -> term\n", ((SPerl_OP*)$1)->uv.double_value);
     }
   | STRING
     {
@@ -257,7 +257,7 @@ term
   | BOOL
     {
       $$ = $1;
-      printf("BOOL -> term (%d)\n", ((SPerl_OP*)$1)->uv.iv);
+      printf("BOOL -> term (%d)\n", ((SPerl_OP*)$1)->uv.int_value);
     }
   | '+' term %prec UMINUS
     {

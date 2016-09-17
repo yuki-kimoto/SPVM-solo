@@ -82,10 +82,10 @@ void SPerl_dump_ast(SPerl_OP* op, int32_t depth) {
   int32_t type = op->op_type;
   printf("%s", SPerl_op_name[type]);
   if (type == SPerl_OP_CONST_INT) {
-    printf(" %d", op->uv.iv);
+    printf(" %d", op->uv.int_value);
   }
   else if (type == SPerl_OP_CONST_DOUBLE) {
-    printf(" %f", op->uv.nv);
+    printf(" %f", op->uv.double_value);
   }
   else if (type == SPerl_OP_CONST_CHAR) {
     printf(" %c", op->uv.char_value);

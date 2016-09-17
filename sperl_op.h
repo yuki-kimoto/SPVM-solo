@@ -102,10 +102,14 @@ struct SPerl_op {
   SPerl_OP* op_last;
   SPerl_OP* op_sibparent;
   union {
+    _Bool boolean_value;
     uint8_t char_value;
-    int8_t* string_value;
-    int32_t iv;
-    double nv;
+    int8_t byte_value;
+    int16_t short_value;
+    int32_t int_value;
+    float float_value;
+    double double_value;
+    uint8_t* string_value;
   } uv;
 };
 
