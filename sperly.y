@@ -49,7 +49,14 @@ grammar
     }
   | packages
     {
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_GRAMMER, $1, NULL);
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_GRAMMER, NULL, NULL);
+      
+      if ($1->op_type == SPerl_OP_LIST) {
+        SPerl_op_sibling_splice(op, 0, 0, $1->op_first);
+      }
+      else {
+        op->op_first = $1;
+      }
       parser->main_root = op;
       $$ = op;
       printf("packages -> grammar\n");
