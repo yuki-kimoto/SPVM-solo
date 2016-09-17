@@ -1,171 +1,176 @@
-my $title : double = 4.1567;
+package Point3D {
 
-package Point3D;
+  my $title : double = 4.1567;
 
-use Point as pt;
-
-
-use Point;
-
-my $title : int;
-my $title : const int;
-my $title : static const int;
-my $title : int = 1;
-my $title : int;
-my $title : int = 4;
-
-$title->();
-$title->(1);
-$title->(1, 2);
-
-++$test;
-$test++;
-
---$test;
-$test--;
-
-+$test;
--$test;
-+$test - -$test;
-
-1 + 2;
-
-for (my $i : int = 0; $i < 5; $i = $i + 1) {
-  1;
-  last;
-  next;
-}
-
-1 > 2;
-1 >= 2;
-1 < 2;
-1 <= 2;
-
-1 == 1;
-$title != 2;
-
-1 = 1;
+  use Point as pt;
 
 
-1 - 4;
+  use Point;
 
-1 || 2;
-1 | 2;
+  my $title : int;
+  my $title : const int;
+  my $title : static const int;
+  my $title : int = 1;
+  my $title : int;
+  my $title : int = 4;
 
-1 && 2;
-1 & 3;
+  $title->();
+  $title->(1);
+  $title->(1, 2);
 
-my $title : int = sub : int () { };
-my $title : int = sub : const int ($p : int) { };
+  ++$test;
+  $test++;
 
-$title += 1;
+  --$test;
+  $test--;
 
-$title -= 1;
+  +$test;
+  -$test;
+  +$test - -$test;
 
-$title *= 1;
-$title /= 2;
+  1 + 2;
 
-$title % $title;
-$title %= $title;
-
-$title ^ $title;
-$title ^= $title;
-
-!$title;
-~$title;
-
-$title ||= 1;
-$title &&= 2;
-
-$title << 2;
-$title >> 2;
-
-
-
-$test->x;
-$test->sum();
-$test->sum(1);
-$test->sum(1, 2);
-
-Test->sum();
-Test->sum(1);
-Test->sum(1, 2);
-
-$test->x = 3;
-$test->last;
-
-
-while (1) {
-  1;
-}
-"abcde";
-"";
-
-_sum();
-sum_foo();
-sum::foo();
-
-$sum_::foo;
-
-$title->[3];
-$title->[3] = 4;
-
-my $title : int = true;
-my $title : int = false;
-
-has x : int;
-has last : int;
-
-has title : static int = 2;
-
-sum();
-sum(1, 3, 5);
-
-# subroutine
-sub sum : int () {
-  2;
-  4;
-}
-sub sum : const int ($foo : const int, $bar : const int) { }
-
-sub sum : int ($foo : int, $bar : float) {
-  if (3) {
-  
+  for (my $i : int = 0; $i < 5; $i = $i + 1) {
+    1;
+    last;
+    next;
   }
-  
-  if (3) {
+
+  1 > 2;
+  1 >= 2;
+  1 < 2;
+  1 <= 2;
+
+  1 == 1;
+  $title != 2;
+
+  1 = 1;
+
+
+  1 - 4;
+
+  1 || 2;
+  1 | 2;
+
+  1 && 2;
+  1 & 3;
+
+  my $title : int = sub : int () { };
+  my $title : int = sub : const int ($p : int) { };
+
+  $title += 1;
+
+  $title -= 1;
+
+  $title *= 1;
+  $title /= 2;
+
+  $title % $title;
+  $title %= $title;
+
+  $title ^ $title;
+  $title ^= $title;
+
+  !$title;
+  ~$title;
+
+  $title ||= 1;
+  $title &&= 2;
+
+  $title << 2;
+  $title >> 2;
+
+
+
+  $test->x;
+  $test->sum();
+  $test->sum(1);
+  $test->sum(1, 2);
+
+  Test->sum();
+  Test->sum(1);
+  Test->sum(1, 2);
+
+  $test->x = 3;
+  $test->last;
+
+
+  while (1) {
     1;
   }
-  elsif (4) {
+  "abcde";
+  "";
+
+  _sum();
+  sum_foo();
+  sum::foo();
+
+  $sum_::foo;
+
+  $title->[3];
+  $title->[3] = 4;
+
+  my $title : int = true;
+  my $title : int = false;
+
+  has x : int;
+  has last : int;
+
+  has title : static int = 2;
+
+  sum();
+  sum(1, 3, 5);
+
+  # subroutine
+  sub sum : int () {
+    2;
     4;
   }
-  else {
+  sub sum : const int ($foo : const int, $bar : const int) { }
+
+  sub sum : int ($foo : int, $bar : float) {
+    if (3) {
     
+    }
+    
+    if (3) {
+      1;
+    }
+    elsif (4) {
+      4;
+    }
+    else {
+      
+    }
+
+    if (3) {
+      1;
+    }
+    elsif (4) {
+      4;
+    }
+    elsif (5) {
+    
+    }
+    else {
+      
+    }
+    
+    if (1) {
+      
+    }
+    else {
+      
+    }
+    
+    return 1;
   }
 
-  if (3) {
-    1;
-  }
-  elsif (4) {
-    4;
-  }
-  elsif (5) {
-  
-  }
-  else {
-    
-  }
-  
-  if (1) {
-    
-  }
-  else {
-    
-  }
-  
-  return 1;
+  sub last : int ($foo : int) { }
+
+  my $char : char = 'a';
 }
 
-sub last : int ($foo : int) { }
+package Point {
 
-my $char : char = 'a';
+}

@@ -64,6 +64,7 @@ struct SPerl_class_info {
   int32_t field_count;
   SPerl_METHOD_INFO* method_infos;
   int32_t method_count;
+  int32_t* local_var;
 };
 
 extern SPerl_CLASS_INFO* class_infos;
