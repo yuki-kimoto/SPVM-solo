@@ -71,6 +71,16 @@ enum SPerl_OP_CODE {
 
 extern uint8_t* const SPerl_op_name[];
 
+// OP_CONST private flag
+#define SPerl_OPp_CONST_BOOLEAN 1
+#define SPerl_OPp_CONST_CHAR 2
+#define SPerl_OPp_CONST_BYTE 3
+#define SPerl_OPp_CONST_INT 4
+#define SPerl_OPp_CONST_LONG 5
+#define SPerl_OPp_COSNT_FLOAT 6
+#define SPerl_OPp_CONST_DOUBLE 7
+
+
 /*
 boolean	1bit
 byte	8bit
