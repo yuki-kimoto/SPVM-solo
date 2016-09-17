@@ -309,12 +309,12 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           bufptr++;
         }
         
-        SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_CHAR, NULL, NULL);
+        SPerl_OP* op = SPerl_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_CHAR);
         op->uv.char_value = ch;
         
         parser->bufptr = bufptr;
         SPerl_yylvalp->opval = (SPerl_OP*)op;
-        return CHAR;
+        return CONST;
       }
       case '"': {
         bufptr++;
@@ -346,12 +346,12 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           bufptr++;
         }
         
-        SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_STRING, NULL, NULL);
+        SPerl_OP* op = SPerl_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
         op->uv.string_value = str;
         
         parser->bufptr = bufptr;
         SPerl_yylvalp->opval = (SPerl_OP*)op;
-        return STRING;
+        return CONST;
       }
       default:
         /* Variable */
@@ -409,7 +409,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           if (point_count) {
             char* ends;
             double num = strtod(num_str, &ends);
-            SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_DOUBLE, NULL, NULL);
+            SPerl_OP* op = SPerl_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_DOUBLE);
             op->uv.double_value = num;
             
             free(num_str);
@@ -417,12 +417,12 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             parser->bufptr = bufptr;
             SPerl_yylvalp->opval = (SPerl_OP*)op;
             
-            return DOUBLE;
+            return CONST;
           }
           // Convert to integer
           else {
             int32_t num = atoi(num_str);
-            SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_INT, NULL, NULL);
+            SPerl_OP* op = SPerl_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_INT);
             op->uv.int_value = num;
 
             free(num_str);
@@ -430,7 +430,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             parser->bufptr = bufptr;
             SPerl_yylvalp->opval = (SPerl_OP*)op;
             
-            return INT;
+            return CONST;
           }
         }
         /* Keyword or word */
@@ -505,22 +505,22 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               return WHILE;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
-              SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_BOOL, NULL, NULL);
+              SPerl_OP* op = SPerl_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_BOOLEAN);
               op->uv.int_value = 1;
 
               parser->bufptr = bufptr;
               SPerl_yylvalp->opval = (SPerl_OP*)op;
 
-              return BOOL;
+              return CONST;
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
-              SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_BOOL, NULL, NULL);
+              SPerl_OP* op = SPerl_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_BOOLEAN);
               op->uv.int_value = 0;
 
               parser->bufptr = bufptr;
               SPerl_yylvalp->opval = (SPerl_OP*)op;
 
-              return BOOL;
+              return CONST;
             }
             else if (memcmp(keyword, "as", str_len) == 0) {
               parser->bufptr = bufptr;
@@ -528,7 +528,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             }
           }
           
-          SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_STRING, NULL, NULL);
+          SPerl_OP* op = SPerl_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
           op->uv.string_value = keyword;
           
           parser->bufptr = bufptr;

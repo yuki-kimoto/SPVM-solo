@@ -16,7 +16,7 @@
 %token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP
 %token <ival> LAST NEXT AS
-%token <opval> WORD VAR INT DOUBLE STRING CHAR BOOL 
+%token <opval> WORD VAR CONST
 
 %type <opval> grammar statements statement declvar if else block
 %type <opval> optterms terms term subargs subarg optsubargs
@@ -234,30 +234,40 @@ term
       $$ = $1;
       printf("VAR(%s) -> term\n", ((SPerl_OP*)$1)->uv.string_value)
     }
-  | INT
+  | CONST
     {
       $$ = $1;
-      printf("INT(%d) -> term\n", ((SPerl_OP*)$1)->uv.int_value);
-    }
-  | DOUBLE
-    {
-      $$ = $1;
-      printf("DOUBLE(%f) -> term\n", ((SPerl_OP*)$1)->uv.double_value);
-    }
-  | STRING
-    {
-      $$ = $1;
-      printf("STRING(%s) -> term\n", ((SPerl_OP*)$1)->uv.string_value);
-    }
-  | CHAR
-    {
-      $$ = $1;
-      printf("CHAR(%c) -> term\n", ((SPerl_OP*)$1)->uv.char_value);
-    }
-  | BOOL
-    {
-      $$ = $1;
-      printf("BOOL -> term (%d)\n", ((SPerl_OP*)$1)->uv.int_value);
+      
+      SPerl_OP* op = $1;
+      switch(op->op_private) {
+        case SPerl_OPp_CONST_BOOLEAN:
+          printf("CONST(boolean %d) -> term\n", op->uv.boolean_value);
+          break;
+        case SPerl_OPp_CONST_CHAR:
+          printf("CONST(char %c) -> term\n", op->uv.char_value);
+          break;
+        case SPerl_OPp_CONST_BYTE:
+          printf("CONST(byte %d) -> term\n", op->uv.byte_value);
+          break;
+        case SPerl_OPp_CONST_SHORT:
+          printf("CONST(short %d) -> term\n", op->uv.short_value);
+          break;
+        case SPerl_OPp_CONST_INT:
+          printf("CONST(int %d) -> term\n", op->uv.int_value);
+          break;
+        case SPerl_OPp_CONST_LONG:
+          printf("CONST(long %ld) -> term\n", op->uv.long_value);
+          break;
+        case SPerl_OPp_CONST_FLOAT:
+          printf("CONST(float %f) -> term\n", op->uv.float_value);
+          break;
+        case SPerl_OPp_CONST_DOUBLE:
+          printf("CONST(double %f) -> term\n", op->uv.double_value);
+          break;
+        case SPerl_OPp_CONST_STRING:
+          printf("CONST(string %s) -> term\n", op->uv.string_value);
+          break;
+      }
     }
   | '+' term %prec UMINUS
     {

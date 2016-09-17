@@ -7,15 +7,7 @@
 /* Operation code */
 enum SPerl_OP_CODE {
   SPerl_OP_NULL,
-  SPerl_OP_CONST_BOOLEAN,
-  SPerl_OP_CONST_CHAR,
-  SPerl_OP_CONST_BYTE,
-  SPerl_OP_CONST_SHORT,
-  SPerl_OP_CONST_INT,
-  SPerl_OP_CONST_LONG,
-  SPerl_OP_CONST_FLOAT,
-  SPerl_OP_CONST_DOUBLE,
-  SPerl_OP_CONST_STRING,
+  SPerl_OP_CONST,
   SPerl_OP_LT,
   SPerl_OP_LE,
   SPerl_OP_GT,
@@ -36,7 +28,6 @@ enum SPerl_OP_CODE {
   SPerl_OP_INC,
   SPerl_OP_DEC,
   SPerl_OP_BIT_NOT,
-  SPerl_OP_CONST_BOOL,
   SPerl_OP_PREINC,
   SPerl_OP_POSTINC,
   SPerl_OP_PREDEC,
@@ -75,10 +66,12 @@ extern uint8_t* const SPerl_op_name[];
 #define SPerl_OPp_CONST_BOOLEAN 1
 #define SPerl_OPp_CONST_CHAR 2
 #define SPerl_OPp_CONST_BYTE 3
-#define SPerl_OPp_CONST_INT 4
-#define SPerl_OPp_CONST_LONG 5
-#define SPerl_OPp_COSNT_FLOAT 6
-#define SPerl_OPp_CONST_DOUBLE 7
+#define SPerl_OPp_CONST_SHORT 4
+#define SPerl_OPp_CONST_INT 5
+#define SPerl_OPp_CONST_LONG 6
+#define SPerl_OPp_CONST_FLOAT 7
+#define SPerl_OPp_CONST_DOUBLE 8
+#define SPerl_OPp_CONST_STRING 9
 
 /*
 boolean	1bit
@@ -107,6 +100,7 @@ struct SPerl_op {
     int8_t byte_value;
     int16_t short_value;
     int32_t int_value;
+    int64_t long_value;
     float float_value;
     double double_value;
     uint8_t* string_value;

@@ -11,15 +11,7 @@
 
 uint8_t* const SPerl_op_name[] = {
   "null",
-  "const_boolean",
-  "const_char",
-  "const_byte",
-  "const_short",
-  "const_int",
-  "const_long",
-  "const_float",
-  "const_double",
-  "const_string",
+  "const",
   "lt",
   "le",
   "gt",
@@ -40,7 +32,6 @@ uint8_t* const SPerl_op_name[] = {
   "inc",
   "dec",
   "bit_not",
-  "const_bool",
   "preinc",
   "postinc",
   "predec",
@@ -81,16 +72,38 @@ void SPerl_dump_ast(SPerl_OP* op, int32_t depth) {
   }
   int32_t type = op->op_type;
   printf("%s", SPerl_op_name[type]);
-  if (type == SPerl_OP_CONST_INT) {
-    printf(" %d", op->uv.int_value);
+  if (type == SPerl_OP_CONST) {
+    switch(op->op_private) {
+      case SPerl_OPp_CONST_BOOLEAN:
+        printf(" boolean %d", op->uv.boolean_value);
+        break;
+      case SPerl_OPp_CONST_CHAR:
+        printf(" char %c", op->uv.char_value);
+        break;
+      case SPerl_OPp_CONST_BYTE:
+        printf(" byte %d", op->uv.byte_value);
+        break;
+      case SPerl_OPp_CONST_SHORT:
+        printf(" short %d", op->uv.short_value);
+        break;
+      case SPerl_OPp_CONST_INT:
+        printf(" int %d", op->uv.int_value);
+        break;
+      case SPerl_OPp_CONST_LONG:
+        printf(" long %ld", op->uv.long_value);
+        break;
+      case SPerl_OPp_CONST_FLOAT:
+        printf(" float %f", op->uv.float_value);
+        break;
+      case SPerl_OPp_CONST_DOUBLE:
+        printf(" double %f", op->uv.double_value);
+        break;
+      case SPerl_OPp_CONST_STRING:
+        printf(" string \"%s\"", op->uv.string_value);
+        break;
+    }
   }
-  else if (type == SPerl_OP_CONST_DOUBLE) {
-    printf(" %f", op->uv.double_value);
-  }
-  else if (type == SPerl_OP_CONST_CHAR) {
-    printf(" %c", op->uv.char_value);
-  }
-  else if (type == SPerl_OP_CONST_STRING || type == SPerl_OP_VAR) {
+  else if (type == SPerl_OP_VAR) {
     printf(" \"%s\"", op->uv.string_value);
   }
   printf("\n");
