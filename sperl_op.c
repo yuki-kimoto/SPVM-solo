@@ -9,7 +9,7 @@
 #include "sperl_op.h"
 #include "sperl_class.h"
 
-int8_t* const SPerl_op_name[] = {
+uint8_t* const SPerl_op_name[] = {
   "null",
   "const_boolean",
   "const_char",
@@ -201,11 +201,11 @@ SPerl_OP* SPerl_op_append_elem(SPerl_OP *first, SPerl_OP *last)
   return first;
 }
 
-SPerl_OP* SPerl_newOP(int8_t type, SPerl_OP* first, SPerl_OP* last) {
+SPerl_OP* SPerl_newOP(uint8_t type, SPerl_OP* first, SPerl_OP* last) {
   return SPerl_newOP_flag(type, first, last, 0, 0);
 }
 
-SPerl_OP* SPerl_newOP_flag(int8_t type, SPerl_OP* first, SPerl_OP* last, int8_t flags, int8_t private) {
+SPerl_OP* SPerl_newOP_flag(uint8_t type, SPerl_OP* first, SPerl_OP* last, uint8_t flags, uint8_t private) {
         
   SPerl_OP *op;
 

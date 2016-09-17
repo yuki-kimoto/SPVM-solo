@@ -7,9 +7,9 @@
 struct SPerl_field_info;
 typedef struct SPerl_field_info SPerl_FIELD_INFO;
 struct SPerl_field_info {
-  int8_t* name;
+  uint8_t* name;
   int16_t desc_flag;
-  int8_t* type;
+  uint8_t* type;
 };
 
 // Argument information
@@ -17,7 +17,7 @@ struct SPerl_argument_info;
 typedef struct SPerl_argument_info SPerl_ARGUMENT_INFO;
 struct SPerl_argument_info {
   int16_t desc_flag;
-  int8_t* type;
+  uint8_t* type;
 };
 
 // Local variable
@@ -32,9 +32,9 @@ struct SPerl_local_variable {
 struct SPerl_method_info;
 typedef struct SPerl_method_info SPerl_METHOD_INFO;
 struct SPerl_METHOD_INFO {
-  int8_t* name;
+  uint8_t* name;
   int16_t desc_flag;
-  int8_t* return_type;
+  uint8_t* return_type;
   SPerl_ARGUMENT_INFO* argument_infos;
   int32_t argument_count;
 };
@@ -55,7 +55,7 @@ enum SPerl_constant_tag {
 struct SPerl_constant_pool;
 typedef struct SPerl_constant_pool SPerl_CONSTANT_POOL;
 struct SPerl_constant_pool {
-  int8_t tag;
+  uint8_t tag;
   union {
     int8_t byte_data;
     int16_t short_data;
@@ -63,7 +63,7 @@ struct SPerl_constant_pool {
     int64_t long_data;
     float float_data;
     double double_data;
-    int8_t* string_data;
+    uint8_t* string_data;
   } uv;
 };
 
@@ -71,9 +71,9 @@ struct SPerl_constant_pool {
 struct SPerl_class_info;
 typedef struct SPerl_class_info SPerl_CLASS_INFO;
 struct SPerl_class_info {
-  int8_t* name;
+  uint8_t* name;
   int16_t desc_flag;
-  int8_t* super_class_name;
+  uint8_t* super_class_name;
   SPerl_FIELD_INFO* field_infos;
   int32_t field_count;
   SPerl_METHOD_INFO* method_infos;

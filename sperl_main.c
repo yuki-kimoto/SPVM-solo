@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
   }
   
   /* Source file */
-  int8_t* file = argv[1];
+  uint8_t* file = argv[1];
   
   /* Open source file */
   FILE* fp = fopen(file, "r");

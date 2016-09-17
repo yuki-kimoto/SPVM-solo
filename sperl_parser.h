@@ -6,10 +6,10 @@
 /* Parser information */
 typedef struct {
   /* Source data */
-  int8_t* linestr;
+  uint8_t* linestr;
 
   /* Current buffer position */
-  int8_t* bufptr;
+  uint8_t* bufptr;
   
   /* Expect next */
   int32_t expect;
@@ -23,7 +23,7 @@ typedef union
   int32_t ival;
 } SPerl_yystype;
 
-void SPerl_yyerror(SPerl_yy_parser* parser, const int8_t* s);
+void SPerl_yyerror(SPerl_yy_parser* parser, const uint8_t* s);
 
 /* Expected token */
 enum SPerl_OP_EXPECT {

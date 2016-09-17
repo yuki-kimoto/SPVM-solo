@@ -69,7 +69,7 @@ enum SPerl_OP_CODE {
   SPerl_OP_GRAMMER
 };
 
-extern int8_t* const SPerl_op_name[];
+extern uint8_t* const SPerl_op_name[];
 
 /*
 boolean	1bit
@@ -85,10 +85,10 @@ double	64bit
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 struct SPerl_op {
-  int8_t op_type;
-  int8_t op_flags;
-  int8_t op_private;
-  int8_t op_moresib;
+  uint8_t op_type;
+  uint8_t op_flags;
+  uint8_t op_private;
+  uint8_t op_moresib;
   SPerl_OP* op_first;
   SPerl_OP* op_last;
   SPerl_OP* op_sibparent;
@@ -104,8 +104,8 @@ void SPerl_OpMORESIB_set(SPerl_OP* o, SPerl_OP* sib);
 void SPerl_OpLASTSIB_set(SPerl_OP* o, SPerl_OP* parent);
 void SPerl_OpMAYBESIB_set(SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
 
-SPerl_OP* SPerl_newOP(int8_t type, SPerl_OP *first, SPerl_OP *last);
-SPerl_OP* SPerl_newOP_flag(int8_t type, SPerl_OP *first, SPerl_OP *last, int8_t flags, int8_t private);
+SPerl_OP* SPerl_newOP(uint8_t type, SPerl_OP *first, SPerl_OP *last);
+SPerl_OP* SPerl_newOP_flag(uint8_t type, SPerl_OP *first, SPerl_OP *last, uint8_t flags, uint8_t private);
 SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_op_append_elem(SPerl_OP* first, SPerl_OP* last);
 
