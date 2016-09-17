@@ -51,22 +51,6 @@ enum SPerl_constant_tag {
   SPerl_CONSTANT_STRING
 };
 
-// Constant pool
-struct SPerl_constant_pool;
-typedef struct SPerl_constant_pool SPerl_CONSTANT_POOL;
-struct SPerl_constant_pool {
-  uint8_t tag;
-  union {
-    int8_t byte_data;
-    int16_t short_data;
-    int32_t int_data;
-    int64_t long_data;
-    float float_data;
-    double double_data;
-    uint8_t* string_data;
-  } uv;
-};
-
 // Class information
 struct SPerl_class_info;
 typedef struct SPerl_class_info SPerl_CLASS_INFO;
@@ -78,8 +62,6 @@ struct SPerl_class_info {
   int32_t field_count;
   SPerl_METHOD_INFO* method_infos;
   int32_t method_count;
-  SPerl_CONSTANT_POOL* constant_pools;
-  int32_t constant_pool_count;
 };
 
 #endif
