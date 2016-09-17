@@ -76,15 +76,11 @@ package
 statements
   : statements statement 
     {
-      $$ = SPerl_op_append_elem(
-        $1,
-        SPerl_newOP(SPerl_OP_STATEMENT, $2, NULL)
-      );
+      $$ = SPerl_op_append_elem($1, $2);
       printf("statements statement -> statements\n");
     }
   | statement
     {
-      $$ = SPerl_newOP(SPerl_OP_STATEMENT, $1, NULL);
       printf("statement -> statements\n");
     }
 
