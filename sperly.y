@@ -21,7 +21,7 @@
 %type <opval> grammar statements statement declvar if else block
 %type <opval> optterms terms term subargs subarg optsubargs
 %type <opval> modiftype modifiers modifier
-%type <opval> type pkgname attrname subname package
+%type <opval> type pkgname attrname subname package packages
 
 %right <ival> ASSIGNOP
 %left <ival> OROP
@@ -47,17 +47,25 @@ grammar
       $$ = SPerl_newOP(SPerl_OP_GRAMMER, NULL, NULL);;
       printf("NULL -> grammar\n");
     }
-  | grammar package
+  | packages
     {
-      SPerl_op_sibling_splice($1, $1->op_first, 0, $2);
-      printf("grammar package -> grammar\n");
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_GRAMMER, NULL, NULL);
+      SPerl_op_sibling_splice(op, 0, 0, $1->op_first);
+      free($1);
+      parser->main_root = op;
+      $$ = op;
+      printf("packages -> grammar\n");
+    }
+
+packages
+  : packages package
+    {
+      $$ = SPerl_op_append_elem($1, $2);
+      printf("packages package -> packages\n");
     }
   | package
     {
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_GRAMMER, $1, NULL);
-      parser->main_root = op;
-      $$ = op;
-      printf("package -> grammar\n");
+      printf("pacakge -> packages\n");
     }
 
 package
