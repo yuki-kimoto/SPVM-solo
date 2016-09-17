@@ -1,3 +1,5 @@
+package Point3D;
+
 package Point {
 
 }
@@ -7,7 +9,6 @@ package Point3D extend Point {
   my $title : double = 4.1567;
 
   use Point as pt;
-
 
   use Point;
 

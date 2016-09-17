@@ -70,7 +70,7 @@ package
   : PACKAGE pkgname block
     {
       $$ = SPerl_newOP(SPerl_OP_PACKAGE, $2, $3);
-      printf("PACKAGE pkgname block; -> package\n");
+      printf("PACKAGE pkgname block -> package\n");
     }
   | PACKAGE pkgname EXTEND pkgname block
     {
@@ -78,7 +78,12 @@ package
       SPerl_op_sibling_splice(op, $5, 0, $4);
       
       $$ = op;
-      printf("PACKAGE pkgname EXTEND pkbname block; -> package\n");
+      printf("PACKAGE pkgname EXTEND pkbname block -> package\n");
+    }
+  | PACKAGE pkgname ';'
+    {
+      $$ = SPerl_newOP(SPerl_OP_PACKAGE, $2, NULL);
+      printf("PACKAGE pkgname ';' -> package\n");
     }
 
 statements
@@ -373,7 +378,7 @@ term
     }
   | subname '(' optterms  ')'
     {
-      $$ = SPerl_newOP(SPerl_OP_FUNC, $1, $3);
+      $$ = SPerl_newOP(SPerl_OP_CALLSUB, $1, $3);
       printf("subname (optterms) -> term\n");
     }
   | term ASSIGNOP term
@@ -394,7 +399,7 @@ term
   | VAR ARROW subname '(' optterms ')'
     {
       $$ = SPerl_newOP(
-        SPerl_OP_FUNC,
+        SPerl_OP_CALLSUB,
         $3,
         SPerl_op_append_elem($1, $5)
       );
@@ -404,7 +409,7 @@ term
   | VAR ARROW '(' optterms ')'
     {
       $$ = SPerl_newOP(
-        SPerl_OP_FUNC,
+        SPerl_OP_CALLSUB,
         $1,
         $4
       );
@@ -414,7 +419,7 @@ term
   | pkgname ARROW subname '(' optterms ')'
     {
       $$ = SPerl_newOP(
-        SPerl_OP_FUNC,
+        SPerl_OP_CALLSUB,
         SPerl_op_append_elem($1, $3),
         $5
       );

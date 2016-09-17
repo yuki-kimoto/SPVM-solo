@@ -43,7 +43,7 @@ uint8_t* const SPerl_op_name[] = {
   "aelem",
   "attr",
   "assign",
-  "func",
+  "callsub",
   "subarg",
   "anonsub",
   "block",
