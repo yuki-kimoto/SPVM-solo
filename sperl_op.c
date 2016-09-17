@@ -12,6 +12,7 @@
 int8_t* const SPerl_op_name[] = {
   "null",
   "const_boolean",
+  "const_char",
   "const_byte",
   "const_short",
   "const_int",

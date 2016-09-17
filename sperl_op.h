@@ -8,6 +8,7 @@
 enum SPerl_OP_CODE {
   SPerl_OP_NULL,
   SPerl_OP_CONST_BOOLEAN,
+  SPerl_OP_COSNT_CHAR,
   SPerl_OP_CONST_BYTE,
   SPerl_OP_CONST_SHORT,
   SPerl_OP_CONST_INT,

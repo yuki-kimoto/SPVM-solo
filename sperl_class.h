@@ -41,6 +41,8 @@ struct SPerl_METHOD_INFO {
 
 // Constant pool tag
 enum SPerl_constant_tag {
+  SPerl_COSNTANT_BOOLEAN,
+  SPerl_CONSTANT_CHAR,
   SPerl_CONSTANT_BYTE,
   SPerl_CONSTANT_SHORT,
   SPerl_CONSTANT_INT,
