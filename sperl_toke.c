@@ -526,7 +526,10 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               parser->bufptr = bufptr;
               return AS;
             }
-          }
+            else if (memcmp(keyword, "extend", str_len) == 0) {
+              parser->bufptr = bufptr;
+              return EXTEND;
+            }          }
           
           SPerl_OP* op = SPerl_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
           op->uv.string_value = keyword;
