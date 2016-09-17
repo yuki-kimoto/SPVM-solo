@@ -3,6 +3,14 @@
 
 #include "sperl_parser.h"
 #include "sperl_op.h"
+#include "sperl_class.h"
+
+SPerl_CLASS_INFO* class_infos;
+
+void SPerl_global_init () {
+  class_infos = malloc(sizeof(SPerl_CLASS_INFO) * SPerl_CLASS_MAX);
+  memset(class_infos, 0, sizeof(SPerl_CLASS_INFO) * SPerl_CLASS_MAX);
+}
 
 int main(int argc, char *argv[])
 {

@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define SPerl_CLASS_MAX 1024
+
 // Field information
 struct SPerl_field_info;
 typedef struct SPerl_field_info SPerl_FIELD_INFO;
@@ -64,7 +66,6 @@ struct SPerl_class_info {
   int32_t method_count;
 };
 
-#define SPerl_CLASS_MAX 1024
-SPerl_CLASS_INFO class_infos[SPerl_CLASS_MAX];
+extern SPerl_CLASS_INFO* class_infos;
 
 #endif
