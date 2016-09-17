@@ -68,6 +68,8 @@ struct SPerl_class_info {
   int32_t field_count;
   SPerl_METHOD_INFO* method_infos;
   int32_t method_count;
+  SPerl_CONSTANT_POOL* constant_pools;
+  int32_t constant_pool_count;
 };
 
 #endif
