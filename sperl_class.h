@@ -64,4 +64,7 @@ struct SPerl_class_info {
   int32_t method_count;
 };
 
+#define SPerl_CLASS_MAX 1024
+SPerl_CLASS_INFO class_infos[SPerl_CLASS_MAX];
+
 #endif
