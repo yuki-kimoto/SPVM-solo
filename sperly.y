@@ -232,7 +232,7 @@ term
   : VAR
     {
       $$ = $1;
-      printf("VAR(%s) -> term\n", ((SPerl_OP*)$1)->uv.pv)
+      printf("VAR(%s) -> term\n", ((SPerl_OP*)$1)->uv.string_value)
     }
   | INT
     {
@@ -247,7 +247,7 @@ term
   | STRING
     {
       $$ = $1;
-      printf("STRING(%s) -> term\n", ((SPerl_OP*)$1)->uv.pv);
+      printf("STRING(%s) -> term\n", ((SPerl_OP*)$1)->uv.string_value);
     }
   | CHAR
     {
@@ -452,7 +452,7 @@ subarg
   : VAR ':' modiftype
     {
       $$ = SPerl_newOP(SPerl_OP_SUBARG, $1, $3);
-      printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.pv);
+      printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.string_value);
     }
 
 modiftype
@@ -471,7 +471,7 @@ type
   : WORD
     {
       $$ = $1;
-      printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.pv);
+      printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.string_value);
     }
 
 modifiers

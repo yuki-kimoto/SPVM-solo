@@ -80,7 +80,6 @@ extern uint8_t* const SPerl_op_name[];
 #define SPerl_OPp_COSNT_FLOAT 6
 #define SPerl_OPp_CONST_DOUBLE 7
 
-
 /*
 boolean	1bit
 byte	8bit
@@ -104,7 +103,7 @@ struct SPerl_op {
   SPerl_OP* op_sibparent;
   union {
     uint8_t char_value;
-    int8_t* pv;
+    int8_t* string_value;
     int32_t iv;
     double nv;
   } uv;

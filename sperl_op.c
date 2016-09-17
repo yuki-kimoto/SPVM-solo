@@ -91,7 +91,7 @@ void SPerl_dump_ast(SPerl_OP* op, int32_t depth) {
     printf(" %c", op->uv.char_value);
   }
   else if (type == SPerl_OP_CONST_STRING || type == SPerl_OP_VAR) {
-    printf(" \"%s\"", op->uv.pv);
+    printf(" \"%s\"", op->uv.string_value);
   }
   printf("\n");
   
