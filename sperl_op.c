@@ -1,11 +1,13 @@
 #include "sperl.h"
 
-#include "sperl_op.h"
 #include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+
+#include "sperl_op.h"
+#include "sperl_class.h"
 
 int8_t* const SPerl_op_name[] = {
   "null",
