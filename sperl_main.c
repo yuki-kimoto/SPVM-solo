@@ -4,6 +4,8 @@
 #include "sperl_parser.h"
 #include "sperl_op.h"
 
+#include "sperl_hash.h"
+
 int main(int argc, char *argv[])
 {
   if (argc < 2) {
