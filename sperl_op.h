@@ -88,7 +88,7 @@ struct SPerl_op {
   uint8_t op_type;
   uint8_t op_flags;
   uint8_t op_private;
-  uint8_t op_moresib;
+  _Bool op_moresib;
   SPerl_OP* op_first;
   SPerl_OP* op_last;
   SPerl_OP* op_sibparent;
