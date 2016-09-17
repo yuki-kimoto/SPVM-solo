@@ -167,3 +167,5 @@ sub sum : int ($foo : int, $bar : float) {
 }
 
 sub last : int ($foo : int) { }
+
+my $char : char = 'a';

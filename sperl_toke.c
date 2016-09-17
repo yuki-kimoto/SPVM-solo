@@ -288,7 +288,35 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         SPerl_yylvalp->ival = SPerl_OP_COMPLEMENT;
         return '~';
       
-      case '"':
+      case '\'': {
+        bufptr++;
+        
+        /* Save current position */
+        uint8_t* cur_token_ptr = bufptr;
+        
+        uint8_t ch;
+        if (*bufptr == '\'') {
+          ch = '\0';
+          bufptr++;
+        }
+        else {
+          ch = *bufptr;
+          bufptr++;
+          if (*bufptr != '\'') {
+            fprintf(stderr, "syntax error: string don't finish\n");
+            exit(1);
+          }
+          bufptr++;
+        }
+        
+        SPerl_OP* op = SPerl_newOP(SPerl_OP_CONST_CHAR, NULL, NULL);
+        op->uv.char_value = ch;
+        
+        parser->bufptr = bufptr;
+        SPerl_yylvalp->opval = (SPerl_OP*)op;
+        return CHAR;
+      }
+      case '"': {
         bufptr++;
         
         /* Save current position */
@@ -324,7 +352,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         parser->bufptr = bufptr;
         SPerl_yylvalp->opval = (SPerl_OP*)op;
         return STRING;
-      
+      }
       default:
         /* Variable */
         if (c == '$') {

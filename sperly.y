@@ -16,7 +16,7 @@
 %token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP
 %token <ival> LAST NEXT AS
-%token <opval> WORD VAR INT DOUBLE STRING BOOL 
+%token <opval> WORD VAR INT DOUBLE STRING CHAR BOOL 
 
 %type <opval> grammar statements statement declvar if else block
 %type <opval> optterms terms term subargs subarg optsubargs
@@ -248,6 +248,11 @@ term
     {
       $$ = $1;
       printf("STRING(%s) -> term\n", ((SPerl_OP*)$1)->uv.pv);
+    }
+  | CHAR
+    {
+      $$ = $1;
+      printf("CHAR(%c) -> term\n", ((SPerl_OP*)$1)->uv.char_value);
     }
   | BOOL
     {

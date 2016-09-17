@@ -8,7 +8,7 @@
 enum SPerl_OP_CODE {
   SPerl_OP_NULL,
   SPerl_OP_CONST_BOOLEAN,
-  SPerl_OP_COSNT_CHAR,
+  SPerl_OP_CONST_CHAR,
   SPerl_OP_CONST_BYTE,
   SPerl_OP_CONST_SHORT,
   SPerl_OP_CONST_INT,
@@ -93,6 +93,7 @@ struct SPerl_op {
   SPerl_OP* op_last;
   SPerl_OP* op_sibparent;
   union {
+    uint8_t char_value;
     int8_t* pv;
     int32_t iv;
     double nv;
