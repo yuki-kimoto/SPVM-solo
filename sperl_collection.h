@@ -31,6 +31,7 @@ struct SPerl_array {
 
 SPerl_ARRAY* SPerl_new_array(SPerl_long length);
 void SPerl_array_push(SPerl_ARRAY* array, SPerl_VALUE* value);
+SPerl_VALUE* SPerl_array_fetch(SPerl_ARRAY* array, SPerl_long index);
 
 // Hash
 struct SPerl_hash_entry;
