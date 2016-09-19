@@ -12,6 +12,6 @@ struct SPerl_array {
   void* elements;
 };
 
-SPerl_ARRAY* create_array(int64_t block_size, int64_t length);
+SPerl_ARRAY* new_array(int64_t block_size, int64_t length);
 
 #endif
