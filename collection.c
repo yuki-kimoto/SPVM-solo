@@ -41,3 +41,13 @@ void SPerl_array_push(SPerl_ARRAY* array, uintptr_t* element) {
 void* SPerl_array_fetch(SPerl_ARRAY* array, int32_t index) {
   return (array->elements)[index];
 }
+
+int64_t SPerL_hash_func(uint8_t* str, int64_t len) {
+  uint8_t* str_tmp = str;
+  int64_t hash = 5381;
+  while (len--) {
+    /* hash * 33 + c */
+    hash = ((hash << 5) + hash) + *str_tmp++;
+  }
+  return hash;
+}
