@@ -13,6 +13,6 @@ struct SPerl_array {
 };
 
 SPerl_ARRAY* SPerl_new_array(int32_t length);
-void SPerl_push_array(SPerl_ARRAY* array, uintptr_t* element);
+void SPerl_array_push(SPerl_ARRAY* array, uintptr_t* element);
 
 #endif

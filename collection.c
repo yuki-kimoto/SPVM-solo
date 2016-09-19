@@ -24,7 +24,7 @@ SPerl_ARRAY* SPerl_new_array(int32_t length) {
   return array;
 }
 
-void SPerl_push_array(SPerl_ARRAY* array, uintptr_t* element) {
+void SPerl_array_push(SPerl_ARRAY* array, uintptr_t* element) {
   int32_t length = array->length;
   int32_t capacity = array->capacity;
   
@@ -36,4 +36,8 @@ void SPerl_push_array(SPerl_ARRAY* array, uintptr_t* element) {
   }
   
   (array->elements)[length - 1] = element;
+}
+
+void* SPerl_array_fetch(SPerl_ARRAY* array, int32_t index) {
+  return (array->elements)[index];
 }
