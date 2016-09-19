@@ -2,7 +2,7 @@
 #define SPERL_OP_H
 
 #include "sperl.h"
-#include <stdint.h>
+#include "sperl_type.h"
 
 /* Operation code */
 enum SPerl_OP_CODE {
@@ -60,7 +60,7 @@ enum SPerl_OP_CODE {
   SPerl_OP_GRAMMER
 };
 
-extern uint8_t* const SPerl_op_name[];
+extern SPerl_char* const SPerl_op_name[];
 
 // OP_CONST private flag
 #define SPerl_OPp_CONST_BOOLEAN 1
@@ -87,23 +87,23 @@ double	64bit
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 struct SPerl_op {
-  uint8_t op_type;
-  uint8_t op_flags;
-  uint8_t op_private;
-  _Bool op_moresib;
+  SPerl_char op_type;
+  SPerl_char op_flags;
+  SPerl_char op_private;
+  SPerl_boolean op_moresib;
   SPerl_OP* op_first;
   SPerl_OP* op_last;
   SPerl_OP* op_sibparent;
   union {
-    _Bool boolean_value;
-    uint8_t char_value;
-    int8_t byte_value;
-    int16_t short_value;
-    int32_t int_value;
-    int64_t long_value;
+    SPerl_boolean boolean_value;
+    SPerl_char char_value;
+    SPerl_byte byte_value;
+    SPerl_short short_value;
+    SPerl_long int_value;
+    SPerl_long long_value;
     float float_value;
-    double double_value;
-    uint8_t* string_value;
+    SPerl_double double_value;
+    SPerl_char* string_value;
   } uv;
 };
 
@@ -112,11 +112,11 @@ void SPerl_OpMORESIB_set(SPerl_OP* o, SPerl_OP* sib);
 void SPerl_OpLASTSIB_set(SPerl_OP* o, SPerl_OP* parent);
 void SPerl_OpMAYBESIB_set(SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
 
-SPerl_OP* SPerl_newOP(uint8_t type, SPerl_OP *first, SPerl_OP *last);
-SPerl_OP* SPerl_newOP_flag(uint8_t type, SPerl_OP *first, SPerl_OP *last, uint8_t flags, uint8_t private);
-SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP *insert);
+SPerl_OP* SPerl_newOP(SPerl_char type, SPerl_OP *first, SPerl_OP *last);
+SPerl_OP* SPerl_newOP_flag(SPerl_char type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
+SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_long del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_op_append_elem(SPerl_OP* first, SPerl_OP* last);
 
-void SPerl_dump_ast(SPerl_OP* op, int32_t depth);
+void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth);
 
 #endif

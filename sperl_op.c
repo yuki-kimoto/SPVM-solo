@@ -4,12 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
+#include "sperl_type.h"
 
 #include "sperl_op.h"
 #include "sperl_class.h"
 
-uint8_t* const SPerl_op_name[] = {
+SPerl_char* const SPerl_op_name[] = {
   "null",
   "const",
   "lt",
@@ -64,13 +64,13 @@ uint8_t* const SPerl_op_name[] = {
   "grammer"
 };
 
-void SPerl_dump_ast(SPerl_OP* op, int32_t depth) {
+void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth) {
   
-  int32_t i;
+  SPerl_long i;
   for (i = 0; i < depth; i++) {
     printf(" ");
   }
-  int32_t type = op->op_type;
+  SPerl_long type = op->op_type;
   printf("%s", SPerl_op_name[type]);
   if (type == SPerl_OP_CONST) {
     switch(op->op_private) {
@@ -138,7 +138,7 @@ void SPerl_OpMAYBESIB_set(SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent) {
   o->op_sibparent = o->op_moresib ? sib : parent;
 }
 
-SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP* insert) {
+SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_long del_count, SPerl_OP* insert) {
   SPerl_OP *first;
   SPerl_OP *rest;
   SPerl_OP *last_del = NULL;
@@ -217,11 +217,11 @@ SPerl_OP* SPerl_op_append_elem(SPerl_OP *first, SPerl_OP *last)
   return first;
 }
 
-SPerl_OP* SPerl_newOP(uint8_t type, SPerl_OP* first, SPerl_OP* last) {
+SPerl_OP* SPerl_newOP(SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
   return SPerl_newOP_flag(type, first, last, 0, 0);
 }
 
-SPerl_OP* SPerl_newOP_flag(uint8_t type, SPerl_OP* first, SPerl_OP* last, uint8_t flags, uint8_t private) {
+SPerl_OP* SPerl_newOP_flag(SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
         
   SPerl_OP *op;
 

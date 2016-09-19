@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
   }
   
   /* Source file */
-  uint8_t* file = argv[1];
+  SPerl_char* file = argv[1];
   
   /* Open source file */
   FILE* fp = fopen(file, "r");
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
   
   /* call SPerl_yyparse */
   printf("[Token reduction]\n");
-  int32_t parse_success = SPerl_yyparse(parser);
+  SPerl_long parse_success = SPerl_yyparse(parser);
   
   printf("\n[Abstract Syntax Tree]\n");
   SPerl_dump_ast(parser->main_root, 0);
