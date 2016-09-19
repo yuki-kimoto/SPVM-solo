@@ -459,7 +459,16 @@ block
     }
   | '{' statements '}'
     {
-      $$ = SPerl_newOP(SPerl_OP_BLOCK, $2, NULL);
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_BLOCK, NULL, NULL);
+      
+      if ($2->op_type == SPerl_OP_LIST) {
+        SPerl_op_sibling_splice(op, 0, 0, $2->op_first);
+      }
+      else {
+        op->op_first = $2;
+      }
+
+      $$ = op;
       printf("{ statements } -> block\n");
     }
 
