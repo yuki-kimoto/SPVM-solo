@@ -3,19 +3,23 @@
 
 #include "sperl_type.h"
 
-// Array
-struct SPerl_array;
-typedef struct SPerl_array SPerl_ARRAY;
-struct SPerl_array {
-  SPerl_long block_size;
-  SPerl_long length;
-  SPerl_long capacity;
-  void* elements;
-};
+// Declaration of array
+#define SPerl_DECL_ARRAY(TYPE) \
+struct SPerl_array_##TYPE; \
+typedef struct SPerl_array_##TYPE SPerl_ARRAY_##TYPE; \
+struct SPerl_array_##TYPE {\
+  SPerl_long block_size;\
+  SPerl_long length;\
+  SPerl_long capacity;\
+  TYPE* elements;\
+}; \
+\
+SPerl_ARRAY_##TYPE* SPerl_new_array_##TYPE(SPerl_long length);\
+void SPerl_array_push_##TYPE(SPerl_ARRAY_##TYPE* array, TYPE* element);\
 
-SPerl_ARRAY* SPerl_new_array(SPerl_long length);
-void SPerl_array_push(SPerl_ARRAY* array, void* element);
+// Implementation of array
 
+/*
 // Hash
 struct SPerl_hash_entry;
 typedef struct SPerl_hash_entry SPerl_HASH_ENTRY;
@@ -32,5 +36,6 @@ struct SPerl_hash {
 };
 
 SPerl_long SPerl_hash_func(SPerl_char* str, SPerl_long len);
+*/
 
 #endif

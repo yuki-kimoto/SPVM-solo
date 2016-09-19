@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "sperl_collection.h"
-
 /*
 SPerl_ARRAY* SPerl_new_array(SPerl_long length) {
   

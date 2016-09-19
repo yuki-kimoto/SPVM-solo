@@ -2,6 +2,7 @@
 #define SPERL_CLASS_H
 
 #include "sperl_type.h"
+#include "sperl_collection.h"
 
 #define SPerl_CLASS_MAX 1024
 
@@ -67,6 +68,7 @@ struct SPerl_class_info {
   SPerl_long* local_var;
 };
 
-extern SPerl_CLASS_INFO* class_infos;
+// Array of SPerl_CLASS_INFO
+SPerl_DECL_ARRAY(SPerl_CLASS_INFO)
 
 #endif
