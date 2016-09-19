@@ -3,6 +3,22 @@
 
 #include "sperl_type.h"
 
+struct SPerl_value;
+typedef struct SPerl_value SPerl_VALUE;
+struct SPerl_value {
+  SPerl_char type;
+  union {
+    SPerl_char char_value;
+    SPerl_byte byte_value;
+    SPerl_short short_value;
+    SPerl_int int_value;
+    SPerl_long long_value;
+    SPerl_float float_value;
+    SPerl_double double_value;
+    void* ptr_value;
+  } uv;
+};
+
 // Array
 struct SPerl_array;
 typedef struct SPerl_array SPerl_ARRAY;
