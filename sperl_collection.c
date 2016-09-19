@@ -4,7 +4,7 @@
 
 #include "sperl_collection.h"
 
-/*
+
 SPerl_ARRAY* SPerl_new_array(SPerl_long length) {
   
   SPerl_ARRAY* array = (SPerl_ARRAY*)malloc(sizeof(SPerl_ARRAY));
@@ -16,31 +16,31 @@ SPerl_ARRAY* SPerl_new_array(SPerl_long length) {
     array->capacity = 32;
   }
   
-  SPerl_long elements_byte_size = sizeof(void*) * array->capacity;
-  void* elements = malloc(elements_byte_size);
-  memset(elements, 0, elements_byte_size);
+  SPerl_long values_byte_size = sizeof(SPerl_VALUE) * array->capacity;
+  SPerl_VALUE* values = (SPerl_VALUE*)malloc(values_byte_size);
+  memset(values, 0, values_byte_size);
   
-  array->elements = elements;
+  array->values = values;
   
   return array;
 }
 
-void SPerl_array_push(SPerl_ARRAY* array, void* element) {
+void SPerl_array_push(SPerl_ARRAY* array, SPerl_VALUE* value) {
   SPerl_long length = array->length;
   SPerl_long capacity = array->capacity;
   
   length++;
   if (length > capacity) {
     capacity = capacity * 2;
-    array->elements = realloc(array->elements, capacity);
+    array->values = realloc(array->values, capacity);
     array->capacity = capacity;
   }
   
-  (array->elements)[length - 1] = element;
+  array->values[length - 1] = *value;
 }
 
-void* SPerl_array_fetch(SPerl_ARRAY* array, SPerl_long index) {
-  return (array->elements)[index];
+SPerl_VALUE* SPerl_array_fetch(SPerl_ARRAY* array, SPerl_long index) {
+  return array->values + index;
 }
 
 SPerl_long SPerL_hash_func(SPerl_char* str, SPerl_long len) {
@@ -51,4 +51,3 @@ SPerl_long SPerL_hash_func(SPerl_char* str, SPerl_long len) {
   }
   return hash;
 }
-*/

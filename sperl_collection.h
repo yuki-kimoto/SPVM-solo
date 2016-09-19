@@ -26,11 +26,11 @@ struct SPerl_array {
   SPerl_long block_size;
   SPerl_long length;
   SPerl_long capacity;
-  void* elements;
+  SPerl_VALUE* values;
 };
 
 SPerl_ARRAY* SPerl_new_array(SPerl_long length);
-void SPerl_array_push(SPerl_ARRAY* array, void* element);
+void SPerl_array_push(SPerl_ARRAY* array, SPerl_VALUE* value);
 
 // Hash
 struct SPerl_hash_entry;
