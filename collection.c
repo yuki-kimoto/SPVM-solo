@@ -1,9 +1,10 @@
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "collection.h"
 
-SPerl_ARRAY* SPerl_new_array(int64_t length) {
+SPerl_ARRAY* SPerl_new_array(int32_t length) {
   
   SPerl_ARRAY* array = (SPerl_ARRAY*)malloc(sizeof(SPerl_ARRAY));
   array->length = length;
@@ -23,4 +24,16 @@ SPerl_ARRAY* SPerl_new_array(int64_t length) {
   return array;
 }
 
-
+void SPerl_push_array(SPerl_ARRAY* array, uintptr_t* element) {
+  int32_t length = array->length;
+  int32_t capacity = array->capacity;
+  
+  length++;
+  if (length > capacity) {
+    capacity = capacity * 2;
+    array->elements = realloc(array->elements, capacity);
+    array->capacity = capacity;
+  }
+  
+  (array->elements)[length - 1] = element;
+}

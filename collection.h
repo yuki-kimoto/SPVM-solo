@@ -6,12 +6,13 @@
 struct SPerl_array;
 typedef struct SPerl_array SPerl_ARRAY;
 struct SPerl_array {
-  int64_t block_size;
-  int64_t length;
-  int64_t capacity;
+  int32_t block_size;
+  int32_t length;
+  int32_t capacity;
   uintptr_t* elements;
 };
 
-SPerl_ARRAY* SPerl_new_array(int64_t length);
+SPerl_ARRAY* SPerl_new_array(int32_t length);
+void SPerl_push_array(SPerl_ARRAY* array, uintptr_t* element);
 
 #endif
