@@ -1,6 +1,6 @@
 #ifndef SPERL_H
 #define SPERL_H
 
-#include "collection.h"
+#include "sperl_collection.h"
 
 #endif

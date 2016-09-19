@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "collection.h"
+#include "sperl_collection.h"
 
 SPerl_ARRAY* SPerl_new_array(int32_t length) {
   
