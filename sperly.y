@@ -20,7 +20,7 @@
 
 %type <opval> grammar statements statement declvar if else block
 %type <opval> optterms terms term subargs subarg optsubargs
-%type <opval> modiftype descripters descripter
+%type <opval> desctype descripters descripter
 %type <opval> type pkgname fieldname subname package packages
 
 %right <ival> ASSIGNOP
@@ -105,7 +105,7 @@ statements
     }
 
 statement
-  : SUB subname ':' modiftype '(' optsubargs ')' block
+  : SUB subname ':' desctype '(' optsubargs ')' block
     {
       SPerl_OP* optsubargs_op = $6;
       if (!optsubargs_op) {
@@ -117,7 +117,7 @@ statement
       
       $$ = op;
       
-      printf("SUB subname : modiftype ( optsubargs ) block -> statement\n");
+      printf("SUB subname : desctype ( optsubargs ) block -> statement\n");
     }
   | FOR '(' term ';' term ';' term ')' block
     {
@@ -222,15 +222,15 @@ else
     }
 
 declvar
-  : MY VAR ':' modiftype
+  : MY VAR ':' desctype
     {
       $$ = SPerl_newOP(SPerl_OP_MY, $2, $4);
-      printf("MY VAR : modiftype -> declvar\n");
+      printf("MY VAR : desctype -> declvar\n");
     }
-  | HAS fieldname ':' modiftype
+  | HAS fieldname ':' desctype
     {
       $$ = SPerl_newOP(SPerl_OP_HAS, $2, $4);
-      printf("HAS fieldname : modiftype -> declvar\n");
+      printf("HAS fieldname : desctype -> declvar\n");
     }
 
 optterms
@@ -438,7 +438,7 @@ term
       $$ = $1;
       printf("declvar -> term\n");
     }
-  | SUB ':' modiftype '(' optsubargs ')' block
+  | SUB ':' desctype '(' optsubargs ')' block
     {
       SPerl_OP* op_optsubargs = $5;
       if (!op_optsubargs) {
@@ -448,7 +448,7 @@ term
       SPerl_op_sibling_splice(op, op_optsubargs, 0, $7);
       $$ = op;
       
-      printf("SUB : modiftype ( optsubargs ) block -> term\n");
+      printf("SUB : desctype ( optsubargs ) block -> term\n");
     }
 
 block 
@@ -497,22 +497,22 @@ subargs
     }
 
 subarg
-  : VAR ':' modiftype
+  : VAR ':' desctype
     {
       $$ = SPerl_newOP(SPerl_OP_SUBARG, $1, $3);
-      printf("VAR : modiftype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.string_value);
+      printf("VAR : desctype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.string_value);
     }
 
-modiftype
+desctype
   : type
     {
       $$ = $1;
-      printf("type -> modiftype\n");
+      printf("type -> desctype\n");
     }
   | descripters type
     {
       $$ = SPerl_op_append_elem($2, $1);
-      printf("descripters type -> modiftype\n");
+      printf("descripters type -> desctype\n");
     }
     
 type
