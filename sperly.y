@@ -20,8 +20,8 @@
 
 %type <opval> grammar statements statement declvar if else block
 %type <opval> optterms terms term subargs subarg optsubargs
-%type <opval> modiftype modifiers modifier
-%type <opval> type pkgname attrname subname package packages
+%type <opval> modiftype descripters descripter
+%type <opval> type pkgname fieldname subname package packages
 
 %right <ival> ASSIGNOP
 %left <ival> OROP
@@ -227,10 +227,10 @@ declvar
       $$ = SPerl_newOP(SPerl_OP_MY, $2, $4);
       printf("MY VAR : modiftype -> declvar\n");
     }
-  | HAS attrname ':' modiftype
+  | HAS fieldname ':' modiftype
     {
       $$ = SPerl_newOP(SPerl_OP_HAS, $2, $4);
-      printf("HAS attrname : modiftype -> declvar\n");
+      printf("HAS fieldname : modiftype -> declvar\n");
     }
 
 optterms
@@ -378,9 +378,9 @@ term
       $$ = SPerl_newOP(SPerl_OP_AELEM, $1, $4);
       printf("VAR ARROW [ term ] -> term\n");
     }
-  | VAR ARROW subname
+  | VAR ARROW fieldname
     {
-      $$ = SPerl_newOP(SPerl_OP_ATTR, $1, $3);
+      $$ = SPerl_newOP(SPerl_OP_FIELD, $1, $3);
       printf("VAR ARROW subname -> term\n");
     }
   | subname '(' optterms  ')'
@@ -509,10 +509,10 @@ modiftype
       $$ = $1;
       printf("type -> modiftype\n");
     }
-  | modifiers type
+  | descripters type
     {
       $$ = SPerl_op_append_elem($2, $1);
-      printf("modifiers type -> modiftype\n");
+      printf("descripters type -> modiftype\n");
     }
     
 type
@@ -522,30 +522,30 @@ type
       printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.string_value);
     }
 
-modifiers
-  : modifiers  modifier
+descripters
+  : descripters descripter
     {
       $$ = SPerl_op_append_elem($1, $2);
-      printf("modifiers modifier -> modifiers\n");
+      printf("descripters descripter -> descripters\n");
     }
-  | modifier
+  | descripter
     {
       $$ = $1;
-      printf("modifier -> modifiers\n");
+      printf("descripter -> descripters\n");
     }
 
-modifier
+descripter
   : WORD
     {
       $$ = $1;
-      printf("WORD -> modifier\n");
+      printf("WORD -> descripter\n");
     }
 
-attrname
+fieldname
   : WORD
     {
       $$ = $1;
-      printf("WORD -> attrname\n");
+      printf("WORD -> fieldname\n");
     }
 
 subname

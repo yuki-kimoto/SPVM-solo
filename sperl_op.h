@@ -37,7 +37,7 @@ enum SPerl_OP_CODE {
   SPerl_OP_LIST,
   SPerl_OP_PUSHMARK,
   SPerl_OP_AELEM,
-  SPerl_OP_ATTR,
+  SPerl_OP_FIELD,
   SPerl_OP_ASSIGN,
   SPerl_OP_CALLSUB,
   SPerl_OP_SUBARG,

@@ -41,7 +41,7 @@ SPerl_char* const SPerl_op_name[] = {
   "list",
   "pushmark",
   "aelem",
-  "attr",
+  "field",
   "assign",
   "callsub",
   "subarg",
