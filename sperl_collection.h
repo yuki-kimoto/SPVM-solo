@@ -33,6 +33,8 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long length);
 void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value);
 SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index);
 
+/*
+
 // Hash entry
 struct SPerl_hash_entry;
 typedef struct SPerl_hash_entry SPerl_HASH_ENTRY;
@@ -52,11 +54,10 @@ struct SPerl_hash {
 };
 
 SPerl_HASH* SPerl_new_hash();
-
 SPerl_long SPerl_hash_func(SPerl_char* str, SPerl_long len);
-
+SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, SPerl_VALUE* value) {
 SPerl_HASH* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length);
-
 SPerl_HASH* SPerl_HASH_rehash(SPerl_HASH* hash);
+*/
 
 #endif
