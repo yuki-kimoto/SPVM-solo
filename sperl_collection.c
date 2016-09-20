@@ -30,8 +30,10 @@ void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value) {
   
   length++;
   if (length > capacity) {
+    SPerl_long capacity_old = capacity;
     capacity = capacity * 2;
     array->values = realloc(array->values, capacity);
+    memset(array->values + capacity_old, 0, capacity - capacity_old);
     array->capacity = capacity;
   }
   
