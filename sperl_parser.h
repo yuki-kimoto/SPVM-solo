@@ -2,6 +2,7 @@
 #define SPERL_PARSER_H
 
 #include "sperl_op.h"
+#include "sperl_collection.h"
 
 /* Parser information */
 typedef struct {
@@ -14,7 +15,15 @@ typedef struct {
   /* Expect next */
   SPerl_long expect;
   
+  /* AST root */
   SPerl_OP* main_root;
+  
+  /* class information array */
+  SPerl_ARRAY* class_infos;
+  
+  /* class information hash */
+  SPerl_HASH* class_info_h;
+  
 } SPerl_yy_parser;
 
 typedef union
