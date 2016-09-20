@@ -15,8 +15,8 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long length) {
     array->capacity = 32;
   }
   
-  SPerl_long values_byte_size = sizeof(SPerl_VALUE) * array->capacity;
-  SPerl_VALUE* values = (SPerl_VALUE*)malloc(values_byte_size);
+  SPerl_long values_byte_size = sizeof(SPerl_VALUE*) * array->capacity;
+  SPerl_VALUE** values = (SPerl_VALUE**)malloc(values_byte_size);
   memset(values, 0, values_byte_size);
   
   array->values = values;
@@ -35,7 +35,7 @@ void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value) {
     array->capacity = capacity;
   }
   
-  array->values[length - 1] = *value;
+  array->values[length - 1] = value;
 }
 
 SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index) {
@@ -43,7 +43,7 @@ SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index) {
     return NULL;
   }
   else {
-    return array->values + index;
+    return array->values[index];
   }
 }
 

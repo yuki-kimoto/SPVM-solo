@@ -26,7 +26,7 @@ struct SPerl_array {
   SPerl_long block_size;
   SPerl_long length;
   SPerl_long capacity;
-  SPerl_VALUE* values;
+  SPerl_VALUE** values;
 };
 
 SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long length);
