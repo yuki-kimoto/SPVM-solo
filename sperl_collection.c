@@ -47,8 +47,8 @@ SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index) {
   }
 }
 
-/*
-SPerl_long SPerL_hash_func(SPerl_char* str, SPerl_long len) {
+
+SPerl_long SPerl_hash_func(SPerl_char* str, SPerl_long len) {
   SPerl_char* str_tmp = str;
   SPerl_long hash = 5381;
   while (len--) {
@@ -67,12 +67,12 @@ SPerl_HASH* SPerl_HASH_new() {
   return hash;
 }
 
-SPerl_HASH* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, SPerl_VALUE* value) {
+SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, SPerl_VALUE* value) {
   if (hash == NULL) {
     return 0;
   }
-  SPerl_long hash = SPerl_hash_func(key, length);
-  SPerl_long index = hash % hash->capacity;
+  SPerl_long hash_value = SPerl_hash_func(key, length);
+  SPerl_long index = hash_value % hash->capacity;
   
   return 1;
 }
@@ -84,4 +84,4 @@ SPerl_HASH* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long leng
 SPerl_HASH* SPerl_HASH_rehash(SPerl_HASH* hash) {
   
 }
-*/
+
