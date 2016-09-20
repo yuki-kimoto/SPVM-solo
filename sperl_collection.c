@@ -4,7 +4,6 @@
 
 #include "sperl_collection.h"
 
-
 SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long length) {
   
   SPerl_ARRAY* array = (SPerl_ARRAY*)malloc(sizeof(SPerl_ARRAY));
@@ -55,4 +54,26 @@ SPerl_long SPerL_hash_func(SPerl_char* str, SPerl_long len) {
     hash = ((hash << 5) + hash) + *str_tmp++;
   }
   return hash;
+}
+
+SPerl_HASH* SPerl_HASH_new() {
+  
+  SPerl_long capacity = 101;
+  SPerl_HASH* hash = (SPerl_HASH*)malloc(sizeof(SPerl_HASH) * capacity);
+  hash->count = 0;
+  hash->capacity = capacity;
+  
+  return hash;
+}
+
+SPerl_HASH* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, SPerl_VALUE* value) {
+  
+}
+
+SPerl_HASH* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length) {
+  
+}
+
+SPerl_HASH* SPerl_HASH_rehash(SPerl_HASH* hash) {
+  
 }

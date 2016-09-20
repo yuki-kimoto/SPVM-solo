@@ -29,11 +29,11 @@ struct SPerl_array {
   SPerl_VALUE* values;
 };
 
-SPerl_ARRAY* SPerl_new_array(SPerl_long length);
-void SPerl_array_push(SPerl_ARRAY* array, SPerl_VALUE* value);
-SPerl_VALUE* SPerl_array_fetch(SPerl_ARRAY* array, SPerl_long index);
+SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long length);
+void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value);
+SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index);
 
-// Hash
+// Hash entry
 struct SPerl_hash_entry;
 typedef struct SPerl_hash_entry SPerl_HASH_ENTRY;
 struct SPerl_hash_entry {
@@ -42,12 +42,21 @@ struct SPerl_hash_entry {
   SPerl_HASH_ENTRY* next;
 };
 
+// Hash table
 struct SPerl_hash;
 typedef struct SPerl_hash SPerl_HASH;
 struct SPerl_hash {
+  SPerl_long count;
+  SPerl_long capacity;
   SPerl_HASH_ENTRY* entries;
 };
 
+SPerl_HASH* SPerl_new_hash();
+
 SPerl_long SPerl_hash_func(SPerl_char* str, SPerl_long len);
+
+SPerl_HASH* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length);
+
+SPerl_HASH* SPerl_HASH_rehash(SPerl_HASH* hash);
 
 #endif
