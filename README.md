@@ -34,7 +34,7 @@ sub sum : int ($num1 : int, $num2 : int) {
 
 ## Run
 
-    bison -p SPerl_yy -d sperly.y && gcc -O -o sperl sperly.tab.c sperl_main.c sperl_toke.c sperl_op.c sperl_collection.c && ./sperl test.spl
+    bison -p SPerl_yy -d sperly.y && gcc -std=c99 -O -o sperl sperly.tab.c sperl_main.c sperl_toke.c sperl_op.c sperl_collection.c && ./sperl test.spl
 
 Now I only print the result of **token reduction** and **abstract syntax tree**.
 

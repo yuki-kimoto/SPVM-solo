@@ -50,10 +50,9 @@ struct SPerl_hash {
   SPerl_HASH_ENTRY** entries;
 };
 
-SPerl_HASH* SPerl_new_hash();
+SPerl_HASH* SPerl_HASH_new(SPerl_long capacity);
 SPerl_long SPerl_hash_func(SPerl_char* str, SPerl_long len);
 SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, SPerl_VALUE* value);
-SPerl_HASH* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length);
-SPerl_HASH* SPerl_HASH_rehash(SPerl_HASH* hash);
+SPerl_VALUE* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length);
 
 #endif
