@@ -92,7 +92,8 @@ SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long le
     SPerl_HASH* new_hash = SPerl_HASH_new(new_capacity);
     
     // Rehash
-    for (SPerl_long i = 0; i < hash->count; i++) {
+    SPerl_long i;
+    for (i = 0; i < hash->count; i++) {
       SPerl_HASH_ENTRY* entry = entries[i];
       
       SPerl_char* key = entry->key;
