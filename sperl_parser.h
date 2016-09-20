@@ -24,6 +24,12 @@ typedef struct {
   /* class information hash */
   SPerl_HASH* class_info_h;
   
+  /* method information array */
+  SPerl_ARRAY* method_infos;
+  
+  /* method information hash */
+  SPerl_HASH* method_info_h;
+  
 } SPerl_yy_parser;
 
 typedef union
