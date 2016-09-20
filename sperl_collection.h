@@ -38,7 +38,7 @@ struct SPerl_hash_entry;
 typedef struct SPerl_hash_entry SPerl_HASH_ENTRY;
 struct SPerl_hash_entry {
   SPerl_char* key;
-  void* value;
+  SPerl_VALUE* value;
   SPerl_HASH_ENTRY* next;
 };
 

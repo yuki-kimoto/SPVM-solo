@@ -5,7 +5,7 @@
 #include "sperl_collection.h"
 
 
-SPerl_ARRAY* SPerl_new_array(SPerl_long length) {
+SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long length) {
   
   SPerl_ARRAY* array = (SPerl_ARRAY*)malloc(sizeof(SPerl_ARRAY));
   array->length = length;
@@ -25,7 +25,7 @@ SPerl_ARRAY* SPerl_new_array(SPerl_long length) {
   return array;
 }
 
-void SPerl_array_push(SPerl_ARRAY* array, SPerl_VALUE* value) {
+void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value) {
   SPerl_long length = array->length;
   SPerl_long capacity = array->capacity;
   
@@ -39,8 +39,13 @@ void SPerl_array_push(SPerl_ARRAY* array, SPerl_VALUE* value) {
   array->values[length - 1] = *value;
 }
 
-SPerl_VALUE* SPerl_array_fetch(SPerl_ARRAY* array, SPerl_long index) {
-  return array->values + index;
+SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index) {
+  if (array == NULL || index < 0 || index >= array->length) {
+    return NULL;
+  }
+  else {
+    return array->values + index;
+  }
 }
 
 SPerl_long SPerL_hash_func(SPerl_char* str, SPerl_long len) {
