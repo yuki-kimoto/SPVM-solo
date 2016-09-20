@@ -23,7 +23,6 @@ struct SPerl_value {
 struct SPerl_array;
 typedef struct SPerl_array SPerl_ARRAY;
 struct SPerl_array {
-  SPerl_long block_size;
   SPerl_long length;
   SPerl_long capacity;
   SPerl_VALUE** values;
@@ -48,7 +47,7 @@ typedef struct SPerl_hash SPerl_HASH;
 struct SPerl_hash {
   SPerl_long count;
   SPerl_long capacity;
-  SPerl_HASH_ENTRY* entries;
+  SPerl_HASH_ENTRY** entries;
 };
 
 SPerl_HASH* SPerl_new_hash();

@@ -64,6 +64,11 @@ SPerl_HASH* SPerl_HASH_new() {
   hash->count = 0;
   hash->capacity = capacity;
   
+  SPerl_long byte_size = sizeof(SPerl_HASH_ENTRY*) * hash->capacity;
+  SPerl_HASH_ENTRY** entries = (SPerl_HASH_ENTRY**)malloc(byte_size);
+  memset(entries, 0, byte_size);
+  hash->entries = entries;
+  
   return hash;
 }
 
@@ -74,14 +79,21 @@ SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long le
   SPerl_long hash_value = SPerl_hash_func(key, length);
   SPerl_long index = hash_value % hash->capacity;
   
+  hash->entries[index]->value = value;
+  
   return 1;
 }
 
 SPerl_HASH* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length) {
+  if (hash == NULL) {
+    return 0;
+  }
+  SPerl_long hash_value = SPerl_hash_func(key, length);
+  SPerl_long index = hash_value % hash->capacity;
   
+  return hash->entries[index]->value;
 }
 
 SPerl_HASH* SPerl_HASH_rehash(SPerl_HASH* hash) {
   
 }
-
