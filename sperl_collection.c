@@ -4,14 +4,6 @@
 
 #include "sperl_collection.h"
 
-SPerl_VALUE* SPerl_VALUE_new() {
-  SPerl_VALUE* value = malloc(sizeof(SPerl_VALUE));
-  
-  memset(value, 0, sizeof(SPerl_VALUE));
-  
-  return value;
-}
-
 SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long capacity) {
   
   SPerl_ARRAY* array = (SPerl_ARRAY*)malloc(sizeof(SPerl_ARRAY));
@@ -24,8 +16,8 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long capacity) {
     array->capacity = capacity;
   }
   
-  SPerl_long total_byte = sizeof(SPerl_VALUE*) * array->capacity;
-  SPerl_VALUE** values = (SPerl_VALUE**)malloc(total_byte);
+  SPerl_long total_byte = sizeof(void*) * array->capacity;
+  void** values = (void**)malloc(total_byte);
   memset(values, 0, total_byte);
   
   array->values = values;
@@ -33,7 +25,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long capacity) {
   return array;
 }
 
-void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value) {
+void SPerl_ARRAY_push(SPerl_ARRAY* array, void* value) {
   SPerl_long length = array->length;
   SPerl_long capacity = array->capacity;
   
@@ -48,7 +40,7 @@ void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value) {
   array->length++;
 }
 
-SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index) {
+void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index) {
   if (array == NULL || index < 0 || index >= array->length) {
     return NULL;
   }
@@ -84,7 +76,7 @@ SPerl_HASH* SPerl_HASH_new(SPerl_long capacity) {
   return hash;
 }
 
-SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, SPerl_VALUE* value) {
+SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value) {
   if (hash == NULL) {
     return 0;
   }
@@ -107,7 +99,7 @@ SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long le
       SPerl_char* key = entry->key;
       if (key) {
         SPerl_long length = strlen(key);
-        SPerl_VALUE* value = SPerl_HASH_search(hash, key, length);
+        void* value = SPerl_HASH_search(hash, key, length);
         SPerl_HASH_insert(new_hash, key, length, value);
       }
       
@@ -116,7 +108,7 @@ SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long le
         SPerl_char* key = next_entry->key;
         if (key) {
           SPerl_long length = strlen(key);
-          SPerl_VALUE* value = SPerl_HASH_search(hash, key, length);
+          void* value = SPerl_HASH_search(hash, key, length);
           SPerl_HASH_insert(new_hash, key, length, value);
         }
         
@@ -161,7 +153,7 @@ SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long le
   return 1;
 }
 
-SPerl_VALUE* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length) {
+void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length) {
   if (hash == NULL) {
     return 0;
   }

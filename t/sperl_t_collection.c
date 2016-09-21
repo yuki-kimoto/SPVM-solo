@@ -4,17 +4,6 @@
 
 int main(int argc, char *argv[])
 {
-  // Value
-  {
-    SPerl_VALUE* value = SPerl_VALUE_new();
-    if (value->uv.long_value == 0) {
-      printf("OK\n");
-    }
-    else {
-      printf("Not OK %d\n", __LINE__);
-    }
-  }
-  
   // Array - new
   {
     SPerl_ARRAY* array = SPerl_ARRAY_new(10);
@@ -77,10 +66,9 @@ int main(int argc, char *argv[])
     SPerl_ARRAY* array = SPerl_ARRAY_new(0);
     
     // push long value at first
-    SPerl_VALUE* value1 = SPerl_VALUE_new();
-    value1->uv.long_value = 10;
-    SPerl_ARRAY_push(array, value1);
-    if (array->values[0]->uv.long_value == 10) {
+    SPerl_long value1 = 10;
+    SPerl_ARRAY_push(array, &value1);
+    if (*(SPerl_long*)array->values[0] == 10) {
       printf("OK\n");
     }
     else {
@@ -94,10 +82,9 @@ int main(int argc, char *argv[])
     }
     
     // push long value next
-    SPerl_VALUE* value2 = SPerl_VALUE_new();
-    value2->uv.long_value = 15;
-    SPerl_ARRAY_push(array, value2);
-    if (array->values[1]->uv.long_value == 15) {
+    SPerl_long value2 = 15;
+    SPerl_ARRAY_push(array, &value2);
+    if (*(SPerl_long*)array->values[1] == 15) {
       printf("OK\n");
     }
     else {
@@ -111,10 +98,9 @@ int main(int argc, char *argv[])
     }
     
     // push pointer value
-    SPerl_VALUE* value3 = SPerl_VALUE_new();
-    value3->uv.ptr_value = "foo";
+    SPerl_char* value3 = "foo";
     SPerl_ARRAY_push(array, value3);
-    if (array->values[2]->uv.ptr_value == value3->uv.ptr_value) {
+    if (array->values[2] == value3) {
       printf("OK\n");
     }
     else {
@@ -126,12 +112,10 @@ int main(int argc, char *argv[])
   {
     SPerl_ARRAY* array = SPerl_ARRAY_new(2);
     
-    SPerl_VALUE* value1 = SPerl_VALUE_new();
-    value1->uv.long_value = 1;
-    SPerl_VALUE* value2 = SPerl_VALUE_new();
-    value2->uv.long_value = 2;
-    SPerl_ARRAY_push(array, value1);
-    SPerl_ARRAY_push(array, value2);
+    SPerl_long value1 = 1;
+    SPerl_long value2 = 2;
+    SPerl_ARRAY_push(array, &value1);
+    SPerl_ARRAY_push(array, &value2);
     if (array->capacity == 2) {
       printf("OK\n");
     }
@@ -139,9 +123,8 @@ int main(int argc, char *argv[])
       printf("Not OK\n", __LINE__);
     }
     
-    SPerl_VALUE* value3 = SPerl_VALUE_new();
-    value3->uv.long_value = 3;
-    SPerl_ARRAY_push(array, value3);
+    SPerl_long value3 = 3;
+    SPerl_ARRAY_push(array, &value3);
     if (array->capacity == 4) {
       printf("OK\n");
     }
@@ -154,19 +137,19 @@ int main(int argc, char *argv[])
     else {
       printf("Not OK %d\n", __LINE__);
     }
-    if (array->values[0]->uv.long_value == 1) {
+    if (*(SPerl_long*)array->values[0] == 1) {
       printf("OK\n");
     }
     else {
       printf("Not OK %d\n", __LINE__);
     }
-    if (array->values[1]->uv.long_value == 2) {
+    if (*(SPerl_long*)array->values[1] == 2) {
       printf("OK\n");
     }
     else {
       printf("Not OK %d\n", __LINE__);
     }
-    if (array->values[2]->uv.long_value == 3) {
+    if (*(SPerl_long*)array->values[2] == 3) {
       printf("OK\n");
     }
     else {
@@ -177,21 +160,19 @@ int main(int argc, char *argv[])
   // Array - fetch
   {
     SPerl_ARRAY* array = SPerl_ARRAY_new(0);
-    SPerl_VALUE* value1 = SPerl_VALUE_new();
-    value1->uv.long_value = 3;
-    SPerl_VALUE* value2 = SPerl_VALUE_new();
-    value2->uv.long_value = 5;
+    SPerl_long value1 = 3;
+    SPerl_long value2 = 5;
     
-    SPerl_ARRAY_push(array, value1);
-    SPerl_ARRAY_push(array, value2);
+    SPerl_ARRAY_push(array, &value1);
+    SPerl_ARRAY_push(array, &value2);
     
-    if (SPerl_ARRAY_fetch(array, 0)->uv.long_value == 3) {
+    if (*(SPerl_long*)SPerl_ARRAY_fetch(array, 0) == 3) {
       printf("OK\n");
     }
     else {
       printf("Not OK %d\n", __LINE__);
     }
-    if (SPerl_ARRAY_fetch(array, 1)->uv.long_value == 5) {
+    if (*(SPerl_long*)SPerl_ARRAY_fetch(array, 1) == 5) {
       printf("OK\n");
     }
     else {
