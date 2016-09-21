@@ -171,7 +171,39 @@ int main(int argc, char *argv[])
     }
     else {
       printf("Not OK %d\n", __LINE__);
-    }  }
+    }
+  }
+
+  // Array - fetch
+  {
+    SPerl_ARRAY* array = SPerl_ARRAY_new(0);
+    SPerl_VALUE* value1 = SPerl_VALUE_new();
+    value1->uv.long_value = 3;
+    SPerl_VALUE* value2 = SPerl_VALUE_new();
+    value2->uv.long_value = 5;
+    
+    SPerl_ARRAY_push(array, value1);
+    SPerl_ARRAY_push(array, value2);
+    
+    if (SPerl_ARRAY_fetch(array, 0)->uv.long_value == 3) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK %d\n", __LINE__);
+    }
+    if (SPerl_ARRAY_fetch(array, 1)->uv.long_value == 5) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK %d\n", __LINE__);
+    }
+    if (SPerl_ARRAY_fetch(array, 2) == NULL) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK %d\n", __LINE__);
+    }
+  }
   
   return 1;
 }
