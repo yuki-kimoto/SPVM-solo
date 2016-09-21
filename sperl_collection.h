@@ -29,7 +29,7 @@ struct SPerl_array {
   SPerl_long length;
   SPerl_long capacity;
   SPerl_long block_size;
-  uintptr_t start;
+  SPerl_char* start;
   SPerl_VALUE** values;
 };
 
@@ -40,7 +40,7 @@ SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index);
 
 SPerl_ARRAY* SPerl_ARRAY_new_(SPerl_long block_size, SPerl_long capacity);
 void SPerl_ARRAY_push_(SPerl_ARRAY* array, SPerl_char* value);
-uintptr_t SPerl_ARRAY_fetch_(SPerl_ARRAY* array, SPerl_long index);
+SPerl_char* SPerl_ARRAY_fetch_(SPerl_ARRAY* array, SPerl_long index);
 
 // Hash entry
 struct SPerl_hash_entry;
