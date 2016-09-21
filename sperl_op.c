@@ -78,25 +78,25 @@ void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth) {
         printf(" boolean %d", op->uv.boolean_value);
         break;
       case SPerl_OPp_CONST_CHAR:
-        printf(" char %c", op->uv.cv);
+        printf(" char %c", op->uv.char_value);
         break;
       case SPerl_OPp_CONST_BYTE:
-        printf(" byte %d", op->uv.bv);
+        printf(" byte %d", op->uv.byte_value);
         break;
       case SPerl_OPp_CONST_SHORT:
-        printf(" short %d", op->uv.sv);
+        printf(" short %d", op->uv.short_value);
         break;
       case SPerl_OPp_CONST_INT:
-        printf(" int %d", op->uv.iv);
+        printf(" int %d", op->uv.int_value);
         break;
       case SPerl_OPp_CONST_LONG:
-        printf(" long %ld", op->uv.lv);
+        printf(" long %ld", op->uv.long_value);
         break;
       case SPerl_OPp_CONST_FLOAT:
-        printf(" float %f", op->uv.fv);
+        printf(" float %f", op->uv.float_value);
         break;
       case SPerl_OPp_CONST_DOUBLE:
-        printf(" double %f", op->uv.dv);
+        printf(" double %f", op->uv.double_value);
         break;
       case SPerl_OPp_CONST_STRING:
         printf(" string \"%s\"", op->uv.string_value);
