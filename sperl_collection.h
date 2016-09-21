@@ -28,7 +28,7 @@ struct SPerl_array {
   SPerl_VALUE** values;
 };
 
-SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long length);
+SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long capacity);
 void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value);
 SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index);
 

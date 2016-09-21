@@ -4,20 +4,21 @@
 
 #include "sperl_collection.h"
 
-SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long length) {
+SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long capacity) {
   
   SPerl_ARRAY* array = (SPerl_ARRAY*)malloc(sizeof(SPerl_ARRAY));
-  array->length = length;
-  if (length > 32) {
-    array->capacity = length;
+  array->length = 0;
+  
+  if (capacity == 0) {
+    array->capacity = 128;
   }
   else {
-    array->capacity = 32;
+    array->capacity = capacity;
   }
   
-  SPerl_long values_byte_size = sizeof(SPerl_VALUE*) * array->capacity;
-  SPerl_VALUE** values = (SPerl_VALUE**)malloc(values_byte_size);
-  memset(values, 0, values_byte_size);
+  SPerl_long total_byte = sizeof(SPerl_VALUE*) * array->capacity;
+  SPerl_VALUE** values = (SPerl_VALUE**)malloc(total_byte);
+  memset(values, 0, total_byte);
   
   array->values = values;
   

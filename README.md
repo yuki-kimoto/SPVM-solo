@@ -192,4 +192,3 @@ grammer
 # Development
 
   gcc -O -o tmp_sperl_t_collection t/sperl_t_collection.c sperl_collection.c && ./tmp_sperl_t_collection
-
