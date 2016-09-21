@@ -96,13 +96,13 @@ struct SPerl_op {
   SPerl_OP* op_sibparent;
   union {
     SPerl_boolean boolean_value;
-    SPerl_char char_value;
-    SPerl_byte byte_value;
-    SPerl_short short_value;
-    SPerl_long int_value;
-    SPerl_long long_value;
-    float float_value;
-    SPerl_double double_value;
+    SPerl_char cv;
+    SPerl_byte bv;
+    SPerl_short sv;
+    SPerl_long iv;
+    SPerl_long lv;
+    float fv;
+    SPerl_double dv;
     SPerl_char* string_value;
   } uv;
 };

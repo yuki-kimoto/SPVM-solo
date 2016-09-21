@@ -8,14 +8,14 @@ struct SPerl_value;
 typedef struct SPerl_value SPerl_VALUE;
 struct SPerl_value {
   union {
-    SPerl_char char_value;
-    SPerl_byte byte_value;
-    SPerl_short short_value;
-    SPerl_int int_value;
-    SPerl_long long_value;
-    SPerl_float float_value;
-    SPerl_double double_value;
-    void* ptr_value;
+    SPerl_char cv;
+    SPerl_byte bv;
+    SPerl_short sv;
+    SPerl_int iv;
+    SPerl_long lv;
+    SPerl_float fv;
+    SPerl_double dv;
+    void* pv;
   } uv;
 };
 
@@ -28,6 +28,8 @@ typedef struct SPerl_array SPerl_ARRAY;
 struct SPerl_array {
   SPerl_long length;
   SPerl_long capacity;
+  SPerl_long block_size;
+  uintptr_t start;
   SPerl_VALUE** values;
 };
 
@@ -35,6 +37,10 @@ struct SPerl_array {
 SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long capacity);
 void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value);
 SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index);
+
+SPerl_ARRAY* SPerl_ARRAY_new_(SPerl_long block_size, SPerl_long capacity);
+void SPerl_ARRAY_push_(SPerl_ARRAY* array, SPerl_char* value);
+uintptr_t SPerl_ARRAY_fetch_(SPerl_ARRAY* array, SPerl_long index);
 
 // Hash entry
 struct SPerl_hash_entry;

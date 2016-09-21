@@ -260,25 +260,25 @@ term
           printf("CONST(boolean %d) -> term\n", op->uv.boolean_value);
           break;
         case SPerl_OPp_CONST_CHAR:
-          printf("CONST(char %c) -> term\n", op->uv.char_value);
+          printf("CONST(char %c) -> term\n", op->uv.cv);
           break;
         case SPerl_OPp_CONST_BYTE:
-          printf("CONST(byte %d) -> term\n", op->uv.byte_value);
+          printf("CONST(byte %d) -> term\n", op->uv.bv);
           break;
         case SPerl_OPp_CONST_SHORT:
-          printf("CONST(short %d) -> term\n", op->uv.short_value);
+          printf("CONST(short %d) -> term\n", op->uv.sv);
           break;
         case SPerl_OPp_CONST_INT:
-          printf("CONST(int %d) -> term\n", op->uv.int_value);
+          printf("CONST(int %d) -> term\n", op->uv.iv);
           break;
         case SPerl_OPp_CONST_LONG:
-          printf("CONST(long %ld) -> term\n", op->uv.long_value);
+          printf("CONST(long %ld) -> term\n", op->uv.lv);
           break;
         case SPerl_OPp_CONST_FLOAT:
-          printf("CONST(float %f) -> term\n", op->uv.float_value);
+          printf("CONST(float %f) -> term\n", op->uv.fv);
           break;
         case SPerl_OPp_CONST_DOUBLE:
-          printf("CONST(double %f) -> term\n", op->uv.double_value);
+          printf("CONST(double %f) -> term\n", op->uv.dv);
           break;
         case SPerl_OPp_CONST_STRING:
           printf("CONST(string %s) -> term\n", op->uv.string_value);
