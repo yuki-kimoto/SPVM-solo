@@ -6,7 +6,7 @@ package Point3D {
 
   my $title : double = 4.1567;
 
-  use Point as pt;
+  use Point -pt;
 
   use Point;
 
@@ -173,4 +173,3 @@ package Point3D {
 
   my $char : char = 'a';
 }
-

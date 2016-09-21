@@ -523,10 +523,6 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
 
               return CONST;
             }
-            else if (memcmp(keyword, "as", str_len) == 0) {
-              parser->bufptr = bufptr;
-              return AS;
-            }
           }
           
           SPerl_OP* op = SPerl_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);

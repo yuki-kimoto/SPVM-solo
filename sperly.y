@@ -15,7 +15,7 @@
 %token <ival> '+' '-'
 %token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP
-%token <ival> LAST NEXT AS
+%token <ival> LAST NEXT
 %token <opval> WORD VAR CONST
 
 %type <opval> grammar statements statement declvar if else block
@@ -159,12 +159,12 @@ statement
       $$ = SPerl_newOP(SPerl_OP_RETURN, $2, NULL);
       printf("RETURN term ; -> statement\n");
     }
-  | USE pkgname';'
+  | USE pkgname ';'
     {
       $$ = SPerl_newOP(SPerl_OP_USE, $2, NULL);
       printf("USE pkgname; -> statement\n");
     }
-  | USE pkgname AS WORD';'
+  | USE pkgname '-' WORD';'
     {
       $$ = SPerl_newOP(SPerl_OP_USE, $2, $4);
       printf("USE pkgname AS WORD; -> statement\n");
