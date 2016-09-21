@@ -86,6 +86,12 @@ int main(int argc, char *argv[])
     else {
       printf("Not OK\n");
     }
+    if (array->length == 1) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK %d\n", __LINE__);
+    }
     
     // push long value next
     SPerl_VALUE* value2 = SPerl_VALUE_new();
@@ -96,6 +102,12 @@ int main(int argc, char *argv[])
     }
     else {
       printf("Not OK\n");
+    }
+    if (array->length == 2) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK %d\n", __LINE__);
     }
     
     // push pointer value
@@ -108,7 +120,58 @@ int main(int argc, char *argv[])
     else {
       printf("Not OK %d\n", __LINE__);
     }
-    
   }
+
+  // Array - push capacity resize
+  {
+    SPerl_ARRAY* array = SPerl_ARRAY_new(2);
+    
+    SPerl_VALUE* value1 = SPerl_VALUE_new();
+    value1->uv.long_value = 1;
+    SPerl_VALUE* value2 = SPerl_VALUE_new();
+    value2->uv.long_value = 2;
+    SPerl_ARRAY_push(array, value1);
+    SPerl_ARRAY_push(array, value2);
+    if (array->capacity == 2) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK\n", __LINE__);
+    }
+    
+    SPerl_VALUE* value3 = SPerl_VALUE_new();
+    value3->uv.long_value = 3;
+    SPerl_ARRAY_push(array, value3);
+    if (array->capacity == 4) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK %d\n", __LINE__);
+    }
+    if (array->length == 3) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK %d\n", __LINE__);
+    }
+    if (array->values[0]->uv.long_value == 1) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK %d\n", __LINE__);
+    }
+    if (array->values[1]->uv.long_value == 2) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK %d\n", __LINE__);
+    }
+    if (array->values[2]->uv.long_value == 3) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK %d\n", __LINE__);
+    }  }
+  
   return 1;
 }
