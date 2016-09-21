@@ -25,11 +25,10 @@ SPerl_ARRAY* SPerl_ARRAY_new_(SPerl_long block_size, SPerl_long capacity) {
   }
   
   SPerl_long total_byte = block_size * capacity;
-  SPerl_char* start = malloc(total_byte);
+  void* start = malloc(total_byte);
   memset(start, 0, total_byte);
   
   array->block_size = block_size;
-  array->start = start;
   
   return array;
 }
@@ -38,25 +37,25 @@ void SPerl_ARRAY_push_(SPerl_ARRAY* array, SPerl_char* value) {
   SPerl_long length = array->length;
   SPerl_long capacity = array->capacity;
   SPerl_long block_size = array->block_size;
-  SPerl_char* start = array->start;
+  uintptr_t start = array->start;
   
   if (length >= capacity) {
     SPerl_long new_capacity = capacity * 2;
-    array->start = realloc(array->start, new_capacity);
-    memset(start + (capacity * block_size), 0, (new_capacity - capacity) * block_size);
+    array->start = (uintptr_t)realloc((void*)array->start, new_capacity);
+    memset((void*)(start + (capacity * block_size)), 0, (new_capacity - capacity) * block_size);
     array->capacity = new_capacity;
   }
   
-  memcpy(start + (length * block_size), value, block_size);
+  memcpy((void*)(start + (length * block_size)), value, block_size);
   array->length++;
 }
 
-SPerl_char* SPerl_ARRAY_fetch_(SPerl_ARRAY* array, SPerl_long index) {
+uintptr_t SPerl_ARRAY_fetch_(SPerl_ARRAY* array, SPerl_long index) {
   if (array == NULL || index < 0 || index >= array->length) {
     return 0;
   }
   else {
-    return array->start + (index * array->block_size);
+    return array->start + (array->length * array->block_size);
   }
 }
 
