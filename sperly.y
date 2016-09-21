@@ -14,7 +14,7 @@
 
 %token <ival> '+' '-'
 %token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <ival> RELOP EXTEND
+%token <ival> RELOP
 %token <ival> LAST NEXT AS
 %token <opval> WORD VAR CONST
 
@@ -78,19 +78,6 @@ package
     {
       $$ = SPerl_newOP(SPerl_OP_PACKAGE, $2, $3);
       printf("PACKAGE pkgname block -> package\n");
-    }
-  | PACKAGE pkgname EXTEND pkgname block
-    {
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_PACKAGE, $2, $5);
-      SPerl_op_sibling_splice(op, $5, 0, $4);
-      
-      $$ = op;
-      printf("PACKAGE pkgname EXTEND pkbname block -> package\n");
-    }
-  | PACKAGE pkgname ';'
-    {
-      $$ = SPerl_newOP(SPerl_OP_PACKAGE, $2, NULL);
-      printf("PACKAGE pkgname ';' -> package\n");
     }
 
 statements
