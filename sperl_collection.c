@@ -65,6 +65,8 @@ SPerl_HASH* SPerl_HASH_new(SPerl_long capacity) {
   }
 
   SPerl_HASH* hash = (SPerl_HASH*)malloc(sizeof(SPerl_HASH) * capacity);
+  memset(hash, 0, sizeof(SPerl_HASH));
+
   hash->count = 0;
   hash->capacity = capacity;
   

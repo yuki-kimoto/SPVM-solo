@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
     SPerl_HASH* hash = SPerl_HASH_new(10);
     // capacity
     OK(hash->capacity == 10);
+    OK(hash->count == 0);
   }
   
   // Array - new
