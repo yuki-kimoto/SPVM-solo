@@ -19,7 +19,14 @@ int main(int argc, char *argv[])
     OK(hash->capacity == 10);
     OK(hash->count == 0);
   }
-  
+
+  // Hash - capacity default
+  {
+    SPerl_HASH* hash = SPerl_HASH_new(0);
+    // capacity
+    OK(hash->capacity == 101);
+  }
+    
   // Array - new
   {
     SPerl_ARRAY* array = SPerl_ARRAY_new(10);
