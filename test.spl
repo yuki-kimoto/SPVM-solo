@@ -58,8 +58,8 @@ package Point3D {
   1 && 2;
   1 & 3;
 
-  my $title : int = sub : int () { };
-  my $title : int = sub : const int ($p : int) { };
+  my $title : int = sub () : int { };
+  my $title : int = sub ($p : int) : const int { };
 
   $title += 1;
 
@@ -125,13 +125,13 @@ package Point3D {
   sum(1, 3, 5);
 
   # subroutine
-  sub sum : int () {
+  sub sum () : int {
     2;
     4;
   }
-  sub sum : const int ($foo : const int, $bar : const int) { }
+  sub sum ($foo : const int, $bar : const int) : const int { }
 
-  sub sum : int ($foo : int, $bar : float) {
+  sub sum ($foo : int, $bar : float) : int {
     if (3) {
     
     }
@@ -169,7 +169,7 @@ package Point3D {
     return 1;
   }
 
-  sub last : int ($foo : int) { }
+  sub last ($foo : int) : int { }
 
   my $char : char = 'a';
 }

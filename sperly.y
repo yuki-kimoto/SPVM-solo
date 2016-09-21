@@ -92,19 +92,19 @@ statements
     }
 
 statement
-  : SUB subname ':' desctype '(' optsubargs ')' block
+  : SUB subname '(' optsubargs ')' ':' desctype block
     {
-      SPerl_OP* optsubargs_op = $6;
+      SPerl_OP* optsubargs_op = $4;
       if (!optsubargs_op) {
         optsubargs_op = SPerl_newOP(SPerl_OP_NULL, NULL, NULL);
       }
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_SUB, $2, $4);
-      SPerl_op_sibling_splice(op, $4, 0, optsubargs_op);
-      SPerl_op_sibling_splice(op, optsubargs_op, 0, $8);
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_SUB, $2, optsubargs_op);
+      SPerl_op_sibling_splice(op, optsubargs_op, 0, $7);
+      SPerl_op_sibling_splice(op, $7, 0, $8);
       
       $$ = op;
       
-      printf("SUB subname : desctype ( optsubargs ) block -> statement\n");
+      printf("SUB subname ( optsubargs ) : desctype block -> statement\n");
     }
   | FOR '(' term ';' term ';' term ')' block
     {
@@ -425,17 +425,17 @@ term
       $$ = $1;
       printf("declvar -> term\n");
     }
-  | SUB ':' desctype '(' optsubargs ')' block
+  | SUB '(' optsubargs ')' ':' desctype block
     {
-      SPerl_OP* op_optsubargs = $5;
+      SPerl_OP* op_optsubargs = $3;
       if (!op_optsubargs) {
         op_optsubargs = SPerl_newOP(SPerl_OP_NULL, NULL, NULL);
       }
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_ANONSUB, $3, op_optsubargs);
-      SPerl_op_sibling_splice(op, op_optsubargs, 0, $7);
+      SPerl_OP* op = SPerl_newOP(SPerl_OP_ANONSUB, op_optsubargs, $6);
+      SPerl_op_sibling_splice(op, $6, 0, $7);
       $$ = op;
       
-      printf("SUB : desctype ( optsubargs ) block -> term\n");
+      printf("SUB ( optsubargs ) block : desctype -> term\n");
     }
 
 block 
