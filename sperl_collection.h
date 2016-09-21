@@ -3,10 +3,10 @@
 
 #include "sperl_type.h"
 
+// Value
 struct SPerl_value;
 typedef struct SPerl_value SPerl_VALUE;
 struct SPerl_value {
-  SPerl_char type;
   union {
     SPerl_char char_value;
     SPerl_byte byte_value;
@@ -19,6 +19,9 @@ struct SPerl_value {
   } uv;
 };
 
+// Value function
+SPerl_VALUE* SPerl_VALUE_new();
+
 // Array
 struct SPerl_array;
 typedef struct SPerl_array SPerl_ARRAY;
@@ -28,6 +31,7 @@ struct SPerl_array {
   SPerl_VALUE** values;
 };
 
+// Array function
 SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long capacity);
 void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value);
 SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index);
@@ -50,6 +54,7 @@ struct SPerl_hash {
   SPerl_HASH_ENTRY** entries;
 };
 
+// Hash function
 SPerl_HASH* SPerl_HASH_new(SPerl_long capacity);
 SPerl_long SPerl_hash_func(SPerl_char* str, SPerl_long len);
 SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, SPerl_VALUE* value);

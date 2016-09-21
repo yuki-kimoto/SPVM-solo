@@ -4,6 +4,14 @@
 
 #include "sperl_collection.h"
 
+SPerl_VALUE* SPerl_VALUE_new() {
+  SPerl_VALUE* value = malloc(sizeof(SPerl_VALUE));
+  
+  memset(value, 0, sizeof(SPerl_VALUE));
+  
+  return value;
+}
+
 SPerl_ARRAY* SPerl_ARRAY_new(SPerl_long capacity) {
   
   SPerl_ARRAY* array = (SPerl_ARRAY*)malloc(sizeof(SPerl_ARRAY));
