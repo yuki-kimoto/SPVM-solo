@@ -188,3 +188,8 @@ grammer
 - **sperly.y** - Parser generator
 - **sperl_op.c** - Create OP tree
 - **test.spl** - Test script
+
+# Development
+
+  gcc -O -o tmp_sperl_t_collection t/sperl_t_collection.c sperl_collection.c && ./tmp_sperl_t_collection
+

@@ -3,3 +3,4 @@ sperl
 *.tab.h
 core.*
 *.output
+tmp_*
