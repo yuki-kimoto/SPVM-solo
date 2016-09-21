@@ -76,12 +76,24 @@ int main(int argc, char *argv[])
   {
     SPerl_ARRAY* array = SPerl_ARRAY_new(0);
     
-    SPerl_VALUE* value = SPerl_VALUE_new();
-    value->uv.long_value = 10;
+    SPerl_VALUE* value1 = SPerl_VALUE_new();
+    value1->uv.long_value = 10;
     
-    SPerl_ARRAY_push(array, value);
+    SPerl_ARRAY_push(array, value1);
     
     if (array->values[0]->uv.long_value == 10) {
+      printf("OK\n");
+    }
+    else {
+      printf("Not OK\n");
+    }
+
+    SPerl_VALUE* value2 = SPerl_VALUE_new();
+    value2->uv.long_value = 15;
+    
+    SPerl_ARRAY_push(array, value2);
+    
+    if (array->values[1]->uv.long_value == 15) {
       printf("OK\n");
     }
     else {

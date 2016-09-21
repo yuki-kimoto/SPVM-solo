@@ -37,16 +37,15 @@ void SPerl_ARRAY_push(SPerl_ARRAY* array, SPerl_VALUE* value) {
   SPerl_long length = array->length;
   SPerl_long capacity = array->capacity;
   
-  length++;
-  if (length > capacity) {
-    SPerl_long capacity_old = capacity;
-    capacity = capacity * 2;
-    array->values = realloc(array->values, capacity);
-    memset(array->values + capacity_old, 0, capacity - capacity_old);
-    array->capacity = capacity;
+  if (length >= capacity) {
+    SPerl_long new_capacity = capacity * 2;
+    array->values = realloc(array->values, new_capacity);
+    memset(array->values + capacity, 0, new_capacity - capacity);
+    array->capacity = new_capacity;
   }
   
-  array->values[length - 1] = value;
+  array->values[length] = value;
+  array->length++;
 }
 
 SPerl_VALUE* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index) {
