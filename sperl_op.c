@@ -248,3 +248,15 @@ SPerl_OP* SPerl_newOP_flag(SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPe
 
   return (SPerl_OP *)op;
 }
+
+SPerl_OP* SPerl_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
+
+  if (!op_optsubargs) {
+    op_optsubargs = SPerl_newOP(SPerl_OP_NULL, NULL, NULL);
+  }
+  SPerl_OP* op = SPerl_newOP(SPerl_OP_SUB, op_subname, op_optsubargs);
+  SPerl_op_sibling_splice(op, op_optsubargs, 0, op_desctype);
+  SPerl_op_sibling_splice(op, op_desctype, 0, op_block);
+  
+  return op;
+}

@@ -2,6 +2,7 @@
 #define SPERL_OP_H
 
 #include "sperl_type.h"
+#include "sperl_parser.h"
 
 /* Operation code */
 enum SPerl_OP_CODE {
@@ -113,6 +114,8 @@ SPerl_OP* SPerl_newOP(SPerl_char type, SPerl_OP *first, SPerl_OP *last);
 SPerl_OP* SPerl_newOP_flag(SPerl_char type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
 SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_long del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_op_append_elem(SPerl_OP* first, SPerl_OP* last);
+
+SPerl_OP* SPerl_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block);
 
 void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth);
 

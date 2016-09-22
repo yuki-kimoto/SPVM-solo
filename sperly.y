@@ -8,6 +8,7 @@
   #include <stdlib.h>
   #include <string.h>
   
+  #include "sperl_type.h"
   #include "sperl_parser.h"
   #include "sperl_op.h"
 %}
@@ -94,15 +95,7 @@ statements
 statement
   : SUB subname '(' optsubargs ')' ':' desctype block
     {
-      SPerl_OP* optsubargs_op = $4;
-      if (!optsubargs_op) {
-        optsubargs_op = SPerl_newOP(SPerl_OP_NULL, NULL, NULL);
-      }
-      SPerl_OP* op = SPerl_newOP(SPerl_OP_SUB, $2, optsubargs_op);
-      SPerl_op_sibling_splice(op, optsubargs_op, 0, $7);
-      SPerl_op_sibling_splice(op, $7, 0, $8);
-      
-      $$ = op;
+      $$ = SPerl_newOP_SUB(parser, $2, $4, $7, $8);
       
       printf("SUB subname ( optsubargs ) : desctype block -> statement\n");
     }
