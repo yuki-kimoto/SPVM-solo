@@ -204,6 +204,9 @@ SPerl_OP* SPerl_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_O
   SPerl_op_sibling_splice(op, op_desctype, 0, op_block);
   
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new();
+  method_info->name = op_subname->uv.string_value;
+  SPerl_ARRAY_push(parser->method_infos, method_info);
+  
   
   return op;
 }

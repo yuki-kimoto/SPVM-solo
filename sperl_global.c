@@ -1,5 +1,6 @@
 #include "sperl_type.h"
 
+/* sperl_op.h */
 SPerl_char* const SPerl_op_name[] = {
   "null",
   "const",

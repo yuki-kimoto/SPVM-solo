@@ -17,13 +17,13 @@ package Point3D {
   sub last ($foo : int) : int { }
 
   # subroutine
-  sub sum () : int {
+  sub sum1 () : int {
     2;
     4;
   }
-  sub sum ($foo : const int, $bar : const int) : const int { }
+  sub sum2 ($foo : const int, $bar : const int) : const int { }
 
-  sub sum ($foo : int, $bar : float) : int {
+  sub sum3 ($foo : int, $bar : float) : int {
     if (3) {
     
     }
