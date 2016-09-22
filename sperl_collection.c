@@ -181,35 +181,24 @@ void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, vo
 }
 
 void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length) {
-  if (hash == NULL) {
+  if (!hash) {
     return 0;
   }
   SPerl_long hash_value = SPerl_hash_func(key, length);
   SPerl_long index = hash_value % hash->capacity;
   
-  SPerl_HASH_ENTRY* entry = hash->entries[index];
-  if (entry->key) {
-    if (strncmp(key, entry->key, length) == 0) {
-      return entry->value;
-    }
-    else {
-      SPerl_HASH_ENTRY* next_entry = entry->next;
-      while (1) {
-        if (next_entry) {
-          if (strncmp(key, next_entry->key, length) == 0) {
-            return next_entry->value;
-          }
-          else {
-            next_entry = next_entry->next;
-          }
-        }
-        else {
-          return NULL;
-        }
+  SPerl_HASH_ENTRY* next_entry = hash->entries[index];
+  while (1) {
+    if (next_entry) {
+      if (strncmp(key, next_entry->key, length) == 0) {
+        return next_entry->value;
+      }
+      else {
+        next_entry = next_entry->next;
       }
     }
-  }
-  else {
-    return NULL;
+    else {
+      return NULL;
+    }
   }
 }
