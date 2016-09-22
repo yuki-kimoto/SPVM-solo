@@ -1,7 +1,6 @@
 #ifndef SPERL_OP_H
 #define SPERL_OP_H
 
-#include "sperl.h"
 #include "sperl_type.h"
 
 /* Operation code */
@@ -116,6 +115,7 @@ SPerl_OP* SPerl_newOP(SPerl_char type, SPerl_OP *first, SPerl_OP *last);
 SPerl_OP* SPerl_newOP_flag(SPerl_char type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
 SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_long del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_op_append_elem(SPerl_OP* first, SPerl_OP* last);
+
 
 void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth);
 

@@ -1,11 +1,9 @@
-#include "sperl.h"
-
 #include <malloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sperl_type.h"
 
+#include "sperl_type.h"
 #include "sperl_op.h"
 #include "sperl_class.h"
 
