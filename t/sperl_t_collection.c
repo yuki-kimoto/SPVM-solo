@@ -75,9 +75,23 @@ int main(int argc, char *argv[])
     OK(hash->count == 1);
     
     SPerl_long value3 = 7;
-    SPerl_long return_value3 = *(SPerl_long*)SPerl_HASH_insert_norehash(hash, "key3", 4, &value3);
+    SPerl_HASH_insert_norehash(hash, "key3", 4, &value3);
     
     OK(*(SPerl_long*)hash->entries[0]->next->next->value == 7);
+    OK(hash->count == 1);
+
+    SPerl_long value4 = 11;
+    SPerl_long return_value4 = *(SPerl_long*)SPerl_HASH_insert_norehash(hash, "key2", 4, &value4);
+    
+    OK(*(SPerl_long*)hash->entries[0]->next->value == 11);
+    OK(return_value4 == 5);
+    OK(hash->count == 1);
+
+    SPerl_long value5 = 13;
+    SPerl_long return_value5 = *(SPerl_long*)SPerl_HASH_insert_norehash(hash, "key3", 4, &value5);
+    
+    OK(*(SPerl_long*)hash->entries[0]->next->next->value == 13);
+    OK(return_value5 == 7);
     OK(hash->count == 1);
   }
   
