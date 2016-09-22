@@ -3,7 +3,7 @@ package Point {
     
   }
   
-  sub get2 () : int {
+  sub get2 () : static const long {
     
   }
 }
@@ -17,7 +17,7 @@ package Point3D {
   sub last ($foo : int) : int { }
 
   # subroutine
-  sub sum1 () : int {
+  sub sum1 () : double {
     2;
     4;
   }

@@ -205,6 +205,28 @@ SPerl_OP* SPerl_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_O
   
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new();
   method_info->name = op_subname->uv.string_value;
+  
+  if (op_optsubargs->op_type == SPerl_OP_NULL) {
+    method_info->argument_count = 0;
+  }
+  else if (op_optsubargs->op_type == SPerl_OP_SUBARG) {
+    method_info->argument_count = 1;
+  }
+  else if (op_optsubargs->op_type == SPerl_OP_LIST) {
+    method_info->argument_count = 2;
+  }
+  
+  // type, descripters
+  if (op_desctype->op_type == SPerl_OP_LIST) {
+    method_info->return_type = op_desctype->op_first->uv.string_value;
+  }
+  // type
+  else if (op_desctype->op_type == SPerl_OP_CONST) {
+    method_info->return_type = op_desctype->uv.string_value;
+  }
+  
+  method_info->op_block = op_block;
+  
   SPerl_ARRAY_push(parser->method_infos, method_info);
   
   

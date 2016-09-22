@@ -31,6 +31,7 @@ struct SPerl_method_info {
   SPerl_char* return_type;
   SPerl_ARGUMENT_INFO* argument_infos;
   SPerl_long argument_count;
+  SPerl_OP* op_block;
 };
 
 SPerl_METHOD_INFO* SPerl_METHOD_INFO_new();
