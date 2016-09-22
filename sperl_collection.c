@@ -95,8 +95,8 @@ void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, SPerl_char* key, SPerl_long l
 
   SPerl_long hash_value = SPerl_hash_func(key, length);
   SPerl_long index = hash_value % hash->capacity;
-
-  SPerl_HASH_ENTRY** next_entry_ptr = &hash->entries[index];
+  
+  SPerl_HASH_ENTRY** next_entry_ptr = hash->entries + index;
   SPerl_HASH_ENTRY* next_entry = hash->entries[index];
   
   SPerl_long countup;
