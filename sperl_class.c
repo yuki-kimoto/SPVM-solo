@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "sperl_type.h"
 #include "sperl_class.h"
 
