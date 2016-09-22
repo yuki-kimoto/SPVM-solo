@@ -25,13 +25,15 @@ struct SPerl_local_variable {
 };
 
 // Method information
-struct SPerl_METHOD_INFO {
+struct SPerl_method_info {
   SPerl_char* name;
   SPerl_short desc_flag;
   SPerl_char* return_type;
   SPerl_ARGUMENT_INFO* argument_infos;
   SPerl_long argument_count;
 };
+
+SPerl_METHOD_INFO* SPerl_METHOD_INFO_new();
 
 // Constant pool tag
 enum SPerl_constant_tag {
