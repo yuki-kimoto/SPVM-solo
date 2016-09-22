@@ -7,8 +7,6 @@
 #include "sperl_class.h"
 #include "sperl_collection.h"
 
-
-
 int main(int argc, char *argv[])
 {
   if (argc < 2) {
@@ -27,7 +25,7 @@ int main(int argc, char *argv[])
   }
   
   /* initialize parser */
-  SPerl_yy_parser* parser = malloc(sizeof(SPerl_yy_parser));
+  SPerl_yy_parser* parser = SPerl_new_parser();
 
   /* Read source file */
   size_t linestr_buf_len;

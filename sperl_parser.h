@@ -40,6 +40,8 @@ union SPerl_yystype_
 
 void SPerl_yyerror(SPerl_yy_parser* parser, const SPerl_char* s);
 
+SPerl_yy_parser* SPerl_new_parser();
+
 /* Expected token */
 enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_NORMAL,
