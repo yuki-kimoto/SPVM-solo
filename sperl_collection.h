@@ -4,8 +4,6 @@
 #include "sperl_type.h"
 
 // Array
-struct SPerl_array;
-typedef struct SPerl_array SPerl_ARRAY;
 struct SPerl_array {
   SPerl_long length;
   SPerl_long capacity;
@@ -18,8 +16,6 @@ void SPerl_ARRAY_push(SPerl_ARRAY* array, void* value);
 void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index);
 
 // Hash entry
-struct SPerl_hash_entry;
-typedef struct SPerl_hash_entry SPerl_HASH_ENTRY;
 struct SPerl_hash_entry {
   SPerl_char* key;
   void* value;
@@ -27,8 +23,6 @@ struct SPerl_hash_entry {
 };
 
 // Hash table
-struct SPerl_hash;
-typedef struct SPerl_hash SPerl_HASH;
 struct SPerl_hash {
   SPerl_long count;
   SPerl_long capacity;

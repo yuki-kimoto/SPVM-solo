@@ -12,4 +12,41 @@ typedef int64_t SPerl_long;
 typedef float SPerl_float;
 typedef double SPerl_double;
 
+/* sperl_op.h */
+struct SPerl_op;
+typedef struct SPerl_op SPerl_OP;
+
+/* sperl_class.h */
+struct SPerl_field_info;
+typedef struct SPerl_field_info SPerl_FIELD_INFO;
+
+struct SPerl_argument_info;
+typedef struct SPerl_argument_info SPerl_ARGUMENT_INFO;
+
+struct SPerl_local_variable;
+typedef struct SPerl_local_variable SPerl_LOCAL_VARIABLE;
+
+struct SPerl_method_info;
+typedef struct SPerl_method_info SPerl_METHOD_INFO;
+
+struct SPerl_class_info;
+typedef struct SPerl_class_info SPerl_CLASS_INFO;
+
+/* sperl_collection.h */
+struct SPerl_array;
+typedef struct SPerl_array SPerl_ARRAY;
+
+struct SPerl_hash_entry;
+typedef struct SPerl_hash_entry SPerl_HASH_ENTRY;
+
+struct SPerl_hash;
+typedef struct SPerl_hash SPerl_HASH;
+
+/* sperl_parser.h */
+struct SPerl_yy_parser_;
+typedef struct SPerl_yy_parser_ SPerl_yy_parser;
+
+union SPerl_yystype_;
+typedef union SPerl_yystype_ SPerl_yystype;
+
 #endif

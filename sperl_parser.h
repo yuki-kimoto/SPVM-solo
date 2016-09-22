@@ -1,11 +1,12 @@
 #ifndef SPERL_PARSER_H
 #define SPERL_PARSER_H
 
+#include "sperl_type.h"
 #include "sperl_op.h"
 #include "sperl_collection.h"
 
 /* Parser information */
-typedef struct {
+struct SPerl_yy_parser_{
   /* Source data */
   SPerl_char* linestr;
 
@@ -29,14 +30,13 @@ typedef struct {
   
   /* method information hash */
   SPerl_HASH* method_info_h;
-  
-} SPerl_yy_parser;
+};
 
-typedef union
+union SPerl_yystype_
 {
   SPerl_OP* opval;
   SPerl_long ival;
-} SPerl_yystype;
+};
 
 void SPerl_yyerror(SPerl_yy_parser* parser, const SPerl_char* s);
 
