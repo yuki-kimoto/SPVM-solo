@@ -91,58 +91,14 @@ SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl_char* key, SPerl_long length, void*
   return new_entry;
 }
 
-void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value) {
-  if (hash == NULL) {
-    return 0;
-  }
-  
-  // Rehash
-  if (hash->count > hash->capacity * 0.75) {
-    SPerl_long capacity = hash->capacity;
-    SPerl_long new_capacity = (capacity * 2) + 1;
-    
-    SPerl_HASH_ENTRY** entries = hash->entries;
-    
-    // Create new hash
-    SPerl_HASH* new_hash = SPerl_HASH_new(new_capacity);
-    
-    // Rehash
-    SPerl_long i;
-    for (i = 0; i < hash->count; i++) {
-      SPerl_HASH_ENTRY* entry = entries[i];
-      
-      SPerl_char* key = entry->key;
-      if (key) {
-        SPerl_long length = strlen(key);
-        void* value = SPerl_HASH_search(hash, key, length);
-        SPerl_HASH_insert(new_hash, key, length, value);
-      }
-      
-      SPerl_HASH_ENTRY* next_entry = entry->next;
-      while (next_entry) {
-        SPerl_char* key = next_entry->key;
-        if (key) {
-          SPerl_long length = strlen(key);
-          void* value = SPerl_HASH_search(hash, key, length);
-          SPerl_HASH_insert(new_hash, key, length, value);
-        }
-        
-        next_entry = next_entry->next;
-      }
-    }
-    
-    hash->count = new_hash->count;
-    hash->capacity = new_hash->capacity;
-    free(hash->entries);
-    hash->entries = new_hash->entries;
-  }
-  
+void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value) {
+
   SPerl_long hash_value = SPerl_hash_func(key, length);
   SPerl_long index = hash_value % hash->capacity;
 
   SPerl_HASH_ENTRY** next_entry_ptr = &hash->entries[index];
   SPerl_HASH_ENTRY* next_entry = hash->entries[index];
-
+  
   SPerl_long countup;
   if (!next_entry) {
     countup = 1;
@@ -166,9 +122,62 @@ void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, vo
       if (countup) {
         hash->count++;
       }
-      break;
+      return NULL;
     }
   }
+}
+
+void SPerl_HASH_rehash(SPerl_HASH* hash, SPerl_long new_capacity) {
+
+  SPerl_HASH_ENTRY** entries = hash->entries;
+  
+  // Create new hash
+  SPerl_HASH* new_hash = SPerl_HASH_new(new_capacity);
+  
+  // Rehash
+  SPerl_long i;
+  for (i = 0; i < hash->count; i++) {
+    SPerl_HASH_ENTRY* entry = entries[i];
+    
+    SPerl_char* key = entry->key;
+    if (key) {
+      SPerl_long length = strlen(key);
+      void* value = SPerl_HASH_search(hash, key, length);
+      SPerl_HASH_insert_norehash(new_hash, key, length, value);
+    }
+    
+    SPerl_HASH_ENTRY* next_entry = entry->next;
+    while (next_entry) {
+      SPerl_char* key = next_entry->key;
+      if (key) {
+        SPerl_long length = strlen(key);
+        void* value = SPerl_HASH_search(hash, key, length);
+        SPerl_HASH_insert_norehash(new_hash, key, length, value);
+      }
+      
+      next_entry = next_entry->next;
+    }
+  }
+  
+  hash->count = new_hash->count;
+  hash->capacity = new_hash->capacity;
+  free(hash->entries);
+  hash->entries = new_hash->entries;
+}
+
+void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value) {
+  if (hash == NULL) {
+    return 0;
+  }
+  
+  // Rehash
+  if (hash->count > hash->capacity * 0.75) {
+    SPerl_long new_capacity = (hash->capacity * 2) + 1;
+
+    SPerl_HASH_rehash(hash, new_capacity);
+  }
+  
+  SPerl_HASH_insert_norehash(hash, key, length, value);
 }
 
 void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length) {

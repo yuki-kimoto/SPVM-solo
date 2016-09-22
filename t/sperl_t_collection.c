@@ -29,13 +29,15 @@ int main(int argc, char *argv[])
   
   // Hash - insert
   {
-    SPerl_HASH* hash = SPerl_HASH_new(0);
+    SPerl_HASH* hash = SPerl_HASH_new(30);
     SPerl_long value1 = 3;
-    SPerl_HASH_insert(hash, "key1", 4, &value1);
+    SPerl_HASH_insert_norehash(hash, "key1", 4, &value1);
+    SPerl_long hash_value = SPerl_hash_func("key1", 4);
+    SPerl_long index = hash_value % 30;
     
-    
+    OK(*(SPerl_long*)hash->entries[index]->value == 3);
   }
-    
+  
   // Array - new
   {
     SPerl_ARRAY* array = SPerl_ARRAY_new(10);
