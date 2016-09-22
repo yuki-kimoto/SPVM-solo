@@ -30,33 +30,55 @@ int main(int argc, char *argv[])
   // Hash - insert
   {
     SPerl_HASH* hash = SPerl_HASH_new(101);
-    {
-      SPerl_long value1 = 3;
-      SPerl_HASH_insert_norehash(hash, "key1", 4, &value1);
-      SPerl_long hash_value1 = SPerl_hash_func("key1", 4);
-      SPerl_long index1 = hash_value1 % 101;
-      
-      OK(*(SPerl_long*)hash->entries[index1]->value == 3);
-      OK(hash->count == 1);
-      SPerl_long i;
+    SPerl_long value1 = 3;
+    SPerl_HASH_insert_norehash(hash, "key1", 4, &value1);
+    SPerl_long hash_value1 = SPerl_hash_func("key1", 4);
+    SPerl_long index1 = hash_value1 % 101;
+    
+    OK(*(SPerl_long*)hash->entries[index1]->value == 3);
+    OK(hash->count == 1);
+    SPerl_long i;
 
-      SPerl_long value2 = 5;
-      SPerl_HASH_insert_norehash(hash, "key2", 4, &value2);
-      SPerl_long hash_value2 = SPerl_hash_func("key2", 4);
-      SPerl_long index2 = hash_value2 % 101;
-      
-      OK(*(SPerl_long*)hash->entries[index2]->value == 5);
-      OK(hash->count == 2);
+    SPerl_long value2 = 5;
+    SPerl_HASH_insert_norehash(hash, "key2", 4, &value2);
+    SPerl_long hash_value2 = SPerl_hash_func("key2", 4);
+    SPerl_long index2 = hash_value2 % 101;
+    
+    OK(*(SPerl_long*)hash->entries[index2]->value == 5);
+    OK(hash->count == 2);
+    
+    // Replace
+    SPerl_long value3 = 7;
+    SPerl_long return_value3 = *(SPerl_long*)SPerl_HASH_insert_norehash(hash, "key1", 4, &value3);
+    SPerl_long hash_value3 = SPerl_hash_func("key1", 4);
+    SPerl_long index3 = hash_value3 % 101;
+    
+    OK(*(SPerl_long*)hash->entries[index3]->value == 7);
+    OK(return_value3 == 3);
+    OK(hash->count == 2);
+  }
+  
+  // Hash - insert link
+  {
+    SPerl_HASH* hash = SPerl_HASH_new(1);
+    SPerl_long value1 = 3;
+    SPerl_HASH_insert_norehash(hash, "key1", 4, &value1);
+    
+    OK(*(SPerl_long*)hash->entries[0]->value == 3);
+    OK(hash->count == 1);
+    SPerl_long i;
 
-      SPerl_long value3 = 7;
-      SPerl_long return_value3 = *(SPerl_long*)SPerl_HASH_insert_norehash(hash, "key1", 4, &value3);
-      SPerl_long hash_value3 = SPerl_hash_func("key1", 4);
-      SPerl_long index3 = hash_value3 % 101;
-      
-      OK(*(SPerl_long*)hash->entries[index3]->value == 7);
-      OK(return_value3 == 3);
-      OK(hash->count == 2);
-    }
+    SPerl_long value2 = 5;
+    SPerl_HASH_insert_norehash(hash, "key2", 4, &value2);
+    
+    OK(*(SPerl_long*)hash->entries[0]->next->value == 5);
+    OK(hash->count == 1);
+    
+    SPerl_long value3 = 7;
+    SPerl_long return_value3 = *(SPerl_long*)SPerl_HASH_insert_norehash(hash, "key3", 4, &value3);
+    
+    OK(*(SPerl_long*)hash->entries[0]->next->next->value == 7);
+    OK(hash->count == 1);
   }
   
   // Array - new
