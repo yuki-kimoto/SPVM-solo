@@ -26,6 +26,15 @@ int main(int argc, char *argv[])
     // capacity
     OK(hash->capacity == 101);
   }
+  
+  // Hash - insert
+  {
+    SPerl_HASH* hash = SPerl_HASH_new(0);
+    SPerl_long value1 = 3;
+    SPerl_HASH_insert(hash, "key1", 4, &value1);
+    
+    
+  }
     
   // Array - new
   {

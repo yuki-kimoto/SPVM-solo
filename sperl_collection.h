@@ -36,9 +36,10 @@ struct SPerl_hash {
 };
 
 // Hash function
+SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new();
 SPerl_HASH* SPerl_HASH_new(SPerl_long capacity);
 SPerl_long SPerl_hash_func(SPerl_char* str, SPerl_long len);
-SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value);
+void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value);
 void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length);
 
 #endif

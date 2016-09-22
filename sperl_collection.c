@@ -78,7 +78,20 @@ SPerl_HASH* SPerl_HASH_new(SPerl_long capacity) {
   return hash;
 }
 
-SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value) {
+SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl_char* key, SPerl_long length, void* value) {
+  
+  SPerl_HASH_ENTRY* new_entry = (SPerl_HASH_ENTRY*)malloc(sizeof(SPerl_HASH_ENTRY));
+  memset(new_entry, 0, sizeof(SPerl_HASH_ENTRY));
+  
+  new_entry->key = (SPerl_char*)malloc(sizeof(SPerl_char) * (length + 1));
+  strncpy(new_entry->key, key, length);
+  new_entry->key[length] = '\0';
+  new_entry->value = value;
+  
+  return new_entry;
+}
+
+void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value) {
   if (hash == NULL) {
     return 0;
   }
@@ -126,33 +139,36 @@ SPerl_boolean SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long le
   
   SPerl_long hash_value = SPerl_hash_func(key, length);
   SPerl_long index = hash_value % hash->capacity;
+
+  SPerl_HASH_ENTRY** next_entry_ptr = &hash->entries[index];
+  SPerl_HASH_ENTRY* next_entry = hash->entries[index];
+
+  SPerl_long countup;
+  if (!next_entry) {
+    countup = 1;
+  }
   
-  SPerl_HASH_ENTRY* entry = hash->entries[index];
-  if (entry->key) {
-    SPerl_HASH_ENTRY* next_entry = entry->next;
-    while (1) {
-      if (next_entry) {
-        next_entry = next_entry->next;
+  while (1) {
+    if (next_entry) {
+      if (strncmp(next_entry->key, key, length) == 0) {
+        void* old_value = next_entry->value;
+        next_entry->value = value;
+        return old_value;
       }
       else {
-        SPerl_HASH_ENTRY* new_entry = (SPerl_HASH_ENTRY*)malloc(sizeof(SPerl_HASH_ENTRY));
-        new_entry->key = (SPerl_char*)malloc(sizeof(SPerl_char) * (length + 1));
-        strncpy(new_entry->key, key, length);
-        new_entry->value = value;
-        
-        break;
+        next_entry_ptr = &next_entry->next;
+        next_entry = next_entry->next;
       }
     }
+    else {
+      SPerl_HASH_ENTRY* new_entry = SPerl_HASH_ENTRY_new(key, length, value);
+      *next_entry_ptr = new_entry;
+      if (countup) {
+        hash->count++;
+      }
+      break;
+    }
   }
-  else {
-    entry->value = value;
-    entry->key = (SPerl_char*)malloc(sizeof(SPerl_char) * (length + 1));
-    strncpy(entry->key, key, length);
-    entry->key[length] = '\0';
-    hash->count++;
-  }
-  
-  return 1;
 }
 
 void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length) {
