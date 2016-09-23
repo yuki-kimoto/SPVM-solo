@@ -8,25 +8,6 @@
 #define SPerl_DESC_CONST 1
 #define SPerl_DESC_STATIC 2
 
-// Field information
-struct SPerl_field_info {
-  SPerl_char* name;
-  SPerl_short desc_flag;
-  SPerl_char* type;
-};
-
-// Argument information
-struct SPerl_argument_info {
-  SPerl_short desc_flag;
-  SPerl_char* type;
-};
-
-// Local variable
-struct SPerl_local_variable {
-  SPerl_char* name;
-  SPerl_long offset;
-};
-
 // Method information
 struct SPerl_method_info {
   SPerl_char* name;
@@ -38,18 +19,6 @@ struct SPerl_method_info {
 };
 
 SPerl_METHOD_INFO* SPerl_METHOD_INFO_new();
-
-// Constant pool tag
-enum SPerl_constant_tag {
-  SPerl_COSNTANT_BOOLEAN,
-  SPerl_CONSTANT_CHAR,
-  SPerl_CONSTANT_BYTE,
-  SPerl_CONSTANT_SHORT,
-  SPerl_CONSTANT_INT,
-  SPerl_CONSTANT_LONG,
-  SPerl_CONSTANT_FLOAT,
-  SPerl_CONSTANT_STRING
-};
 
 // Class information
 struct SPerl_class_info {
