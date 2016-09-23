@@ -192,3 +192,25 @@ grammer
 # Development
 
   gcc -O -o tmp_sperl_t_collection t/sperl_t_collection.c sperl_collection.c && ./tmp_sperl_t_collection
+
+# SPVM specification
+
+## Core type
+
+core type is char, byte, short, int, long, float, double.
+
+  char    unsinged integer        1byte
+  byte    singed integer          1byte
+  short   singed integer          2byte
+  int     signed integer          4byte
+  long    singed integer          8byte
+  float   floating-point number   4byte
+  double  floating-point number   8byte
+
+## Class name
+
+class name first character must be upper case. if class name contain "::", each part first character must be upper case.
+
+  Foo
+  Foo::Bar
+
