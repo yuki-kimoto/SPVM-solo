@@ -30,7 +30,7 @@ struct SPerl_local_variable {
 // Method information
 struct SPerl_method_info {
   SPerl_char* name;
-  SPerl_short desc_flag;
+  SPerl_char desc_flag;
   SPerl_char* return_type;
   SPerl_ARGUMENT_INFO* argument_infos;
   SPerl_long argument_count;
@@ -64,5 +64,7 @@ struct SPerl_class_info {
 };
 
 extern SPerl_CLASS_INFO* class_infos;
+
+SPerl_char SPerl_get_desc_flag(SPerl_char* desc_str);
 
 #endif

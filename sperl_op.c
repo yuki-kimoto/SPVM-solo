@@ -152,12 +152,24 @@ SPerl_OP* SPerl_op_append_elem(SPerl_OP *first, SPerl_OP *last)
   if (!last)
     return first;
   
-  if (first->op_type != SPerl_OP_LIST) {
-    return SPerl_newOP(SPerl_OP_LIST, first, last);
+  if (first->op_type == SPerl_OP_LIST) {
+    SPerl_op_sibling_splice(first, first->op_last, 0, last);
+    return first;
   }
+  else {
+    SPerl_OP* op_list = SPerl_newOP_LIST();
+    SPerl_op_sibling_splice(op_list, op_list->op_first, 0, first);
+    SPerl_op_sibling_splice(op_list, first, 0, last);
+    
+    return op_list;
+  }
+}
+
+SPerl_OP* SPerl_newOP_LIST() {
   
-  SPerl_op_sibling_splice(first, first->op_last, 0, last);
-  return first;
+  SPerl_OP* op_pushmark = SPerl_newOP(SPerl_OP_PUSHMARK, NULL, NULL);
+  
+  return SPerl_newOP(SPerl_OP_LIST, op_pushmark, NULL);
 }
 
 SPerl_OP* SPerl_newOP(SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
@@ -219,6 +231,13 @@ SPerl_OP* SPerl_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_O
   // type, descripters
   if (op_desctype->op_type == SPerl_OP_LIST) {
     method_info->return_type = op_desctype->op_first->uv.string_value;
+    SPerl_OP* op_descripters = op_desctype->op_last;
+    if (op_descripters->op_type == SPerl_OP_LIST) {
+      
+    }
+    else if (op_descripters->op_type == SPerl_OP_CONST) {
+      method_info->desc_flag |= SPerl_get_desc_flag(op_descripters->uv.string_value);
+    }
   }
   // type
   else if (op_desctype->op_type == SPerl_OP_CONST) {

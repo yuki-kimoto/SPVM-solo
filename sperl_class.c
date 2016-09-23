@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 
 #include "sperl_type.h"
 #include "sperl_class.h"
@@ -33,5 +34,17 @@ void SPerl_dump_method_infos(SPerl_ARRAY* method_infos) {
     else {
       printf("None\n");
     }
+  }
+}
+
+SPerl_char SPerl_get_desc_flag(SPerl_char* desc_str) {
+  if (strcmp(desc_str, "const") == 0) {
+    return SPerl_DESC_CONST;
+  }
+  else if (strcmp(desc_str, "static") == 0) {
+    return SPerl_DESC_STATIC;
+  }
+  else {
+    return 0;
   }
 }

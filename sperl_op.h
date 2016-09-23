@@ -116,6 +116,7 @@ SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_long 
 SPerl_OP* SPerl_op_append_elem(SPerl_OP* first, SPerl_OP* last);
 
 SPerl_OP* SPerl_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block);
+SPerl_OP* SPerl_newOP_LIST();
 
 void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth);
 
