@@ -4,7 +4,7 @@
 
 #include "sperl_parser.h"
 #include "sperl_op.h"
-#include "sperl_class_info.h"
+#include "sperl_method_info.h"
 
 int main(int argc, char *argv[])
 {
@@ -42,10 +42,10 @@ int main(int argc, char *argv[])
   
   if (parse_success == 0) {
     printf("\n[Abstract Syntax Tree]\n");
-    SPerl_dump_ast(parser->main_root, 0);
+    SPerl_OP_dump_ast(parser->main_root, 0);
     
     printf("\n[Method infomation]\n");
-    SPerl_dump_method_infos(parser->method_infos);
+    SPerl_METHOD_INFO_dump_method_infos(parser->method_infos);
   }
   
   free(parser->linestr);

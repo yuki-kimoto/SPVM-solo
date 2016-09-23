@@ -5,9 +5,10 @@
 
 #include "sperl_type.h"
 #include "sperl_op.h"
-#include "sperl_class_info.h"
+#include "sperl_method_info.h"
+#include "sperl_descripter.h"
 
-void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth) {
+void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_long depth) {
   
   SPerl_long i;
   for (i = 0; i < depth; i++) {
@@ -53,12 +54,12 @@ void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth) {
   
   if (op->first) {
     depth++;
-    SPerl_dump_ast(op->first, depth);
+    SPerl_OP_dump_ast(op->first, depth);
     depth--;
   }
   
   if (op->moresib) {
-    SPerl_dump_ast(SPerl_OP_sibling(op), depth);
+    SPerl_OP_dump_ast(SPerl_OP_sibling(op), depth);
   }
 }
 
@@ -236,7 +237,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
       
     }
     else if (op_descripters->type == SPerl_OP_CONST) {
-      method_info->desc_flag |= SPerl_get_desc_flag(op_descripters->uv.string_value);
+      method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
     }
   }
   // type

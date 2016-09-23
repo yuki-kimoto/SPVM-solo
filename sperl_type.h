@@ -16,19 +16,19 @@ typedef double SPerl_double;
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 
-/* sperl_class_info.h */
-struct SPerl_field_info;
-typedef struct SPerl_field_info SPerl_FIELD_INFO;
-
+/* sperl_argument_info.h */
 struct SPerl_argument_info;
 typedef struct SPerl_argument_info SPerl_ARGUMENT_INFO;
 
-struct SPerl_local_variable;
-typedef struct SPerl_local_variable SPerl_LOCAL_VARIABLE;
+/* sperl_field_info.h */
+struct SPerl_field_info;
+typedef struct SPerl_field_info SPerl_FIELD_INFO;
 
+/* sperl_method_info.h */
 struct SPerl_method_info;
 typedef struct SPerl_method_info SPerl_METHOD_INFO;
 
+/* sperl_class_info.h */
 struct SPerl_class_info;
 typedef struct SPerl_class_info SPerl_CLASS_INFO;
 

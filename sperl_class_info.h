@@ -5,20 +5,6 @@
 
 #define SPerl_CLASS_MAX 1024
 
-#define SPerl_DESC_CONST 1
-#define SPerl_DESC_STATIC 2
-
-// Method information
-struct SPerl_method_info {
-  SPerl_char* name;
-  SPerl_char desc_flag;
-  SPerl_char* return_type;
-  SPerl_ARGUMENT_INFO* argument_infos;
-  SPerl_long argument_count;
-  SPerl_OP* op_block;
-};
-
-SPerl_METHOD_INFO* SPerl_METHOD_INFO_new();
 
 // Class information
 struct SPerl_class_info {
@@ -34,6 +20,5 @@ struct SPerl_class_info {
 
 extern SPerl_CLASS_INFO* class_infos;
 
-SPerl_char SPerl_get_desc_flag(SPerl_char* desc_str);
 
 #endif
