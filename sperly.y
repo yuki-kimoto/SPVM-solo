@@ -52,11 +52,11 @@ grammar
     {
       SPerl_OP* op = SPerl_newOP(SPerl_OP_GRAMMER, NULL, NULL);
       
-      if ($1->op_type == SPerl_OP_LIST) {
-        SPerl_op_sibling_splice(op, 0, 0, $1->op_first);
+      if ($1->type == SPerl_OP_LIST) {
+        SPerl_op_sibling_splice(op, 0, 0, $1->first);
       }
       else {
-        op->op_first = $1;
+        op->first = $1;
       }
       parser->main_root = op;
       $$ = op;
@@ -248,7 +248,7 @@ term
       $$ = $1;
       
       SPerl_OP* op = $1;
-      switch(op->op_private) {
+      switch(op->private) {
         case SPerl_OPp_CONST_BOOLEAN:
           printf("CONST(boolean %d) -> term\n", op->uv.boolean_value);
           break;
@@ -441,11 +441,11 @@ block
     {
       SPerl_OP* op = SPerl_newOP(SPerl_OP_BLOCK, NULL, NULL);
       
-      if ($2->op_type == SPerl_OP_LIST) {
-        SPerl_op_sibling_splice(op, 0, 0, $2->op_first);
+      if ($2->type == SPerl_OP_LIST) {
+        SPerl_op_sibling_splice(op, 0, 0, $2->first);
       }
       else {
-        op->op_first = $2;
+        op->first = $2;
       }
 
       $$ = op;

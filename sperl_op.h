@@ -85,13 +85,13 @@ double	64bit
 
 /* Binary operation */
 struct SPerl_op {
-  SPerl_char op_type;
-  SPerl_char op_flags;
-  SPerl_char op_private;
-  SPerl_boolean op_moresib;
-  SPerl_OP* op_first;
-  SPerl_OP* op_last;
-  SPerl_OP* op_sibparent;
+  SPerl_char type;
+  SPerl_char flags;
+  SPerl_char private;
+  SPerl_boolean moresib;
+  SPerl_OP* first;
+  SPerl_OP* last;
+  SPerl_OP* sibparent;
   union {
     SPerl_boolean boolean_value;
     SPerl_char char_value;
