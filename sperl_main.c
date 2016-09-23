@@ -5,7 +5,6 @@
 #include "sperl_parser.h"
 #include "sperl_op.h"
 #include "sperl_class.h"
-#include "sperl_collection.h"
 
 int main(int argc, char *argv[])
 {

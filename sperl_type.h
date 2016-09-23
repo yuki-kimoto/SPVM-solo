@@ -32,10 +32,11 @@ typedef struct SPerl_method_info SPerl_METHOD_INFO;
 struct SPerl_class_info;
 typedef struct SPerl_class_info SPerl_CLASS_INFO;
 
-/* sperl_collection.h */
+/* sperl_array.h */
 struct SPerl_array;
 typedef struct SPerl_array SPerl_ARRAY;
 
+/* sperl_hash.h */
 struct SPerl_hash_entry;
 typedef struct SPerl_hash_entry SPerl_HASH_ENTRY;
 

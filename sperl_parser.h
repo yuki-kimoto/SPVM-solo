@@ -3,7 +3,8 @@
 
 #include "sperl_type.h"
 #include "sperl_op.h"
-#include "sperl_collection.h"
+#include "sperl_array.h"
+#include "sperl_hash.h"
 
 /* Parser information */
 struct SPerl_yy_parser_{
