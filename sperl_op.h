@@ -105,18 +105,18 @@ struct SPerl_op {
   } uv;
 };
 
-SPerl_OP* SPerl_OpSIBLING(SPerl_OP* o);
-void SPerl_OpMORESIB_set(SPerl_OP* o, SPerl_OP* sib);
-void SPerl_OpLASTSIB_set(SPerl_OP* o, SPerl_OP* parent);
-void SPerl_OpMAYBESIB_set(SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
+SPerl_OP* SPerl_OP_sibling(SPerl_OP* o);
+void SPerl_OP_moresib_set(SPerl_OP* o, SPerl_OP* sib);
+void SPerl_OP_lastsib_set(SPerl_OP* o, SPerl_OP* parent);
+void SPerl_OP_maybesib_set(SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
 
-SPerl_OP* SPerl_newOP(SPerl_char type, SPerl_OP *first, SPerl_OP *last);
-SPerl_OP* SPerl_newOP_flag(SPerl_char type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
-SPerl_OP* SPerl_op_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_long del_count, SPerl_OP *insert);
-SPerl_OP* SPerl_op_append_elem(SPerl_OP* first, SPerl_OP* last);
+SPerl_OP* SPerl_OP_newOP(SPerl_char type, SPerl_OP *first, SPerl_OP *last);
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_char type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
+SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_long del_count, SPerl_OP *insert);
+SPerl_OP* SPerl_OP_append_elem(SPerl_OP* first, SPerl_OP* last);
 
-SPerl_OP* SPerl_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block);
-SPerl_OP* SPerl_newOP_LIST();
+SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block);
+SPerl_OP* SPerl_OP_newOP_LIST();
 
 void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth);
 

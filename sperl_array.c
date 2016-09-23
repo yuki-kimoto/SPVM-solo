@@ -48,3 +48,4 @@ void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_long index) {
     return array->values[index];
   }
 }
+
