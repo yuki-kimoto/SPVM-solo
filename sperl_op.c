@@ -226,7 +226,12 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     method_info->argument_count = 1;
   }
   else if (op_optsubargs->type == SPerl_OP_LIST) {
-    method_info->argument_count = 2;
+    SPerl_long argument_count = 0;
+    SPerl_OP* op_next = op_optsubargs->first;
+    while (op_next = SPerl_OP_sibling(op_next)) {
+      argument_count++;
+    }
+    method_info->argument_count = argument_count;
   }
   
   // type, descripters
@@ -234,7 +239,10 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     method_info->return_type = op_desctype->first->uv.string_value;
     SPerl_OP* op_descripters = op_desctype->last;
     if (op_descripters->type == SPerl_OP_LIST) {
-      
+      SPerl_OP* op_next = op_descripters->first;
+      while (op_next = SPerl_OP_sibling(op_next)) {
+        method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
+      }
     }
     else if (op_descripters->type == SPerl_OP_CONST) {
       method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);

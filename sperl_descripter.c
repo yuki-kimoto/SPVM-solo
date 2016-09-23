@@ -12,3 +12,14 @@ SPerl_char SPerl_DESCRIPTER_get_flag(SPerl_char* desc_str) {
     return 0;
   }
 }
+
+void SPerl_DESCRIPTER_to_str(SPerl_char* str, SPerl_char flags) {
+  
+  sprintf(
+    (char *)str,
+    "%s %s",
+    (flags & SPerl_DESCRIPTER_CONST) ? "const" : "",
+    (flags & SPerl_DESCRIPTER_STATIC) ? "static" : ""
+  );
+}
+
