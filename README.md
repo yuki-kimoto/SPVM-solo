@@ -175,7 +175,10 @@ grammer
 
 # Development
 
-  gcc -O -o tmp_sperl_t_collection t/sperl_t_collection.c sperl_collection.c && ./tmp_sperl_t_collection
+## Test
+
+  gcc -O -o tmp_sperl_t_array t/sperl_t_array.c sperl_array.c && ./tmp_sperl_t_array
+  gcc -O -o tmp_sperl_t_hash t/sperl_t_hash.c sperl_hash.c && ./tmp_sperl_t_hash
 
 # SPVM specification
 
