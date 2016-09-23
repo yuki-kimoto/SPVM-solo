@@ -35,7 +35,7 @@ package Main {
 
 ## Run
 
-    bison -p SPerl_yy -d sperly.y && gcc -O -o sperl sperly.tab.c sperl_main.c sperl_toke.c sperl_op.c sperl_array.c sperl_hash.c sperl_parser.c sperl_class_info.c sperl_global.c sperl_method_info.c sperl_argument_info.c sperl_field_info.c sperl_descripter.c && ./sperl test.spl
+    bison -p SPerl_yy -d sperly.y && gcc -O -o sperl *.c && ./sperl test.spl
 
 Now I only print the result of **token reduction** and **abstract syntax tree**.
 
