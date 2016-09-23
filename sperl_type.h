@@ -16,7 +16,7 @@ typedef double SPerl_double;
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 
-/* sperl_class.h */
+/* sperl_class_info.h */
 struct SPerl_field_info;
 typedef struct SPerl_field_info SPerl_FIELD_INFO;
 

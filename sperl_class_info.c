@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "sperl_type.h"
-#include "sperl_class.h"
+#include "sperl_class_info.h"
 #include "sperl_array.h"
 
 SPerl_METHOD_INFO* SPerl_METHOD_INFO_new() {

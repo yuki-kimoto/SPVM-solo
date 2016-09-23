@@ -5,7 +5,7 @@
 
 #include "sperl_type.h"
 #include "sperl_op.h"
-#include "sperl_class.h"
+#include "sperl_class_info.h"
 
 void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth) {
   
