@@ -8,9 +8,6 @@
 #define SPerl_DESC_CONST 1
 #define SPerl_DESC_STATIC 2
 
-コアタイプだけ小文字で始まる。
-クラス名は、大文字で始めなければならない。
-
 // Field information
 struct SPerl_field_info {
   SPerl_char* name;
