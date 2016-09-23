@@ -41,12 +41,13 @@ int main(int argc, char *argv[])
   printf("[Token reduction]\n");
   SPerl_long parse_success = SPerl_yyparse(parser);
   
-  printf("\n[Abstract Syntax Tree]\n");
-  SPerl_dump_ast(parser->main_root, 0);
-  
-  printf("\n[Method infomation]\n");
-  SPerl_dump_method_infos(parser->method_infos);
-  
+  if (parse_success == 0) {
+    printf("\n[Abstract Syntax Tree]\n");
+    SPerl_dump_ast(parser->main_root, 0);
+    
+    printf("\n[Method infomation]\n");
+    SPerl_dump_method_infos(parser->method_infos);
+  }
   
   free(parser->linestr);
   free(parser);

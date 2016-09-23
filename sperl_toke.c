@@ -26,11 +26,15 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
       /* Skip space character */
       case ' ':
       case '\t':
-      case '\n':
-      case '\r':
       case (SPerl_char)EOF :
         bufptr++;
         parser->bufptr = bufptr;
+        continue;
+
+      case '\n':
+        bufptr++;
+        parser->bufptr = bufptr;
+        parser->line++;
         continue;
       
       /* Addition */

@@ -30,6 +30,8 @@ struct SPerl_yy_parser_{
   
   /* method information hash */
   SPerl_HASH* method_info_h;
+  
+  SPerl_long line;
 };
 
 union SPerl_yystype_
