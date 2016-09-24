@@ -387,7 +387,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         else if (isdigit(c)) {
           SPerl_char* cur_token_ptr = bufptr;
           
-          SPerl_long point_count = 0;
+          SPerl_int point_count = 0;
           
           bufptr++;
           
@@ -426,7 +426,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           }
           // Convert to integer
           else {
-            SPerl_long num = atoi(num_str);
+            SPerl_int num = atoi(num_str);
             SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_INT);
             op->uv.int_value = num;
 

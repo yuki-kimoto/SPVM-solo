@@ -13,7 +13,7 @@ SPerl_METHOD_INFO* SPerl_METHOD_INFO_new() {
 }
 
 void SPerl_METHOD_INFO_dump_method_infos(SPerl_ARRAY* method_infos) {
-  SPerl_long i;
+  SPerl_int i;
   
   if (!method_infos) {
     return;

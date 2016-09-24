@@ -15,7 +15,7 @@ struct SPerl_yy_parser_{
   SPerl_char* bufptr;
   
   /* Expect next */
-  SPerl_long expect;
+  SPerl_int expect;
   
   /* AST root */
   SPerl_OP* main_root;
@@ -32,13 +32,13 @@ struct SPerl_yy_parser_{
   /* method information hash */
   SPerl_HASH* method_info_h;
   
-  SPerl_long line;
+  SPerl_int line;
 };
 
 union SPerl_yystype_
 {
   SPerl_OP* opval;
-  SPerl_long ival;
+  SPerl_int ival;
 };
 
 void SPerl_yyerror(SPerl_yy_parser* parser, const SPerl_char* s);

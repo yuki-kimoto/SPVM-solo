@@ -12,18 +12,18 @@ struct SPerl_hash_entry {
 
 // Hash table
 struct SPerl_hash {
-  SPerl_long count;
-  SPerl_long capacity;
+  SPerl_int count;
+  SPerl_int capacity;
   SPerl_HASH_ENTRY** entries;
 };
 
 // Hash function
 SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new();
-SPerl_HASH* SPerl_HASH_new(SPerl_long capacity);
-SPerl_long SPerl_hash_func(SPerl_char* str, SPerl_long len);
-void SPerl_HASH_rehash(SPerl_HASH* hash_ptr, SPerl_long new_capacity);
-void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value);
-void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value);
-void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length);
+SPerl_HASH* SPerl_HASH_new(SPerl_int capacity);
+SPerl_int SPerl_hash_func(SPerl_char* str, SPerl_int len);
+void SPerl_HASH_rehash(SPerl_HASH* hash_ptr, SPerl_int new_capacity);
+void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, SPerl_char* key, SPerl_int length, void* value);
+void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_int length, void* value);
+void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_int length);
 
 #endif

@@ -11,7 +11,7 @@ struct SPerl_method_info {
   SPerl_char desc_flags;
   SPerl_char* return_type;
   SPerl_ARGUMENT_INFO* argument_info;
-  SPerl_long argument_count;
+  SPerl_int argument_count;
   SPerl_OP* op_block;
 };
 

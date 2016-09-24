@@ -97,8 +97,8 @@ struct SPerl_op {
     SPerl_char char_value;
     SPerl_byte byte_value;
     SPerl_short short_value;
-    SPerl_long int_value;
-    SPerl_long long_value;
+    SPerl_int int_value;
+    SPerl_int long_value;
     float float_value;
     SPerl_double double_value;
     SPerl_char* string_value;
@@ -112,12 +112,12 @@ void SPerl_OP_maybesib_set(SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
 
 SPerl_OP* SPerl_OP_newOP(SPerl_char type, SPerl_OP *first, SPerl_OP *last);
 SPerl_OP* SPerl_OP_newOP_flag(SPerl_char type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
-SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_long del_count, SPerl_OP *insert);
+SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_OP_append_elem(SPerl_OP* first, SPerl_OP* last);
 
 SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block);
 SPerl_OP* SPerl_OP_newOP_LIST();
 
-void SPerl_dump_ast(SPerl_OP* op, SPerl_long depth);
+void SPerl_dump_ast(SPerl_OP* op, SPerl_int depth);
 
 #endif

@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
   
   /* call SPerl_yyparse */
   printf("[Token reduction]\n");
-  SPerl_long parse_success = SPerl_yyparse(parser);
+  SPerl_int parse_success = SPerl_yyparse(parser);
   
   if (parse_success == 0) {
     printf("\n[Abstract Syntax Tree]\n");

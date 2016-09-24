@@ -4,16 +4,16 @@
 
 #include "sperl_hash.h"
 
-SPerl_long SPerl_hash_func(SPerl_char* str, SPerl_long len) {
+SPerl_int SPerl_hash_func(SPerl_char* str, SPerl_int len) {
   SPerl_char* str_tmp = str;
-  SPerl_long hash = 5381;
+  SPerl_int hash = 5381;
   while (len--) {
     hash = ((hash << 5) + hash) + *str_tmp++;
   }
   return hash;
 }
 
-SPerl_HASH* SPerl_HASH_new(SPerl_long capacity) {
+SPerl_HASH* SPerl_HASH_new(SPerl_int capacity) {
   
   if (capacity == 0) {
     capacity = 101;
@@ -25,7 +25,7 @@ SPerl_HASH* SPerl_HASH_new(SPerl_long capacity) {
   hash->count = 0;
   hash->capacity = capacity;
   
-  SPerl_long byte_size = sizeof(SPerl_HASH_ENTRY*) * hash->capacity;
+  SPerl_int byte_size = sizeof(SPerl_HASH_ENTRY*) * hash->capacity;
   SPerl_HASH_ENTRY** entries = (SPerl_HASH_ENTRY**)malloc(byte_size);
   memset(entries, 0, byte_size);
   hash->entries = entries;
@@ -33,7 +33,7 @@ SPerl_HASH* SPerl_HASH_new(SPerl_long capacity) {
   return hash;
 }
 
-SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl_char* key, SPerl_long length, void* value) {
+SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl_char* key, SPerl_int length, void* value) {
   
   SPerl_HASH_ENTRY* new_entry = (SPerl_HASH_ENTRY*)malloc(sizeof(SPerl_HASH_ENTRY));
   memset(new_entry, 0, sizeof(SPerl_HASH_ENTRY));
@@ -46,15 +46,15 @@ SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl_char* key, SPerl_long length, void*
   return new_entry;
 }
 
-void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value) {
+void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, SPerl_char* key, SPerl_int length, void* value) {
 
-  SPerl_long hash_value = SPerl_hash_func(key, length);
-  SPerl_long index = hash_value % hash->capacity;
+  SPerl_int hash_value = SPerl_hash_func(key, length);
+  SPerl_int index = hash_value % hash->capacity;
   
   SPerl_HASH_ENTRY** next_entry_ptr = hash->entries + index;
   SPerl_HASH_ENTRY* next_entry = hash->entries[index];
 
-  SPerl_long countup = 0;
+  SPerl_int countup = 0;
   if (!next_entry) {
     countup = 1;
   }
@@ -82,7 +82,7 @@ void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, SPerl_char* key, SPerl_long l
   }
 }
 
-void SPerl_HASH_rehash(SPerl_HASH* hash, SPerl_long new_capacity) {
+void SPerl_HASH_rehash(SPerl_HASH* hash, SPerl_int new_capacity) {
 
   SPerl_HASH_ENTRY** entries = hash->entries;
   
@@ -90,13 +90,13 @@ void SPerl_HASH_rehash(SPerl_HASH* hash, SPerl_long new_capacity) {
   SPerl_HASH* new_hash = SPerl_HASH_new(new_capacity);
   
   // Rehash
-  SPerl_long i;
+  SPerl_int i;
   for (i = 0; i < hash->count; i++) {
     SPerl_HASH_ENTRY* entry = entries[i];
     
     SPerl_char* key = entry->key;
     if (key) {
-      SPerl_long length = strlen(key);
+      SPerl_int length = strlen(key);
       void* value = SPerl_HASH_search(hash, key, length);
       SPerl_HASH_insert_norehash(new_hash, key, length, value);
     }
@@ -105,7 +105,7 @@ void SPerl_HASH_rehash(SPerl_HASH* hash, SPerl_long new_capacity) {
     while (next_entry) {
       SPerl_char* key = next_entry->key;
       if (key) {
-        SPerl_long length = strlen(key);
+        SPerl_int length = strlen(key);
         void* value = SPerl_HASH_search(hash, key, length);
         SPerl_HASH_insert_norehash(new_hash, key, length, value);
       }
@@ -120,14 +120,14 @@ void SPerl_HASH_rehash(SPerl_HASH* hash, SPerl_long new_capacity) {
   hash->entries = new_hash->entries;
 }
 
-void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, void* value) {
+void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_int length, void* value) {
   if (hash == NULL) {
     return 0;
   }
   
   // Rehash
   if (hash->count > hash->capacity * 0.75) {
-    SPerl_long new_capacity = (hash->capacity * 2) + 1;
+    SPerl_int new_capacity = (hash->capacity * 2) + 1;
 
     SPerl_HASH_rehash(hash, new_capacity);
   }
@@ -135,12 +135,12 @@ void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_long length, vo
   SPerl_HASH_insert_norehash(hash, key, length, value);
 }
 
-void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_long length) {
+void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_int length) {
   if (!hash) {
     return 0;
   }
-  SPerl_long hash_value = SPerl_hash_func(key, length);
-  SPerl_long index = hash_value % hash->capacity;
+  SPerl_int hash_value = SPerl_hash_func(key, length);
+  SPerl_int index = hash_value % hash->capacity;
   
   SPerl_HASH_ENTRY* next_entry = hash->entries[index];
   while (1) {

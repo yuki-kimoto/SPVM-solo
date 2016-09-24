@@ -43,15 +43,15 @@ int main(int argc, char *argv[])
     SPerl_ARRAY* array = SPerl_ARRAY_new(0);
     
     // push long value at first
-    SPerl_long value1 = 10;
+    SPerl_int value1 = 10;
     SPerl_ARRAY_push(array, &value1);
-    OK(*(SPerl_long*)array->values[0] == 10);
+    OK(*(SPerl_int*)array->values[0] == 10);
     OK(array->length == 1);
     
     // push long value next
-    SPerl_long value2 = 15;
+    SPerl_int value2 = 15;
     SPerl_ARRAY_push(array, &value2);
-    OK(*(SPerl_long*)array->values[1] == 15);
+    OK(*(SPerl_int*)array->values[1] == 15);
     OK(array->length == 2);
     
     // push pointer value
@@ -64,32 +64,32 @@ int main(int argc, char *argv[])
   {
     SPerl_ARRAY* array = SPerl_ARRAY_new(2);
     
-    SPerl_long value1 = 1;
-    SPerl_long value2 = 2;
+    SPerl_int value1 = 1;
+    SPerl_int value2 = 2;
     SPerl_ARRAY_push(array, &value1);
     SPerl_ARRAY_push(array, &value2);
     OK(array->capacity == 2);
     
-    SPerl_long value3 = 3;
+    SPerl_int value3 = 3;
     SPerl_ARRAY_push(array, &value3);
     OK(array->capacity == 4);
     OK(array->length == 3);
-    OK(*(SPerl_long*)array->values[0] == 1);
-    OK(*(SPerl_long*)array->values[1] == 2);
-    OK(*(SPerl_long*)array->values[2] == 3);
+    OK(*(SPerl_int*)array->values[0] == 1);
+    OK(*(SPerl_int*)array->values[1] == 2);
+    OK(*(SPerl_int*)array->values[2] == 3);
   }
 
   // Array - fetch
   {
     SPerl_ARRAY* array = SPerl_ARRAY_new(0);
-    SPerl_long value1 = 3;
-    SPerl_long value2 = 5;
+    SPerl_int value1 = 3;
+    SPerl_int value2 = 5;
     
     SPerl_ARRAY_push(array, &value1);
     SPerl_ARRAY_push(array, &value2);
     
-    OK(*(SPerl_long*)SPerl_ARRAY_fetch(array, 0) == 3);
-    OK(*(SPerl_long*)SPerl_ARRAY_fetch(array, 1) == 5);
+    OK(*(SPerl_int*)SPerl_ARRAY_fetch(array, 0) == 3);
+    OK(*(SPerl_int*)SPerl_ARRAY_fetch(array, 1) == 5);
     OK(SPerl_ARRAY_fetch(array, 2) == NULL);
   }
   

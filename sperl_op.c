@@ -40,7 +40,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   }
   // subargs is list of subarg
   else if (op_optsubargs->type == SPerl_OP_LIST) {
-    SPerl_long argument_count = 0;
+    SPerl_int argument_count = 0;
     SPerl_OP* op_next = op_optsubargs->first;
     while (op_next = SPerl_OP_sibling(op_next)) {
       argument_count++;
@@ -81,13 +81,13 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   return op;
 }
 
-void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_long depth) {
+void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_int depth) {
   
-  SPerl_long i;
+  SPerl_int i;
   for (i = 0; i < depth; i++) {
     printf(" ");
   }
-  SPerl_long type = op->type;
+  SPerl_int type = op->type;
   printf("%s", SPerl_op_name[type]);
   if (type == SPerl_OP_CONST) {
     switch(op->private) {
@@ -155,7 +155,7 @@ void SPerl_OP_maybesib_set(SPerl_OP* op, SPerl_OP* sib, SPerl_OP* parent) {
   op->sibparent = op->moresib ? sib : parent;
 }
 
-SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_long del_count, SPerl_OP* insert) {
+SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP* insert) {
   SPerl_OP *first;
   SPerl_OP *rest;
   SPerl_OP *last_del = NULL;
