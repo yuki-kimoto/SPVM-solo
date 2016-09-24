@@ -9,6 +9,26 @@
 #include "sperl_descripter.h"
 #include "sperl_argument_info.h"
 
+SPerl_char SPerl_OP_create_desc_flags(SPerl_OP* op_descripters) {
+  
+  SPerl_char desc_flags = 0;
+  
+  // descripters
+  // descripters is list of descripter
+  if (op_descripters->type == SPerl_OP_LIST) {
+    SPerl_OP* op_next = op_descripters->first;
+    while (op_next = SPerl_OP_sibling(op_next)) {
+      desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
+    }
+  }
+  // descripters is descripter
+  else if (op_descripters->type == SPerl_OP_CONST) {
+    desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
+  }
+  
+  return desc_flags;
+}
+
 SPerl_ARGUMENT_INFO* SPerl_OP_create_argument_info(SPerl_OP* op_subarg) {
   SPerl_ARGUMENT_INFO* argument_info = SPerl_ARGUMENT_INFO_new();
   
@@ -23,18 +43,7 @@ SPerl_ARGUMENT_INFO* SPerl_OP_create_argument_info(SPerl_OP* op_subarg) {
     SPerl_OP* op_descripters = op_desctype->first;
     argument_info->type = op_desctype->last->uv.string_value;
     
-    // descripters
-    // descripters is list of descripter
-    if (op_descripters->type == SPerl_OP_LIST) {
-      SPerl_OP* op_next = op_descripters->first;
-      while (op_next = SPerl_OP_sibling(op_next)) {
-        argument_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
-      }
-    }
-    // descripters is descripter
-    else if (op_descripters->type == SPerl_OP_CONST) {
-      argument_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
-    }
+    argument_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
   }
   // desctype is type
   else if (op_desctype->type == SPerl_OP_CONST) {
@@ -98,18 +107,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     SPerl_OP* op_descripters = op_desctype->first;
     method_info->return_type = op_desctype->last->uv.string_value;
     
-    // descripters
-    // descripters is list of descripter
-    if (op_descripters->type == SPerl_OP_LIST) {
-      SPerl_OP* op_next = op_descripters->first;
-      while (op_next = SPerl_OP_sibling(op_next)) {
-        method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
-      }
-    }
-    // descripters is descripter
-    else if (op_descripters->type == SPerl_OP_CONST) {
-      method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
-    }
+    method_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
   }
   // desctype is type
   else if (op_desctype->type == SPerl_OP_CONST) {
