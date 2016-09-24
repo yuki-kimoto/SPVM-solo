@@ -14,6 +14,7 @@ struct SPerl_class_info {
   SPerl_int field_count;
   SPerl_int method_base_pos;
   SPerl_int method_count;
+  SPerl_OP* op_block;
 };
 
 SPerl_CLASS_INFO* SPerl_CLASS_INFO_new();

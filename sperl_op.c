@@ -8,9 +8,16 @@
 #include "sperl_method_info.h"
 #include "sperl_descripter.h"
 #include "sperl_argument_info.h"
+#include "sperl_class_info.h"
 
 SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block) {
   SPerl_OP* op_package = SPerl_OP_newOP(SPerl_OP_PACKAGE, op_pkgname, op_block);
+  
+  SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new();
+  class_info->name = op_pkgname->uv.string_value;
+  class_info->op_block = op_block;
+  
+  SPerl_ARRAY_push(parser->class_infos, class_info);
   
   return op_package;
 }
