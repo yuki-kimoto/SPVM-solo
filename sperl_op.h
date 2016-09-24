@@ -120,4 +120,6 @@ SPerl_OP* SPerl_OP_newOP_LIST();
 
 void SPerl_dump_ast(SPerl_OP* op, SPerl_int depth);
 
+SPerl_ARGUMENT_INFO* SPerl_OP_create_argument_info(SPerl_OP* op_subarg);
+
 #endif
