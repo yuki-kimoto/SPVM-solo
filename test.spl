@@ -10,6 +10,15 @@ package Point {
   sub get2 () : static const long {
     
   }
+
+  sub get3 () : int {}
+  sub get4 ($foo : int) : int {}
+  sub get5 ($foo : const int) : int {}
+  sub get6 ($foo : static const int) : int {}
+
+  sub get7 ($foo : int, $bar : int) : int {}
+  sub get8 ($foo : const int, $bar : const int) : int {}
+  sub get9 ($foo : static const int, $bar : static const int) : int {}
 }
 
 package Point3D {
