@@ -10,7 +10,7 @@ struct SPerl_method_info {
   SPerl_char* name;
   SPerl_char desc_flags;
   SPerl_char* return_type;
-  SPerl_ARGUMENT_INFO* argument_infos;
+  SPerl_ARRAY* argument_infos;
   SPerl_int argument_count;
   SPerl_OP* op_block;
 };

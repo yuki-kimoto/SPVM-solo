@@ -10,7 +10,7 @@ SPerl_METHOD_INFO* SPerl_METHOD_INFO_new() {
   SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)malloc(sizeof(SPerl_METHOD_INFO));
   memset(method_info, 0, sizeof(SPerl_METHOD_INFO));
   
-  method_info->argument_infos = (SPerl_ARGUMENT_INFO*)SPerl_ARRAY_new(0);
+  method_info->argument_infos = SPerl_ARRAY_new(0);
   
   return method_info;
 }
@@ -28,11 +28,25 @@ void SPerl_METHOD_INFO_dump_method_infos(SPerl_ARRAY* method_infos) {
       SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
       SPerl_DESCRIPTER_to_str(desc_str, method_info->desc_flags);
       
-      warn("zzzzzzzzzzzzzzzzzzzzzzzzz %d", method_info->desc_flags);
-      
-      printf("[%d]\n", i);
+      printf("method_info[%d]\n", i);
       printf("  name => \"%s\"\n", method_info->name);
       printf("  argument_count => %d\n", method_info->argument_count);
+      
+      SPerl_int j;
+      printf("  argument_infos\n");
+      for (j = 0; j < method_info->argument_count; j++) {
+        SPerl_ARGUMENT_INFO* argument_info
+          = (SPerl_ARGUMENT_INFO*)SPerl_ARRAY_fetch(method_info->argument_infos, j);
+        printf("    argument_info[%d]\n", j);
+        printf("    type => \"%s\"\n", argument_info->type);
+        
+        SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
+        SPerl_DESCRIPTER_to_str(desc_str, argument_info->desc_flags);
+        printf("    desc_flags => \"%s\"\n", desc_str);
+        
+        free(desc_str);
+      }
+      
       printf("  desc_flags => \"%s\"\n", desc_str);
       printf("  treturn_type => \"%s\"\n", method_info->return_type);
       printf("  op_block => %x\n", method_info->op_block);

@@ -253,8 +253,7 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_int d
     exit(1);
 }
 
-SPerl_OP* SPerl_OP_append_elem(SPerl_OP *first, SPerl_OP *last)
-{
+SPerl_OP* SPerl_OP_append_elem(SPerl_OP *first, SPerl_OP *last) {
   if (!first)
     return last;
 
