@@ -5,6 +5,7 @@
 #include "sperl_method_info.h"
 #include "sperl_array.h"
 #include "sperl_argument_info.h"
+#include "sperl_class_info.h"
 
 SPerl_METHOD_INFO* SPerl_METHOD_INFO_new() {
   SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)malloc(sizeof(SPerl_METHOD_INFO));
@@ -50,6 +51,7 @@ void SPerl_METHOD_INFO_dump_method_infos(SPerl_ARRAY* method_infos) {
       printf("  desc_flags => \"%s\"\n", desc_str);
       printf("  treturn_type => \"%s\"\n", method_info->return_type);
       printf("  op_block => %x\n", method_info->op_block);
+      printf("  class_info->name => \"%s\"\n", method_info->class_info->name);
       
       free(desc_str);
     }
