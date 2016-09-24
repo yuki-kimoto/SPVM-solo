@@ -9,6 +9,12 @@
 #include "sperl_descripter.h"
 #include "sperl_argument_info.h"
 
+SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block) {
+  SPerl_OP* op_package = SPerl_OP_newOP(SPerl_OP_PACKAGE, op_pkgname, op_block);
+  
+  return op_package;
+}
+
 SPerl_char SPerl_OP_create_desc_flags(SPerl_OP* op_descripters) {
   
   if (!op_descripters) {

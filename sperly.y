@@ -71,7 +71,7 @@ packages
 package
   : PACKAGE pkgname block
     {
-      $$ = SPerl_OP_newOP(SPerl_OP_PACKAGE, $2, $3);
+      $$ = SPerl_OP_newOP_PACKAGE(parser, $2, $3);
       printf("PACKAGE pkgname block -> package\n");
     }
 

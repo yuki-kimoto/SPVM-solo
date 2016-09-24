@@ -117,6 +117,7 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_int d
 SPerl_OP* SPerl_OP_append_elem(SPerl_OP* first, SPerl_OP* last);
 
 SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block);
+SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block);
 SPerl_OP* SPerl_OP_newOP_LIST();
 
 void SPerl_dump_ast(SPerl_OP* op, SPerl_int depth);
