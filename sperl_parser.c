@@ -9,6 +9,7 @@ SPerl_yy_parser* SPerl_new_parser() {
   memset(parser, 0, sizeof(SPerl_yy_parser));
   
   parser->method_infos = SPerl_ARRAY_new(0);
+  parser->class_infos = SPerl_ARRAY_new(0);
   parser->line = 1;
   
   return parser;
