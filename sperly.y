@@ -477,7 +477,7 @@ desctype
     }
   | descripters type
     {
-      $$ = SPerl_OP_append_elem($2, $1);
+      $$ = SPerl_OP_append_elem($1, $2);
       printf("descripters type -> desctype\n");
     }
     

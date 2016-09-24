@@ -20,6 +20,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new();
   method_info->name = op_subname->uv.string_value;
   
+  // 
   if (op_optsubargs->type == SPerl_OP_NULL) {
     method_info->argument_count = 0;
   }
@@ -35,10 +36,10 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     method_info->argument_count = argument_count;
   }
   
-  // type, descripters
+  // descripters, type
   if (op_desctype->type == SPerl_OP_LIST) {
-    method_info->return_type = op_desctype->first->uv.string_value;
-    SPerl_OP* op_descripters = op_desctype->last;
+    SPerl_OP* op_descripters = op_desctype->first;
+    method_info->return_type = op_desctype->last->uv.string_value;
     if (op_descripters->type == SPerl_OP_LIST) {
       SPerl_OP* op_next = op_descripters->first;
       while (op_next = SPerl_OP_sibling(op_next)) {
