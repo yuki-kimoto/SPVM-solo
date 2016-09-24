@@ -10,4 +10,7 @@ struct SPerl_argument_info {
   SPerl_char* name;
 };
 
+SPerl_ARGUMENT_INFO* SPerl_ARGUMENT_INFO_new();
+
+
 #endif

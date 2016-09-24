@@ -7,9 +7,11 @@
 #include "sperl_op.h"
 #include "sperl_method_info.h"
 #include "sperl_descripter.h"
+#include "sperl_argument_info.h"
 
 SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
-
+  
+  // Create OP_SUB
   if (!op_optsubargs) {
     op_optsubargs = SPerl_OP_newOP(SPerl_OP_NULL, NULL, NULL);
   }
@@ -17,16 +19,26 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   SPerl_OP_sibling_splice(op, op_optsubargs, 0, op_desctype);
   SPerl_OP_sibling_splice(op, op_desctype, 0, op_block);
   
+  // Create method infomation
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new();
   method_info->name = op_subname->uv.string_value;
   
-  // 
+  // subargs
+  // subargs is NULL
   if (op_optsubargs->type == SPerl_OP_NULL) {
     method_info->argument_count = 0;
   }
+  // subargs is subarg
   else if (op_optsubargs->type == SPerl_OP_SUBARG) {
     method_info->argument_count = 1;
+    SPerl_ARGUMENT_INFO* argument_info = SPerl_ARGUMENT_INFO_new();
+    
+    // subarg
+    // subarg is VAR, desctype
+    argument_info->name = op_optsubargs->first->uv.string_value;
+    
   }
+  // subargs is list of subarg
   else if (op_optsubargs->type == SPerl_OP_LIST) {
     SPerl_long argument_count = 0;
     SPerl_OP* op_next = op_optsubargs->first;
@@ -36,29 +48,35 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     method_info->argument_count = argument_count;
   }
   
-  // descripters, type
+  // desctype
+  // desctype is descripters, type
   if (op_desctype->type == SPerl_OP_LIST) {
     SPerl_OP* op_descripters = op_desctype->first;
     method_info->return_type = op_desctype->last->uv.string_value;
+    
+    // descripters
+    // descripters is list of descripter
     if (op_descripters->type == SPerl_OP_LIST) {
       SPerl_OP* op_next = op_descripters->first;
       while (op_next = SPerl_OP_sibling(op_next)) {
         method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
       }
     }
+    // descripters is descripter
     else if (op_descripters->type == SPerl_OP_CONST) {
       method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
     }
   }
-  // type
+  // desctype is type
   else if (op_desctype->type == SPerl_OP_CONST) {
     method_info->return_type = op_desctype->uv.string_value;
   }
   
+  // Save block
   method_info->op_block = op_block;
   
+  // Add method information
   SPerl_ARRAY_push(parser->method_infos, method_info);
-  
   
   return op;
 }
