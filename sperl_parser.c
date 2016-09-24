@@ -20,6 +20,24 @@ SPerl_yy_parser* SPerl_new_parser() {
   return parser;
 }
 
+void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
+  SPerl_int i;
+  
+  if (!parser) {
+    return;
+  }
+  
+  SPerl_ARRAY* class_infos = parser->class_infos;
+  for (i = 0; i < class_infos->length; i++) {
+    SPerl_CLASS_INFO* class_info = (SPerl_CLASS_INFO*)SPerl_ARRAY_fetch(class_infos, i);
+    
+    printf("class_info[%d]\n", i);
+    printf("  name => \"%s\"\n", class_info->name);
+    printf("  op_block => %x\n", class_info->op_block);
+  }
+  
+}
+
 void SPerl_PARSER_dump_method_infos(SPerl_yy_parser* parser) {
   SPerl_int i;
   

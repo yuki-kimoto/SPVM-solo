@@ -46,6 +46,9 @@ int main(int argc, char *argv[])
     
     printf("\n[Method infomation]\n");
     SPerl_PARSER_dump_method_infos(parser);
+
+    printf("\n[Class infomation]\n");
+    SPerl_PARSER_dump_class_infos(parser);
   }
   
   free(parser->linestr);
