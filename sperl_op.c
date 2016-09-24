@@ -11,6 +11,10 @@
 
 SPerl_char SPerl_OP_create_desc_flags(SPerl_OP* op_descripters) {
   
+  if (!op_descripters) {
+    return 0;
+  }
+  
   SPerl_char desc_flags = 0;
   
   // descripters
@@ -37,18 +41,12 @@ SPerl_ARGUMENT_INFO* SPerl_OP_create_argument_info(SPerl_OP* op_subarg) {
   argument_info->name = op_subarg->first->uv.string_value;
   SPerl_OP* op_desctype = op_subarg->last;
   
-  // desctype
-  // desctype is descripters, type
-  if (op_desctype->type == SPerl_OP_LIST) {
-    SPerl_OP* op_descripters = op_desctype->first;
-    argument_info->type = op_desctype->last->uv.string_value;
-    
-    argument_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
-  }
-  // desctype is type
-  else if (op_desctype->type == SPerl_OP_CONST) {
-    argument_info->type = op_desctype->uv.string_value;
-  }
+  // type
+  argument_info->type = op_desctype->first->uv.string_value;
+  
+  // descripters
+  SPerl_OP* op_descripters = op_desctype->last;
+  argument_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
   
   return argument_info;
 }
@@ -75,6 +73,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   }
   // subargs is subarg
   else if (op_optsubargs->type == SPerl_OP_SUBARG) {
+    
     // Argument count
     method_info->argument_count = 1;
     
@@ -101,18 +100,12 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     method_info->argument_count = argument_count;
   }
   
-  // desctype
-  // desctype is descripters, type
-  if (op_desctype->type == SPerl_OP_LIST) {
-    SPerl_OP* op_descripters = op_desctype->first;
-    method_info->return_type = op_desctype->last->uv.string_value;
-    
-    method_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
-  }
-  // desctype is type
-  else if (op_desctype->type == SPerl_OP_CONST) {
-    method_info->return_type = op_desctype->uv.string_value;
-  }
+  // return type
+  method_info->return_type = op_desctype->first->uv.string_value;
+  
+  // descripters
+  SPerl_OP* op_descripters = op_desctype->last;
+  method_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
   
   // Save block
   method_info->op_block = op_block;
@@ -321,5 +314,3 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_char type, SPerl_OP* first, SPerl_OP* last, 
 
   return (SPerl_OP *)op;
 }
-
-

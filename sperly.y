@@ -472,12 +472,12 @@ subarg
 desctype
   : type
     {
-      $$ = $1;
+      $$ = SPerl_OP_newOP(SPerl_OP_DESCTYPE, $1, 0);
       printf("type -> desctype\n");
     }
   | descripters type
     {
-      $$ = SPerl_OP_append_elem($1, $2);
+      $$ = SPerl_OP_newOP(SPerl_OP_DESCTYPE, $2, $1);
       printf("descripters type -> desctype\n");
     }
     

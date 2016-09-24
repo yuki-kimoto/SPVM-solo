@@ -28,7 +28,7 @@ void SPerl_METHOD_INFO_dump_method_infos(SPerl_ARRAY* method_infos) {
       SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
       SPerl_DESCRIPTER_to_str(desc_str, method_info->desc_flags);
       
-      warn("aaaaaaaaaa %d", method_info->desc_flags);
+      warn("zzzzzzzzzzzzzzzzzzzzzzzzz %d", method_info->desc_flags);
       
       printf("[%d]\n", i);
       printf("  name => \"%s\"\n", method_info->name);
