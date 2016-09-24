@@ -8,6 +8,60 @@
 #include "sperl_method_info.h"
 #include "sperl_descripter.h"
 
+SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
+
+  if (!op_optsubargs) {
+    op_optsubargs = SPerl_OP_newOP(SPerl_OP_NULL, NULL, NULL);
+  }
+  SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_SUB, op_subname, op_optsubargs);
+  SPerl_OP_sibling_splice(op, op_optsubargs, 0, op_desctype);
+  SPerl_OP_sibling_splice(op, op_desctype, 0, op_block);
+  
+  SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new();
+  method_info->name = op_subname->uv.string_value;
+  
+  if (op_optsubargs->type == SPerl_OP_NULL) {
+    method_info->argument_count = 0;
+  }
+  else if (op_optsubargs->type == SPerl_OP_SUBARG) {
+    method_info->argument_count = 1;
+  }
+  else if (op_optsubargs->type == SPerl_OP_LIST) {
+    SPerl_long argument_count = 0;
+    SPerl_OP* op_next = op_optsubargs->first;
+    while (op_next = SPerl_OP_sibling(op_next)) {
+      argument_count++;
+    }
+    method_info->argument_count = argument_count;
+  }
+  
+  // type, descripters
+  if (op_desctype->type == SPerl_OP_LIST) {
+    method_info->return_type = op_desctype->first->uv.string_value;
+    SPerl_OP* op_descripters = op_desctype->last;
+    if (op_descripters->type == SPerl_OP_LIST) {
+      SPerl_OP* op_next = op_descripters->first;
+      while (op_next = SPerl_OP_sibling(op_next)) {
+        method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
+      }
+    }
+    else if (op_descripters->type == SPerl_OP_CONST) {
+      method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
+    }
+  }
+  // type
+  else if (op_desctype->type == SPerl_OP_CONST) {
+    method_info->return_type = op_desctype->uv.string_value;
+  }
+  
+  method_info->op_block = op_block;
+  
+  SPerl_ARRAY_push(parser->method_infos, method_info);
+  
+  
+  return op;
+}
+
 void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_long depth) {
   
   SPerl_long i;
@@ -207,56 +261,4 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_char type, SPerl_OP* first, SPerl_OP* last, 
   return (SPerl_OP *)op;
 }
 
-SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
 
-  if (!op_optsubargs) {
-    op_optsubargs = SPerl_OP_newOP(SPerl_OP_NULL, NULL, NULL);
-  }
-  SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_SUB, op_subname, op_optsubargs);
-  SPerl_OP_sibling_splice(op, op_optsubargs, 0, op_desctype);
-  SPerl_OP_sibling_splice(op, op_desctype, 0, op_block);
-  
-  SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new();
-  method_info->name = op_subname->uv.string_value;
-  
-  if (op_optsubargs->type == SPerl_OP_NULL) {
-    method_info->argument_count = 0;
-  }
-  else if (op_optsubargs->type == SPerl_OP_SUBARG) {
-    method_info->argument_count = 1;
-  }
-  else if (op_optsubargs->type == SPerl_OP_LIST) {
-    SPerl_long argument_count = 0;
-    SPerl_OP* op_next = op_optsubargs->first;
-    while (op_next = SPerl_OP_sibling(op_next)) {
-      argument_count++;
-    }
-    method_info->argument_count = argument_count;
-  }
-  
-  // type, descripters
-  if (op_desctype->type == SPerl_OP_LIST) {
-    method_info->return_type = op_desctype->first->uv.string_value;
-    SPerl_OP* op_descripters = op_desctype->last;
-    if (op_descripters->type == SPerl_OP_LIST) {
-      SPerl_OP* op_next = op_descripters->first;
-      while (op_next = SPerl_OP_sibling(op_next)) {
-        method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
-      }
-    }
-    else if (op_descripters->type == SPerl_OP_CONST) {
-      method_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
-    }
-  }
-  // type
-  else if (op_desctype->type == SPerl_OP_CONST) {
-    method_info->return_type = op_desctype->uv.string_value;
-  }
-  
-  method_info->op_block = op_block;
-  
-  SPerl_ARRAY_push(parser->method_infos, method_info);
-  
-  
-  return op;
-}
