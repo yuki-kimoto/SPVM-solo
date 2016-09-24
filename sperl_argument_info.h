@@ -6,7 +6,7 @@
 // Field information
 struct SPerl_argument_info {
   SPerl_char* type;
-  SPerl_char desc_flag;
+  SPerl_char desc_flags;
   SPerl_char* name;
 };
 

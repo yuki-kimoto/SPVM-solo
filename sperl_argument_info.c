@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <string.h>
+
 #include "sperl_argument_info.h"
 
 SPerl_ARGUMENT_INFO* SPerl_ARGUMENT_INFO_new() {

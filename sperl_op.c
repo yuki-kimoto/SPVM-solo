@@ -36,7 +36,31 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     // subarg
     // subarg is VAR, desctype
     argument_info->name = op_optsubargs->first->uv.string_value;
+    SPerl_OP* op_desctype = op_optsubargs->last;
     
+    // desctype
+    // desctype is descripters, type
+    if (op_desctype->type == SPerl_OP_LIST) {
+      SPerl_OP* op_descripters = op_desctype->first;
+      argument_info->type = op_desctype->last->uv.string_value;
+      
+      // descripters
+      // descripters is list of descripter
+      if (op_descripters->type == SPerl_OP_LIST) {
+        SPerl_OP* op_next = op_descripters->first;
+        while (op_next = SPerl_OP_sibling(op_next)) {
+          argument_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
+        }
+      }
+      // descripters is descripter
+      else if (op_descripters->type == SPerl_OP_CONST) {
+        argument_info->desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
+      }
+    }
+    // desctype is type
+    else if (op_desctype->type == SPerl_OP_CONST) {
+      argument_info->type = op_desctype->uv.string_value;
+    }
   }
   // subargs is list of subarg
   else if (op_optsubargs->type == SPerl_OP_LIST) {
