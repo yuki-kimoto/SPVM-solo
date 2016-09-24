@@ -45,21 +45,15 @@
 grammar
   : /* NULL */
     {
-      $$ = SPerl_OP_newOP(SPerl_OP_GRAMMER, NULL, NULL);;
+      $$ = SPerl_OP_newOP(SPerl_OP_GRAMMER, NULL, NULL);
+      parser->main_root = $$;
       printf("NULL -> grammar\n");
     }
   | packages
     {
-      SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_GRAMMER, NULL, NULL);
-      
-      if ($1->type == SPerl_OP_LIST) {
-        SPerl_OP_sibling_splice(op, 0, 0, $1->first);
-      }
-      else {
-        op->first = $1;
-      }
-      parser->main_root = op;
-      $$ = op;
+      $$ = SPerl_OP_newOP(SPerl_OP_GRAMMER, $1, NULL);;
+      parser->main_root = $$;
+
       printf("packages -> grammar\n");
     }
 
