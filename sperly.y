@@ -235,7 +235,7 @@ term
   : VAR
     {
       $$ = $1;
-      printf("VAR(%s) -> term\n", ((SPerl_OP*)$1)->uv.string_value)
+      printf("VAR(%s) -> term\n", ((SPerl_OP*)$1)->string_value)
     }
   | CONST
     {
@@ -268,7 +268,7 @@ term
           printf("CONST(double %f) -> term\n", op->uv.double_value);
           break;
         case SPerl_OPp_CONST_STRING:
-          printf("CONST(string %s) -> term\n", op->uv.string_value);
+          printf("CONST(string %s) -> term\n", op->string_value);
           break;
       }
     }
@@ -466,7 +466,7 @@ subarg
   : VAR ':' desctype
     {
       $$ = SPerl_OP_newOP(SPerl_OP_SUBARG, $1, $3);
-      printf("VAR : desctype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.string_value);
+      printf("VAR : desctype -> subarg (%s)\n", ((SPerl_OP*)$1)->string_value);
     }
 
 desctype
@@ -485,7 +485,7 @@ type
   : WORD
     {
       $$ = $1;
-      printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.string_value);
+      printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->string_value);
     }
 
 descripters

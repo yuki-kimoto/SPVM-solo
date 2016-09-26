@@ -352,7 +352,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         }
         
         SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
-        op->uv.string_value = str;
+        op->string_value = str;
         
         parser->bufptr = bufptr;
         SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -377,7 +377,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           var[str_len] = '\0';
           
           SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_VAR, NULL, NULL);
-          op->uv.string_value = var;
+          op->string_value = var;
           
           parser->bufptr = bufptr;
           SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -530,7 +530,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           }
           
           SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
-          op->uv.string_value = keyword;
+          op->string_value = keyword;
           
           parser->bufptr = bufptr;
           SPerl_yylvalp->opval = (SPerl_OP*)op;

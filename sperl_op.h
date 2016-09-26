@@ -93,6 +93,7 @@ struct SPerl_op {
   SPerl_OP* first;
   SPerl_OP* last;
   SPerl_OP* sibparent;
+  SPerl_char* string_value;
   union {
     SPerl_boolean boolean_value;
     SPerl_char char_value;
@@ -102,7 +103,6 @@ struct SPerl_op {
     SPerl_int long_value;
     float float_value;
     SPerl_double double_value;
-    SPerl_char* string_value;
   } uv;
 };
 
