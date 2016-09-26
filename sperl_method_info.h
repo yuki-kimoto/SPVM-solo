@@ -13,7 +13,6 @@ struct SPerl_method_info {
   SPerl_ARRAY* argument_infos;
   SPerl_int argument_count;
   SPerl_OP* op_block;
-  SPerl_CLASS_INFO* class_info;
 };
 
 SPerl_METHOD_INFO* SPerl_METHOD_INFO_new();

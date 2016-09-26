@@ -119,7 +119,6 @@ void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info) {
     printf("      desc_flags => \"%s\"\n", desc_str);
     printf("      treturn_type => \"%s\"\n", method_info->return_type);
     printf("      op_block => %x\n", method_info->op_block);
-    printf("      class_info->name => \"%s\"\n", method_info->class_info->name);
     
     free(desc_str);
   }

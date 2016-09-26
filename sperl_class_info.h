@@ -15,6 +15,7 @@ struct SPerl_class_info {
   SPerl_ARRAY* method_infos;
   SPerl_ARRAY* const_ops;
   SPerl_OP* op_block;
+  SPerl_char* const_pool;
 };
 
 SPerl_CLASS_INFO* SPerl_CLASS_INFO_new();

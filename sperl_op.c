@@ -17,13 +17,6 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   class_info->name = op_pkgname->string_value;
   class_info->op_block = op_block;
   
-  // Add class information to method
-  SPerl_int i;
-  for (i = 0; i < parser->current_method_infos->length; i++) {
-    SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)SPerl_ARRAY_fetch(parser->current_method_infos, i);
-    method_info->class_info = class_info;
-  }
-  
   class_info->method_infos = parser->current_method_infos;
   parser->current_method_infos = SPerl_ARRAY_new(0);
   
