@@ -11,7 +11,6 @@
   #include "sperl_type.h"
   #include "sperl_parser.h"
   #include "sperl_op.h"
-  #include "sperl_const_info.h"
 %}
 
 %token <ival> '+' '-'
@@ -243,35 +242,33 @@ term
       $$ = $1;
       
       SPerl_OP* op = $1;
-      SPerl_CONST_INFO* const_info = op->const_info;
-      
-      switch(const_info->type) {
-        case SPerl_CONST_INFO_BOOLEAN:
-          printf("CONST(boolean %d) -> term\n", const_info->uv.boolean_value);
+      switch(op->private) {
+        case SPerl_OPp_CONST_BOOLEAN:
+          printf("CONST(boolean %d) -> term\n", op->uv.boolean_value);
           break;
-        case SPerl_CONST_INFO_CHAR:
-          printf("CONST(char %c) -> term\n", const_info->uv.char_value);
+        case SPerl_OPp_CONST_CHAR:
+          printf("CONST(char %c) -> term\n", op->uv.char_value);
           break;
-        case SPerl_CONST_INFO_BYTE:
-          printf("CONST(byte %d) -> term\n", const_info->uv.byte_value);
+        case SPerl_OPp_CONST_BYTE:
+          printf("CONST(byte %d) -> term\n", op->uv.byte_value);
           break;
-        case SPerl_CONST_INFO_SHORT:
-          printf("CONST(short %d) -> term\n", const_info->uv.short_value);
+        case SPerl_OPp_CONST_SHORT:
+          printf("CONST(short %d) -> term\n", op->uv.short_value);
           break;
-        case SPerl_CONST_INFO_INT:
-          printf("CONST(int %d) -> term\n", const_info->uv.int_value);
+        case SPerl_OPp_CONST_INT:
+          printf("CONST(int %d) -> term\n", op->uv.int_value);
           break;
-        case SPerl_CONST_INFO_LONG:
-          printf("CONST(long %ld) -> term\n", const_info->uv.long_value);
+        case SPerl_OPp_CONST_LONG:
+          printf("CONST(long %ld) -> term\n", op->uv.long_value);
           break;
-        case SPerl_CONST_INFO_FLOAT:
-          printf("CONST(float %f) -> term\n", const_info->uv.float_value);
+        case SPerl_OPp_CONST_FLOAT:
+          printf("CONST(float %f) -> term\n", op->uv.float_value);
           break;
-        case SPerl_CONST_INFO_DOUBLE:
-          printf("CONST(double %f) -> term\n", const_info->uv.double_value);
+        case SPerl_OPp_CONST_DOUBLE:
+          printf("CONST(double %f) -> term\n", op->uv.double_value);
           break;
-        case SPerl_CONST_INFO_STRING:
-          printf("CONST(string %s) -> term\n", const_info->string_value);
+        case SPerl_OPp_CONST_STRING:
+          printf("CONST(string %s) -> term\n", op->uv.string_value);
           break;
       }
     }

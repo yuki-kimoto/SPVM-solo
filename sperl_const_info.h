@@ -14,8 +14,8 @@ enum SPerl_CONST_INFO_TYPE {
 };
 
 struct SPerl_const_info {
+  SPerl_char* val_str;
   SPerl_char type;
-  SPerl_char* string_value;
   union {
     SPerl_boolean boolean_value;
     SPerl_char char_value;
@@ -27,7 +27,5 @@ struct SPerl_const_info {
     SPerl_double double_value;
   } uv;
 };
-
-SPerl_CONST_INFO* SPerl_CONST_INFO_new();
 
 #endif
