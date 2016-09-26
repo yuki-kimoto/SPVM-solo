@@ -6,7 +6,6 @@
 #include "sperl_op.h"
 #include "sperl_parser.h"
 #include "sperly.tab.h"
-#include "sperl_const_info.h"
 
 /* Get token */
 int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
@@ -318,16 +317,6 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_CHAR);
         op->uv.char_value = ch;
         
-        // Create constant information
-        SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
-        const_info->type = SPerl_CONST_INFO_CHAR;
-        SPerl_char* char_str = malloc(2);
-        char_str[0] = ch;
-        char_str[1] = '\0';
-        const_info->val_str = char_str;
-        const_info->uv.char_value = ch;
-        op->const_info = const_info;
-        
         parser->bufptr = bufptr;
         SPerl_yylvalp->opval = (SPerl_OP*)op;
         return CONST;
@@ -364,12 +353,6 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         
         SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
         op->uv.string_value = str;
-
-        // Create constant information
-        SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
-        const_info->type = SPerl_CONST_INFO_STRING;
-        const_info->val_str = str;
-        op->const_info = const_info;
         
         parser->bufptr = bufptr;
         SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -434,12 +417,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_DOUBLE);
             op->uv.double_value = num;
             
-            // Create constant information
-            SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
-            const_info->type = SPerl_CONST_INFO_DOUBLE;
-            const_info->val_str = num_str;
-            const_info->uv.double_value = num;
-            op->const_info = const_info;
+            free(num_str);
             
             parser->bufptr = bufptr;
             SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -452,12 +430,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_INT);
             op->uv.int_value = num;
 
-            // Create constant information
-            SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
-            const_info->type = SPerl_CONST_INFO_INT;
-            const_info->val_str = num_str;
-            const_info->uv.double_value = num;
-            op->const_info = const_info;
+            free(num_str);
             
             parser->bufptr = bufptr;
             SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -540,13 +513,6 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_BOOLEAN);
               op->uv.int_value = 1;
 
-              // Create constant information
-              SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
-              const_info->type = SPerl_CONST_INFO_BOOLEAN;
-              const_info->val_str = "true";
-              const_info->uv.boolean_value = 1;
-              op->const_info = const_info;
-
               parser->bufptr = bufptr;
               SPerl_yylvalp->opval = (SPerl_OP*)op;
 
@@ -555,13 +521,6 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             else if (memcmp(keyword, "false", str_len) == 0) {
               SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_BOOLEAN);
               op->uv.int_value = 0;
-
-              // Create constant information
-              SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
-              const_info->type = SPerl_CONST_INFO_BOOLEAN;
-              const_info->val_str = "false";
-              const_info->uv.boolean_value = 0;
-              op->const_info = const_info;
 
               parser->bufptr = bufptr;
               SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -572,12 +531,6 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           
           SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
           op->uv.string_value = keyword;
-
-          // Create constant information
-          SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
-          const_info->type = SPerl_CONST_INFO_STRING;
-          const_info->val_str = keyword;
-          op->const_info = const_info;
           
           parser->bufptr = bufptr;
           SPerl_yylvalp->opval = (SPerl_OP*)op;
