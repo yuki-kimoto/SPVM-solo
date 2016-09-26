@@ -317,6 +317,11 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_CHAR);
         op->uv.char_value = ch;
         
+        SPerl_char* string_value = malloc(2);
+        string_value[0] = ch;
+        string_value[1] = '\0';
+        op->string_value = string_value;
+        
         parser->bufptr = bufptr;
         SPerl_yylvalp->opval = (SPerl_OP*)op;
         return CONST;
@@ -417,7 +422,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_DOUBLE);
             op->uv.double_value = num;
             
-            free(num_str);
+            op->string_value = num_str;
             
             parser->bufptr = bufptr;
             SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -430,7 +435,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_INT);
             op->uv.int_value = num;
 
-            free(num_str);
+            op->string_value = num_str;
             
             parser->bufptr = bufptr;
             SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -512,6 +517,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             else if (memcmp(keyword, "true", str_len) == 0) {
               SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_BOOLEAN);
               op->uv.int_value = 1;
+              op->string_value = "true";
 
               parser->bufptr = bufptr;
               SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -521,6 +527,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             else if (memcmp(keyword, "false", str_len) == 0) {
               SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_BOOLEAN);
               op->uv.int_value = 0;
+              op->string_value = "false";
 
               parser->bufptr = bufptr;
               SPerl_yylvalp->opval = (SPerl_OP*)op;
