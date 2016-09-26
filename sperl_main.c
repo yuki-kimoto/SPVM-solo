@@ -44,9 +44,6 @@ int main(int argc, char *argv[])
     printf("\n[Abstract Syntax Tree]\n");
     SPerl_OP_dump_ast(parser->main_root, 0);
     
-    printf("\n[Method infomation]\n");
-    SPerl_PARSER_dump_method_infos(parser);
-
     printf("\n[Class infomation]\n");
     SPerl_PARSER_dump_class_infos(parser);
   }

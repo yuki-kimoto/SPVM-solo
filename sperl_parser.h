@@ -26,8 +26,8 @@ struct SPerl_yy_parser_{
   /* class information hash */
   SPerl_HASH* class_info_h;
   
-  /* method information array */
-  SPerl_ARRAY* method_infos;
+  /* current method information array */
+  SPerl_ARRAY* current_method_infos;
   
   /* method information hash */
   SPerl_HASH* method_info_h;
