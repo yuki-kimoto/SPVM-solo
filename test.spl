@@ -8,7 +8,7 @@ package Point {
   }
   
   sub get2 () : static const long {
-    
+    1;
   }
 
   sub get3 () : int {}
