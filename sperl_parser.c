@@ -18,6 +18,7 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->current_const_ops = SPerl_ARRAY_new(0);
   parser->class_infos = SPerl_ARRAY_new(0);
   parser->line = 1;
+  parser->current_const_pool_size = 0;
   
   return parser;
 }
@@ -54,6 +55,8 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
       printf("    const_op[%d]\n", j);
       SPerl_PARSER_dump_const_op(const_op);
     }
+    
+    printf("  const_pool_size %d\n", class_info->const_pool_size);
   }
 }
 

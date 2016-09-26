@@ -17,11 +17,23 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   class_info->name = op_pkgname->string_value;
   class_info->op_block = op_block;
   
+  // Set method infomations
   class_info->method_infos = parser->current_method_infos;
   parser->current_method_infos = SPerl_ARRAY_new(0);
   
-  class_info->const_ops = parser->current_const_ops;
+  // Set constant ops
+  SPerl_ARRAY* const_ops = parser->current_const_ops;
+  class_info->const_ops = const_ops;
   parser->current_const_ops = SPerl_ARRAY_new(0);
+  
+  // Constant pool size
+  class_info->const_pool_size = parser->current_const_pool_size * 2;
+  parser->current_const_pool_size = 0;
+  
+  // Create constant pool
+  SPerl_char* constant_pool = (SPerl_char*)malloc(class_info->const_pool_size);
+  
+  // Add class information
   SPerl_ARRAY_push(parser->class_infos, class_info);
   
   return op_package;
