@@ -14,7 +14,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   SPerl_OP* op_package = SPerl_OP_newOP(SPerl_OP_PACKAGE, op_pkgname, op_block);
   
   SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new();
-  class_info->name = op_pkgname->string_value;
+  class_info->name = op_pkgname->uv.string_value;
   class_info->op_block = op_block;
   
   // Set method infomations
@@ -53,12 +53,12 @@ SPerl_char SPerl_OP_create_desc_flags(SPerl_OP* op_descripters) {
   if (op_descripters->type == SPerl_OP_LIST) {
     SPerl_OP* op_next = op_descripters->first;
     while (op_next = SPerl_OP_sibling(op_next)) {
-      desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->string_value);
+      desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
     }
   }
   // descripters is descripter
   else if (op_descripters->type == SPerl_OP_CONST) {
-    desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->string_value);
+    desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
   }
   
   return desc_flags;
@@ -69,11 +69,11 @@ SPerl_ARGUMENT_INFO* SPerl_OP_create_argument_info(SPerl_OP* op_subarg) {
   
   // subarg
   // subarg is VAR, desctype
-  argument_info->name = op_subarg->first->string_value;
+  argument_info->name = op_subarg->first->uv.string_value;
   SPerl_OP* op_desctype = op_subarg->last;
   
   // type
-  argument_info->type = op_desctype->first->string_value;
+  argument_info->type = op_desctype->first->uv.string_value;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
@@ -95,7 +95,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   
   // Create method infomation
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new();
-  method_info->name = op_subname->string_value;
+  method_info->name = op_subname->uv.string_value;
   
   // subargs
   // subargs is NULL
@@ -132,7 +132,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   }
   
   // return type
-  method_info->return_type = op_desctype->first->string_value;
+  method_info->return_type = op_desctype->first->uv.string_value;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
@@ -182,12 +182,12 @@ void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_int depth) {
         printf(" double %f", op->uv.double_value);
         break;
       case SPerl_OPp_CONST_STRING:
-        printf(" string \"%s\"", op->string_value);
+        printf(" string \"%s\"", op->uv.string_value);
         break;
     }
   }
   else if (type == SPerl_OP_VAR) {
-    printf(" \"%s\"", op->string_value);
+    printf(" \"%s\"", op->uv.string_value);
   }
   printf("\n");
   
