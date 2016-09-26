@@ -57,6 +57,7 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
     }
     
     printf("  const_pool_size %d\n", class_info->const_pool_size);
+    printf("  const_pool_next_pos %d\n", class_info->const_pool_next_pos);
   }
 }
 
