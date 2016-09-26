@@ -33,6 +33,7 @@ package Point3D {
   sub sum1 () : double {
     2;
     4;
+    "abcdefghijklnm";
   }
   sub sum2 ($foo : const int, $bar : const int) : const int { }
 
