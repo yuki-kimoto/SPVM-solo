@@ -240,6 +240,7 @@ term
   | CONST
     {
       $$ = $1;
+      SPerl_ARRAY_push(parser->current_const_ops, $$);
       
       SPerl_OP* op = $1;
       switch(op->private) {

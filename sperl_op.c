@@ -26,6 +26,9 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   
   class_info->method_infos = parser->current_method_infos;
   parser->current_method_infos = SPerl_ARRAY_new(0);
+  
+  class_info->const_ops = parser->current_const_ops;
+  parser->current_const_ops = SPerl_ARRAY_new(0);
   SPerl_ARRAY_push(parser->class_infos, class_info);
   
   return op_package;
