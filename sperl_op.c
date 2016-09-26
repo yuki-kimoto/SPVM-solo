@@ -15,6 +15,7 @@ SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
   
   SPerl_ARRAY_push(parser->current_const_ops, op);
   
+  op->const_pos = parser->current_const_pool_size;
   switch(op->private) {
     case SPerl_OPp_CONST_BOOLEAN:
       parser->current_const_pool_size += 4;
