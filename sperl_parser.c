@@ -91,7 +91,7 @@ void SPerl_PARSER_dump_const_op(SPerl_OP* const_op) {
         printf("      double %f\n", const_op->uv.double_value);
         break;
       case SPerl_OPp_CONST_STRING:
-        printf("      string \"%s\"\n", const_op->string_value);
+        printf("      string \"%s\"\n", const_op->uv.string_value);
         break;
     }
   }
