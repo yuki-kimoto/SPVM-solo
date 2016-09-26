@@ -3,7 +3,6 @@
 
 #include "sperl_type.h"
 #include "sperl_parser.h"
-#include "sperl_const_info.h"
 
 /* Operation code */
 enum SPerl_OP_CODE {
@@ -101,11 +100,10 @@ struct SPerl_op {
     SPerl_short short_value;
     SPerl_int int_value;
     SPerl_int long_value;
-    SPerl_float float_value;
+    float float_value;
     SPerl_double double_value;
     SPerl_char* string_value;
   } uv;
-  SPerl_CONST_INFO* const_info;
 };
 
 SPerl_OP* SPerl_OP_sibling(SPerl_OP* o);
