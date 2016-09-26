@@ -239,50 +239,7 @@ term
     }
   | CONST
     {
-      $$ = $1;
-      SPerl_ARRAY_push(parser->current_const_ops, $$);
-      
-      SPerl_OP* op = $1;
-      switch(op->private) {
-        case SPerl_OPp_CONST_BOOLEAN:
-          parser->current_const_pool_size += 4;
-          printf("CONST(boolean %d) -> term\n", op->uv.boolean_value);
-          break;
-        case SPerl_OPp_CONST_CHAR:
-          parser->current_const_pool_size += 4;
-          printf("CONST(char %c) -> term\n", op->uv.char_value);
-          break;
-        case SPerl_OPp_CONST_BYTE:
-          parser->current_const_pool_size += 4;
-          printf("CONST(byte %d) -> term\n", op->uv.byte_value);
-          break;
-        case SPerl_OPp_CONST_SHORT:
-          parser->current_const_pool_size += 4;
-          printf("CONST(short %d) -> term\n", op->uv.short_value);
-          break;
-        case SPerl_OPp_CONST_INT:
-          parser->current_const_pool_size += 4;
-          printf("CONST(int %d) -> term\n", op->uv.int_value);
-          break;
-        case SPerl_OPp_CONST_LONG:
-          parser->current_const_pool_size += 8;
-          printf("CONST(long %ld) -> term\n", op->uv.long_value);
-          break;
-        case SPerl_OPp_CONST_FLOAT:
-          parser->current_const_pool_size += 4;
-          printf("CONST(float %f) -> term\n", op->uv.float_value);
-          break;
-        case SPerl_OPp_CONST_DOUBLE:
-          parser->current_const_pool_size += 8;
-          printf("CONST(double %f) -> term\n", op->uv.double_value);
-          break;
-        case SPerl_OPp_CONST_STRING: {
-          SPerl_int const_pool_size = ((int)(((strlen(op->uv.string_value) + 1) + 3) / 4)) * 4 ;
-          parser->current_const_pool_size += const_pool_size;
-          printf("CONST(string %s) -> term\n", op->uv.string_value);
-          break;
-        }
-      }
+      $$ = SPerl_OP_newOP_CONST(parser, $1);
     }
   | '+' term %prec UMINUS
     {
