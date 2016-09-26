@@ -56,48 +56,48 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
       SPerl_PARSER_dump_const_op(const_op);
     }
 
-    printf("  const_ops\n");
+    printf("  const_pool\n");
     for (j = 0; j < const_ops->length; j++) {
       SPerl_OP* const_op = SPerl_ARRAY_fetch(const_ops, j);
-      printf("    const_op[%d]\n", j);
-      SPerl_PARSER_dump_const_pool(parser, const_op);
+      SPerl_PARSER_dump_const_pool(class_info->const_pool, const_op);
     }
     printf("  const_pool_size %d\n", class_info->const_pool_size);
     printf("  const_pool_next_pos %d\n", class_info->const_pool_next_pos);
   }
 }
 
-void SPerl_PARSER_dump_const_pool(SPerl_yy_parser* parser, SPerl_OP* const_op) {
+void SPerl_PARSER_dump_const_pool(SPerl_char* const_pool, SPerl_OP* const_op) {
   SPerl_int type = const_op->type;
+  printf("    const_pool[%d]\n", const_op->const_pos);
   printf("      %s", SPerl_op_name[type]);
   if (type == SPerl_OP_CONST) {
     switch(const_op->private) {
       case SPerl_OPp_CONST_BOOLEAN:
-        printf("      boolean %d\n", const_op->uv.boolean_value);
+        printf("      boolean %d\n", *(SPerl_int*)(const_pool + const_op->const_pos));
         break;
       case SPerl_OPp_CONST_CHAR:
-        printf("      char %c\n", const_op->uv.char_value);
+        printf("      char %c\n", *(SPerl_int*)(const_pool + const_op->const_pos));
         break;
       case SPerl_OPp_CONST_BYTE:
-        printf("      byte %d\n", const_op->uv.byte_value);
+        printf("      byte %d\n", *(SPerl_int*)(const_pool + const_op->const_pos));
         break;
       case SPerl_OPp_CONST_SHORT:
-        printf("      short %d\n", const_op->uv.short_value);
+        printf("      short %d\n", *(SPerl_int*)(const_pool + const_op->const_pos));
         break;
       case SPerl_OPp_CONST_INT:
-        printf("      int %d\n", const_op->uv.int_value);
+        printf("      int %d\n", *(SPerl_int*)(const_pool + const_op->const_pos));
         break;
       case SPerl_OPp_CONST_LONG:
-        printf("      long %ld\n", const_op->uv.long_value);
+        printf("      long %ld\n", *(SPerl_long*)(const_pool + const_op->const_pos));
         break;
       case SPerl_OPp_CONST_FLOAT:
-        printf("      float %f\n", const_op->uv.float_value);
+        printf("      float %f\n", *(SPerl_float*)(const_pool + const_op->const_pos));
         break;
       case SPerl_OPp_CONST_DOUBLE:
-        printf("      double %f\n", const_op->uv.double_value);
+        printf("      double %f\n", *(SPerl_double*)(const_pool + const_op->const_pos));
         break;
       case SPerl_OPp_CONST_STRING:
-        printf("      string \"%s\"\n", const_op->uv.string_value);
+        printf("      string \"%s\"\n", const_pool + const_op->const_pos);
         break;
     }
   }
