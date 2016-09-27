@@ -101,42 +101,6 @@ void SPerl_PARSER_dump_const_pool(SPerl_char* const_pool, SPerl_CONST_INFO* cons
   }
 }
 
-void SPerl_PARSER_dump_const_op(SPerl_OP* const_op) {
-  SPerl_int type = const_op->type;
-  printf("      %s", SPerl_op_name[type]);
-  if (type == SPerl_OP_CONST) {
-    switch(const_op->private) {
-      case SPerl_OPp_CONST_BOOLEAN:
-        printf("      boolean %" PRId32 "\n", const_op->uv.boolean_value);
-        break;
-      case SPerl_OPp_CONST_CHAR:
-        printf("      char %c\n", const_op->uv.char_value);
-        break;
-      case SPerl_OPp_CONST_BYTE:
-        printf("      byte %" PRId32 "\n", const_op->uv.byte_value);
-        break;
-      case SPerl_OPp_CONST_SHORT:
-        printf("      short %" PRId32 "\n", const_op->uv.short_value);
-        break;
-      case SPerl_OPp_CONST_INT:
-        printf("      int %" PRId32 "\n", const_op->uv.int_value);
-        break;
-      case SPerl_OPp_CONST_LONG:
-        printf("      long %" PRId64 "\n", const_op->uv.long_value);
-        break;
-      case SPerl_OPp_CONST_FLOAT:
-        printf("      float %f\n", const_op->uv.float_value);
-        break;
-      case SPerl_OPp_CONST_DOUBLE:
-        printf("      double %f\n", const_op->uv.double_value);
-        break;
-      case SPerl_OPp_CONST_STRING:
-        printf("      string \"%s\"\n", const_op->uv.string_value);
-        break;
-    }
-  }
-}
-
 void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info) {
   switch(const_info->type) {
     case SPerl_CONST_INFO_BOOLEAN:
