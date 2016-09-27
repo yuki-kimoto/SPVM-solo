@@ -103,6 +103,18 @@ struct SPerl_op {
     SPerl_double double_value;
     SPerl_char* string_value;
   } uv;
+  union {
+    SPerl_boolean boolean_value;
+    SPerl_char char_value;
+    SPerl_byte byte_value;
+    SPerl_short short_value;
+    SPerl_int int_value;
+    SPerl_int long_value;
+    float float_value;
+    SPerl_double double_value;
+    SPerl_char* string_value;
+    void* ptr_value;
+  } uv_n;
   SPerl_int const_pos;
 };
 
