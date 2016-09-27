@@ -125,9 +125,6 @@ package Point3D {
   1 && 2;
   1 & 3;
 
-  my $title : int = sub () : int { };
-  my $title : int = sub ($p : int) : const int { };
-
   $title += 1;
 
   $title -= 1;

@@ -377,7 +377,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           var[str_len] = '\0';
           
           SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_VAR, NULL, NULL);
-          op->uv.string_value;
+          op->uv.string_value = var;
           
           parser->bufptr = bufptr;
           SPerl_yylvalp->opval = (SPerl_OP*)op;

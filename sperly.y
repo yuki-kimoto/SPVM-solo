@@ -381,18 +381,6 @@ term
       $$ = $1;
       printf("declvar -> term\n");
     }
-  | SUB '(' optsubargs ')' ':' desctype block
-    {
-      SPerl_OP* op_optsubargs = $3;
-      if (!op_optsubargs) {
-        op_optsubargs = SPerl_OP_newOP(SPerl_OP_NULL, NULL, NULL);
-      }
-      SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_ANONSUB, op_optsubargs, $6);
-      SPerl_OP_sibling_splice(op, $6, 0, $7);
-      $$ = op;
-      
-      printf("SUB ( optsubargs ) block : desctype -> term\n");
-    }
 
 block 
   : '{' '}'

@@ -37,7 +37,6 @@ SPerl_char* const SPerl_op_name[] = {
   "assign",
   "callsub",
   "subarg",
-  "anonsub",
   "block",
   "my",
   "has",
