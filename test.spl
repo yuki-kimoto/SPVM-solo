@@ -1,4 +1,7 @@
-package Complex {
+package Complex : interface {
+}
+
+package Complex : value {
   has re : double;
   has im : double;
 }

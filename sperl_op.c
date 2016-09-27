@@ -60,8 +60,11 @@ SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
   return op;
 }
 
-SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
   SPerl_OP* op_package = SPerl_OP_newOP(SPerl_OP_PACKAGE, op_pkgname, op_block);
+  if (op_descripters) {
+    SPerl_OP_sibling_splice(op_package, op_package->first, 0, op_descripters);
+  }
   
   SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new();
   class_info->name = op_pkgname->uv.string_value;
