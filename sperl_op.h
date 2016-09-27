@@ -103,7 +103,7 @@ struct SPerl_op {
     SPerl_double double_value;
     SPerl_char* string_value;
     void* ptr_value;
-  } uv_n;
+  } uv;
 };
 
 SPerl_OP* SPerl_OP_sibling(SPerl_OP* o);

@@ -320,7 +320,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
         const_info->type = SPerl_CONST_INFO_CHAR;
         const_info->uv.char_value = ch;
-        op->uv_n.ptr_value = const_info;
+        op->uv.ptr_value = const_info;
         
         parser->bufptr = bufptr;
         SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -361,7 +361,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
         SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
         const_info->type = SPerl_CONST_INFO_STRING;
         const_info->uv.string_value = str;
-        op->uv_n.ptr_value = const_info;
+        op->uv.ptr_value = const_info;
         
         parser->bufptr = bufptr;
         SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -386,7 +386,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           var[str_len] = '\0';
           
           SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_VAR, NULL, NULL);
-          op->uv_n.string_value = var;
+          op->uv.string_value = var;
           
           parser->bufptr = bufptr;
           SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -428,7 +428,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
             const_info->type = SPerl_CONST_INFO_DOUBLE;
             const_info->uv.double_value = num;
-            op->uv_n.ptr_value = const_info;
+            op->uv.ptr_value = const_info;
             
             free(num_str);
             
@@ -445,7 +445,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
             const_info->type = SPerl_CONST_INFO_INT;
             const_info->uv.int_value = num;
-            op->uv_n.ptr_value = const_info;
+            op->uv.ptr_value = const_info;
 
             free(num_str);
             
@@ -532,7 +532,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
               const_info->type = SPerl_CONST_INFO_BOOLEAN;
               const_info->uv.boolean_value = 1;
-              op->uv_n.ptr_value = const_info;
+              op->uv.ptr_value = const_info;
 
               parser->bufptr = bufptr;
               SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -545,7 +545,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
               const_info->type = SPerl_CONST_INFO_BOOLEAN;
               const_info->uv.boolean_value = 0;
-              op->uv_n.ptr_value = const_info;
+              op->uv.ptr_value = const_info;
 
               parser->bufptr = bufptr;
               SPerl_yylvalp->opval = (SPerl_OP*)op;
@@ -559,7 +559,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
           const_info->type = SPerl_CONST_INFO_STRING;
           const_info->uv.string_value = keyword;
-          op->uv_n.ptr_value = const_info;
+          op->uv.ptr_value = const_info;
           
           parser->bufptr = bufptr;
           SPerl_yylvalp->opval = (SPerl_OP*)op;

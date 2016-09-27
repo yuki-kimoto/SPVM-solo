@@ -14,7 +14,7 @@
 
 SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
   
-  SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv_n.ptr_value;
+  SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
   SPerl_ARRAY_push(parser->current_const_infos, const_info);
   const_info->pool_pos = parser->current_const_pool_size;
   
@@ -69,7 +69,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   }
   
   SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new();
-  class_info->name = op_pkgname->uv_n.string_value;
+  class_info->name = op_pkgname->uv.string_value;
   class_info->op_block = op_block;
   
   // Set method infomations
@@ -142,12 +142,12 @@ SPerl_char SPerl_OP_create_desc_flags(SPerl_OP* op_descripters) {
   if (op_descripters->type == SPerl_OP_LIST) {
     SPerl_OP* op_next = op_descripters->first;
     while (op_next = SPerl_OP_sibling(op_next)) {
-      desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv_n.string_value);
+      desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
     }
   }
   // descripters is descripter
   else if (op_descripters->type == SPerl_OP_CONST) {
-    desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv_n.string_value);
+    desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
   }
   
   return desc_flags;
@@ -158,11 +158,11 @@ SPerl_ARGUMENT_INFO* SPerl_OP_create_argument_info(SPerl_OP* op_subarg) {
   
   // subarg
   // subarg is VAR, desctype
-  argument_info->name = op_subarg->first->uv_n.string_value;
+  argument_info->name = op_subarg->first->uv.string_value;
   SPerl_OP* op_desctype = op_subarg->last;
   
   // type
-  argument_info->type = op_desctype->first->uv_n.string_value;
+  argument_info->type = op_desctype->first->uv.string_value;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
@@ -184,7 +184,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   
   // Create method infomation
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new();
-  method_info->name = op_subname->uv_n.string_value;
+  method_info->name = op_subname->uv.string_value;
   
   // subargs
   // subargs is NULL
@@ -221,7 +221,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   }
   
   // return type
-  method_info->return_type = op_desctype->first->uv_n.string_value;
+  method_info->return_type = op_desctype->first->uv.string_value;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
@@ -245,7 +245,7 @@ void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_int depth) {
   SPerl_int type = op->type;
   printf("%s", SPerl_op_name[type]);
   if (type == SPerl_OP_CONST) {
-    SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv_n.ptr_value;
+    SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
     switch(const_info->type) {
       case SPerl_CONST_INFO_BOOLEAN:
         printf(" boolean %d", const_info->uv.boolean_value);
@@ -277,7 +277,7 @@ void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_int depth) {
     }
   }
   else if (type == SPerl_OP_VAR) {
-    printf(" \"%s\"", op->uv_n.string_value);
+    printf(" \"%s\"", op->uv.string_value);
   }
   printf("\n");
   
