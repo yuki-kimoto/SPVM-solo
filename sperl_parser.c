@@ -17,7 +17,6 @@ SPerl_yy_parser* SPerl_new_parser() {
   memset(parser, 0, sizeof(SPerl_yy_parser));
   
   parser->current_method_infos = SPerl_ARRAY_new(0);
-  parser->current_const_ops = SPerl_ARRAY_new(0);
   parser->current_const_infos = SPerl_ARRAY_new(0);
   parser->class_infos = SPerl_ARRAY_new(0);
   parser->line = 1;
@@ -51,14 +50,6 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
       SPerl_PARSER_dump_method_info(method_info);
     }
     
-    printf("  const_ops\n");
-    SPerl_ARRAY* const_ops = class_info->const_ops;
-    for (j = 0; j < const_ops->length; j++) {
-      SPerl_OP* const_op = SPerl_ARRAY_fetch(const_ops, j);
-      printf("    const_op[%" PRId32 "]\n", j);
-      SPerl_PARSER_dump_const_op(const_op);
-    }
-
     printf("  const_infos\n");
     SPerl_ARRAY* const_infos = class_info->const_infos;
     for (j = 0; j < const_infos->length; j++) {

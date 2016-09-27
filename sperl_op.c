@@ -14,9 +14,6 @@
 
 SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
   
-  SPerl_ARRAY_push(parser->current_const_ops, op);
-  op->const_pos = parser->current_const_pool_size;
-  
   SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv_n.ptr_value;
   SPerl_ARRAY_push(parser->current_const_infos, const_info);
   const_info->pool_pos = parser->current_const_pool_size;
@@ -79,11 +76,6 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   class_info->method_infos = parser->current_method_infos;
   parser->current_method_infos = SPerl_ARRAY_new(0);
   
-  // Set constant ops
-  SPerl_ARRAY* const_ops = parser->current_const_ops;
-  class_info->const_ops = const_ops;
-  parser->current_const_ops = SPerl_ARRAY_new(0);
-
   // Set constant infos
   SPerl_ARRAY* const_infos = parser->current_const_infos;
   class_info->const_infos = const_infos;
