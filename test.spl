@@ -1,6 +1,7 @@
-
-
-
+package Complex {
+  has re : double;
+  has im : double;
+}
 
 package Point {
   sub get1 () : int {
