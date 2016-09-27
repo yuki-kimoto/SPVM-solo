@@ -68,49 +68,45 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
     }
     
     printf("  const_pool\n");
-    for (j = 0; j < const_ops->length; j++) {
-      SPerl_OP* const_op = SPerl_ARRAY_fetch(const_ops, j);
-      SPerl_PARSER_dump_const_pool(class_info->const_pool, const_op);
+    for (j = 0; j < const_infos->length; j++) {
+      SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, j);
+      SPerl_PARSER_dump_const_pool(class_info->const_pool, const_info);
     }
     printf("  const_pool_size %" PRId32 "\n", class_info->const_pool_size);
     printf("  const_pool_next_pos %" PRId32 "\n", class_info->const_pool_next_pos);
   }
 }
 
-void SPerl_PARSER_dump_const_pool(SPerl_char* const_pool, SPerl_OP* const_op) {
-  SPerl_int type = const_op->type;
-  printf("    const_pool[%" PRId32 "]\n", const_op->const_pos);
-  printf("      %s", SPerl_op_name[type]);
-  if (type == SPerl_OP_CONST) {
-    switch(const_op->private) {
-      case SPerl_OPp_CONST_BOOLEAN:
-        printf("      boolean %" PRId32 "\n", *(SPerl_int*)(const_pool + const_op->const_pos));
-        break;
-      case SPerl_OPp_CONST_CHAR:
-        printf("      char %c\n", *(SPerl_int*)(const_pool + const_op->const_pos));
-        break;
-      case SPerl_OPp_CONST_BYTE:
-        printf("      byte %" PRId32 "\n", *(SPerl_int*)(const_pool + const_op->const_pos));
-        break;
-      case SPerl_OPp_CONST_SHORT:
-        printf("      short %" PRId32 "\n", *(SPerl_int*)(const_pool + const_op->const_pos));
-        break;
-      case SPerl_OPp_CONST_INT:
-        printf("      int %" PRId32 "\n", *(SPerl_int*)(const_pool + const_op->const_pos));
-        break;
-      case SPerl_OPp_CONST_LONG:
-        printf("      long %" PRId64 "\n", *(SPerl_long*)(const_pool + const_op->const_pos));
-        break;
-      case SPerl_OPp_CONST_FLOAT:
-        printf("      float %f\n", *(SPerl_float*)(const_pool + const_op->const_pos));
-        break;
-      case SPerl_OPp_CONST_DOUBLE:
-        printf("      double %f\n", *(SPerl_double*)(const_pool + const_op->const_pos));
-        break;
-      case SPerl_OPp_CONST_STRING:
-        printf("      string \"%s\"\n", const_pool + const_op->const_pos);
-        break;
-    }
+void SPerl_PARSER_dump_const_pool(SPerl_char* const_pool, SPerl_CONST_INFO* const_info) {
+  printf("    const_pool[%" PRId32 "]\n", const_info->pool_pos);
+  switch(const_info->type) {
+    case SPerl_CONST_INFO_BOOLEAN:
+      printf("      boolean %" PRId32 "\n", *(SPerl_int*)(const_pool + const_info->pool_pos));
+      break;
+    case SPerl_CONST_INFO_CHAR:
+      printf("      char %c\n", *(SPerl_int*)(const_pool + const_info->pool_pos));
+      break;
+    case SPerl_CONST_INFO_BYTE:
+      printf("      byte %" PRId32 "\n", *(SPerl_int*)(const_pool + const_info->pool_pos));
+      break;
+    case SPerl_CONST_INFO_SHORT:
+      printf("      short %" PRId32 "\n", *(SPerl_int*)(const_pool + const_info->pool_pos));
+      break;
+    case SPerl_CONST_INFO_INT:
+      printf("      int %" PRId32 "\n", *(SPerl_int*)(const_pool + const_info->pool_pos));
+      break;
+    case SPerl_CONST_INFO_LONG:
+      printf("      long %" PRId64 "\n", *(SPerl_long*)(const_pool + const_info->pool_pos));
+      break;
+    case SPerl_CONST_INFO_FLOAT:
+      printf("      float %f\n", *(SPerl_float*)(const_pool + const_info->pool_pos));
+      break;
+    case SPerl_CONST_INFO_DOUBLE:
+      printf("      double %f\n", *(SPerl_double*)(const_pool + const_info->pool_pos));
+      break;
+    case SPerl_CONST_INFO_STRING:
+      printf("      string \"%s\"\n", const_pool + const_info->pool_pos);
+      break;
   }
 }
 

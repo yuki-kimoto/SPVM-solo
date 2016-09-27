@@ -15,11 +15,12 @@
 SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
   
   SPerl_ARRAY_push(parser->current_const_ops, op);
+  op->const_pos = parser->current_const_pool_size;
   
   SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv_n.ptr_value;
   SPerl_ARRAY_push(parser->current_const_infos, const_info);
+  const_info->pool_pos = parser->current_const_pool_size;
   
-  op->const_pos = parser->current_const_pool_size;
   switch(const_info->type) {
     case SPerl_CONST_INFO_BOOLEAN:
       parser->current_const_pool_size += 4;
@@ -83,7 +84,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   class_info->const_ops = const_ops;
   parser->current_const_ops = SPerl_ARRAY_new(0);
 
-  // Set constant ops
+  // Set constant infos
   SPerl_ARRAY* const_infos = parser->current_const_infos;
   class_info->const_infos = const_infos;
   parser->current_const_infos = SPerl_ARRAY_new(0);
@@ -96,36 +97,35 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   // Create constant pool
   SPerl_char* const_pool = (SPerl_char*)malloc(class_info->const_pool_size);
   SPerl_int i;
-  SPerl_int const_pos = 0;
-  for (i = 0; i < const_ops->length; i++) {
-    SPerl_OP* const_op = SPerl_ARRAY_fetch(const_ops, i);
-    switch(const_op->private) {
-      case SPerl_OPp_CONST_BOOLEAN:
-        *(SPerl_int*)(const_pool + const_op->const_pos) = (SPerl_int)const_op->uv.boolean_value;
+  for (i = 0; i < const_infos->length; i++) {
+    SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, i);
+    switch(const_info->type) {
+      case SPerl_CONST_INFO_BOOLEAN:
+        *(SPerl_int*)(const_pool + const_info->pool_pos) = (SPerl_int)const_info->uv.boolean_value;
         break;
-      case SPerl_OPp_CONST_CHAR:
-        *(SPerl_int*)(const_pool + const_op->const_pos) = (SPerl_int)const_op->uv.char_value;
+      case SPerl_CONST_INFO_CHAR:
+        *(SPerl_int*)(const_pool + const_info->pool_pos) = (SPerl_int)const_info->uv.char_value;
         break;
-      case SPerl_OPp_CONST_BYTE:
-        *(SPerl_int*)(const_pool + const_op->const_pos) = (SPerl_int)const_op->uv.byte_value;
+      case SPerl_CONST_INFO_BYTE:
+        *(SPerl_int*)(const_pool + const_info->pool_pos) = (SPerl_int)const_info->uv.byte_value;
         break;
-      case SPerl_OPp_CONST_SHORT:
-        *(SPerl_int*)(const_pool + const_op->const_pos) = (SPerl_int)const_op->uv.short_value;
+      case SPerl_CONST_INFO_SHORT:
+        *(SPerl_int*)(const_pool + const_info->pool_pos) = (SPerl_int)const_info->uv.short_value;
         break;
-      case SPerl_OPp_CONST_INT:
-        *(SPerl_int*)(const_pool + const_op->const_pos) = (SPerl_int)const_op->uv.int_value;
+      case SPerl_CONST_INFO_INT:
+        *(SPerl_int*)(const_pool + const_info->pool_pos) = (SPerl_int)const_info->uv.int_value;
         break;
-      case SPerl_OPp_CONST_LONG:
-        *(SPerl_long*)(const_pool + const_op->const_pos) = (SPerl_long)const_op->uv.int_value;
+      case SPerl_CONST_INFO_LONG:
+        *(SPerl_long*)(const_pool + const_info->pool_pos) = (SPerl_long)const_info->uv.int_value;
         break;
-      case SPerl_OPp_CONST_FLOAT:
-        *(SPerl_float*)(const_pool + const_op->const_pos) = (SPerl_float)const_op->uv.float_value;
+      case SPerl_CONST_INFO_FLOAT:
+        *(SPerl_float*)(const_pool + const_info->pool_pos) = (SPerl_float)const_info->uv.float_value;
         break;
-      case SPerl_OPp_CONST_DOUBLE:
-        *(SPerl_double*)(const_pool + const_op->const_pos) = (SPerl_double)const_op->uv.double_value;
+      case SPerl_CONST_INFO_DOUBLE:
+        *(SPerl_double*)(const_pool + const_info->pool_pos) = (SPerl_double)const_info->uv.double_value;
         break;
-      case SPerl_OPp_CONST_STRING:
-        strcpy(const_pool + const_op->const_pos, const_op->uv.string_value);
+      case SPerl_CONST_INFO_STRING:
+        strcpy(const_pool + const_info->pool_pos, const_info->uv.string_value);
         break;
     }
   }
