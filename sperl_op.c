@@ -82,6 +82,11 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   SPerl_ARRAY* const_ops = parser->current_const_ops;
   class_info->const_ops = const_ops;
   parser->current_const_ops = SPerl_ARRAY_new(0);
+
+  // Set constant ops
+  SPerl_ARRAY* const_infos = parser->current_const_infos;
+  class_info->const_infos = const_infos;
+  parser->current_const_infos = SPerl_ARRAY_new(0);
   
   // Constant pool size
   class_info->const_pool_next_pos = parser->current_const_pool_size;

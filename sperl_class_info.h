@@ -14,6 +14,7 @@ struct SPerl_class_info {
   SPerl_int field_count;
   SPerl_ARRAY* method_infos;
   SPerl_ARRAY* const_ops;
+  SPerl_ARRAY* const_infos;
   SPerl_OP* op_block;
   SPerl_char* const_pool;
   SPerl_int const_pool_size;

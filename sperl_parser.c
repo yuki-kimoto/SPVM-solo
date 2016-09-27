@@ -9,6 +9,7 @@
 #include "sperl_array.h"
 #include "sperl_argument_info.h"
 #include "sperl_class_info.h"
+#include "sperl_const_info.h"
 
 
 SPerl_yy_parser* SPerl_new_parser() {
@@ -58,6 +59,14 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
       SPerl_PARSER_dump_const_op(const_op);
     }
 
+    printf("  const_infos\n");
+    SPerl_ARRAY* const_infos = class_info->const_infos;
+    for (j = 0; j < const_infos->length; j++) {
+      SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)SPerl_ARRAY_fetch(const_infos, j);
+      printf("    const_info[%" PRId32 "]\n", j);
+      SPerl_PARSER_dump_const_info(const_info);
+    }
+    
     printf("  const_pool\n");
     for (j = 0; j < const_ops->length; j++) {
       SPerl_OP* const_op = SPerl_ARRAY_fetch(const_ops, j);
@@ -138,6 +147,38 @@ void SPerl_PARSER_dump_const_op(SPerl_OP* const_op) {
         printf("      string \"%s\"\n", const_op->uv.string_value);
         break;
     }
+  }
+}
+
+void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info) {
+  switch(const_info->type) {
+    case SPerl_CONST_INFO_BOOLEAN:
+      printf("      boolean %" PRId32 "\n", const_info->uv.boolean_value);
+      break;
+    case SPerl_CONST_INFO_CHAR:
+      printf("      char %c\n", const_info->uv.char_value);
+      break;
+    case SPerl_CONST_INFO_BYTE:
+      printf("      byte %" PRId32 "\n", const_info->uv.byte_value);
+      break;
+    case SPerl_CONST_INFO_SHORT:
+      printf("      short %" PRId32 "\n", const_info->uv.short_value);
+      break;
+    case SPerl_CONST_INFO_INT:
+      printf("      int %" PRId32 "\n", const_info->uv.int_value);
+      break;
+    case SPerl_CONST_INFO_LONG:
+      printf("      long %" PRId64 "\n", const_info->uv.long_value);
+      break;
+    case SPerl_CONST_INFO_FLOAT:
+      printf("      float %f\n", const_info->uv.float_value);
+      break;
+    case SPerl_CONST_INFO_DOUBLE:
+      printf("      double %f\n", const_info->uv.double_value);
+      break;
+    case SPerl_CONST_INFO_STRING:
+      printf("      string \"%s\"\n", const_info->uv.string_value);
+      break;
   }
 }
 

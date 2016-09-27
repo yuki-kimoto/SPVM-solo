@@ -5,6 +5,7 @@
 #include "sperl_op.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
+#include "sperl_const_info.h"
 
 /* Parser information */
 struct SPerl_yy_parser_{
@@ -55,6 +56,7 @@ SPerl_yy_parser* SPerl_new_parser();
 void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info);
 void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser);
 void SPerl_PARSER_dump_const_op(SPerl_OP* const_op);
+void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info);
 void SPerl_PARSER_dump_const_pool(SPerl_char* const_pool, SPerl_OP* const_op);
 
 /* Expected token */

@@ -1,7 +1,7 @@
 #ifndef SPerl_CONST_INFO_H
 #define SPerl_CONST_INFO_H
 
-enum SPerl_COSNT_INFO_TYPE {
+enum SPerl_CONST_INFO_TYPE {
   SPerl_CONST_INFO_BOOLEAN,
   SPerl_CONST_INFO_CHAR,
   SPerl_CONST_INFO_BYTE,
@@ -26,7 +26,7 @@ struct SPerl_const_info {
     SPerl_double double_value;
     SPerl_char* string_value;
   } uv;
-  SPerl_int pos;
+  SPerl_int pool_pos;
 };
 
 SPerl_CONST_INFO* SPerl_CONST_INFO_new();
