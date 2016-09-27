@@ -245,38 +245,39 @@ void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_int depth) {
   SPerl_int type = op->type;
   printf("%s", SPerl_op_name[type]);
   if (type == SPerl_OP_CONST) {
-    switch(op->private) {
-      case SPerl_OPp_CONST_BOOLEAN:
-        printf(" boolean %d", op->uv.boolean_value);
+    SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv_n.ptr_value;
+    switch(const_info->type) {
+      case SPerl_CONST_INFO_BOOLEAN:
+        printf(" boolean %d", const_info->uv.boolean_value);
         break;
-      case SPerl_OPp_CONST_CHAR:
-        printf(" char %c", op->uv.char_value);
+      case SPerl_CONST_INFO_CHAR:
+        printf(" char %c", const_info->uv.char_value);
         break;
-      case SPerl_OPp_CONST_BYTE:
-        printf(" byte %d", op->uv.byte_value);
+      case SPerl_CONST_INFO_BYTE:
+        printf(" byte %d", const_info->uv.byte_value);
         break;
-      case SPerl_OPp_CONST_SHORT:
-        printf(" short %d", op->uv.short_value);
+      case SPerl_CONST_INFO_SHORT:
+        printf(" short %d", const_info->uv.short_value);
         break;
-      case SPerl_OPp_CONST_INT:
-        printf(" int %d", op->uv.int_value);
+      case SPerl_CONST_INFO_INT:
+        printf(" int %d", const_info->uv.int_value);
         break;
-      case SPerl_OPp_CONST_LONG:
-        printf(" long %ld", op->uv.long_value);
+      case SPerl_CONST_INFO_LONG:
+        printf(" long %ld", const_info->uv.long_value);
         break;
-      case SPerl_OPp_CONST_FLOAT:
-        printf(" float %f", op->uv.float_value);
+      case SPerl_CONST_INFO_FLOAT:
+        printf(" float %f", const_info->uv.float_value);
         break;
-      case SPerl_OPp_CONST_DOUBLE:
-        printf(" double %f", op->uv.double_value);
+      case SPerl_CONST_INFO_DOUBLE:
+        printf(" double %f", const_info->uv.double_value);
         break;
-      case SPerl_OPp_CONST_STRING:
-        printf(" string \"%s\"", op->uv.string_value);
+      case SPerl_CONST_INFO_STRING:
+        printf(" string \"%s\"", const_info->uv.string_value);
         break;
     }
   }
   else if (type == SPerl_OP_VAR) {
-    printf(" \"%s\"", op->uv.string_value);
+    printf(" \"%s\"", op->uv_n.string_value);
   }
   printf("\n");
   
