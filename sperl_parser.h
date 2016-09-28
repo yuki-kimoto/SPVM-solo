@@ -36,6 +36,9 @@ struct SPerl_yy_parser_{
   /* current constant op infirmation array */
   SPerl_ARRAY* current_const_infos;
   
+  /* constant pool */
+  SPerl_char* const_pool;
+  
   /* method information hash */
   SPerl_HASH* method_info_h;
   

@@ -22,6 +22,8 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->line = 1;
   parser->current_const_pool_size = 0;
   
+  parser->const_pool = (SPerl_char)calloc(1, sizeof(SPerl_char));
+  
   return parser;
 }
 

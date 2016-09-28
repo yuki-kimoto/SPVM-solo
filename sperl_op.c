@@ -16,7 +16,6 @@ SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
   
   SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
   SPerl_ARRAY_push(parser->current_const_infos, const_info);
-  const_info->pool_pos = parser->current_const_pool_size;
   
   switch(const_info->type) {
     case SPerl_CONST_INFO_BOOLEAN:
