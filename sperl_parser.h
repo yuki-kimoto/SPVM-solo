@@ -38,7 +38,7 @@ struct SPerl_yy_parser_{
   
   /* constant pool */
   SPerl_int* const_pool_number;
-  SPerl_char* const_pool_string;
+  SPerl_int* const_pool_string;
   
   /* method information hash */
   SPerl_HASH* method_info_h;
