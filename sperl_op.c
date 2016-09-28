@@ -19,40 +19,40 @@ SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
   
   switch(const_info->type) {
     case SPerl_CONST_INFO_BOOLEAN:
-      parser->current_const_pool_size += 4;
+      parser->const_pool_pos += 4;
       printf("CONST(boolean %d) -> term\n", const_info->uv.boolean_value);
       break;
     case SPerl_CONST_INFO_CHAR:
-      parser->current_const_pool_size += 4;
+      parser->const_pool_pos += 4;
       printf("CONST(char %c) -> term\n", const_info->uv.char_value);
       break;
     case SPerl_CONST_INFO_BYTE:
-      parser->current_const_pool_size += 4;
+      parser->const_pool_pos += 4;
       printf("CONST(byte %d) -> term\n", const_info->uv.byte_value);
       break;
     case SPerl_CONST_INFO_SHORT:
-      parser->current_const_pool_size += 4;
+      parser->const_pool_pos += 4;
       printf("CONST(short %d) -> term\n", const_info->uv.short_value);
       break;
     case SPerl_CONST_INFO_INT:
-      parser->current_const_pool_size += 4;
+      parser->const_pool_pos += 4;
       printf("CONST(int %d) -> term\n", const_info->uv.int_value);
       break;
     case SPerl_CONST_INFO_LONG:
-      parser->current_const_pool_size += 8;
+      parser->const_pool_pos += 8;
       printf("CONST(long %ld) -> term\n", const_info->uv.long_value);
       break;
     case SPerl_CONST_INFO_FLOAT:
-      parser->current_const_pool_size += 4;
+      parser->const_pool_pos += 4;
       printf("CONST(float %f) -> term\n", const_info->uv.float_value);
       break;
     case SPerl_CONST_INFO_DOUBLE:
-      parser->current_const_pool_size += 8;
+      parser->const_pool_pos += 8;
       printf("CONST(double %f) -> term\n", const_info->uv.double_value);
       break;
     case SPerl_CONST_INFO_STRING: {
       SPerl_int const_pool_size = ((int)(((strlen(const_info->uv.string_value) + 1) + 3) / 4)) * 4 ;
-      parser->current_const_pool_size += const_pool_size;
+      parser->const_pool_pos += const_pool_size;
       printf("CONST(string %s) -> term\n", const_info->uv.string_value);
       break;
     }
@@ -81,9 +81,9 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   parser->current_const_infos = SPerl_ARRAY_new(0);
   
   // Constant pool size
-  class_info->const_pool_next_pos = parser->current_const_pool_size;
-  class_info->const_pool_size = parser->current_const_pool_size * 2;
-  parser->current_const_pool_size = 0;
+  class_info->const_pool_next_pos = parser->const_pool_pos;
+  class_info->const_pool_size = parser->const_pool_pos * 2;
+  parser->const_pool_pos = 0;
   
   // Create constant pool
   SPerl_char* const_pool = (SPerl_char*)malloc(class_info->const_pool_size);

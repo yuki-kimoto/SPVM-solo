@@ -42,7 +42,7 @@ struct SPerl_yy_parser_{
   /* method information hash */
   SPerl_HASH* method_info_h;
   
-  SPerl_int current_const_pool_size;
+  SPerl_int const_pool_pos;
   
   SPerl_int line;
 };
