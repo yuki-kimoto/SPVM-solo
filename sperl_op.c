@@ -79,6 +79,8 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
     switch(const_info->type) {
       case SPerl_CONST_INFO_BOOLEAN:
         *(const_pool + parser->const_pool_pos) = (SPerl_int)const_info->uv.boolean_value;
+        
+        warn("pppppppppppppppppp %d", const_info->uv.boolean_value);
         parser->const_pool_pos += 1;
         break;
       case SPerl_CONST_INFO_CHAR:

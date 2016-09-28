@@ -13,14 +13,13 @@
 
 
 SPerl_yy_parser* SPerl_new_parser() {
-  SPerl_yy_parser* parser = (SPerl_yy_parser*)malloc(sizeof(SPerl_yy_parser));
+  SPerl_yy_parser* parser = (SPerl_yy_parser*)calloc(1, sizeof(SPerl_yy_parser));
   memset(parser, 0, sizeof(SPerl_yy_parser));
   
   parser->current_method_infos = SPerl_ARRAY_new(0);
   parser->current_const_infos = SPerl_ARRAY_new(0);
   parser->class_infos = SPerl_ARRAY_new(0);
   parser->line = 1;
-  parser->const_pool_pos = 0;
   parser->const_pool = (SPerl_int*)calloc(1024, sizeof(SPerl_int));
   
   return parser;
@@ -101,6 +100,7 @@ void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info) {
       printf("      string \"%s\"\n", const_info->uv.string_value);
       break;
   }
+  printf("      pool_pos => %d\n", const_info->pool_pos);
 }
 
 void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info) {
