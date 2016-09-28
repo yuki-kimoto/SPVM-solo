@@ -62,7 +62,7 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
 
 void SPerl_PARSER_dump_const_pool(SPerl_yy_parser* parser) {
   SPerl_int* const_pool = parser->const_pool;
-  SPerl_int* const_pool_length = parser->const_pool_pos;
+  SPerl_int const_pool_length = parser->const_pool_pos;
   
   SPerl_int i;
   for (i = 0; i < const_pool_length; i++) {

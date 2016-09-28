@@ -13,7 +13,6 @@ struct SPerl_class_info {
   SPerl_ARRAY* field_infos;
   SPerl_ARRAY* method_infos;
   SPerl_ARRAY* const_infos;
-  SPerl_int pool_pos;
   SPerl_OP* op_block;
 };
 
