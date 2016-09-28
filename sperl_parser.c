@@ -14,7 +14,6 @@
 
 SPerl_yy_parser* SPerl_new_parser() {
   SPerl_yy_parser* parser = (SPerl_yy_parser*)calloc(1, sizeof(SPerl_yy_parser));
-  memset(parser, 0, sizeof(SPerl_yy_parser));
   
   parser->current_method_infos = SPerl_ARRAY_new(0);
   parser->current_const_infos = SPerl_ARRAY_new(0);

@@ -76,11 +76,10 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   for (i = 0; i < const_infos->length; i++) {
     SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, i);
     const_info->pool_pos = parser->const_pool_pos;
+    
     switch(const_info->type) {
       case SPerl_CONST_INFO_BOOLEAN:
         *(const_pool + parser->const_pool_pos) = (SPerl_int)const_info->uv.boolean_value;
-        
-        warn("pppppppppppppppppp %d", const_info->uv.boolean_value);
         parser->const_pool_pos += 1;
         break;
       case SPerl_CONST_INFO_CHAR:

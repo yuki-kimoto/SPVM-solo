@@ -26,6 +26,22 @@ int main(int argc, char *argv[])
     // capacity
     OK(hash->capacity == 101);
   }
+
+  // Hash - first same key
+  {
+    SPerl_HASH* hash = SPerl_HASH_new(101);
+    SPerl_int value1 = 3;
+    SPerl_HASH_insert_norehash(hash, "key1", 4, &value1);
+
+    SPerl_int value1_ret = *(SPerl_int*)SPerl_HASH_search(hash, "key1", 4);
+    OK(value1_ret == 3);
+
+    SPerl_int value2 = 5;
+    SPerl_HASH_insert_norehash(hash, "key", 3, &value2);
+    
+    SPerl_int value2_ret = *(SPerl_int*)SPerl_HASH_search(hash, "key", 3);
+    OK(value2_ret == 5);
+  }
   
   // Hash - insert and search
   {
