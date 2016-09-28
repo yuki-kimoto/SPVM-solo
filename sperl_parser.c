@@ -58,47 +58,16 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
       printf("    const_info[%" PRId32 "]\n", j);
       SPerl_PARSER_dump_const_info(const_info);
     }
-    
-    printf("  const_pool\n");
-    for (j = 0; j < const_infos->length; j++) {
-      SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, j);
-      SPerl_PARSER_dump_const_pool(class_info->const_pool, const_info);
-    }
-    printf("  const_pool_size %" PRId32 "\n", class_info->const_pool_size);
-    printf("  const_pool_next_pos %" PRId32 "\n", class_info->const_pool_next_pos);
   }
 }
 
-void SPerl_PARSER_dump_const_pool(SPerl_char* const_pool, SPerl_CONST_INFO* const_info) {
-  printf("    const_pool[%" PRId32 "]\n", const_info->pool_pos);
-  switch(const_info->type) {
-    case SPerl_CONST_INFO_BOOLEAN:
-      printf("      boolean %" PRId32 "\n", *(SPerl_int*)(const_pool + const_info->pool_pos));
-      break;
-    case SPerl_CONST_INFO_CHAR:
-      printf("      char %c\n", *(SPerl_int*)(const_pool + const_info->pool_pos));
-      break;
-    case SPerl_CONST_INFO_BYTE:
-      printf("      byte %" PRId32 "\n", *(SPerl_int*)(const_pool + const_info->pool_pos));
-      break;
-    case SPerl_CONST_INFO_SHORT:
-      printf("      short %" PRId32 "\n", *(SPerl_int*)(const_pool + const_info->pool_pos));
-      break;
-    case SPerl_CONST_INFO_INT:
-      printf("      int %" PRId32 "\n", *(SPerl_int*)(const_pool + const_info->pool_pos));
-      break;
-    case SPerl_CONST_INFO_LONG:
-      printf("      long %" PRId64 "\n", *(SPerl_long*)(const_pool + const_info->pool_pos));
-      break;
-    case SPerl_CONST_INFO_FLOAT:
-      printf("      float %f\n", *(SPerl_float*)(const_pool + const_info->pool_pos));
-      break;
-    case SPerl_CONST_INFO_DOUBLE:
-      printf("      double %f\n", *(SPerl_double*)(const_pool + const_info->pool_pos));
-      break;
-    case SPerl_CONST_INFO_STRING:
-      printf("      string \"%s\"\n", const_pool + const_info->pool_pos);
-      break;
+void SPerl_PARSER_dump_const_pool(SPerl_yy_parser* parser) {
+  SPerl_int* const_pool = parser->const_pool;
+  SPerl_int* const_pool_length = parser->const_pool_pos;
+  
+  SPerl_int i;
+  for (i = 0; i < const_pool_length; i++) {
+    printf("const_pool[%d] %d\n", i, const_pool[i]);
   }
 }
 

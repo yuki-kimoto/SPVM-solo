@@ -10,13 +10,10 @@
 struct SPerl_class_info {
   SPerl_char* name;
   SPerl_char desc_flags;
-  SPerl_int field_count;
   SPerl_ARRAY* field_infos;
   SPerl_ARRAY* method_infos;
   SPerl_ARRAY* const_infos;
-  SPerl_char* const_pool;
-  SPerl_int const_pool_size;
-  SPerl_int const_pool_next_pos;
+  SPerl_int pool_pos;
   SPerl_OP* op_block;
 };
 

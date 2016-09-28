@@ -19,40 +19,30 @@ SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
   
   switch(const_info->type) {
     case SPerl_CONST_INFO_BOOLEAN:
-      parser->const_pool_pos += 4;
       printf("CONST(boolean %d) -> term\n", const_info->uv.boolean_value);
       break;
     case SPerl_CONST_INFO_CHAR:
-      parser->const_pool_pos += 4;
       printf("CONST(char %c) -> term\n", const_info->uv.char_value);
       break;
     case SPerl_CONST_INFO_BYTE:
-      parser->const_pool_pos += 4;
       printf("CONST(byte %d) -> term\n", const_info->uv.byte_value);
       break;
     case SPerl_CONST_INFO_SHORT:
-      parser->const_pool_pos += 4;
       printf("CONST(short %d) -> term\n", const_info->uv.short_value);
       break;
     case SPerl_CONST_INFO_INT:
-      parser->const_pool_pos += 4;
       printf("CONST(int %d) -> term\n", const_info->uv.int_value);
       break;
     case SPerl_CONST_INFO_LONG:
-      parser->const_pool_pos += 8;
       printf("CONST(long %ld) -> term\n", const_info->uv.long_value);
       break;
     case SPerl_CONST_INFO_FLOAT:
-      parser->const_pool_pos += 4;
       printf("CONST(float %f) -> term\n", const_info->uv.float_value);
       break;
     case SPerl_CONST_INFO_DOUBLE:
-      parser->const_pool_pos += 8;
       printf("CONST(double %f) -> term\n", const_info->uv.double_value);
       break;
     case SPerl_CONST_INFO_STRING: {
-      SPerl_int const_pool_size = ((int)(((strlen(const_info->uv.string_value) + 1) + 3) / 4)) * 4 ;
-      parser->const_pool_pos += const_pool_size;
       printf("CONST(string %s) -> term\n", const_info->uv.string_value);
       break;
     }
@@ -80,47 +70,51 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   class_info->const_infos = const_infos;
   parser->current_const_infos = SPerl_ARRAY_new(0);
   
-  // Constant pool size
-  class_info->const_pool_next_pos = parser->const_pool_pos;
-  class_info->const_pool_size = parser->const_pool_pos * 2;
-  parser->const_pool_pos = 0;
-  
   // Create constant pool
-  SPerl_char* const_pool = (SPerl_char*)malloc(class_info->const_pool_size);
+  SPerl_int* const_pool = parser->const_pool;
   SPerl_int i;
   for (i = 0; i < const_infos->length; i++) {
     SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, i);
+    const_info->pool_pos = parser->const_pool_pos;
     switch(const_info->type) {
       case SPerl_CONST_INFO_BOOLEAN:
-        *(SPerl_int*)(const_pool + const_info->pool_pos) = (SPerl_int)const_info->uv.boolean_value;
+        *(const_pool + parser->const_pool_pos) = (SPerl_int)const_info->uv.boolean_value;
+        parser->const_pool_pos += 1;
         break;
       case SPerl_CONST_INFO_CHAR:
-        *(SPerl_int*)(const_pool + const_info->pool_pos) = (SPerl_int)const_info->uv.char_value;
+        *(const_pool + parser->const_pool_pos) = (SPerl_int)const_info->uv.char_value;
+        parser->const_pool_pos += 1;
         break;
       case SPerl_CONST_INFO_BYTE:
-        *(SPerl_int*)(const_pool + const_info->pool_pos) = (SPerl_int)const_info->uv.byte_value;
+        *(const_pool + parser->const_pool_pos) = (SPerl_int)const_info->uv.byte_value;
+        parser->const_pool_pos += 1;
         break;
       case SPerl_CONST_INFO_SHORT:
-        *(SPerl_int*)(const_pool + const_info->pool_pos) = (SPerl_int)const_info->uv.short_value;
+        *(const_pool + parser->const_pool_pos) = (SPerl_int)const_info->uv.short_value;
+        parser->const_pool_pos += 1;
         break;
       case SPerl_CONST_INFO_INT:
-        *(SPerl_int*)(const_pool + const_info->pool_pos) = (SPerl_int)const_info->uv.int_value;
+        *(const_pool + parser->const_pool_pos) = const_info->uv.int_value;
+        parser->const_pool_pos += 1;
         break;
       case SPerl_CONST_INFO_LONG:
-        *(SPerl_long*)(const_pool + const_info->pool_pos) = (SPerl_long)const_info->uv.int_value;
+        *(SPerl_long*)(const_pool + parser->const_pool_pos) = const_info->uv.long_value;
+        parser->const_pool_pos += 2;
         break;
       case SPerl_CONST_INFO_FLOAT:
-        *(SPerl_float*)(const_pool + const_info->pool_pos) = (SPerl_float)const_info->uv.float_value;
+        *(SPerl_float*)(const_pool + const_info->pool_pos) = const_info->uv.float_value;
+        parser->const_pool_pos += 1;
         break;
       case SPerl_CONST_INFO_DOUBLE:
-        *(SPerl_double*)(const_pool + const_info->pool_pos) = (SPerl_double)const_info->uv.double_value;
+        *(SPerl_double*)(const_pool + const_info->pool_pos) = const_info->uv.double_value;
+        parser->const_pool_pos += 2;
         break;
       case SPerl_CONST_INFO_STRING:
-        strcpy(const_pool + const_info->pool_pos, const_info->uv.string_value);
+        strcpy((SPerl_char*)(const_pool + const_info->pool_pos), const_info->uv.string_value);
+        parser->const_pool_pos += (SPerl_int)(((strlen(const_info->uv.string_value) + 1) + 3) / sizeof(SPerl_int));
         break;
     }
   }
-  class_info->const_pool = const_pool;
   
   // Add class information
   SPerl_ARRAY_push(parser->class_infos, class_info);

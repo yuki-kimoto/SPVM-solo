@@ -46,6 +46,9 @@ int main(int argc, char *argv[])
     
     printf("\n[Class infomation]\n");
     SPerl_PARSER_dump_class_infos(parser);
+    
+    printf("\n[Constant pool]\n");
+    SPerl_PARSER_dump_const_pool(parser);
   }
   
   free(parser->linestr);
