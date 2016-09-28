@@ -129,15 +129,12 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
     if (value) {
       SPerl_int pool_pos = *(SPerl_int*)value;
       const_info->pool_pos = pool_pos;
-      warn("aaaaaaaaaaaaaaaaaa %d", pool_pos);
     }
     else {
       const_info->pool_pos = parser->const_pool_pos;
       SPerl_int* pool_pos_ptr = (SPerl_int*)calloc(1, sizeof(SPerl_int));
       *pool_pos_ptr = parser->const_pool_pos;
       SPerl_HASH_insert(parser->same_const_h, key_ptr, key_len, pool_pos_ptr);
-
-      warn("bbbbbbbbbbbbbbbbbb %d", *pool_pos_ptr);
       
       switch(const_info->type) {
         case SPerl_CONST_INFO_BOOLEAN:

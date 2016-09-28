@@ -20,7 +20,8 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->class_infos = SPerl_ARRAY_new(0);
   parser->same_const_h = SPerl_HASH_new(0);
   parser->line = 1;
-  parser->const_pool = (SPerl_int*)calloc(1024, sizeof(SPerl_int));
+  parser->const_pool_size = 1024;
+  parser->const_pool = (SPerl_int*)calloc(parser->const_pool_size, sizeof(SPerl_int));
   
   return parser;
 }
