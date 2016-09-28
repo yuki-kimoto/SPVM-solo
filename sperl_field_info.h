@@ -10,4 +10,6 @@ struct SPerl_field_info {
   SPerl_char* name;
 };
 
+SPerl_FIELD_INFO* SPerl_FIELD_INFO_new();
+
 #endif
