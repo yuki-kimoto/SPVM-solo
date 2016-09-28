@@ -12,6 +12,10 @@
 #include "sperl_parser.h"
 #include "sperl_const_info.h"
 
+SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
+  return SPerl_OP_newOP(SPerl_OP_HAS, op_field_name, op_desctype);
+}
+
 SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
   
   SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;

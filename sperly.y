@@ -208,7 +208,7 @@ declvar
     }
   | HAS fieldname ':' desctype
     {
-      $$ = SPerl_OP_newOP(SPerl_OP_HAS, $2, $4);
+      $$ = SPerl_OP_newOP_HAS(parser, $2, $4);
       printf("HAS fieldname : desctype -> declvar\n");
     }
 

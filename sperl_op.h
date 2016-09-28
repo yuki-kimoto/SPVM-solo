@@ -73,16 +73,6 @@ extern SPerl_char* const SPerl_op_name[];
 #define SPerl_OPp_CONST_DOUBLE 8
 #define SPerl_OPp_CONST_STRING 9
 
-/*
-boolean	1bit
-byte	8bit
-short	16bit
-int	32bit
-float	32bit
-long	64bit
-double	64bit
-*/
-
 /* Binary operation */
 struct SPerl_op {
   SPerl_char type;
@@ -120,6 +110,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
 SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters);
 SPerl_OP* SPerl_OP_newOP_LIST();
 SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op);
+SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype);
 
 void SPerl_dump_ast(SPerl_OP* op, SPerl_int depth);
 
