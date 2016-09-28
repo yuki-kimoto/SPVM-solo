@@ -43,7 +43,7 @@ SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
       printf("CONST(boolean %d) -> term\n", const_info->uv.boolean_value);
       break;
     case SPerl_CONST_INFO_CHAR:
-      printf("CONST(char %c) -> term\n", const_info->uv.char_value);
+      printf("CONST(char '%c') -> term\n", const_info->uv.char_value);
       break;
     case SPerl_CONST_INFO_BYTE:
       printf("CONST(byte %d) -> term\n", const_info->uv.byte_value);
@@ -339,7 +339,7 @@ void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_int depth) {
         printf(" boolean %d", const_info->uv.boolean_value);
         break;
       case SPerl_CONST_INFO_CHAR:
-        printf(" char %c", const_info->uv.char_value);
+        printf(" char '%c'", const_info->uv.char_value);
         break;
       case SPerl_CONST_INFO_BYTE:
         printf(" byte %d", const_info->uv.byte_value);
@@ -365,6 +365,9 @@ void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_int depth) {
     }
   }
   else if (type == SPerl_OP_VAR) {
+    printf(" \"%s\"", op->uv.string_value);
+  }
+  else if (type == SPerl_OP_WORD) {
     printf(" \"%s\"", op->uv.string_value);
   }
   printf("\n");

@@ -86,7 +86,7 @@ void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info) {
       printf("      boolean %" PRId32 "\n", const_info->uv.boolean_value);
       break;
     case SPerl_CONST_INFO_CHAR:
-      printf("      char %c\n", const_info->uv.char_value);
+      printf("      char '%c'\n", const_info->uv.char_value);
       break;
     case SPerl_CONST_INFO_BYTE:
       printf("      byte %" PRId32 "\n", const_info->uv.byte_value);

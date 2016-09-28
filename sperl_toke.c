@@ -554,7 +554,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             }
           }
           
-          SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
+          SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_WORD, NULL, NULL, 0, 0);
 
           op->uv.string_value = keyword;
           

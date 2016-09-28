@@ -53,5 +53,6 @@ SPerl_char* const SPerl_op_name[] = {
   "ne",
   "statement",
   "grammer",
-  "desctype"
+  "desctype",
+  "word"
 };
