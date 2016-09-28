@@ -71,7 +71,6 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   parser->current_const_infos = SPerl_ARRAY_new(0);
   
   // Create constant pool
-  SPerl_int* const_pool = parser->const_pool;
   SPerl_int i;
   for (i = 0; i < const_infos->length; i++) {
     SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, i);
@@ -136,6 +135,16 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
       *pool_pos_ptr = parser->const_pool_pos;
       SPerl_HASH_insert(parser->same_const_h, key_ptr, key_len, pool_pos_ptr);
       
+      // Realloc
+      if (parser->const_pool_pos >= parser->const_pool_size) {
+        SPerl_int new_const_pool_size = parser->const_pool_size * 2;
+        SPerl_int* new_const_pool = calloc(new_const_pool_size, sizeof(SPerl_int));
+        memcpy(new_const_pool, parser->const_pool, parser->const_pool_size);
+        parser->const_pool = new_const_pool;
+        parser->const_pool_size = new_const_pool_size;
+      }
+
+      SPerl_int* const_pool = parser->const_pool;
       switch(const_info->type) {
         case SPerl_CONST_INFO_BOOLEAN:
           *(const_pool + parser->const_pool_pos) = (SPerl_int)const_info->uv.boolean_value;
