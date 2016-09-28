@@ -15,6 +15,7 @@
 SPerl_yy_parser* SPerl_new_parser() {
   SPerl_yy_parser* parser = (SPerl_yy_parser*)calloc(1, sizeof(SPerl_yy_parser));
   
+  parser->current_field_infos = SPerl_ARRAY_new(0);
   parser->current_method_infos = SPerl_ARRAY_new(0);
   parser->current_const_infos = SPerl_ARRAY_new(0);
   parser->class_infos = SPerl_ARRAY_new(0);
@@ -37,14 +38,22 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
   for (i = 0; i < class_infos->length; i++) {
     SPerl_CLASS_INFO* class_info = (SPerl_CLASS_INFO*)SPerl_ARRAY_fetch(class_infos, i);
     
-    printf("class_info[" PRId64 "]\n", i);
+    printf("class_info[%d]\n", i);
     printf("  name => \"%s\"\n", class_info->name);
     printf("  op_block => %x\n", class_info->op_block);
     
     // Dump method informations
-    SPerl_ARRAY* method_infos = class_info->method_infos;
     SPerl_int j;
+    printf("  field_infos\n");
+    SPerl_ARRAY* field_infos = class_info->field_infos;
+    for (j = 0; j < field_infos->length; j++) {
+      SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
+      printf("    field_info[%" PRId32 "]\n", j);
+      SPerl_PARSER_dump_field_info(field_info);
+    }
+    
     printf("  method_infos\n");
+    SPerl_ARRAY* method_infos = class_info->method_infos;
     for (j = 0; j < method_infos->length; j++) {
       SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
       printf("    method_info[%" PRId32 "]\n", j);
@@ -130,6 +139,23 @@ void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info) {
     printf("      desc_flags => \"%s\"\n", desc_str);
     printf("      treturn_type => \"%s\"\n", method_info->return_type);
     printf("      op_block => %x\n", method_info->op_block);
+    
+    free(desc_str);
+  }
+  else {
+    printf("      None\n");
+  }
+}
+
+
+void SPerl_PARSER_dump_field_info(SPerl_FIELD_INFO* field_info) {
+  if (field_info) {
+    SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
+    SPerl_DESCRIPTER_to_str(desc_str, field_info->desc_flags);
+    
+    printf("      name => \"%s\"\n", field_info->name);
+    printf("      desc_flags => \"%s\"\n", desc_str);
+    printf("      type => \"%s\"\n", field_info->type);
     
     free(desc_str);
   }

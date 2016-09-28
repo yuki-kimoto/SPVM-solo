@@ -11,9 +11,26 @@
 #include "sperl_class_info.h"
 #include "sperl_parser.h"
 #include "sperl_const_info.h"
+#include "sperl_field_info.h"
 
 SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
-  return SPerl_OP_newOP(SPerl_OP_HAS, op_field_name, op_desctype);
+  SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_HAS, op_field_name, op_desctype);
+  
+  // Create field information
+  SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new();
+  field_info->name = op_field_name->uv.string_value;
+  
+  // type
+  field_info->type = op_desctype->first->uv.string_value;
+  
+  // descripters
+  SPerl_OP* op_descripters = op_desctype->last;
+  field_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
+  
+  // Add field information
+  SPerl_ARRAY_push(parser->current_field_infos, field_info);
+  
+  return op;
 }
 
 SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
@@ -65,11 +82,15 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   class_info->name = op_pkgname->uv.string_value;
   class_info->op_block = op_block;
   
-  // Set method infomations
+  // Set field information
+  class_info->field_infos = parser->current_field_infos;
+  parser->current_field_infos = SPerl_ARRAY_new(0);
+  
+  // Set method informations
   class_info->method_infos = parser->current_method_infos;
   parser->current_method_infos = SPerl_ARRAY_new(0);
   
-  // Set constant infos
+  // Set constant informations
   SPerl_ARRAY* const_infos = parser->current_const_infos;
   class_info->const_infos = const_infos;
   parser->current_const_infos = SPerl_ARRAY_new(0);

@@ -6,6 +6,7 @@
 #include "sperl_array.h"
 #include "sperl_hash.h"
 #include "sperl_const_info.h"
+#include "sperl_field_info.h"
 
 /* Parser information */
 struct SPerl_yy_parser_{
@@ -36,6 +37,9 @@ struct SPerl_yy_parser_{
   /* current constant op infirmation array */
   SPerl_ARRAY* current_const_infos;
   
+  /* current field infomations */
+  SPerl_ARRAY* current_field_infos;
+  
   SPerl_HASH* same_const_h;
   
   /* constant pool */
@@ -64,6 +68,7 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser);
 void SPerl_PARSER_dump_const_op(SPerl_OP* const_op);
 void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info);
 void SPerl_PARSER_dump_const_pool(SPerl_yy_parser* parser);
+void SPerl_PARSER_dump_field_info(SPerl_FIELD_INFO* field_info);
 
 /* Expected token */
 enum SPerl_OP_EXPECT {

@@ -2,8 +2,8 @@ package Complex : interface {
 }
 
 package Complex : value {
-  has re : double;
-  has im : double;
+  has re : const double;
+  has im : const double;
 }
 
 package Point {

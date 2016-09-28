@@ -208,6 +208,8 @@ declvar
     }
   | HAS fieldname ':' desctype
     {
+      warn("ppppppppppppppp %s\n", $2->uv.string_value);
+      
       $$ = SPerl_OP_newOP_HAS(parser, $2, $4);
       printf("HAS fieldname : desctype -> declvar\n");
     }

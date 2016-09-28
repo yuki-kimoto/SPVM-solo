@@ -556,10 +556,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           
           SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
 
-          SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
-          const_info->type = SPerl_CONST_INFO_STRING;
-          const_info->uv.string_value = keyword;
-          op->uv.ptr_value = const_info;
+          op->uv.string_value = keyword;
           
           parser->bufptr = bufptr;
           SPerl_yylvalp->opval = (SPerl_OP*)op;
