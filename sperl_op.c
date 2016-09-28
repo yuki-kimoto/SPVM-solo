@@ -77,6 +77,56 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
     SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, i);
     const_info->pool_pos = parser->const_pool_pos;
     
+    // Check same constant
+    SPerl_int int_value;
+    switch(const_info->type) {
+      SPerl_int int_value;
+      SPerl_char* key_ptr;
+      SPerl_int key_len;
+      
+      case SPerl_CONST_INFO_BOOLEAN:
+        int_value = (SPerl_int)const_info->uv.boolean_value;
+        key_ptr = (SPerl_char*)&int_value;
+        key_len = 4;
+        break;
+      case SPerl_CONST_INFO_CHAR:
+        int_value = (SPerl_int)const_info->uv.char_value;
+        key_ptr = (SPerl_char*)&int_value;
+        key_len = 4;
+        break;
+      case SPerl_CONST_INFO_BYTE:
+        int_value = (SPerl_int)const_info->uv.byte_value;
+        key_ptr = (SPerl_char*)&int_value;
+        key_len = 4;
+        break;
+      case SPerl_CONST_INFO_SHORT:
+        int_value = (SPerl_int)const_info->uv.short_value;
+        key_ptr = (SPerl_char*)&int_value;
+        key_len = 4;
+        break;
+      case SPerl_CONST_INFO_INT:
+        key_ptr = (SPerl_char*)&const_info->uv.int_value;;
+        key_len = 4;
+        break;
+      case SPerl_CONST_INFO_LONG:
+        key_ptr = (SPerl_char*)&const_info->uv.long_value;
+        key_len = 8;
+        break;
+      case SPerl_CONST_INFO_FLOAT:
+        key_ptr = (SPerl_char*)&const_info->uv.float_value;
+        key_len = 4;
+        break;
+      case SPerl_CONST_INFO_DOUBLE:
+        key_ptr = (SPerl_char*)&const_info->uv.double_value;
+        key_len = 8;
+        break;
+      case SPerl_CONST_INFO_STRING:
+        key_ptr = const_info->uv.string_value;
+        key_len = strlen(const_info->uv.string_value);
+        break;
+    }
+    
+    
     switch(const_info->type) {
       case SPerl_CONST_INFO_BOOLEAN:
         *(const_pool + parser->const_pool_pos) = (SPerl_int)const_info->uv.boolean_value;
