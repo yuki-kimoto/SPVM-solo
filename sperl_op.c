@@ -7,7 +7,6 @@
 #include "sperl_op.h"
 #include "sperl_method_info.h"
 #include "sperl_descripter.h"
-#include "sperl_argument_info.h"
 #include "sperl_class_info.h"
 #include "sperl_parser.h"
 #include "sperl_const_info.h"
@@ -282,26 +281,6 @@ SPerl_char SPerl_OP_create_desc_flags(SPerl_OP* op_descripters) {
   return desc_flags;
 }
 
-SPerl_ARGUMENT_INFO* SPerl_OP_create_argument_info(SPerl_OP* op_subarg) {
-  SPerl_ARGUMENT_INFO* argument_info = SPerl_ARGUMENT_INFO_new();
-  
-  // subarg
-  // subarg is VAR, desctype
-  SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_subarg->first->uv.ptr_value;
-  argument_info->name = var_info->name;
-  SPerl_OP* op_desctype = op_subarg->last;
-  
-  // type
-  argument_info->type = op_desctype->first->uv.string_value;
-  
-  // descripters
-  SPerl_OP* op_descripters = op_desctype->last;
-  argument_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
-  
-  return argument_info;
-}
-
-
 SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
   
   // Create OP_SUB
@@ -326,12 +305,6 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     
     // Argument count
     method_info->argument_count = 1;
-    
-    // Create argument information
-    SPerl_ARGUMENT_INFO* argument_info = SPerl_OP_create_argument_info(op_optsubargs);
-    
-    // Add arugment information
-    SPerl_ARRAY_push(method_info->argument_infos, argument_info);
   }
   // subargs is list of subarg
   else if (op_optsubargs->type == SPerl_OP_LIST) {
@@ -340,12 +313,6 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     while (op_subarg = SPerl_OP_sibling(op_subarg)) {
       // Increment argument count
       argument_count++;
-      
-      // Creat argument information
-      SPerl_ARGUMENT_INFO* argument_info = SPerl_OP_create_argument_info(op_subarg);
-
-      // Add arugment information
-      SPerl_ARRAY_push(method_info->argument_infos, argument_info);
     }
     method_info->argument_count = argument_count;
   }

@@ -28,10 +28,6 @@ typedef struct SPerl_const_info SPerl_CONST_INFO;
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 
-/* sperl_argument_info.h */
-struct SPerl_argument_info;
-typedef struct SPerl_argument_info SPerl_ARGUMENT_INFO;
-
 /* sperl_field_info.h */
 struct SPerl_field_info;
 typedef struct SPerl_field_info SPerl_FIELD_INFO;

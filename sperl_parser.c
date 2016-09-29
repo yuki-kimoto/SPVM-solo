@@ -7,7 +7,6 @@
 #include "sperl_parser.h"
 #include "sperl_method_info.h"
 #include "sperl_array.h"
-#include "sperl_argument_info.h"
 #include "sperl_class_info.h"
 #include "sperl_const_info.h"
 #include "sperl_my_var_info.h"
@@ -124,24 +123,9 @@ void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info) {
     printf("      argument_count => %" PRId32 "\n", method_info->argument_count);
     
     SPerl_int j;
-    printf("      argument_infos\n");
-    for (j = 0; j < method_info->argument_count; j++) {
-      SPerl_ARGUMENT_INFO* argument_info
-        = (SPerl_ARGUMENT_INFO*)SPerl_ARRAY_fetch(method_info->argument_infos, j);
-
-      printf("        argument_info[%" PRId32 "]\n", j);
-      printf("          name => \"%s\"\n", argument_info->name);
-      printf("          type => \"%s\"\n", argument_info->type);
-      
-      SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
-      SPerl_DESCRIPTER_to_str(desc_str, argument_info->desc_flags);
-      printf("          desc_flags => \"%s\"\n", desc_str);
-      
-      free(desc_str);
-    }
     
     printf("      desc_flags => \"%s\"\n", desc_str);
-    printf("      treturn_type => \"%s\"\n", method_info->return_type);
+    printf("      return_type => \"%s\"\n", method_info->return_type);
     printf("      op_block => %x\n", method_info->op_block);
 
     printf("      my_var_infos\n");

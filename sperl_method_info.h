@@ -3,18 +3,16 @@
 
 #include "sperl_type.h"
 #include "sperl_array.h"
-#include "sperl_argument_info.h"
 
 // Method information
 struct SPerl_method_info {
   SPerl_char* name;
   SPerl_char desc_flags;
   SPerl_char* return_type;
-  SPerl_ARRAY* argument_infos;
   SPerl_int argument_count;
-  SPerl_OP* op_block;
   SPerl_ARRAY* my_var_infos;
   SPerl_HASH* my_var_h;
+  SPerl_OP* op_block;
   SPerl_CLASS_INFO* class_info;
 };
 
