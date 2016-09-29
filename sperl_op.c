@@ -36,7 +36,7 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP*
     strlen(var_info->name)
   );
   if (found_my_var_info) {
-    fprintf(stderr, "Declare same name variable %s", var_info->name);
+    fprintf(stderr, "Warnings: Declare same name variable %s\n", var_info->name);
   }
   else {
     SPerl_HASH_insert(parser->current_my_var_info_h, var_info->name, strlen(var_info->name), my_var_info);

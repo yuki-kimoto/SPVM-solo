@@ -10,6 +10,7 @@ package Point {
   sub get1 ($var1 : double, $var2 : int) : int {
     my $var3 : int;
     my $var4 : int;
+    my $var3 : double; // Error
     
     $var3 = 3;
     $var3 = 4;
@@ -20,6 +21,7 @@ package Point {
   sub get2 () : static const long {
     1;
     my $var1 : int;
+    my $var1 : double; // Error
     my $var2 : int;
   }
 
