@@ -21,6 +21,7 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->current_my_var_infos = SPerl_ARRAY_new(0);
   parser->current_my_var_info_symtable = SPerl_HASH_new(0);
   parser->class_infos = SPerl_ARRAY_new(0);
+  parser->class_info_symtable = SPerl_HASH_new(0);
   parser->same_const_h = SPerl_HASH_new(0);
   parser->line = 1;
   parser->const_pool_size = 1024;
