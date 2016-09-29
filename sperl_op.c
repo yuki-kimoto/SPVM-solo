@@ -17,7 +17,7 @@
 
 SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP* op_desctype) {
   SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_MY, op_var, op_desctype);
-
+  
   // Create my var information
   SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new();
   my_var_info->name = op_var->uv.string_value;
@@ -34,7 +34,6 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP*
   
   return op;
 }
-
 
 SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
   SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_HAS, op_field_name, op_desctype);
