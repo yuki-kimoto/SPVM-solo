@@ -11,6 +11,7 @@
   #include "sperl_type.h"
   #include "sperl_parser.h"
   #include "sperl_op.h"
+  #include "sperl_var_info.h"
 %}
 
 %token <ival> '+' '-'
@@ -240,7 +241,8 @@ term
   : VAR
     {
       $$ = $1;
-      printf("VAR(%s) -> term\n", ((SPerl_OP*)$1)->uv.string_value)
+      SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)$1->uv.ptr_value;
+      printf("VAR(%s) -> term\n", var_info->name)
     }
   | CONST
     {

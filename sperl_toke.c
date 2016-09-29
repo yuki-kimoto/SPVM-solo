@@ -7,6 +7,7 @@
 #include "sperl_parser.h"
 #include "sperly.tab.h"
 #include "sperl_const_info.h"
+#include "sperl_var_info.h"
 
 /* Get token */
 int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
@@ -386,7 +387,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           var[str_len] = '\0';
           
           SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_VAR, NULL, NULL);
-          op->uv.string_value = var;
+          SPerl_VAR_INFO* var_info = SPerl_VAR_INFO_new();
+          var_info->name = var;
+          op->uv.ptr_value = var_info;
           
           parser->bufptr = bufptr;
           SPerl_yylvalp->opval = (SPerl_OP*)op;

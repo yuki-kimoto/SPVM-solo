@@ -13,6 +13,7 @@
 #include "sperl_const_info.h"
 #include "sperl_field_info.h"
 #include "sperl_my_var_info.h"
+#include "sperl_var_info.h"
 
 SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP* op_desctype) {
   SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_MY, op_var, op_desctype);
@@ -391,7 +392,8 @@ void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_int depth) {
     }
   }
   else if (type == SPerl_OP_VAR) {
-    printf(" \"%s\"", op->uv.string_value);
+    SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op->uv.ptr_value;
+    printf(" \"%s\"", var_info->name);
   }
   else if (type == SPerl_OP_WORD) {
     printf(" \"%s\"", op->uv.string_value);
