@@ -10,6 +10,7 @@
 #include "sperl_argument_info.h"
 #include "sperl_class_info.h"
 #include "sperl_const_info.h"
+#include "sperl_my_var_info.h"
 
 
 SPerl_yy_parser* SPerl_new_parser() {
@@ -140,6 +141,15 @@ void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info) {
     printf("      desc_flags => \"%s\"\n", desc_str);
     printf("      treturn_type => \"%s\"\n", method_info->return_type);
     printf("      op_block => %x\n", method_info->op_block);
+
+    printf("      my_var_infos\n");
+    SPerl_ARRAY* my_var_infos = method_info->my_var_infos;
+    for (j = 0; j < my_var_infos->length; j++) {
+      SPerl_MY_VAR_INFO* my_var_info
+        = (SPerl_MY_VAR_INFO*)SPerl_ARRAY_fetch(method_info->my_var_infos, j);
+      printf("      my_var_info[%d]\n", j);
+      SPerl_PARSER_dump_my_var_info(my_var_info);
+    }
     
     free(desc_str);
   }
@@ -154,13 +164,29 @@ void SPerl_PARSER_dump_field_info(SPerl_FIELD_INFO* field_info) {
     SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
     SPerl_DESCRIPTER_to_str(desc_str, field_info->desc_flags);
     
-    printf("      name => \"%s\"\n", field_info->name);
-    printf("      desc_flags => \"%s\"\n", desc_str);
-    printf("      type => \"%s\"\n", field_info->type);
+    printf("        name => \"%s\"\n", field_info->name);
+    printf("        desc_flags => \"%s\"\n", desc_str);
+    printf("        type => \"%s\"\n", field_info->type);
     
     free(desc_str);
   }
   else {
-    printf("      None\n");
+    printf("        None\n");
+  }
+}
+
+void SPerl_PARSER_dump_my_var_info(SPerl_MY_VAR_INFO* my_var_info) {
+  if (my_var_info) {
+    SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
+    SPerl_DESCRIPTER_to_str(desc_str, my_var_info->desc_flags);
+    
+    printf("        name => \"%s\"\n", my_var_info->name);
+    printf("        desc_flags => \"%s\"\n", desc_str);
+    printf("        type => \"%s\"\n", my_var_info->type);
+    
+    free(desc_str);
+  }
+  else {
+    printf("        None\n");
   }
 }

@@ -340,6 +340,10 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   // Save block
   method_info->op_block = op_block;
   
+  // Add my var informations
+  method_info->my_var_infos = parser->current_my_var_infos;
+  parser->current_my_var_infos = SPerl_ARRAY_new(0);
+  
   // Add method information
   SPerl_ARRAY_push(parser->current_method_infos, method_info);
   

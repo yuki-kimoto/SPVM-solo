@@ -72,6 +72,7 @@ void SPerl_PARSER_dump_const_op(SPerl_OP* const_op);
 void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info);
 void SPerl_PARSER_dump_const_pool(SPerl_yy_parser* parser);
 void SPerl_PARSER_dump_field_info(SPerl_FIELD_INFO* field_info);
+void SPerl_PARSER_dump_my_var_info(SPerl_MY_VAR_INFO* my_var_info);
 
 /* Expected token */
 enum SPerl_OP_EXPECT {
