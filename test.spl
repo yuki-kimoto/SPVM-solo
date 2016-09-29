@@ -7,9 +7,9 @@ package Complex : value {
 }
 
 package Point {
-  sub get1 () : int {
-    my $var1 : int;
-    my $var2 : int;
+  sub get1 ($var1 : double, $var2 : int) : int {
+    my $var3 : int;
+    my $var4 : int;
   }
   
   sub get2 () : static const long {
