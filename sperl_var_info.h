@@ -3,7 +3,8 @@
 
 struct SPerl_var_info {
   SPerl_char* name;
-  SPerl_int pos;
+  SPerl_MY_VAR_INFO* my_var_info;
+  SPerl_int version;
 };
 
 SPerl_VAR_INFO* SPerl_VAR_INFO_new();
