@@ -30,7 +30,18 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP*
   my_var_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
   
   // Add my_var information
-  SPerl_ARRAY_push(parser->current_my_var_infos, my_var_info);
+  SPerl_MY_VAR_INFO* found_my_var_info = SPerl_HASH_search(
+    parser->current_my_var_info_h,
+    var_info->name,
+    strlen(var_info->name)
+  );
+  if (found_my_var_info) {
+    fprintf(stderr, "Declare same name variable %s", var_info->name);
+  }
+  else {
+    SPerl_HASH_insert(parser->current_my_var_info_h, var_info->name, strlen(var_info->name), my_var_info);
+    SPerl_ARRAY_push(parser->current_my_var_infos, my_var_info);
+  }
   
   // Add my_var information to op
   op->uv.ptr_value = my_var_info;
@@ -330,6 +341,8 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   // Add my var informations
   method_info->my_var_infos = parser->current_my_var_infos;
   parser->current_my_var_infos = SPerl_ARRAY_new(0);
+  method_info->my_var_info_h = parser->current_my_var_info_h;
+  parser->current_my_var_info_h = SPerl_HASH_new(0);
   
   // Add method information to my_var
   SPerl_int i = 0;

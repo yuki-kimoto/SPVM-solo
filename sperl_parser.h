@@ -43,6 +43,9 @@ struct SPerl_yy_parser_{
   /* current my var informations */
   SPerl_ARRAY* current_my_var_infos;
   
+  /* Current my var hash */
+  SPerl_HASH* current_my_var_info_h;
+  
   SPerl_HASH* same_const_h;
   
   /* constant pool */
