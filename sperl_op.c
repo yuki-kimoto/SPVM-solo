@@ -13,6 +13,13 @@
 #include "sperl_const_info.h"
 #include "sperl_field_info.h"
 
+SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP* op_desctype) {
+  SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_MY, op_var, op_desctype);
+  
+  return op;
+}
+
+
 SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
   SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_HAS, op_field_name, op_desctype);
   

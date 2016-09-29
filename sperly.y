@@ -203,13 +203,11 @@ else
 declvar
   : MY VAR ':' desctype
     {
-      $$ = SPerl_OP_newOP(SPerl_OP_MY, $2, $4);
+      $$ = SPerl_OP_newOP_MY(parser, $2, $4);
       printf("MY VAR : desctype -> declvar\n");
     }
   | HAS fieldname ':' desctype
     {
-      warn("ppppppppppppppp %s\n", $2->uv.string_value);
-      
       $$ = SPerl_OP_newOP_HAS(parser, $2, $4);
       printf("HAS fieldname : desctype -> declvar\n");
     }
