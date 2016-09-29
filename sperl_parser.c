@@ -128,12 +128,14 @@ void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info) {
     for (j = 0; j < method_info->argument_count; j++) {
       SPerl_ARGUMENT_INFO* argument_info
         = (SPerl_ARGUMENT_INFO*)SPerl_ARRAY_fetch(method_info->argument_infos, j);
+
       printf("        argument_info[%" PRId32 "]\n", j);
-      printf("        type => \"%s\"\n", argument_info->type);
+      printf("          name => \"%s\"\n", argument_info->name);
+      printf("          type => \"%s\"\n", argument_info->type);
       
       SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
       SPerl_DESCRIPTER_to_str(desc_str, argument_info->desc_flags);
-      printf("        desc_flags => \"%s\"\n", desc_str);
+      printf("          desc_flags => \"%s\"\n", desc_str);
       
       free(desc_str);
     }
@@ -181,8 +183,8 @@ void SPerl_PARSER_dump_my_var_info(SPerl_MY_VAR_INFO* my_var_info) {
     SPerl_DESCRIPTER_to_str(desc_str, my_var_info->desc_flags);
     
     printf("        name => \"%s\"\n", my_var_info->name);
-    printf("        desc_flags => \"%s\"\n", desc_str);
     printf("        type => \"%s\"\n", my_var_info->type);
+    printf("        desc_flags => \"%s\"\n", desc_str);
     
     free(desc_str);
   }

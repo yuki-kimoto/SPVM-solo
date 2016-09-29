@@ -287,7 +287,8 @@ SPerl_ARGUMENT_INFO* SPerl_OP_create_argument_info(SPerl_OP* op_subarg) {
   
   // subarg
   // subarg is VAR, desctype
-  argument_info->name = op_subarg->first->uv.string_value;
+  SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_subarg->first->uv.ptr_value;
+  argument_info->name = var_info->name;
   SPerl_OP* op_desctype = op_subarg->last;
   
   // type
