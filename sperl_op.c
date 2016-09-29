@@ -32,6 +32,9 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP*
   // Add my_var information
   SPerl_ARRAY_push(parser->current_my_var_infos, my_var_info);
   
+  // Add my_var information to op
+  op->uv.ptr_value = my_var_info;
+  
   return op;
 }
 
