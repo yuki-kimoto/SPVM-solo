@@ -436,7 +436,7 @@ subargs
 subarg
   : VAR ':' desctype
     {
-      $$ = SPerl_OP_newOP(SPerl_OP_SUBARG, $1, $3);
+      $$ = SPerl_OP_newOP_MY(parser, $1, $3);
       printf("VAR : desctype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.string_value);
     }
 

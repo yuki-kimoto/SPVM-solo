@@ -20,7 +20,8 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP*
   
   // Create my var information
   SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new();
-  my_var_info->name = op_var->uv.string_value;
+  SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_var->uv.ptr_value;
+  my_var_info->name = var_info->name;
   
   // type
   my_var_info->type = op_desctype->first->uv.string_value;
@@ -320,7 +321,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     method_info->argument_count = 0;
   }
   // subargs is subarg
-  else if (op_optsubargs->type == SPerl_OP_SUBARG) {
+  else if (op_optsubargs->type == SPerl_OP_MY) {
     
     // Argument count
     method_info->argument_count = 1;
