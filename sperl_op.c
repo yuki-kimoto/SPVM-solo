@@ -362,6 +362,13 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   method_info->my_var_infos = parser->current_my_var_infos;
   parser->current_my_var_infos = SPerl_ARRAY_new(0);
   
+  // Add method information to my_var
+  SPerl_int i = 0;
+  for (i = 0; i < method_info->my_var_infos->length; i++) {
+    SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(method_info->my_var_infos, i);
+    my_var_info->method_info = method_info;
+  }
+  
   // Add method information
   SPerl_ARRAY_push(parser->current_method_infos, method_info);
   
