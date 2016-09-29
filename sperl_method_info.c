@@ -11,6 +11,7 @@ SPerl_METHOD_INFO* SPerl_METHOD_INFO_new() {
   memset(method_info, 0, sizeof(SPerl_METHOD_INFO));
   
   method_info->argument_infos = SPerl_ARRAY_new(0);
+  method_info->my_var_infos = SPerl_ARRAY_new(0);
   
   return method_info;
 }
