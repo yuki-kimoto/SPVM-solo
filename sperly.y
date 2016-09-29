@@ -20,7 +20,7 @@
 %token <ival> LAST NEXT
 %token <opval> WORD VAR CONST
 
-%type <opval> grammar statements statement declvar if else block
+%type <opval> grammar statements statement declmy declhas if else block
 %type <opval> optterms terms term subargs subarg optsubargs
 %type <opval> desctype descripters descripter
 %type <opval> type pkgname fieldname subname package packages
@@ -201,16 +201,18 @@ else
       printf("ELSIF ( term ) block else -> else\n");
     }
 
-declvar
+declmy
   : MY VAR ':' desctype
     {
       $$ = SPerl_OP_newOP_MY(parser, $2, $4);
-      printf("MY VAR : desctype -> declvar\n");
+      printf("MY VAR : desctype -> declmy\n");
     }
-  | HAS fieldname ':' desctype
+
+declhas
+  : HAS fieldname ':' desctype
     {
       $$ = SPerl_OP_newOP_HAS(parser, $2, $4);
-      printf("HAS fieldname : desctype -> declvar\n");
+      printf("HAS fieldname : desctype -> declhas\n");
     }
 
 optterms
@@ -383,10 +385,15 @@ term
       
       printf("pkgname ARROW subname ( optterms )\n");
     }
-  | declvar
+  | declmy
     {
       $$ = $1;
-      printf("declvar -> term\n");
+      printf("declmy -> term\n");
+    }
+  | declhas
+    {
+      $$ = $1;
+      printf("declhas -> term\n");
     }
 
 block 
