@@ -12,9 +12,24 @@
 #include "sperl_parser.h"
 #include "sperl_const_info.h"
 #include "sperl_field_info.h"
+#include "sperl_my_var_info.h"
 
 SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP* op_desctype) {
   SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_MY, op_var, op_desctype);
+
+  // Create my var information
+  SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new();
+  my_var_info->name = op_var->uv.string_value;
+  
+  // type
+  my_var_info->type = op_desctype->first->uv.string_value;
+  
+  // descripters
+  SPerl_OP* op_descripters = op_desctype->last;
+  my_var_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
+  
+  // Add my_var information
+  SPerl_ARRAY_push(parser->current_my_var_infos, my_var_info);
   
   return op;
 }

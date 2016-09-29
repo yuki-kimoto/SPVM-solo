@@ -18,6 +18,7 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->current_field_infos = SPerl_ARRAY_new(0);
   parser->current_method_infos = SPerl_ARRAY_new(0);
   parser->current_const_infos = SPerl_ARRAY_new(0);
+  parser->current_my_var_infos = SPerl_ARRAY_new(0);
   parser->class_infos = SPerl_ARRAY_new(0);
   parser->same_const_h = SPerl_HASH_new(0);
   parser->line = 1;
