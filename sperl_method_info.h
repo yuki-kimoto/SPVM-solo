@@ -14,6 +14,8 @@ struct SPerl_method_info {
   SPerl_int argument_count;
   SPerl_OP* op_block;
   SPerl_ARRAY* my_var_infos;
+  SPerl_HASH* my_var_h;
+  SPerl_CLASS_INFO* class_info;
 };
 
 SPerl_METHOD_INFO* SPerl_METHOD_INFO_new();

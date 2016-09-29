@@ -14,6 +14,8 @@ package Point {
   
   sub get2 () : static const long {
     1;
+    my $var1 : int;
+    my $var2 : int;
   }
 
   sub get3 () : int {}

@@ -112,13 +112,19 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   class_info->method_infos = parser->current_method_infos;
   parser->current_method_infos = SPerl_ARRAY_new(0);
   
+  // Set class information to method informations
+  SPerl_int i;
+  for (i = 0; i < class_info->method_infos->length; i++) {
+    SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)SPerl_ARRAY_fetch(class_info->method_infos, i);
+    method_info->class_info = class_info;
+  }
+  
   // Set constant informations
   SPerl_ARRAY* const_infos = parser->current_const_infos;
   class_info->const_infos = const_infos;
   parser->current_const_infos = SPerl_ARRAY_new(0);
   
   // Create constant pool
-  SPerl_int i;
   for (i = 0; i < const_infos->length; i++) {
     SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, i);
     
