@@ -52,6 +52,8 @@ SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, S
   // Add field information
   SPerl_ARRAY_push(parser->current_field_infos, field_info);
   
+  op->uv.ptr_value = field_info;
+  
   return op;
 }
 
@@ -95,6 +97,8 @@ SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
 }
 
 SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
+  SPerl_int i;
+
   SPerl_OP* op_package = SPerl_OP_newOP(SPerl_OP_PACKAGE, op_pkgname, op_block);
   if (op_descripters) {
     SPerl_OP_sibling_splice(op_package, op_package->first, 0, op_descripters);
@@ -107,13 +111,18 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   // Set field information
   class_info->field_infos = parser->current_field_infos;
   parser->current_field_infos = SPerl_ARRAY_new(0);
+
+  // Set class information to field informations
+  for (i = 0; i < class_info->field_infos->length; i++) {
+    SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)SPerl_ARRAY_fetch(class_info->field_infos, i);
+    field_info->class_info = class_info;
+  }
   
   // Set method informations
   class_info->method_infos = parser->current_method_infos;
   parser->current_method_infos = SPerl_ARRAY_new(0);
   
   // Set class information to method informations
-  SPerl_int i;
   for (i = 0; i < class_info->method_infos->length; i++) {
     SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)SPerl_ARRAY_fetch(class_info->method_infos, i);
     method_info->class_info = class_info;
