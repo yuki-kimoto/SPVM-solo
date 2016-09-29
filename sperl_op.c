@@ -31,7 +31,7 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP*
   
   // Add my_var information
   SPerl_MY_VAR_INFO* found_my_var_info = SPerl_HASH_search(
-    parser->current_my_var_info_h,
+    parser->current_my_var_info_symtable,
     var_info->name,
     strlen(var_info->name)
   );
@@ -39,7 +39,7 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP*
     fprintf(stderr, "Warnings: Declare same name variable %s\n", var_info->name);
   }
   else {
-    SPerl_HASH_insert(parser->current_my_var_info_h, var_info->name, strlen(var_info->name), my_var_info);
+    SPerl_HASH_insert(parser->current_my_var_info_symtable, var_info->name, strlen(var_info->name), my_var_info);
     SPerl_ARRAY_push(parser->current_my_var_infos, my_var_info);
   }
   
@@ -341,8 +341,8 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   // Add my var informations
   method_info->my_var_infos = parser->current_my_var_infos;
   parser->current_my_var_infos = SPerl_ARRAY_new(0);
-  method_info->my_var_info_h = parser->current_my_var_info_h;
-  parser->current_my_var_info_h = SPerl_HASH_new(0);
+  method_info->my_var_info_symtable = parser->current_my_var_info_symtable;
+  parser->current_my_var_info_symtable = SPerl_HASH_new(0);
   
   // Add method information to my_var
   SPerl_int i = 0;
