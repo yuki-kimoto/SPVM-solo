@@ -60,6 +60,28 @@ int main(int argc, char *argv[])
     OK(array->values[2] == value3);
   }
 
+  // Array - pop
+  {
+    SPerl_ARRAY* array = SPerl_ARRAY_new(0);
+    
+    // push long value at first
+    SPerl_int value1 = 10;
+    SPerl_ARRAY_push(array, &value1);
+    OK(*(SPerl_int*)array->values[0] == 10);
+    OK(array->length == 1);
+    
+    // push long value next
+    SPerl_int value2 = 15;
+    SPerl_ARRAY_push(array, &value2);
+    OK(*(SPerl_int*)array->values[1] == 15);
+    OK(array->length == 2);
+    
+    // pop
+    void* pop_value = SPerl_ARRAY_pop(array);
+    OK(*(SPerl_int*)pop_value == 15);
+    OK(array->length == 1);
+  }
+  
   // Array - push capacity resize
   {
     SPerl_ARRAY* array = SPerl_ARRAY_new(2);

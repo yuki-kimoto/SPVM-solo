@@ -49,3 +49,10 @@ void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_int index) {
   }
 }
 
+void* SPerl_ARRAY_pop(SPerl_ARRAY* array) {
+  SPerl_int length = array->length;
+  
+  array->length--;
+  
+  return array->values[array->length];
+}
