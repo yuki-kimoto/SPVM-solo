@@ -11,17 +11,30 @@
 #include "sperl_const_info.h"
 #include "sperl_my_var_info.h"
 
+SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser) {
+  printf("\n[Abstract Syntax Tree]\n");
+  SPerl_OP_dump_ast(parser->main_root, 0);
+  
+  printf("\n[Class infomation]\n");
+  SPerl_PARSER_dump_class_infos(parser->class_infos);
+  
+  printf("\n[Constant information]\n");
+  SPerl_PARSER_dump_const_infos(parser->const_infos);
+  
+  printf("\n[Constant pool]\n");
+  SPerl_PARSER_dump_const_pool(parser->const_pool, parser->const_pool_pos);
+}
 
 SPerl_yy_parser* SPerl_new_parser() {
   SPerl_yy_parser* parser = (SPerl_yy_parser*)calloc(1, sizeof(SPerl_yy_parser));
   
   parser->current_field_infos = SPerl_ARRAY_new(0);
   parser->current_method_infos = SPerl_ARRAY_new(0);
-  parser->current_const_infos = SPerl_ARRAY_new(0);
   parser->current_my_var_infos = SPerl_ARRAY_new(0);
   parser->current_my_var_info_symtable = SPerl_HASH_new(0);
   parser->class_infos = SPerl_ARRAY_new(0);
   parser->class_info_symtable = SPerl_HASH_new(0);
+  parser->const_infos = SPerl_ARRAY_new(0);
   parser->same_const_h = SPerl_HASH_new(0);
   parser->line = 1;
   parser->const_pool_size = 1024;
@@ -30,14 +43,18 @@ SPerl_yy_parser* SPerl_new_parser() {
   return parser;
 }
 
-void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
+void SPerl_PARSER_dump_const_infos(SPerl_ARRAY* const_infos) {
   SPerl_int i;
-  
-  if (!parser) {
-    return;
+  for (i = 0; i < const_infos->length; i++) {
+    SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)SPerl_ARRAY_fetch(const_infos, i);
+    printf("    const_info[%" PRId32 "]\n", i);
+    SPerl_PARSER_dump_const_info(const_info);
   }
-  
-  SPerl_ARRAY* class_infos = parser->class_infos;
+}
+
+void SPerl_PARSER_dump_class_infos(SPerl_ARRAY* class_infos) {
+  SPerl_int i;
+
   for (i = 0; i < class_infos->length; i++) {
     SPerl_CLASS_INFO* class_info = (SPerl_CLASS_INFO*)SPerl_ARRAY_fetch(class_infos, i);
     
@@ -62,21 +79,10 @@ void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser) {
       printf("    method_info[%" PRId32 "]\n", j);
       SPerl_PARSER_dump_method_info(method_info);
     }
-    
-    printf("  const_infos\n");
-    SPerl_ARRAY* const_infos = class_info->const_infos;
-    for (j = 0; j < const_infos->length; j++) {
-      SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)SPerl_ARRAY_fetch(const_infos, j);
-      printf("    const_info[%" PRId32 "]\n", j);
-      SPerl_PARSER_dump_const_info(const_info);
-    }
   }
 }
 
-void SPerl_PARSER_dump_const_pool(SPerl_yy_parser* parser) {
-  SPerl_int* const_pool = parser->const_pool;
-  SPerl_int const_pool_length = parser->const_pool_pos;
-  
+void SPerl_PARSER_dump_const_pool(SPerl_int* const_pool, SPerl_int const_pool_length) {
   SPerl_int i;
   for (i = 0; i < const_pool_length; i++) {
     printf("const_pool[%d] %d\n", i, const_pool[i]);

@@ -40,15 +40,9 @@ int main(int argc, char *argv[])
   printf("[Token reduction]\n");
   SPerl_int parse_success = SPerl_yyparse(parser);
   
+  /* dump parser information */
   if (parse_success == 0) {
-    printf("\n[Abstract Syntax Tree]\n");
-    SPerl_OP_dump_ast(parser->main_root, 0);
-    
-    printf("\n[Class infomation]\n");
-    SPerl_PARSER_dump_class_infos(parser);
-    
-    printf("\n[Constant pool]\n");
-    SPerl_PARSER_dump_const_pool(parser);
+    SPerl_PARSER_dump_parser_info(parser);
   }
   
   free(parser->linestr);

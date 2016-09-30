@@ -46,15 +46,12 @@
 grammar
   : /* NULL */
     {
-      $$ = SPerl_OP_newOP(SPerl_OP_GRAMMER, NULL, NULL);
-      parser->main_root = $$;
+      $$ = SPerl_OP_newOP_GRAMMER(parser, NULL);
       printf("NULL -> grammar\n");
     }
   | packages
     {
-      $$ = SPerl_OP_newOP(SPerl_OP_GRAMMER, $1, NULL);;
-      parser->main_root = $$;
-
+      $$ = SPerl_OP_newOP_GRAMMER(parser, $1);;
       printf("packages -> grammar\n");
     }
 

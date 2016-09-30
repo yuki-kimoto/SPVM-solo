@@ -34,9 +34,6 @@ struct SPerl_yy_parser_{
   /* current constant op infirmation array */
   SPerl_ARRAY* current_const_ops;
 
-  /* current constant op infirmation array */
-  SPerl_ARRAY* current_const_infos;
-  
   /* current field informations */
   SPerl_ARRAY* current_field_infos;
 
@@ -46,6 +43,9 @@ struct SPerl_yy_parser_{
   /* Current my var hash */
   SPerl_HASH* current_my_var_info_symtable;
   
+  /* Constant information */
+  SPerl_ARRAY* const_infos;
+
   SPerl_HASH* same_const_h;
   
   /* constant pool */
@@ -69,12 +69,14 @@ union SPerl_yystype_
 void SPerl_yyerror(SPerl_yy_parser* parser, const SPerl_char* s);
 
 SPerl_yy_parser* SPerl_new_parser();
-void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info);
-void SPerl_PARSER_dump_class_infos(SPerl_yy_parser* parser);
+void SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser);
+void SPerl_PARSER_dump_class_infos(SPerl_ARRAY* class_infos);
+void SPerl_PARSER_dump_const_infos(SPerl_ARRAY* const_infos);
+void SPerl_PARSER_dump_const_pool(SPerl_int* const_pool, SPerl_int size);
 void SPerl_PARSER_dump_const_op(SPerl_OP* const_op);
 void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info);
-void SPerl_PARSER_dump_const_pool(SPerl_yy_parser* parser);
 void SPerl_PARSER_dump_field_info(SPerl_FIELD_INFO* field_info);
+void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info);
 void SPerl_PARSER_dump_my_var_info(SPerl_MY_VAR_INFO* my_var_info);
 
 /* Expected token */
