@@ -45,7 +45,7 @@ struct SPerl_yy_parser_{
   SPerl_int const_pool_capacity;
   
   /* method information hash */
-  SPerl_HASH* method_info_symtable;
+  SPerl_HASH* current_method_info_symtable;
   
   SPerl_int const_pool_length;
   
