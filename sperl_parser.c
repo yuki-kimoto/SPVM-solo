@@ -31,7 +31,7 @@ SPerl_yy_parser* SPerl_new_parser() {
   return parser;
 }
 
-SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser) {
+void SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser) {
   printf("\n[Abstract Syntax Tree]\n");
   SPerl_OP_dump_ast(parser->main_root, 0);
   
