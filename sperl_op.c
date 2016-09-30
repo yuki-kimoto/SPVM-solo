@@ -77,7 +77,7 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_yy_parser* parser, SPerl_OP* op_packages)
         break;
     }
     
-    void* value = SPerl_HASH_search(parser->same_const_h, key_ptr, key_len);
+    void* value = SPerl_HASH_search(parser->const_info_symtable, key_ptr, key_len);
     
     if (value) {
       SPerl_int pool_pos = *(SPerl_int*)value;
@@ -87,7 +87,7 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_yy_parser* parser, SPerl_OP* op_packages)
       const_info->pool_pos = parser->const_pool_pos;
       SPerl_int* pool_pos_ptr = (SPerl_int*)calloc(1, sizeof(SPerl_int));
       *pool_pos_ptr = parser->const_pool_pos;
-      SPerl_HASH_insert(parser->same_const_h, key_ptr, key_len, pool_pos_ptr);
+      SPerl_HASH_insert(parser->const_info_symtable, key_ptr, key_len, pool_pos_ptr);
       
       // Realloc
       if (parser->const_pool_pos >= parser->const_pool_size) {
