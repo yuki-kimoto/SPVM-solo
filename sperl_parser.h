@@ -42,12 +42,12 @@ struct SPerl_yy_parser_{
   
   /* constant pool */
   SPerl_int* const_pool;
-  SPerl_int const_pool_size;
+  SPerl_int const_pool_capacity;
   
   /* method information hash */
   SPerl_HASH* method_info_symtable;
   
-  SPerl_int const_pool_pos;
+  SPerl_int const_pool_length;
   
   SPerl_int line;
 };

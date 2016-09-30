@@ -25,8 +25,8 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->const_infos = SPerl_ARRAY_new(0);
   parser->const_info_symtable = SPerl_HASH_new(0);
   parser->line = 1;
-  parser->const_pool_size = 1024;
-  parser->const_pool = (SPerl_int*)calloc(parser->const_pool_size, sizeof(SPerl_int));
+  parser->const_pool_capacity = 1024;
+  parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
   
   return parser;
 }
@@ -42,7 +42,7 @@ void SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser) {
   SPerl_PARSER_dump_const_infos(parser->const_infos);
   
   printf("\n[Constant pool]\n");
-  SPerl_PARSER_dump_const_pool(parser->const_pool, parser->const_pool_pos);
+  SPerl_PARSER_dump_const_pool(parser->const_pool, parser->const_pool_length);
 }
 
 void SPerl_PARSER_dump_const_infos(SPerl_ARRAY* const_infos) {
