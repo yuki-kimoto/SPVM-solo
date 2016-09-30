@@ -2,7 +2,6 @@
 #define SPERL_OP_H
 
 #include "sperl_type.h"
-#include "sperl_parser.h"
 
 /* Operation code */
 enum SPerl_OP_CODE {

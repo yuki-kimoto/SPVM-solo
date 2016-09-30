@@ -2,7 +2,6 @@
 #define SPERL_METHOD_H
 
 #include "sperl_type.h"
-#include "sperl_array.h"
 
 // Method information
 struct SPerl_method_info {

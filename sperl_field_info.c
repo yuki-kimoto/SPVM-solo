@@ -1,6 +1,5 @@
 #include <stdlib.h>
 
-#include "sperl_type.h"
 #include "sperl_field_info.h"
 
 SPerl_FIELD_INFO* SPerl_FIELD_INFO_new() {

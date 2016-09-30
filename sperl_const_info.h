@@ -1,6 +1,8 @@
 #ifndef SPerl_CONST_INFO_H
 #define SPerl_CONST_INFO_H
 
+#include "sperl_type.h"
+
 enum SPerl_CONST_INFO_TYPE {
   SPerl_CONST_INFO_BOOLEAN,
   SPerl_CONST_INFO_CHAR,

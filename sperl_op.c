@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sperl_type.h"
+#include "sperl_array.h"
+#include "sperl_hash.h"
+#include "sperl_parser.h"
 #include "sperl_op.h"
 #include "sperl_method_info.h"
 #include "sperl_descripter.h"

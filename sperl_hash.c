@@ -1,4 +1,3 @@
-#include "sperl_type.h"
 #include <string.h>
 #include <stdlib.h>
 

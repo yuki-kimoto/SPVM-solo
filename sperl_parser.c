@@ -3,27 +3,15 @@
 #include <string.h>
 #include <inttypes.h>
 
-#include "sperl_type.h"
+#include "sperl_array.h"
+#include "sperl_hash.h"
 #include "sperl_parser.h"
 #include "sperl_method_info.h"
-#include "sperl_array.h"
 #include "sperl_class_info.h"
 #include "sperl_const_info.h"
 #include "sperl_my_var_info.h"
-
-SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser) {
-  printf("\n[Abstract Syntax Tree]\n");
-  SPerl_OP_dump_ast(parser->main_root, 0);
-  
-  printf("\n[Class infomation]\n");
-  SPerl_PARSER_dump_class_infos(parser->class_infos);
-  
-  printf("\n[Constant information]\n");
-  SPerl_PARSER_dump_const_infos(parser->const_infos);
-  
-  printf("\n[Constant pool]\n");
-  SPerl_PARSER_dump_const_pool(parser->const_pool, parser->const_pool_pos);
-}
+#include "sperl_descripter.h"
+#include "sperl_field_info.h"
 
 SPerl_yy_parser* SPerl_new_parser() {
   SPerl_yy_parser* parser = (SPerl_yy_parser*)calloc(1, sizeof(SPerl_yy_parser));
@@ -41,6 +29,20 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_size, sizeof(SPerl_int));
   
   return parser;
+}
+
+SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser) {
+  printf("\n[Abstract Syntax Tree]\n");
+  SPerl_OP_dump_ast(parser->main_root, 0);
+  
+  printf("\n[Class infomation]\n");
+  SPerl_PARSER_dump_class_infos(parser->class_infos);
+  
+  printf("\n[Constant information]\n");
+  SPerl_PARSER_dump_const_infos(parser->const_infos);
+  
+  printf("\n[Constant pool]\n");
+  SPerl_PARSER_dump_const_pool(parser->const_pool, parser->const_pool_pos);
 }
 
 void SPerl_PARSER_dump_const_infos(SPerl_ARRAY* const_infos) {

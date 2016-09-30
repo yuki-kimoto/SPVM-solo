@@ -1,6 +1,5 @@
 #include <stdio.h>
 
-#include "sperl_type.h"
 #include "sperl_descripter.h"
 
 SPerl_char SPerl_DESCRIPTER_get_flag(SPerl_char* desc_str) {

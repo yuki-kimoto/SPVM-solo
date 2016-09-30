@@ -1,6 +1,5 @@
 #include <stdlib.h>
 
-#include "sperl_type.h"
 #include "sperl_var_info.h"
 
 SPerl_VAR_INFO* SPerl_VAR_INFO_new() {

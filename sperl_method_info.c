@@ -1,7 +1,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "sperl_type.h"
 #include "sperl_method_info.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"

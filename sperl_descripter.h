@@ -1,6 +1,8 @@
 #ifndef SPERL_DESCRIPTER_H
 #define SPERL_DESCRIPTER_H
 
+#include "sperl_type.h"
+
 #define SPerl_DESCRIPTER_CONST 1
 #define SPerl_DESCRIPTER_STATIC 2
 #define SPerl_DESCRIPTER_INTERFACE 4

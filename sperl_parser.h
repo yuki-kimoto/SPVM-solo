@@ -2,11 +2,6 @@
 #define SPERL_PARSER_H
 
 #include "sperl_type.h"
-#include "sperl_op.h"
-#include "sperl_array.h"
-#include "sperl_hash.h"
-#include "sperl_const_info.h"
-#include "sperl_field_info.h"
 
 /* Parser information */
 struct SPerl_yy_parser_{
