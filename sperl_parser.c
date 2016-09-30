@@ -22,7 +22,17 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->current_my_var_info_symtable = SPerl_HASH_new(0);
   parser->class_infos = SPerl_ARRAY_new(0);
   parser->class_info_symtable = SPerl_HASH_new(0);
+  
   parser->const_infos = SPerl_ARRAY_new(0);
+  SPerl_int default_const_values[] = {0, 1, 2, 4, 8, 16, 32, 64};
+  SPerl_int i;
+  for (i = 0; i < 8; i++) {
+    SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
+    const_info->type = SPerl_CONST_INFO_INT;
+    const_info->uv.int_value = default_const_values[i];
+    SPerl_ARRAY_push(parser->const_infos, const_info);
+  }
+  
   parser->const_info_symtable = SPerl_HASH_new(0);
   parser->line = 1;
   parser->const_pool_capacity = 1024;
