@@ -31,9 +31,6 @@ struct SPerl_yy_parser_{
   /* current method information array */
   SPerl_ARRAY* current_method_infos;
   
-  /* current constant op infirmation array */
-  SPerl_ARRAY* current_const_ops;
-
   /* current field informations */
   SPerl_ARRAY* current_field_infos;
 
@@ -73,7 +70,6 @@ void SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser);
 void SPerl_PARSER_dump_class_infos(SPerl_ARRAY* class_infos);
 void SPerl_PARSER_dump_const_infos(SPerl_ARRAY* const_infos);
 void SPerl_PARSER_dump_const_pool(SPerl_int* const_pool, SPerl_int size);
-void SPerl_PARSER_dump_const_op(SPerl_OP* const_op);
 void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info);
 void SPerl_PARSER_dump_field_info(SPerl_FIELD_INFO* field_info);
 void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info);
