@@ -13,5 +13,6 @@ struct SPerl_allocator {
 
 SPerl_ALLOCATOR* SPerl_ALLOCATOR_new(SPerl_int block_size);
 void* SPerl_ALLOCATOR_alloc(SPerl_ALLOCATOR* allocator);
+void SPerl_ALLOCATOR_free(SPerl_ALLOCATOR* allocator);
 
 #endif

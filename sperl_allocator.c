@@ -41,3 +41,14 @@ void* SPerl_ALLOCATOR_alloc(SPerl_ALLOCATOR* allocator) {
   
   return ptr;
 }
+
+void SPerl_ALLOCATOR_free(SPerl_ALLOCATOR* allocator) {
+  SPerl_ARRAY* memory_nodes = allocator->memory_nodes;
+  SPerl_int i;
+  for (i = 0; i < memory_nodes->length; i++) {
+    SPerl_char* memory_node = (SPerl_char*)SPerl_ARRAY_fetch(memory_nodes, i);
+    free(memory_node);
+  }
+  free(memory_nodes);
+  free(allocator);
+}
