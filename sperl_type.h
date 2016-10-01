@@ -12,6 +12,10 @@ typedef int64_t SPerl_long;
 typedef float SPerl_float;
 typedef double SPerl_double;
 
+/* sperl_allocator.h */
+struct SPerl_allocator;
+typedef struct SPerl_allocator SPerl_ALLOCATOR;
+
 /* sperl_var_info.h */
 struct SPerl_var_info;
 typedef struct SPerl_var_info SPerl_VAR_INFO;
