@@ -156,3 +156,23 @@ void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_int length) {
     }
   }
 }
+
+void SPerl_HASH_free(SPerl_HASH* hash) {
+  SPerl_int capacity = hash->capacity;
+  
+  SPerl_int i;
+  for (i = 0; i < capacity; i++) {
+    SPerl_HASH_ENTRY* next_entry = hash->entries[i];
+    while (next_entry) {
+      SPerl_HASH_ENTRY* tmp_entry = next_entry->next;
+      if (next_entry->key) {
+        free(next_entry->key);
+      }
+      free(next_entry);
+      next_entry = tmp_entry;
+    }
+  }
+  
+  free(hash->entries);
+  free(hash);
+}
