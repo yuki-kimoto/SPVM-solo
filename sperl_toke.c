@@ -316,7 +316,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           bufptr++;
         }
         
-        SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_CHAR);
+        SPerl_OP* op = SPerl_OP_newOP_flag(parser, SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_CHAR);
         
         SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
         const_info->type = SPerl_CONST_INFO_CHAR;
@@ -357,7 +357,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           bufptr++;
         }
         
-        SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
+        SPerl_OP* op = SPerl_OP_newOP_flag(parser, SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_STRING);
 
         SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
         const_info->type = SPerl_CONST_INFO_STRING;
@@ -386,7 +386,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
-          SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_VAR, NULL, NULL);
+          SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_VAR, NULL, NULL);
           SPerl_VAR_INFO* var_info = SPerl_VAR_INFO_new();
           var_info->name = var;
           op->uv.ptr_value = var_info;
@@ -426,7 +426,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           if (point_count) {
             char* ends;
             double num = strtod(num_str, &ends);
-            SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_DOUBLE);
+            SPerl_OP* op = SPerl_OP_newOP_flag(parser, SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_DOUBLE);
 
             SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
             const_info->type = SPerl_CONST_INFO_DOUBLE;
@@ -443,7 +443,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
           // Convert to integer
           else {
             SPerl_int num = atoi(num_str);
-            SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_INT);
+            SPerl_OP* op = SPerl_OP_newOP_flag(parser, SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_INT);
 
             SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
             const_info->type = SPerl_CONST_INFO_INT;
@@ -530,7 +530,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               return WHILE;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
-              SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_BOOLEAN);
+              SPerl_OP* op = SPerl_OP_newOP_flag(parser, SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_BOOLEAN);
 
               SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
               const_info->type = SPerl_CONST_INFO_BOOLEAN;
@@ -543,7 +543,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
               return CONST;
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
-              SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_BOOLEAN);
+              SPerl_OP* op = SPerl_OP_newOP_flag(parser, SPerl_OP_CONST, NULL, NULL, 0, SPerl_OPp_CONST_BOOLEAN);
 
               SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
               const_info->type = SPerl_CONST_INFO_BOOLEAN;
@@ -557,7 +557,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
             }
           }
           
-          SPerl_OP* op = SPerl_OP_newOP_flag(SPerl_OP_WORD, NULL, NULL, 0, 0);
+          SPerl_OP* op = SPerl_OP_newOP_flag(parser, SPerl_OP_WORD, NULL, NULL, 0, 0);
 
           op->uv.string_value = keyword;
           

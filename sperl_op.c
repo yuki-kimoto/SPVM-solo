@@ -17,7 +17,7 @@
 #include "sperl_var_info.h"
 
 SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_yy_parser* parser, SPerl_OP* op_packages) {
-  SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_GRAMMER, op_packages, NULL);
+  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
 
   parser->main_root = op;
 
@@ -144,7 +144,7 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_yy_parser* parser, SPerl_OP* op_packages)
 }
 
 SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP* op_desctype) {
-  SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_MY, op_var, op_desctype);
+  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_MY, op_var, op_desctype);
   
   // Create my var information
   SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new();
@@ -156,7 +156,7 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP*
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
-  my_var_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
+  my_var_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   
   // Add my_var information
   SPerl_MY_VAR_INFO* found_my_var_info = SPerl_HASH_search(
@@ -179,7 +179,7 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP*
 }
 
 SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
-  SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_HAS, op_field_name, op_desctype);
+  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_HAS, op_field_name, op_desctype);
   
   // Create field information
   SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new();
@@ -190,7 +190,7 @@ SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, S
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
-  field_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
+  field_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   
   // Add field information
   SPerl_ARRAY_push(parser->current_field_infos, field_info);
@@ -242,9 +242,9 @@ SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
 SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
   SPerl_int i;
 
-  SPerl_OP* op_package = SPerl_OP_newOP(SPerl_OP_PACKAGE, op_pkgname, op_block);
+  SPerl_OP* op_package = SPerl_OP_newOP(parser, SPerl_OP_PACKAGE, op_pkgname, op_block);
   if (op_descripters) {
-    SPerl_OP_sibling_splice(op_package, op_package->first, 0, op_descripters);
+    SPerl_OP_sibling_splice(parser, op_package, op_package->first, 0, op_descripters);
   }
   
   SPerl_char* name = op_pkgname->uv.string_value;
@@ -292,7 +292,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   return op_package;
 }
 
-SPerl_char SPerl_OP_create_desc_flags(SPerl_OP* op_descripters) {
+SPerl_char SPerl_OP_create_desc_flags(SPerl_yy_parser* parser, SPerl_OP* op_descripters) {
   
   if (!op_descripters) {
     return 0;
@@ -304,7 +304,7 @@ SPerl_char SPerl_OP_create_desc_flags(SPerl_OP* op_descripters) {
   // descripters is list of descripter
   if (op_descripters->type == SPerl_OP_LIST) {
     SPerl_OP* op_next = op_descripters->first;
-    while (op_next = SPerl_OP_sibling(op_next)) {
+    while (op_next = SPerl_OP_sibling(parser, op_next)) {
       desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
     }
   }
@@ -320,11 +320,11 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   
   // Create OP_SUB
   if (!op_optsubargs) {
-    op_optsubargs = SPerl_OP_newOP(SPerl_OP_NULL, NULL, NULL);
+    op_optsubargs = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
   }
-  SPerl_OP* op = SPerl_OP_newOP(SPerl_OP_SUB, op_subname, op_optsubargs);
-  SPerl_OP_sibling_splice(op, op_optsubargs, 0, op_desctype);
-  SPerl_OP_sibling_splice(op, op_desctype, 0, op_block);
+  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_SUB, op_subname, op_optsubargs);
+  SPerl_OP_sibling_splice(parser, op, op_optsubargs, 0, op_desctype);
+  SPerl_OP_sibling_splice(parser, op, op_desctype, 0, op_block);
   
   SPerl_char* name = op_subname->uv.string_value;
   SPerl_METHOD_INFO* found_method_info = SPerl_HASH_search(
@@ -356,7 +356,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     else if (op_optsubargs->type == SPerl_OP_LIST) {
       SPerl_int argument_count = 0;
       SPerl_OP* op_subarg = op_optsubargs->first;
-      while (op_subarg = SPerl_OP_sibling(op_subarg)) {
+      while (op_subarg = SPerl_OP_sibling(parser, op_subarg)) {
         // Increment argument count
         argument_count++;
       }
@@ -368,7 +368,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     
     // descripters
     SPerl_OP* op_descripters = op_desctype->last;
-    method_info->desc_flags |= SPerl_OP_create_desc_flags(op_descripters);
+    method_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
     
     // Save block
     method_info->op_block = op_block;
@@ -394,7 +394,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   return op;
 }
 
-void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_int depth) {
+void SPerl_OP_dump_ast(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_int depth) {
   
   SPerl_int i;
   for (i = 0; i < depth; i++) {
@@ -445,42 +445,42 @@ void SPerl_OP_dump_ast(SPerl_OP* op, SPerl_int depth) {
   
   if (op->first) {
     depth++;
-    SPerl_OP_dump_ast(op->first, depth);
+    SPerl_OP_dump_ast(parser, op->first, depth);
     depth--;
   }
   
   if (op->moresib) {
-    SPerl_OP_dump_ast(SPerl_OP_sibling(op), depth);
+    SPerl_OP_dump_ast(parser, SPerl_OP_sibling(parser, op), depth);
   }
 }
 
-SPerl_OP* SPerl_OP_sibling(SPerl_OP* op) {
+SPerl_OP* SPerl_OP_sibling(SPerl_yy_parser* parser, SPerl_OP* op) {
   return op->moresib ? op->sibparent : NULL;
 }
 
-void SPerl_OP_moresib_set(SPerl_OP* op, SPerl_OP* sib) {
+void SPerl_OP_moresib_set(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_OP* sib) {
   op->moresib = 1;
   op->sibparent = sib;
 }
 
-void SPerl_OP_lastsib_set(SPerl_OP* op, SPerl_OP* parent) {
+void SPerl_OP_lastsib_set(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_OP* parent) {
   op->moresib = 0;
   op->sibparent = parent;
 }
 
-void SPerl_OP_maybesib_set(SPerl_OP* op, SPerl_OP* sib, SPerl_OP* parent) {
+void SPerl_OP_maybesib_set(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_OP* sib, SPerl_OP* parent) {
   op->moresib = sib ? 1 : 0;
   op->sibparent = op->moresib ? sib : parent;
 }
 
-SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP* insert) {
+SPerl_OP* SPerl_OP_sibling_splice(SPerl_yy_parser* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP* insert) {
   SPerl_OP *first;
   SPerl_OP *rest;
   SPerl_OP *last_del = NULL;
   SPerl_OP *last_ins = NULL;
 
   if (start)
-    first = SPerl_OP_sibling(start);
+    first = SPerl_OP_sibling(parser, start);
   else if (!parent)
     goto no_parent;
   else
@@ -489,9 +489,9 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_int d
   if (del_count && first) {
     last_del = first;
     while (--del_count && last_del->moresib)
-      last_del = SPerl_OP_sibling(last_del);
-    rest = SPerl_OP_sibling(last_del);
-    SPerl_OP_lastsib_set(last_del, NULL);
+      last_del = SPerl_OP_sibling(parser, last_del);
+    rest = SPerl_OP_sibling(parser, last_del);
+    SPerl_OP_lastsib_set(parser, last_del, NULL);
   }
   else
     rest = first;
@@ -499,16 +499,16 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_int d
   if (insert) {
     last_ins = insert;
     while (last_ins->moresib) {
-      last_ins = SPerl_OP_sibling(last_ins);
+      last_ins = SPerl_OP_sibling(parser, last_ins);
     }
-    SPerl_OP_maybesib_set(last_ins, rest, NULL);
+    SPerl_OP_maybesib_set(parser, last_ins, rest, NULL);
   }
   else {
     insert = rest;
   }
 
   if (start) {
-    SPerl_OP_maybesib_set(start, insert, NULL);
+    SPerl_OP_maybesib_set(parser, start, insert, NULL);
   }
   else {
     if (!parent)
@@ -527,7 +527,7 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_int d
     parent->last = lastop;
 
     if (lastop)
-      SPerl_OP_lastsib_set(lastop, parent);
+      SPerl_OP_lastsib_set(parser, lastop, parent);
   }
   return last_del ? first : NULL;
 
@@ -536,7 +536,7 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_OP* parent, SPerl_OP* start, SPerl_int d
     exit(1);
 }
 
-SPerl_OP* SPerl_OP_append_elem(SPerl_OP *first, SPerl_OP *last) {
+SPerl_OP* SPerl_OP_append_elem(SPerl_yy_parser* parser, SPerl_OP *first, SPerl_OP *last) {
   if (!first)
     return last;
 
@@ -544,30 +544,30 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_OP *first, SPerl_OP *last) {
     return first;
   
   if (first->type == SPerl_OP_LIST) {
-    SPerl_OP_sibling_splice(first, first->last, 0, last);
+    SPerl_OP_sibling_splice(parser, first, first->last, 0, last);
     return first;
   }
   else {
-    SPerl_OP* op_list = SPerl_OP_newOP_LIST();
-    SPerl_OP_sibling_splice(op_list, op_list->first, 0, first);
-    SPerl_OP_sibling_splice(op_list, first, 0, last);
+    SPerl_OP* op_list = SPerl_OP_newOP_LIST(parser);
+    SPerl_OP_sibling_splice(parser, op_list, op_list->first, 0, first);
+    SPerl_OP_sibling_splice(parser, op_list, first, 0, last);
     
     return op_list;
   }
 }
 
-SPerl_OP* SPerl_OP_newOP_LIST() {
+SPerl_OP* SPerl_OP_newOP_LIST(SPerl_yy_parser* parser) {
   
-  SPerl_OP* op_pushmark = SPerl_OP_newOP(SPerl_OP_PUSHMARK, NULL, NULL);
+  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_PUSHMARK, NULL, NULL);
   
-  return SPerl_OP_newOP(SPerl_OP_LIST, op_pushmark, NULL);
+  return SPerl_OP_newOP(parser, SPerl_OP_LIST, op_pushmark, NULL);
 }
 
-SPerl_OP* SPerl_OP_newOP(SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
-  return SPerl_OP_newOP_flag(type, first, last, 0, 0);
+SPerl_OP* SPerl_OP_newOP(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
+  return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
 }
 
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
         
   SPerl_OP *op;
 
@@ -586,12 +586,12 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_char type, SPerl_OP* first, SPerl_OP* last, 
     }
     
     op->last = last;
-    SPerl_OP_moresib_set(first, last);
+    SPerl_OP_moresib_set(parser, first, last);
     if (op->last)
-      SPerl_OP_lastsib_set(op->last, (SPerl_OP*)op);
+      SPerl_OP_lastsib_set(parser, op->last, (SPerl_OP*)op);
   }
   else if (first) {
-    SPerl_OP_lastsib_set(op->first, (SPerl_OP*)op);
+    SPerl_OP_lastsib_set(parser, op->first, (SPerl_OP*)op);
   }
 
   return (SPerl_OP *)op;
