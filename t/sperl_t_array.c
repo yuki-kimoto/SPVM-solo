@@ -12,7 +12,7 @@
 
 int main(int argc, char *argv[])
 {
-  // Array - new
+  // Array - new and free
   {
     SPerl_ARRAY* array = SPerl_ARRAY_new(10);
     
@@ -27,6 +27,8 @@ int main(int argc, char *argv[])
     
     // Last element is NULL
     OK(array->values[9] == NULL);
+    
+    SPerl_ARRAY_free(array);
   }
     
   // Array - capacity default

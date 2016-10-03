@@ -60,6 +60,6 @@ void SPerl_ALLOCATOR_free(SPerl_ALLOCATOR* allocator) {
     SPerl_char* memory_node = (SPerl_char*)SPerl_ARRAY_fetch(memory_nodes, i);
     free(memory_node);
   }
-  free(memory_nodes);
+  SPerl_ARRAY_free(memory_nodes);
   free(allocator);
 }

@@ -56,3 +56,8 @@ void* SPerl_ARRAY_pop(SPerl_ARRAY* array) {
   
   return array->values[array->length];
 }
+
+void SPerl_ARRAY_free(SPerl_ARRAY* array) {
+  free(array->values);
+  free(array);
+}
