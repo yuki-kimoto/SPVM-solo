@@ -26,8 +26,8 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->current_my_var_info_symtable = SPerl_HASH_new(0);
   parser->class_infos = SPerl_ARRAY_new(0);
   parser->class_info_symtable = SPerl_HASH_new(0);
-  
   parser->const_infos = SPerl_ARRAY_new(0);
+  
   SPerl_int default_const_values[] = {0, 1, 2, 4, 8, 16, 32, 64};
   SPerl_int i;
   for (i = 0; i < 8; i++) {
@@ -48,6 +48,19 @@ SPerl_yy_parser* SPerl_new_parser() {
 }
 
 void SPerl_PARSER_free(SPerl_yy_parser* parser) {
+
+  SPerl_ARRAY_free(parser->current_field_infos);
+  SPerl_ARRAY_free(parser->current_method_infos);
+  
+  SPerl_HASH_free(parser->current_method_info_symtable);
+  SPerl_ARRAY_free(parser->current_my_var_infos);
+  SPerl_HASH_free(parser->current_my_var_info_symtable);
+  SPerl_ARRAY_free(parser->class_infos);
+  SPerl_HASH_free(parser->class_info_symtable);
+  SPerl_ARRAY_free(parser->const_infos);
+  SPerl_HASH_free(parser->const_info_symtable);
+  free(parser->const_pool);
+  
   free(parser->linestr);
   free(parser);
 }
