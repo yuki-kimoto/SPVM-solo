@@ -11,6 +11,12 @@
     printf("Not OK at line %d\n", __LINE__);\
   }
 
+struct test {
+  SPerl_int a;
+  SPerl_double b;
+  SPerl_long c;
+};
+
 int main(int argc, char *argv[])
 {
   // new and free
@@ -29,6 +35,45 @@ int main(int argc, char *argv[])
     SPerl_ALLOCATOR_free(allocator);
   }
 
+  // default values
+  {
+    SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(sizeof(struct test), 1);
+    
+    struct test* int_ptr1 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
+    struct test* int_ptr2 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
+    struct test* int_ptr3 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
+    struct test* int_ptr4 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
+    struct test* int_ptr5 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
+    struct test* int_ptr6 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
+    struct test* int_ptr7 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
+    struct test* int_ptr8 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
+
+    OK(int_ptr1->a == 0);
+    OK(int_ptr2->a == 0);
+    OK(int_ptr3->a == 0);
+    OK(int_ptr4->a == 0);
+    OK(int_ptr5->a == 0);
+    OK(int_ptr6->a == 0);
+    OK(int_ptr7->a == 0);
+    OK(int_ptr8->a == 0);
+    OK(int_ptr1->b == 0);
+    OK(int_ptr2->b == 0);
+    OK(int_ptr3->b == 0);
+    OK(int_ptr4->b == 0);
+    OK(int_ptr5->b == 0);
+    OK(int_ptr6->b == 0);
+    OK(int_ptr7->b == 0);
+    OK(int_ptr8->b == 0);
+    OK(int_ptr1->b == 0);
+    OK(int_ptr2->b == 0);
+    OK(int_ptr3->b == 0);
+    OK(int_ptr4->b == 0);
+    OK(int_ptr5->b == 0);
+    OK(int_ptr6->b == 0);
+    OK(int_ptr7->b == 0);
+    OK(int_ptr8->b == 0);
+  }
+  
   // Crete next memroy node
   {
     SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(sizeof(SPerl_int), 1);
@@ -41,6 +86,15 @@ int main(int argc, char *argv[])
     SPerl_int* int_ptr6 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
     SPerl_int* int_ptr7 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
     SPerl_int* int_ptr8 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
+
+    OK(*int_ptr1 == 0);
+    OK(*int_ptr2 == 0);
+    OK(*int_ptr3 == 0);
+    OK(*int_ptr4 == 0);
+    OK(*int_ptr5 == 0);
+    OK(*int_ptr6 == 0);
+    OK(*int_ptr7 == 0);
+    OK(*int_ptr8 == 0);
     
     *int_ptr1 = 1;
     *int_ptr2 = 2;

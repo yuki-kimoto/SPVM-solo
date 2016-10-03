@@ -31,17 +31,19 @@ void* SPerl_ALLOCATOR_alloc(SPerl_ALLOCATOR* allocator) {
   SPerl_int block_size = allocator->block_size;
   
   // Calculate capacity
-  SPerl_int capacity = start_length * pow(2, node_depth - 1);
+  SPerl_int capacity_pos = start_length * pow(2, node_depth - 1);
 
   // Create next memroy node
   SPerl_char* data_ptr;
   SPerl_char* memory_node;
-  if (next_pos >= capacity) {
+  if (next_pos >= capacity_pos) {
     node_depth++;
     next_pos = 0;
     
+    SPerl_int new_capacity_pos = capacity_pos * 2;
     SPerl_MEMORY_NODE* new_memory_node = (SPerl_MEMORY_NODE*)SPerl_MEMORY_NODE_new();
-    new_memory_node->data = (SPerl_char*)calloc(block_size * start_length * node_depth, sizeof(SPerl_char));
+    new_memory_node->data = (SPerl_char*)malloc(new_capacity_pos * block_size);
+    memset(new_memory_node->data, 0, new_capacity_pos * block_size);
     
     new_memory_node->next = allocator->memory_node;
     allocator->memory_node = new_memory_node;
