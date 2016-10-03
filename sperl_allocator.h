@@ -6,9 +6,9 @@
 struct SPerl_allocator {
   SPerl_int block_size;
   SPerl_int start_length;
-  SPerl_ARRAY* memory_nodes;
-  SPerl_int next_memory_row;
-  SPerl_int next_memory_col;
+  SPerl_MEMORY_NODE* memory_node;
+  SPerl_int node_depth;
+  SPerl_int next_pos;
 };
 
 SPerl_ALLOCATOR* SPerl_ALLOCATOR_new(SPerl_int block_size, SPerl_int start_length);
