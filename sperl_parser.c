@@ -12,6 +12,8 @@
 #include "sperl_my_var_info.h"
 #include "sperl_descripter.h"
 #include "sperl_field_info.h"
+#include "sperl_allocator.h"
+#include "sperl_op.h"
 
 SPerl_yy_parser* SPerl_new_parser() {
   SPerl_yy_parser* parser = (SPerl_yy_parser*)calloc(1, sizeof(SPerl_yy_parser));
@@ -38,6 +40,8 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->line = 1;
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
+  
+  parser->allocator_op = SPerl_ALLOCATOR_new(sizeof(SPerl_OP), 0);
   
   return parser;
 }

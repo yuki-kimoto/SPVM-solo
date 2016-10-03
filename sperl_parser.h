@@ -50,6 +50,9 @@ struct SPerl_yy_parser_{
   SPerl_int const_pool_length;
   
   SPerl_int line;
+  
+  /* OP allocator */
+  SPerl_ALLOCATOR* allocator_op;
 };
 
 union SPerl_yystype_
