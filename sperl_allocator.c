@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <math.h>
 
 #include "sperl_allocator.h"
 #include "sperl_array.h"
@@ -27,10 +28,10 @@ void* SPerl_ALLOCATOR_alloc(SPerl_ALLOCATOR* allocator) {
   SPerl_int block_size = allocator->block_size;
   SPerl_ARRAY* memory_nodes = allocator->memory_nodes;
   
-  SPerl_char* memory_node = (SPerl_char*)SPerl_ARRAY_fetch(memory_nodes, next_memory_row);
-  SPerl_int capacity_col = start_length * (next_memory_row + 1);
+  SPerl_int capacity_col = start_length * pow(2, next_memory_row);
   
   // Create next memroy node
+  SPerl_char* memory_node;
   if (next_memory_col >= capacity_col) {
     next_memory_row++;
     next_memory_col = 0;
@@ -39,6 +40,9 @@ void* SPerl_ALLOCATOR_alloc(SPerl_ALLOCATOR* allocator) {
     SPerl_ARRAY_push(memory_nodes, new_memory_node);
     memory_node = new_memory_node;
     allocator->next_memory_row = next_memory_row;
+  }
+  else {
+    memory_node = (SPerl_char*)SPerl_ARRAY_fetch(memory_nodes, next_memory_row);
   }
   
   void* ptr = memory_node + (next_memory_col * block_size);
