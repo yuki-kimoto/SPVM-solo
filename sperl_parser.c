@@ -14,6 +14,7 @@
 #include "sperl_field_info.h"
 #include "sperl_allocator.h"
 #include "sperl_op.h"
+#include "sperl_var_info.h"
 
 SPerl_yy_parser* SPerl_new_parser() {
   SPerl_yy_parser* parser = (SPerl_yy_parser*)calloc(1, sizeof(SPerl_yy_parser));
@@ -46,9 +47,69 @@ SPerl_yy_parser* SPerl_new_parser() {
   return parser;
 }
 
+void SPerl_PARSER_dump_ast(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_int depth) {
+  
+  SPerl_int i;
+  for (i = 0; i < depth; i++) {
+    printf(" ");
+  }
+  SPerl_int type = op->type;
+  printf("%s", SPerl_op_name[type]);
+  if (type == SPerl_OP_CONST) {
+    SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
+    switch(const_info->type) {
+      case SPerl_CONST_INFO_BOOLEAN:
+        printf(" boolean %d", const_info->uv.boolean_value);
+        break;
+      case SPerl_CONST_INFO_CHAR:
+        printf(" char '%c'", const_info->uv.char_value);
+        break;
+      case SPerl_CONST_INFO_BYTE:
+        printf(" byte %d", const_info->uv.byte_value);
+        break;
+      case SPerl_CONST_INFO_SHORT:
+        printf(" short %d", const_info->uv.short_value);
+        break;
+      case SPerl_CONST_INFO_INT:
+        printf(" int %d", const_info->uv.int_value);
+        break;
+      case SPerl_CONST_INFO_LONG:
+        printf(" long %ld", const_info->uv.long_value);
+        break;
+      case SPerl_CONST_INFO_FLOAT:
+        printf(" float %f", const_info->uv.float_value);
+        break;
+      case SPerl_CONST_INFO_DOUBLE:
+        printf(" double %f", const_info->uv.double_value);
+        break;
+      case SPerl_CONST_INFO_STRING:
+        printf(" string \"%s\"", const_info->uv.string_value);
+        break;
+    }
+  }
+  else if (type == SPerl_OP_VAR) {
+    SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op->uv.ptr_value;
+    printf(" \"%s\"", var_info->name);
+  }
+  else if (type == SPerl_OP_WORD) {
+    printf(" \"%s\"", op->uv.string_value);
+  }
+  printf("\n");
+  
+  if (op->first) {
+    depth++;
+    SPerl_PARSER_dump_ast(parser, op->first, depth);
+    depth--;
+  }
+  
+  if (op->moresib) {
+    SPerl_PARSER_dump_ast(parser, SPerl_OP_sibling(parser, op), depth);
+  }
+}
+
 void SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser) {
   printf("\n[Abstract Syntax Tree]\n");
-  SPerl_OP_dump_ast(parser, parser->main_root, 0);
+  SPerl_PARSER_dump_ast(parser, parser->main_root, 0);
   
   printf("\n[Class infomation]\n");
   SPerl_PARSER_dump_class_infos(parser->class_infos);

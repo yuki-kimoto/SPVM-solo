@@ -79,6 +79,8 @@ enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_WORD
 };
 
+void SPerl_PARSER_dump_ast(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_int depth);
+
 #define YYSTYPE SPerl_yystype
 
 #endif

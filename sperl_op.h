@@ -116,6 +116,4 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_yy_parser* parser, SPerl_OP* op_packages)
 
 SPerl_char SPerl_OP_create_desc_flags(SPerl_yy_parser* parser, SPerl_OP* op_descripters);
 
-void SPerl_dump_ast(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_int depth);
-
 #endif
