@@ -15,6 +15,37 @@
 #include "sperl_field_info.h"
 #include "sperl_my_var_info.h"
 #include "sperl_var_info.h"
+#include "sperl_allocator.h"
+
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
+        
+  SPerl_OP *op;
+
+  op = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1);
+  memset(op, 0, sizeof(SPerl_OP));
+  
+  op->type = type;
+  op->first = first;
+  op->flags = flags;
+  op->private = private;
+  
+  if (last) {
+    if (!first) {
+      first = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1 );
+      first->type = SPerl_OP_NULL;
+    }
+    
+    op->last = last;
+    SPerl_OP_moresib_set(parser, first, last);
+    if (op->last)
+      SPerl_OP_lastsib_set(parser, op->last, (SPerl_OP*)op);
+  }
+  else if (first) {
+    SPerl_OP_lastsib_set(parser, op->first, (SPerl_OP*)op);
+  }
+
+  return (SPerl_OP *)op;
+}
 
 SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_yy_parser* parser, SPerl_OP* op_packages) {
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
@@ -507,32 +538,4 @@ SPerl_OP* SPerl_OP_newOP(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP* fir
   return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
 }
 
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
-        
-  SPerl_OP *op;
 
-  op = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1);
-  memset(op, 0, sizeof(SPerl_OP));
-  
-  op->type = type;
-  op->first = first;
-  op->flags = flags;
-  op->private = private;
-  
-  if (last) {
-    if (!first) {
-      first = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1 );
-      first->type = SPerl_OP_NULL;
-    }
-    
-    op->last = last;
-    SPerl_OP_moresib_set(parser, first, last);
-    if (op->last)
-      SPerl_OP_lastsib_set(parser, op->last, (SPerl_OP*)op);
-  }
-  else if (first) {
-    SPerl_OP_lastsib_set(parser, op->first, (SPerl_OP*)op);
-  }
-
-  return (SPerl_OP *)op;
-}
