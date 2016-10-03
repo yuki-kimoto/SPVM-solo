@@ -42,8 +42,7 @@ void* SPerl_ALLOCATOR_alloc(SPerl_ALLOCATOR* allocator) {
     
     SPerl_int new_capacity_pos = capacity_pos * 2;
     SPerl_MEMORY_NODE* new_memory_node = (SPerl_MEMORY_NODE*)SPerl_MEMORY_NODE_new();
-    new_memory_node->data = (SPerl_char*)malloc(new_capacity_pos * block_size);
-    memset(new_memory_node->data, 0, new_capacity_pos * block_size);
+    new_memory_node->data = (SPerl_char*)calloc(new_capacity_pos * block_size, sizeof(SPerl_char));
     
     new_memory_node->next = allocator->memory_node;
     allocator->memory_node = new_memory_node;

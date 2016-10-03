@@ -19,9 +19,8 @@
 
 SPerl_OP* SPerl_OP_newOP_flag(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
         
-  SPerl_OP *op;
-
-  op = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1);
+  SPerl_OP *op = (SPerl_OP*)SPerl_ALLOCATOR_alloc(parser->allocator_op);
+  
   memset(op, 0, sizeof(SPerl_OP));
   
   op->type = type;
@@ -31,7 +30,7 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP
   
   if (last) {
     if (!first) {
-      first = (SPerl_OP*)malloc(sizeof(SPerl_OP) * 1 );
+      first = (SPerl_OP*)SPerl_ALLOCATOR_alloc(parser->allocator_op);
       first->type = SPerl_OP_NULL;
     }
     

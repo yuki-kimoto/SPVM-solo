@@ -42,12 +42,13 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
   
-  parser->allocator_op = SPerl_ALLOCATOR_new(sizeof(SPerl_OP), 0);
+  parser->allocator_op = SPerl_ALLOCATOR_new(sizeof(SPerl_OP), 1);
   
   return parser;
 }
 
 void SPerl_PARSER_dump_ast(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_int depth) {
+
   
   SPerl_int i;
   for (i = 0; i < depth; i++) {
@@ -95,7 +96,7 @@ void SPerl_PARSER_dump_ast(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_int dept
     printf(" \"%s\"", op->uv.string_value);
   }
   printf("\n");
-  
+
   if (op->first) {
     depth++;
     SPerl_PARSER_dump_ast(parser, op->first, depth);
