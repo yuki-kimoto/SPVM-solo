@@ -127,6 +127,9 @@ int main(int argc, char *argv[])
     OK(value2_1 == 11);
     SPerl_int value3_1 = *(SPerl_int*)SPerl_HASH_search(hash, "key3", 4);
     OK(value3_1 == 13);
+    
+    // free
+    SPerl_HASH_free(hash);
   }
   
   return 1;
