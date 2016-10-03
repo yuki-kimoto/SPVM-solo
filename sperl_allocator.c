@@ -3,13 +3,20 @@
 #include "sperl_allocator.h"
 #include "sperl_array.h"
 
-SPerl_ALLOCATOR* SPerl_ALLOCATOR_new(SPerl_int block_size) {
+SPerl_ALLOCATOR* SPerl_ALLOCATOR_new(SPerl_int block_size, SPerl_int start_length) {
   SPerl_ALLOCATOR* allocator = (SPerl_ALLOCATOR*)calloc(1, sizeof(SPerl_ALLOCATOR));
   allocator->block_size = block_size;
-  allocator->start_length = 64;
+  if (start_length == 0) {
+    allocator->start_length = 64;
+  }
+  else {
+    allocator->start_length = start_length;
+  }
   allocator->memory_nodes = SPerl_ARRAY_new(0);
   SPerl_char* byte_data_ptr = (SPerl_char*)calloc(allocator->start_length, block_size);
   SPerl_ARRAY_push(allocator->memory_nodes, byte_data_ptr);
+  
+  return allocator;
 }
 
 void* SPerl_ALLOCATOR_alloc(SPerl_ALLOCATOR* allocator) {
