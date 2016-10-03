@@ -242,8 +242,8 @@ term
   : VAR
     {
       $$ = $1;
-      SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)$1->uv.ptr_value;
-      printf("VAR(%s) -> term\n", var_info->name)
+      SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)((SPerl_OP*)$1)->uv.ptr_value;
+      printf("VAR : desctype -> subarg (%s)\n", var_info->name);
     }
   | CONST
     {
@@ -439,7 +439,8 @@ subarg
   : VAR ':' desctype
     {
       $$ = SPerl_OP_newOP_MY(parser, $1, $3);
-      printf("VAR : desctype -> subarg (%s)\n", ((SPerl_OP*)$1)->uv.string_value);
+      SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)((SPerl_OP*)$1)->uv.ptr_value;
+      printf("VAR : desctype -> subarg (%s)\n", var_info->name);
     }
 
 desctype
