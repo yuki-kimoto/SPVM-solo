@@ -43,8 +43,7 @@ int main(int argc, char *argv[])
     SPerl_PARSER_dump_parser_info(parser);
   }
   
-  free(parser->linestr);
-  free(parser);
+  SPerl_PARSER_free(parser);
   
   return parse_success;
 }

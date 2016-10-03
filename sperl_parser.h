@@ -73,6 +73,8 @@ void SPerl_PARSER_dump_field_info(SPerl_FIELD_INFO* field_info);
 void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info);
 void SPerl_PARSER_dump_my_var_info(SPerl_MY_VAR_INFO* my_var_info);
 
+void SPerl_PARSER_free(SPerl_yy_parser* parser);
+
 /* Expected token */
 enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_NORMAL,

@@ -47,6 +47,11 @@ SPerl_yy_parser* SPerl_new_parser() {
   return parser;
 }
 
+void SPerl_PARSER_free(SPerl_yy_parser* parser) {
+  free(parser->linestr);
+  free(parser);
+}
+
 void SPerl_PARSER_dump_ast(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_int depth) {
 
   
