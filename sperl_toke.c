@@ -335,7 +335,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         SPerl_char* str;
         if (*(bufptr + 1) == '"') {
-          str = malloc(1);
+          str = SPerl_PARSER_new_string(parser, 0);
           str[0] = '\0';
           bufptr++;
           bufptr++;
@@ -350,7 +350,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = bufptr - cur_token_ptr;
-          str = malloc(str_len + 1);
+          str = SPerl_PARSER_new_string(parser, str_len);
           memcpy(str, cur_token_ptr, str_len);
           str[str_len] = '\0';
 
@@ -382,7 +382,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           }
 
           size_t str_len = bufptr - cur_token_ptr;
-          SPerl_char* var = malloc(str_len + 1);
+          SPerl_char* var = SPerl_PARSER_new_string(parser, str_len);
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
@@ -470,7 +470,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = bufptr - cur_token_ptr;
-          SPerl_char* keyword = malloc(str_len + 1);
+          SPerl_char* keyword = SPerl_PARSER_new_string(parser, str_len);
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
           
