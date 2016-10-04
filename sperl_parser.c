@@ -55,11 +55,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->class_infos = SPerl_PARSER_new_array(parser, 0);
   parser->class_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_infos = SPerl_PARSER_new_array(parser, 0);
+  parser->allocator = SPerl_ALLOCATOR_new(0);
   
   SPerl_int default_const_values[] = {0, 1, 2, 4, 8, 16, 32, 64};
   SPerl_int i;
   for (i = 0; i < 8; i++) {
-    SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new();
+    SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
     const_info->type = SPerl_CONST_INFO_INT;
     const_info->uv.int_value = default_const_values[i];
     SPerl_ARRAY_push(parser->const_infos, const_info);
@@ -69,9 +70,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->line = 1;
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
-  
-  parser->allocator = SPerl_ALLOCATOR_new(0);
-  
   
   return parser;
 }
