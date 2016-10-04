@@ -16,8 +16,27 @@
 #include "sperl_op.h"
 #include "sperl_var_info.h"
 
+SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_yy_parser* parser, SPerl_int capacity) {
+  SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
+  
+  SPerl_ARRAY_push(parser->array_ptrs, array);
+  
+  return array;
+}
+
+SPerl_HASH* SPerl_PARSER_new_hash(SPerl_yy_parser* parser, SPerl_int capacity) {
+  SPerl_HASH* hash = SPerl_HASH_new(capacity);
+  
+  SPerl_ARRAY_push(parser->hash_ptrs, hash);
+  
+  return hash;
+}
+
 SPerl_yy_parser* SPerl_new_parser() {
   SPerl_yy_parser* parser = (SPerl_yy_parser*)calloc(1, sizeof(SPerl_yy_parser));
+
+  parser->array_ptrs = SPerl_ARRAY_new(0);
+  parser->hash_ptrs = SPerl_ARRAY_new(0);
   
   parser->current_field_infos = SPerl_ARRAY_new(0);
   parser->current_method_infos = SPerl_ARRAY_new(0);
@@ -43,6 +62,7 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
   
   parser->allocator_op = SPerl_ALLOCATOR_new(sizeof(SPerl_OP), 1);
+  
   
   return parser;
 }
