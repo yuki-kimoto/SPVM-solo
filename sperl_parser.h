@@ -61,7 +61,7 @@ struct SPerl_yy_parser_{
   SPerl_ARRAY* hash_ptrs;
   
   /* All string pointers */
-  SPerl_char** str_ptrs;
+  SPerl_ARRAY* str_ptrs;
 };
 
 union SPerl_yystype_
