@@ -16,10 +16,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl_int capacity) {
     array->capacity = capacity;
   }
   
-  SPerl_int total_byte = sizeof(void*) * array->capacity;
-  void** values = (void**)malloc(total_byte);
-  memset(values, 0, total_byte);
-  
+  void** values = (void**)calloc(array->capacity, sizeof(void*));
   array->values = values;
   
   return array;
@@ -31,8 +28,8 @@ void SPerl_ARRAY_push(SPerl_ARRAY* array, void* value) {
   
   if (length >= capacity) {
     SPerl_int new_capacity = capacity * 2;
-    array->values = realloc(array->values, new_capacity);
-    memset(array->values + capacity, 0, new_capacity - capacity);
+    array->values = realloc(array->values, new_capacity * sizeof(void*));
+    memset(array->values + capacity, 0, (new_capacity - capacity) * sizeof(void*));
     array->capacity = new_capacity;
   }
   

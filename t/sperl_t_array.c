@@ -116,6 +116,41 @@ int main(int argc, char *argv[])
     OK(*(SPerl_int*)SPerl_ARRAY_fetch(array, 1) == 5);
     OK(SPerl_ARRAY_fetch(array, 2) == NULL);
   }
+
+  // Array - push many values
+  {
+    SPerl_ARRAY* array = SPerl_ARRAY_new(1);
+    
+    SPerl_int value1 = 1;
+    SPerl_int value2 = 2;
+    SPerl_int value3 = 3;
+    SPerl_int value4 = 4;
+    SPerl_int value5 = 5;
+    SPerl_int value6 = 6;
+    SPerl_int value7 = 7;
+    SPerl_int value8 = 8;
+    SPerl_int value9 = 9;
+    SPerl_int value10 = 10;
+    SPerl_int value11 = 11;
+    SPerl_int value12 = 12;
+    SPerl_int value13 = 13;
+    SPerl_int value14 = 14;
+    
+    SPerl_ARRAY_push(array, &value1);
+    SPerl_ARRAY_push(array, &value2);
+    SPerl_ARRAY_push(array, &value3);
+    SPerl_ARRAY_push(array, &value4);
+    SPerl_ARRAY_push(array, &value5);
+    SPerl_ARRAY_push(array, &value6);
+    SPerl_ARRAY_push(array, &value7);
+    SPerl_ARRAY_push(array, &value8);
+    SPerl_ARRAY_push(array, &value9);
+    SPerl_ARRAY_push(array, &value10);
+    SPerl_ARRAY_push(array, &value11);
+    SPerl_ARRAY_push(array, &value12);
+    SPerl_ARRAY_push(array, &value13);
+    SPerl_ARRAY_push(array, &value14);
+  }
   
   return 1;
 }
