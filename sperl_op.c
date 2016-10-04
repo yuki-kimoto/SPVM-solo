@@ -294,7 +294,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
     
     // Set field information
     class_info->field_infos = parser->current_field_infos;
-    parser->current_field_infos = SPerl_ARRAY_new(0);
+    parser->current_field_infos = SPerl_PARSER_new_array(parser, 0);
 
     // Set class information to field informations
     for (i = 0; i < class_info->field_infos->length; i++) {
@@ -304,7 +304,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
     
     // Set method informations
     class_info->method_infos = parser->current_method_infos;
-    parser->current_method_infos = SPerl_ARRAY_new(0);
+    parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
     class_info->method_info_symtable = parser->current_method_info_symtable;
     parser->current_method_info_symtable = SPerl_HASH_new(0);
     
@@ -368,7 +368,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   }
   else {
     // Create method infomation
-    SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new();
+    SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new(parser);
     method_info->name = name;
     
     // subargs
@@ -405,7 +405,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
     
     // Add my var informations
     method_info->my_var_infos = parser->current_my_var_infos;
-    parser->current_my_var_infos = SPerl_ARRAY_new(0);
+    parser->current_my_var_infos = SPerl_PARSER_new_array(parser, 0);
     method_info->my_var_info_symtable = parser->current_my_var_info_symtable;
     parser->current_my_var_info_symtable = SPerl_HASH_new(0);
     

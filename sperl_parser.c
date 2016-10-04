@@ -38,14 +38,14 @@ SPerl_yy_parser* SPerl_new_parser() {
   parser->array_ptrs = SPerl_ARRAY_new(0);
   parser->hash_ptrs = SPerl_ARRAY_new(0);
   
-  parser->current_field_infos = SPerl_ARRAY_new(0);
-  parser->current_method_infos = SPerl_ARRAY_new(0);
+  parser->current_field_infos = SPerl_PARSER_new_array(parser, 0);
+  parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
   parser->current_method_info_symtable = SPerl_HASH_new(0);
-  parser->current_my_var_infos = SPerl_ARRAY_new(0);
+  parser->current_my_var_infos = SPerl_PARSER_new_array(parser, 0);
   parser->current_my_var_info_symtable = SPerl_HASH_new(0);
-  parser->class_infos = SPerl_ARRAY_new(0);
+  parser->class_infos = SPerl_PARSER_new_array(parser, 0);
   parser->class_info_symtable = SPerl_HASH_new(0);
-  parser->const_infos = SPerl_ARRAY_new(0);
+  parser->const_infos = SPerl_PARSER_new_array(parser, 0);
   
   SPerl_int default_const_values[] = {0, 1, 2, 4, 8, 16, 32, 64};
   SPerl_int i;
@@ -81,6 +81,9 @@ void SPerl_PARSER_free(SPerl_yy_parser* parser) {
   free(parser->const_pool);
   
   SPerl_ALLOCATOR_free(parser->allocator_op);
+
+  SPerl_ARRAY_free(parser->array_ptrs);
+  SPerl_ARRAY_free(parser->hash_ptrs);
   
   free(parser->linestr);
   free(parser);
