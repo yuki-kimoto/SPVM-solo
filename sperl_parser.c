@@ -70,7 +70,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
   
-  parser->allocator_op = SPerl_ALLOCATOR_new(sizeof(SPerl_OP), 1);
+  parser->allocator = SPerl_ALLOCATOR_new(0);
   
   
   return parser;
@@ -101,8 +101,8 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
   }
   SPerl_ARRAY_free(parser->str_ptrs);
   
-
-  SPerl_ALLOCATOR_free(parser->allocator_op);
+  // Free memory pool */
+  SPerl_ALLOCATOR_free(parser->allocator);
   
   free(parser->const_pool);
   free(parser->linestr);

@@ -52,7 +52,7 @@ struct SPerl_yy_parser_{
   SPerl_int line;
   
   /* OP allocator */
-  SPerl_ALLOCATOR* allocator_op;
+  SPerl_ALLOCATOR* allocator;
   
   /* All array pointers */
   SPerl_ARRAY* array_ptrs;
