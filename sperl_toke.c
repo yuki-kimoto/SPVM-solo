@@ -387,7 +387,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           var[str_len] = '\0';
           
           SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_VAR, NULL, NULL);
-          SPerl_VAR_INFO* var_info = SPerl_VAR_INFO_new();
+          SPerl_VAR_INFO* var_info = SPerl_VAR_INFO_new(parser);
           var_info->name = var;
           op->uv.ptr_value = var_info;
           

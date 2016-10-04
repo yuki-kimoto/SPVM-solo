@@ -177,7 +177,7 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_MY, op_var, op_desctype);
   
   // Create my var information
-  SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new();
+  SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new(parser);
   SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_var->uv.ptr_value;
   my_var_info->name = var_info->name;
   
