@@ -21,10 +21,10 @@ int main(int argc, char *argv[])
 {
   // new and free
   {
-    SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(sizeof(SPerl_int), 0);
+    SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(0);
     
-    SPerl_int* int_ptr1 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
-    SPerl_int* int_ptr2 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
+    SPerl_int* int_ptr1 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
+    SPerl_int* int_ptr2 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
     
     *int_ptr1 = 1;
     *int_ptr2 = 2;
@@ -37,16 +37,16 @@ int main(int argc, char *argv[])
 
   // default values
   {
-    SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(sizeof(struct test), 1);
+    SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(sizeof(struct test));
     
-    struct test* int_ptr1 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
-    struct test* int_ptr2 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
-    struct test* int_ptr3 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
-    struct test* int_ptr4 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
-    struct test* int_ptr5 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
-    struct test* int_ptr6 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
-    struct test* int_ptr7 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
-    struct test* int_ptr8 = (struct test*)SPerl_ALLOCATOR_alloc(allocator);
+    struct test* int_ptr1 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
+    struct test* int_ptr2 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
+    struct test* int_ptr3 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
+    struct test* int_ptr4 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
+    struct test* int_ptr5 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
+    struct test* int_ptr6 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
+    struct test* int_ptr7 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
+    struct test* int_ptr8 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
 
     OK(int_ptr1->a == 0);
     OK(int_ptr2->a == 0);
@@ -76,16 +76,16 @@ int main(int argc, char *argv[])
   
   // Crete next memroy node
   {
-    SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(sizeof(SPerl_int), 1);
+    SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(sizeof(SPerl_int));
     
-    SPerl_int* int_ptr1 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
-    SPerl_int* int_ptr2 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
-    SPerl_int* int_ptr3 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
-    SPerl_int* int_ptr4 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
-    SPerl_int* int_ptr5 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
-    SPerl_int* int_ptr6 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
-    SPerl_int* int_ptr7 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
-    SPerl_int* int_ptr8 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator);
+    SPerl_int* int_ptr1 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
+    SPerl_int* int_ptr2 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
+    SPerl_int* int_ptr3 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
+    SPerl_int* int_ptr4 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
+    SPerl_int* int_ptr5 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
+    SPerl_int* int_ptr6 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
+    SPerl_int* int_ptr7 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
+    SPerl_int* int_ptr8 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
 
     OK(*int_ptr1 == 0);
     OK(*int_ptr2 == 0);
