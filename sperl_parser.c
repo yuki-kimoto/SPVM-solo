@@ -166,25 +166,25 @@ void SPerl_PARSER_dump_parser_info(SPerl_PARSER* parser) {
   SPerl_PARSER_dump_ast(parser, parser->main_root, 0);
   
   printf("\n[Class infomation]\n");
-  SPerl_PARSER_dump_class_infos(parser->class_infos);
+  SPerl_PARSER_dump_class_infos(parser, parser->class_infos);
   
   printf("\n[Constant information]\n");
-  SPerl_PARSER_dump_const_infos(parser->const_infos);
+  SPerl_PARSER_dump_const_infos(parser, parser->const_infos);
   
   printf("\n[Constant pool]\n");
-  SPerl_PARSER_dump_const_pool(parser->const_pool, parser->const_pool_length);
+  SPerl_PARSER_dump_const_pool(parser, parser->const_pool, parser->const_pool_length);
 }
 
-void SPerl_PARSER_dump_const_infos(SPerl_ARRAY* const_infos) {
+void SPerl_PARSER_dump_const_infos(SPerl_PARSER* parser, SPerl_ARRAY* const_infos) {
   SPerl_int i;
   for (i = 0; i < const_infos->length; i++) {
     SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)SPerl_ARRAY_fetch(const_infos, i);
     printf("    const_info[%" PRId32 "]\n", i);
-    SPerl_PARSER_dump_const_info(const_info);
+    SPerl_PARSER_dump_const_info(parser, const_info);
   }
 }
 
-void SPerl_PARSER_dump_class_infos(SPerl_ARRAY* class_infos) {
+void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_infos) {
   SPerl_int i;
 
   for (i = 0; i < class_infos->length; i++) {
@@ -201,7 +201,7 @@ void SPerl_PARSER_dump_class_infos(SPerl_ARRAY* class_infos) {
     for (j = 0; j < field_infos->length; j++) {
       SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
       printf("    field_info[%" PRId32 "]\n", j);
-      SPerl_PARSER_dump_field_info(field_info);
+      SPerl_PARSER_dump_field_info(parser, field_info);
     }
     
     printf("  method_infos\n");
@@ -209,19 +209,19 @@ void SPerl_PARSER_dump_class_infos(SPerl_ARRAY* class_infos) {
     for (j = 0; j < method_infos->length; j++) {
       SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
       printf("    method_info[%" PRId32 "]\n", j);
-      SPerl_PARSER_dump_method_info(method_info);
+      SPerl_PARSER_dump_method_info(parser, method_info);
     }
   }
 }
 
-void SPerl_PARSER_dump_const_pool(SPerl_int* const_pool, SPerl_int const_pool_length) {
+void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, SPerl_int const_pool_length) {
   SPerl_int i;
   for (i = 0; i < const_pool_length; i++) {
     printf("const_pool[%d] %d\n", i, const_pool[i]);
   }
 }
 
-void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info) {
+void SPerl_PARSER_dump_const_info(SPerl_PARSER* parser, SPerl_CONST_INFO* const_info) {
   switch(const_info->type) {
     case SPerl_CONST_INFO_BOOLEAN:
       printf("      boolean %" PRId32 "\n", const_info->uv.boolean_value);
@@ -254,7 +254,7 @@ void SPerl_PARSER_dump_const_info(SPerl_CONST_INFO* const_info) {
   printf("      pool_pos => %d\n", const_info->pool_pos);
 }
 
-void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info) {
+void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* method_info) {
   if (method_info) {
     SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
     SPerl_DESCRIPTER_to_str(desc_str, method_info->desc_flags);
@@ -274,7 +274,7 @@ void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info) {
       SPerl_MY_VAR_INFO* my_var_info
         = (SPerl_MY_VAR_INFO*)SPerl_ARRAY_fetch(method_info->my_var_infos, j);
       printf("        my_var_info[%d]\n", j);
-      SPerl_PARSER_dump_my_var_info(my_var_info);
+      SPerl_PARSER_dump_my_var_info(parser, my_var_info);
     }
     
     free(desc_str);
@@ -285,7 +285,7 @@ void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info) {
 }
 
 
-void SPerl_PARSER_dump_field_info(SPerl_FIELD_INFO* field_info) {
+void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_info) {
   if (field_info) {
     SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
     SPerl_DESCRIPTER_to_str(desc_str, field_info->desc_flags);
@@ -301,7 +301,7 @@ void SPerl_PARSER_dump_field_info(SPerl_FIELD_INFO* field_info) {
   }
 }
 
-void SPerl_PARSER_dump_my_var_info(SPerl_MY_VAR_INFO* my_var_info) {
+void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_var_info) {
   if (my_var_info) {
     SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
     SPerl_DESCRIPTER_to_str(desc_str, my_var_info->desc_flags);
