@@ -288,7 +288,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     fprintf(stderr, "Warnings: class %s is already defined\n", name);
   }
   else {
-    SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new();
+    SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new(parser);
     class_info->name = name;
     class_info->op_block = op_block;
     
