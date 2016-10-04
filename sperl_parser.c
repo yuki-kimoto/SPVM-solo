@@ -32,6 +32,14 @@ SPerl_HASH* SPerl_PARSER_new_hash(SPerl_yy_parser* parser, SPerl_int capacity) {
   return hash;
 }
 
+SPerl_char* SPerl_PARSER_new_string(SPerl_yy_parser* parser, SPerl_int length) {
+  SPerl_char* str = (SPerl_char*)malloc(length + 1);
+  
+  SPerl_ARRAY_push(parser->str_ptrs, str);
+  
+  return str;
+}
+
 SPerl_yy_parser* SPerl_new_parser() {
   SPerl_yy_parser* parser = (SPerl_yy_parser*)calloc(1, sizeof(SPerl_yy_parser));
 
@@ -40,11 +48,11 @@ SPerl_yy_parser* SPerl_new_parser() {
   
   parser->current_field_infos = SPerl_PARSER_new_array(parser, 0);
   parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->current_method_info_symtable = SPerl_HASH_new(0);
+  parser->current_method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->current_my_var_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->current_my_var_info_symtable = SPerl_HASH_new(0);
+  parser->current_my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->class_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->class_info_symtable = SPerl_HASH_new(0);
+  parser->class_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_infos = SPerl_PARSER_new_array(parser, 0);
   
   SPerl_int default_const_values[] = {0, 1, 2, 4, 8, 16, 32, 64};
@@ -56,7 +64,7 @@ SPerl_yy_parser* SPerl_new_parser() {
     SPerl_ARRAY_push(parser->const_infos, const_info);
   }
   
-  parser->const_info_symtable = SPerl_HASH_new(0);
+  parser->const_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->line = 1;
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
@@ -69,25 +77,25 @@ SPerl_yy_parser* SPerl_new_parser() {
 
 void SPerl_PARSER_free(SPerl_yy_parser* parser) {
 
-  SPerl_HASH_free(parser->current_method_info_symtable);
-  SPerl_HASH_free(parser->current_my_var_info_symtable);
-  SPerl_HASH_free(parser->class_info_symtable);
-  SPerl_HASH_free(parser->const_info_symtable);
-  free(parser->const_pool);
-  
-  SPerl_ALLOCATOR_free(parser->allocator_op);
-  
   SPerl_int i;
   
-  // Free all arrays
+  // Free all array pointers
   for (i = 0; i < parser->array_ptrs->length; i++) {
     SPerl_ARRAY* array = SPerl_ARRAY_fetch(parser->array_ptrs, i);
     SPerl_ARRAY_free(array);
   }
   SPerl_ARRAY_free(parser->array_ptrs);
   
+  // Free all hash pointers
+  for (i = 0; i < parser->hash_ptrs->length; i++) {
+    SPerl_HASH* hash = SPerl_ARRAY_fetch(parser->hash_ptrs, i);
+    SPerl_HASH_free(hash);
+  }
   SPerl_ARRAY_free(parser->hash_ptrs);
+
+  SPerl_ALLOCATOR_free(parser->allocator_op);
   
+  free(parser->const_pool);
   free(parser->linestr);
   free(parser);
 }

@@ -54,11 +54,14 @@ struct SPerl_yy_parser_{
   /* OP allocator */
   SPerl_ALLOCATOR* allocator_op;
   
-  /* All arrays */
+  /* All array pointers */
   SPerl_ARRAY* array_ptrs;
   
-  /* All hashes */
+  /* All hash pointers */
   SPerl_ARRAY* hash_ptrs;
+  
+  /* All string pointers */
+  SPerl_char** str_ptrs;
 };
 
 union SPerl_yystype_
@@ -82,6 +85,7 @@ void SPerl_PARSER_dump_my_var_info(SPerl_MY_VAR_INFO* my_var_info);
 void SPerl_PARSER_free(SPerl_yy_parser* parser);
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_yy_parser* parser, SPerl_int capacity);
 SPerl_HASH* SPerl_PARSER_new_hash(SPerl_yy_parser* parser, SPerl_int capacity);
+SPerl_char* SPerl_PARSER_new_string(SPerl_yy_parser* parser, SPerl_int length);
 
 /* Expected token */
 enum SPerl_OP_EXPECT {
