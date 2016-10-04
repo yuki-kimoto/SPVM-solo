@@ -93,6 +93,14 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
     SPerl_HASH_free(hash);
   }
   SPerl_ARRAY_free(parser->hash_ptrs);
+  
+  // Free all string pointers;
+  for (i = 0; i < parser->str_ptrs->length; i++) {
+    SPerl_char* str = SPerl_ARRAY_fetch(parser->str_ptrs, i);
+    free(str);
+  }
+  SPerl_ARRAY_free(parser->str_ptrs);
+  
 
   SPerl_ALLOCATOR_free(parser->allocator_op);
   
