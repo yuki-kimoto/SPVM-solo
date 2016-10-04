@@ -11,6 +11,6 @@ struct SPerl_field_info {
   SPerl_CLASS_INFO* class_info;
 };
 
-SPerl_FIELD_INFO* SPerl_FIELD_INFO_new();
+SPerl_FIELD_INFO* SPerl_FIELD_INFO_new(SPerl_PARSER* parser);
 
 #endif

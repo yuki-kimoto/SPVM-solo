@@ -212,7 +212,7 @@ SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPer
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_HAS, op_field_name, op_desctype);
   
   // Create field information
-  SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new();
+  SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new(parser);
   field_info->name = op_field_name->uv.string_value;
   
   // type
