@@ -62,6 +62,7 @@ typedef struct SPerl_hash SPerl_HASH;
 /* sperl_parser.h */
 struct SPerl_yy_parser_;
 typedef struct SPerl_yy_parser_ SPerl_yy_parser;
+typedef SPerl_yy_parser SPerl_PARSER;
 
 union SPerl_yystype_;
 typedef union SPerl_yystype_ SPerl_yystype;
