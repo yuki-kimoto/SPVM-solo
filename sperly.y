@@ -1,6 +1,6 @@
 %pure-parser
-%parse-param	{ SPerl_yy_parser* parser }
-%lex-param	{ SPerl_yy_parser* parser }
+%parse-param	{ SPerl_PARSER* parser }
+%lex-param	{ SPerl_PARSER* parser }
 
 %{
   #include <stdio.h>

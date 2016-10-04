@@ -70,10 +70,10 @@ union SPerl_yystype_
   SPerl_int ival;
 };
 
-void SPerl_yyerror(SPerl_yy_parser* parser, const SPerl_char* s);
+void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s);
 
-SPerl_yy_parser* SPerl_new_parser();
-void SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser);
+SPerl_PARSER* SPerl_PARSER_new();
+void SPerl_PARSER_dump_parser_info(SPerl_PARSER* parser);
 void SPerl_PARSER_dump_class_infos(SPerl_ARRAY* class_infos);
 void SPerl_PARSER_dump_const_infos(SPerl_ARRAY* const_infos);
 void SPerl_PARSER_dump_const_pool(SPerl_int* const_pool, SPerl_int size);
@@ -82,10 +82,10 @@ void SPerl_PARSER_dump_field_info(SPerl_FIELD_INFO* field_info);
 void SPerl_PARSER_dump_method_info(SPerl_METHOD_INFO* method_info);
 void SPerl_PARSER_dump_my_var_info(SPerl_MY_VAR_INFO* my_var_info);
 
-void SPerl_PARSER_free(SPerl_yy_parser* parser);
-SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_yy_parser* parser, SPerl_int capacity);
-SPerl_HASH* SPerl_PARSER_new_hash(SPerl_yy_parser* parser, SPerl_int capacity);
-SPerl_char* SPerl_PARSER_new_string(SPerl_yy_parser* parser, SPerl_int length);
+void SPerl_PARSER_free(SPerl_PARSER* parser);
+SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity);
+SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity);
+SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length);
 
 /* Expected token */
 enum SPerl_OP_EXPECT {
@@ -93,7 +93,7 @@ enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_WORD
 };
 
-void SPerl_PARSER_dump_ast(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_int depth);
+void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 
 #define YYSTYPE SPerl_yystype
 

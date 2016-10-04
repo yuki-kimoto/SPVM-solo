@@ -96,24 +96,24 @@ struct SPerl_op {
   } uv;
 };
 
-SPerl_OP* SPerl_OP_sibling(SPerl_yy_parser* parser, SPerl_OP* o);
-void SPerl_OP_moresib_set(SPerl_yy_parser* parser, SPerl_OP* o, SPerl_OP* sib);
-void SPerl_OP_lastsib_set(SPerl_yy_parser* parser, SPerl_OP* o, SPerl_OP* parent);
-void SPerl_OP_maybesib_set(SPerl_yy_parser* parser, SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
+SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* o);
+void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib);
+void SPerl_OP_lastsib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* parent);
+void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
 
-SPerl_OP* SPerl_OP_newOP(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP *first, SPerl_OP *last);
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
-SPerl_OP* SPerl_OP_sibling_splice(SPerl_yy_parser* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP *insert);
-SPerl_OP* SPerl_OP_append_elem(SPerl_yy_parser* parser, SPerl_OP* first, SPerl_OP* last);
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP *first, SPerl_OP *last);
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
+SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP *insert);
+SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP* first, SPerl_OP* last);
 
-SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block);
-SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters);
-SPerl_OP* SPerl_OP_newOP_LIST(SPerl_yy_parser* parser);
-SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op);
-SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype);
-SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP* op_desctype);
-SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_yy_parser* parser, SPerl_OP* op_packages);
+SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block);
+SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters);
+SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser);
+SPerl_OP* SPerl_OP_newOP_CONST(SPerl_PARSER* parser, SPerl_OP* op);
+SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype);
+SPerl_OP* SPerl_OP_newOP_MY(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_desctype);
+SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages);
 
-SPerl_char SPerl_OP_create_desc_flags(SPerl_yy_parser* parser, SPerl_OP* op_descripters);
+SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descripters);
 
 #endif

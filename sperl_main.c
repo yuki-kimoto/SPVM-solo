@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
   }
   
   /* initialize parser */
-  SPerl_yy_parser* parser = SPerl_new_parser();
+  SPerl_PARSER* parser = SPerl_PARSER_new();
 
   /* Read source file */
   size_t linestr_buf_len;

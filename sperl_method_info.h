@@ -15,6 +15,6 @@ struct SPerl_method_info {
   SPerl_CLASS_INFO* class_info;
 };
 
-SPerl_METHOD_INFO* SPerl_METHOD_INFO_new(SPerl_yy_parser* parser);
+SPerl_METHOD_INFO* SPerl_METHOD_INFO_new(SPerl_PARSER* parser);
 
 #endif

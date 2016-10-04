@@ -16,7 +16,7 @@
 #include "sperl_op.h"
 #include "sperl_var_info.h"
 
-SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_yy_parser* parser, SPerl_int capacity) {
+SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
   
   SPerl_ARRAY_push(parser->array_ptrs, array);
@@ -24,7 +24,7 @@ SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_yy_parser* parser, SPerl_int capacity)
   return array;
 }
 
-SPerl_HASH* SPerl_PARSER_new_hash(SPerl_yy_parser* parser, SPerl_int capacity) {
+SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity) {
   SPerl_HASH* hash = SPerl_HASH_new(capacity);
   
   SPerl_ARRAY_push(parser->hash_ptrs, hash);
@@ -32,7 +32,7 @@ SPerl_HASH* SPerl_PARSER_new_hash(SPerl_yy_parser* parser, SPerl_int capacity) {
   return hash;
 }
 
-SPerl_char* SPerl_PARSER_new_string(SPerl_yy_parser* parser, SPerl_int length) {
+SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
   SPerl_char* str = (SPerl_char*)malloc(length + 1);
   
   SPerl_ARRAY_push(parser->str_ptrs, str);
@@ -40,8 +40,8 @@ SPerl_char* SPerl_PARSER_new_string(SPerl_yy_parser* parser, SPerl_int length) {
   return str;
 }
 
-SPerl_yy_parser* SPerl_new_parser() {
-  SPerl_yy_parser* parser = (SPerl_yy_parser*)calloc(1, sizeof(SPerl_yy_parser));
+SPerl_PARSER* SPerl_PARSER_new() {
+  SPerl_PARSER* parser = (SPerl_PARSER*)calloc(1, sizeof(SPerl_PARSER));
 
   parser->array_ptrs = SPerl_ARRAY_new(0);
   parser->hash_ptrs = SPerl_ARRAY_new(0);
@@ -75,7 +75,7 @@ SPerl_yy_parser* SPerl_new_parser() {
   return parser;
 }
 
-void SPerl_PARSER_free(SPerl_yy_parser* parser) {
+void SPerl_PARSER_free(SPerl_PARSER* parser) {
 
   SPerl_int i;
   
@@ -100,7 +100,7 @@ void SPerl_PARSER_free(SPerl_yy_parser* parser) {
   free(parser);
 }
 
-void SPerl_PARSER_dump_ast(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_int depth) {
+void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) {
 
   
   SPerl_int i;
@@ -161,7 +161,7 @@ void SPerl_PARSER_dump_ast(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_int dept
   }
 }
 
-void SPerl_PARSER_dump_parser_info(SPerl_yy_parser* parser) {
+void SPerl_PARSER_dump_parser_info(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
   SPerl_PARSER_dump_ast(parser, parser->main_root, 0);
   

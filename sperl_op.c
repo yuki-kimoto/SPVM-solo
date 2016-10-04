@@ -17,7 +17,7 @@
 #include "sperl_var_info.h"
 #include "sperl_allocator.h"
 
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
         
   SPerl_OP *op = (SPerl_OP*)SPerl_ALLOCATOR_alloc(parser->allocator_op);
   
@@ -46,7 +46,7 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP
   return (SPerl_OP *)op;
 }
 
-SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_yy_parser* parser, SPerl_OP* op_packages) {
+SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
 
   parser->main_root = op;
@@ -173,7 +173,7 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_yy_parser* parser, SPerl_OP* op_packages)
   return op;
 }
 
-SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP* op_desctype) {
+SPerl_OP* SPerl_OP_newOP_MY(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_desctype) {
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_MY, op_var, op_desctype);
   
   // Create my var information
@@ -208,7 +208,7 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_yy_parser* parser, SPerl_OP* op_var, SPerl_OP*
   return op;
 }
 
-SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
+SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_HAS, op_field_name, op_desctype);
   
   // Create field information
@@ -230,7 +230,7 @@ SPerl_OP* SPerl_OP_newOP_HAS(SPerl_yy_parser* parser, SPerl_OP* op_field_name, S
   return op;
 }
 
-SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
+SPerl_OP* SPerl_OP_newOP_CONST(SPerl_PARSER* parser, SPerl_OP* op) {
   
   SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
   SPerl_ARRAY_push(parser->const_infos, const_info);
@@ -269,7 +269,7 @@ SPerl_OP* SPerl_OP_newOP_CONST(SPerl_yy_parser* parser, SPerl_OP* op) {
   return op;
 }
 
-SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
+SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
   SPerl_int i;
 
   SPerl_OP* op_package = SPerl_OP_newOP(parser, SPerl_OP_PACKAGE, op_pkgname, op_block);
@@ -322,7 +322,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_yy_parser* parser, SPerl_OP* op_pkgname, 
   return op_package;
 }
 
-SPerl_char SPerl_OP_create_desc_flags(SPerl_yy_parser* parser, SPerl_OP* op_descripters) {
+SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
   
   if (!op_descripters) {
     return 0;
@@ -346,7 +346,7 @@ SPerl_char SPerl_OP_create_desc_flags(SPerl_yy_parser* parser, SPerl_OP* op_desc
   return desc_flags;
 }
 
-SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
   
   // Create OP_SUB
   if (!op_optsubargs) {
@@ -424,26 +424,26 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_yy_parser* parser, SPerl_OP* op_subname, SPer
   return op;
 }
 
-SPerl_OP* SPerl_OP_sibling(SPerl_yy_parser* parser, SPerl_OP* op) {
+SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* op) {
   return op->moresib ? op->sibparent : NULL;
 }
 
-void SPerl_OP_moresib_set(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_OP* sib) {
+void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* sib) {
   op->moresib = 1;
   op->sibparent = sib;
 }
 
-void SPerl_OP_lastsib_set(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_OP* parent) {
+void SPerl_OP_lastsib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* parent) {
   op->moresib = 0;
   op->sibparent = parent;
 }
 
-void SPerl_OP_maybesib_set(SPerl_yy_parser* parser, SPerl_OP* op, SPerl_OP* sib, SPerl_OP* parent) {
+void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* sib, SPerl_OP* parent) {
   op->moresib = sib ? 1 : 0;
   op->sibparent = op->moresib ? sib : parent;
 }
 
-SPerl_OP* SPerl_OP_sibling_splice(SPerl_yy_parser* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP* insert) {
+SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP* insert) {
   SPerl_OP *first;
   SPerl_OP *rest;
   SPerl_OP *last_del = NULL;
@@ -506,7 +506,7 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_yy_parser* parser, SPerl_OP* parent, SPe
     exit(1);
 }
 
-SPerl_OP* SPerl_OP_append_elem(SPerl_yy_parser* parser, SPerl_OP *first, SPerl_OP *last) {
+SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last) {
   if (!first)
     return last;
 
@@ -526,14 +526,14 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_yy_parser* parser, SPerl_OP *first, SPerl_O
   }
 }
 
-SPerl_OP* SPerl_OP_newOP_LIST(SPerl_yy_parser* parser) {
+SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
   
   SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_PUSHMARK, NULL, NULL);
   
   return SPerl_OP_newOP(parser, SPerl_OP_LIST, op_pushmark, NULL);
 }
 
-SPerl_OP* SPerl_OP_newOP(SPerl_yy_parser* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
   return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
 }
 

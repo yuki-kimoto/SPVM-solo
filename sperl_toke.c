@@ -10,7 +10,7 @@
 #include "sperl_var_info.h"
 
 /* Get token */
-int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
+int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
   SPerl_char* bufptr = parser->bufptr;
   enum SPerl_OP_EXPECT expect = parser->expect;
   parser->expect = SPerl_OP_EXPECT_NORMAL;
@@ -575,7 +575,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_yy_parser* parser) {
 }
 
 /* Function for error */
-void SPerl_yyerror(SPerl_yy_parser* parser, const SPerl_char* s)
+void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
 {
   fprintf(stderr, "error: %s\n", s);
 }
