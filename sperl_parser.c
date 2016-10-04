@@ -45,6 +45,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
 
   parser->array_ptrs = SPerl_ARRAY_new(0);
   parser->hash_ptrs = SPerl_ARRAY_new(0);
+  parser->str_ptrs = SPerl_ARRAY_new(0);
   
   parser->current_field_infos = SPerl_PARSER_new_array(parser, 0);
   parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
