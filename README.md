@@ -179,7 +179,7 @@ grammer
 
   gcc -lm -O -o tmp_sperl_t_array t/sperl_t_array.c *.c && ./tmp_sperl_t_array
   gcc -lm -O -o tmp_sperl_t_hash t/sperl_t_hash.c *.c && ./tmp_sperl_t_hash
-  gcc -lm -O -o tmp_sperl_t_allocator t/sperl_t_allocator.c *.c && ./tmp_sperl_t_allocator
+  gcc -lm -O -o tmp_sperl_t_memory_pool t/sperl_t_memory_pool.c *.c && ./tmp_sperl_t_memory_pool
 
 # SPVM specification
 

@@ -12,7 +12,7 @@
 #include "sperl_my_var_info.h"
 #include "sperl_descripter.h"
 #include "sperl_field_info.h"
-#include "sperl_allocator.h"
+#include "sperl_memory_pool.h"
 #include "sperl_op.h"
 #include "sperl_var_info.h"
 
@@ -55,7 +55,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->class_infos = SPerl_PARSER_new_array(parser, 0);
   parser->class_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->allocator = SPerl_ALLOCATOR_new(0);
+  parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
   SPerl_int default_const_values[] = {0, 1, 2, 4, 8, 16, 32, 64};
   SPerl_int i;
@@ -100,7 +100,7 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
   SPerl_ARRAY_free(parser->str_ptrs);
   
   // Free memory pool */
-  SPerl_ALLOCATOR_free(parser->allocator);
+  SPerl_MEMORY_POOL_free(parser->memory_pool);
   
   free(parser->const_pool);
   free(parser->linestr);

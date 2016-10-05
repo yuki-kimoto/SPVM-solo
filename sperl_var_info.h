@@ -2,7 +2,7 @@
 #define SPERL_VAR_INFO_H
 
 #include "sperl_type.h"
-#include "sperl_allocator.h"
+#include "sperl_memory_pool.h"
 #include "sperl_parser.h"
 
 struct SPerl_var_info {

@@ -15,11 +15,11 @@
 #include "sperl_field_info.h"
 #include "sperl_my_var_info.h"
 #include "sperl_var_info.h"
-#include "sperl_allocator.h"
+#include "sperl_memory_pool.h"
 
 SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
         
-  SPerl_OP *op = (SPerl_OP*)SPerl_ALLOCATOR_alloc(parser->allocator, sizeof(SPerl_OP));
+  SPerl_OP *op = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
   
   memset(op, 0, sizeof(SPerl_OP));
   
@@ -30,7 +30,7 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* f
   
   if (last) {
     if (!first) {
-      first = (SPerl_OP*)SPerl_ALLOCATOR_alloc(parser->allocator, sizeof(SPerl_OP));
+      first = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
       first->type = SPerl_OP_NULL;
     }
     

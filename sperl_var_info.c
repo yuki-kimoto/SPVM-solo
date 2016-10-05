@@ -3,5 +3,5 @@
 #include "sperl_var_info.h"
 
 SPerl_VAR_INFO* SPerl_VAR_INFO_new(SPerl_PARSER* parser) {
-  return (SPerl_VAR_INFO*)SPerl_ALLOCATOR_alloc(parser->allocator, sizeof(SPerl_VAR_INFO));
+  return (SPerl_VAR_INFO*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_VAR_INFO));
 }

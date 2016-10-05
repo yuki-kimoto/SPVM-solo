@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "../sperl_allocator.h"
+#include "../sperl_memory_pool.h"
 #include "../sperl_memory_node.h"
 
 #define OK(condition) \
@@ -21,32 +21,32 @@ int main(int argc, char *argv[])
 {
   // new and free
   {
-    SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(0);
+    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(0);
     
-    SPerl_int* int_ptr1 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
-    SPerl_int* int_ptr2 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
+    SPerl_int* int_ptr1 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
+    SPerl_int* int_ptr2 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
     
     *int_ptr1 = 1;
     *int_ptr2 = 2;
     
-    OK(*int_ptr1 == ((SPerl_int*)allocator->memory_node->data)[0]);
-    OK(*int_ptr2 == ((SPerl_int*)allocator->memory_node->data)[1]);
+    OK(*int_ptr1 == ((SPerl_int*)memory_pool->memory_node->data)[0]);
+    OK(*int_ptr2 == ((SPerl_int*)memory_pool->memory_node->data)[1]);
     
-    SPerl_ALLOCATOR_free(allocator);
+    SPerl_MEMORY_POOL_free(memory_pool);
   }
 
   // default values
   {
-    SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(sizeof(struct test));
+    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sizeof(struct test));
     
-    struct test* int_ptr1 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
-    struct test* int_ptr2 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
-    struct test* int_ptr3 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
-    struct test* int_ptr4 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
-    struct test* int_ptr5 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
-    struct test* int_ptr6 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
-    struct test* int_ptr7 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
-    struct test* int_ptr8 = (struct test*)SPerl_ALLOCATOR_alloc(allocator, sizeof(struct test));
+    struct test* int_ptr1 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
+    struct test* int_ptr2 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
+    struct test* int_ptr3 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
+    struct test* int_ptr4 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
+    struct test* int_ptr5 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
+    struct test* int_ptr6 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
+    struct test* int_ptr7 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
+    struct test* int_ptr8 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
 
     OK(int_ptr1->a == 0);
     OK(int_ptr2->a == 0);
@@ -76,16 +76,16 @@ int main(int argc, char *argv[])
   
   // Crete next memroy node
   {
-    SPerl_ALLOCATOR* allocator = SPerl_ALLOCATOR_new(sizeof(SPerl_int));
+    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sizeof(SPerl_int));
     
-    SPerl_int* int_ptr1 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
-    SPerl_int* int_ptr2 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
-    SPerl_int* int_ptr3 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
-    SPerl_int* int_ptr4 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
-    SPerl_int* int_ptr5 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
-    SPerl_int* int_ptr6 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
-    SPerl_int* int_ptr7 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
-    SPerl_int* int_ptr8 = (SPerl_int*)SPerl_ALLOCATOR_alloc(allocator, sizeof(SPerl_int));
+    SPerl_int* int_ptr1 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
+    SPerl_int* int_ptr2 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
+    SPerl_int* int_ptr3 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
+    SPerl_int* int_ptr4 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
+    SPerl_int* int_ptr5 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
+    SPerl_int* int_ptr6 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
+    SPerl_int* int_ptr7 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
+    SPerl_int* int_ptr8 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
 
     OK(*int_ptr1 == 0);
     OK(*int_ptr2 == 0);
@@ -105,15 +105,15 @@ int main(int argc, char *argv[])
     *int_ptr7 = 7;
     *int_ptr8 = 8;
     
-    OK(*int_ptr1 == ((SPerl_int*)allocator->memory_node->next->next->next->data)[0]);
-    OK(*int_ptr2 == ((SPerl_int*)allocator->memory_node->next->next->data)[0]);
-    OK(*int_ptr3 == ((SPerl_int*)allocator->memory_node->next->next->data)[1]);
-    OK(*int_ptr4 == ((SPerl_int*)allocator->memory_node->next->data)[0]);
-    OK(*int_ptr5 == ((SPerl_int*)allocator->memory_node->next->data)[1]);
-    OK(*int_ptr6 == ((SPerl_int*)allocator->memory_node->next->data)[2]);
-    OK(*int_ptr7 == ((SPerl_int*)allocator->memory_node->next->data)[3]);
-    OK(*int_ptr8 == ((SPerl_int*)allocator->memory_node->data)[0]);
+    OK(*int_ptr1 == ((SPerl_int*)memory_pool->memory_node->next->next->next->data)[0]);
+    OK(*int_ptr2 == ((SPerl_int*)memory_pool->memory_node->next->next->data)[0]);
+    OK(*int_ptr3 == ((SPerl_int*)memory_pool->memory_node->next->next->data)[1]);
+    OK(*int_ptr4 == ((SPerl_int*)memory_pool->memory_node->next->data)[0]);
+    OK(*int_ptr5 == ((SPerl_int*)memory_pool->memory_node->next->data)[1]);
+    OK(*int_ptr6 == ((SPerl_int*)memory_pool->memory_node->next->data)[2]);
+    OK(*int_ptr7 == ((SPerl_int*)memory_pool->memory_node->next->data)[3]);
+    OK(*int_ptr8 == ((SPerl_int*)memory_pool->memory_node->data)[0]);
     
-    SPerl_ALLOCATOR_free(allocator);
+    SPerl_MEMORY_POOL_free(memory_pool);
   }
 }

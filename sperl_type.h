@@ -16,9 +16,9 @@ typedef double SPerl_double;
 struct SPerl_memory_node;
 typedef struct SPerl_memory_node SPerl_MEMORY_NODE;
 
-/* sperl_allocator.h */
-struct SPerl_allocator;
-typedef struct SPerl_allocator SPerl_ALLOCATOR;
+/* sperl_memory_pool.h */
+struct SPerl_memory_pool;
+typedef struct SPerl_memory_pool SPerl_MEMORY_POOL;
 
 /* sperl_var_info.h */
 struct SPerl_var_info;

@@ -1,36 +1,36 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "sperl_allocator.h"
+#include "sperl_memory_pool.h"
 #include "sperl_array.h"
 #include "sperl_memory_node.h"
 
-SPerl_ALLOCATOR* SPerl_ALLOCATOR_new(SPerl_int base_capacity) {
-  SPerl_ALLOCATOR* allocator = (SPerl_ALLOCATOR*)calloc(1, sizeof(SPerl_ALLOCATOR));
+SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl_int base_capacity) {
+  SPerl_MEMORY_POOL* memory_pool = (SPerl_MEMORY_POOL*)calloc(1, sizeof(SPerl_MEMORY_POOL));
   if (base_capacity == 0) {
-    allocator->base_capacity = 4096;
+    memory_pool->base_capacity = 4096;
   }
   else {
     SPerl_int rem = base_capacity % 4;
     if (rem != 0) {
       base_capacity = base_capacity - rem + 4;
     }
-    allocator->base_capacity = base_capacity;
+    memory_pool->base_capacity = base_capacity;
   }
   
   SPerl_MEMORY_NODE* memory_node = (SPerl_MEMORY_NODE*)SPerl_MEMORY_NODE_new();
-  memory_node->data = calloc(allocator->base_capacity, sizeof(SPerl_char));
-  allocator->memory_node = memory_node;
-  allocator->node_depth = 1;
+  memory_node->data = calloc(memory_pool->base_capacity, sizeof(SPerl_char));
+  memory_pool->memory_node = memory_node;
+  memory_pool->node_depth = 1;
   
-  return allocator;
+  return memory_pool;
 }
 
-void* SPerl_ALLOCATOR_alloc(SPerl_ALLOCATOR* allocator, SPerl_int block_size) {
+void* SPerl_MEMORY_POOL_alloc(SPerl_MEMORY_POOL* memory_pool, SPerl_int block_size) {
   
-  SPerl_int node_depth = allocator->node_depth;
-  SPerl_int current_pos = allocator->current_pos;
-  SPerl_int base_capacity = allocator->base_capacity;
+  SPerl_int node_depth = memory_pool->node_depth;
+  SPerl_int current_pos = memory_pool->current_pos;
+  SPerl_int base_capacity = memory_pool->base_capacity;
   
   SPerl_int block_size_rem = block_size % 4;
   if (block_size_rem != 0) {
@@ -51,21 +51,21 @@ void* SPerl_ALLOCATOR_alloc(SPerl_ALLOCATOR* allocator, SPerl_int block_size) {
     SPerl_MEMORY_NODE* new_memory_node = (SPerl_MEMORY_NODE*)SPerl_MEMORY_NODE_new();
     new_memory_node->data = (SPerl_char*)calloc(new_capacity, sizeof(SPerl_char));
     
-    new_memory_node->next = allocator->memory_node;
-    allocator->memory_node = new_memory_node;
-    allocator->node_depth = node_depth;
+    new_memory_node->next = memory_pool->memory_node;
+    memory_pool->memory_node = new_memory_node;
+    memory_pool->node_depth = node_depth;
   }
 
-  data_ptr = allocator->memory_node->data + current_pos;
+  data_ptr = memory_pool->memory_node->data + current_pos;
   
-  allocator->current_pos = current_pos + block_size;
+  memory_pool->current_pos = current_pos + block_size;
   
   return data_ptr;
 }
 
-void SPerl_ALLOCATOR_free(SPerl_ALLOCATOR* allocator) {
+void SPerl_MEMORY_POOL_free(SPerl_MEMORY_POOL* memory_pool) {
   
-  SPerl_MEMORY_NODE* next_node = allocator->memory_node;
+  SPerl_MEMORY_NODE* next_node = memory_pool->memory_node;
   
   while (next_node) {
     SPerl_MEMORY_NODE* tmp_node = next_node->next;
@@ -73,5 +73,5 @@ void SPerl_ALLOCATOR_free(SPerl_ALLOCATOR* allocator) {
     next_node = tmp_node;
   }
   
-  free(allocator);
+  free(memory_pool);
 }
