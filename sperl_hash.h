@@ -3,13 +3,6 @@
 
 #include "sperl_type.h"
 
-// Hash entry
-struct SPerl_hash_entry {
-  SPerl_char* key;
-  void* value;
-  SPerl_HASH_ENTRY* next;
-};
-
 // Hash table
 struct SPerl_hash {
   SPerl_int count;

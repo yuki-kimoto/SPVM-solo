@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "sperl_hash.h"
+#include "sperl_hash_entry.h"
 
 SPerl_int SPerl_hash_func(SPerl_char* str, SPerl_int len) {
   SPerl_char* str_tmp = str;

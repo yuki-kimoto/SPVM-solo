@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "../sperl_hash.h"
+#include "../sperl_hash_entry.h"
 
 #define OK(condition) \
   if (condition) {\
