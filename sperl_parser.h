@@ -23,9 +23,6 @@ struct SPerl_yy_parser_{
   /* class information hash */
   SPerl_HASH* class_info_symtable;
   
-  /* current method information array */
-  SPerl_ARRAY* current_method_infos;
-  
   /* current field informations */
   SPerl_ARRAY* current_field_infos;
 
@@ -44,14 +41,11 @@ struct SPerl_yy_parser_{
   SPerl_int* const_pool;
   SPerl_int const_pool_capacity;
   
-  /* method information hash */
-  SPerl_HASH* current_method_info_symtable;
-  
   SPerl_int const_pool_length;
   
   SPerl_int line;
   
-  /* OP memory_pool */
+  /* Memory_pool */
   SPerl_MEMORY_POOL* memory_pool;
   
   /* All array pointers */

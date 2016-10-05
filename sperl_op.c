@@ -295,24 +295,37 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     // Set field information
     class_info->field_infos = parser->current_field_infos;
     parser->current_field_infos = SPerl_PARSER_new_array(parser, 0);
-
-    // Set class information to field informations
     for (i = 0; i < class_info->field_infos->length; i++) {
       SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)SPerl_ARRAY_fetch(class_info->field_infos, i);
       field_info->class_info = class_info;
     }
     
-    // Set method informations
-    class_info->method_infos = parser->current_method_infos;
-    parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
-    class_info->method_info_symtable = parser->current_method_info_symtable;
-    parser->current_method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
+    // Search methods
+    SPerl_ARRAY* method_infos = SPerl_PARSER_new_array(parser, 0);;
+    SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
     
-    // Set class information to method informations
-    for (i = 0; i < class_info->method_infos->length; i++) {
-      SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)SPerl_ARRAY_fetch(class_info->method_infos, i);
-      method_info->class_info = class_info;
+    SPerl_OP* op_sub = op_block->first;
+    if (op_sub && op_sub->type == SPerl_OP_LIST) {
+      op_sub = SPerl_OP_sibling(parser, op_sub->first);
     }
+    while (op_sub) {
+      if (op_sub->type == SPerl_OP_SUB) {
+        SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)op_sub->uv.ptr_value;
+        SPerl_char* method_name = method_info->name;
+        SPerl_CLASS_INFO* found_method_info
+          = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
+        if (found_method_info) {
+          fprintf(stderr, "Warnings: method %s::%s is already defined\n", class_info->name, method_name);
+        }
+        else {
+          method_info->class_info = class_info;
+          SPerl_ARRAY_push(method_infos, method_info);
+        }
+      }
+      op_sub = SPerl_OP_sibling(parser, op_sub);
+    }
+    class_info->method_infos = method_infos;
+    class_info->method_info_symtable = method_info_symtable;
     
     // Add class information
     SPerl_ARRAY_push(parser->class_infos, class_info);
@@ -356,70 +369,56 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   SPerl_OP_sibling_splice(parser, op, op_optsubargs, 0, op_desctype);
   SPerl_OP_sibling_splice(parser, op, op_desctype, 0, op_block);
   
-  SPerl_char* name = op_subname->uv.string_value;
-  SPerl_METHOD_INFO* found_method_info = SPerl_HASH_search(
-    parser->current_method_info_symtable,
-    name,
-    strlen(name)
-  );
+  // Create method infomation
+  SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new(parser);
+  method_info->name = op_subname->uv.string_value;
   
-  if (found_method_info) {
-    fprintf(stderr, "Warnings: method %s is already defined\n", name);
+  // subargs
+  // subargs is NULL
+  if (op_optsubargs->type == SPerl_OP_NULL) {
+    method_info->argument_count = 0;
   }
-  else {
-    // Create method infomation
-    SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new(parser);
-    method_info->name = name;
+  // subargs is subarg
+  else if (op_optsubargs->type == SPerl_OP_MY) {
     
-    // subargs
-    // subargs is NULL
-    if (op_optsubargs->type == SPerl_OP_NULL) {
-      method_info->argument_count = 0;
-    }
-    // subargs is subarg
-    else if (op_optsubargs->type == SPerl_OP_MY) {
-      
-      // Argument count
-      method_info->argument_count = 1;
-    }
-    // subargs is list of subarg
-    else if (op_optsubargs->type == SPerl_OP_LIST) {
-      SPerl_int argument_count = 0;
-      SPerl_OP* op_subarg = op_optsubargs->first;
-      while (op_subarg = SPerl_OP_sibling(parser, op_subarg)) {
-        // Increment argument count
-        argument_count++;
-      }
-      method_info->argument_count = argument_count;
-    }
-    
-    // return type
-    method_info->return_type = op_desctype->first->uv.string_value;
-    
-    // descripters
-    SPerl_OP* op_descripters = op_desctype->last;
-    method_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
-    
-    // Save block
-    method_info->op_block = op_block;
-    
-    // Add my var informations
-    method_info->my_var_infos = parser->current_my_var_infos;
-    parser->current_my_var_infos = SPerl_PARSER_new_array(parser, 0);
-    method_info->my_var_info_symtable = parser->current_my_var_info_symtable;
-    parser->current_my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
-    
-    // Add method information to my_var
-    SPerl_int i = 0;
-    for (i = 0; i < method_info->my_var_infos->length; i++) {
-      SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(method_info->my_var_infos, i);
-      my_var_info->method_info = method_info;
-    }
-    
-    // Add method information
-    SPerl_ARRAY_push(parser->current_method_infos, method_info);
-    SPerl_HASH_insert(parser->current_method_info_symtable, name, strlen(name), method_info);
+    // Argument count
+    method_info->argument_count = 1;
   }
+  // subargs is list of subarg
+  else if (op_optsubargs->type == SPerl_OP_LIST) {
+    SPerl_int argument_count = 0;
+    SPerl_OP* op_subarg = op_optsubargs->first;
+    while (op_subarg = SPerl_OP_sibling(parser, op_subarg)) {
+      // Increment argument count
+      argument_count++;
+    }
+    method_info->argument_count = argument_count;
+  }
+  
+  // return type
+  method_info->return_type = op_desctype->first->uv.string_value;
+  
+  // descripters
+  SPerl_OP* op_descripters = op_desctype->last;
+  method_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
+  
+  // Save block
+  method_info->op_block = op_block;
+  
+  // Add my var informations
+  method_info->my_var_infos = parser->current_my_var_infos;
+  parser->current_my_var_infos = SPerl_PARSER_new_array(parser, 0);
+  method_info->my_var_info_symtable = parser->current_my_var_info_symtable;
+  parser->current_my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
+  
+  // Add method information to my_var
+  SPerl_int i = 0;
+  for (i = 0; i < method_info->my_var_infos->length; i++) {
+    SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(method_info->my_var_infos, i);
+    my_var_info->method_info = method_info;
+  }
+  
+  op->uv.ptr_value = method_info;
   
   return op;
 }

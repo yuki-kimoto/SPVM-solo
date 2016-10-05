@@ -48,8 +48,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->str_ptrs = SPerl_ARRAY_new(0);
   
   parser->current_field_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->current_method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->current_my_var_infos = SPerl_PARSER_new_array(parser, 0);
   parser->current_my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->class_infos = SPerl_PARSER_new_array(parser, 0);
