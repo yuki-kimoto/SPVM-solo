@@ -17,35 +17,6 @@
 #include "sperl_var_info.h"
 #include "sperl_memory_pool.h"
 
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
-        
-  SPerl_OP *op = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
-  
-  memset(op, 0, sizeof(SPerl_OP));
-  
-  op->type = type;
-  op->first = first;
-  op->flags = flags;
-  op->private = private;
-  
-  if (last) {
-    if (!first) {
-      first = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
-      first->type = SPerl_OP_NULL;
-    }
-    
-    op->last = last;
-    SPerl_OP_moresib_set(parser, first, last);
-    if (op->last)
-      SPerl_OP_lastsib_set(parser, op->last, (SPerl_OP*)op);
-  }
-  else if (first) {
-    SPerl_OP_lastsib_set(parser, op->first, (SPerl_OP*)op);
-  }
-
-  return (SPerl_OP *)op;
-}
-
 SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
 
@@ -222,9 +193,6 @@ SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPer
   SPerl_OP* op_descripters = op_desctype->last;
   field_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   
-  // Add field information
-  SPerl_ARRAY_push(parser->current_field_infos, field_info);
-  
   op->uv.ptr_value = field_info;
   
   return op;
@@ -292,25 +260,34 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     class_info->name = name;
     class_info->op_block = op_block;
     
-    // Set field information
-    class_info->field_infos = parser->current_field_infos;
-    parser->current_field_infos = SPerl_PARSER_new_array(parser, 0);
-    for (i = 0; i < class_info->field_infos->length; i++) {
-      SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)SPerl_ARRAY_fetch(class_info->field_infos, i);
-      field_info->class_info = class_info;
-    }
-    
-    // Search methods
+    // Search field and methods
+    SPerl_ARRAY* field_infos = SPerl_PARSER_new_array(parser, 0);;
+    SPerl_HASH* field_info_symtable = SPerl_PARSER_new_hash(parser, 0);
     SPerl_ARRAY* method_infos = SPerl_PARSER_new_array(parser, 0);;
     SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
-    
-    SPerl_OP* op_sub = op_block->first;
-    if (op_sub && op_sub->type == SPerl_OP_LIST) {
-      op_sub = SPerl_OP_sibling(parser, op_sub->first);
+    SPerl_OP* op_fs = op_block->first;
+    if (op_fs && op_fs->type == SPerl_OP_LIST) {
+      op_fs = SPerl_OP_sibling(parser, op_fs->first);
     }
-    while (op_sub) {
-      if (op_sub->type == SPerl_OP_SUB) {
-        SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)op_sub->uv.ptr_value;
+    while (op_fs) {
+      // Search field
+      if (op_fs->type == SPerl_OP_HAS) {
+        SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_fs->uv.ptr_value;
+        SPerl_char* field_name = field_info->name;
+        SPerl_CLASS_INFO* found_field_info
+          = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
+        if (found_field_info) {
+          fprintf(stderr, "Warnings: field %s::%s is already defined\n", class_info->name, field_name);
+        }
+        else {
+          field_info->class_info = class_info;
+          SPerl_ARRAY_push(field_infos, field_info);
+          SPerl_HASH_insert(field_info_symtable, field_name, strlen(field_name), field_info);
+        }
+      }
+      // Search method
+      else if (op_fs->type == SPerl_OP_SUB) {
+        SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)op_fs->uv.ptr_value;
         SPerl_char* method_name = method_info->name;
         SPerl_CLASS_INFO* found_method_info
           = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
@@ -320,13 +297,18 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
         else {
           method_info->class_info = class_info;
           SPerl_ARRAY_push(method_infos, method_info);
+          SPerl_HASH_insert(method_info_symtable, method_name, strlen(method_name), method_info);
         }
       }
-      op_sub = SPerl_OP_sibling(parser, op_sub);
+      op_fs = SPerl_OP_sibling(parser, op_fs);
     }
+    
+    // Set filed and method information
+    class_info->field_infos = field_infos;
+    class_info->field_info_symtable = field_info_symtable;
     class_info->method_infos = method_infos;
     class_info->method_info_symtable = method_info_symtable;
-    
+   
     // Add class information
     SPerl_ARRAY_push(parser->class_infos, class_info);
     SPerl_HASH_insert(parser->class_info_symtable, name, strlen(name), class_info);
@@ -423,23 +405,64 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   return op;
 }
 
-SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* op) {
-  return op->moresib ? op->sibparent : NULL;
+SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
+  
+  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_PUSHMARK, NULL, NULL);
+  
+  return SPerl_OP_newOP(parser, SPerl_OP_LIST, op_pushmark, NULL);
 }
 
-void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* sib) {
-  op->moresib = 1;
-  op->sibparent = sib;
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
+  return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
 }
 
-void SPerl_OP_lastsib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* parent) {
-  op->moresib = 0;
-  op->sibparent = parent;
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
+        
+  SPerl_OP *op = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
+  
+  memset(op, 0, sizeof(SPerl_OP));
+  
+  op->type = type;
+  op->first = first;
+  op->flags = flags;
+  op->private = private;
+  
+  if (last) {
+    if (!first) {
+      first = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
+      first->type = SPerl_OP_NULL;
+    }
+    
+    op->last = last;
+    SPerl_OP_moresib_set(parser, first, last);
+    if (op->last)
+      SPerl_OP_lastsib_set(parser, op->last, (SPerl_OP*)op);
+  }
+  else if (first) {
+    SPerl_OP_lastsib_set(parser, op->first, (SPerl_OP*)op);
+  }
+
+  return (SPerl_OP *)op;
 }
 
-void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* sib, SPerl_OP* parent) {
-  op->moresib = sib ? 1 : 0;
-  op->sibparent = op->moresib ? sib : parent;
+SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last) {
+  if (!first)
+    return last;
+
+  if (!last)
+    return first;
+  
+  if (first->type == SPerl_OP_LIST) {
+    SPerl_OP_sibling_splice(parser, first, first->last, 0, last);
+    return first;
+  }
+  else {
+    SPerl_OP* op_list = SPerl_OP_newOP_LIST(parser);
+    SPerl_OP_sibling_splice(parser, op_list, op_list->first, 0, first);
+    SPerl_OP_sibling_splice(parser, op_list, first, 0, last);
+    
+    return op_list;
+  }
 }
 
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP* insert) {
@@ -505,35 +528,21 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_
     exit(1);
 }
 
-SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last) {
-  if (!first)
-    return last;
-
-  if (!last)
-    return first;
-  
-  if (first->type == SPerl_OP_LIST) {
-    SPerl_OP_sibling_splice(parser, first, first->last, 0, last);
-    return first;
-  }
-  else {
-    SPerl_OP* op_list = SPerl_OP_newOP_LIST(parser);
-    SPerl_OP_sibling_splice(parser, op_list, op_list->first, 0, first);
-    SPerl_OP_sibling_splice(parser, op_list, first, 0, last);
-    
-    return op_list;
-  }
+SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* op) {
+  return op->moresib ? op->sibparent : NULL;
 }
 
-SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
-  
-  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_PUSHMARK, NULL, NULL);
-  
-  return SPerl_OP_newOP(parser, SPerl_OP_LIST, op_pushmark, NULL);
+void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* sib) {
+  op->moresib = 1;
+  op->sibparent = sib;
 }
 
-SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
-  return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
+void SPerl_OP_lastsib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* parent) {
+  op->moresib = 0;
+  op->sibparent = parent;
 }
 
-
+void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* sib, SPerl_OP* parent) {
+  op->moresib = sib ? 1 : 0;
+  op->sibparent = op->moresib ? sib : parent;
+}

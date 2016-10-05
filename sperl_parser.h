@@ -22,9 +22,6 @@ struct SPerl_yy_parser_{
   
   /* class information hash */
   SPerl_HASH* class_info_symtable;
-  
-  /* current field informations */
-  SPerl_ARRAY* current_field_infos;
 
   /* current my var informations */
   SPerl_ARRAY* current_my_var_infos;

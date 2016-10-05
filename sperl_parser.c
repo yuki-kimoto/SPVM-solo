@@ -42,18 +42,19 @@ SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
 
 SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_PARSER* parser = (SPerl_PARSER*)calloc(1, sizeof(SPerl_PARSER));
-
+  
+  // Manipulate memory
   parser->array_ptrs = SPerl_ARRAY_new(0);
   parser->hash_ptrs = SPerl_ARRAY_new(0);
   parser->str_ptrs = SPerl_ARRAY_new(0);
+  parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
-  parser->current_field_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->current_my_var_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->current_my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->class_infos = SPerl_PARSER_new_array(parser, 0);
   parser->class_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->memory_pool = SPerl_MEMORY_POOL_new(0);
+  
+  parser->current_my_var_infos = SPerl_PARSER_new_array(parser, 0);
+  parser->current_my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   SPerl_int default_const_values[] = {0, 1, 2, 4, 8, 16, 32, 64};
   SPerl_int i;
