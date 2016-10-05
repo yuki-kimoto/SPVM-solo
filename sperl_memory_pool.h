@@ -5,8 +5,8 @@
 
 struct SPerl_memory_pool {
   SPerl_int base_capacity;
-  SPerl_MEMORY_NODE* memory_node;
-  SPerl_int node_depth;
+  SPerl_MEMORY_POOL_PAGE* page;
+  SPerl_int page_depth;
   SPerl_int current_pos;
 };
 

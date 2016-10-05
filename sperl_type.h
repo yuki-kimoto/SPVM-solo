@@ -12,9 +12,9 @@ typedef int64_t SPerl_long;
 typedef float SPerl_float;
 typedef double SPerl_double;
 
-/* sperl_memory_node */
-struct SPerl_memory_node;
-typedef struct SPerl_memory_node SPerl_MEMORY_NODE;
+/* sperl_memory_pool_page.h */
+struct SPerl_memory_pool_page;
+typedef struct SPerl_memory_pool_page SPerl_MEMORY_POOL_PAGE;
 
 /* sperl_memory_pool.h */
 struct SPerl_memory_pool;
