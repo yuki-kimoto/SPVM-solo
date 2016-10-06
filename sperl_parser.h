@@ -39,6 +39,9 @@ struct SPerl_yy_parser_{
   /* Current line number */
   SPerl_int line;
   
+  /* Current file name */
+  SPerl_char* file;
+  
   /* Memory_pool */
   SPerl_MEMORY_POOL* memory_pool;
   

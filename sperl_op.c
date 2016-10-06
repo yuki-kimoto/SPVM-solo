@@ -189,37 +189,6 @@ SPerl_OP* SPerl_OP_newOP_CONST(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
   SPerl_ARRAY_push(parser->const_infos, const_info);
   
-  switch(const_info->type) {
-    case SPerl_CONST_INFO_BOOLEAN:
-      printf("CONST(boolean %d) -> term\n", const_info->uv.boolean_value);
-      break;
-    case SPerl_CONST_INFO_CHAR:
-      printf("CONST(char '%c') -> term\n", const_info->uv.char_value);
-      break;
-    case SPerl_CONST_INFO_BYTE:
-      printf("CONST(byte %d) -> term\n", const_info->uv.byte_value);
-      break;
-    case SPerl_CONST_INFO_SHORT:
-      printf("CONST(short %d) -> term\n", const_info->uv.short_value);
-      break;
-    case SPerl_CONST_INFO_INT:
-      printf("CONST(int %d) -> term\n", const_info->uv.int_value);
-      break;
-    case SPerl_CONST_INFO_LONG:
-      printf("CONST(long %ld) -> term\n", const_info->uv.long_value);
-      break;
-    case SPerl_CONST_INFO_FLOAT:
-      printf("CONST(float %f) -> term\n", const_info->uv.float_value);
-      break;
-    case SPerl_CONST_INFO_DOUBLE:
-      printf("CONST(double %f) -> term\n", const_info->uv.double_value);
-      break;
-    case SPerl_CONST_INFO_STRING: {
-      printf("CONST(string %s) -> term\n", const_info->uv.string_value);
-      break;
-    }
-  }
-  
   return op;
 }
 

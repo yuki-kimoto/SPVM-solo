@@ -6,9 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-  // Debug bison
-  SPerl_yydebug = 1;
-  
   if (argc < 2) {
     fprintf(stderr, "Not script\n");
     exit(1);
@@ -38,7 +35,7 @@ int main(int argc, char *argv[])
   parser->bufptr = parser->linestr;
   
   /* call SPerl_yyparse */
-  printf("[Token reduction]\n");
+  SPerl_yydebug = 0;
   SPerl_int parse_success = SPerl_yyparse(parser);
   
   /* dump parser information */

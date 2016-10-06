@@ -94,6 +94,8 @@ struct SPerl_op {
     SPerl_char* string_value;
     void* ptr_value;
   } uv;
+  SPerl_char* file;
+  SPerl_int line;
 };
 
 SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* o);

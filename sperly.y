@@ -13,10 +13,10 @@
   #include "sperl_op.h"
   #include "sperl_var_info.h"
   #include "sperl_my_var_info.h"
+  #include "sperl_const_info.h"
 
   static void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
     
-    SPerl_VAR_INFO* var_info;
     switch(type) {
       case MULOP:
         fprintf(file, "%d", yylval.ival);
@@ -24,10 +24,44 @@
       case WORD:
         fprintf(file, "\"%s\"", ((SPerl_OP*)yylval.opval)->uv.string_value);
         break;
-      case VAR:
-        var_info = (SPerl_VAR_INFO*)((SPerl_OP*)yylval.opval)->uv.ptr_value;
+      case VAR: {
+        SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)((SPerl_OP*)yylval.opval)->uv.ptr_value;
         fprintf(file, "\"%s\"", var_info->name);
         break;
+      }
+      case CONST: {
+        SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)((SPerl_OP*)yylval.opval)->uv.ptr_value;
+        
+        switch(const_info->type) {
+          case SPerl_CONST_INFO_BOOLEAN:
+            fprintf(file, "boolean %d", const_info->uv.boolean_value);
+            break;
+          case SPerl_CONST_INFO_CHAR:
+            fprintf(file, "char '%c'", const_info->uv.char_value);
+            break;
+          case SPerl_CONST_INFO_BYTE:
+            fprintf(file, "byte %d", const_info->uv.byte_value);
+            break;
+          case SPerl_CONST_INFO_SHORT:
+            fprintf(file, "short %d", const_info->uv.short_value);
+            break;
+          case SPerl_CONST_INFO_INT:
+            fprintf(file, "int %d", const_info->uv.int_value);
+            break;
+          case SPerl_CONST_INFO_LONG:
+            fprintf(file, "long %ld", const_info->uv.long_value);
+            break;
+          case SPerl_CONST_INFO_FLOAT:
+            fprintf(file, "float %f", const_info->uv.float_value);
+            break;
+          case SPerl_CONST_INFO_DOUBLE:
+            fprintf(file, "double %f", const_info->uv.double_value);
+            break;
+          case SPerl_CONST_INFO_STRING:
+            fprintf(file, "string %s", const_info->uv.string_value);
+            break;
+        }
+      }
     }
   }
 %}
