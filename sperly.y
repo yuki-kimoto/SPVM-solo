@@ -13,7 +13,7 @@
   #include "sperl_op.h"
   #include "sperl_var_info.h"
 
-  void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
+  static void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
     
     switch(type) {
       case MULOP:
