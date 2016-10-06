@@ -8,13 +8,19 @@ extern int SPerl_yydebug;
 /* Parser information */
 struct SPerl_yy_parser_{
   /* Source data */
-  SPerl_char* linestr;
+  SPerl_char* source;
   
   /* Current buffer position */
   SPerl_char* bufptr;
   
-  /* Expect next */
+  /* Expect next token type */
   SPerl_int expect;
+
+  /* Current file name */
+  SPerl_char* cur_file;
+  
+  /* Current line number */
+  SPerl_int cur_line;
   
   /* AST root */
   SPerl_OP* op_root;
@@ -35,12 +41,6 @@ struct SPerl_yy_parser_{
   SPerl_int* const_pool;
   SPerl_int const_pool_capacity;
   SPerl_int const_pool_length;
-
-  /* Current file name */
-  SPerl_char* cur_file;
-  
-  /* Current line number */
-  SPerl_int cur_line;
   
   /* Memory_pool */
   SPerl_MEMORY_POOL* memory_pool;

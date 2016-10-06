@@ -100,7 +100,7 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
   SPerl_MEMORY_POOL_free(parser->memory_pool);
   
   free(parser->const_pool);
-  free(parser->linestr);
+  free(parser->source);
   free(parser);
 }
 

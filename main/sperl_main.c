@@ -25,14 +25,14 @@ int main(int argc, char *argv[])
   SPerl_PARSER* parser = SPerl_PARSER_new();
 
   /* Read source file */
-  size_t linestr_buf_len;
-  getdelim(&(parser->linestr), &linestr_buf_len, EOF, fp);
+  size_t source_buf_len;
+  getdelim(&(parser->source), &source_buf_len, EOF, fp);
   
   /* Close file */
   fclose(fp);
   
   /* Initialize parser information */
-  parser->bufptr = parser->linestr;
+  parser->bufptr = parser->source;
   
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;
