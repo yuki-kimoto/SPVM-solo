@@ -15,7 +15,10 @@
 
   void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
     if (type == MULOP) {
-      fprintf (file, " %d", yylval.ival);
+      fprintf(file, "%d", yylval.ival);
+    }
+    else if (type == WORD) {
+      fprintf(file, "\"%s\"", ((SPerl_OP*)yylval.opval)->uv.string_value);
     }
   }
 %}
@@ -463,47 +466,40 @@ type
   : WORD
     {
       $$ = $1;
-      printf("WORD -> type (%s)\n", ((SPerl_OP*)$1)->uv.string_value);
     }
 
 descripters
   : descripters descripter
     {
       $$ = SPerl_OP_append_elem(parser, $1, $2);
-      printf("descripters descripter -> descripters\n");
     }
   | descripter
     {
       $$ = $1;
-      printf("descripter -> descripters\n");
     }
 
 descripter
   : WORD
     {
       $$ = $1;
-      printf("WORD -> descripter\n");
     }
 
 fieldname
   : WORD
     {
       $$ = $1;
-      printf("WORD -> fieldname\n");
     }
 
 subname
   : WORD
     {
       $$ = $1;
-      printf("WORD -> subname\n");
     }
 
 pkgname
   : WORD
     {
       $$ = $1;
-      printf("WORD -> pkgname\n");
     }
 %%
 
