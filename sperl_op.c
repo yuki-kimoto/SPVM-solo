@@ -17,6 +17,63 @@
 #include "sperl_var_info.h"
 #include "sperl_memory_pool.h"
 
+/* sperl_op.h */
+SPerl_char* const SPerl_OP_names[] = {
+  "null",
+  "const",
+  "lt",
+  "le",
+  "gt",
+  "ge",
+  "add",
+  "subtract",
+  "multiply",
+  "divide",
+  "and",
+  "or",
+  "bit_and",
+  "bit_or",
+  "modulo",
+  "bit_xor",
+  "not",
+  "left_shift",
+  "right_shift",
+  "inc",
+  "dec",
+  "bit_not",
+  "preinc",
+  "postinc",
+  "predec",
+  "postdec",
+  "complement",
+  "negate",
+  "list",
+  "pushmark",
+  "aelem",
+  "field",
+  "assign",
+  "callsub",
+  "subarg",
+  "block",
+  "my",
+  "has",
+  "cond",
+  "use",
+  "return",
+  "last",
+  "next",
+  "package",
+  "loop",
+  "sub",
+  "var",
+  "eq",
+  "ne",
+  "statement",
+  "grammer",
+  "desctype",
+  "word"
+};
+
 SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
 

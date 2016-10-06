@@ -112,7 +112,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
     printf(" ");
   }
   SPerl_int type = op->type;
-  printf("%s", SPerl_op_name[type]);
+  printf("%s", SPerl_OP_names[type]);
   if (type == SPerl_OP_CONST) {
     SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
     switch(const_info->type) {

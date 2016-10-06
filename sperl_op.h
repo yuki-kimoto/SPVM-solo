@@ -60,7 +60,7 @@ enum SPerl_OP_CODE {
   SPerl_OP_WORD
 };
 
-extern SPerl_char* const SPerl_op_name[];
+extern SPerl_char* const SPerl_OP_names[];
 
 // OP_CONST private flag
 #define SPerl_OPp_CONST_BOOLEAN 1
