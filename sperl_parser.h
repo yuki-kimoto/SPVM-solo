@@ -2,6 +2,7 @@
 #define SPERL_PARSER_H
 
 #include "sperl_type.h"
+#include "stdio.h"
 
 extern int SPerl_yydebug;
 
@@ -18,6 +19,9 @@ struct SPerl_yy_parser_{
 
   /* Current file name */
   SPerl_char* cur_file;
+  
+  /* Current file handle */
+  FILE* cur_fh;
   
   /* Current line number */
   SPerl_int cur_line;
