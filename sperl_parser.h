@@ -37,9 +37,13 @@ struct SPerl_yy_parser_{
   /* Constant information symbol table */
   SPerl_HASH* const_info_symtable;
   
-  /* constant pool */
+  /* Constant pool */
   SPerl_int* const_pool;
+  
+  /* Constant pool capacity*/
   SPerl_int const_pool_capacity;
+  
+  /* Constant pool length */
   SPerl_int const_pool_length;
   
   /* Memory_pool */
