@@ -3,6 +3,8 @@
 
 #include "sperl_type.h"
 
+extern int SPerl_yydebug;
+
 /* Parser information */
 struct SPerl_yy_parser_{
   /* Source data */

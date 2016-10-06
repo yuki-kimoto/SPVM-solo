@@ -6,6 +6,9 @@
 
 int main(int argc, char *argv[])
 {
+  // Debug bison
+  SPerl_yydebug = 1;
+  
   if (argc < 2) {
     fprintf(stderr, "Not script\n");
     exit(1);
