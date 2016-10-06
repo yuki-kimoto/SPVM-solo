@@ -94,4 +94,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 #define YYSTYPE SPerl_yystype
 #define YYPRINT(file, type, value) SPerl_yyprint(file, type, value)
 
+int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser);
+int SPerl_yyparse(SPerl_PARSER* parser);
+
 #endif

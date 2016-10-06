@@ -35,7 +35,7 @@ package Main {
 
 ## Run
 
-    bison -t -p SPerl_yy -d sperly.y && gcc -lm -O -o sperl main/sperl_main.c *.c && ./sperl test.spl
+    bison -t -p SPerl_yy -d sperly.y && gcc -std=c99 -lm -O -o sperl main/sperl_main.c *.c && ./sperl test.spl
 
 Now I only print the result of **token reduction** and **abstract syntax tree**.
 
@@ -177,9 +177,9 @@ grammer
 
 ## Test
 
-  gcc -lm -O -o tmp_sperl_t_array t/sperl_t_array.c *.c && ./tmp_sperl_t_array
-  gcc -lm -O -o tmp_sperl_t_hash t/sperl_t_hash.c *.c && ./tmp_sperl_t_hash
-  gcc -lm -O -o tmp_sperl_t_memory_pool t/sperl_t_memory_pool.c *.c && ./tmp_sperl_t_memory_pool
+  gcc  -std=c99 -lm -O -o tmp_sperl_t_array t/sperl_t_array.c *.c && ./tmp_sperl_t_array
+  gcc  -std=c99 -lm -O -o tmp_sperl_t_hash t/sperl_t_hash.c *.c && ./tmp_sperl_t_hash
+  gcc  -std=c99 -lm -O -o tmp_sperl_t_memory_pool t/sperl_t_memory_pool.c *.c && ./tmp_sperl_t_memory_pool
 
 # SPVM specification
 

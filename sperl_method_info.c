@@ -1,5 +1,4 @@
-#include <string.h>
-#include <stdio.h>
+#include <stdlib.h>
 
 #include "sperl_method_info.h"
 #include "sperl_array.h"
