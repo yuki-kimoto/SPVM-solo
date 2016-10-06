@@ -14,11 +14,14 @@
   #include "sperl_var_info.h"
 
   void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
-    if (type == MULOP) {
-      fprintf(file, "%d", yylval.ival);
-    }
-    else if (type == WORD) {
-      fprintf(file, "\"%s\"", ((SPerl_OP*)yylval.opval)->uv.string_value);
+    
+    switch(type) {
+      case MULOP:
+        fprintf(file, "%d", yylval.ival);
+        break;
+      case WORD:
+        fprintf(file, "\"%s\"", ((SPerl_OP*)yylval.opval)->uv.string_value);
+        break;
     }
   }
 %}
