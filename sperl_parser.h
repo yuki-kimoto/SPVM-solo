@@ -8,9 +8,6 @@ extern int SPerl_yydebug;
 
 /* Parser information */
 struct SPerl_yy_parser_{
-  /* Source data */
-  SPerl_char* source;
-  
   /* Current buffer position */
   SPerl_char* bufptr;
   
@@ -20,11 +17,11 @@ struct SPerl_yy_parser_{
   /* Current file name */
   SPerl_char* cur_file;
   
-  /* Current file handle */
-  FILE* cur_fh;
+  /* Source data */
+  SPerl_char* cur_src;
   
   /* Current line number */
-  SPerl_int cur_line;
+  SPerl_int cur_line_num;
   
   /* AST root */
   SPerl_OP* op_root;

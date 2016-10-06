@@ -9,8 +9,35 @@
 #include "sperl_const_info.h"
 #include "sperl_var_info.h"
 
-/* Get token */
+// Get token
 int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
+  
+  if (!parser->cur_src) {
+    
+    // Open source file
+    FILE* fh = fopen(parser->cur_file, "r");
+    if (fh == NULL) {
+      printf("Can't open file %s\n", parser->cur_file);
+      return -1;
+    }
+    
+    // File size
+    fseek(fh, 0, SEEK_END);
+    SPerl_int file_size = ftell(fh);
+    fseek(fh, 0, SEEK_SET);
+    
+    // Read file
+    SPerl_char* src = SPerl_PARSER_new_string(parser, file_size);
+    if (fread(src, 1, file_size, fh) == -1) {
+      printf("Can't read file %s\n", parser->cur_file);
+      return -1;
+    }
+    src[file_size] = '\0';
+    
+    parser->cur_src = src;
+    parser->bufptr = src;
+  }
+  
   SPerl_char* bufptr = parser->bufptr;
   enum SPerl_OP_EXPECT expect = parser->expect;
   parser->expect = SPerl_OP_EXPECT_NORMAL;
@@ -29,6 +56,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
       case ' ':
       case '\t':
       case (SPerl_char)EOF :
+
         bufptr++;
         parser->bufptr = bufptr;
         continue;
@@ -36,7 +64,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
       case '\n':
         bufptr++;
         parser->bufptr = bufptr;
-        parser->cur_line++;
+        parser->cur_line_num++;
         continue;
       
       /* Addition */
