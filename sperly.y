@@ -134,20 +134,12 @@ statement
       printf("WHILE ( term ) block\n");
     }
   | term ';'
-    {
-      $$ = $1;
-      printf("term ; -> statement\n")
-    }
   | ';'
     {
       $$ = (SPerl_OP*)NULL;
       printf("; -> statement\n")
     }
   | if
-    {
-      $$ = $1;
-      printf("if -> statement\n");
-    }
   | LAST ';'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_LAST, NULL, NULL);
@@ -173,10 +165,6 @@ statement
       printf("USE pkgname AS WORD; -> statement\n");
     }
   | block
-    {
-      $$ = $1;
-      printf("block -> statement\n");
-    }
 
 if
   : IF '(' term ')' block else
@@ -232,10 +220,6 @@ optterms
       printf("NULL -> optterms\n");
     }
   |	terms
-    {
-      $$ = $1;
-      printf("terms -> optterms\n");
-    }
 
 terms
   : terms ',' term
@@ -244,10 +228,6 @@ terms
       printf("terms , term -> terms\n");
     }
   | term
-    {
-      $$ = $1;
-      printf("term -> terms\n");
-    }
 
 term
   : VAR
@@ -398,15 +378,7 @@ term
       printf("pkgname ARROW subname ( optterms )\n");
     }
   | declmy
-    {
-      $$ = $1;
-      printf("declmy -> term\n");
-    }
   | declhas
-    {
-      $$ = $1;
-      printf("declhas -> term\n");
-    }
 
 block 
   : '{' '}'
@@ -428,10 +400,6 @@ optsubargs
       printf("NULL -> optsubargs\n");
     }
   |	subargs
-    {
-      $$ = $1;
-      printf("subargs -> optsubargs\n");
-    }
 
 subargs
   : subargs ',' subarg
@@ -440,10 +408,6 @@ subargs
       printf("subargs , subarg\n");
     }
   | subarg
-    {
-      $$ = $1;
-      printf("subarg -> subargs\n");
-    }
 
 subarg
   : VAR ':' desctype
@@ -457,19 +421,13 @@ desctype
   : type
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_DESCTYPE, $1, 0);
-      printf("type -> desctype\n");
     }
   | descripters type
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_DESCTYPE, $2, $1);
-      printf("descripters type -> desctype\n");
     }
     
-type
-  : WORD
-    {
-      $$ = $1;
-    }
+type : WORD
 
 descripters
   : descripters descripter
@@ -477,32 +435,11 @@ descripters
       $$ = SPerl_OP_append_elem(parser, $1, $2);
     }
   | descripter
-    {
-      $$ = $1;
-    }
 
-descripter
-  : WORD
-    {
-      $$ = $1;
-    }
+descripter : WORD
+fieldname : WORD
+subname : WORD
+pkgname : WORD
 
-fieldname
-  : WORD
-    {
-      $$ = $1;
-    }
-
-subname
-  : WORD
-    {
-      $$ = $1;
-    }
-
-pkgname
-  : WORD
-    {
-      $$ = $1;
-    }
 %%
 
