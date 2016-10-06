@@ -36,7 +36,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
       case '\n':
         bufptr++;
         parser->bufptr = bufptr;
-        parser->line++;
+        parser->cur_line++;
         continue;
       
       /* Addition */

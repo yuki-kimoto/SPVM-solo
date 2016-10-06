@@ -14,7 +14,8 @@
   #include "sperl_var_info.h"
   #include "sperl_my_var_info.h"
   #include "sperl_const_info.h"
-
+  
+  // Print token value for debug
   static void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
     
     switch(type) {
