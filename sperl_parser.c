@@ -53,9 +53,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->class_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_infos = SPerl_PARSER_new_array(parser, 0);
   
-  parser->current_my_var_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->current_my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
-  
   SPerl_int default_const_values[] = {0, 1, 2, 4, 8, 16, 32, 64};
   SPerl_int i;
   for (i = 0; i < 8; i++) {

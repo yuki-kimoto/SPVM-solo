@@ -17,29 +17,24 @@ struct SPerl_yy_parser_{
   /* AST root */
   SPerl_OP* main_root;
   
-  /* class information array */
+  /* class informations */
   SPerl_ARRAY* class_infos;
   
-  /* class information hash */
+  /* class information symbol table */
   SPerl_HASH* class_info_symtable;
-
-  /* current my var informations */
-  SPerl_ARRAY* current_my_var_infos;
   
-  /* Current my var hash */
-  SPerl_HASH* current_my_var_info_symtable;
-  
-  /* Constant information */
+  /* Constant informations */
   SPerl_ARRAY* const_infos;
-
+  
+  /* Constant information symbol table */
   SPerl_HASH* const_info_symtable;
   
   /* constant pool */
   SPerl_int* const_pool;
   SPerl_int const_pool_capacity;
-  
   SPerl_int const_pool_length;
   
+  /* Current line number */
   SPerl_int line;
   
   /* Memory_pool */

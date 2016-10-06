@@ -159,20 +159,6 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op
   SPerl_OP* op_descripters = op_desctype->last;
   my_var_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   
-  // Add my_var information
-  SPerl_MY_VAR_INFO* found_my_var_info = SPerl_HASH_search(
-    parser->current_my_var_info_symtable,
-    var_info->name,
-    strlen(var_info->name)
-  );
-  if (found_my_var_info) {
-    fprintf(stderr, "Warnings: Declare same name variable %s\n", var_info->name);
-  }
-  else {
-    SPerl_HASH_insert(parser->current_my_var_info_symtable, var_info->name, strlen(var_info->name), my_var_info);
-    SPerl_ARRAY_push(parser->current_my_var_infos, my_var_info);
-  }
-  
   // Add my_var information to op
   op->uv.ptr_value = my_var_info;
   
@@ -387,18 +373,53 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   // Save block
   method_info->op_block = op_block;
   
-  // Add my var informations
-  method_info->my_var_infos = parser->current_my_var_infos;
-  parser->current_my_var_infos = SPerl_PARSER_new_array(parser, 0);
-  method_info->my_var_info_symtable = parser->current_my_var_info_symtable;
-  parser->current_my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
+  // my var informations
+  SPerl_ARRAY* my_var_infos = SPerl_PARSER_new_array(parser, 0);
+  SPerl_HASH* my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   
-  // Add method information to my_var
-  SPerl_int i = 0;
-  for (i = 0; i < method_info->my_var_infos->length; i++) {
-    SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(method_info->my_var_infos, i);
-    my_var_info->method_info = method_info;
+  SPerl_ARRAY* op_stack = SPerl_ARRAY_new(0);
+  SPerl_OP* op_cur = op;
+  while (op_cur) {
+    SPerl_OP* first;
+    
+    // Add my var
+    if (op_cur->type == SPerl_OP_MY) {
+      SPerl_MY_VAR_INFO* my_var_info = (SPerl_MY_VAR_INFO*)op_cur->uv.ptr_value;
+      SPerl_MY_VAR_INFO* found_my_var_info
+        = SPerl_HASH_search(my_var_info_symtable, my_var_info->name, strlen(my_var_info->name));
+      if (found_my_var_info) {
+        fprintf(stderr, "Warnings: Declare same name variable %s\n", my_var_info->name);
+      }
+      else {
+        SPerl_HASH_insert(my_var_info_symtable, my_var_info->name, strlen(my_var_info->name), my_var_info);
+        SPerl_ARRAY_push(my_var_infos, my_var_info);
+        my_var_info->method_info = method_info;
+      }
+    }
+    else {
+      first = op_cur->first;
+    }
+    
+    if (first) {
+      SPerl_ARRAY_push(op_stack, op_cur);
+      op_cur = op_cur->first;
+    }
+    else {
+      SPerl_OP* op_sib = SPerl_OP_sibling(parser, op_cur);
+      if (op_sib) {
+        op_cur = op_sib;
+      }
+      else {
+        op_cur = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
+        op_cur = SPerl_OP_sibling(parser, op_cur);
+      }
+    }
   }
+  SPerl_ARRAY_free(op_stack);
+  
+  // Set my var information
+  method_info->my_var_infos = my_var_infos;
+  method_info->my_var_info_symtable = my_var_info_symtable;
   
   op->uv.ptr_value = method_info;
   
