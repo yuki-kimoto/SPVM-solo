@@ -84,5 +84,6 @@ enum SPerl_OP_EXPECT {
 void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 
 #define YYSTYPE SPerl_yystype
+#define YYPRINT(file, type, value) SPerl_yyprint(file, type, value)
 
 #endif

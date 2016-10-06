@@ -12,6 +12,12 @@
   #include "sperl_parser.h"
   #include "sperl_op.h"
   #include "sperl_var_info.h"
+
+  void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
+    if (type == MULOP) {
+      fprintf (file, " %d", yylval.ival);
+    }
+  }
 %}
 
 %token <ival> '+' '-'
@@ -301,7 +307,6 @@ term
   | term MULOP term
     {
       $$ = SPerl_OP_newOP(parser, $2, $1, $3);
-      printf("term MULOP(%d) term -> term\n", $2);
     }
   | term RELOP term
     {
