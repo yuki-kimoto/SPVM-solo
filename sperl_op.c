@@ -20,7 +20,7 @@
 SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
 
-  parser->main_root = op;
+  parser->op_root = op;
 
   // Set constant informations
   SPerl_ARRAY* const_infos = parser->const_infos;

@@ -17,7 +17,7 @@ struct SPerl_yy_parser_{
   SPerl_int expect;
   
   /* AST root */
-  SPerl_OP* main_root;
+  SPerl_OP* op_root;
   
   /* class informations */
   SPerl_ARRAY* class_infos;

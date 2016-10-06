@@ -167,7 +167,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
 
 void SPerl_PARSER_dump_parser_info(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
-  SPerl_PARSER_dump_ast(parser, parser->main_root, 0);
+  SPerl_PARSER_dump_ast(parser, parser->op_root, 0);
   
   printf("\n[Class infomation]\n");
   SPerl_PARSER_dump_class_infos(parser, parser->class_infos);
