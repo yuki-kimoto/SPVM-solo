@@ -189,7 +189,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
       else if (op_cur->type == SPerl_OP_SUB) {
         SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)op_cur->uv.ptr_value;
         SPerl_char* method_name = method_info->name;
-        SPerl_CLASS_INFO* found_method_info
+        SPerl_METHOD_INFO* found_method_info
           = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
         if (found_method_info) {
           fprintf(stderr, "Warnings: method %s::%s is already defined\n", class_info->name, method_name);
