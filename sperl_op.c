@@ -16,6 +16,7 @@
 #include "sperl_my_var_info.h"
 #include "sperl_var_info.h"
 #include "sperl_memory_pool.h"
+#include "sperl_use_info.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_names[] = {
@@ -217,6 +218,13 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
 
 SPerl_OP* SPerl_OP_newOP_USE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_pkgalias) {
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_USE, op_pkgname, op_pkgalias);
+  
+  SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
+  use_info->class_name = op_pkgname->uv.string_value;
+  if (op_pkgalias) {
+    use_info->alias = op_pkgalias->uv.string_value;
+  }
+  op->uv.ptr_value = use_info;
   
   return op;
 }
