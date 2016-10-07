@@ -129,10 +129,6 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
         key_ptr = (SPerl_char*)&const_info->uv.double_value;
         key_len = 8;
         break;
-      case SPerl_CONST_INFO_STRING:
-        key_ptr = const_info->uv.string_value;
-        key_len = strlen(const_info->uv.string_value);
-        break;
     }
     
     void* value = SPerl_HASH_search(parser->const_info_symtable, key_ptr, key_len);
@@ -189,10 +185,6 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
         case SPerl_CONST_INFO_DOUBLE:
           *(SPerl_double*)(const_pool + parser->const_pool_length) = const_info->uv.double_value;
           parser->const_pool_length += 2;
-          break;
-        case SPerl_CONST_INFO_STRING:
-          strcpy((SPerl_char*)(const_pool + parser->const_pool_length), const_info->uv.string_value);
-          parser->const_pool_length += (SPerl_int)(((strlen(const_info->uv.string_value) + 1) + 3) / sizeof(SPerl_int));
           break;
       }
     }
