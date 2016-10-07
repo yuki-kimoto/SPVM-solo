@@ -134,60 +134,6 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   return op;
 }
 
-SPerl_OP* SPerl_OP_newOP_MY(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_desctype) {
-  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_MY, op_var, op_desctype);
-  
-  // Create my var information
-  SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new(parser);
-  SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_var->uv.ptr_value;
-  my_var_info->name = var_info->name;
-  
-  // type
-  my_var_info->type = op_desctype->first->uv.string_value;
-  
-  // descripters
-  SPerl_OP* op_descripters = op_desctype->last;
-  my_var_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
-  
-  // Add my_var information to op
-  op->uv.ptr_value = my_var_info;
-  
-  return op;
-}
-
-SPerl_OP* SPerl_OP_newOP_USE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_pkgalias) {
-  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_USE, op_pkgname, op_pkgalias);
-  
-  return op;
-}
-
-SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
-  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_HAS, op_field_name, op_desctype);
-  
-  // Create field information
-  SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new(parser);
-  field_info->name = op_field_name->uv.string_value;
-  
-  // type
-  field_info->type = op_desctype->first->uv.string_value;
-  
-  // descripters
-  SPerl_OP* op_descripters = op_desctype->last;
-  field_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
-  
-  op->uv.ptr_value = field_info;
-  
-  return op;
-}
-
-SPerl_OP* SPerl_OP_newOP_CONST(SPerl_PARSER* parser, SPerl_OP* op) {
-  
-  SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
-  SPerl_ARRAY_push(parser->const_infos, const_info);
-  
-  return op;
-}
-
 SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
   SPerl_int i;
 
@@ -210,6 +156,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new(parser);
     class_info->name = name;
     class_info->op_block = op_block;
+    class_info->alias = SPerl_PARSER_new_hash(parser, 0);
     
     // Search field and methods
     SPerl_ARRAY* field_infos = SPerl_PARSER_new_array(parser, 0);;
@@ -266,6 +213,60 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
   }
   
   return op_package;
+}
+
+SPerl_OP* SPerl_OP_newOP_USE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_pkgalias) {
+  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_USE, op_pkgname, op_pkgalias);
+  
+  return op;
+}
+
+SPerl_OP* SPerl_OP_newOP_MY(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_desctype) {
+  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_MY, op_var, op_desctype);
+  
+  // Create my var information
+  SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new(parser);
+  SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_var->uv.ptr_value;
+  my_var_info->name = var_info->name;
+  
+  // type
+  my_var_info->type = op_desctype->first->uv.string_value;
+  
+  // descripters
+  SPerl_OP* op_descripters = op_desctype->last;
+  my_var_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
+  
+  // Add my_var information to op
+  op->uv.ptr_value = my_var_info;
+  
+  return op;
+}
+
+SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
+  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_HAS, op_field_name, op_desctype);
+  
+  // Create field information
+  SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new(parser);
+  field_info->name = op_field_name->uv.string_value;
+  
+  // type
+  field_info->type = op_desctype->first->uv.string_value;
+  
+  // descripters
+  SPerl_OP* op_descripters = op_desctype->last;
+  field_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
+  
+  op->uv.ptr_value = field_info;
+  
+  return op;
+}
+
+SPerl_OP* SPerl_OP_newOP_CONST(SPerl_PARSER* parser, SPerl_OP* op) {
+  
+  SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
+  SPerl_ARRAY_push(parser->const_infos, const_info);
+  
+  return op;
 }
 
 SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
