@@ -164,14 +164,14 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     SPerl_HASH* field_info_symtable = SPerl_PARSER_new_hash(parser, 0);
     SPerl_ARRAY* method_infos = SPerl_PARSER_new_array(parser, 0);;
     SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
-    SPerl_OP* op_fs = op_block->first;
-    if (op_fs && op_fs->type == SPerl_OP_LIST) {
-      op_fs = SPerl_OP_sibling(parser, op_fs->first);
+    SPerl_OP* op_cur = op_block->first;
+    if (op_cur && op_cur->type == SPerl_OP_LIST) {
+      op_cur = SPerl_OP_sibling(parser, op_cur->first);
     }
-    while (op_fs) {
+    while (op_cur) {
       // Search field
-      if (op_fs->type == SPerl_OP_HAS) {
-        SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_fs->uv.ptr_value;
+      if (op_cur->type == SPerl_OP_HAS) {
+        SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_cur->uv.ptr_value;
         SPerl_char* field_name = field_info->name;
         SPerl_CLASS_INFO* found_field_info
           = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
@@ -185,8 +185,8 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
         }
       }
       // Search method
-      else if (op_fs->type == SPerl_OP_SUB) {
-        SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)op_fs->uv.ptr_value;
+      else if (op_cur->type == SPerl_OP_SUB) {
+        SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)op_cur->uv.ptr_value;
         SPerl_char* method_name = method_info->name;
         SPerl_CLASS_INFO* found_method_info
           = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
@@ -199,7 +199,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
           SPerl_HASH_insert(method_info_symtable, method_name, strlen(method_name), method_info);
         }
       }
-      op_fs = SPerl_OP_sibling(parser, op_fs);
+      op_cur = SPerl_OP_sibling(parser, op_cur);
     }
     
     // Set filed and method information
