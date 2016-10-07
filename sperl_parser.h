@@ -55,6 +55,9 @@ struct SPerl_yy_parser_{
   
   /* All string pointers */
   SPerl_ARRAY* str_ptrs;
+  
+  /* Module loading stack */
+  SPerl_ARRAY* module_stack;
 };
 
 union SPerl_yystype_

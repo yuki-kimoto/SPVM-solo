@@ -76,7 +76,7 @@
 %type <opval> grammar statements statement declmy declhas if else block
 %type <opval> optterms terms term subargs subarg optsubargs
 %type <opval> desctype descripters descripter
-%type <opval> type pkgname fieldname subname package packages
+%type <opval> type pkgname fieldname subname package packages pkgalias
 
 %right <ival> ASSIGNOP
 %left <ival> OROP
@@ -178,11 +178,11 @@ statement
     }
   | USE pkgname ';'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_USE, $2, NULL);
+      $$ = SPerl_OP_newOP_USE(parser, $2, NULL);
     }
-  | USE pkgname '-' WORD';'
+  | USE pkgname '-' pkgalias';'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_USE, $2, $4);
+      $$ = SPerl_OP_newOP_USE(parser, $2, $4);
     }
   | block
 
@@ -413,6 +413,7 @@ descripter : WORD
 fieldname : WORD
 subname : WORD
 pkgname : WORD
+pkgalias : WORD
 
 %%
 

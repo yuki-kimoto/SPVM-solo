@@ -1,0 +1,4 @@
+package Complex : value {
+  has re : const double;
+  has im : const double;
+}

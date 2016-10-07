@@ -55,7 +55,6 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
       /* Skip space character */
       case ' ':
       case '\t':
-      case (SPerl_char)EOF :
 
         bufptr++;
         parser->bufptr = bufptr;
@@ -226,7 +225,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
       case '#':
         bufptr++;
         while(1) {
-          if (*bufptr == '\r' || *bufptr == '\n' || *bufptr == (SPerl_char)EOF || *bufptr == '\0') {
+          if (*bufptr == '\r' || *bufptr == '\n' || *bufptr == '\0') {
             break;
           }
           bufptr++;

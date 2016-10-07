@@ -47,6 +47,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->array_ptrs = SPerl_ARRAY_new(0);
   parser->hash_ptrs = SPerl_ARRAY_new(0);
   parser->str_ptrs = SPerl_ARRAY_new(0);
+  parser->module_stack = SPerl_ARRAY_new(0);
   parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
   parser->class_infos = SPerl_PARSER_new_array(parser, 0);

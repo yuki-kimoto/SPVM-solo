@@ -1,4 +1,5 @@
 package Point {
+  use Complex;
   sub get1 ($var1 : double, $var2 : int) : int {
     my $var3 : int;
     my $var4 : int;
@@ -23,11 +24,6 @@ package Point {
   sub get7 ($foo : int, $bar : int) : int {}
   sub get8 ($foo : const int, $bar : const int) : int {}
   sub get9 ($foo : static const int, $bar : static const int) : int {}
-}
-
-package Complex : value {
-  has re : const double;
-  has im : const double;
 }
 
 package Point3D {
