@@ -18,10 +18,6 @@ enum SPerl_CONST_INFO_TYPE {
 struct SPerl_const_info {
   SPerl_char type;
   union {
-    SPerl_boolean boolean_value;
-    SPerl_char char_value;
-    SPerl_byte byte_value;
-    SPerl_short short_value;
     SPerl_int int_value;
     SPerl_int long_value;
     float float_value;

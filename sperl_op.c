@@ -94,22 +94,22 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
     switch(const_info->type) {
       
       case SPerl_CONST_INFO_BOOLEAN:
-        int_value = (SPerl_int)const_info->uv.boolean_value;
+        int_value = (SPerl_int)const_info->uv.int_value;
         key_ptr = (SPerl_char*)&int_value;
         key_len = 4;
         break;
       case SPerl_CONST_INFO_CHAR:
-        int_value = (SPerl_int)const_info->uv.char_value;
+        int_value = (SPerl_int)const_info->uv.int_value;
         key_ptr = (SPerl_char*)&int_value;
         key_len = 4;
         break;
       case SPerl_CONST_INFO_BYTE:
-        int_value = (SPerl_int)const_info->uv.byte_value;
+        int_value = (SPerl_int)const_info->uv.int_value;
         key_ptr = (SPerl_char*)&int_value;
         key_len = 4;
         break;
       case SPerl_CONST_INFO_SHORT:
-        int_value = (SPerl_int)const_info->uv.short_value;
+        int_value = (SPerl_int)const_info->uv.int_value;
         key_ptr = (SPerl_char*)&int_value;
         key_len = 4;
         break;
@@ -159,19 +159,19 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
       SPerl_int* const_pool = parser->const_pool;
       switch(const_info->type) {
         case SPerl_CONST_INFO_BOOLEAN:
-          *(const_pool + parser->const_pool_length) = (SPerl_int)const_info->uv.boolean_value;
+          *(const_pool + parser->const_pool_length) = (SPerl_int)const_info->uv.int_value;
           parser->const_pool_length += 1;
           break;
         case SPerl_CONST_INFO_CHAR:
-          *(const_pool + parser->const_pool_length) = (SPerl_int)const_info->uv.char_value;
+          *(const_pool + parser->const_pool_length) = (SPerl_int)const_info->uv.int_value;
           parser->const_pool_length += 1;
           break;
         case SPerl_CONST_INFO_BYTE:
-          *(const_pool + parser->const_pool_length) = (SPerl_int)const_info->uv.byte_value;
+          *(const_pool + parser->const_pool_length) = (SPerl_int)const_info->uv.int_value;
           parser->const_pool_length += 1;
           break;
         case SPerl_CONST_INFO_SHORT:
-          *(const_pool + parser->const_pool_length) = (SPerl_int)const_info->uv.short_value;
+          *(const_pool + parser->const_pool_length) = (SPerl_int)const_info->uv.int_value;
           parser->const_pool_length += 1;
           break;
         case SPerl_CONST_INFO_INT:

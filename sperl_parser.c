@@ -116,16 +116,16 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
     SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
     switch(const_info->type) {
       case SPerl_CONST_INFO_BOOLEAN:
-        printf(" boolean %d", const_info->uv.boolean_value);
+        printf(" boolean %d", const_info->uv.int_value);
         break;
       case SPerl_CONST_INFO_CHAR:
-        printf(" char '%c'", const_info->uv.char_value);
+        printf(" char '%c'", const_info->uv.int_value);
         break;
       case SPerl_CONST_INFO_BYTE:
-        printf(" byte %d", const_info->uv.byte_value);
+        printf(" byte %d", const_info->uv.int_value);
         break;
       case SPerl_CONST_INFO_SHORT:
-        printf(" short %d", const_info->uv.short_value);
+        printf(" short %d", const_info->uv.int_value);
         break;
       case SPerl_CONST_INFO_INT:
         printf(" int %d", const_info->uv.int_value);
@@ -227,16 +227,16 @@ void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, S
 void SPerl_PARSER_dump_const_info(SPerl_PARSER* parser, SPerl_CONST_INFO* const_info) {
   switch(const_info->type) {
     case SPerl_CONST_INFO_BOOLEAN:
-      printf("      boolean %" PRId32 "\n", const_info->uv.boolean_value);
+      printf("      boolean %" PRId32 "\n", const_info->uv.int_value);
       break;
     case SPerl_CONST_INFO_CHAR:
-      printf("      char '%c'\n", const_info->uv.char_value);
+      printf("      char '%c'\n", const_info->uv.int_value);
       break;
     case SPerl_CONST_INFO_BYTE:
-      printf("      byte %" PRId32 "\n", const_info->uv.byte_value);
+      printf("      byte %" PRId32 "\n", const_info->uv.int_value);
       break;
     case SPerl_CONST_INFO_SHORT:
-      printf("      short %" PRId32 "\n", const_info->uv.short_value);
+      printf("      short %" PRId32 "\n", const_info->uv.int_value);
       break;
     case SPerl_CONST_INFO_INT:
       printf("      int %" PRId32 "\n", const_info->uv.int_value);

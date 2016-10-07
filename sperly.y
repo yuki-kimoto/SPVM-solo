@@ -35,16 +35,16 @@
         
         switch(const_info->type) {
           case SPerl_CONST_INFO_BOOLEAN:
-            fprintf(file, "boolean %d", const_info->uv.boolean_value);
+            fprintf(file, "boolean %d", const_info->uv.int_value);
             break;
           case SPerl_CONST_INFO_CHAR:
-            fprintf(file, "char '%c'", const_info->uv.char_value);
+            fprintf(file, "char '%c'", (SPerl_char)const_info->uv.int_value);
             break;
           case SPerl_CONST_INFO_BYTE:
-            fprintf(file, "byte %d", const_info->uv.byte_value);
+            fprintf(file, "byte %d", const_info->uv.int_value);
             break;
           case SPerl_CONST_INFO_SHORT:
-            fprintf(file, "short %d", const_info->uv.short_value);
+            fprintf(file, "short %d", const_info->uv.int_value);
             break;
           case SPerl_CONST_INFO_INT:
             fprintf(file, "int %d", const_info->uv.int_value);
