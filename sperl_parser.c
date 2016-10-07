@@ -53,7 +53,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->class_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_infos = SPerl_PARSER_new_array(parser, 0);
   
-  parser->const_pool_capacity = 1024;
+  parser->const_pool_capacity = 4096;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
   
   parser->cur_line_num = 1;

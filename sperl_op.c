@@ -82,9 +82,6 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   // Set constant informations
   SPerl_ARRAY* const_infos = parser->const_infos;
   
-  // Default const pool values
-  SPerl_int* const_pool = parser->const_pool;
-
   // Create constant pool
   SPerl_int i;
   for (i = 0; i < const_infos->length; i++) {
@@ -93,14 +90,19 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
     const_info->pool_pos = parser->const_pool_pos;
     
     // Realloc
-    if (parser->const_pool_pos >= parser->const_pool_capacity) {
+    if (parser->const_pool_pos - 1 >= parser->const_pool_capacity) {
+      
       SPerl_int new_const_pool_capacity = parser->const_pool_capacity * 2;
-      SPerl_int* new_const_pool = calloc(new_const_pool_capacity, sizeof(SPerl_int));
-      memcpy(new_const_pool, parser->const_pool, parser->const_pool_capacity);
-      parser->const_pool = new_const_pool;
+      parser->const_pool = realloc(parser->const_pool, new_const_pool_capacity * sizeof(SPerl_int));
+      memset(
+        parser->const_pool + parser->const_pool_capacity,
+        0,
+        (new_const_pool_capacity - parser->const_pool_capacity) * sizeof(SPerl_int)
+      );
       parser->const_pool_capacity = new_const_pool_capacity;
     }
     
+    SPerl_int* const_pool = parser->const_pool;
     switch(const_info->type) {
       case SPerl_CONST_INFO_BOOLEAN:
       case SPerl_CONST_INFO_CHAR:
@@ -108,7 +110,7 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
       case SPerl_CONST_INFO_SHORT:
       case SPerl_CONST_INFO_INT:
         const_info->pool_pos = parser->const_pool_pos;
-        *(const_pool + parser->const_pool_pos) = (SPerl_int)const_info->uv.int_value;
+        *(const_pool + parser->const_pool_pos) = const_info->uv.int_value;
         parser->const_pool_pos += 1;
         break;
       case SPerl_CONST_INFO_LONG:
