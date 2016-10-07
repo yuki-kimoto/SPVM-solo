@@ -164,7 +164,8 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     SPerl_HASH* field_info_symtable = SPerl_PARSER_new_hash(parser, 0);
     SPerl_ARRAY* method_infos = SPerl_PARSER_new_array(parser, 0);;
     SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
-
+    
+    // Run ast
     SPerl_ARRAY* op_stack = SPerl_ARRAY_new(0);
     SPerl_OP* op_cur = op;
     while (op_cur) {
@@ -198,6 +199,17 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
           method_info->class_info = class_info;
           SPerl_ARRAY_push(method_infos, method_info);
           SPerl_HASH_insert(method_info_symtable, method_name, strlen(method_name), method_info);
+        }
+      }
+      else if (op_cur->type == SPerl_OP_USE) {
+        SPerl_USE_INFO* use_info = (SPerl_USE_INFO*)op_cur->uv.ptr_value;
+        
+        SPerl_char* class_name = use_info->class_name;
+        SPerl_ARRAY_push(parser->module_stack, class_name);
+        
+        SPerl_char* alias_name = use_info->alias_name;
+        if (alias_name) {
+          SPerl_HASH_insert(class_info->alias, alias_name, strlen(alias_name), class_info);
         }
       }
       else {
@@ -241,7 +253,7 @@ SPerl_OP* SPerl_OP_newOP_USE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_O
   SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
   use_info->class_name = op_pkgname->uv.string_value;
   if (op_pkgalias) {
-    use_info->alias = op_pkgalias->uv.string_value;
+    use_info->alias_name = op_pkgalias->uv.string_value;
   }
   op->uv.ptr_value = use_info;
   
