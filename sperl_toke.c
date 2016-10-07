@@ -67,8 +67,8 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
               continue;
             }
             else {
-              SPerl_char* cur_file = SPerl_PARSER_new_string(parser, strlen(class_name) + 3);
-              sprintf(cur_file, "%s.pm", class_name);
+              SPerl_char* cur_file = SPerl_PARSER_new_string(parser, strlen(class_name) + 8);
+              sprintf(cur_file, "%s.pm.spvm", class_name);
               parser->cur_file = cur_file;
               
               // Open source file
@@ -94,7 +94,8 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
               src[file_size] = '\0';
               
               parser->cur_src = src;
-              parser->bufptr = src;
+              bufptr = src;
+              parser->bufptr = bufptr;
               break;
             }
           }

@@ -51,6 +51,10 @@ void* SPerl_ARRAY_pop(SPerl_ARRAY* array) {
   
   array->length--;
   
+  if (array->length < 0) {
+    return NULL;
+  }
+  
   return array->values[array->length];
 }
 
