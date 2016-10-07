@@ -165,7 +165,7 @@ void SPerl_PARSER_dump_parser_info(SPerl_PARSER* parser) {
   SPerl_PARSER_dump_const_infos(parser, parser->const_infos);
   
   printf("\n[Constant pool]\n");
-  SPerl_PARSER_dump_const_pool(parser, parser->const_pool, parser->const_pool_length);
+  SPerl_PARSER_dump_const_pool(parser, parser->const_pool, parser->const_pool_pos);
 }
 
 void SPerl_PARSER_dump_const_infos(SPerl_PARSER* parser, SPerl_ARRAY* const_infos) {
@@ -207,9 +207,9 @@ void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_info
   }
 }
 
-void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, SPerl_int const_pool_length) {
+void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, SPerl_int const_pool_pos) {
   SPerl_int i;
-  for (i = 0; i < const_pool_length; i++) {
+  for (i = 0; i < const_pool_pos; i++) {
     printf("const_pool[%d] %d\n", i, const_pool[i]);
   }
 }
