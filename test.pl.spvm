@@ -1,5 +1,5 @@
 package Point {
-  use Complex;
+  use Module1;
   sub get1 ($var1 : double, $var2 : int) : int {
     my $var3 : int;
     my $var4 : int;

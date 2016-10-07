@@ -205,7 +205,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
         SPerl_USE_INFO* use_info = (SPerl_USE_INFO*)op_cur->uv.ptr_value;
         
         SPerl_char* class_name = use_info->class_name;
-        SPerl_ARRAY_push(parser->module_stack, class_name);
+        SPerl_ARRAY_push(parser->class_stack, class_name);
         
         SPerl_char* alias_name = use_info->alias_name;
         if (alias_name) {

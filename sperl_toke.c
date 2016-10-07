@@ -8,6 +8,8 @@
 #include "sperly.tab.h"
 #include "sperl_const_info.h"
 #include "sperl_var_info.h"
+#include "sperl_array.h"
+#include "sperl_hash.h"
 
 // Get token
 int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
@@ -32,6 +34,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
       printf("Can't read file %s\n", parser->cur_file);
       return -1;
     }
+    fclose(fh);
     src[file_size] = '\0';
     
     parser->cur_src = src;
@@ -43,14 +46,68 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
   parser->expect = SPerl_OP_EXPECT_NORMAL;
   
   while(1) {
-    /* Get current character */
+    // Get current character
     SPerl_char c = *bufptr;
     
-    /* line end */
+    // line end
     switch(c) {
-      /* End */
       case '\0':
-        return 0;
+        parser->cur_file = NULL;
+        parser->cur_src = NULL;
+        
+        // If there are more module, load it
+        SPerl_ARRAY* class_stack = parser->class_stack;
+        
+        while (1) {
+          SPerl_char* class_name = (SPerl_char*)SPerl_ARRAY_pop(class_stack);
+          
+          if (class_name) {
+            SPerl_CLASS_INFO* found_class_info = SPerl_HASH_search(parser->class_info_symtable, class_name, strlen(class_name));
+            if (found_class_info) {
+              continue;
+            }
+            else {
+              SPerl_char* cur_file = SPerl_PARSER_new_string(parser, strlen(class_name) + 3);
+              sprintf(cur_file, "%s.pm", class_name);
+              parser->cur_file = cur_file;
+              
+              // Open source file
+              FILE* fh = fopen(parser->cur_file, "r");
+              if (fh == NULL) {
+                printf("Can't open file %s\n", parser->cur_file);
+                return -1;
+              }
+              
+              // File size
+              fseek(fh, 0, SEEK_END);
+              SPerl_int file_size = ftell(fh);
+              fseek(fh, 0, SEEK_SET);
+              
+              // Read file
+              SPerl_char* src = SPerl_PARSER_new_string(parser, file_size);
+              if (fread(src, 1, file_size, fh) == -1) {
+                printf("Can't read file %s\n", parser->cur_file);
+                return -1;
+              }
+              fclose(fh);
+              
+              src[file_size] = '\0';
+              
+              parser->cur_src = src;
+              parser->bufptr = src;
+              break;
+            }
+          }
+          else {
+            return 0;
+          }
+        }
+        if (parser->cur_src) {
+          continue;
+        }
+        else {
+          return 0;
+        }
       
       /* Skip space character */
       case ' ':
