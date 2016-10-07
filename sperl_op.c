@@ -138,9 +138,9 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
   SPerl_int i;
 
-  SPerl_OP* op_package = SPerl_OP_newOP(parser, SPerl_OP_PACKAGE, op_pkgname, op_block);
+  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_PACKAGE, op_pkgname, op_block);
   if (op_descripters) {
-    SPerl_OP_sibling_splice(parser, op_package, op_package->first, 0, op_descripters);
+    SPerl_OP_sibling_splice(parser, op, op->first, 0, op_descripters);
   }
   
   SPerl_char* name = op_pkgname->uv.string_value;
@@ -164,12 +164,13 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     SPerl_HASH* field_info_symtable = SPerl_PARSER_new_hash(parser, 0);
     SPerl_ARRAY* method_infos = SPerl_PARSER_new_array(parser, 0);;
     SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
-    SPerl_OP* op_cur = op_block->first;
-    if (op_cur && op_cur->type == SPerl_OP_LIST) {
-      op_cur = SPerl_OP_sibling(parser, op_cur->first);
-    }
+
+    SPerl_ARRAY* op_stack = SPerl_ARRAY_new(0);
+    SPerl_OP* op_cur = op;
     while (op_cur) {
-      // Search field
+      SPerl_OP* first;
+      
+      // Field
       if (op_cur->type == SPerl_OP_HAS) {
         SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_cur->uv.ptr_value;
         SPerl_char* field_name = field_info->name;
@@ -184,7 +185,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
           SPerl_HASH_insert(field_info_symtable, field_name, strlen(field_name), field_info);
         }
       }
-      // Search method
+      // Method
       else if (op_cur->type == SPerl_OP_SUB) {
         SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)op_cur->uv.ptr_value;
         SPerl_char* method_name = method_info->name;
@@ -199,8 +200,26 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
           SPerl_HASH_insert(method_info_symtable, method_name, strlen(method_name), method_info);
         }
       }
-      op_cur = SPerl_OP_sibling(parser, op_cur);
+      else {
+        first = op_cur->first;
+      }
+      
+      if (first) {
+        SPerl_ARRAY_push(op_stack, op_cur);
+        op_cur = op_cur->first;
+      }
+      else {
+        SPerl_OP* op_sib = SPerl_OP_sibling(parser, op_cur);
+        if (op_sib) {
+          op_cur = op_sib;
+        }
+        else {
+          op_cur = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
+          op_cur = SPerl_OP_sibling(parser, op_cur);
+        }
+      }
     }
+    SPerl_ARRAY_free(op_stack);
     
     // Set filed and method information
     class_info->field_infos = field_infos;
@@ -213,7 +232,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     SPerl_HASH_insert(parser->class_info_symtable, name, strlen(name), class_info);
   }
   
-  return op_package;
+  return op;
 }
 
 SPerl_OP* SPerl_OP_newOP_USE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_pkgalias) {
