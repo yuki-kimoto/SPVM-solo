@@ -35,9 +35,6 @@ struct SPerl_yy_parser_{
   /* Constant informations */
   SPerl_ARRAY* const_infos;
   
-  /* Constant information symbol table */
-  SPerl_HASH* const_info_symtable;
-  
   /* Constant pool */
   SPerl_int* const_pool;
   
