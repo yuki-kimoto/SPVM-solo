@@ -67,10 +67,10 @@
   }
 %}
 
-%token <opval> '+' '-'
-%token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <opval> RELOP
-%token <opval> LAST NEXT
+%token <ival> '+' '-'
+%token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
+%token <ival> RELOP
+%token <ival> LAST NEXT
 %token <opval> WORD VAR CONST
 
 %type <opval> grammar statements statement declmy declhas if else block
@@ -78,21 +78,21 @@
 %type <opval> desctype descripters descripter
 %type <opval> type pkgname fieldname subname package packages pkgalias
 
-%right <opval> ASSIGNOP
-%left <opval> OROP
-%left <opval> ANDOP
-%left <opval> BITOROP
-%left <opval> BITANDOP
+%right <ival> ASSIGNOP
+%left <ival> OROP
+%left <ival> ANDOP
+%left <ival> BITOROP
+%left <ival> BITANDOP
 %nonassoc RELOP
-%left <opval> SHIFTOP
-%left <opval> ADDOP
-%left <opval> MULOP
-%right <opval> NOTOP '~' UMINUS
-%nonassoc <opval> INCOP DECOP
-%left <opval> ARROW
-%nonassoc <opval> ')'
-%left <opval> '('
-%left <opval> '[' '{'
+%left <ival> SHIFTOP
+%left <ival> ADDOP
+%left <ival> MULOP
+%right <ival> NOTOP '~' UMINUS
+%nonassoc <ival> INCOP DECOP
+%left <ival> ARROW
+%nonassoc <ival> ')'
+%left <ival> '('
+%left '[' '{'
 
 %%
 
