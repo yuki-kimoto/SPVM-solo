@@ -86,7 +86,7 @@
 %left <ival> ADDOP
 %left <ival> MULOP
 %right <opval> NOTOP '~' UMINUS
-%nonassoc <ival> INCOP DECOP
+%nonassoc <opval> INCOP DECOP
 %left <opval> ARROW
 %nonassoc <opval> ')'
 %left <opval> '('
@@ -250,19 +250,27 @@ term
     }
   | INCOP term
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_PREINC, $2, NULL);
+      $1->first = $2;
+      $1->type = SPerl_OP_PREINC;
+      $$ = $1;
     }
   | term INCOP
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_POSTINC, $1, NULL);
+      $2->first = $1;
+      $2->type = SPerl_OP_POSTINC;
+      $$ = $2;
     }
   | DECOP term
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_PREDEC, $2, NULL);
+      $1->first = $2;
+      $1->type = SPerl_OP_PREDEC;
+      $$ = $1;
     }
   | term DECOP
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_POSTDEC, $1, NULL);
+      $2->first = $1;
+      $2->type = SPerl_OP_POSTDEC;
+      $$ = $2;
     }
   | NOTOP term
     {

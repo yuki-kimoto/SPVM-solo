@@ -128,7 +128,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '+') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_INC;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
           return INCOP;
         }
         else if (*parser->bufptr == '=') {
@@ -153,7 +153,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         }
         else if (*parser->bufptr == '-') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_DEC;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
           return DECOP;
         }
         else if (*parser->bufptr == '=') {
