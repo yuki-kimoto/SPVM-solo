@@ -77,10 +77,10 @@
 %type <opval> type pkgname fieldname subname package packages pkgalias
 
 %right <ival> ASSIGNOP
-%left <ival> OROP
-%left <ival> ANDOP
-%left <ival> BITOROP
-%left <ival> BITANDOP
+%left <opval> OROP
+%left <opval> ANDOP
+%left <opval> BITOROP
+%left <opval> BITANDOP
 %nonassoc <opval> RELOP
 %left <opval> SHIFTOP
 %left <opval> ADDOP
@@ -316,11 +316,15 @@ term
     }
   | term BITANDOP term
     {
-      $$ = SPerl_OP_newOP(parser, $2, $1, $3);
+      $2->first = $1;
+      $2->last = $3;
+      $$ = $2;
     }
   | term BITOROP term
     {
-      $$ = SPerl_OP_newOP(parser, $2, $1, $3);
+      $2->first = $1;
+      $2->last = $3;
+      $$ = $2;
     }
   | term SHIFTOP term
     {
@@ -346,11 +350,15 @@ term
     }
   | term ANDOP term
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_AND, $1, $3);
+      $2->first = $1;
+      $2->last = $3;
+      $$ = $2;
     }
   | term OROP term
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_OR, $1, $3);
+      $2->first = $1;
+      $2->last = $3;
+      $$ = $2;
     }
   | VAR ARROW subname '(' optterms ')'
     {
