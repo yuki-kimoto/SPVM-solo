@@ -68,9 +68,8 @@
 %}
 
 %token <opval> '+' '-'
-%token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <ival> LAST NEXT
-%token <opval> WORD VAR CONST
+%token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
+%token <opval> LAST NEXT WORD VAR CONST
 
 %type <opval> grammar statements statement declmy declhas if else block
 %type <opval> optterms terms term subargs subarg optsubargs
