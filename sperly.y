@@ -90,7 +90,7 @@
 %left <ival> ARROW
 %nonassoc <ival> ')'
 %left <ival> '('
-%left '[' '{'
+%left <ival> '[' '{'
 
 %%
 
