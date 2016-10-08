@@ -23,15 +23,15 @@
         fprintf(file, "%d", yylval.ival);
         break;
       case WORD:
-        fprintf(file, "\"%s\"", ((SPerl_OP*)yylval.opval)->uv.string_value);
+        fprintf(file, "\"%s\"", ((SPerl_OP*)yylval.opval)->uv.pv);
         break;
       case VAR: {
-        SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)((SPerl_OP*)yylval.opval)->uv.ptr_value;
+        SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)((SPerl_OP*)yylval.opval)->uv.pv;
         fprintf(file, "\"%s\"", var_info->name);
         break;
       }
       case CONST: {
-        SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)((SPerl_OP*)yylval.opval)->uv.ptr_value;
+        SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)((SPerl_OP*)yylval.opval)->uv.pv;
         
         switch(const_info->type) {
           case SPerl_CONST_INFO_BOOLEAN:

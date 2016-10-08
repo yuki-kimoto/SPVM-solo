@@ -143,7 +143,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     SPerl_OP_sibling_splice(parser, op, op->first, 0, op_descripters);
   }
   
-  SPerl_char* name = op_pkgname->uv.string_value;
+  SPerl_char* name = op_pkgname->uv.pv;
   SPerl_CLASS_INFO* found_class_info = SPerl_HASH_search(
     parser->class_info_symtable,
     name,
@@ -173,7 +173,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
       
       // Field
       if (op_cur->type == SPerl_OP_HAS) {
-        SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_cur->uv.ptr_value;
+        SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_cur->uv.pv;
         SPerl_char* field_name = field_info->name;
         SPerl_CLASS_INFO* found_field_info
           = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
@@ -188,7 +188,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
       }
       // Method
       else if (op_cur->type == SPerl_OP_SUB) {
-        SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)op_cur->uv.ptr_value;
+        SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)op_cur->uv.pv;
         SPerl_char* method_name = method_info->name;
         SPerl_METHOD_INFO* found_method_info
           = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
@@ -202,7 +202,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
         }
       }
       else if (op_cur->type == SPerl_OP_USE) {
-        SPerl_USE_INFO* use_info = (SPerl_USE_INFO*)op_cur->uv.ptr_value;
+        SPerl_USE_INFO* use_info = (SPerl_USE_INFO*)op_cur->uv.pv;
         
         SPerl_char* class_name = use_info->class_name;
         SPerl_ARRAY_push(parser->class_stack, class_name);
@@ -251,11 +251,11 @@ SPerl_OP* SPerl_OP_newOP_USE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_O
   SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_USE, op_pkgname, op_pkgalias);
   
   SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
-  use_info->class_name = op_pkgname->uv.string_value;
+  use_info->class_name = op_pkgname->uv.pv;
   if (op_pkgalias) {
-    use_info->alias_name = op_pkgalias->uv.string_value;
+    use_info->alias_name = op_pkgalias->uv.pv;
   }
-  op->uv.ptr_value = use_info;
+  op->uv.pv = use_info;
   
   return op;
 }
@@ -265,18 +265,18 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op
   
   // Create my var information
   SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new(parser);
-  SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_var->uv.ptr_value;
+  SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_var->uv.pv;
   my_var_info->name = var_info->name;
   
   // type
-  my_var_info->type = op_desctype->first->uv.string_value;
+  my_var_info->type = op_desctype->first->uv.pv;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
   my_var_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   
   // Add my_var information to op
-  op->uv.ptr_value = my_var_info;
+  op->uv.pv = my_var_info;
   
   return op;
 }
@@ -286,23 +286,23 @@ SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPer
   
   // Create field information
   SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new(parser);
-  field_info->name = op_field_name->uv.string_value;
+  field_info->name = op_field_name->uv.pv;
   
   // type
-  field_info->type = op_desctype->first->uv.string_value;
+  field_info->type = op_desctype->first->uv.pv;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
   field_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   
-  op->uv.ptr_value = field_info;
+  op->uv.pv = field_info;
   
   return op;
 }
 
 SPerl_OP* SPerl_OP_newOP_CONST(SPerl_PARSER* parser, SPerl_OP* op) {
   
-  SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.ptr_value;
+  SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.pv;
   SPerl_ARRAY_push(parser->const_infos, const_info);
   
   return op;
@@ -321,12 +321,12 @@ SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descrip
   if (op_descripters->type == SPerl_OP_LIST) {
     SPerl_OP* op_next = op_descripters->first;
     while (op_next = SPerl_OP_sibling(parser, op_next)) {
-      desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.string_value);
+      desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.pv);
     }
   }
   // descripters is descripter
   else if (op_descripters->type == SPerl_OP_CONST) {
-    desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.string_value);
+    desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.pv);
   }
   
   return desc_flags;
@@ -344,7 +344,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   
   // Create method infomation
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new(parser);
-  method_info->name = op_subname->uv.string_value;
+  method_info->name = op_subname->uv.pv;
   
   // subargs
   // subargs is NULL
@@ -369,7 +369,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   }
   
   // return type
-  method_info->return_type = op_desctype->first->uv.string_value;
+  method_info->return_type = op_desctype->first->uv.pv;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
@@ -389,7 +389,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
     
     // Add my var
     if (op_cur->type == SPerl_OP_MY) {
-      SPerl_MY_VAR_INFO* my_var_info = (SPerl_MY_VAR_INFO*)op_cur->uv.ptr_value;
+      SPerl_MY_VAR_INFO* my_var_info = (SPerl_MY_VAR_INFO*)op_cur->uv.pv;
       SPerl_MY_VAR_INFO* found_my_var_info
         = SPerl_HASH_search(my_var_info_symtable, my_var_info->name, strlen(my_var_info->name));
       if (found_my_var_info) {
@@ -426,7 +426,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   method_info->my_var_infos = my_var_infos;
   method_info->my_var_info_symtable = my_var_info_symtable;
   
-  op->uv.ptr_value = method_info;
+  op->uv.pv = method_info;
   
   return op;
 }
