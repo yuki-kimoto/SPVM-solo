@@ -11,9 +11,8 @@
 #include "sperl_array.h"
 #include "sperl_hash.h"
 
-static SPerl_OP* _create_op(SPerl_PARSER* parser, enum SPerl_OP_CODE code, void* ptr_value) {
+static SPerl_OP* _newOP(SPerl_PARSER* parser, enum SPerl_OP_CODE code) {
   SPerl_OP* op = SPerl_OP_newOP(parser, code, NULL, NULL);
-  op->uv.ptr_value = ptr_value;
   op->file = parser->cur_file;
   op->line = parser->cur_line;
   
@@ -411,10 +410,12 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         }
         
         // Constant
+        SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
         SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
         const_info->type = SPerl_CONST_INFO_CHAR;
         const_info->uv.int_value = ch;
-        SPerl_yylvalp->opval = _create_op(parser, SPerl_OP_CONST, const_info);
+        op->uv.ptr_value = const_info;
+        SPerl_yylvalp->opval = op;
         
         parser->bufptr = bufptr;
         return CONST;
