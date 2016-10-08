@@ -19,16 +19,19 @@
   static void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
     
     switch(type) {
+      case MULOP:
+        fprintf(file, "%d", yylval.ival);
+        break;
       case WORD:
-        fprintf(file, "\"%s\"", ((SPerl_OP*)yylval.opval)->ptr_value);
+        fprintf(file, "\"%s\"", ((SPerl_OP*)yylval.opval)->uv.string_value);
         break;
       case VAR: {
-        SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)((SPerl_OP*)yylval.opval)->ptr_value;
+        SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)((SPerl_OP*)yylval.opval)->uv.ptr_value;
         fprintf(file, "\"%s\"", var_info->name);
         break;
       }
       case CONST: {
-        SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)((SPerl_OP*)yylval.opval)->ptr_value;
+        SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)((SPerl_OP*)yylval.opval)->uv.ptr_value;
         
         switch(const_info->type) {
           case SPerl_CONST_INFO_BOOLEAN:
@@ -64,9 +67,10 @@
   }
 %}
 
-%token <opval> '+' '-'
-%token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <opval> LAST NEXT
+%token <ival> '+' '-'
+%token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
+%token <ival> RELOP
+%token <ival> LAST NEXT
 %token <opval> WORD VAR CONST
 
 %type <opval> grammar statements statement declmy declhas if else block
@@ -74,21 +78,21 @@
 %type <opval> desctype descripters descripter
 %type <opval> type pkgname fieldname subname package packages pkgalias
 
-%right <opval> ASSIGNOP
-%left <opval> OROP
-%left <opval> ANDOP
-%left <opval> BITOROP
-%left <opval> BITANDOP
-%nonassoc <opval> RELOP
-%left <opval> SHIFTOP
-%left <opval> ADDOP
-%left <opval> MULOP
-%right <opval> NOTOP '~' UMINUS
-%nonassoc <opval> INCOP DECOP
-%left <opval> ARROW
-%nonassoc <opval> ')'
-%left <opval> '('
-%left <opval> '[' '{'
+%right <ival> ASSIGNOP
+%left <ival> OROP
+%left <ival> ANDOP
+%left <ival> BITOROP
+%left <ival> BITANDOP
+%nonassoc RELOP
+%left <ival> SHIFTOP
+%left <ival> ADDOP
+%left <ival> MULOP
+%right <ival> NOTOP '~' UMINUS
+%nonassoc <ival> INCOP DECOP
+%left <ival> ARROW
+%nonassoc <ival> ')'
+%left <ival> '('
+%left '[' '{'
 
 %%
 

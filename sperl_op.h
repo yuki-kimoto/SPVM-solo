@@ -82,7 +82,11 @@ struct SPerl_op {
   SPerl_OP* first;
   SPerl_OP* last;
   SPerl_OP* sibparent;
-  void* ptr_value;
+  union {
+    SPerl_int int_value;
+    SPerl_char* string_value;
+    void* ptr_value;
+  } uv;
   SPerl_char* file;
   SPerl_int line;
 };
