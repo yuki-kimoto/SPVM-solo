@@ -85,12 +85,12 @@
 %left <ival> SHIFTOP
 %left <ival> ADDOP
 %left <ival> MULOP
-%right <ival> NOTOP '~' UMINUS
+%right <opval> NOTOP '~' UMINUS
 %nonassoc <ival> INCOP DECOP
 %left <ival> ARROW
-%nonassoc <ival> ')'
-%left <ival> '('
-%left <ival> '[' '{'
+%nonassoc <opval> ')'
+%left <opval> '('
+%left <opval> '[' '{'
 
 %%
 
@@ -266,11 +266,13 @@ term
     }
   | NOTOP term
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_NOT, $2, NULL);
+      $1->first = $2;
+      $$ = $1;
     }
   | '~' term
     {
-      $$ = SPerl_OP_newOP(parser, $1, $2, NULL);
+      $1->first = $2;
+      $$ = $1;
     }
   | '-' term %prec UMINUS
     {

@@ -333,13 +333,13 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           return RELOP;
         }
         else {
-          SPerl_yylvalp->ival = SPerl_OP_NOT;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NOT);
           return NOTOP;
         }
         
       case '~':
         parser->bufptr++;
-        SPerl_yylvalp->ival = SPerl_OP_COMPLEMENT;
+        SPerl_yylvalp->opval = _newOP(parser,  SPerl_OP_COMPLEMENT);
         return '~';
       
       case '\'': {
@@ -598,6 +598,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         /* Return character */
         parser->bufptr++;
+        SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
         
         return c;
     }
