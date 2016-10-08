@@ -67,8 +67,7 @@
   }
 %}
 
-%token <opval> '+'
-%token <ival> '-'
+%token <opval> '+' '-'
 %token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP
 %token <ival> LAST NEXT
@@ -277,17 +276,23 @@ term
     }
   | '-' term %prec UMINUS
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_NEGATE, $2, NULL);
+      $1->first = $2;
+      $1->type = SPerl_OP_NEGATE;
+      $$ = $1;
     }
   | term '+' term %prec ADDOP
     {
       $2->first = $1;
       $2->last = $3;
       $2->type = SPerl_OP_ADD;
+      $$ = $2;
     }
   | term '-' term %prec ADDOP
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_SUBTRACT, $1, $3);
+      $2->first = $1;
+      $2->last = $3;
+      $2->type = SPerl_OP_SUBTRACT;
+      $$ = $2;
     }
   | term MULOP term
     {
