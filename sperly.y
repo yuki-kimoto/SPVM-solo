@@ -248,11 +248,15 @@ term
     }
   | INCOP term
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_PREINC, $2, NULL);
+      $1->type = SPerl_OP_PREINC;
+      $1->first = $2;
+      $$ = $1;
     }
   | term INCOP
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_POSTINC, $1, NULL);
+      $2->type = SPerl_OP_POSTINC;
+      $2->first = $1;
+      $$ = $2;
     }
   | DECOP term
     {
