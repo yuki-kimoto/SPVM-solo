@@ -260,7 +260,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         /* Bit or */
         else {
           parser->bufptr = bufptr;
-          SPerl_yylvalp->ival = SPerl_OP_BIT_OR;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_BIT_OR, NULL);
           return BITOROP;
         }
 
@@ -272,12 +272,12 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           if (*bufptr == '=') {
             bufptr++;
             parser->bufptr = bufptr;
-            SPerl_yylvalp->ival = SPerl_OP_AND;
+            SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_AND, NULL);
             return ASSIGNOP;
           }
           else {
             parser->bufptr = bufptr;
-            SPerl_yylvalp->ival = SPerl_OP_AND;
+            SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_AND, NULL);
             return ANDOP;
           }
         }
