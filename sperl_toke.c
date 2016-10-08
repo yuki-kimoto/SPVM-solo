@@ -137,6 +137,8 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           return ASSIGNOP;
         }
         else {
+          SPerl_OP* op = _newOP(parser, SPerl_OP_NULL);
+          SPerl_yylvalp->opval = op;
           return '+';
         }
       

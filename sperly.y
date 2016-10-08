@@ -67,7 +67,8 @@
   }
 %}
 
-%token <ival> '+' '-'
+%token <opval> '+'
+%token <ival> '-'
 %token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <ival> RELOP
 %token <ival> LAST NEXT
@@ -280,7 +281,9 @@ term
     }
   | term '+' term %prec ADDOP
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_ADD, $1, $3);
+      $2->first = $1;
+      $2->last = $3;
+      $2->type = SPerl_OP_ADD;
     }
   | term '-' term %prec ADDOP
     {
