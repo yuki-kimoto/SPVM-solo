@@ -140,7 +140,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         if (*bufptr == '+') {
           bufptr++;
           parser->bufptr = bufptr;
-          SPerl_yylvalp->opval = _newOP(parser, 0, NULL);
+          SPerl_yylvalp->ival = SPerl_OP_INC;
           return INCOP;
         }
         else if (*bufptr == '=') {
