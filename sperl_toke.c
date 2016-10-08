@@ -114,14 +114,11 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
       /* Skip space character */
       case ' ':
       case '\t':
-
         parser->bufptr++;
-        
         continue;
 
       case '\n':
         parser->bufptr++;
-        
         parser->cur_line++;
         continue;
       
@@ -131,19 +128,15 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '+') {
           parser->bufptr++;
-          
           SPerl_yylvalp->ival = SPerl_OP_INC;
           return INCOP;
         }
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          
           SPerl_yylvalp->ival = SPerl_OP_ADD;
           return ASSIGNOP;
         }
         else {
-          
-          
           return '+';
         }
       
@@ -153,25 +146,20 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '>') {
           parser->bufptr++;
-          
           parser->expect = SPerl_OP_EXPECT_WORD;
           return ARROW;
         }
         else if (*parser->bufptr == '-') {
           parser->bufptr++;
-          
           SPerl_yylvalp->ival = SPerl_OP_DEC;
           return DECOP;
         }
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          
           SPerl_yylvalp->ival = SPerl_OP_SUBTRACT;
           return ASSIGNOP;
         }
         else {
-          
-
           return '-';
         }
       /* Multiply */
@@ -179,12 +167,10 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          
           SPerl_yylvalp->ival = SPerl_OP_MULTIPLY;
           return ASSIGNOP;
         }
         else {
-          
           SPerl_yylvalp->ival = SPerl_OP_MULTIPLY;
           return MULOP;
         }
@@ -194,12 +180,10 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          
           SPerl_yylvalp->ival = SPerl_OP_DIVIDE;
           return ASSIGNOP;
         }
         else {
-          
           SPerl_yylvalp->ival = SPerl_OP_DIVIDE;
           return MULOP;
         }
@@ -208,12 +192,10 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          
           SPerl_yylvalp->ival = SPerl_OP_MODULO;
           return ASSIGNOP;
         }
         else {
-          
           SPerl_yylvalp->ival = SPerl_OP_MODULO;
           return MULOP;
         }
@@ -222,12 +204,10 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          
           SPerl_yylvalp->ival = SPerl_OP_BIT_XOR;
           return ASSIGNOP;
         }
         else {
-          
           SPerl_yylvalp->ival = SPerl_OP_BIT_XOR;
           return MULOP;
         }
@@ -239,19 +219,16 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
           if (*parser->bufptr == '=') {
             parser->bufptr++;
-            
             SPerl_yylvalp->ival = SPerl_OP_OR;
             return ASSIGNOP;
           }
           else {
-            
             SPerl_yylvalp->ival = SPerl_OP_OR;
             return OROP;
           }
         }
         /* Bit or */
         else {
-          
           SPerl_yylvalp->ival = SPerl_OP_BIT_OR;
           return BITOROP;
         }
@@ -263,19 +240,16 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
           if (*parser->bufptr == '=') {
             parser->bufptr++;
-            
             SPerl_yylvalp->ival = SPerl_OP_AND;
             return ASSIGNOP;
           }
           else {
-            
             SPerl_yylvalp->ival = SPerl_OP_AND;
             return ANDOP;
           }
         }
         /* Bit and */
         else {
-          
           SPerl_yylvalp->ival = SPerl_OP_BIT_AND;
           return BITANDOP;
         }
