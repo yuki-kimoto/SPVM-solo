@@ -449,15 +449,13 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
         }
         
-        SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_CONST, NULL, NULL);
-
+        SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
         SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
         const_info->type = SPerl_CONST_INFO_STRING;
         const_info->uv.string_value = str;
         op->uv.ptr_value = const_info;
-        
-        
         SPerl_yylvalp->opval = (SPerl_OP*)op;
+
         return CONST;
       }
       default:
@@ -478,13 +476,12 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
-          SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_VAR, NULL, NULL);
+          SPerl_OP* op = _newOP(parser, SPerl_OP_VAR);
           SPerl_VAR_INFO* var_info = SPerl_VAR_INFO_new(parser);
           var_info->name = var;
           op->uv.ptr_value = var_info;
-          
-          
           SPerl_yylvalp->opval = (SPerl_OP*)op;
+
           return VAR;
         }
         /* Number literal */
@@ -518,16 +515,13 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           if (point_count) {
             char* ends;
             double num = strtod(num_str, &ends);
-            SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_CONST, NULL, NULL);
+            free(num_str);
 
+            SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
             SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
             const_info->type = SPerl_CONST_INFO_DOUBLE;
             const_info->uv.double_value = num;
             op->uv.ptr_value = const_info;
-            
-            free(num_str);
-            
-            
             SPerl_yylvalp->opval = (SPerl_OP*)op;
             
             return CONST;
@@ -535,16 +529,13 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           // Convert to integer
           else {
             SPerl_int num = atoi(num_str);
-            SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_CONST, NULL, NULL);
-
+            free(num_str);
+            
+            SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
             SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
             const_info->type = SPerl_CONST_INFO_INT;
             const_info->uv.int_value = num;
             op->uv.ptr_value = const_info;
-
-            free(num_str);
-            
-            
             SPerl_yylvalp->opval = (SPerl_OP*)op;
             
             return CONST;
@@ -622,39 +613,31 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
               return WHILE;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
-              SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_CONST, NULL, NULL);
-
+              SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
               SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
               const_info->type = SPerl_CONST_INFO_BOOLEAN;
               const_info->uv.int_value = 1;
               op->uv.ptr_value = const_info;
-
-              
               SPerl_yylvalp->opval = (SPerl_OP*)op;
 
               return CONST;
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
-              SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_CONST, NULL, NULL);
-
+              SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
               SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
               const_info->type = SPerl_CONST_INFO_BOOLEAN;
               const_info->uv.int_value = 0;
               op->uv.ptr_value = const_info;
-
-              
               SPerl_yylvalp->opval = (SPerl_OP*)op;
-
+              
               return CONST;
             }
           }
           
-          SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_WORD, NULL, NULL);
-
+          SPerl_OP* op = _newOP(parser, SPerl_OP_WORD);
           op->uv.string_value = keyword;
-          
-          
           SPerl_yylvalp->opval = (SPerl_OP*)op;
+
           return WORD;
         }
         
