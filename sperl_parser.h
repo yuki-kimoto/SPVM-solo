@@ -21,7 +21,7 @@ struct SPerl_yy_parser_{
   SPerl_char* cur_src;
   
   /* Current line number */
-  SPerl_int cur_line_num;
+  SPerl_int cur_line;
   
   /* AST root */
   SPerl_OP* op_root;

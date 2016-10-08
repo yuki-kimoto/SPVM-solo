@@ -57,7 +57,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
   
-  parser->cur_line_num = 1;
+  parser->cur_line = 1;
   
   return parser;
 }
