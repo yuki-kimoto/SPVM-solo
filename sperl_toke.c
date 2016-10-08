@@ -77,19 +77,16 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
               SPerl_char* cur_file = SPerl_PARSER_new_string(parser, strlen(class_name) + 8);
               sprintf(cur_file, "%s.pm.spvm", class_name);
               parser->cur_file = cur_file;
-              
               // Open source file
               FILE* fh = fopen(parser->cur_file, "r");
               if (fh == NULL) {
                 printf("Can't open file %s\n", parser->cur_file);
                 return -1;
               }
-              
               // File size
               fseek(fh, 0, SEEK_END);
               SPerl_int file_size = ftell(fh);
               fseek(fh, 0, SEEK_SET);
-              
               // Read file
               SPerl_char* src = SPerl_PARSER_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
@@ -97,12 +94,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
                 return -1;
               }
               fclose(fh);
-              
               src[file_size] = '\0';
-              
               parser->cur_src = src;
               parser->bufptr = src;
-              
               break;
             }
           }
@@ -304,14 +298,11 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         /* == */
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          
-          
           SPerl_yylvalp->ival = SPerl_OP_EQ;
           return RELOP;
         }
         /* = */
         else {
-          
           SPerl_yylvalp->ival = 0;
           return ASSIGNOP;
         }
@@ -321,22 +312,17 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '<') {
           parser->bufptr++;
-          
-          
           SPerl_yylvalp->ival = SPerl_OP_LEFT_SHIFT;
           return SHIFTOP;
         }
         /* <= */
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          
-          
           SPerl_yylvalp->ival = SPerl_OP_LE;
           return RELOP;
         }
         /* < */
         else {
-          
           SPerl_yylvalp->ival = SPerl_OP_LT;
           return RELOP;
         }
@@ -346,22 +332,17 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '>') {
           parser->bufptr++;
-          
-          
           SPerl_yylvalp->ival = SPerl_OP_RIGHT_SHIFT;
           return SHIFTOP;
         }
         /* >= */
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          
-          
           SPerl_yylvalp->ival = SPerl_OP_GE;
           return RELOP;
         }
         /* < */
         else {
-          
           SPerl_yylvalp->ival = SPerl_OP_GT;
           return RELOP;
         }
@@ -370,20 +351,16 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          
           SPerl_yylvalp->ival = SPerl_OP_NE;
           return RELOP;
         }
         else {
-          
           SPerl_yylvalp->ival = SPerl_OP_NOT;
           return NOTOP;
         }
         
       case '~':
         parser->bufptr++;
-        
-        
         SPerl_yylvalp->ival = SPerl_OP_COMPLEMENT;
         return '~';
       
@@ -559,57 +536,44 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           
           if (expect != SPerl_OP_EXPECT_WORD) {
             if (memcmp(keyword, "my", str_len) == 0) {
-              
               return MY;
             }
             else if (memcmp(keyword, "has", str_len) == 0) {
               parser->expect = SPerl_OP_EXPECT_WORD;
-              
               return HAS;
             }
             else if (memcmp(keyword, "sub", str_len) == 0) {
-              
               parser->expect = SPerl_OP_EXPECT_WORD;
               return SUB;
             }
             else if (memcmp(keyword, "package", str_len) == 0) {
-              
               return PACKAGE;
             }
             else if (memcmp(keyword, "if", str_len) == 0) {
-              
               return IF;
             }
             else if (memcmp(keyword, "elsif", str_len) == 0) {
-              
               return ELSIF;
             }
             else if (memcmp(keyword, "else", str_len) == 0) {
-              
               return ELSE;
             }
             else if (memcmp(keyword, "return", str_len) == 0) {
-              
               return RETURN;
             }
             else if (memcmp(keyword, "for", str_len) == 0) {
-              
               return FOR;
             }
             else if (memcmp(keyword, "last", str_len) == 0) {
-              
               return LAST;
             }
             else if (memcmp(keyword, "next", str_len) == 0) {
-              
               return NEXT;
             }
             else if (memcmp(keyword, "use", str_len) == 0) {
-              
               return USE;
             }
             else if (memcmp(keyword, "while", str_len) == 0) {
-              
               return WHILE;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
@@ -629,7 +593,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
               const_info->uv.int_value = 0;
               op->uv.pv = const_info;
               SPerl_yylvalp->opval = (SPerl_OP*)op;
-              
+
               return CONST;
             }
           }
