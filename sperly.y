@@ -69,7 +69,6 @@
 
 %token <opval> '+' '-'
 %token <ival> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <ival> RELOP
 %token <ival> LAST NEXT
 %token <opval> WORD VAR CONST
 
@@ -83,7 +82,7 @@
 %left <ival> ANDOP
 %left <ival> BITOROP
 %left <ival> BITANDOP
-%nonassoc RELOP
+%nonassoc <ival> RELOP
 %left <ival> SHIFTOP
 %left <ival> ADDOP
 %left <ival> MULOP
