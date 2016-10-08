@@ -296,9 +296,7 @@ term
     }
   | term BITOROP term
     {
-      $2->first = $1;
-      $2->last = $3;
-      $$ = $2;
+      $$ = SPerl_OP_newOP(parser, $2, $1, $3);
     }
   | term SHIFTOP term
     {
@@ -322,9 +320,7 @@ term
     }
   | term ANDOP term
     {
-      $2->first = $1;
-      $2->last = $3;
-      $$ = $2;
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_AND, $1, $3);
     }
   | term OROP term
     {
