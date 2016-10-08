@@ -81,10 +81,10 @@
 %left <ival> ANDOP
 %left <ival> BITOROP
 %left <ival> BITANDOP
-%nonassoc <ival> RELOP
-%left <ival> SHIFTOP
-%left <ival> ADDOP
-%left <ival> MULOP
+%nonassoc <opval> RELOP
+%left <opval> SHIFTOP
+%left <opval> ADDOP
+%left <opval> MULOP
 %right <opval> NOTOP '~' UMINUS
 %nonassoc <opval> INCOP DECOP
 %left <opval> ARROW
@@ -304,11 +304,15 @@ term
     }
   | term MULOP term
     {
-      $$ = SPerl_OP_newOP(parser, $2, $1, $3);
+      $2->first = $1;
+      $2->last = $3;
+      $$ = $2;
     }
   | term RELOP term
     {
-      $$ = SPerl_OP_newOP(parser, $2, $1, $3);
+      $2->first = $1;
+      $2->last = $3;
+      $$ = $2;
     }
   | term BITANDOP term
     {
@@ -320,7 +324,9 @@ term
     }
   | term SHIFTOP term
     {
-      $$ = SPerl_OP_newOP(parser, $2, $1, $3);
+      $2->first = $1;
+      $2->last = $3;
+      $$ = $2;
     }
   | VAR ARROW '[' term ']'
     {

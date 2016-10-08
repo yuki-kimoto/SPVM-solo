@@ -174,7 +174,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           return ASSIGNOP;
         }
         else {
-          SPerl_yylvalp->ival = SPerl_OP_MULTIPLY;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_MULTIPLY);
           return MULOP;
         }
       
@@ -187,7 +187,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           return ASSIGNOP;
         }
         else {
-          SPerl_yylvalp->ival = SPerl_OP_DIVIDE;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_DIVIDE);
           return MULOP;
         }
 
@@ -199,7 +199,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           return ASSIGNOP;
         }
         else {
-          SPerl_yylvalp->ival = SPerl_OP_MODULO;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_MODULO);
           return MULOP;
         }
 
@@ -211,7 +211,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           return ASSIGNOP;
         }
         else {
-          SPerl_yylvalp->ival = SPerl_OP_BIT_XOR;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_BIT_XOR);
           return MULOP;
         }
             
@@ -275,7 +275,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         /* == */
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_EQ;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_EQ);
           return RELOP;
         }
         /* = */
@@ -289,18 +289,18 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '<') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_LEFT_SHIFT;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_LEFT_SHIFT);
           return SHIFTOP;
         }
         /* <= */
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_LE;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_LE);
           return RELOP;
         }
         /* < */
         else {
-          SPerl_yylvalp->ival = SPerl_OP_LT;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_LT);
           return RELOP;
         }
       
@@ -309,18 +309,18 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '>') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_RIGHT_SHIFT;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_RIGHT_SHIFT);
           return SHIFTOP;
         }
         /* >= */
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_GE;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_GE);
           return RELOP;
         }
         /* < */
         else {
-          SPerl_yylvalp->ival = SPerl_OP_GT;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_GT);
           return RELOP;
         }
       case '!':
@@ -328,7 +328,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_NE;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NE);
           return RELOP;
         }
         else {
