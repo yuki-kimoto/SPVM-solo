@@ -133,7 +133,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         }
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_ADD;
+          SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
+          op->uv.iv = SPerl_OP_ADD;
+          SPerl_yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
@@ -158,7 +160,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         }
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_SUBTRACT;
+          SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
+          op->uv.iv = SPerl_OP_SUBTRACT;
+          SPerl_yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
@@ -170,7 +174,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_MULTIPLY;
+          SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
+          op->uv.iv = SPerl_OP_MULTIPLY;
+          SPerl_yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
@@ -183,7 +189,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_DIVIDE;
+          SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
+          op->uv.iv = SPerl_OP_DIVIDE;
+          SPerl_yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
@@ -195,7 +203,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_MODULO;
+          SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
+          op->uv.iv = SPerl_OP_MODULO;
+          SPerl_yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
@@ -207,7 +217,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->ival = SPerl_OP_BIT_XOR;
+          SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
+          op->uv.iv = SPerl_OP_BIT_XOR;
+          SPerl_yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
@@ -222,7 +234,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
           if (*parser->bufptr == '=') {
             parser->bufptr++;
-            SPerl_yylvalp->ival = SPerl_OP_OR;
+            SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
+            op->uv.iv = SPerl_OP_OR;
+            SPerl_yylvalp->opval = op;
             return ASSIGNOP;
           }
           else {
@@ -243,7 +257,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
           if (*parser->bufptr == '=') {
             parser->bufptr++;
-            SPerl_yylvalp->ival = SPerl_OP_AND;
+            SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
+            op->uv.iv = SPerl_OP_AND;
+            SPerl_yylvalp->opval = op;
             return ASSIGNOP;
           }
           else {
@@ -280,7 +296,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         }
         /* = */
         else {
-          SPerl_yylvalp->ival = 0;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_ASSIGN);
           return ASSIGNOP;
         }
         

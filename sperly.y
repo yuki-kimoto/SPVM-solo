@@ -76,7 +76,7 @@
 %type <opval> desctype descripters descripter
 %type <opval> type pkgname fieldname subname package packages pkgalias
 
-%right <ival> ASSIGNOP
+%right <opval> ASSIGNOP
 %left <opval> OROP
 %left <opval> ANDOP
 %left <opval> BITOROP
@@ -346,7 +346,9 @@ term
     }
   | term ASSIGNOP term
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_ASSIGN, $1, $3);
+      $2->first = $1;
+      $2->last = $3;
+      $$ = $2;
     }
   | term ANDOP term
     {
