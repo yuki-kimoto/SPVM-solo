@@ -87,7 +87,7 @@
 %left <ival> MULOP
 %right <opval> NOTOP '~' UMINUS
 %nonassoc <ival> INCOP DECOP
-%left <ival> ARROW
+%left <opval> ARROW
 %nonassoc <opval> ')'
 %left <opval> '('
 %left <opval> '[' '{'

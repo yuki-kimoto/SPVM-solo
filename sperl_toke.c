@@ -137,8 +137,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           return ASSIGNOP;
         }
         else {
-          SPerl_OP* op = _newOP(parser, SPerl_OP_NULL);
-          SPerl_yylvalp->opval = op;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
           return '+';
         }
       
@@ -149,6 +148,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '>') {
           parser->bufptr++;
           parser->expect = SPerl_OP_EXPECT_WORD;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
           return ARROW;
         }
         else if (*parser->bufptr == '-') {
@@ -162,8 +162,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           return ASSIGNOP;
         }
         else {
-          SPerl_OP* op = _newOP(parser, SPerl_OP_NULL);
-          SPerl_yylvalp->opval = op;
+          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);;
           return '-';
         }
       /* Multiply */
