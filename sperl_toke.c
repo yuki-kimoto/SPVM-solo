@@ -623,6 +623,6 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
 /* Function for error */
 void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
 {
-  fprintf(stderr, "error: %s\n", s);
+  fprintf(stderr, "Syntax error: %s at %s line %d\n", s, parser->cur_file, parser->cur_line);
 }
 
