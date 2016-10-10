@@ -383,22 +383,29 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   SPerl_HASH* my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   // my variable stack
-  SPerl_ARRAY* my_var_stack = SPerl_ARRAY_new(0);
+  SPerl_ARRAY* my_var_stack = SPerl_PARSER_new_array(parser, 0);
+  
+  // block base position stack
+  SPerl_ARRAY* block_base_stack = SPerl_PARSER_new_array(parser, 0);
   
   // Run in AST
-  SPerl_ARRAY* op_stack = SPerl_ARRAY_new(0);
+  SPerl_ARRAY* op_stack = SPerl_PARSER_new_array(parser, 0);
   SPerl_OP* op_cur = op;
   while (op_cur) {
     SPerl_OP* first;
     
     // Add my var
-    if (op_cur->type == SPerl_OP_MY) {
+    if (op_cur->type == SPerl_OP_BLOCK) {
+      // SPerl_int block_base = my_var_stack->length;
+      // SPerl_ARRAY_push(block_base_stack, block_base);
+    }
+    else if (op_cur->type == SPerl_OP_MY) {
       SPerl_MY_VAR_INFO* my_var_info = (SPerl_MY_VAR_INFO*)op_cur->uv.pv;
       
       // Serach same name variable
       SPerl_int found = 0;
       SPerl_int i;
-      for (i = 0; i < my_var_stack->length; i++) {
+      for (i = my_var_stack->length - 1 ; i >= 0; i--) {
         SPerl_MY_VAR_INFO* bef_my_var_info = SPerl_ARRAY_fetch(my_var_stack, i);
         if (strcmp(my_var_info->name, bef_my_var_info->name) == 0) {
           found = 1;
@@ -431,12 +438,16 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
       }
       else {
         op_cur = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
+        
+        // Pop block base
+        if (op_cur->type == SPerl_OP_BLOCK) {
+          // SPerl_ARRAY_pop(block_base_stack);
+        }
+        
         op_cur = SPerl_OP_sibling(parser, op_cur);
       }
     }
   }
-  SPerl_ARRAY_free(op_stack);
-  SPerl_ARRAY_free(my_var_stack);
   
   // Set my var information
   method_info->my_var_infos = my_var_infos;
