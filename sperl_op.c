@@ -420,6 +420,12 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
       }
     }
     else {
+      if (op_cur->type == SPerl_OP_BLOCK) {
+        SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
+        *block_base_ptr = my_var_stack->length;
+        SPerl_ARRAY_push(block_base_stack, block_base_ptr);
+      }
+      
       first = op_cur->first;
     }
     
@@ -434,6 +440,11 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
       }
       else {
         op_cur = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
+        
+        if (op_cur->type == SPerl_OP_BLOCK) {
+          SPerl_ARRAY_pop(block_base_stack);
+        }
+        
         op_cur = SPerl_OP_sibling(parser, op_cur);
       }
     }
