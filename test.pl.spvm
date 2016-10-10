@@ -3,6 +3,16 @@ package Point {
   sub get1 ($var1 : double, $var2 : int) : int {
     my $var3 : int;
     my $var4 : int;
+
+    {
+      my $var3 : int;
+      my $var4 : int;
+    }
+    
+    {
+      my $var3 : int;
+      my $var4 : int;
+    }
     
     $var3 = 3;
     $var3 = 4;

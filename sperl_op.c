@@ -452,17 +452,43 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
     }
     else {
       SPerl_OP* op_sib = SPerl_OP_sibling(parser, op_cur);
+      
+      // Next sibling
       if (op_sib) {
         op_cur = op_sib;
       }
+      // Next is parent
       else {
-        op_cur = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
-        
-        if (op_cur->type == SPerl_OP_BLOCK) {
-          SPerl_ARRAY_pop(block_base_stack);
+        SPerl_OP* op_parent;
+        while (1) {
+          op_parent = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
+          
+          if (op_parent) {
+            
+            // End of scope
+            if (op_parent->type == SPerl_OP_BLOCK) {
+              SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
+              if (block_base_ptr) {
+                SPerl_int block_base = *block_base_ptr;
+                SPerl_int j;
+                for (j = 0; j < my_var_stack->length - block_base; j++) {
+                  SPerl_ARRAY_pop(my_var_stack);
+                }
+              }
+            }
+            
+            SPerl_OP* op_parent_sib = SPerl_OP_sibling(parser, op_parent);
+            if (op_parent_sib) {
+              // Next is parent's sibling
+              op_cur = op_parent_sib;
+              break;
+            }
+          }
+          else {
+            op_cur = NULL;
+            break;
+          }
         }
-        
-        op_cur = SPerl_OP_sibling(parser, op_cur);
       }
     }
   }
