@@ -47,8 +47,10 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
     
     parser->cur_src = src;
     parser->bufptr = src;
+    parser->befbufptr = src;
   }
   
+  // Get expected and retrun back to normal
   enum SPerl_OP_EXPECT expect = parser->expect;
   parser->expect = SPerl_OP_EXPECT_NORMAL;
   
@@ -625,4 +627,3 @@ void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
 {
   fprintf(stderr, "Syntax error at %s line %d\n", parser->cur_file, parser->cur_line);
 }
-

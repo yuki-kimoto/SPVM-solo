@@ -8,6 +8,9 @@ extern int SPerl_yydebug;
 
 /* Parser information */
 struct SPerl_yy_parser_{
+  /* Before buffer position */
+  SPerl_char* befbufptr;
+  
   /* Current buffer position */
   SPerl_char* bufptr;
   
