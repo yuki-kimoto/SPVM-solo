@@ -395,11 +395,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
     SPerl_OP* first;
     
     // Add my var
-    if (op_cur->type == SPerl_OP_BLOCK) {
-      // SPerl_int block_base = my_var_stack->length;
-      // SPerl_ARRAY_push(block_base_stack, block_base);
-    }
-    else if (op_cur->type == SPerl_OP_MY) {
+    if (op_cur->type == SPerl_OP_MY) {
       SPerl_MY_VAR_INFO* my_var_info = (SPerl_MY_VAR_INFO*)op_cur->uv.pv;
       
       // Serach same name variable
@@ -438,12 +434,6 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
       }
       else {
         op_cur = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
-        
-        // Pop block base
-        if (op_cur->type == SPerl_OP_BLOCK) {
-          // SPerl_ARRAY_pop(block_base_stack);
-        }
-        
         op_cur = SPerl_OP_sibling(parser, op_cur);
       }
     }
