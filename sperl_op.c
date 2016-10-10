@@ -382,6 +382,10 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   SPerl_ARRAY* my_var_infos = SPerl_PARSER_new_array(parser, 0);
   SPerl_HASH* my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   
+  // my variable stack
+  SPerl_ARRAY* my_var_stack = SPerl_ARRAY_new(0);
+  
+  // Run in AST
   SPerl_ARRAY* op_stack = SPerl_ARRAY_new(0);
   SPerl_OP* op_cur = op;
   while (op_cur) {
@@ -390,15 +394,26 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
     // Add my var
     if (op_cur->type == SPerl_OP_MY) {
       SPerl_MY_VAR_INFO* my_var_info = (SPerl_MY_VAR_INFO*)op_cur->uv.pv;
-      SPerl_MY_VAR_INFO* found_my_var_info
-        = SPerl_HASH_search(my_var_info_symtable, my_var_info->name, strlen(my_var_info->name));
-      if (found_my_var_info) {
+      
+      // Serach same name variable
+      SPerl_int found = 0;
+      SPerl_int i;
+      for (i = 0; i < my_var_stack->length; i++) {
+        SPerl_MY_VAR_INFO* bef_my_var_info = SPerl_ARRAY_fetch(my_var_stack, i);
+        if (strcmp(my_var_info->name, bef_my_var_info->name) == 0) {
+          found = 1;
+          break;
+        }
+      }
+      
+      if (found) {
         fprintf(stderr, "Warnings: Declare same name variable %s\n", my_var_info->name);
       }
       else {
-        SPerl_HASH_insert(my_var_info_symtable, my_var_info->name, strlen(my_var_info->name), my_var_info);
         SPerl_ARRAY_push(my_var_infos, my_var_info);
         my_var_info->method_info = method_info;
+        
+        SPerl_ARRAY_push(my_var_stack, my_var_info);
       }
     }
     else {
@@ -421,6 +436,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
     }
   }
   SPerl_ARRAY_free(op_stack);
+  SPerl_ARRAY_free(my_var_stack);
   
   // Set my var information
   method_info->my_var_infos = my_var_infos;
