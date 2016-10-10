@@ -50,6 +50,9 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
     parser->befbufptr = src;
   }
   
+  // Set before buffer pointer
+  parser->befbufptr = parser->bufptr;
+  
   // Get expected and retrun back to normal
   enum SPerl_OP_EXPECT expect = parser->expect;
   parser->expect = SPerl_OP_EXPECT_NORMAL;
@@ -99,6 +102,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
               src[file_size] = '\0';
               parser->cur_src = src;
               parser->bufptr = src;
+              parser->befbufptr = src;
               break;
             }
           }
@@ -625,5 +629,22 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
 /* Function for error */
 void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
 {
-  fprintf(stderr, "Syntax error at %s line %d\n", parser->cur_file, parser->cur_line);
+  // Current token
+  SPerl_int length = 0;
+  SPerl_int empty_count = 0;
+  SPerl_char* ptr = parser->befbufptr;
+  while (ptr != parser->bufptr) {
+    if (*ptr == ' ' || *ptr == '\t' || *ptr == '\n') {
+      empty_count++;
+    }
+    else {
+      length++;
+    }
+    ptr++;
+  }
+  SPerl_char* token = calloc(length + 1, sizeof(SPerl_char));
+  memcpy(token, parser->befbufptr + empty_count, length);
+  token[length] = '\0';
+  
+  fprintf(stderr, "Syntax error: unexpected token \"%s\" is found at %s line %d\n", token, parser->cur_file, parser->cur_line);
 }
