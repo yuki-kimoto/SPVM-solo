@@ -425,6 +425,8 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
         fprintf(stderr, "Warnings: Declare same name variable %s\n", my_var_info->name);
       }
       else {
+        // Add my var information
+        my_var_info->id = parser->next_var_id++;
         SPerl_ARRAY_push(my_var_infos, my_var_info);
         my_var_info->method_info = method_info;
         

@@ -61,6 +61,9 @@ struct SPerl_yy_parser_{
   
   /* Class loading stack */
   SPerl_ARRAY* class_stack;
+  
+  // Variable id
+  SPerl_int next_var_id;
 };
 
 union SPerl_yystype_

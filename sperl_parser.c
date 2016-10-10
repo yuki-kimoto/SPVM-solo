@@ -58,6 +58,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
   
   parser->cur_line = 1;
+  parser->next_var_id = 1;
   
   return parser;
 }
@@ -301,6 +302,7 @@ void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_v
     SPerl_DESCRIPTER_to_str(desc_str, my_var_info->desc_flags);
     
     printf("          name => \"%s\"\n", my_var_info->name);
+    printf("          id => %d\n", my_var_info->id);
     printf("          type => \"%s\"\n", my_var_info->type);
     printf("          desc_flags => \"%s\"\n", desc_str);
     
