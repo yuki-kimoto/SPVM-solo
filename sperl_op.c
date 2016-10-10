@@ -391,8 +391,19 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   // Run in AST
   SPerl_ARRAY* op_stack = SPerl_PARSER_new_array(parser, 0);
   SPerl_OP* op_cur = op;
+  SPerl_boolean block_start;
   while (op_cur) {
     SPerl_OP* first;
+    
+    // Current block base
+    SPerl_int block_base;
+    if (block_base_stack->length == 0) {
+      block_base = 0;
+    }
+    else {
+      SPerl_int* block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
+      block_base = *block_base_ptr;
+    }
     
     // Add my var
     if (op_cur->type == SPerl_OP_MY) {
@@ -401,7 +412,8 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
       // Serach same name variable
       SPerl_int found = 0;
       SPerl_int i;
-      for (i = my_var_stack->length - 1 ; i >= 0; i--) {
+      
+      for (i = my_var_stack->length - 1 ; i >= block_base; i--) {
         SPerl_MY_VAR_INFO* bef_my_var_info = SPerl_ARRAY_fetch(my_var_stack, i);
         if (strcmp(my_var_info->name, bef_my_var_info->name) == 0) {
           found = 1;
@@ -421,9 +433,14 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
     }
     else {
       if (op_cur->type == SPerl_OP_BLOCK) {
-        SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
-        *block_base_ptr = my_var_stack->length;
-        SPerl_ARRAY_push(block_base_stack, block_base_ptr);
+        if (block_start) {
+          SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
+          *block_base_ptr = my_var_stack->length;
+          SPerl_ARRAY_push(block_base_stack, block_base_ptr);
+        }
+        else {
+          block_start = 1;
+        }
       }
       
       first = op_cur->first;
