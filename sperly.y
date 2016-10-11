@@ -250,26 +250,26 @@ term
     }
   | INCOP term
     {
-      $1->first = $2;
       $1->type = SPerl_OP_PREINC;
+      $1->first = $2;
       $$ = $1;
     }
   | term INCOP
     {
-      $2->first = $1;
       $2->type = SPerl_OP_POSTINC;
+      $2->first = $1;
       $$ = $2;
     }
   | DECOP term
     {
-      $1->first = $2;
       $1->type = SPerl_OP_PREDEC;
+      $1->first = $2;
       $$ = $1;
     }
   | term DECOP
     {
-      $2->first = $1;
       $2->type = SPerl_OP_POSTDEC;
+      $2->first = $1;
       $$ = $2;
     }
   | NOTOP term
@@ -284,52 +284,50 @@ term
     }
   | '-' term %prec UMINUS
     {
-      $1->first = $2;
       $1->type = SPerl_OP_NEGATE;
+      $1->first = $2;
       $$ = $1;
     }
   | term '+' term %prec ADDOP
     {
-      $2->first = $1;
-      $2->last = $3;
-      $2->type = SPerl_OP_ADD;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | term '-' term %prec ADDOP
     {
-      $2->first = $1;
-      $2->last = $3;
-      $2->type = SPerl_OP_SUBTRACT;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | term MULOP term
     {
-      $2->first = $1;
-      $2->last = $3;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | term RELOP term
     {
-      $2->first = $1;
-      $2->last = $3;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | term BITANDOP term
     {
-      $2->first = $1;
-      $2->last = $3;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | term BITOROP term
     {
-      $2->first = $1;
-      $2->last = $3;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | term SHIFTOP term
     {
-      $2->first = $1;
-      $2->last = $3;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | VAR ARROW '[' term ']'
@@ -346,20 +344,20 @@ term
     }
   | term ASSIGNOP term
     {
-      $2->first = $1;
-      $2->last = $3;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | term ANDOP term
     {
-      $2->first = $1;
-      $2->last = $3;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | term OROP term
     {
-      $2->first = $1;
-      $2->last = $3;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | VAR ARROW subname '(' optterms ')'
