@@ -251,41 +251,41 @@ term
   | INCOP term
     {
       $1->type = SPerl_OP_PREINC;
-      $1->first = $2;
+      SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
       $$ = $1;
     }
   | term INCOP
     {
       $2->type = SPerl_OP_POSTINC;
-      $2->first = $1;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
       $$ = $2;
     }
   | DECOP term
     {
       $1->type = SPerl_OP_PREDEC;
-      $1->first = $2;
+      SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
       $$ = $1;
     }
   | term DECOP
     {
       $2->type = SPerl_OP_POSTDEC;
-      $2->first = $1;
+      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
       $$ = $2;
     }
   | NOTOP term
     {
-      $1->first = $2;
+      SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
       $$ = $1;
     }
   | '~' term
     {
-      $1->first = $2;
+      SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
       $$ = $1;
     }
   | '-' term %prec UMINUS
     {
       $1->type = SPerl_OP_NEGATE;
-      $1->first = $2;
+      SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
       $$ = $1;
     }
   | term '+' term %prec ADDOP
