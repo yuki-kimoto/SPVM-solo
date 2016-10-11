@@ -35,7 +35,7 @@ SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity) {
 SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
   SPerl_char* str = (SPerl_char*)malloc(length + 1);
   
-  SPerl_ARRAY_push(parser->str_ptrs, str);
+  SPerl_ARRAY_push(parser->long_str_ptrs, str);
   
   return str;
 }
@@ -46,7 +46,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   // Manipulate memory
   parser->array_ptrs = SPerl_ARRAY_new(0);
   parser->hash_ptrs = SPerl_ARRAY_new(0);
-  parser->str_ptrs = SPerl_ARRAY_new(0);
+  parser->long_str_ptrs = SPerl_ARRAY_new(0);
   parser->class_stack = SPerl_ARRAY_new(0);
   parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
@@ -82,11 +82,11 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
   SPerl_ARRAY_free(parser->hash_ptrs);
   
   // Free all string pointers;
-  for (i = 0; i < parser->str_ptrs->length; i++) {
-    SPerl_char* str = SPerl_ARRAY_fetch(parser->str_ptrs, i);
+  for (i = 0; i < parser->long_str_ptrs->length; i++) {
+    SPerl_char* str = SPerl_ARRAY_fetch(parser->long_str_ptrs, i);
     free(str);
   }
-  SPerl_ARRAY_free(parser->str_ptrs);
+  SPerl_ARRAY_free(parser->long_str_ptrs);
   
   // Free memory pool */
   SPerl_MEMORY_POOL_free(parser->memory_pool);

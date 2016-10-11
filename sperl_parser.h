@@ -56,8 +56,8 @@ struct SPerl_yy_parser_{
   /* All hash pointers */
   SPerl_ARRAY* hash_ptrs;
   
-  /* All string pointers */
-  SPerl_ARRAY* str_ptrs;
+  /* All long string pointers */
+  SPerl_ARRAY* long_str_ptrs;
   
   /* Class loading stack */
   SPerl_ARRAY* class_stack;
