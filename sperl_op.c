@@ -438,8 +438,9 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
       
       if (found) {
         SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var_info->name));
-        sprintf(message, "Error: redeclaration of \"%s\" at %s line %d", my_var_info->name, op_cur->file, op_cur->line);
+        sprintf(message, "Error: redeclaration of \"%s\" at %s line %d\n", my_var_info->name, op_cur->file, op_cur->line);
         SPerl_yyerror(parser, message);
+        parser->error_count++;
       }
       else {
         // Add my var information

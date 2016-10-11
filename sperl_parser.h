@@ -26,6 +26,9 @@ struct SPerl_yy_parser_{
   /* Current line number */
   SPerl_int cur_line;
   
+  /* Syntax error count */
+  SPerl_int error_count;
+  
   /* AST root */
   SPerl_OP* op_root;
   

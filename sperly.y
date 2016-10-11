@@ -97,10 +97,16 @@
 grammar
   : /* NULL */
     {
+      if (parser->error_count) {
+        YYABORT;
+      }
       $$ = SPerl_OP_newOP_GRAMMER(parser, NULL);
     }
   | packages
     {
+      if (parser->error_count) {
+        YYABORT;
+      }
       $$ = SPerl_OP_newOP_GRAMMER(parser, $1);
     }
 
