@@ -242,7 +242,7 @@ term
   : VAR
   | CONST
     {
-      $$ = SPerl_OP_newOP_CONST(parser, $1);
+      $$ = SPerl_OP_build_CONST(parser, $1);
     }
   | '+' term %prec UMINUS
     {

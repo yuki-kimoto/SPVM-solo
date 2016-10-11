@@ -310,12 +310,12 @@ SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPer
   return op;
 }
 
-SPerl_OP* SPerl_OP_newOP_CONST(SPerl_PARSER* parser, SPerl_OP* op) {
+SPerl_OP* SPerl_OP_build_CONST(SPerl_PARSER* parser, SPerl_OP* op_const) {
   
-  SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.pv;
+  SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op_const->uv.pv;
   SPerl_ARRAY_push(parser->const_infos, const_info);
   
-  return op;
+  return op_const;
 }
 
 SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
