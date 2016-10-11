@@ -176,11 +176,11 @@ statement
     }
   | USE pkgname ';'
     {
-      $$ = SPerl_OP_newOP_USE(parser, $2, NULL);
+      $$ = SPerl_OP_build_USE(parser, $1, $2, NULL);
     }
   | USE pkgname '-' pkgalias';'
     {
-      $$ = SPerl_OP_newOP_USE(parser, $2, $4);
+      $$ = SPerl_OP_build_USE(parser, $1, $2, $4);
     }
   | block
 

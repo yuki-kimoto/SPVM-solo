@@ -253,17 +253,20 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   return op_package;
 }
 
-SPerl_OP* SPerl_OP_newOP_USE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_pkgalias) {
-  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_USE, op_pkgname, op_pkgalias);
+SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_pkgname, SPerl_OP* op_pkgalias) {
+  SPerl_OP_sibling_splice(parser, op_use, NULL, 0, op_pkgname);
+  if (op_pkgalias) {
+    SPerl_OP_sibling_splice(parser, op_use, op_pkgname, 0, op_pkgalias);
+  }
   
   SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
   use_info->class_name = op_pkgname->uv.pv;
   if (op_pkgalias) {
     use_info->alias_name = op_pkgalias->uv.pv;
   }
-  op->uv.pv = use_info;
+  op_use->uv.pv = use_info;
   
-  return op;
+  return op_use;
 }
 
 SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_desctype) {
