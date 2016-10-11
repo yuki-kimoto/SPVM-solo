@@ -114,11 +114,11 @@ packages
 package
   : PACKAGE pkgname block
     {
-      $$ = SPerl_OP_newOP_PACKAGE(parser, $2, $3, NULL);
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, NULL);
     }
   | PACKAGE pkgname ':' descripters block
     {
-      $$ = SPerl_OP_newOP_PACKAGE(parser, $2, $5, $4);
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
     }
 
 statements

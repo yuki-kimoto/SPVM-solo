@@ -140,12 +140,13 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   return op;
 }
 
-SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
+SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
   SPerl_int i;
-
-  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_PACKAGE, op_pkgname, op_block);
+  
+  SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_pkgname);
+  SPerl_OP_sibling_splice(parser, op_package, op_pkgname, 0, op_block);
   if (op_descripters) {
-    SPerl_OP_sibling_splice(parser, op, op->first, 0, op_descripters);
+    SPerl_OP_sibling_splice(parser, op_package, op_block, 0, op_descripters);
   }
   
   SPerl_char* name = op_pkgname->uv.pv;
@@ -172,7 +173,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     
     // Run ast
     SPerl_ARRAY* op_stack = SPerl_ARRAY_new(0);
-    SPerl_OP* op_cur = op;
+    SPerl_OP* op_cur = op_package;
     while (op_cur) {
       SPerl_OP* first;
       
@@ -249,7 +250,7 @@ SPerl_OP* SPerl_OP_newOP_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPe
     SPerl_HASH_insert(parser->class_info_symtable, name, strlen(name), class_info);
   }
   
-  return op;
+  return op_package;
 }
 
 SPerl_OP* SPerl_OP_newOP_USE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_OP* op_pkgalias) {
