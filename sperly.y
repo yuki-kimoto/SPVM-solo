@@ -215,7 +215,7 @@ else
 declmy
   : MY VAR ':' desctype
     {
-      $$ = SPerl_OP_newOP_MY(parser, $2, $4);
+      $$ = SPerl_OP_build_MY(parser, $1, $2, $4);
     }
 
 declhas
@@ -417,7 +417,7 @@ subargs
 subarg
   : VAR ':' desctype
     {
-      $$ = SPerl_OP_newOP_MY(parser, $1, $3);
+      $$ = SPerl_OP_build_MY(parser, NULL, $1, $3);
     }
 
 desctype

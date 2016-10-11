@@ -266,8 +266,12 @@ SPerl_OP* SPerl_OP_newOP_USE(SPerl_PARSER* parser, SPerl_OP* op_pkgname, SPerl_O
   return op;
 }
 
-SPerl_OP* SPerl_OP_newOP_MY(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_desctype) {
-  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_MY, op_var, op_desctype);
+SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_desctype) {
+  if (!op_my) {
+    op_my = SPerl_OP_newOP(parser, SPerl_OP_MY, NULL, NULL);
+  }
+  SPerl_OP_sibling_splice(parser, op_my, NULL, 0, op_var);
+  SPerl_OP_sibling_splice(parser, op_my, op_var, 0, op_desctype);
   
   // Create my var information
   SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new(parser);
@@ -282,9 +286,9 @@ SPerl_OP* SPerl_OP_newOP_MY(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op
   my_var_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   
   // Add my_var information to op
-  op->uv.pv = my_var_info;
+  op_my->uv.pv = my_var_info;
   
-  return op;
+  return op_my;
 }
 
 SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
