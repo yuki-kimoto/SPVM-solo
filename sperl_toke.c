@@ -646,5 +646,5 @@ void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
   memcpy(token, parser->befbufptr + empty_count, length);
   token[length] = '\0';
   
-  fprintf(stderr, "Syntax error: unexpected token \"%s\" is found at %s line %d\n", token, parser->cur_file, parser->cur_line);
+  fprintf(stderr, "Error: unexpected token \"%s\" at %s line %d\n", token, parser->cur_file, parser->cur_line);
 }
