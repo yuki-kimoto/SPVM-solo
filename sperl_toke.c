@@ -535,57 +535,57 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           
           if (expect != SPerl_OP_EXPECT_WORD) {
             if (memcmp(keyword, "my", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_MY);
               return MY;
             }
             else if (memcmp(keyword, "has", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_HAS);
               parser->expect = SPerl_OP_EXPECT_WORD;
               return HAS;
             }
             else if (memcmp(keyword, "sub", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_SUB);
               parser->expect = SPerl_OP_EXPECT_WORD;
               return SUB;
             }
             else if (memcmp(keyword, "package", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_PACKAGE);
               return PACKAGE;
             }
             else if (memcmp(keyword, "if", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_IF);
               return IF;
             }
             else if (memcmp(keyword, "elsif", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_ELSIF);
               return ELSIF;
             }
             else if (memcmp(keyword, "else", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_ELSE);
               return ELSE;
             }
             else if (memcmp(keyword, "return", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_RETURN);
               return RETURN;
             }
             else if (memcmp(keyword, "for", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_FOR);
               return FOR;
             }
             else if (memcmp(keyword, "last", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_LAST);
               return LAST;
             }
             else if (memcmp(keyword, "next", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NEXT);
               return NEXT;
             }
             else if (memcmp(keyword, "use", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_USE);
               return USE;
             }
             else if (memcmp(keyword, "while", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_WHILE);
               return WHILE;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {

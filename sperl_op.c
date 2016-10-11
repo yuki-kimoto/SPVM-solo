@@ -72,7 +72,12 @@ SPerl_char* const SPerl_OP_names[] = {
   "statement",
   "grammer",
   "desctype",
-  "word"
+  "word",
+  "IF",
+  "ELSIF",
+  "ELSE",
+  "FOR",
+  "WHILE"
 };
 
 SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {

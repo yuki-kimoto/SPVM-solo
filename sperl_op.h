@@ -57,7 +57,12 @@ enum SPerl_OP_CODE {
   SPerl_OP_STATEMENT,
   SPerl_OP_GRAMMER,
   SPerl_OP_DESCTYPE,
-  SPerl_OP_WORD
+  SPerl_OP_WORD,
+  SPerl_OP_IF,
+  SPerl_OP_ELSIF,
+  SPerl_OP_ELSE,
+  SPerl_OP_FOR,
+  SPerl_OP_WHILE,
 };
 
 extern SPerl_char* const SPerl_OP_names[];
