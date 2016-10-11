@@ -29,8 +29,8 @@ struct SPerl_yy_parser_{
   /* Syntax error count */
   SPerl_int error_count;
   
-  /* AST root */
-  SPerl_OP* op_root;
+  /* AST grammer */
+  SPerl_OP* op_grammer;
   
   /* class informations */
   SPerl_ARRAY* class_infos;
