@@ -534,11 +534,6 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* f
     
     op->last = last;
     SPerl_OP_moresib_set(parser, first, last);
-    if (op->last)
-      SPerl_OP_lastsib_set(parser, op->last, (SPerl_OP*)op);
-  }
-  else if (first) {
-    SPerl_OP_lastsib_set(parser, op->first, (SPerl_OP*)op);
   }
 
   return (SPerl_OP *)op;
@@ -582,7 +577,6 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_
     while (--del_count && last_del->moresib)
       last_del = SPerl_OP_sibling(parser, last_del);
     rest = SPerl_OP_sibling(parser, last_del);
-    SPerl_OP_lastsib_set(parser, last_del, NULL);
   }
   else
     rest = first;
@@ -616,9 +610,6 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_
 
     lastop = last_ins ? last_ins : start ? start : NULL;
     parent->last = lastop;
-
-    if (lastop)
-      SPerl_OP_lastsib_set(parser, lastop, parent);
   }
   return last_del ? first : NULL;
 
@@ -634,11 +625,6 @@ SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* op) {
 void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* sib) {
   op->moresib = 1;
   op->sibparent = sib;
-}
-
-void SPerl_OP_lastsib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* parent) {
-  op->moresib = 0;
-  op->sibparent = parent;
 }
 
 void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* sib, SPerl_OP* parent) {
