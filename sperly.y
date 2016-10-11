@@ -101,7 +101,7 @@ grammar
     }
   | packages
     {
-      $$ = SPerl_OP_newOP_GRAMMER(parser, $1);;
+      $$ = SPerl_OP_newOP_GRAMMER(parser, $1);
     }
 
 packages
