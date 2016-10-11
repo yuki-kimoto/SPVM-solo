@@ -35,7 +35,13 @@ SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity) {
 SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
   SPerl_char* str = (SPerl_char*)malloc(length + 1);
   
-  SPerl_ARRAY_push(parser->long_str_ptrs, str);
+  if (length < 40) {
+    str = SPerl_MEMORY_POOL_alloc(parser->memory_pool, 40);
+  }
+  else {
+    str = (SPerl_char*)malloc(length + 1);
+    SPerl_ARRAY_push(parser->long_str_ptrs, str);
+  }
   
   return str;
 }
