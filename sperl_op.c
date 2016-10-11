@@ -346,15 +346,16 @@ SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descrip
   return desc_flags;
 }
 
-SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
   
-  // Create OP_SUB
+  // Build OP_SUB
   if (!op_optsubargs) {
     op_optsubargs = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
   }
-  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_SUB, op_subname, op_optsubargs);
-  SPerl_OP_sibling_splice(parser, op, op_optsubargs, 0, op_desctype);
-  SPerl_OP_sibling_splice(parser, op, op_desctype, 0, op_block);
+  SPerl_OP_sibling_splice(parser, op_sub, NULL, 0, op_subname);
+  SPerl_OP_sibling_splice(parser, op_sub, op_subname, 0, op_optsubargs);
+  SPerl_OP_sibling_splice(parser, op_sub, op_optsubargs, 0, op_desctype);
+  SPerl_OP_sibling_splice(parser, op_sub, op_desctype, 0, op_block);
   
   // Create method infomation
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new(parser);
@@ -404,7 +405,7 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   
   // Run in AST
   SPerl_ARRAY* op_stack = SPerl_PARSER_new_array(parser, 0);
-  SPerl_OP* op_cur = op;
+  SPerl_OP* op_cur = op_sub;
   SPerl_boolean block_start;
   while (op_cur) {
     SPerl_OP* first;
@@ -513,9 +514,9 @@ SPerl_OP* SPerl_OP_newOP_SUB(SPerl_PARSER* parser, SPerl_OP* op_subname, SPerl_O
   method_info->my_var_infos = my_var_infos;
   method_info->my_var_info_symtable = my_var_info_symtable;
   
-  op->uv.pv = method_info;
+  op_sub->uv.pv = method_info;
   
-  return op;
+  return op_sub;
 }
 
 SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {

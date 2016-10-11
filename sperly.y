@@ -131,7 +131,7 @@ statements
 statement
   : SUB subname '(' optsubargs ')' ':' desctype block
     {
-      $$ = SPerl_OP_newOP_SUB(parser, $2, $4, $7, $8);
+      $$ = SPerl_OP_build_SUB(parser, $1, $2, $4, $7, $8);
     }
   | FOR '(' term ';' term ';' term ')' block
     {
