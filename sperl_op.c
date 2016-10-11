@@ -291,8 +291,9 @@ SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_
   return op_my;
 }
 
-SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
-  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_HAS, op_field_name, op_desctype);
+SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
+  SPerl_OP_sibling_splice(parser, op_has, NULL, 0, op_field_name);
+  SPerl_OP_sibling_splice(parser, op_has, op_field_name, 0, op_desctype);
   
   // Create field information
   SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new(parser);
@@ -305,9 +306,9 @@ SPerl_OP* SPerl_OP_newOP_HAS(SPerl_PARSER* parser, SPerl_OP* op_field_name, SPer
   SPerl_OP* op_descripters = op_desctype->last;
   field_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   
-  op->uv.pv = field_info;
+  op_has->uv.pv = field_info;
   
-  return op;
+  return op_has;
 }
 
 SPerl_OP* SPerl_OP_build_CONST(SPerl_PARSER* parser, SPerl_OP* op_const) {

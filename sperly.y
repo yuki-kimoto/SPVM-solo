@@ -221,7 +221,7 @@ declmy
 declhas
   : HAS fieldname ':' desctype
     {
-      $$ = SPerl_OP_newOP_HAS(parser, $2, $4);
+      $$ = SPerl_OP_build_HAS(parser, $1, $2, $4);
     }
 
 optterms
