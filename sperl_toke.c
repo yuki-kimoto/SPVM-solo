@@ -524,8 +524,16 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           
           parser->bufptr++;
           
-          while(isalnum(*parser->bufptr) || (*parser->bufptr) == '_' || (*parser->bufptr) == ':') {
-            parser->bufptr++;
+          while(isalnum(*parser->bufptr)
+            || *parser->bufptr == '_'
+            || *parser->bufptr == ':' && *(parser->bufptr + 1) == ':')
+          {
+            if (*parser->bufptr == ':' && *(parser->bufptr + 1) == ':') {
+              parser->bufptr += 2;
+            }
+            else {
+              parser->bufptr++;
+            }
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
