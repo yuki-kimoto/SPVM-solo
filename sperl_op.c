@@ -538,7 +538,6 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   
   // Set my var information
   method_info->my_var_infos = my_var_infos;
-  method_info->my_var_info_symtable = my_var_info_symtable;
   
   op_sub->uv.pv = method_info;
   
