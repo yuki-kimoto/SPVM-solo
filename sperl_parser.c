@@ -102,7 +102,10 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
 }
 
 void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) {
-
+  
+  if (!op) {
+    return;
+  }
   
   SPerl_int i;
   for (i = 0; i < depth; i++) {

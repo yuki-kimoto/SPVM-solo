@@ -80,10 +80,7 @@ SPerl_char* const SPerl_OP_names[] = {
   "while"
 };
 
-SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
-  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
-
-  parser->op_grammer = op;
+void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
 
   // Set constant informations
   SPerl_ARRAY* const_infos = parser->const_infos;
@@ -136,7 +133,14 @@ SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
         break;
     }
   }
-  
+}
+
+
+SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
+  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
+
+  parser->op_grammer = op;
+
   return op;
 }
 

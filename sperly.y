@@ -97,17 +97,17 @@
 grammar
   : /* NULL */
     {
-      if (parser->error_count) {
-        YYABORT;
-      }
-      $$ = SPerl_OP_newOP_GRAMMER(parser, NULL);
+      $$ = NULL;
     }
   | packages
     {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, $1, NULL);
       if (parser->error_count) {
         YYABORT;
       }
-      $$ = SPerl_OP_newOP_GRAMMER(parser, $1);
+      
+      // Build constant pool
+      SPerl_OP_build_const_pool(parser);
     }
 
 packages

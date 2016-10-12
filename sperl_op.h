@@ -113,6 +113,7 @@ SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* o
 SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_desctype);
 SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages);
 SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_var, SPerl_OP* op_desctype);
+void SPerl_OP_build_const_pool(SPerl_PARSER* parser);
 
 SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descripters);
 
