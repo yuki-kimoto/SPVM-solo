@@ -412,8 +412,6 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   SPerl_OP* op_cur = op_sub;
   SPerl_boolean block_start;
   while (op_cur) {
-    SPerl_OP* first;
-    
     // Current block base
     SPerl_int block_base;
     if (block_base_stack->length == 0) {
@@ -425,7 +423,17 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
     }
     
     // Add my var
-    if (op_cur->type == SPerl_OP_MY) {
+    if (op_cur->type == SPerl_OP_BLOCK) {
+      if (block_start) {
+        SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
+        *block_base_ptr = my_var_stack->length;
+        SPerl_ARRAY_push(block_base_stack, block_base_ptr);
+      }
+      else {
+        block_start = 1;
+      }
+    }
+    else if (op_cur->type == SPerl_OP_MY) {
       SPerl_MY_VAR_INFO* my_var_info = (SPerl_MY_VAR_INFO*)op_cur->uv.pv;
       
       // Serach same name variable
@@ -455,22 +463,33 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
         SPerl_ARRAY_push(my_var_stack, my_var_info);
       }
     }
-    else {
-      if (op_cur->type == SPerl_OP_BLOCK) {
-        if (block_start) {
-          SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
-          *block_base_ptr = my_var_stack->length;
-          SPerl_ARRAY_push(block_base_stack, block_base_ptr);
-        }
-        else {
-          block_start = 1;
+    else if (op_cur->type == SPerl_OP_VAR) {
+      SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_cur->uv.pv;
+      
+      // Serach same name variable
+      SPerl_int i;
+      SPerl_MY_VAR_INFO* my_var_info = NULL;
+      for (i = my_var_stack->length - 1 ; i >= 0; i--) {
+        my_var_info = SPerl_ARRAY_fetch(my_var_stack, i);
+        if (strcmp(var_info->name, my_var_info->name) == 0) {
+          break;
         }
       }
       
-      first = op_cur->first;
+      if (my_var_info) {
+        // Add my var information to var
+        var_info->my_var_info = my_var_info;
+      }
+      else {
+        // Error
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var_info->name));
+        sprintf(message, "Error: Not found \"%s\" at %s line %d\n", var_info->name, op_cur->file, op_cur->line);
+        SPerl_yyerror(parser, message);
+        parser->error_count++;
+      }
     }
     
-    if (first) {
+    if (op_cur->first) {
       SPerl_ARRAY_push(op_stack, op_cur);
       op_cur = op_cur->first;
     }
@@ -486,7 +505,6 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
         SPerl_OP* op_parent;
         while (1) {
           op_parent = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
-          
           if (op_parent) {
             
             // End of scope
