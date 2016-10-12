@@ -470,8 +470,9 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
       SPerl_int i;
       SPerl_MY_VAR_INFO* my_var_info = NULL;
       for (i = my_var_stack->length - 1 ; i >= 0; i--) {
-        my_var_info = SPerl_ARRAY_fetch(my_var_stack, i);
-        if (strcmp(var_info->name, my_var_info->name) == 0) {
+        SPerl_MY_VAR_INFO* my_var_info_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
+        if (strcmp(var_info->name, my_var_info_tmp->name) == 0) {
+          my_var_info = my_var_info_tmp;
           break;
         }
       }
@@ -483,7 +484,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
       else {
         // Error
         SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var_info->name));
-        sprintf(message, "Error: Not found \"%s\" at %s line %d\n", var_info->name, op_cur->file, op_cur->line);
+        sprintf(message, "Error: \"%s\" undeclared at %s line %d\n", var_info->name, op_cur->file, op_cur->line);
         SPerl_yyerror(parser, message);
         parser->error_count++;
       }

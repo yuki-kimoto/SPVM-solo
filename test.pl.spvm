@@ -96,7 +96,8 @@ package Point3D {
   }
 
   sub sum4 () : const int {
-  
+    
+    my $title : int;
     my $title1 : double = 4.1567;
    
     my $title2 : int;
@@ -109,7 +110,8 @@ package Point3D {
     $title->();
     $title->(1);
     $title->(1, 2);
-
+    
+    my $test : int = 0;
     ++$test;
     $test++;
 
@@ -192,9 +194,7 @@ package Point3D {
     _sum();
     sum_foo();
     sum::foo();
-
-    $sum_::foo;
-
+    
     $title->[3];
     $title->[3] = 4;
 
