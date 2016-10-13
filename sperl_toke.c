@@ -621,7 +621,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op = _newOP(parser, SPerl_OP_WORD);
           op->uv.pv = keyword;
           SPerl_yylvalp->opval = (SPerl_OP*)op;
-
+          
           return WORD;
         }
         
@@ -637,6 +637,8 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
 /* Function for error */
 void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
 {
+  parser->error_count++;
+  
   if (memcmp(s, "Error:", 6) == 0) {
     fprintf(stderr, "%s", s);
   }
