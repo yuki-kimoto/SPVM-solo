@@ -14,7 +14,38 @@
   #include "sperl_var_info.h"
   #include "sperl_my_var_info.h"
   #include "sperl_const_info.h"
-  
+
+  /* Function for error */
+  void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
+  {
+    parser->error_count++;
+    
+    if (memcmp(s, "Error:", 6) == 0) {
+      fprintf(stderr, "%s", s);
+    }
+    // Syntax structure error
+    else {
+      // Current token
+      SPerl_int length = 0;
+      SPerl_int empty_count = 0;
+      SPerl_char* ptr = parser->befbufptr;
+      while (ptr != parser->bufptr) {
+        if (*ptr == ' ' || *ptr == '\t' || *ptr == '\n') {
+          empty_count++;
+        }
+        else {
+          length++;
+        }
+        ptr++;
+      }
+      SPerl_char* token = calloc(length + 1, sizeof(SPerl_char));
+      memcpy(token, parser->befbufptr + empty_count, length);
+      token[length] = '\0';
+      
+      fprintf(stderr, "Error: unexpected token \"%s\" at %s line %d\n", token, parser->cur_file, parser->cur_line);
+    }
+  }
+
   // Print token value for debug
   static void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
     
