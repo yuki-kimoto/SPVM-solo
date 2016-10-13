@@ -117,4 +117,6 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser);
 
 SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descripters);
 
+void SPerl_OP_check(SPerl_PARSER* parser);
+
 #endif

@@ -134,8 +134,13 @@ grammar
         YYABORT;
       }
       
+      // Name and type check
+      SPerl_OP_check(parser);
+      
       // Build constant pool
       SPerl_OP_build_const_pool(parser);
+      
+      SPerl_PARSER_dump_parser_info(parser);
     }
 
 packages

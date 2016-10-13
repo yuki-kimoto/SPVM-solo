@@ -22,11 +22,6 @@ int main(int argc, char *argv[])
   SPerl_yydebug = 0;
   SPerl_int parse_success = SPerl_yyparse(parser);
   
-  /* dump parser information */
-  if (parse_success == 0) {
-    SPerl_PARSER_dump_parser_info(parser);
-  }
-  
   SPerl_PARSER_free(parser);
   
   return parse_success;

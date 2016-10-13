@@ -80,6 +80,10 @@ SPerl_char* const SPerl_OP_names[] = {
   "while"
 };
 
+void SPerl_OP_check(SPerl_PARSER* parser) {
+  
+}
+
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
 
   // Set constant informations
