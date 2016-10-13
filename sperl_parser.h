@@ -68,14 +68,6 @@ struct SPerl_yy_parser_{
   SPerl_int next_var_id;
 };
 
-union SPerl_yystype_
-{
-  SPerl_OP* opval;
-  SPerl_int ival;
-};
-
-void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s);
-
 SPerl_PARSER* SPerl_PARSER_new();
 void SPerl_PARSER_dump_parser_info(SPerl_PARSER* parser);
 void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_infos);
@@ -91,23 +83,30 @@ SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity);
 SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity);
 SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length);
 
+void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
+
+/* sperly.y(sperly.tab.c) */
+union SPerl_yystype_
+{
+  SPerl_OP* opval;
+  SPerl_int ival;
+};
+
+#define YYSTYPE SPerl_yystype
+#define YYPRINT(file, type, value) SPerl_yyprint(file, type, value)
+
+extern int SPerl_yydebug;
+
+int SPerl_yyparse(SPerl_PARSER* parser);
+void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s);
+
+/* sperl_toke.c */
 // Expected token
 enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_NORMAL,
   SPerl_OP_EXPECT_WORD
 };
 
-int SPerl_yyparse(SPerl_PARSER* parser);
-void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
-
-#define YYSTYPE SPerl_yystype
-
-// sperl_toke.c
 int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser);
-
-// sperly.y(sperly.tab.c)
-extern int SPerl_yydebug;
-void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s);
-#define YYPRINT(file, type, value) SPerl_yyprint(file, type, value)
 
 #endif
