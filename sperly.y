@@ -50,9 +50,6 @@
   void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
     
     switch(type) {
-      case MULOP:
-        fprintf(file, "%d", yylval.ival);
-        break;
       case WORD:
         fprintf(file, "\"%s\"", ((SPerl_OP*)yylval.opval)->uv.pv);
         break;

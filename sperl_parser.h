@@ -98,7 +98,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser);
 union SPerl_yystype
 {
   SPerl_OP* opval;
-  SPerl_int ival;
 };
 
 #define YYSTYPE SPerl_YYSTYPE
