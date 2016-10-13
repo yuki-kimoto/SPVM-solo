@@ -47,7 +47,7 @@
   }
 
   // Print token value for debug
-  static void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
+  void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
     
     switch(type) {
       case MULOP:

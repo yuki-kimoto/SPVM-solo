@@ -1,10 +1,9 @@
 #ifndef SPERL_PARSER_H
 #define SPERL_PARSER_H
 
-#include "sperl_type.h"
-#include "stdio.h"
+#include <stdio.h>
 
-extern int SPerl_yydebug;
+#include "sperl_type.h"
 
 // Parser information
 struct SPerl_yy_parser_{
@@ -98,13 +97,17 @@ enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_WORD
 };
 
+int SPerl_yyparse(SPerl_PARSER* parser);
 void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 
-// sperly.y
 #define YYSTYPE SPerl_yystype
-#define YYPRINT(file, type, value) SPerl_yyprint(file, type, value)
 
+// sperl_toke.c
 int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser);
-int SPerl_yyparse(SPerl_PARSER* parser);
+
+// sperly.y(sperly.tab.c)
+extern int SPerl_yydebug;
+void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s);
+#define YYPRINT(file, type, value) SPerl_yyprint(file, type, value)
 
 #endif
