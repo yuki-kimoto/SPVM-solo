@@ -48,6 +48,7 @@ package Foo::Point3D {
   has title : static int = 2;
 
   sub last ($foo : int) : int { }
+  sub last ($foo : int) : int { }
 
   # subroutine
   sub sum1 () : double {

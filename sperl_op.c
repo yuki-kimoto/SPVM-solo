@@ -195,19 +195,23 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     SPerl_OP_sibling_splice(parser, op_package, op_block, 0, op_descripters);
   }
   
-  SPerl_char* name = op_pkgname->uv.pv;
+  SPerl_char* class_name = op_pkgname->uv.pv;
   SPerl_CLASS_INFO* found_class_info = SPerl_HASH_search(
     parser->class_info_symtable,
-    name,
-    strlen(name)
+    class_name,
+    strlen(class_name)
   );
   
+          
   if (found_class_info) {
-    fprintf(stderr, "Warnings: class %s is already defined\n", name);
+    SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(class_name));
+    sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", class_name, op_package->file, op_package->line);
+    SPerl_yyerror(parser, message);
   }
   else {
+
     SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new(parser);
-    class_info->name = name;
+    class_info->name = class_name;
     class_info->op_block = op_block;
     class_info->alias = SPerl_PARSER_new_hash(parser, 0);
     
@@ -230,7 +234,9 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_CLASS_INFO* found_field_info
           = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
         if (found_field_info) {
-          fprintf(stderr, "Warnings: field %s::%s is already defined\n", class_info->name, field_name);
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_name));
+          sprintf(message, "Error: redeclaration of has \"%s\" at %s line %d\n", field_name, op_cur->file, op_cur->line);
+          SPerl_yyerror(parser, message);
         }
         else {
           field_info->class_info = class_info;
@@ -245,8 +251,11 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_char* method_name = method_info->name;
         SPerl_METHOD_INFO* found_method_info
           = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
+        
         if (found_method_info) {
-          fprintf(stderr, "Warnings: method %s::%s is already defined\n", class_info->name, method_name);
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
+          sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, op_cur->file, op_cur->line);
+          SPerl_yyerror(parser, message);
         }
         else {
           method_info->class_info = class_info;
@@ -294,7 +303,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
    
     // Add class information
     SPerl_ARRAY_push(parser->class_infos, class_info);
-    SPerl_HASH_insert(parser->class_info_symtable, name, strlen(name), class_info);
+    SPerl_HASH_insert(parser->class_info_symtable, class_name, strlen(class_name), class_info);
   }
   
   return op_package;
@@ -493,7 +502,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
       
       if (found) {
         SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var_info->name));
-        sprintf(message, "Error: redeclaration of \"%s\" at %s line %d\n", my_var_info->name, op_cur->file, op_cur->line);
+        sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var_info->name, op_cur->file, op_cur->line);
         SPerl_yyerror(parser, message);
       }
       else {
