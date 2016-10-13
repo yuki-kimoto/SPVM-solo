@@ -20,7 +20,7 @@ static SPerl_OP* _newOP(SPerl_PARSER* parser, enum SPerl_OP_CODE code) {
 }
 
 // Get token
-int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
+int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
   
   if (!parser->cur_src) {
     
@@ -134,18 +134,18 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '+') {
           parser->bufptr++;
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+          yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
           return INCOP;
         }
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
           op->uv.iv = SPerl_OP_ADD;
-          SPerl_yylvalp->opval = op;
+          yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+          yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
           return '+';
         }
       
@@ -156,23 +156,23 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '>') {
           parser->bufptr++;
           parser->expect = SPerl_OP_EXPECT_WORD;
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+          yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
           return ARROW;
         }
         else if (*parser->bufptr == '-') {
           parser->bufptr++;
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+          yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
           return DECOP;
         }
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
           op->uv.iv = SPerl_OP_SUBTRACT;
-          SPerl_yylvalp->opval = op;
+          yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);;
+          yylvalp->opval = _newOP(parser, SPerl_OP_NULL);;
           return '-';
         }
       /* Multiply */
@@ -182,11 +182,11 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
           op->uv.iv = SPerl_OP_MULTIPLY;
-          SPerl_yylvalp->opval = op;
+          yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_MULTIPLY);
+          yylvalp->opval = _newOP(parser, SPerl_OP_MULTIPLY);
           return MULOP;
         }
       
@@ -197,11 +197,11 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
           op->uv.iv = SPerl_OP_DIVIDE;
-          SPerl_yylvalp->opval = op;
+          yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_DIVIDE);
+          yylvalp->opval = _newOP(parser, SPerl_OP_DIVIDE);
           return MULOP;
         }
 
@@ -211,11 +211,11 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
           op->uv.iv = SPerl_OP_MODULO;
-          SPerl_yylvalp->opval = op;
+          yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_MODULO);
+          yylvalp->opval = _newOP(parser, SPerl_OP_MODULO);
           return MULOP;
         }
 
@@ -225,11 +225,11 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
           op->uv.iv = SPerl_OP_BIT_XOR;
-          SPerl_yylvalp->opval = op;
+          yylvalp->opval = op;
           return ASSIGNOP;
         }
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_BIT_XOR);
+          yylvalp->opval = _newOP(parser, SPerl_OP_BIT_XOR);
           return MULOP;
         }
             
@@ -242,17 +242,17 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
             parser->bufptr++;
             SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
             op->uv.iv = SPerl_OP_OR;
-            SPerl_yylvalp->opval = op;
+            yylvalp->opval = op;
             return ASSIGNOP;
           }
           else {
-            SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_OR);
+            yylvalp->opval = _newOP(parser, SPerl_OP_OR);
             return OROP;
           }
         }
         /* Bit or */
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_BIT_OR);
+          yylvalp->opval = _newOP(parser, SPerl_OP_BIT_OR);
           return BITOROP;
         }
 
@@ -265,17 +265,17 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
             parser->bufptr++;
             SPerl_OP* op = _newOP(parser, SPerl_OP_ASSIGN);
             op->uv.iv = SPerl_OP_AND;
-            SPerl_yylvalp->opval = op;
+            yylvalp->opval = op;
             return ASSIGNOP;
           }
           else {
-            SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_AND);
+            yylvalp->opval = _newOP(parser, SPerl_OP_AND);
             return ANDOP;
           }
         }
         /* Bit and */
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_BIT_AND);
+          yylvalp->opval = _newOP(parser, SPerl_OP_BIT_AND);
           return BITANDOP;
         }
       
@@ -297,12 +297,12 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         /* == */
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_EQ);
+          yylvalp->opval = _newOP(parser, SPerl_OP_EQ);
           return RELOP;
         }
         /* = */
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_ASSIGN);
+          yylvalp->opval = _newOP(parser, SPerl_OP_ASSIGN);
           return ASSIGNOP;
         }
         
@@ -311,18 +311,18 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '<') {
           parser->bufptr++;
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_LEFT_SHIFT);
+          yylvalp->opval = _newOP(parser, SPerl_OP_LEFT_SHIFT);
           return SHIFTOP;
         }
         /* <= */
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_LE);
+          yylvalp->opval = _newOP(parser, SPerl_OP_LE);
           return RELOP;
         }
         /* < */
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_LT);
+          yylvalp->opval = _newOP(parser, SPerl_OP_LT);
           return RELOP;
         }
       
@@ -331,18 +331,18 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '>') {
           parser->bufptr++;
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_RIGHT_SHIFT);
+          yylvalp->opval = _newOP(parser, SPerl_OP_RIGHT_SHIFT);
           return SHIFTOP;
         }
         /* >= */
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_GE);
+          yylvalp->opval = _newOP(parser, SPerl_OP_GE);
           return RELOP;
         }
         /* < */
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_GT);
+          yylvalp->opval = _newOP(parser, SPerl_OP_GT);
           return RELOP;
         }
       case '!':
@@ -350,17 +350,17 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NE);
+          yylvalp->opval = _newOP(parser, SPerl_OP_NE);
           return RELOP;
         }
         else {
-          SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NOT);
+          yylvalp->opval = _newOP(parser, SPerl_OP_NOT);
           return NOTOP;
         }
         
       case '~':
         parser->bufptr++;
-        SPerl_yylvalp->opval = _newOP(parser,  SPerl_OP_COMPLEMENT);
+        yylvalp->opval = _newOP(parser,  SPerl_OP_COMPLEMENT);
         return '~';
       
       case '\'': {
@@ -390,7 +390,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         const_info->type = SPerl_CONST_INFO_CHAR;
         const_info->uv.int_value = ch;
         op->uv.pv = const_info;
-        SPerl_yylvalp->opval = op;
+        yylvalp->opval = op;
         
         
         return CONST;
@@ -430,7 +430,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
         const_info->type = SPerl_CONST_INFO_STRING;
         const_info->uv.string_value = str;
         op->uv.pv = const_info;
-        SPerl_yylvalp->opval = (SPerl_OP*)op;
+        yylvalp->opval = (SPerl_OP*)op;
 
         return CONST;
       }
@@ -456,7 +456,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           SPerl_VAR_INFO* var_info = SPerl_VAR_INFO_new(parser);
           var_info->name = var;
           op->uv.pv = var_info;
-          SPerl_yylvalp->opval = (SPerl_OP*)op;
+          yylvalp->opval = (SPerl_OP*)op;
 
           return VAR;
         }
@@ -498,7 +498,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
             const_info->type = SPerl_CONST_INFO_DOUBLE;
             const_info->uv.double_value = num;
             op->uv.pv = const_info;
-            SPerl_yylvalp->opval = (SPerl_OP*)op;
+            yylvalp->opval = (SPerl_OP*)op;
             
             return CONST;
           }
@@ -512,7 +512,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
             const_info->type = SPerl_CONST_INFO_INT;
             const_info->uv.int_value = num;
             op->uv.pv = const_info;
-            SPerl_yylvalp->opval = (SPerl_OP*)op;
+            yylvalp->opval = (SPerl_OP*)op;
             
             return CONST;
           }
@@ -543,57 +543,57 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           
           if (expect != SPerl_OP_EXPECT_WORD) {
             if (memcmp(keyword, "my", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_MY);
+              yylvalp->opval = _newOP(parser, SPerl_OP_MY);
               return MY;
             }
             else if (memcmp(keyword, "has", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_HAS);
+              yylvalp->opval = _newOP(parser, SPerl_OP_HAS);
               parser->expect = SPerl_OP_EXPECT_WORD;
               return HAS;
             }
             else if (memcmp(keyword, "sub", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_SUB);
+              yylvalp->opval = _newOP(parser, SPerl_OP_SUB);
               parser->expect = SPerl_OP_EXPECT_WORD;
               return SUB;
             }
             else if (memcmp(keyword, "package", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_PACKAGE);
+              yylvalp->opval = _newOP(parser, SPerl_OP_PACKAGE);
               return PACKAGE;
             }
             else if (memcmp(keyword, "if", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_IF);
+              yylvalp->opval = _newOP(parser, SPerl_OP_IF);
               return IF;
             }
             else if (memcmp(keyword, "elsif", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_ELSIF);
+              yylvalp->opval = _newOP(parser, SPerl_OP_ELSIF);
               return ELSIF;
             }
             else if (memcmp(keyword, "else", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_ELSE);
+              yylvalp->opval = _newOP(parser, SPerl_OP_ELSE);
               return ELSE;
             }
             else if (memcmp(keyword, "return", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_RETURN);
+              yylvalp->opval = _newOP(parser, SPerl_OP_RETURN);
               return RETURN;
             }
             else if (memcmp(keyword, "for", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_FOR);
+              yylvalp->opval = _newOP(parser, SPerl_OP_FOR);
               return FOR;
             }
             else if (memcmp(keyword, "last", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_LAST);
+              yylvalp->opval = _newOP(parser, SPerl_OP_LAST);
               return LAST;
             }
             else if (memcmp(keyword, "next", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NEXT);
+              yylvalp->opval = _newOP(parser, SPerl_OP_NEXT);
               return NEXT;
             }
             else if (memcmp(keyword, "use", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_USE);
+              yylvalp->opval = _newOP(parser, SPerl_OP_USE);
               return USE;
             }
             else if (memcmp(keyword, "while", str_len) == 0) {
-              SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_WHILE);
+              yylvalp->opval = _newOP(parser, SPerl_OP_WHILE);
               return WHILE;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
@@ -602,7 +602,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
               const_info->type = SPerl_CONST_INFO_BOOLEAN;
               const_info->uv.int_value = 1;
               op->uv.pv = const_info;
-              SPerl_yylvalp->opval = (SPerl_OP*)op;
+              yylvalp->opval = (SPerl_OP*)op;
 
               return CONST;
             }
@@ -612,7 +612,7 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
               const_info->type = SPerl_CONST_INFO_BOOLEAN;
               const_info->uv.int_value = 0;
               op->uv.pv = const_info;
-              SPerl_yylvalp->opval = (SPerl_OP*)op;
+              yylvalp->opval = (SPerl_OP*)op;
 
               return CONST;
             }
@@ -620,14 +620,14 @@ int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser) {
           
           SPerl_OP* op = _newOP(parser, SPerl_OP_WORD);
           op->uv.pv = keyword;
-          SPerl_yylvalp->opval = (SPerl_OP*)op;
+          yylvalp->opval = (SPerl_OP*)op;
           
           return WORD;
         }
         
         /* Return character */
         parser->bufptr++;
-        SPerl_yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
+        yylvalp->opval = _newOP(parser, SPerl_OP_NULL);
         
         return c;
     }

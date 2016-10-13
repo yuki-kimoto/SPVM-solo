@@ -85,21 +85,6 @@ SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length);
 
 void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 
-/* sperly.y(sperly.tab.c) */
-union SPerl_yystype_
-{
-  SPerl_OP* opval;
-  SPerl_int ival;
-};
-
-#define YYSTYPE SPerl_yystype
-#define YYPRINT(file, type, value) SPerl_yyprint(file, type, value)
-
-extern int SPerl_yydebug;
-
-int SPerl_yyparse(SPerl_PARSER* parser);
-void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s);
-
 /* sperl_toke.c */
 // Expected token
 enum SPerl_OP_EXPECT {
@@ -107,6 +92,21 @@ enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_WORD
 };
 
-int SPerl_yylex(YYSTYPE* SPerl_yylvalp, SPerl_PARSER* parser);
+int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser);
+
+/* sperly.y(sperly.tab.c) */
+union SPerl_yystype
+{
+  SPerl_OP* opval;
+  SPerl_int ival;
+};
+
+#define YYSTYPE SPerl_YYSTYPE
+#define YYPRINT(file, type, value) SPerl_yyprint(file, type, value)
+
+extern int SPerl_yydebug;
+
+int SPerl_yyparse(SPerl_PARSER* parser);
+void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s);
 
 #endif
