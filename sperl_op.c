@@ -80,8 +80,21 @@ SPerl_char* const SPerl_OP_names[] = {
   "while"
 };
 
+static SPerl_boolean _is_core_type (SPerl_char* type_name) {
+  if (strcmp(type_name, "boolean") == 0 || strcmp(type_name, "char") == 0 || strcmp(type_name, "byte") == 0
+    || strcmp(type_name, "short") == 0 || strcmp(type_name, "int") == 0 || strcmp(type_name, "long") == 0
+    || strcmp(type_name, "float") == 0 || strcmp(type_name, "double") == 0)
+  {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 void SPerl_OP_check(SPerl_PARSER* parser) {
-  
+  SPerl_ARRAY* class_infos = parser->class_infos;
+  SPerl_HASH* class_info_symtable = parser->class_info_symtable;
 }
 
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
