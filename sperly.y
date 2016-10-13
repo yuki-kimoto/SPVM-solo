@@ -135,9 +135,10 @@ grammar
       if (parser->error_count) {
         YYABORT;
       }
-      
-      // Dump parser infomation
-      SPerl_PARSER_dump_parser_info(parser);
+      else {
+        // Dump parser infomation
+        SPerl_PARSER_dump_parser_info(parser);
+      }
     }
 
 packages

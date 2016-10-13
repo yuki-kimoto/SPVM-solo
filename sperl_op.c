@@ -95,6 +95,26 @@ static SPerl_boolean _is_core_type (SPerl_char* type_name) {
 void SPerl_OP_check(SPerl_PARSER* parser) {
   SPerl_ARRAY* class_infos = parser->class_infos;
   SPerl_HASH* class_info_symtable = parser->class_info_symtable;
+  
+  // Check field info type
+  SPerl_int i;
+  for (i = 0; i < class_infos->length; i++) {
+    SPerl_CLASS_INFO* class_info = SPerl_ARRAY_fetch(class_infos, i);
+    SPerl_ARRAY* field_infos = class_info->field_infos;
+    SPerl_int j;
+    for (j = 0; j < field_infos->length; j++) {
+      SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
+      if (
+        !_is_core_type(field_info->type)
+        && !SPerl_HASH_search(class_info_symtable, field_info->type, strlen(field_info->type))
+        )
+      {
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_info->type));
+        sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", field_info->type, field_info->op->file, field_info->op->line);
+        SPerl_yyerror(parser, message);
+      }
+    }
+  }
 }
 
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
@@ -214,13 +234,14 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         }
         else {
           field_info->class_info = class_info;
+          field_info->op = op_cur;
           SPerl_ARRAY_push(field_infos, field_info);
           SPerl_HASH_insert(field_info_symtable, field_name, strlen(field_name), field_info);
         }
       }
       // Method
       else if (op_cur->type == SPerl_OP_SUB) {
-        SPerl_METHOD_INFO* method_info = (SPerl_METHOD_INFO*)op_cur->uv.pv;
+        SPerl_METHOD_INFO* method_info = op_cur->uv.pv;
         SPerl_char* method_name = method_info->name;
         SPerl_METHOD_INFO* found_method_info
           = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
