@@ -140,12 +140,17 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
 }
 
 
-SPerl_OP* SPerl_OP_newOP_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
-  SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
+SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
+  SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
+  parser->op_grammer = op_grammer;
+  
+  // Name and type check
+  SPerl_OP_check(parser);
+  
+  // Build constant pool
+  SPerl_OP_build_const_pool(parser);
 
-  parser->op_grammer = op;
-
-  return op;
+  return op_grammer;
 }
 
 SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {

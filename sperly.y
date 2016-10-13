@@ -129,17 +129,14 @@ grammar
     }
   | packages
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, $1, NULL);
+      $$ = SPerl_OP_build_GRAMMER(parser, $1);
+
+      // Syntax error
       if (parser->error_count) {
         YYABORT;
       }
       
-      // Name and type check
-      SPerl_OP_check(parser);
-      
-      // Build constant pool
-      SPerl_OP_build_const_pool(parser);
-      
+      // Dump parser infomation
       SPerl_PARSER_dump_parser_info(parser);
     }
 
