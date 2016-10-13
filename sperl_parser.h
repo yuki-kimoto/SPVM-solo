@@ -6,63 +6,63 @@
 
 extern int SPerl_yydebug;
 
-/* Parser information */
+// Parser information
 struct SPerl_yy_parser_{
-  /* Before buffer position */
+  // Before buffer position
   SPerl_char* befbufptr;
   
-  /* Current buffer position */
+  // Current buffer position
   SPerl_char* bufptr;
   
-  /* Expect next token type */
+  // Expect next token type
   SPerl_int expect;
 
-  /* Current file name */
+  // Current file name
   SPerl_char* cur_file;
   
-  /* Source data */
+  // Source data
   SPerl_char* cur_src;
   
-  /* Current line number */
+  // Current line number
   SPerl_int cur_line;
   
-  /* Syntax error count */
+  // Syntax error count
   SPerl_int error_count;
   
-  /* AST grammer */
+  // AST grammer
   SPerl_OP* op_grammer;
   
-  /* class informations */
+  // class informations
   SPerl_ARRAY* class_infos;
   
-  /* class information symbol table */
+  // class information symbol table
   SPerl_HASH* class_info_symtable;
   
-  /* Constant informations */
+  // Constant informations
   SPerl_ARRAY* const_infos;
   
-  /* Constant pool */
+  // Constant pool
   SPerl_int* const_pool;
   
-  /* Constant pool capacity*/
+  // Constant pool capacity
   SPerl_int const_pool_capacity;
   
-  /* Constant pool length */
+  // Constant pool length
   SPerl_int const_pool_pos;
   
-  /* Memory_pool */
+  // Memory_pool
   SPerl_MEMORY_POOL* memory_pool;
   
-  /* All array pointers */
+  // All array pointers
   SPerl_ARRAY* array_ptrs;
   
-  /* All hash pointers */
+  // All hash pointers
   SPerl_ARRAY* hash_ptrs;
   
-  /* All long string pointers */
+  // All long string pointers
   SPerl_ARRAY* long_str_ptrs;
   
-  /* Class loading stack */
+  // Class loading stack
   SPerl_ARRAY* class_stack;
   
   // Variable id
@@ -92,7 +92,7 @@ SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity);
 SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity);
 SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length);
 
-/* Expected token */
+// Expected token
 enum SPerl_OP_EXPECT {
   SPerl_OP_EXPECT_NORMAL,
   SPerl_OP_EXPECT_WORD
@@ -100,6 +100,7 @@ enum SPerl_OP_EXPECT {
 
 void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 
+// sperly.y
 #define YYSTYPE SPerl_yystype
 #define YYPRINT(file, type, value) SPerl_yyprint(file, type, value)
 
