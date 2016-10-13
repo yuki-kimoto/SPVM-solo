@@ -87,7 +87,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 
 /* sperl_toke.c */
 // Expected token
-enum SPerl_OP_EXPECT {
+enum SPerl_op_expect {
   SPerl_OP_EXPECT_NORMAL,
   SPerl_OP_EXPECT_WORD
 };

@@ -54,7 +54,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
   parser->befbufptr = parser->bufptr;
   
   // Get expected and retrun back to normal
-  enum SPerl_OP_EXPECT expect = parser->expect;
+  SPerl_OP_EXPECT expect = parser->expect;
   parser->expect = SPerl_OP_EXPECT_NORMAL;
   
   while(1) {

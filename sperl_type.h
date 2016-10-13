@@ -71,4 +71,7 @@ typedef SPerl_yy_parser SPerl_PARSER;
 union SPerl_yystype;
 typedef union SPerl_yystype SPerl_YYSTYPE;
 
+enum SPerl_op_expect;
+typedef enum SPerl_op_expect SPerl_OP_EXPECT;
+
 #endif
