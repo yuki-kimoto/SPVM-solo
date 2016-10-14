@@ -263,7 +263,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       // Method
       else if (op_cur->type == SPerl_OP_SUB) {
         SPerl_METHOD_INFO* method_info = op_cur->uv.pv;
-        SPerl_char* method_name = method_info->name;
+        SPerl_char* method_name = method_info->name->value;
         SPerl_METHOD_INFO* found_method_info
           = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
         
@@ -449,7 +449,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   
   // Create method infomation
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new(parser);
-  method_info->name = ((SPerl_WORD_INFO*)op_subname->uv.pv)->value;
+  method_info->name = op_subname->uv.pv;
   
   // subargs
   // subargs is NULL
@@ -474,7 +474,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   }
   
   // return type
-  method_info->return_type = ((SPerl_WORD_INFO*)op_desctype->first->uv.pv)->value;
+  method_info->return_type = op_desctype->first->uv.pv;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;

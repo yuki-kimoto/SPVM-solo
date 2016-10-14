@@ -261,9 +261,8 @@ void SPerl_PARSER_dump_const_info(SPerl_PARSER* parser, SPerl_CONST_INFO* const_
 
 void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* method_info) {
   if (method_info) {
-    printf("      name => \"%s\"\n", method_info->name);
-    printf("      argument_count => %" PRId32 "\n", method_info->argument_count);
-    
+    printf("      name => \"%s\"\n", method_info->name->value);
+    printf("      return_type => \"%s\"\n", method_info->return_type->value);
     SPerl_int i;
     printf("      descripters => ");
     SPerl_ARRAY* descripters = method_info->descripters;
@@ -278,9 +277,7 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
       printf("(None)");
     }
     printf("\n");
-    printf("      return_type => \"%s\"\n", method_info->return_type);
-    printf("      op_block => %x\n", method_info->op_block);
-
+    printf("      argument_count => %" PRId32 "\n", method_info->argument_count);
     printf("      my_var_infos\n");
     SPerl_ARRAY* my_var_infos = method_info->my_var_infos;
     for (i = 0; i < my_var_infos->length; i++) {
@@ -289,6 +286,7 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
       printf("        my_var_info[%d]\n", i);
       SPerl_PARSER_dump_my_var_info(parser, my_var_info);
     }
+    printf("      op_block => %x\n", method_info->op_block);
   }
   else {
     printf("      None\n");
