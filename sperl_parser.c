@@ -196,7 +196,7 @@ void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_info
     SPerl_CLASS_INFO* class_info = (SPerl_CLASS_INFO*)SPerl_ARRAY_fetch(class_infos, i);
     
     printf("class_info[%d]\n", i);
-    printf("  name => \"%s\"\n", class_info->name);
+    printf("  name => \"%s\"\n", class_info->name->value);
     printf("  op_block => %x\n", class_info->op_block);
     
     // Dump method informations

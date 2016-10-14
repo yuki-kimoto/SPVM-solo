@@ -8,15 +8,14 @@
 
 // Class information
 struct SPerl_class_info {
-  SPerl_char* name;
-  SPerl_char desc_flags;
+  SPerl_WORD_INFO* name;
+  SPerl_ARRAY* descripters;
   SPerl_ARRAY* field_infos;
   SPerl_HASH* field_info_symtable;
   SPerl_ARRAY* method_infos;
   SPerl_HASH* method_info_symtable;
   SPerl_OP* op_block;
   SPerl_HASH* alias;
-  SPerl_ARRAY* descripters;
   SPerl_OP* op;
 };
 

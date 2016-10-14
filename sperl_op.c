@@ -227,7 +227,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   else {
 
     SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new(parser);
-    class_info->name = class_name;
+    class_info->name = op_pkgname->uv.pv;
     class_info->op_block = op_block;
     class_info->alias = SPerl_PARSER_new_hash(parser, 0);
     
