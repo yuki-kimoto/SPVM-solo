@@ -16,6 +16,8 @@ struct SPerl_class_info {
   SPerl_HASH* method_info_symtable;
   SPerl_OP* op_block;
   SPerl_HASH* alias;
+  SPerl_ARRAY* descripters;
+  SPerl_OP* op;
 };
 
 SPerl_CLASS_INFO* SPerl_CLASS_INFO_new(SPerl_PARSER* parser);

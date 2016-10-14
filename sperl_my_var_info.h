@@ -9,6 +9,8 @@ struct SPerl_my_var_info {
   SPerl_char* name;
   SPerl_int id;
   SPerl_METHOD_INFO* method_info;
+  SPerl_ARRAY* descripters;
+  SPerl_OP* op;
 };
 
 SPerl_MY_VAR_INFO* SPerl_MY_VAR_INFO_new();
