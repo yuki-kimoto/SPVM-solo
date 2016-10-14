@@ -14,6 +14,7 @@
 #include "sperl_memory_pool.h"
 #include "sperl_op.h"
 #include "sperl_var_info.h"
+#include "sperl_word_info.h"
 
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
@@ -113,7 +114,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
   SPerl_int type = op->type;
   printf("%s", SPerl_OP_names[type]);
   if (type == SPerl_OP_CONST) {
-    SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op->uv.pv;
+    SPerl_CONST_INFO* const_info = op->uv.pv;
     switch(const_info->type) {
       case SPerl_CONST_INFO_BOOLEAN:
         printf(" boolean %d", const_info->uv.int_value);
@@ -145,11 +146,12 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
     }
   }
   else if (type == SPerl_OP_VAR) {
-    SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op->uv.pv;
+    SPerl_VAR_INFO* var_info = op->uv.pv;
     printf(" \"%s\"", var_info->name);
   }
   else if (type == SPerl_OP_WORD) {
-    printf(" \"%s\"", op->uv.pv);
+    SPerl_WORD_INFO* word_info = op->uv.pv;
+    printf(" \"%s\"", word_info->value);
   }
   printf("\n");
 

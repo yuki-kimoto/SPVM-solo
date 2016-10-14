@@ -10,6 +10,7 @@
 #include "sperl_var_info.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
+#include "sperl_word_info.h"
 
 static SPerl_OP* _newOP(SPerl_PARSER* parser, enum SPerl_OP_CODE code) {
   SPerl_OP* op = SPerl_OP_newOP(parser, code, NULL, NULL);
@@ -517,9 +518,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             return CONST;
           }
         }
-        /* Keyword or word */
+        // Keyword or word
         else if (isalpha(c) || c == '_') {
-          /* Save current position */
+          // Save current position
           SPerl_char* cur_token_ptr = parser->bufptr;
           
           parser->bufptr++;
@@ -541,6 +542,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
           
+          // Keyword
           if (expect != SPerl_OP_EXPECT_WORD) {
             if (memcmp(keyword, "my", str_len) == 0) {
               yylvalp->opval = _newOP(parser, SPerl_OP_MY);
@@ -619,7 +621,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           SPerl_OP* op = _newOP(parser, SPerl_OP_WORD);
-          op->uv.pv = keyword;
+          SPerl_WORD_INFO* word_info = SPerl_WORD_INFO_new(parser);
+          word_info->value = keyword;
+          word_info->op = op;
+          op->uv.pv = word_info;
           yylvalp->opval = (SPerl_OP*)op;
           
           return WORD;

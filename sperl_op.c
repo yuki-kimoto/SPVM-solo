@@ -16,6 +16,7 @@
 #include "sperl_var_info.h"
 #include "sperl_memory_pool.h"
 #include "sperl_use_info.h"
+#include "sperl_word_info.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_names[] = {
@@ -200,7 +201,8 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     SPerl_OP_sibling_splice(parser, op_package, op_block, 0, op_descripters);
   }
   
-  SPerl_char* class_name = op_pkgname->uv.pv;
+  SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
+  
   SPerl_CLASS_INFO* found_class_info = SPerl_HASH_search(
     parser->class_info_symtable,
     class_name,
@@ -336,9 +338,9 @@ SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* o
   }
   
   SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
-  use_info->class_name = op_pkgname->uv.pv;
+  use_info->class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
   if (op_pkgalias) {
-    use_info->alias_name = op_pkgalias->uv.pv;
+    use_info->alias_name = ((SPerl_WORD_INFO*)op_pkgalias->uv.pv)->value;
   }
   op_use->uv.pv = use_info;
   
@@ -358,7 +360,7 @@ SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_
   my_var_info->name = var_info->name;
   
   // type
-  my_var_info->type = op_desctype->first->uv.pv;
+  my_var_info->type = ((SPerl_WORD_INFO*)op_desctype->first->uv.pv)->value;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
@@ -376,10 +378,10 @@ SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* o
   
   // Create field information
   SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new(parser);
-  field_info->name = op_field_name->uv.pv;
+  field_info->name = ((SPerl_WORD_INFO*)op_field_name->uv.pv)->value;
   
   // type
-  field_info->type = op_desctype->first->uv.pv;
+  field_info->type = ((SPerl_WORD_INFO*)op_desctype->first->uv.pv)->value;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
@@ -417,7 +419,7 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
     }
     
     while (op_next) {
-      SPerl_char* descripter = op_next->uv.pv;
+      SPerl_char* descripter = ((SPerl_WORD_INFO*)op_next->uv.pv)->value;
       SPerl_ARRAY_push(descripters, descripter);
       op_next = SPerl_OP_sibling(parser, op_next);
     }
@@ -439,7 +441,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   
   // Create method infomation
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new(parser);
-  method_info->name = op_subname->uv.pv;
+  method_info->name = ((SPerl_WORD_INFO*)op_subname->uv.pv)->value;
   
   // subargs
   // subargs is NULL
@@ -464,7 +466,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   }
   
   // return type
-  method_info->return_type = op_desctype->first->uv.pv;
+  method_info->return_type = ((SPerl_WORD_INFO*)op_desctype->first->uv.pv)->value;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
