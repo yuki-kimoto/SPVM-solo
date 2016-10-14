@@ -405,7 +405,6 @@ SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* o
 SPerl_OP* SPerl_OP_build_CONST(SPerl_PARSER* parser, SPerl_OP* op_const) {
   
   SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op_const->uv.pv;
-  const_info->op = op_const;
   SPerl_ARRAY_push(parser->const_infos, const_info);
   
   return op_const;
