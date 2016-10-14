@@ -108,12 +108,12 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       // Check field type
       SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
       if (
-        !_is_core_type(field_info->type)
-        && !SPerl_HASH_search(class_info_symtable, field_info->type, strlen(field_info->type))
+        !_is_core_type(field_info->type->value)
+        && !SPerl_HASH_search(class_info_symtable, field_info->type->value, strlen(field_info->type->value))
         )
       {
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_info->type));
-        sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", field_info->type, field_info->op->file, field_info->op->line);
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_info->type->value));
+        sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", field_info->type->value, field_info->type->op->file,field_info->type->op->line);
         SPerl_yyerror(parser, message);
       }
       
@@ -245,7 +245,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       // Field
       if (op_cur->type == SPerl_OP_HAS) {
         SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_cur->uv.pv;
-        SPerl_char* field_name = field_info->name;
+        SPerl_char* field_name = field_info->name->value;
         SPerl_CLASS_INFO* found_field_info
           = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
         if (found_field_info) {
@@ -387,10 +387,10 @@ SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* o
   
   // Create field information
   SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new(parser);
-  field_info->name = ((SPerl_WORD_INFO*)op_field_name->uv.pv)->value;
+  field_info->name = op_field_name->uv.pv;
   
   // type
-  field_info->type = ((SPerl_WORD_INFO*)op_desctype->first->uv.pv)->value;
+  field_info->type = op_desctype->first->uv.pv;
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;

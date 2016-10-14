@@ -298,8 +298,8 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
 
 void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_info) {
   if (field_info) {
-    printf("        name => \"%s\"\n", field_info->name);
-    printf("        type => \"%s\"\n", field_info->type);
+    printf("        name => \"%s\"\n", field_info->name->value);
+    printf("        type => \"%s\"\n", field_info->type->value);
     printf("          descripters => ");
     SPerl_ARRAY* descripters = field_info->descripters;
     if (descripters->length) {
