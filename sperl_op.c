@@ -96,7 +96,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   SPerl_ARRAY* class_infos = parser->class_infos;
   SPerl_HASH* class_info_symtable = parser->class_info_symtable;
   
-  // Check field info type
+  // Check field info type and descripter
   SPerl_int i;
   for (i = 0; i < class_infos->length; i++) {
     SPerl_CLASS_INFO* class_info = SPerl_ARRAY_fetch(class_infos, i);
@@ -113,6 +113,12 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", field_info->type, field_info->op->file, field_info->op->line);
         SPerl_yyerror(parser, message);
       }
+      
+      // if (field_info->desc_flags && SPerl_DESCRIPTER_CONST || field_info->desc_flags && SPerl_DESCRIPTER_STATIC) {
+      //   SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_info->type));
+      //   sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n", field_info->type, field_info->op->file, field_info->op->line);
+      //   SPerl_yyerror(parser, message);
+      // }
     }
   }
 }
@@ -205,7 +211,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           
   if (found_class_info) {
     SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(class_name));
-    sprintf(message, "Error: redeclaration of \"package %s\" at %s line %d\n", class_name, op_package->file, op_package->line);
+    sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", class_name, op_package->file, op_package->line);
     SPerl_yyerror(parser, message);
   }
   else {
@@ -234,7 +240,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
         if (found_field_info) {
           SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_name));
-          sprintf(message, "Error: redeclaration of \"has %s\" at %s line %d\n", field_name, op_cur->file, op_cur->line);
+          sprintf(message, "Error: redeclaration of has \"%s\" at %s line %d\n", field_name, op_cur->file, op_cur->line);
           SPerl_yyerror(parser, message);
         }
         else {
@@ -253,7 +259,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         
         if (found_method_info) {
           SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
-          sprintf(message, "Error: redeclaration of \"sub %s\" at %s line %d\n", method_name, op_cur->file, op_cur->line);
+          sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, op_cur->file, op_cur->line);
           SPerl_yyerror(parser, message);
         }
         else {
@@ -401,17 +407,20 @@ SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descrip
   
   SPerl_char desc_flags = 0;
   
-  // descripters
-  // descripters is list of descripter
-  if (op_descripters->type == SPerl_OP_LIST) {
-    SPerl_OP* op_next = op_descripters->first;
-    while (op_next = SPerl_OP_sibling(parser, op_next)) {
-      desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.pv);
+  // descripters is list of descripter or descripter
+  if (op_descripters->type == SPerl_OP_LIST || op_descripters->type == SPerl_OP_WORD) {
+    SPerl_OP* op_next;
+    if (op_descripters->type == SPerl_OP_LIST) {
+      op_next = SPerl_OP_sibling(parser, op_descripters->first);
     }
-  }
-  // descripters is descripter
-  else if (op_descripters->type == SPerl_OP_CONST) {
-    desc_flags |= SPerl_DESCRIPTER_get_flag(op_descripters->uv.pv);
+    else {
+      op_next = op_descripters;
+    }
+    
+    while (op_next) {
+      desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.pv);
+      op_next = SPerl_OP_sibling(parser, op_next);
+    }
   }
   
   return desc_flags;
@@ -517,7 +526,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
       
       if (found) {
         SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var_info->name));
-        sprintf(message, "Error: redeclaration of \"my %s\" at %s line %d\n", my_var_info->name, op_cur->file, op_cur->line);
+        sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var_info->name, op_cur->file, op_cur->line);
         SPerl_yyerror(parser, message);
       }
       else {
