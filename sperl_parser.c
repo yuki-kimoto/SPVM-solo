@@ -260,28 +260,34 @@ void SPerl_PARSER_dump_const_info(SPerl_PARSER* parser, SPerl_CONST_INFO* const_
 
 void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* method_info) {
   if (method_info) {
-    SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
-    SPerl_DESCRIPTER_to_str(desc_str, method_info->desc_flags);
-    
     printf("      name => \"%s\"\n", method_info->name);
     printf("      argument_count => %" PRId32 "\n", method_info->argument_count);
     
-    SPerl_int j;
-    
-    printf("      desc_flags => \"%s\"\n", desc_str);
+    SPerl_int i;
+    printf("      descripters => ");
+    SPerl_ARRAY* descripters = method_info->descripters;
+    if (descripters->length) {
+      SPerl_int i;
+      for (i = 0; i < descripters->length; i++) {
+        SPerl_char* descripter = SPerl_ARRAY_fetch(descripters, i);
+        printf("%s ", descripter);
+      }
+    }
+    else {
+      printf("(None)");
+    }
+    printf("\n");
     printf("      return_type => \"%s\"\n", method_info->return_type);
     printf("      op_block => %x\n", method_info->op_block);
 
     printf("      my_var_infos\n");
     SPerl_ARRAY* my_var_infos = method_info->my_var_infos;
-    for (j = 0; j < my_var_infos->length; j++) {
+    for (i = 0; i < my_var_infos->length; i++) {
       SPerl_MY_VAR_INFO* my_var_info
-        = (SPerl_MY_VAR_INFO*)SPerl_ARRAY_fetch(method_info->my_var_infos, j);
-      printf("        my_var_info[%d]\n", j);
+        = (SPerl_MY_VAR_INFO*)SPerl_ARRAY_fetch(method_info->my_var_infos, i);
+      printf("        my_var_info[%d]\n", i);
       SPerl_PARSER_dump_my_var_info(parser, my_var_info);
     }
-    
-    free(desc_str);
   }
   else {
     printf("      None\n");
@@ -291,14 +297,21 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
 
 void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_info) {
   if (field_info) {
-    SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
-    SPerl_DESCRIPTER_to_str(desc_str, field_info->desc_flags);
-    
     printf("        name => \"%s\"\n", field_info->name);
-    printf("        desc_flags => \"%s\"\n", desc_str);
     printf("        type => \"%s\"\n", field_info->type);
-    
-    free(desc_str);
+    printf("          descripters => ");
+    SPerl_ARRAY* descripters = field_info->descripters;
+    if (descripters->length) {
+      SPerl_int i;
+      for (i = 0; i < descripters->length; i++) {
+        SPerl_char* descripter = SPerl_ARRAY_fetch(descripters, i);
+        printf("%s ", descripter);
+      }
+    }
+    else {
+      printf("(None)");
+    }
+    printf("\n");
   }
   else {
     printf("        None\n");
@@ -307,15 +320,22 @@ void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_
 
 void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_var_info) {
   if (my_var_info) {
-    SPerl_char* desc_str = (SPerl_char*)malloc(sizeof(SPerl_char) * 100);
-    SPerl_DESCRIPTER_to_str(desc_str, my_var_info->desc_flags);
-    
     printf("          name => \"%s\"\n", my_var_info->name);
     printf("          id => %d\n", my_var_info->id);
     printf("          type => \"%s\"\n", my_var_info->type);
-    printf("          desc_flags => \"%s\"\n", desc_str);
-    
-    free(desc_str);
+    printf("          descripters => ");
+    SPerl_ARRAY* descripters = my_var_info->descripters;
+    if (descripters->length) {
+      SPerl_int i;
+      for (i = 0; i < descripters->length; i++) {
+        SPerl_char* descripter = SPerl_ARRAY_fetch(descripters, i);
+        printf("%s ", descripter);
+      }
+    }
+    else {
+      printf("(None)");
+    }
+    printf("\n");
   }
   else {
     printf("          None\n");
