@@ -418,7 +418,16 @@ SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descrip
     }
     
     while (op_next) {
-      desc_flags |= SPerl_DESCRIPTER_get_flag(op_next->uv.pv);
+      SPerl_int desc_flag = SPerl_DESCRIPTER_get_flag(op_next->uv.pv);
+      
+      // Unknown descripter
+      if (!desc_flag) {
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_next->uv.pv));
+        sprintf(message, "Error: unknown descripter \"%s\" at %s line %d\n", op_next->uv.pv, op_next->file, op_next->line);
+        SPerl_yyerror(parser, message);
+      }
+      
+      desc_flags |= desc_flag;
       op_next = SPerl_OP_sibling(parser, op_next);
     }
   }
