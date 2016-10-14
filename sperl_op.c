@@ -279,13 +279,13 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         }
       }
       else if (op_cur->type == SPerl_OP_USE) {
-        SPerl_USE_INFO* use_info = (SPerl_USE_INFO*)op_cur->uv.pv;
+        SPerl_USE_INFO* use_info = op_cur->uv.pv;
         
-        SPerl_char* class_name = use_info->class_name;
+        SPerl_char* class_name = use_info->class_name->value;
         SPerl_ARRAY_push(parser->class_stack, class_name);
         
-        SPerl_char* alias_name = use_info->alias_name;
-        if (alias_name) {
+        if (use_info->alias_name) {
+          SPerl_char* alias_name = use_info->alias_name->value;
           SPerl_HASH_insert(class_info->alias, alias_name, strlen(alias_name), class_info);
         }
       }
@@ -347,9 +347,9 @@ SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* o
   }
   
   SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
-  use_info->class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
+  use_info->class_name = op_pkgname->uv.pv;
   if (op_pkgalias) {
-    use_info->alias_name = ((SPerl_WORD_INFO*)op_pkgalias->uv.pv)->value;
+    use_info->alias_name = op_pkgalias->uv.pv;
   }
   op_use->uv.pv = use_info;
   
