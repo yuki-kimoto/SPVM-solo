@@ -364,6 +364,7 @@ SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
   my_var_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
+  my_var_info->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // Add my_var information to op
   op_my->uv.pv = my_var_info;
@@ -385,6 +386,7 @@ SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* o
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
   field_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
+  field_info->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   op_has->uv.pv = field_info;
   
@@ -435,6 +437,34 @@ SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descrip
   return desc_flags;
 }
 
+SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
+  
+  SPerl_ARRAY* descripters = SPerl_PARSER_new_array(parser, 0);
+  
+  if (!op_descripters) {
+    return descripters;
+  }
+  
+  // descripters is list of descripter or descripter
+  if (op_descripters->type == SPerl_OP_LIST || op_descripters->type == SPerl_OP_WORD) {
+    SPerl_OP* op_next;
+    if (op_descripters->type == SPerl_OP_LIST) {
+      op_next = SPerl_OP_sibling(parser, op_descripters->first);
+    }
+    else {
+      op_next = op_descripters;
+    }
+    
+    while (op_next) {
+      SPerl_char* descripter = op_next->uv.pv;
+      SPerl_ARRAY_push(descripters, descripter);
+      op_next = SPerl_OP_sibling(parser, op_next);
+    }
+  }
+  
+  return descripters;
+}
+
 SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
   
   // Build OP_SUB
@@ -478,6 +508,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
   method_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
+  method_info->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // Save block
   method_info->op_block = op_block;

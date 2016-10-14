@@ -116,6 +116,7 @@ SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* o
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser);
 
 SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descripters);
+SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_descripters);
 
 void SPerl_OP_check(SPerl_PARSER* parser);
 
