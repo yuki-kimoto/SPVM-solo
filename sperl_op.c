@@ -114,16 +114,17 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_yyerror(parser, message);
       }
       
-      /*
+      // Check field descripter
       SPerl_ARRAY* descripters = field_info->descripters;
       SPerl_int k;
       for (k = 0; k < descripters->length; k++) {
-        SPerl_CHAR* descripter = SPerl_ARRAY_fetch(descripters, k);
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter));
-        sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n", , field_info->op->file, field_info->op->line);
-        SPerl_yyerror(parser, message);
+        SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
+        if (strcmp(descripter->value, "const") != 0 && strcmp(descripter->value, "static") != 0) {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
+          sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+          SPerl_yyerror(parser, message);
+        }
       }
-      */
     }
   }
 }
