@@ -453,12 +453,15 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           memcpy(var, cur_token_ptr, str_len);
           var[str_len] = '\0';
           
+          SPerl_WORD_INFO* word_info_var = SPerl_WORD_INFO_new(parser);
+          word_info_var->value = var;
+          
           SPerl_OP* op = _newOP(parser, SPerl_OP_VAR);
           SPerl_VAR_INFO* var_info = SPerl_VAR_INFO_new(parser);
-          var_info->name = var;
+          var_info->name = word_info_var;
           op->uv.pv = var_info;
           yylvalp->opval = (SPerl_OP*)op;
-
+          
           return VAR;
         }
         /* Number literal */

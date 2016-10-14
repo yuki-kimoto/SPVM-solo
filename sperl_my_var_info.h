@@ -4,8 +4,8 @@
 #include "sperl_type.h"
 
 struct SPerl_my_var_info {
-  SPerl_char* type;
-  SPerl_char* name;
+  SPerl_WORD_INFO* type;
+  SPerl_WORD_INFO* name;
   SPerl_int id;
   SPerl_METHOD_INFO* method_info;
   SPerl_ARRAY* descripters;

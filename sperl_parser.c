@@ -147,7 +147,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
   }
   else if (type == SPerl_OP_VAR) {
     SPerl_VAR_INFO* var_info = op->uv.pv;
-    printf(" \"%s\"", var_info->name);
+    printf(" \"%s\"", var_info->name->value);
   }
   else if (type == SPerl_OP_WORD) {
     SPerl_WORD_INFO* word_info = op->uv.pv;
@@ -319,9 +319,9 @@ void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_
 
 void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_var_info) {
   if (my_var_info) {
-    printf("          name => \"%s\"\n", my_var_info->name);
+    printf("          name => \"%s\"\n", my_var_info->name->value);
     printf("          id => %d\n", my_var_info->id);
-    printf("          type => \"%s\"\n", my_var_info->type);
+    printf("          type => \"%s\"\n", my_var_info->type->value);
     printf("          descripters => ");
     SPerl_ARRAY* descripters = my_var_info->descripters;
     if (descripters->length) {
