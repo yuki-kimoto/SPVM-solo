@@ -99,10 +99,13 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   // Check field info type and descripter
   SPerl_int i;
   for (i = 0; i < class_infos->length; i++) {
+    
+    // Check field
     SPerl_CLASS_INFO* class_info = SPerl_ARRAY_fetch(class_infos, i);
     SPerl_ARRAY* field_infos = class_info->field_infos;
     SPerl_int j;
     for (j = 0; j < field_infos->length; j++) {
+      // Check field type
       SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
       if (
         !_is_core_type(field_info->type)
@@ -114,7 +117,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_yyerror(parser, message);
       }
       
-      // Check field descripter
+      // Check field descripters
       SPerl_ARRAY* descripters = field_info->descripters;
       SPerl_int k;
       for (k = 0; k < descripters->length; k++) {
