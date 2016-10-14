@@ -10,7 +10,6 @@
 #include "sperl_class_info.h"
 #include "sperl_const_info.h"
 #include "sperl_my_var_info.h"
-#include "sperl_descripter.h"
 #include "sperl_field_info.h"
 #include "sperl_memory_pool.h"
 #include "sperl_op.h"

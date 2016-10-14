@@ -6,7 +6,6 @@
 // Field information
 struct SPerl_field_info {
   SPerl_char* type;
-  SPerl_char desc_flags;
   SPerl_char* name;
   SPerl_CLASS_INFO* class_info;
   SPerl_OP* op;

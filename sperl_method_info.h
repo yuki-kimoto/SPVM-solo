@@ -6,7 +6,6 @@
 // Method information
 struct SPerl_method_info {
   SPerl_char* name;
-  SPerl_char desc_flags;
   SPerl_char* return_type;
   SPerl_int argument_count;
   SPerl_ARRAY* my_var_infos;

@@ -8,7 +8,6 @@
 #include "sperl_parser.h"
 #include "sperl_op.h"
 #include "sperl_method_info.h"
-#include "sperl_descripter.h"
 #include "sperl_class_info.h"
 #include "sperl_parser.h"
 #include "sperl_const_info.h"
@@ -114,7 +113,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_yyerror(parser, message);
       }
       
-      // if (field_info->desc_flags && SPerl_DESCRIPTER_CONST || field_info->desc_flags && SPerl_DESCRIPTER_STATIC) {
+      // if (field_info->desc_flag && SPerl_DESCRIPTER_CONST || field_info->desc_flags && SPerl_DESCRIPTER_STATIC) {
       //   SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_info->type));
       //   sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n", field_info->type, field_info->op->file, field_info->op->line);
       //   SPerl_yyerror(parser, message);
@@ -363,7 +362,6 @@ SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
-  my_var_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   my_var_info->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // Add my_var information to op
@@ -385,7 +383,6 @@ SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* o
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
-  field_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   field_info->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   op_has->uv.pv = field_info;
@@ -399,42 +396,6 @@ SPerl_OP* SPerl_OP_build_CONST(SPerl_PARSER* parser, SPerl_OP* op_const) {
   SPerl_ARRAY_push(parser->const_infos, const_info);
   
   return op_const;
-}
-
-SPerl_char SPerl_OP_create_desc_flags(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
-  
-  if (!op_descripters) {
-    return 0;
-  }
-  
-  SPerl_char desc_flags = 0;
-  
-  // descripters is list of descripter or descripter
-  if (op_descripters->type == SPerl_OP_LIST || op_descripters->type == SPerl_OP_WORD) {
-    SPerl_OP* op_next;
-    if (op_descripters->type == SPerl_OP_LIST) {
-      op_next = SPerl_OP_sibling(parser, op_descripters->first);
-    }
-    else {
-      op_next = op_descripters;
-    }
-    
-    while (op_next) {
-      SPerl_int desc_flag = SPerl_DESCRIPTER_get_flag(op_next->uv.pv);
-      
-      // Unknown descripter
-      if (!desc_flag) {
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_next->uv.pv));
-        sprintf(message, "Error: unknown descripter \"%s\" at %s line %d\n", op_next->uv.pv, op_next->file, op_next->line);
-        SPerl_yyerror(parser, message);
-      }
-      
-      desc_flags |= desc_flag;
-      op_next = SPerl_OP_sibling(parser, op_next);
-    }
-  }
-  
-  return desc_flags;
 }
 
 SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
@@ -507,7 +468,6 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   
   // descripters
   SPerl_OP* op_descripters = op_desctype->last;
-  method_info->desc_flags |= SPerl_OP_create_desc_flags(parser, op_descripters);
   method_info->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // Save block
