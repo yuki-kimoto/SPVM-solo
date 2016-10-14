@@ -25,6 +25,7 @@ struct SPerl_const_info {
     SPerl_char* string_value;
   } uv;
   SPerl_int pool_pos;
+  SPerl_OP* op;
 };
 
 SPerl_CONST_INFO* SPerl_CONST_INFO_new(SPerl_PARSER* parser);
