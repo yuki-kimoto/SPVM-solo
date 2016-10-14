@@ -114,11 +114,16 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_yyerror(parser, message);
       }
       
-      // if (field_info->desc_flag && SPerl_DESCRIPTER_CONST || field_info->desc_flags && SPerl_DESCRIPTER_STATIC) {
-      //   SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_info->type));
-      //   sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n", field_info->type, field_info->op->file, field_info->op->line);
-      //   SPerl_yyerror(parser, message);
-      // }
+      /*
+      SPerl_ARRAY* descripters = field_info->descripters;
+      SPerl_int k;
+      for (k = 0; k < descripters->length; k++) {
+        SPerl_CHAR* descripter = SPerl_ARRAY_fetch(descripters, k);
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter));
+        sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n", , field_info->op->file, field_info->op->line);
+        SPerl_yyerror(parser, message);
+      }
+      */
     }
   }
 }
@@ -419,8 +424,7 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
     }
     
     while (op_next) {
-      SPerl_char* descripter = ((SPerl_WORD_INFO*)op_next->uv.pv)->value;
-      SPerl_ARRAY_push(descripters, descripter);
+      SPerl_ARRAY_push(descripters, op_next->uv.pv);
       op_next = SPerl_OP_sibling(parser, op_next);
     }
   }
