@@ -97,14 +97,16 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   SPerl_HASH* class_info_symtable = parser->class_info_symtable;
   
   // Check field info type and descripter
-  SPerl_int i;
-  for (i = 0; i < class_infos->length; i++) {
+  for (SPerl_int i = 0; i < class_infos->length; i++) {
+    
+    SPerl_CLASS_INFO* class_info = SPerl_ARRAY_fetch(class_infos, i);
+    
+    // Check descripter
+    SPerl_ARRAY* descripters = class_info->descripters;
     
     // Check field
-    SPerl_CLASS_INFO* class_info = SPerl_ARRAY_fetch(class_infos, i);
     SPerl_ARRAY* field_infos = class_info->field_infos;
-    SPerl_int j;
-    for (j = 0; j < field_infos->length; j++) {
+    for (SPerl_int j = 0; j < field_infos->length; j++) {
       // Check field type
       SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
       if (
@@ -119,8 +121,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       
       // Check field descripters
       SPerl_ARRAY* descripters = field_info->descripters;
-      SPerl_int k;
-      for (k = 0; k < descripters->length; k++) {
+      for (SPerl_int k = 0; k < descripters->length; k++) {
         SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
         if (strcmp(descripter->value, "const") != 0 && strcmp(descripter->value, "static") != 0) {
           SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
@@ -131,7 +132,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     }
     
     SPerl_ARRAY* method_infos = class_info->method_infos;
-    for (j = 0; j < method_infos->length; j++) {
+    for (SPerl_int j = 0; j < method_infos->length; j++) {
       // Check method type
       SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
       if (
@@ -147,7 +148,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       // Check method descripters
       SPerl_ARRAY* descripters = method_info->descripters;
       SPerl_int k;
-      for (k = 0; k < descripters->length; k++) {
+      for (SPerl_int k = 0; k < descripters->length; k++) {
         SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
         if (strcmp(descripter->value, "const") != 0 && strcmp(descripter->value, "static") != 0) {
           SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
@@ -158,7 +159,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       
       // Check my var information
       SPerl_ARRAY* my_var_infos = method_info->my_var_infos;
-      for (k = 0; k < my_var_infos->length; k++) {
+      for (SPerl_int k = 0; k < my_var_infos->length; k++) {
         SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(my_var_infos, k);
 
         if (
@@ -173,8 +174,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         
         // Check my_var descripters
         SPerl_ARRAY* descripters = my_var_info->descripters;
-        SPerl_int l;
-        for (l = 0; l < descripters->length; l++) {
+        for (SPerl_int l = 0; l < descripters->length; l++) {
           SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, l);
           if (strcmp(descripter->value, "const") != 0 && strcmp(descripter->value, "static") != 0) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
@@ -194,8 +194,7 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   SPerl_ARRAY* const_infos = parser->const_infos;
   
   // Create constant pool
-  SPerl_int i;
-  for (i = 0; i < const_infos->length; i++) {
+  for (SPerl_int i = 0; i < const_infos->length; i++) {
     SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, i);
     
     const_info->pool_pos = parser->const_pool_pos;
@@ -581,9 +580,8 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
       
       // Serach same name variable
       SPerl_int found = 0;
-      SPerl_int i;
       
-      for (i = my_var_stack->length - 1 ; i >= block_base; i--) {
+      for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
         SPerl_MY_VAR_INFO* bef_my_var_info = SPerl_ARRAY_fetch(my_var_stack, i);
         if (strcmp(my_var_info->name->value, bef_my_var_info->name->value) == 0) {
           found = 1;
@@ -609,9 +607,8 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
       SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_cur->uv.pv;
       
       // Serach same name variable
-      SPerl_int i;
       SPerl_MY_VAR_INFO* my_var_info = NULL;
-      for (i = my_var_stack->length - 1 ; i >= 0; i--) {
+      for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
         SPerl_MY_VAR_INFO* my_var_info_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
         if (strcmp(var_info->name->value, my_var_info_tmp->name->value) == 0) {
           my_var_info = my_var_info_tmp;
@@ -654,8 +651,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
               SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
               if (block_base_ptr) {
                 SPerl_int block_base = *block_base_ptr;
-                SPerl_int j;
-                for (j = 0; j < my_var_stack->length - block_base; j++) {
+                for (SPerl_int j = 0; j < my_var_stack->length - block_base; j++) {
                   SPerl_ARRAY_pop(my_var_stack);
                 }
               }

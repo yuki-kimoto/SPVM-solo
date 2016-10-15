@@ -71,24 +71,22 @@ SPerl_PARSER* SPerl_PARSER_new() {
 
 void SPerl_PARSER_free(SPerl_PARSER* parser) {
 
-  SPerl_int i;
-  
   // Free all array pointers
-  for (i = 0; i < parser->array_ptrs->length; i++) {
+  for (SPerl_int i = 0; i < parser->array_ptrs->length; i++) {
     SPerl_ARRAY* array = SPerl_ARRAY_fetch(parser->array_ptrs, i);
     SPerl_ARRAY_free(array);
   }
   SPerl_ARRAY_free(parser->array_ptrs);
   
   // Free all hash pointers
-  for (i = 0; i < parser->hash_ptrs->length; i++) {
+  for (SPerl_int i = 0; i < parser->hash_ptrs->length; i++) {
     SPerl_HASH* hash = SPerl_ARRAY_fetch(parser->hash_ptrs, i);
     SPerl_HASH_free(hash);
   }
   SPerl_ARRAY_free(parser->hash_ptrs);
   
   // Free all string pointers;
-  for (i = 0; i < parser->long_str_ptrs->length; i++) {
+  for (SPerl_int i = 0; i < parser->long_str_ptrs->length; i++) {
     SPerl_char* str = SPerl_ARRAY_fetch(parser->long_str_ptrs, i);
     free(str);
   }
@@ -107,8 +105,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
     return;
   }
   
-  SPerl_int i;
-  for (i = 0; i < depth; i++) {
+  for (SPerl_int i = 0; i < depth; i++) {
     printf(" ");
   }
   SPerl_int type = op->type;
@@ -181,8 +178,7 @@ void SPerl_PARSER_dump_parser_info(SPerl_PARSER* parser) {
 }
 
 void SPerl_PARSER_dump_const_infos(SPerl_PARSER* parser, SPerl_ARRAY* const_infos) {
-  SPerl_int i;
-  for (i = 0; i < const_infos->length; i++) {
+  for (SPerl_int i = 0; i < const_infos->length; i++) {
     SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)SPerl_ARRAY_fetch(const_infos, i);
     printf("    const_info[%" PRId32 "]\n", i);
     SPerl_PARSER_dump_const_info(parser, const_info);
@@ -190,9 +186,7 @@ void SPerl_PARSER_dump_const_infos(SPerl_PARSER* parser, SPerl_ARRAY* const_info
 }
 
 void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_infos) {
-  SPerl_int i;
-
-  for (i = 0; i < class_infos->length; i++) {
+  for (SPerl_int i = 0; i < class_infos->length; i++) {
     SPerl_CLASS_INFO* class_info = (SPerl_CLASS_INFO*)SPerl_ARRAY_fetch(class_infos, i);
     
     printf("class_info[%d]\n", i);
@@ -200,10 +194,9 @@ void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_info
     printf("  op_block => %x\n", class_info->op_block);
     
     // Dump method informations
-    SPerl_int j;
     printf("  field_infos\n");
     SPerl_ARRAY* field_infos = class_info->field_infos;
-    for (j = 0; j < field_infos->length; j++) {
+    for (SPerl_int j = 0; j < field_infos->length; j++) {
       SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
       printf("    field_info[%" PRId32 "]\n", j);
       SPerl_PARSER_dump_field_info(parser, field_info);
@@ -211,7 +204,7 @@ void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_info
     
     printf("  method_infos\n");
     SPerl_ARRAY* method_infos = class_info->method_infos;
-    for (j = 0; j < method_infos->length; j++) {
+    for (SPerl_int j = 0; j < method_infos->length; j++) {
       SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
       printf("    method_info[%" PRId32 "]\n", j);
       SPerl_PARSER_dump_method_info(parser, method_info);
@@ -220,8 +213,7 @@ void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_info
 }
 
 void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, SPerl_int const_pool_pos) {
-  SPerl_int i;
-  for (i = 0; i < const_pool_pos; i++) {
+  for (SPerl_int i = 0; i < const_pool_pos; i++) {
     printf("const_pool[%d] %d\n", i, const_pool[i]);
   }
 }
@@ -267,8 +259,7 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
     printf("      descripters => ");
     SPerl_ARRAY* descripters = method_info->descripters;
     if (descripters->length) {
-      SPerl_int i;
-      for (i = 0; i < descripters->length; i++) {
+      for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, i);
         printf("%s ", descripter->value);
       }
@@ -280,7 +271,7 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
     printf("      argument_count => %" PRId32 "\n", method_info->argument_count);
     printf("      my_var_infos\n");
     SPerl_ARRAY* my_var_infos = method_info->my_var_infos;
-    for (i = 0; i < my_var_infos->length; i++) {
+    for (SPerl_int i = 0; i < my_var_infos->length; i++) {
       SPerl_MY_VAR_INFO* my_var_info
         = (SPerl_MY_VAR_INFO*)SPerl_ARRAY_fetch(method_info->my_var_infos, i);
       printf("        my_var_info[%d]\n", i);
@@ -301,8 +292,7 @@ void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_
     printf("          descripters => ");
     SPerl_ARRAY* descripters = field_info->descripters;
     if (descripters->length) {
-      SPerl_int i;
-      for (i = 0; i < descripters->length; i++) {
+      for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, i);
         printf("%s ", descripter->value);
       }
@@ -325,8 +315,7 @@ void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_v
     printf("          descripters => ");
     SPerl_ARRAY* descripters = my_var_info->descripters;
     if (descripters->length) {
-      SPerl_int i;
-      for (i = 0; i < descripters->length; i++) {
+      for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, i);
         printf("%s ", descripter->value);
       }
