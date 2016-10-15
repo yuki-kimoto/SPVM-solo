@@ -137,7 +137,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       SPerl_ARRAY* descripters = field_info->descripters;
       for (SPerl_int k = 0; k < descripters->length; k++) {
         SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
-        if (strcmp(descripter->value, "const") != 0 && strcmp(descripter->value, "static") != 0) {
+        if (strcmp(descripter->value, "const") != 0) {
           SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
           sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
           SPerl_yyerror(parser, message);
@@ -164,7 +164,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       SPerl_int k;
       for (SPerl_int k = 0; k < descripters->length; k++) {
         SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
-        if (strcmp(descripter->value, "const") != 0 && strcmp(descripter->value, "static") != 0) {
+        if (strcmp(descripter->value, "static") != 0) {
           SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
           sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
           SPerl_yyerror(parser, message);
@@ -190,7 +190,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_ARRAY* descripters = my_var_info->descripters;
         for (SPerl_int l = 0; l < descripters->length; l++) {
           SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, l);
-          if (strcmp(descripter->value, "const") != 0 && strcmp(descripter->value, "static") != 0) {
+          if (strcmp(descripter->value, "const") != 0) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
             sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
