@@ -77,7 +77,10 @@ SPerl_char* const SPerl_OP_names[] = {
   "elsif",
   "else",
   "for",
-  "while"
+  "while",
+  "enum",
+  "enumblock",
+  "enumvalue"
 };
 
 static SPerl_boolean _is_core_type (SPerl_char* type_name) {

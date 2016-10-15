@@ -63,6 +63,9 @@ enum SPerl_OP_CODE {
   SPerl_OP_ELSE,
   SPerl_OP_FOR,
   SPerl_OP_WHILE,
+  SPerl_OP_ENUM,
+  SPerl_OP_ENUMBLOCK,
+  SPerl_OP_ENUMVALUE
 };
 
 extern SPerl_char* const SPerl_OP_names[];

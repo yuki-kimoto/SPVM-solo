@@ -1,3 +1,8 @@
+package Bar : enum {
+  ONE,
+  TWO = 4
+}
+
 package Point {
   use Class1;
   sub get1 ($var1 : Class1, $var2 : int) : int {
@@ -38,10 +43,6 @@ package Point {
 
 package Foo : interface {
   
-}
-
-package Bar : enum {
-
 }
 
 package Foo::Point3D {

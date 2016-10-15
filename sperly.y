@@ -97,11 +97,11 @@
 
 %token <opval> '+' '-'
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <opval> LAST NEXT WORD VAR CONST
+%token <opval> LAST NEXT WORD VAR CONST ENUM
 
-%type <opval> grammar statements statement declmy declhas if else block
+%type <opval> grammar statements statement declmy declhas if else block enumblock
 %type <opval> optterms terms term subargs subarg optsubargs
-%type <opval> desctype descripters descripter
+%type <opval> desctype descripters descripter enumvalues enumvalue
 %type <opval> type pkgname fieldname subname package packages pkgalias
 
 %right <opval> ASSIGNOP
@@ -157,7 +157,38 @@ package
     {
       $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
     }
+  | PACKAGE pkgname ':' ENUM enumblock
+    {
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
+    }
 
+enumblock 
+  : '{' '}'
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_ENUMBLOCK, NULL, NULL);
+    }
+  | '{' enumvalues '}'
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_ENUMBLOCK, $2, NULL);
+    }
+
+enumvalues
+  : enumvalues ',' enumvalue 
+    {
+      $$ = SPerl_OP_append_elem(parser, $1, $3);
+    }
+  | enumvalue
+  
+enumvalue
+  : WORD
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_ENUMVALUE, $1, NULL);
+    }
+  | WORD ASSIGNOP CONST
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_ENUMVALUE, $1, $3);
+    }
+  
 statements
   : statements statement 
     {
