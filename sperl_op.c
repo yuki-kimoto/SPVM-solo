@@ -129,6 +129,34 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         }
       }
     }
+    
+    SPerl_ARRAY* method_infos = class_info->method_infos;
+    for (j = 0; j < method_infos->length; j++) {
+      // Check method type
+      SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
+      if (
+        !_is_core_type(method_info->return_type->value)
+        && !SPerl_HASH_search(class_info_symtable, method_info->return_type->value, strlen(method_info->return_type->value))
+        )
+      {
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_info->return_type->value));
+        sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", method_info->return_type->value, method_info->return_type->op->file,method_info->return_type->op->line);
+        SPerl_yyerror(parser, message);
+      }
+      
+      // Check method descripters
+      SPerl_ARRAY* descripters = method_info->descripters;
+      SPerl_int k;
+      for (k = 0; k < descripters->length; k++) {
+        SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
+        if (strcmp(descripter->value, "const") != 0 && strcmp(descripter->value, "static") != 0) {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
+          sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+          SPerl_yyerror(parser, message);
+        }
+      }
+    }
+    
   }
 }
 
