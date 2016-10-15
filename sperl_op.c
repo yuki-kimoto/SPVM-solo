@@ -155,6 +155,34 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
           SPerl_yyerror(parser, message);
         }
       }
+      
+      // Check my var information
+      SPerl_ARRAY* my_var_infos = method_info->my_var_infos;
+      for (k = 0; k < my_var_infos->length; k++) {
+        SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(my_var_infos, k);
+
+        if (
+          !_is_core_type(my_var_info->type->value)
+          && !SPerl_HASH_search(class_info_symtable, my_var_info->type->value, strlen(my_var_info->type->value))
+          )
+        {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var_info->type->value));
+          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", my_var_info->type->value, my_var_info->type->op->file,my_var_info->type->op->line);
+          SPerl_yyerror(parser, message);
+        }
+        
+        // Check my_var descripters
+        SPerl_ARRAY* descripters = my_var_info->descripters;
+        SPerl_int l;
+        for (l = 0; l < descripters->length; l++) {
+          SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, l);
+          if (strcmp(descripter->value, "const") != 0 && strcmp(descripter->value, "static") != 0) {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
+            sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+            SPerl_yyerror(parser, message);
+          }
+        }
+      }
     }
     
   }
