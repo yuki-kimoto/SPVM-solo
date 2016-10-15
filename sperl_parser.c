@@ -191,6 +191,18 @@ void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_info
     
     printf("class_info[%d]\n", i);
     printf("  name => \"%s\"\n", class_info->name->value);
+    printf("  descripters => ");
+    SPerl_ARRAY* descripters = class_info->descripters;
+    if (descripters->length) {
+      for (SPerl_int i = 0; i < descripters->length; i++) {
+        SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, i);
+        printf("%s ", descripter->value);
+      }
+    }
+    else {
+      printf("(None)");
+    }
+    printf("\n");
     printf("  op_block => %x\n", class_info->op_block);
     
     // Dump method informations

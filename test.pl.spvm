@@ -36,6 +36,14 @@ package Point {
   sub get9 ($foo : static const int, $bar : static const int) : int {}
 }
 
+package Foo : interface {
+  
+}
+
+package Bar : enum {
+
+}
+
 package Foo::Point3D {
 
   use Point -pt;
