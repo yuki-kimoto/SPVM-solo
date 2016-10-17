@@ -17,6 +17,7 @@
 #include "sperl_memory_pool.h"
 #include "sperl_use_info.h"
 #include "sperl_word_info.h"
+#include "sperl_enum_value_info.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_names[] = {
@@ -415,8 +416,30 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     }
     // Enum
     else if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
-      // Search field and methods
-      SPerl_ARRAY* enum_infos = SPerl_PARSER_new_array(parser, 0);;
+      // Values
+      SPerl_ARRAY* enum_value_infos = SPerl_PARSER_new_array(parser, 0);
+      
+      SPerl_OP* op_enumvalues = op_block->first;
+      if (op_enumvalues) {
+        if (op_enumvalues->type == SPerl_OP_LIST) {
+          SPerl_OP* op_enumvalue = op_enumvalues->first;
+          while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
+            SPerl_ENUM_VALUE_INFO* enum_value_info = SPerl_ENUM_VALUE_INFO_new(parser);
+            enum_value_info->name = op_enumvalue->first->uv.pv;
+            enum_value_info->value = op_enumvalue->last->uv.pv;
+            SPerl_ARRAY_push(enum_value_infos, enum_value_info);
+          }
+        }
+        else {
+          SPerl_OP* op_enumvalue = op_enumvalues;
+          SPerl_ENUM_VALUE_INFO* enum_value_info = SPerl_ENUM_VALUE_INFO_new(parser);
+          enum_value_info->name = op_enumvalue->first->uv.pv;
+          enum_value_info->value = op_enumvalue->last->uv.pv;
+          SPerl_ARRAY_push(enum_value_infos, enum_value_info);
+        }
+      }
+      
+      class_info->enum_value_infos = enum_value_infos;
     }
     
     // Add class information
