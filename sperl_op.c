@@ -489,7 +489,12 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
   }
   
   // descripters is list of descripter or descripter
-  if (op_descripters->type == SPerl_OP_LIST || op_descripters->type == SPerl_OP_WORD) {
+  if (op_descripters->type == SPerl_OP_ENUM) {
+    SPerl_WORD_INFO* word_info = SPerl_WORD_INFO_new(parser);
+    word_info->value = "enum";
+    SPerl_ARRAY_push(descripters, word_info);
+  }
+  else if (op_descripters->type == SPerl_OP_LIST || op_descripters->type == SPerl_OP_WORD) {
     SPerl_OP* op_next;
     if (op_descripters->type == SPerl_OP_LIST) {
       op_next = SPerl_OP_sibling(parser, op_descripters->first);
