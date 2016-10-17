@@ -300,7 +300,7 @@ declmy
 declanonsub
  : SUB '(' optsubargs ')' ':' desctype block
      {
-       $$ = SPerl_OP_build_SUB(parser, NULL, $1, $3, $6, $7);
+       $$ = SPerl_OP_build_SUB(parser, $1, NULL, $3, $6, $7);
      }
 
 declusehassubs

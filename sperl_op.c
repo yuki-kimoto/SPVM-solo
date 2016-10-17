@@ -577,6 +577,9 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
 SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
   
   // Build OP_SUB
+  if (!op_subname) {
+    op_subname = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
+  }
   if (!op_optsubargs) {
     op_optsubargs = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
   }
