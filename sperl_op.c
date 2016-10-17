@@ -286,7 +286,6 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     class_name,
     strlen(class_name)
   );
-  
           
   if (found_class_info) {
     SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(class_name));
