@@ -1,6 +1,15 @@
-package Bar : enum {
+package EnumA : enum {
   ONE,
-  TWO = 4
+  TWO,
+  THREE = 4,
+  FORE
+}
+
+package EnumB : enum {
+  ONE = 5
+}
+
+package EnumC : enum {
 }
 
 package Point {

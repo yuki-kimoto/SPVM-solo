@@ -212,6 +212,7 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   
   // Create constant pool
   for (SPerl_int i = 0; i < const_infos->length; i++) {
+    
     SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, i);
     
     const_info->pool_pos = parser->const_pool_pos;
@@ -415,7 +416,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       class_info->method_info_symtable = method_info_symtable;
     }
     // Enum
-    else if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
+    else if (class_info->type == SPerl_CLASS_INFO_TYPE_ENUM) {
       // Values
       SPerl_ARRAY* enum_value_infos = SPerl_PARSER_new_array(parser, 0);
       
@@ -424,6 +425,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       
       SPerl_OP* op_enumvalues = op_block->first;
       SPerl_OP* op_enumvalue;
+      
       if (op_enumvalues) {
         if (op_enumvalues->type == SPerl_OP_LIST) {
           op_enumvalue = SPerl_OP_sibling(parser, op_enumvalues->first);
@@ -435,7 +437,9 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         while (op_enumvalue) {
           SPerl_ENUM_VALUE_INFO* enum_value_info = SPerl_ENUM_VALUE_INFO_new(parser);
           enum_value_info->name = op_enumvalue->first->uv.pv;
-          enum_value_info->value = op_enumvalue->last->uv.pv;
+          if (op_enumvalue->last) {
+            enum_value_info->value = op_enumvalue->last->uv.pv;
+          }
           
           SPerl_CONST_INFO* const_info;
           if (enum_value_info->value) {
@@ -529,7 +533,7 @@ SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* o
 }
 
 SPerl_OP* SPerl_OP_build_CONST(SPerl_PARSER* parser, SPerl_OP* op_const) {
-  
+
   SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)op_const->uv.pv;
   SPerl_ARRAY_push(parser->const_infos, const_info);
   
