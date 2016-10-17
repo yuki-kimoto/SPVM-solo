@@ -81,7 +81,8 @@ SPerl_char* const SPerl_OP_names[] = {
   "while",
   "enum",
   "enumblock",
-  "enumvalue"
+  "enumvalue",
+  "classblock"
 };
 
 static SPerl_boolean _is_core_type (SPerl_char* type_name) {
