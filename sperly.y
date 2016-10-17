@@ -99,7 +99,7 @@
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <opval> LAST NEXT WORD VAR CONST ENUM
 
-%type <opval> grammar statements statement declmy declhas if else block enumblock classblock declsub
+%type <opval> grammar statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse
 %type <opval> desctype descripters descripter enumvalues enumvalue
 %type <opval> type pkgname fieldname subname package packages pkgalias
@@ -226,7 +226,7 @@ statement
     {
       $$ = (SPerl_OP*)NULL;
     }
-  | if
+  | ifstatement
   | LAST ';'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_LAST, NULL, NULL);
@@ -242,8 +242,8 @@ statement
   | decluse
   | block
 
-if
-  : IF '(' term ')' block else
+ifstatement
+  : IF '(' term ')' block elsestatement
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_COND, $3, $5);
       if ($6) {
@@ -252,7 +252,7 @@ if
       $$ = op;
     }
 
-else
+elsestatement
   : /* NULL */
     {
       $$ = (SPerl_OP*)0;
@@ -261,7 +261,7 @@ else
     {
       $$ = $2;
     }
-  | ELSIF '(' term ')' block else
+  | ELSIF '(' term ')' block elsestatement
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_COND, $3, $5);
       if ($6) {
