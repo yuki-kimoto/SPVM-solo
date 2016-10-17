@@ -14,6 +14,7 @@
   #include "sperl_var_info.h"
   #include "sperl_my_var_info.h"
   #include "sperl_const_info.h"
+  #include "sperl_word_info.h"
 
   /* Function for error */
   void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
@@ -51,7 +52,7 @@
     
     switch(type) {
       case WORD:
-        fprintf(file, "\"%s\"", ((SPerl_OP*)yylval.opval)->uv.pv);
+        fprintf(file, "\"%s\"", ((SPerl_WORD_INFO*)yylval.opval->uv.pv)->value);
         break;
       case VAR: {
         SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)((SPerl_OP*)yylval.opval)->uv.pv;
@@ -100,7 +101,7 @@
 %token <opval> LAST NEXT WORD VAR CONST ENUM
 
 %type <opval> grammar statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
-%type <opval> optterms terms term subargs subarg optsubargs decluse
+%type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs
 %type <opval> desctype descripters descripter enumvalues enumvalue
 %type <opval> type pkgname fieldname subname package packages pkgalias
 
@@ -197,8 +198,7 @@ statements
   | statement
 
 statement
-  : declsub
-  | FOR '(' term ';' term ';' term ')' block
+  : FOR '(' term ';' term ';' term ')' block
     {
       SPerl_OP* op = SPerl_OP_newOP(
         parser,
@@ -239,7 +239,6 @@ statement
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_RETURN, $2, NULL);
     }
-  | decluse
   | block
 
 ifstatement
@@ -281,7 +280,7 @@ decluse
     }
 
 declhas
-  : HAS fieldname ':' desctype
+  : HAS fieldname ':' desctype ';'
     {
       $$ = SPerl_OP_build_HAS(parser, $1, $2, $4);
     }
@@ -296,6 +295,28 @@ declmy
   : MY VAR ':' desctype
     {
       $$ = SPerl_OP_build_MY(parser, $1, $2, $4);
+    }
+
+declusehassubs
+  : declusehassubs declusehassub
+    {
+      $$ = SPerl_OP_append_elem(parser, $1, $2);
+    }
+  | declusehassub
+
+declusehassub
+  : decluse
+  | declhas
+  | declsub
+
+classblock
+  : '{' '}'
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_CLASSBLOCK, NULL, NULL);
+    }
+  | '{' declusehassubs '}'
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_CLASSBLOCK, $2, NULL);
     }
 
 optterms
@@ -463,8 +484,6 @@ term
     }
   | declmy
   | declhas
-
-classblock : block;
 
 block 
   : '{' '}'
