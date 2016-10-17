@@ -102,7 +102,7 @@
 
 %type <opval> grammar statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs
-%type <opval> desctype descripters descripter enumvalues enumvalue
+%type <opval> desctype descripters descripter enumvalues enumvalue declanonsub
 %type <opval> type pkgname fieldname subname package packages pkgalias
 
 %right <opval> ASSIGNOP
@@ -297,6 +297,12 @@ declmy
       $$ = SPerl_OP_build_MY(parser, $1, $2, $4);
     }
 
+declanonsub
+ : SUB '(' optsubargs ')' ':' desctype block
+     {
+       $$ = SPerl_OP_build_SUB(parser, NULL, $1, $3, $6, $7);
+     }
+
 declusehassubs
   : declusehassubs declusehassub
     {
@@ -483,7 +489,7 @@ term
       );
     }
   | declmy
-  | declhas
+  | declanonsub
 
 block 
   : '{' '}'
