@@ -1,4 +1,64 @@
+package EnumA : enum {
+  ONE,
+  TWO,
+  THREE = 4,
+  FORE
+}
+
+package EnumB : enum {
+  ONE = 5
+}
+
+package EnumC : enum {
+}
+
+package Point {
+  use Class1;
+  sub get1 ($var1 : Class1, $var2 : int) : int {
+    my $var3 : int;
+    my $var4 : int;
+
+    {
+      my $var3 : int;
+      my $var4 : int;
+    }
+    
+    {
+      my $var3 : int;
+      my $var4 : int;
+    }
+    
+    $var3 = 3;
+    $var3 = 4;
+    
+    $var4 = 6;
+  }
+  
+  sub get2 () : static long {
+    1;
+    my $var1 : int;
+    my $var2 : int;
+  }
+
+  sub get3 () : int {}
+  sub get4 ($foo : int) : int {}
+  sub get5 ($foo : const int) : int {}
+  sub get6 ($foo : const int) : int {}
+
+  sub get7 ($foo : int, $bar : int) : int {}
+  sub get8 ($foo : const int, $bar : const int) : int {}
+  sub get9 ($foo : const int, $bar : const int) : int {}
+}
+
+package Foo : interface {
+  
+}
+
 package Foo::Point3D {
+
+  use Point -pt;
+
+  use Point;
 
   has x : int;
   has last : int;
