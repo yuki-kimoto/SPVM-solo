@@ -63,6 +63,9 @@ typedef struct SPerl_method_info SPerl_METHOD_INFO;
 struct SPerl_class_info;
 typedef struct SPerl_class_info SPerl_CLASS_INFO;
 
+enum SPerl_class_info_type;
+typedef enum SPerl_class_info_type SPerl_CLASS_INFO_TYPE;
+
 /* sperl_array.h */
 struct SPerl_array;
 typedef struct SPerl_array SPerl_ARRAY;

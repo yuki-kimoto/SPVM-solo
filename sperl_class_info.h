@@ -6,8 +6,16 @@
 
 #include "sperl_type.h"
 
+enum SPerl_class_info_type {
+  NORMAL,
+  VALUE,
+  INTERFACE,
+  ENUM
+};
+
 // Class information
 struct SPerl_class_info {
+  SPerl_char type;
   SPerl_WORD_INFO* name;
   SPerl_ARRAY* descripters;
   SPerl_ARRAY* field_infos;
