@@ -100,7 +100,7 @@
 %token <opval> LAST NEXT WORD VAR CONST ENUM
 
 %type <opval> grammar statements statement declmy declhas if else block enumblock classblock declsub
-%type <opval> optterms terms term subargs subarg optsubargs
+%type <opval> optterms terms term subargs subarg optsubargs decluse
 %type <opval> desctype descripters descripter enumvalues enumvalue
 %type <opval> type pkgname fieldname subname package packages pkgalias
 
@@ -239,14 +239,7 @@ statement
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_RETURN, $2, NULL);
     }
-  | USE pkgname ';'
-    {
-      $$ = SPerl_OP_build_USE(parser, $1, $2, NULL);
-    }
-  | USE pkgname '-' pkgalias';'
-    {
-      $$ = SPerl_OP_build_USE(parser, $1, $2, $4);
-    }
+  | decluse
   | block
 
 if
@@ -277,16 +270,32 @@ else
       $$ = op;
     }
 
-declmy
-  : MY VAR ':' desctype
+decluse
+  : USE pkgname ';'
     {
-      $$ = SPerl_OP_build_MY(parser, $1, $2, $4);
+      $$ = SPerl_OP_build_USE(parser, $1, $2, NULL);
+    }
+  | USE pkgname '-' pkgalias';'
+    {
+      $$ = SPerl_OP_build_USE(parser, $1, $2, $4);
     }
 
 declhas
   : HAS fieldname ':' desctype
     {
       $$ = SPerl_OP_build_HAS(parser, $1, $2, $4);
+    }
+
+declsub
+ : SUB subname '(' optsubargs ')' ':' desctype block
+     {
+       $$ = SPerl_OP_build_SUB(parser, $1, $2, $4, $7, $8);
+     }
+
+declmy
+  : MY VAR ':' desctype
+    {
+      $$ = SPerl_OP_build_MY(parser, $1, $2, $4);
     }
 
 optterms
@@ -457,11 +466,6 @@ term
 
 classblock : block;
 
-declsub
- : SUB subname '(' optsubargs ')' ':' desctype block
-     {
-       $$ = SPerl_OP_build_SUB(parser, $1, $2, $4, $7, $8);
-     }
 block 
   : '{' '}'
     {
