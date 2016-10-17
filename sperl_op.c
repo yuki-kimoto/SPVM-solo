@@ -413,6 +413,11 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       class_info->method_infos = method_infos;
       class_info->method_info_symtable = method_info_symtable;
     }
+    // Enum
+    else if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
+      // Search field and methods
+      SPerl_ARRAY* enum_infos = SPerl_PARSER_new_array(parser, 0);;
+    }
     
     // Add class information
     SPerl_ARRAY_push(parser->class_infos, class_info);
