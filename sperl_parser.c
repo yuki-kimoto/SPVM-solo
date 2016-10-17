@@ -15,6 +15,7 @@
 #include "sperl_op.h"
 #include "sperl_var_info.h"
 #include "sperl_word_info.h"
+#include "sperl_enum_value_info.h"
 
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
@@ -225,6 +226,16 @@ void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_info
         SPerl_PARSER_dump_method_info(parser, method_info);
       }
     }
+    else if (class_info->type == SPerl_CLASS_INFO_TYPE_ENUM) {
+      // Enum value information
+      printf("  enum_value_infos\n");
+      SPerl_ARRAY* enum_value_infos = class_info->enum_value_infos;
+      for (SPerl_int j = 0; j < enum_value_infos->length; j++) {
+        SPerl_ENUM_VALUE_INFO* enum_value_info = SPerl_ARRAY_fetch(enum_value_infos, j);
+        printf("    enum_value_info[%" PRId32 "]\n", j);
+        SPerl_PARSER_dump_enum_value_info(parser, enum_value_info);
+      }
+    }
   }
 }
 
@@ -320,6 +331,17 @@ void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_
   }
   else {
     printf("        None\n");
+  }
+}
+
+
+void SPerl_PARSER_dump_enum_value_info(SPerl_PARSER* parser, SPerl_ENUM_VALUE_INFO* enum_value_info) {
+  if (enum_value_info) {
+    printf("      name => \"%s\"\n", enum_value_info->name->value);
+    printf("      value => %d\n", enum_value_info->value->uv.int_value);
+  }
+  else {
+    printf("      None\n");
   }
 }
 

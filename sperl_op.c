@@ -450,6 +450,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             const_info = SPerl_CONST_INFO_new(parser);
             const_info->type = SPerl_CONST_INFO_INT;
             const_info->uv.int_value = start_value;
+            enum_value_info->value = const_info;
             start_value++;
           }
           SPerl_ARRAY_push(parser->const_infos, const_info);
