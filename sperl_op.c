@@ -419,23 +419,39 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       // Values
       SPerl_ARRAY* enum_value_infos = SPerl_PARSER_new_array(parser, 0);
       
+      // Starting value
+      SPerl_long start_value = 0;
+      
       SPerl_OP* op_enumvalues = op_block->first;
+      SPerl_OP* op_enumvalue;
       if (op_enumvalues) {
         if (op_enumvalues->type == SPerl_OP_LIST) {
-          SPerl_OP* op_enumvalue = op_enumvalues->first;
-          while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
-            SPerl_ENUM_VALUE_INFO* enum_value_info = SPerl_ENUM_VALUE_INFO_new(parser);
-            enum_value_info->name = op_enumvalue->first->uv.pv;
-            enum_value_info->value = op_enumvalue->last->uv.pv;
-            SPerl_ARRAY_push(enum_value_infos, enum_value_info);
-          }
+          op_enumvalue = SPerl_OP_sibling(parser, op_enumvalues->first);
         }
         else {
-          SPerl_OP* op_enumvalue = op_enumvalues;
+          op_enumvalue = op_enumvalues;
+        }
+        
+        while (op_enumvalue) {
           SPerl_ENUM_VALUE_INFO* enum_value_info = SPerl_ENUM_VALUE_INFO_new(parser);
           enum_value_info->name = op_enumvalue->first->uv.pv;
           enum_value_info->value = op_enumvalue->last->uv.pv;
+          
+          SPerl_CONST_INFO* const_info;
+          if (enum_value_info->value) {
+            const_info = enum_value_info->value;
+            start_value = const_info->uv.int_value + 1;
+          }
+          else {
+            const_info = SPerl_CONST_INFO_new(parser);
+            const_info->type = SPerl_CONST_INFO_INT;
+            const_info->uv.int_value = start_value;
+            start_value++;
+          }
+          SPerl_ARRAY_push(parser->const_infos, const_info);
           SPerl_ARRAY_push(enum_value_infos, enum_value_info);
+          
+          op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue);
         }
       }
       
