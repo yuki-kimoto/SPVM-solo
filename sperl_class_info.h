@@ -7,10 +7,10 @@
 #include "sperl_type.h"
 
 enum SPerl_class_info_type {
-  NORMAL,
-  VALUE,
-  INTERFACE,
-  ENUM
+  SPerl_CLASS_INFO_TYPE_NORMAL,
+  SPerl_CLASS_INFO_TYPE_VALUE,
+  SPerl_CLASS_INFO_TYPE_INTERFACE,
+  SPerl_CLASS_INFO_TYPE_ENUM
 };
 
 // Class information

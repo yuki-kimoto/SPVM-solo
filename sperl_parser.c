@@ -205,21 +205,25 @@ void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_info
     printf("\n");
     printf("  op_block => %x\n", class_info->op_block);
     
-    // Dump method informations
-    printf("  field_infos\n");
-    SPerl_ARRAY* field_infos = class_info->field_infos;
-    for (SPerl_int j = 0; j < field_infos->length; j++) {
-      SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
-      printf("    field_info[%" PRId32 "]\n", j);
-      SPerl_PARSER_dump_field_info(parser, field_info);
-    }
-    
-    printf("  method_infos\n");
-    SPerl_ARRAY* method_infos = class_info->method_infos;
-    for (SPerl_int j = 0; j < method_infos->length; j++) {
-      SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
-      printf("    method_info[%" PRId32 "]\n", j);
-      SPerl_PARSER_dump_method_info(parser, method_info);
+    // Class
+    if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
+      // Field information
+      printf("  field_infos\n");
+      SPerl_ARRAY* field_infos = class_info->field_infos;
+      for (SPerl_int j = 0; j < field_infos->length; j++) {
+        SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
+        printf("    field_info[%" PRId32 "]\n", j);
+        SPerl_PARSER_dump_field_info(parser, field_info);
+      }
+      
+      // Method information
+      printf("  method_infos\n");
+      SPerl_ARRAY* method_infos = class_info->method_infos;
+      for (SPerl_int j = 0; j < method_infos->length; j++) {
+        SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
+        printf("    method_info[%" PRId32 "]\n", j);
+        SPerl_PARSER_dump_method_info(parser, method_info);
+      }
     }
   }
 }
