@@ -4,7 +4,7 @@
 #include "sperl_type.h"
 
 /* Operation code */
-enum SPerl_OP_CODE {
+enum SPerl_OP_type {
   SPerl_OP_NULL,
   SPerl_OP_CONST,
   SPerl_OP_LT,

@@ -12,8 +12,8 @@
 #include "sperl_hash.h"
 #include "sperl_word_info.h"
 
-static SPerl_OP* _newOP(SPerl_PARSER* parser, enum SPerl_OP_CODE code) {
-  SPerl_OP* op = SPerl_OP_newOP(parser, code, NULL, NULL);
+static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
+  SPerl_OP* op = SPerl_OP_newOP(parser, type, NULL, NULL);
   op->file = parser->cur_file;
   op->line = parser->cur_line;
   

@@ -44,6 +44,9 @@ typedef struct SPerl_const_info SPerl_CONST_INFO;
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 
+enum SPerl_OP_type;
+typedef enum SPerl_OP_type SPerl_OP_TYPE;
+
 /* sperl_word_info.h */
 struct SPerl_word_info;
 typedef struct SPerl_word_info SPerl_WORD_INFO;
