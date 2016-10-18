@@ -101,7 +101,7 @@
 %token <opval> LAST NEXT WORD VAR CONST ENUM
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
-%type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs
+%type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
 %type <opval> desctype descripters descripter enumvalues enumvalue declanonsub
 %type <opval> type pkgname fieldname subname package packages pkgalias
 
@@ -318,6 +318,22 @@ declanonsub
        $$ = SPerl_OP_build_SUB(parser, $1, NULL, $3, $6, $7);
      }
 
+optdeclusehassubs
+  :	/* Empty */
+    {
+      $$ = SPerl_OP_newOP_LIST(parser);
+    }
+  |	declusehassubs
+    {
+      if ($1->type == SPerl_OP_LIST) {
+        $$ = $1;
+      }
+      else {
+        $$ = SPerl_OP_newOP_LIST(parser);
+        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+      }
+    }
+
 declusehassubs
   : declusehassubs declusehassub
     {
@@ -331,11 +347,7 @@ declusehassub
   | declsub
 
 classblock
-  : '{' '}'
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_CLASSBLOCK, NULL, NULL);
-    }
-  | '{' declusehassubs '}'
+  : '{' optdeclusehassubs '}'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_CLASSBLOCK, $2, NULL);
     }
