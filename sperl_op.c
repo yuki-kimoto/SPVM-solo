@@ -163,49 +163,13 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SP
       SPerl_ARRAY* method_infos = SPerl_PARSER_new_array(parser, 0);;
       SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
       
-      // Run ast
-      SPerl_ARRAY* op_stack = SPerl_PARSER_new_array(parser, 0);
-      SPerl_OP* op_cur = op_package;
-      while (op_cur) {
-        SPerl_OP* op_first = NULL;
-        // Field
-        if (op_cur->type == SPerl_OP_HAS) {
-          SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_cur->uv.pv;
-          SPerl_char* field_name = field_info->name->value;
-          SPerl_CLASS_INFO* found_field_info
-            = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
-          if (found_field_info) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_name));
-            sprintf(message, "Error: redeclaration of has \"%s\" at %s line %d\n", field_name, op_cur->file, op_cur->line);
-            SPerl_yyerror(parser, message);
-          }
-          else {
-            field_info->class_info = class_info;
-            field_info->op = op_cur;
-            SPerl_ARRAY_push(field_infos, field_info);
-            SPerl_HASH_insert(field_info_symtable, field_name, strlen(field_name), field_info);
-          }
-        }
-        // Method
-        else if (op_cur->type == SPerl_OP_SUB) {
-          SPerl_METHOD_INFO* method_info = op_cur->uv.pv;
-          SPerl_char* method_name = method_info->name->value;
-          SPerl_METHOD_INFO* found_method_info
-            = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
-          
-          if (found_method_info) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
-            sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, op_cur->file, op_cur->line);
-            SPerl_yyerror(parser, message);
-          }
-          else {
-            method_info->class_info = class_info;
-            SPerl_ARRAY_push(method_infos, method_info);
-            SPerl_HASH_insert(method_info_symtable, method_name, strlen(method_name), method_info);
-          }
-        }
-        else if (op_cur->type == SPerl_OP_USE) {
-          SPerl_USE_INFO* use_info = op_cur->uv.pv;
+      // Collect field and use information
+      SPerl_OP* op_usehassubs = op_block->first;
+      SPerl_OP* op_usehassub = op_usehassubs->first;
+      while (op_usehassub = SPerl_OP_sibling(parser, op_usehassub)) {
+        // Use
+        if (op_usehassub->type == SPerl_OP_USE) {
+          SPerl_USE_INFO* use_info = op_usehassub->uv.pv;
           
           SPerl_char* class_name = use_info->class_name->value;
           SPerl_ARRAY_push(parser->class_stack, class_name);
@@ -215,39 +179,40 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SP
             SPerl_HASH_insert(class_info->alias, alias_name, strlen(alias_name), class_info);
           }
         }
-        else {
-          op_first = op_cur->first;
-        }
-        
-        if (op_first) {
-          SPerl_ARRAY_push(op_stack, op_cur);
-          op_cur = op_first;
-        }
-        else {
-          SPerl_OP* op_sib = SPerl_OP_sibling(parser, op_cur);
-          
-          // Next sibling
-          if (op_sib) {
-            op_cur = op_sib;
+        // Field
+        else if (op_usehassub->type == SPerl_OP_HAS) {
+          SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_usehassub->uv.pv;
+          SPerl_char* field_name = field_info->name->value;
+          SPerl_CLASS_INFO* found_field_info
+            = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
+          if (found_field_info) {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_name));
+            sprintf(message, "Error: redeclaration of has \"%s\" at %s line %d\n", field_name, op_usehassub->file, op_usehassub->line);
+            SPerl_yyerror(parser, message);
           }
-          // Next is parent
           else {
-            SPerl_OP* op_parent;
-            while (1) {
-              op_parent = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
-              if (op_parent) {
-                SPerl_OP* op_parent_sib = SPerl_OP_sibling(parser, op_parent);
-                if (op_parent_sib) {
-                  // Next is parent's sibling
-                  op_cur = op_parent_sib;
-                  break;
-                }
-              }
-              else {
-                op_cur = NULL;
-                break;
-              }
-            }
+            field_info->class_info = class_info;
+            field_info->op = op_usehassub;
+            SPerl_ARRAY_push(field_infos, field_info);
+            SPerl_HASH_insert(field_info_symtable, field_name, strlen(field_name), field_info);
+          }
+        }
+        // Method
+        else if (op_usehassub->type == SPerl_OP_SUB) {
+          SPerl_METHOD_INFO* method_info = op_usehassub->uv.pv;
+          SPerl_char* method_name = method_info->name->value;
+          SPerl_METHOD_INFO* found_method_info
+            = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
+          
+          if (found_method_info) {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
+            sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, op_usehassub->file, op_usehassub->line);
+            SPerl_yyerror(parser, message);
+          }
+          else {
+            method_info->class_info = class_info;
+            SPerl_ARRAY_push(method_infos, method_info);
+            SPerl_HASH_insert(method_info_symtable, method_name, strlen(method_name), method_info);
           }
         }
       }
