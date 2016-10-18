@@ -115,9 +115,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SP
   
   SPerl_OP_sibling_splice(parser, op_package_, NULL, 0, op_pkgname_);
   SPerl_OP_sibling_splice(parser, op_package_, op_pkgname_, 0, op_block_);
-  if (op_descripters_) {
-    SPerl_OP_sibling_splice(parser, op_package_, op_block_, 0, op_descripters_);
-  }
+  SPerl_OP_sibling_splice(parser, op_package_, op_block_, 0, op_descripters_);
   
   SPerl_OP* op_package = op_package_;
   SPerl_OP* op_pkgname = op_package->first;
@@ -478,13 +476,11 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
 
 SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_pkgname, SPerl_OP* op_pkgalias) {
   SPerl_OP_sibling_splice(parser, op_use, NULL, 0, op_pkgname);
-  if (op_pkgalias) {
-    SPerl_OP_sibling_splice(parser, op_use, op_pkgname, 0, op_pkgalias);
-  }
+  SPerl_OP_sibling_splice(parser, op_use, op_pkgname, 0, op_pkgalias);
   
   SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
   use_info->class_name = op_pkgname->uv.pv;
-  if (op_pkgalias) {
+  if (op_pkgalias->type != SPerl_OP_NULL) {
     use_info->alias_name = op_pkgalias->uv.pv;
   }
   use_info->op = op_use;
@@ -770,13 +766,6 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   return op_sub;
 }
 
-SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
-  
-  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_PUSHMARK, NULL, NULL);
-  
-  return SPerl_OP_newOP(parser, SPerl_OP_LIST, op_pushmark, NULL);
-}
-
 SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
   return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
 }
@@ -828,6 +817,18 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *
     
     return op_list;
   }
+}
+
+SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
+  
+  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_PUSHMARK, NULL, NULL);
+  
+  return SPerl_OP_newOP(parser, SPerl_OP_LIST, op_pushmark, NULL);
+}
+
+SPerl_OP* SPerl_OP_newOP_NULL(SPerl_PARSER* parser) {
+  
+  return SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
 }
 
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP* insert) {

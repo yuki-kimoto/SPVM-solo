@@ -271,7 +271,7 @@ elsestatement
 decluse
   : USE pkgname ';'
     {
-      $$ = SPerl_OP_build_USE(parser, $1, $2, NULL);
+      $$ = SPerl_OP_build_USE(parser, $1, $2, SPerl_OP_newOP_NULL(parser));
     }
   | USE pkgname '-' pkgalias';'
     {
