@@ -97,171 +97,6 @@ static SPerl_boolean _is_core_type (SPerl_char* type_name) {
   }
 }
 
-void SPerl_OP_check(SPerl_PARSER* parser) {
-  SPerl_ARRAY* class_infos = parser->class_infos;
-  SPerl_HASH* class_info_symtable = parser->class_info_symtable;
-  
-  // Check field info type and descripter
-  for (SPerl_int i = 0; i < class_infos->length; i++) {
-    
-    SPerl_CLASS_INFO* class_info = SPerl_ARRAY_fetch(class_infos, i);
-    
-    // Check descripter
-    SPerl_ARRAY* descripters = class_info->descripters;
-    for (SPerl_int j = 0; j < descripters->length; j++) {
-      SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, j);
-      if (strcmp(descripter->value, "interface") != 0
-        && strcmp(descripter->value, "value") != 0
-        && strcmp(descripter->value, "enum") != 0)
-      {
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
-        sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
-        SPerl_yyerror(parser, message);
-      }
-    }
-
-    if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
-      // Check field
-      SPerl_ARRAY* field_infos = class_info->field_infos;
-      for (SPerl_int j = 0; j < field_infos->length; j++) {
-        // Field type
-        SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
-        if (
-          !_is_core_type(field_info->type->value)
-          && !SPerl_HASH_search(class_info_symtable, field_info->type->value, strlen(field_info->type->value))
-          )
-        {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_info->type->value));
-          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", field_info->type->value, field_info->type->op->file,field_info->type->op->line);
-          SPerl_yyerror(parser, message);
-        }
-        
-        // Field descripters
-        SPerl_ARRAY* descripters = field_info->descripters;
-        for (SPerl_int k = 0; k < descripters->length; k++) {
-          SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (strcmp(descripter->value, "const") != 0) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
-            sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
-            SPerl_yyerror(parser, message);
-          }
-        }
-      }
-      
-      // Check method
-      SPerl_ARRAY* method_infos = class_info->method_infos;
-      for (SPerl_int j = 0; j < method_infos->length; j++) {
-        // Check method type
-        SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
-        if (
-          !_is_core_type(method_info->return_type->value)
-          && !SPerl_HASH_search(class_info_symtable, method_info->return_type->value, strlen(method_info->return_type->value))
-          )
-        {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_info->return_type->value));
-          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", method_info->return_type->value, method_info->return_type->op->file,method_info->return_type->op->line);
-          SPerl_yyerror(parser, message);
-        }
-        
-        // Check method descripters
-        SPerl_ARRAY* descripters = method_info->descripters;
-        SPerl_int k;
-        for (SPerl_int k = 0; k < descripters->length; k++) {
-          SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (strcmp(descripter->value, "static") != 0) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
-            sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
-            SPerl_yyerror(parser, message);
-          }
-        }
-        
-        // Check my var information
-        SPerl_ARRAY* my_var_infos = method_info->my_var_infos;
-        for (SPerl_int k = 0; k < my_var_infos->length; k++) {
-          SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(my_var_infos, k);
-
-          if (
-            !_is_core_type(my_var_info->type->value)
-            && !SPerl_HASH_search(class_info_symtable, my_var_info->type->value, strlen(my_var_info->type->value))
-            )
-          {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var_info->type->value));
-            sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", my_var_info->type->value, my_var_info->type->op->file,my_var_info->type->op->line);
-            SPerl_yyerror(parser, message);
-          }
-          
-          // Check my_var descripters
-          SPerl_ARRAY* descripters = my_var_info->descripters;
-          for (SPerl_int l = 0; l < descripters->length; l++) {
-            SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, l);
-            if (strcmp(descripter->value, "const") != 0) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
-              sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
-              SPerl_yyerror(parser, message);
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
-
-  // Set constant informations
-  SPerl_ARRAY* const_infos = parser->const_infos;
-  
-  // Create constant pool
-  for (SPerl_int i = 0; i < const_infos->length; i++) {
-    
-    SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, i);
-    
-    const_info->pool_pos = parser->const_pool_pos;
-    
-    // Realloc
-    if (parser->const_pool_pos - 1 >= parser->const_pool_capacity) {
-      
-      SPerl_int new_const_pool_capacity = parser->const_pool_capacity * 2;
-      parser->const_pool = realloc(parser->const_pool, new_const_pool_capacity * sizeof(SPerl_int));
-      memset(
-        parser->const_pool + parser->const_pool_capacity,
-        0,
-        (new_const_pool_capacity - parser->const_pool_capacity) * sizeof(SPerl_int)
-      );
-      parser->const_pool_capacity = new_const_pool_capacity;
-    }
-    
-    SPerl_int* const_pool = parser->const_pool;
-    switch(const_info->type) {
-      case SPerl_CONST_INFO_BOOLEAN:
-      case SPerl_CONST_INFO_CHAR:
-      case SPerl_CONST_INFO_BYTE:
-      case SPerl_CONST_INFO_SHORT:
-      case SPerl_CONST_INFO_INT:
-        const_info->pool_pos = parser->const_pool_pos;
-        *(const_pool + parser->const_pool_pos) = const_info->uv.int_value;
-        parser->const_pool_pos += 1;
-        break;
-      case SPerl_CONST_INFO_LONG:
-        const_info->pool_pos = parser->const_pool_pos;
-        *(SPerl_long*)(const_pool + parser->const_pool_pos) = const_info->uv.long_value;
-        parser->const_pool_pos += 2;
-        break;
-      case SPerl_CONST_INFO_FLOAT:
-        const_info->pool_pos = parser->const_pool_pos;
-        *(SPerl_float*)(const_pool + parser->const_pool_pos) = const_info->uv.float_value;
-        parser->const_pool_pos += 1;
-        break;
-      case SPerl_CONST_INFO_DOUBLE:
-        const_info->pool_pos = parser->const_pool_pos;
-        *(SPerl_double*)(const_pool + parser->const_pool_pos) = const_info->uv.double_value;
-        parser->const_pool_pos += 2;
-        break;
-    }
-  }
-}
-
-
 SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
   parser->op_grammer = op_grammer;
@@ -275,14 +110,20 @@ SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   return op_grammer;
 }
 
-SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
+SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SPerl_OP* op_pkgname_, SPerl_OP* op_block_, SPerl_OP* op_descripters_) {
   SPerl_int i;
   
-  SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_pkgname);
-  SPerl_OP_sibling_splice(parser, op_package, op_pkgname, 0, op_block);
-  if (op_descripters) {
-    SPerl_OP_sibling_splice(parser, op_package, op_block, 0, op_descripters);
+  SPerl_OP_sibling_splice(parser, op_package_, NULL, 0, op_pkgname_);
+  SPerl_OP_sibling_splice(parser, op_package_, op_pkgname_, 0, op_block_);
+  if (op_descripters_) {
+    SPerl_OP_sibling_splice(parser, op_package_, op_block_, 0, op_descripters_);
   }
+  
+  SPerl_OP* op_package = op_package_;
+  SPerl_OP* op_pkgname = op_pkgname_;
+  SPerl_OP* op_block = op_block_;
+  SPerl_OP* op_descripters = op_descripters_;
+  
   
   SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
   
@@ -470,6 +311,170 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   }
   
   return op_package;
+}
+
+void SPerl_OP_check(SPerl_PARSER* parser) {
+  SPerl_ARRAY* class_infos = parser->class_infos;
+  SPerl_HASH* class_info_symtable = parser->class_info_symtable;
+  
+  // Check field info type and descripter
+  for (SPerl_int i = 0; i < class_infos->length; i++) {
+    
+    SPerl_CLASS_INFO* class_info = SPerl_ARRAY_fetch(class_infos, i);
+    
+    // Check descripter
+    SPerl_ARRAY* descripters = class_info->descripters;
+    for (SPerl_int j = 0; j < descripters->length; j++) {
+      SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, j);
+      if (strcmp(descripter->value, "interface") != 0
+        && strcmp(descripter->value, "value") != 0
+        && strcmp(descripter->value, "enum") != 0)
+      {
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
+        sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+        SPerl_yyerror(parser, message);
+      }
+    }
+
+    if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
+      // Check field
+      SPerl_ARRAY* field_infos = class_info->field_infos;
+      for (SPerl_int j = 0; j < field_infos->length; j++) {
+        // Field type
+        SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
+        if (
+          !_is_core_type(field_info->type->value)
+          && !SPerl_HASH_search(class_info_symtable, field_info->type->value, strlen(field_info->type->value))
+          )
+        {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_info->type->value));
+          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", field_info->type->value, field_info->type->op->file,field_info->type->op->line);
+          SPerl_yyerror(parser, message);
+        }
+        
+        // Field descripters
+        SPerl_ARRAY* descripters = field_info->descripters;
+        for (SPerl_int k = 0; k < descripters->length; k++) {
+          SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
+          if (strcmp(descripter->value, "const") != 0) {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
+            sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+            SPerl_yyerror(parser, message);
+          }
+        }
+      }
+      
+      // Check method
+      SPerl_ARRAY* method_infos = class_info->method_infos;
+      for (SPerl_int j = 0; j < method_infos->length; j++) {
+        // Check method type
+        SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
+        if (
+          !_is_core_type(method_info->return_type->value)
+          && !SPerl_HASH_search(class_info_symtable, method_info->return_type->value, strlen(method_info->return_type->value))
+          )
+        {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_info->return_type->value));
+          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", method_info->return_type->value, method_info->return_type->op->file,method_info->return_type->op->line);
+          SPerl_yyerror(parser, message);
+        }
+        
+        // Check method descripters
+        SPerl_ARRAY* descripters = method_info->descripters;
+        SPerl_int k;
+        for (SPerl_int k = 0; k < descripters->length; k++) {
+          SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
+          if (strcmp(descripter->value, "static") != 0) {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
+            sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+            SPerl_yyerror(parser, message);
+          }
+        }
+        
+        // Check my var information
+        SPerl_ARRAY* my_var_infos = method_info->my_var_infos;
+        for (SPerl_int k = 0; k < my_var_infos->length; k++) {
+          SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(my_var_infos, k);
+
+          if (
+            !_is_core_type(my_var_info->type->value)
+            && !SPerl_HASH_search(class_info_symtable, my_var_info->type->value, strlen(my_var_info->type->value))
+            )
+          {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var_info->type->value));
+            sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", my_var_info->type->value, my_var_info->type->op->file,my_var_info->type->op->line);
+            SPerl_yyerror(parser, message);
+          }
+          
+          // Check my_var descripters
+          SPerl_ARRAY* descripters = my_var_info->descripters;
+          for (SPerl_int l = 0; l < descripters->length; l++) {
+            SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, l);
+            if (strcmp(descripter->value, "const") != 0) {
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
+              sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+              SPerl_yyerror(parser, message);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
+
+  // Set constant informations
+  SPerl_ARRAY* const_infos = parser->const_infos;
+  
+  // Create constant pool
+  for (SPerl_int i = 0; i < const_infos->length; i++) {
+    
+    SPerl_CONST_INFO* const_info = SPerl_ARRAY_fetch(const_infos, i);
+    
+    const_info->pool_pos = parser->const_pool_pos;
+    
+    // Realloc
+    if (parser->const_pool_pos - 1 >= parser->const_pool_capacity) {
+      
+      SPerl_int new_const_pool_capacity = parser->const_pool_capacity * 2;
+      parser->const_pool = realloc(parser->const_pool, new_const_pool_capacity * sizeof(SPerl_int));
+      memset(
+        parser->const_pool + parser->const_pool_capacity,
+        0,
+        (new_const_pool_capacity - parser->const_pool_capacity) * sizeof(SPerl_int)
+      );
+      parser->const_pool_capacity = new_const_pool_capacity;
+    }
+    
+    SPerl_int* const_pool = parser->const_pool;
+    switch(const_info->type) {
+      case SPerl_CONST_INFO_BOOLEAN:
+      case SPerl_CONST_INFO_CHAR:
+      case SPerl_CONST_INFO_BYTE:
+      case SPerl_CONST_INFO_SHORT:
+      case SPerl_CONST_INFO_INT:
+        const_info->pool_pos = parser->const_pool_pos;
+        *(const_pool + parser->const_pool_pos) = const_info->uv.int_value;
+        parser->const_pool_pos += 1;
+        break;
+      case SPerl_CONST_INFO_LONG:
+        const_info->pool_pos = parser->const_pool_pos;
+        *(SPerl_long*)(const_pool + parser->const_pool_pos) = const_info->uv.long_value;
+        parser->const_pool_pos += 2;
+        break;
+      case SPerl_CONST_INFO_FLOAT:
+        const_info->pool_pos = parser->const_pool_pos;
+        *(SPerl_float*)(const_pool + parser->const_pool_pos) = const_info->uv.float_value;
+        parser->const_pool_pos += 1;
+        break;
+      case SPerl_CONST_INFO_DOUBLE:
+        const_info->pool_pos = parser->const_pool_pos;
+        *(SPerl_double*)(const_pool + parser->const_pool_pos) = const_info->uv.double_value;
+        parser->const_pool_pos += 2;
+        break;
+    }
+  }
 }
 
 SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_pkgname, SPerl_OP* op_pkgalias) {
