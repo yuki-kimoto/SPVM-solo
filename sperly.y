@@ -13,7 +13,7 @@
   #include "sperl_op.h"
   #include "sperl_var_info.h"
   #include "sperl_my_var_info.h"
-  #include "sperl_const_info.h"
+  #include "sperl_const_value.h"
   #include "sperl_word_info.h"
 
   /* Function for error */
@@ -59,36 +59,36 @@
         fprintf(file, "\"%s\"", var_info->name);
         break;
       }
-      case CONST: {
-        SPerl_CONST_INFO* const_info = (SPerl_CONST_INFO*)((SPerl_OP*)yylval.opval)->uv.pv;
+      case CONSTVALUE: {
+        SPerl_CONST_VALUE* const_value = (SPerl_CONST_VALUE*)((SPerl_OP*)yylval.opval)->uv.pv;
         
-        switch(const_info->type) {
-          case SPerl_CONST_INFO_BOOLEAN:
-            fprintf(file, "boolean %d", const_info->uv.int_value);
+        switch(const_value->type) {
+          case SPerl_CONST_VALUE_BOOLEAN:
+            fprintf(file, "boolean %d", const_value->uv.int_value);
             break;
-          case SPerl_CONST_INFO_CHAR:
-            fprintf(file, "char '%c'", (SPerl_char)const_info->uv.int_value);
+          case SPerl_CONST_VALUE_CHAR:
+            fprintf(file, "char '%c'", (SPerl_char)const_value->uv.int_value);
             break;
-          case SPerl_CONST_INFO_BYTE:
-            fprintf(file, "byte %d", const_info->uv.int_value);
+          case SPerl_CONST_VALUE_BYTE:
+            fprintf(file, "byte %d", const_value->uv.int_value);
             break;
-          case SPerl_CONST_INFO_SHORT:
-            fprintf(file, "short %d", const_info->uv.int_value);
+          case SPerl_CONST_VALUE_SHORT:
+            fprintf(file, "short %d", const_value->uv.int_value);
             break;
-          case SPerl_CONST_INFO_INT:
-            fprintf(file, "int %d", const_info->uv.int_value);
+          case SPerl_CONST_VALUE_INT:
+            fprintf(file, "int %d", const_value->uv.int_value);
             break;
-          case SPerl_CONST_INFO_LONG:
-            fprintf(file, "long %ld", const_info->uv.long_value);
+          case SPerl_CONST_VALUE_LONG:
+            fprintf(file, "long %ld", const_value->uv.long_value);
             break;
-          case SPerl_CONST_INFO_FLOAT:
-            fprintf(file, "float %f", const_info->uv.float_value);
+          case SPerl_CONST_VALUE_FLOAT:
+            fprintf(file, "float %f", const_value->uv.float_value);
             break;
-          case SPerl_CONST_INFO_DOUBLE:
-            fprintf(file, "double %f", const_info->uv.double_value);
+          case SPerl_CONST_VALUE_DOUBLE:
+            fprintf(file, "double %f", const_value->uv.double_value);
             break;
-          case SPerl_CONST_INFO_STRING:
-            fprintf(file, "string %s", const_info->uv.string_value);
+          case SPerl_CONST_VALUE_STRING:
+            fprintf(file, "string %s", const_value->uv.string_value);
             break;
         }
       }
@@ -98,7 +98,7 @@
 
 %token <opval> '+' '-'
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <opval> LAST NEXT WORD VAR CONST ENUM
+%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
@@ -197,7 +197,7 @@ enumvalue
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_ENUMVALUE, $1, NULL);
     }
-  | WORD ASSIGNOP CONST
+  | WORD ASSIGNOP CONSTVALUE
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_ENUMVALUE, $1, $3);
     }
@@ -389,9 +389,9 @@ terms
 
 term
   : VAR
-  | CONST
+  | CONSTVALUE
     {
-      $$ = SPerl_OP_build_CONST(parser, $1);
+      $$ = SPerl_OP_build_CONST_VALUE(parser, $1);
     }
   | '+' term %prec UMINUS
     {

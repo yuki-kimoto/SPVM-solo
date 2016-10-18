@@ -36,9 +36,9 @@ typedef struct SPerl_var_info SPerl_VAR_INFO;
 struct SPerl_my_var_info;
 typedef struct SPerl_my_var_info SPerl_MY_VAR_INFO;
 
-/* sperl_const_info.h */
-struct SPerl_const_info;
-typedef struct SPerl_const_info SPerl_CONST_INFO;
+/* sperl_const_value.h */
+struct SPerl_const_value;
+typedef struct SPerl_const_value SPerl_CONST_VALUE;
 
 /* sperl_op.h */
 struct SPerl_op;

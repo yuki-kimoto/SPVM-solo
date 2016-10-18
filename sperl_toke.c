@@ -6,7 +6,7 @@
 #include "sperl_op.h"
 #include "sperl_parser.h"
 #include "sperly.tab.h"
-#include "sperl_const_info.h"
+#include "sperl_const_value.h"
 #include "sperl_var_info.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
@@ -386,15 +386,15 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         
         // Constant
-        SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
-        SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
-        const_info->type = SPerl_CONST_INFO_CHAR;
-        const_info->uv.int_value = ch;
-        op->uv.pv = const_info;
+        SPerl_OP* op = _newOP(parser, SPerl_OP_CONST_VALUE);
+        SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
+        const_value->type = SPerl_CONST_VALUE_CHAR;
+        const_value->uv.int_value = ch;
+        op->uv.pv = const_value;
         yylvalp->opval = op;
         
         
-        return CONST;
+        return CONSTVALUE;
       }
       case '"': {
         parser->bufptr++;
@@ -426,14 +426,14 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
         }
         
-        SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
-        SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
-        const_info->type = SPerl_CONST_INFO_STRING;
-        const_info->uv.string_value = str;
-        op->uv.pv = const_info;
+        SPerl_OP* op = _newOP(parser, SPerl_OP_CONST_VALUE);
+        SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
+        const_value->type = SPerl_CONST_VALUE_STRING;
+        const_value->uv.string_value = str;
+        op->uv.pv = const_value;
         yylvalp->opval = (SPerl_OP*)op;
 
-        return CONST;
+        return CONSTVALUE;
       }
       default:
         /* Variable */
@@ -497,28 +497,28 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             double num = strtod(num_str, &ends);
             free(num_str);
 
-            SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
-            SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
-            const_info->type = SPerl_CONST_INFO_DOUBLE;
-            const_info->uv.double_value = num;
-            op->uv.pv = const_info;
+            SPerl_OP* op = _newOP(parser, SPerl_OP_CONST_VALUE);
+            SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
+            const_value->type = SPerl_CONST_VALUE_DOUBLE;
+            const_value->uv.double_value = num;
+            op->uv.pv = const_value;
             yylvalp->opval = (SPerl_OP*)op;
             
-            return CONST;
+            return CONSTVALUE;
           }
           // Convert to integer
           else {
             SPerl_int num = atoi(num_str);
             free(num_str);
             
-            SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
-            SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
-            const_info->type = SPerl_CONST_INFO_INT;
-            const_info->uv.int_value = num;
-            op->uv.pv = const_info;
+            SPerl_OP* op = _newOP(parser, SPerl_OP_CONST_VALUE);
+            SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
+            const_value->type = SPerl_CONST_VALUE_INT;
+            const_value->uv.int_value = num;
+            op->uv.pv = const_value;
             yylvalp->opval = (SPerl_OP*)op;
             
-            return CONST;
+            return CONSTVALUE;
           }
         }
         // Keyword or word
@@ -606,24 +606,24 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               return ENUM;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
-              SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
-              SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
-              const_info->type = SPerl_CONST_INFO_BOOLEAN;
-              const_info->uv.int_value = 1;
-              op->uv.pv = const_info;
+              SPerl_OP* op = _newOP(parser, SPerl_OP_CONST_VALUE);
+              SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
+              const_value->type = SPerl_CONST_VALUE_BOOLEAN;
+              const_value->uv.int_value = 1;
+              op->uv.pv = const_value;
               yylvalp->opval = (SPerl_OP*)op;
 
-              return CONST;
+              return CONSTVALUE;
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
-              SPerl_OP* op = _newOP(parser, SPerl_OP_CONST);
-              SPerl_CONST_INFO* const_info = SPerl_CONST_INFO_new(parser);
-              const_info->type = SPerl_CONST_INFO_BOOLEAN;
-              const_info->uv.int_value = 0;
-              op->uv.pv = const_info;
+              SPerl_OP* op = _newOP(parser, SPerl_OP_CONST_VALUE);
+              SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
+              const_value->type = SPerl_CONST_VALUE_BOOLEAN;
+              const_value->uv.int_value = 0;
+              op->uv.pv = const_value;
               yylvalp->opval = (SPerl_OP*)op;
 
-              return CONST;
+              return CONSTVALUE;
             }
           }
           
