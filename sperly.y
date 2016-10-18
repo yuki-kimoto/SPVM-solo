@@ -138,7 +138,7 @@ grammar
       }
       else {
         // Dump parser infomation
-        SPerl_PARSER_dump_parser_info(parser);
+        //SPerl_PARSER_dump_parser_info(parser);
       }
     }
 
@@ -154,7 +154,7 @@ package
     {
       $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser));
     }
-  | PACKAGE pkgname ':' descripters classblock
+  | PACKAGE pkgname ':' listdescripters classblock
     {
       $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
     }

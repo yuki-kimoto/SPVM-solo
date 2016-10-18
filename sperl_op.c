@@ -105,10 +105,10 @@ SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 
 
   // Name and type check
-  SPerl_OP_check(parser);
+  //SPerl_OP_check(parser);
 
   // Build constant pool
-  SPerl_OP_build_const_pool(parser);
+  //SPerl_OP_build_const_pool(parser);
 
   return op_grammer;
 }
@@ -123,7 +123,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SP
   SPerl_OP* op_package = op_package_;
   SPerl_OP* op_pkgname = op_package->first;
   SPerl_OP* op_block = SPerl_OP_sibling(parser, op_pkgname);
-  SPerl_OP* op_descripters = SPerl_OP_sibling(parser, op_block);;
+  SPerl_OP* op_descripters = SPerl_OP_sibling(parser, op_block);
   
   SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
   
@@ -132,7 +132,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SP
     class_name,
     strlen(class_name)
   );
-          
+    
   if (found_class_info) {
     SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(class_name));
     sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", class_name, op_package->file, op_package->line);
@@ -144,8 +144,9 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SP
     class_info->name = op_pkgname->uv.pv;
     class_info->op_block = op_block;
     class_info->alias = SPerl_PARSER_new_hash(parser, 0);
+
     class_info->descripters = SPerl_OP_create_descripters(parser, op_descripters);
-    
+
     // Class type
     if (op_descripters && op_descripters->type == SPerl_OP_ENUM) {
       class_info->type = SPerl_CLASS_INFO_TYPE_ENUM;
@@ -297,7 +298,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SP
     SPerl_ARRAY_push(parser->class_infos, class_info);
     SPerl_HASH_insert(parser->class_info_symtable, class_name, strlen(class_name), class_info);
   }
-  
+
   return op_package;
 }
 
@@ -539,22 +540,20 @@ SPerl_OP* SPerl_OP_build_CONST_VALUE(SPerl_PARSER* parser, SPerl_OP* op_const) {
 SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
   
   SPerl_ARRAY* descripters = SPerl_PARSER_new_array(parser, 0);
-  
+
   // descripters is enum or list of descripter
   if (op_descripters->type == SPerl_OP_ENUM) {
-    SPerl_WORD_INFO* word_info = SPerl_WORD_INFO_new(parser);
-    word_info->value = "enum";
-    SPerl_ARRAY_push(descripters, word_info);
+    SPerl_DESCRIPTER_INFO* descripter_info = SPerl_DESCRIPTER_INFO_new(parser);
+    descripter_info->type = SPerl_DESCRIPTER_INFO_TYPE_ENUM;
+    SPerl_ARRAY_push(descripters, descripter_info);
   }
   else {
     SPerl_OP* op_descripter = op_descripters->first;
-    warn("AAAAAAAAA %s", SPerl_OP_names[op_descripter->type]);
-    while (op_descripter = SPerl_OP_sibling(parser, op_descripter)) {
-      warn("EEEEEEE %d", ((SPerl_DESCRIPTER_INFO*)op_descripter->uv.pv)->type);
+    while (1) {
+      op_descripter = op_descripter->moresib ? op_descripter->sibparent : NULL;
       SPerl_ARRAY_push(descripters, op_descripter->uv.pv);
     }
   }
-  warn("DDDDDDDDDD");
   
   return descripters;
 }
