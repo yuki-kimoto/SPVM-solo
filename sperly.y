@@ -126,7 +126,7 @@
 grammar
   : /* NULL */
     {
-      $$ = NULL;
+      $$ = SPerl_OP_build_GRAMMER(parser, NULL);
     }
   | packages
     {
@@ -222,9 +222,12 @@ statement
       $$ = op;
     }
   | term ';'
+    {
+      $$ = $1;
+    }
   | ';'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_STAB, NULL, NULL);
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
     }
   | ifstatement
   | LAST ';'
@@ -245,16 +248,14 @@ ifstatement
   : IF '(' term ')' block elsestatement
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_COND, $3, $5);
-      if ($6) {
-        SPerl_OP_sibling_splice(parser, op, $5, 0, $6);
-      }
+      SPerl_OP_sibling_splice(parser, op, $5, 0, $6);
       $$ = op;
     }
 
 elsestatement
   : /* NULL */
     {
-      $$ = (SPerl_OP*)0;
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
     };
   | ELSE block
     {
@@ -263,9 +264,7 @@ elsestatement
   | ELSIF '(' term ')' block elsestatement
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_COND, $3, $5);
-      if ($6) {
-        SPerl_OP_sibling_splice(parser, op, $5, 0, $6);
-      }
+      SPerl_OP_sibling_splice(parser, op, $5, 0, $6);
       $$ = op;
     }
 
