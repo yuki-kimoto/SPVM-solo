@@ -325,12 +325,21 @@ classblock
     }
 
 optterms
-  :	/* NULL */
+  :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
   |	terms
-
+    {
+      if ($1->type == SPerl_OP_LIST) {
+        $$ = $1;
+      }
+      else {
+        $$ = SPerl_OP_newOP_LIST(parser);
+        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+      }
+    }
+    
 terms
   : terms ',' term
     {
