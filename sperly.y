@@ -103,7 +103,7 @@
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
 %type <opval> desctype descripters descripter enumvalues enumvalue declanonsub
-%type <opval> type pkgname fieldname subname package packages pkgalias
+%type <opval> type pkgname fieldname subname package packages pkgalias optenumvalues
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -164,15 +164,27 @@ package
     }
 
 enumblock 
-  : '{' '}'
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_ENUMBLOCK, NULL, NULL);
-    }
-  | '{' enumvalues '}'
+  : '{' optenumvalues '}'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_ENUMBLOCK, $2, NULL);
     }
 
+optenumvalues
+  :	/* Empty */
+    {
+      $$ = SPerl_OP_newOP_LIST(parser);
+    }
+  |	enumvalues
+    {
+      if ($1->type == SPerl_OP_LIST) {
+        $$ = $1;
+      }
+      else {
+        $$ = SPerl_OP_newOP_LIST(parser);
+        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+      }
+    }
+    
 enumvalues
   : enumvalues ',' enumvalue 
     {
