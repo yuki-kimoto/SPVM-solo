@@ -98,7 +98,7 @@
 
 %token <opval> '+' '-'
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM
+%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM CONST STATIC
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs

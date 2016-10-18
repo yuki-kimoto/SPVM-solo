@@ -605,6 +605,14 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               yylvalp->opval = _newOP(parser, SPerl_OP_ENUM);
               return ENUM;
             }
+            else if (memcmp(keyword, "const", str_len) == 0) {
+              yylvalp->opval = _newOP(parser, SPerl_OP_ENUM);
+              return CONST;
+            }
+            else if (memcmp(keyword, "static", str_len) == 0) {
+              yylvalp->opval = _newOP(parser, SPerl_OP_ENUM);
+              return STATIC;
+            }
             else if (memcmp(keyword, "true", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_CONST_VALUE);
               SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
