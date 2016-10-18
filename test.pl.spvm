@@ -54,7 +54,7 @@ package Point {
   sub get9 ($foo : const int, $bar : const int) : int {}
 }
 
-package Foo : interface {
+package Foo {
   
 }
 

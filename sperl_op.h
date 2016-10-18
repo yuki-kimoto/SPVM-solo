@@ -71,17 +71,6 @@ enum SPerl_OP_type {
 
 extern SPerl_char* const SPerl_OP_names[];
 
-// OP_CONST private flag
-#define SPerl_OPp_CONST_BOOLEAN 1
-#define SPerl_OPp_CONST_CHAR 2
-#define SPerl_OPp_CONST_BYTE 3
-#define SPerl_OPp_CONST_SHORT 4
-#define SPerl_OPp_CONST_INT 5
-#define SPerl_OPp_CONST_LONG 6
-#define SPerl_OPp_CONST_FLOAT 7
-#define SPerl_OPp_CONST_DOUBLE 8
-#define SPerl_OPp_CONST_STRING 9
-
 /* Binary operation */
 struct SPerl_op {
   SPerl_char type;
