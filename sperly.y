@@ -504,7 +504,7 @@ block
 optsubargs
   :	/* NULL */
     {
-      $$ = (SPerl_OP*)NULL;
+      $$ = SPerl_OP_newOP_LIST(parser);
     }
   |	subargs
 
