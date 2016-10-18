@@ -105,10 +105,10 @@ SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 
 
   // Name and type check
-  //SPerl_OP_check(parser);
+  SPerl_OP_check(parser);
 
   // Build constant pool
-  //SPerl_OP_build_const_pool(parser);
+  SPerl_OP_build_const_pool(parser);
 
   return op_grammer;
 }
@@ -144,7 +144,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SP
     class_info->name = op_pkgname->uv.pv;
     class_info->op_block = op_block;
     class_info->alias = SPerl_PARSER_new_hash(parser, 0);
-
+    
     class_info->descripters = SPerl_OP_create_descripters(parser, op_descripters);
 
     // Class type
@@ -549,8 +549,7 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
   }
   else {
     SPerl_OP* op_descripter = op_descripters->first;
-    while (1) {
-      op_descripter = op_descripter->moresib ? op_descripter->sibparent : NULL;
+    while (op_descripter = op_descripter->moresib ? op_descripter->sibparent : NULL) {
       SPerl_ARRAY_push(descripters, op_descripter->uv.pv);
     }
   }

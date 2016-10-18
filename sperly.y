@@ -138,7 +138,7 @@ grammar
       }
       else {
         // Dump parser infomation
-        //SPerl_PARSER_dump_parser_info(parser);
+        SPerl_PARSER_dump_parser_info(parser);
       }
     }
 
