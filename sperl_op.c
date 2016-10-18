@@ -311,8 +311,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     SPerl_ARRAY* descripters = class_info->descripters;
     for (SPerl_int j = 0; j < descripters->length; j++) {
       SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, j);
-      if (strcmp(descripter->value, "interface") != 0
-        && strcmp(descripter->value, "value") != 0
+      if (strcmp(descripter->value, "value") != 0
         && strcmp(descripter->value, "enum") != 0)
       {
         SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
