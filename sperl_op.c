@@ -120,10 +120,9 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SP
   }
   
   SPerl_OP* op_package = op_package_;
-  SPerl_OP* op_pkgname = op_pkgname_;
-  SPerl_OP* op_block = op_block_;
-  SPerl_OP* op_descripters = op_descripters_;
-  
+  SPerl_OP* op_pkgname = op_package->first;
+  SPerl_OP* op_block = SPerl_OP_sibling(parser, op_pkgname);
+  SPerl_OP* op_descripters = SPerl_OP_sibling(parser, op_block);;
   
   SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
   
