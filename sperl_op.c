@@ -578,7 +578,6 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   if (!op_subname) {
     op_subname = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
   }
-  op_optsubargs = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
   SPerl_OP_sibling_splice(parser, op_sub, NULL, 0, op_subname);
   SPerl_OP_sibling_splice(parser, op_sub, op_subname, 0, op_optsubargs);
   SPerl_OP_sibling_splice(parser, op_sub, op_optsubargs, 0, op_desctype);
@@ -589,20 +588,13 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   method_info->name = op_subname->uv.pv;
   
   // subargs
-  if (op_optsubargs->type == SPerl_OP_MY) {
-    // Argument count
-    method_info->argument_count = 1;
+  SPerl_int argument_count = 0;
+  SPerl_OP* op_subarg = op_optsubargs->first;
+  while (op_subarg = SPerl_OP_sibling(parser, op_subarg)) {
+    // Increment argument count
+    argument_count++;
   }
-  // subargs is list of subarg
-  else if (op_optsubargs->type == SPerl_OP_LIST) {
-    SPerl_int argument_count = 0;
-    SPerl_OP* op_subarg = op_optsubargs->first;
-    while (op_subarg = SPerl_OP_sibling(parser, op_subarg)) {
-      // Increment argument count
-      argument_count++;
-    }
-    method_info->argument_count = argument_count;
-  }
+  method_info->argument_count = argument_count;
   
   // return type
   method_info->return_type = op_desctype->first->uv.pv;

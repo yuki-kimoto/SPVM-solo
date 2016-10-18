@@ -506,6 +506,15 @@ optsubargs
       $$ = SPerl_OP_newOP_LIST(parser);
     }
   |	subargs
+    {
+      if ($1->type == SPerl_OP_MY) {
+        $$ = SPerl_OP_newOP_LIST(parser);
+        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+      }
+      else {
+        $$ = $1;
+      }
+    }
 
 subargs
   : subargs ',' subarg
