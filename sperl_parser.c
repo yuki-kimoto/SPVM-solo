@@ -193,11 +193,11 @@ void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_info
     
     printf("class_info[%d]\n", i);
     printf("  name => \"%s\"\n", class_info->name->value);
-    printf("  descripters => ");
-    SPerl_ARRAY* descripters = class_info->descripters;
-    if (descripters->length) {
-      for (SPerl_int i = 0; i < descripters->length; i++) {
-        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripters, i);
+    printf("  descripter_infos => ");
+    SPerl_ARRAY* descripter_infos = class_info->descripter_infos;
+    if (descripter_infos->length) {
+      for (SPerl_int i = 0; i < descripter_infos->length; i++) {
+        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, i);
         printf("%s ", SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]);
       }
     }
@@ -284,11 +284,11 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
     printf("      name => \"%s\"\n", method_info->name->value);
     printf("      return_type => \"%s\"\n", method_info->return_type->value);
     SPerl_int i;
-    printf("      descripters => ");
-    SPerl_ARRAY* descripters = method_info->descripters;
-    if (descripters->length) {
-      for (SPerl_int i = 0; i < descripters->length; i++) {
-        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripters, i);
+    printf("      descripter_infos => ");
+    SPerl_ARRAY* descripter_infos = method_info->descripter_infos;
+    if (descripter_infos->length) {
+      for (SPerl_int i = 0; i < descripter_infos->length; i++) {
+        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, i);
         printf("%s ", SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]);
       }
     }
@@ -317,11 +317,11 @@ void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_
   if (field_info) {
     printf("        name => \"%s\"\n", field_info->name->value);
     printf("        type => \"%s\"\n", field_info->type->value);
-    printf("          descripters => ");
-    SPerl_ARRAY* descripters = field_info->descripters;
-    if (descripters->length) {
-      for (SPerl_int i = 0; i < descripters->length; i++) {
-        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripters, i);
+    printf("          descripter_infos => ");
+    SPerl_ARRAY* descripter_infos = field_info->descripter_infos;
+    if (descripter_infos->length) {
+      for (SPerl_int i = 0; i < descripter_infos->length; i++) {
+        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, i);
         printf("%s ", SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]);
       }
     }
@@ -351,11 +351,11 @@ void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_v
     printf("          name => \"%s\"\n", my_var_info->name->value);
     printf("          id => %d\n", my_var_info->id);
     printf("          type => \"%s\"\n", my_var_info->type->value);
-    printf("          descripters => ");
-    SPerl_ARRAY* descripters = my_var_info->descripters;
-    if (descripters->length) {
-      for (SPerl_int i = 0; i < descripters->length; i++) {
-        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripters, i);
+    printf("          descripter_infos => ");
+    SPerl_ARRAY* descripter_infos = my_var_info->descripter_infos;
+    if (descripter_infos->length) {
+      for (SPerl_int i = 0; i < descripter_infos->length; i++) {
+        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, i);
         printf("%s ", SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]);
       }
     }

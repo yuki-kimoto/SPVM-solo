@@ -102,7 +102,7 @@
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
-%type <opval> desctype optdescripters listdescripters descripters enumvalues enumvalue declanonsub
+%type <opval> desctype optdescripter_infos listdescripter_infos descripter_infos enumvalues enumvalue declanonsub
 %type <opval> type pkgname fieldname subname package packages pkgalias optenumvalues
 
 %right <opval> ASSIGNOP
@@ -154,7 +154,7 @@ package
     {
       $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser));
     }
-  | PACKAGE pkgname ':' listdescripters classblock
+  | PACKAGE pkgname ':' listdescripter_infos classblock
     {
       $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
     }
@@ -575,20 +575,20 @@ subarg
     }
 
 desctype
-  : optdescripters type
+  : optdescripter_infos type
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_DESCTYPE, $2, $1);
     }
     
-optdescripters
+optdescripter_infos
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	listdescripters
+  |	listdescripter_infos
 
-listdescripters
-  :	descripters
+listdescripter_infos
+  :	descripter_infos
     {
       if ($1->type == SPerl_OP_LIST) {
         $$ = $1;
@@ -599,8 +599,8 @@ listdescripters
       }
     }
 
-descripters
-  : descripters DESCRIPTER
+descripter_infos
+  : descripter_infos DESCRIPTER
     {
       $$ = SPerl_OP_append_elem(parser, $1, $2);
     }

@@ -7,7 +7,7 @@
 struct SPerl_method_info {
   SPerl_WORD_INFO* name;
   SPerl_WORD_INFO* return_type;
-  SPerl_ARRAY* descripters;
+  SPerl_ARRAY* descripter_infos;
   SPerl_int argument_count;
   SPerl_ARRAY* my_var_infos;
   SPerl_OP* op_block;

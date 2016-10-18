@@ -17,7 +17,7 @@ enum SPerl_class_info_type {
 struct SPerl_class_info {
   SPerl_char type;
   SPerl_WORD_INFO* name;
-  SPerl_ARRAY* descripters;
+  SPerl_ARRAY* descripter_infos;
   SPerl_ARRAY* field_infos;
   SPerl_HASH* field_info_symtable;
   SPerl_ARRAY* method_infos;

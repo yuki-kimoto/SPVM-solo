@@ -8,7 +8,7 @@ struct SPerl_my_var_info {
   SPerl_WORD_INFO* name;
   SPerl_int id;
   SPerl_METHOD_INFO* method_info;
-  SPerl_ARRAY* descripters;
+  SPerl_ARRAY* descripter_infos;
   SPerl_OP* op;
 };
 
