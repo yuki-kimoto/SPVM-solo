@@ -278,7 +278,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SP
         }
         else {
           const_value = SPerl_CONST_VALUE_new(parser);
-          const_value->type = SPerl_CONST_VALUE_INT;
+          const_value->type = SPerl_CONST_VALUE_TYPE_INT;
           const_value->uv.int_value = start_value;
           enum_value_info->value = const_value;
           start_value++;
@@ -433,26 +433,26 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     
     SPerl_int* const_pool = parser->const_pool;
     switch(const_value->type) {
-      case SPerl_CONST_VALUE_BOOLEAN:
-      case SPerl_CONST_VALUE_CHAR:
-      case SPerl_CONST_VALUE_BYTE:
-      case SPerl_CONST_VALUE_SHORT:
-      case SPerl_CONST_VALUE_INT:
+      case SPerl_CONST_VALUE_TYPE_BOOLEAN:
+      case SPerl_CONST_VALUE_TYPE_CHAR:
+      case SPerl_CONST_VALUE_TYPE_BYTE:
+      case SPerl_CONST_VALUE_TYPE_SHORT:
+      case SPerl_CONST_VALUE_TYPE_INT:
         const_value->pool_pos = parser->const_pool_pos;
         *(const_pool + parser->const_pool_pos) = const_value->uv.int_value;
         parser->const_pool_pos += 1;
         break;
-      case SPerl_CONST_VALUE_LONG:
+      case SPerl_CONST_VALUE_TYPE_LONG:
         const_value->pool_pos = parser->const_pool_pos;
         *(SPerl_long*)(const_pool + parser->const_pool_pos) = const_value->uv.long_value;
         parser->const_pool_pos += 2;
         break;
-      case SPerl_CONST_VALUE_FLOAT:
+      case SPerl_CONST_VALUE_TYPE_FLOAT:
         const_value->pool_pos = parser->const_pool_pos;
         *(SPerl_float*)(const_pool + parser->const_pool_pos) = const_value->uv.float_value;
         parser->const_pool_pos += 1;
         break;
-      case SPerl_CONST_VALUE_DOUBLE:
+      case SPerl_CONST_VALUE_TYPE_DOUBLE:
         const_value->pool_pos = parser->const_pool_pos;
         *(SPerl_double*)(const_pool + parser->const_pool_pos) = const_value->uv.double_value;
         parser->const_pool_pos += 2;

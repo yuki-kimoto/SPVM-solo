@@ -63,31 +63,31 @@
         SPerl_CONST_VALUE* const_value = (SPerl_CONST_VALUE*)((SPerl_OP*)yylval.opval)->uv.pv;
         
         switch(const_value->type) {
-          case SPerl_CONST_VALUE_BOOLEAN:
+          case SPerl_CONST_VALUE_TYPE_BOOLEAN:
             fprintf(file, "boolean %d", const_value->uv.int_value);
             break;
-          case SPerl_CONST_VALUE_CHAR:
+          case SPerl_CONST_VALUE_TYPE_CHAR:
             fprintf(file, "char '%c'", (SPerl_char)const_value->uv.int_value);
             break;
-          case SPerl_CONST_VALUE_BYTE:
+          case SPerl_CONST_VALUE_TYPE_BYTE:
             fprintf(file, "byte %d", const_value->uv.int_value);
             break;
-          case SPerl_CONST_VALUE_SHORT:
+          case SPerl_CONST_VALUE_TYPE_SHORT:
             fprintf(file, "short %d", const_value->uv.int_value);
             break;
-          case SPerl_CONST_VALUE_INT:
+          case SPerl_CONST_VALUE_TYPE_INT:
             fprintf(file, "int %d", const_value->uv.int_value);
             break;
-          case SPerl_CONST_VALUE_LONG:
+          case SPerl_CONST_VALUE_TYPE_LONG:
             fprintf(file, "long %ld", const_value->uv.long_value);
             break;
-          case SPerl_CONST_VALUE_FLOAT:
+          case SPerl_CONST_VALUE_TYPE_FLOAT:
             fprintf(file, "float %f", const_value->uv.float_value);
             break;
-          case SPerl_CONST_VALUE_DOUBLE:
+          case SPerl_CONST_VALUE_TYPE_DOUBLE:
             fprintf(file, "double %f", const_value->uv.double_value);
             break;
-          case SPerl_CONST_VALUE_STRING:
+          case SPerl_CONST_VALUE_TYPE_STRING:
             fprintf(file, "string %s", const_value->uv.string_value);
             break;
         }
