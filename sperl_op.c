@@ -490,9 +490,7 @@ SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* o
 }
 
 SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_desctype) {
-  if (!op_my) {
-    op_my = SPerl_OP_newOP(parser, SPerl_OP_MY, NULL, NULL);
-  }
+
   SPerl_OP_sibling_splice(parser, op_my, NULL, 0, op_var);
   SPerl_OP_sibling_splice(parser, op_my, op_var, 0, op_desctype);
   
@@ -580,9 +578,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   if (!op_subname) {
     op_subname = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
   }
-  if (!op_optsubargs) {
-    op_optsubargs = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
-  }
+  op_optsubargs = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
   SPerl_OP_sibling_splice(parser, op_sub, NULL, 0, op_subname);
   SPerl_OP_sibling_splice(parser, op_sub, op_subname, 0, op_optsubargs);
   SPerl_OP_sibling_splice(parser, op_sub, op_optsubargs, 0, op_desctype);
@@ -593,13 +589,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   method_info->name = op_subname->uv.pv;
   
   // subargs
-  // subargs is NULL
-  if (op_optsubargs->type == SPerl_OP_NULL) {
-    method_info->argument_count = 0;
-  }
-  // subargs is subarg
-  else if (op_optsubargs->type == SPerl_OP_MY) {
-    
+  if (op_optsubargs->type == SPerl_OP_MY) {
     // Argument count
     method_info->argument_count = 1;
   }

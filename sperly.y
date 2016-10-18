@@ -501,7 +501,7 @@ block
     }
 
 optsubargs
-  :	/* NULL */
+  :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
@@ -517,7 +517,7 @@ subargs
 subarg
   : VAR ':' desctype
     {
-      $$ = SPerl_OP_build_MY(parser, NULL, $1, $3);
+      $$ = SPerl_OP_build_MY(parser, SPerl_OP_newOP(parser, SPerl_OP_MY, NULL, NULL), $1, $3);
     }
 
 desctype
