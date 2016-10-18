@@ -11,6 +11,7 @@
 #include "sperl_array.h"
 #include "sperl_hash.h"
 #include "sperl_word_info.h"
+#include "sperl_descripter_info.h"
 
 static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
   SPerl_OP* op = SPerl_OP_newOP(parser, type, NULL, NULL);
@@ -606,12 +607,34 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               return ENUM;
             }
             else if (memcmp(keyword, "const", str_len) == 0) {
-              yylvalp->opval = _newOP(parser, SPerl_OP_ENUM);
-              return CONST;
+              SPerl_OP* op = _newOP(parser, SPerl_OP_DESCRIPTER);
+              SPerl_DESCRIPTER_INFO* descripter_info = SPerl_DESCRIPTER_INFO_new(parser);
+              descripter_info->type = SPerl_DESCRIPTER_INFO_TYPE_CONST;
+              descripter_info->op = op;
+              op->uv.pv = descripter_info;
+              yylvalp->opval = op;
+              
+              return DESCRIPTER;
             }
             else if (memcmp(keyword, "static", str_len) == 0) {
-              yylvalp->opval = _newOP(parser, SPerl_OP_ENUM);
-              return STATIC;
+              SPerl_OP* op = _newOP(parser, SPerl_OP_DESCRIPTER);
+              SPerl_DESCRIPTER_INFO* descripter_info = SPerl_DESCRIPTER_INFO_new(parser);
+              descripter_info->type = SPerl_DESCRIPTER_INFO_TYPE_STATIC;
+              descripter_info->op = op;
+              op->uv.pv = descripter_info;
+              yylvalp->opval = op;
+              
+              return DESCRIPTER;
+            }
+            else if (memcmp(keyword, "value", str_len) == 0) {
+              SPerl_OP* op = _newOP(parser, SPerl_OP_DESCRIPTER);
+              SPerl_DESCRIPTER_INFO* descripter_info = SPerl_DESCRIPTER_INFO_new(parser);
+              descripter_info->type = SPerl_DESCRIPTER_INFO_TYPE_VALUE;
+              descripter_info->op = op;
+              op->uv.pv = descripter_info;
+              yylvalp->opval = op;
+              
+              return DESCRIPTER;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_CONST_VALUE);

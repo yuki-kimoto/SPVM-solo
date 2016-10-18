@@ -55,6 +55,12 @@ typedef struct SPerl_word_info SPerl_WORD_INFO;
 struct SPerl_field_info;
 typedef struct SPerl_field_info SPerl_FIELD_INFO;
 
+/* sperl_descripter_info.h */
+enum SPerl_descripter_info_type;
+typedef enum SPerl_descripter_info_type SPerl_DESCRIPTER_INFO_TYPE;
+struct SPerl_descripter_info;
+typedef struct SPerl_descripter_info SPerl_DESCRIPTER_INFO;
+
 /* sperl_method_info.h */
 struct SPerl_method_info;
 typedef struct SPerl_method_info SPerl_METHOD_INFO;

@@ -18,6 +18,7 @@
 #include "sperl_use_info.h"
 #include "sperl_word_info.h"
 #include "sperl_enum_value_info.h"
+#include "sperl_descripter_info.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_names[] = {
@@ -82,7 +83,8 @@ SPerl_char* const SPerl_OP_names[] = {
   "enum",
   "enumblock",
   "enumvalue",
-  "classblock"
+  "classblock",
+  "descripter"
 };
 
 static SPerl_boolean _is_core_type (SPerl_char* type_name) {
@@ -100,10 +102,11 @@ static SPerl_boolean _is_core_type (SPerl_char* type_name) {
 SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
   parser->op_grammer = op_grammer;
-  
+
+
   // Name and type check
   SPerl_OP_check(parser);
-  
+
   // Build constant pool
   SPerl_OP_build_const_pool(parser);
 
@@ -310,12 +313,12 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     // Check descripter
     SPerl_ARRAY* descripters = class_info->descripters;
     for (SPerl_int j = 0; j < descripters->length; j++) {
-      SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, j);
-      if (strcmp(descripter->value, "value") != 0
-        && strcmp(descripter->value, "enum") != 0)
+      SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripters, j);
+      if (descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_VALUE && descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_ENUM)
       {
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
-        sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]));
+        sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
+          SPerl_DESCRIPTER_INFO_type_names[descripter_info->type], descripter_info->op->file, descripter_info->op->line);
         SPerl_yyerror(parser, message);
       }
     }
@@ -339,10 +342,12 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         // Field descripters
         SPerl_ARRAY* descripters = field_info->descripters;
         for (SPerl_int k = 0; k < descripters->length; k++) {
-          SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (strcmp(descripter->value, "const") != 0) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
-            sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+          SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripters, k);
+          if (descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_CONST)
+          {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]));
+            sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n",
+              SPerl_DESCRIPTER_INFO_type_names[descripter_info->type], descripter_info->op->file, descripter_info->op->line);
             SPerl_yyerror(parser, message);
           }
         }
@@ -367,10 +372,12 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_ARRAY* descripters = method_info->descripters;
         SPerl_int k;
         for (SPerl_int k = 0; k < descripters->length; k++) {
-          SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (strcmp(descripter->value, "static") != 0) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
-            sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+          SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripters, k);
+          if (descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_STATIC)
+          {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]));
+            sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
+              SPerl_DESCRIPTER_INFO_type_names[descripter_info->type], descripter_info->op->file, descripter_info->op->line);
             SPerl_yyerror(parser, message);
           }
         }
@@ -393,10 +400,12 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
           // Check my_var descripters
           SPerl_ARRAY* descripters = my_var_info->descripters;
           for (SPerl_int l = 0; l < descripters->length; l++) {
-            SPerl_WORD_INFO* descripter = SPerl_ARRAY_fetch(descripters, l);
-            if (strcmp(descripter->value, "const") != 0) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(descripter->value));
-              sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n", descripter->value, descripter->op->file, descripter->op->line);
+            SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripters, l);
+            if (descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_CONST)
+            {
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]));
+              sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
+                SPerl_DESCRIPTER_INFO_type_names[descripter_info->type], descripter_info->op->file, descripter_info->op->line);
               SPerl_yyerror(parser, message);
             }
           }
@@ -531,30 +540,21 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
   
   SPerl_ARRAY* descripters = SPerl_PARSER_new_array(parser, 0);
   
-  if (!op_descripters) {
-    return descripters;
-  }
-  
-  // descripters is list of descripter or descripter
+  // descripters is enum or list of descripter
   if (op_descripters->type == SPerl_OP_ENUM) {
     SPerl_WORD_INFO* word_info = SPerl_WORD_INFO_new(parser);
     word_info->value = "enum";
     SPerl_ARRAY_push(descripters, word_info);
   }
-  else if (op_descripters->type == SPerl_OP_LIST || op_descripters->type == SPerl_OP_WORD) {
-    SPerl_OP* op_next;
-    if (op_descripters->type == SPerl_OP_LIST) {
-      op_next = SPerl_OP_sibling(parser, op_descripters->first);
-    }
-    else {
-      op_next = op_descripters;
-    }
-    
-    while (op_next) {
-      SPerl_ARRAY_push(descripters, op_next->uv.pv);
-      op_next = SPerl_OP_sibling(parser, op_next);
+  else {
+    SPerl_OP* op_descripter = op_descripters->first;
+    warn("AAAAAAAAA %s", SPerl_OP_names[op_descripter->type]);
+    while (op_descripter = SPerl_OP_sibling(parser, op_descripter)) {
+      warn("EEEEEEE %d", ((SPerl_DESCRIPTER_INFO*)op_descripter->uv.pv)->type);
+      SPerl_ARRAY_push(descripters, op_descripter->uv.pv);
     }
   }
+  warn("DDDDDDDDDD");
   
   return descripters;
 }

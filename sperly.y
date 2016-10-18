@@ -98,11 +98,11 @@
 
 %token <opval> '+' '-'
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM CONST STATIC
+%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
-%type <opval> desctype descripters descripter enumvalues enumvalue declanonsub
+%type <opval> desctype optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type pkgname fieldname subname package packages pkgalias optenumvalues
 
 %right <opval> ASSIGNOP
@@ -152,7 +152,7 @@ packages
 package
   : PACKAGE pkgname classblock
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, NULL);
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser));
     }
   | PACKAGE pkgname ':' descripters classblock
     {
@@ -575,25 +575,38 @@ subarg
     }
 
 desctype
-  : type
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_DESCTYPE, $1, 0);
-    }
-  | descripters type
+  : optdescripters type
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_DESCTYPE, $2, $1);
     }
     
-type : WORD
+optdescripters
+  :	/* Empty */
+    {
+      $$ = SPerl_OP_newOP_LIST(parser);
+    }
+  |	listdescripters
+
+listdescripters
+  :	descripters
+    {
+      if ($1->type == SPerl_OP_LIST) {
+        $$ = $1;
+      }
+      else {
+        $$ = SPerl_OP_newOP_LIST(parser);
+        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+      }
+    }
 
 descripters
-  : descripters descripter
+  : descripters DESCRIPTER
     {
       $$ = SPerl_OP_append_elem(parser, $1, $2);
     }
-  | descripter
+  | DESCRIPTER
 
-descripter : WORD
+type : WORD
 fieldname : WORD
 subname : WORD
 pkgname : WORD
