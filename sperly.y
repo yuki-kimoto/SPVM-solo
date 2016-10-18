@@ -507,12 +507,12 @@ optsubargs
     }
   |	subargs
     {
-      if ($1->type == SPerl_OP_MY) {
-        $$ = SPerl_OP_newOP_LIST(parser);
-        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+      if ($1->type == SPerl_OP_LIST) {
+        $$ = $1;
       }
       else {
-        $$ = $1;
+        $$ = SPerl_OP_newOP_LIST(parser);
+        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
       }
     }
 
