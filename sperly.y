@@ -224,7 +224,7 @@ statement
   | term ';'
   | ';'
     {
-      $$ = (SPerl_OP*)NULL;
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_STAB, NULL, NULL);
     }
   | ifstatement
   | LAST ';'
