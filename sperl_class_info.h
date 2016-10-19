@@ -23,6 +23,7 @@ struct SPerl_class_info {
   SPerl_ARRAY* method_infos;
   SPerl_HASH* method_info_symtable;
   SPerl_ARRAY* enum_value_infos;
+  SPerl_ARRAY* use_infos;
   SPerl_OP* op_block;
   SPerl_HASH* alias;
   SPerl_OP* op;

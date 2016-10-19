@@ -322,9 +322,10 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     
     // Class
     if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
-      // Search field and methods
-      SPerl_ARRAY* field_infos = SPerl_PARSER_new_array(parser, 0);;
+      // Search use and field
+      SPerl_ARRAY* field_infos = SPerl_PARSER_new_array(parser, 0);
       SPerl_HASH* field_info_symtable = SPerl_PARSER_new_hash(parser, 0);
+      SPerl_ARRAY* use_infos = SPerl_PARSER_new_array(parser, 0);
       
       // Collect field and use information
       SPerl_OP* op_usehassubs = op_block->first;
@@ -336,6 +337,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           
           SPerl_char* class_name = use_info->class_name->value;
           SPerl_ARRAY_push(parser->class_stack, class_name);
+          SPerl_ARRAY_push(use_infos, use_info);
           
           if (use_info->alias_name) {
             SPerl_char* alias_name = use_info->alias_name->value;
@@ -364,7 +366,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       // Set filed and method information
       class_info->field_infos = field_infos;
       class_info->field_info_symtable = field_info_symtable;
-
+      class_info->use_infos = use_infos;
 
       // Method information
       SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
