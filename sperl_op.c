@@ -523,7 +523,7 @@ SPerl_ARRAY* SPerl_OP_create_descripter_infos(SPerl_PARSER* parser, SPerl_OP* op
   return descripter_infos;
 }
 
-SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_desctype, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_descripters, SPerl_OP* op_type, SPerl_OP* op_block) {
   
   // Build OP_SUB
   if (!op_subname) {
@@ -531,8 +531,9 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   }
   SPerl_OP_sibling_splice(parser, op_sub, NULL, 0, op_subname);
   SPerl_OP_sibling_splice(parser, op_sub, op_subname, 0, op_optsubargs);
-  SPerl_OP_sibling_splice(parser, op_sub, op_optsubargs, 0, op_desctype);
-  SPerl_OP_sibling_splice(parser, op_sub, op_desctype, 0, op_block);
+  SPerl_OP_sibling_splice(parser, op_sub, op_optsubargs, 0, op_descripters);
+  SPerl_OP_sibling_splice(parser, op_sub, op_descripters, 0, op_type);
+  SPerl_OP_sibling_splice(parser, op_sub, op_type, 0, op_block);
   
   // Create method infomation
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new(parser);
@@ -546,13 +547,12 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
     argument_count++;
   }
   method_info->argument_count = argument_count;
+
+  // descripter_infos
+  method_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
   
   // return type
-  method_info->return_type = op_desctype->first->uv.pv;
-  
-  // descripter_infos
-  SPerl_OP* op_descripters = op_desctype->last;
-  method_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
+  method_info->return_type = op_type->uv.pv;
   
   // Save block
   method_info->op_block = op_block;
