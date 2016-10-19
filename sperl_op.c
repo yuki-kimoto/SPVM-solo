@@ -523,15 +523,12 @@ SPerl_ARRAY* SPerl_OP_create_descripter_infos(SPerl_PARSER* parser, SPerl_OP* op
   return descripter_infos;
 }
 
-SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_optsubargs, SPerl_OP* op_descripters, SPerl_OP* op_type, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* op_descripters, SPerl_OP* op_type, SPerl_OP* op_block) {
   
   // Build OP_SUB
-  if (!op_subname) {
-    op_subname = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
-  }
   SPerl_OP_sibling_splice(parser, op_sub, NULL, 0, op_subname);
-  SPerl_OP_sibling_splice(parser, op_sub, op_subname, 0, op_optsubargs);
-  SPerl_OP_sibling_splice(parser, op_sub, op_optsubargs, 0, op_descripters);
+  SPerl_OP_sibling_splice(parser, op_sub, op_subname, 0, op_subargs);
+  SPerl_OP_sibling_splice(parser, op_sub, op_subargs, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_sub, op_descripters, 0, op_type);
   SPerl_OP_sibling_splice(parser, op_sub, op_type, 0, op_block);
   
@@ -541,7 +538,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   
   // subargs
   SPerl_int argument_count = 0;
-  SPerl_OP* op_subarg = op_optsubargs->first;
+  SPerl_OP* op_subarg = op_subargs->first;
   while (op_subarg = SPerl_OP_sibling(parser, op_subarg)) {
     // Increment argument count
     argument_count++;
