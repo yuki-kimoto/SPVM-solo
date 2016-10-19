@@ -104,7 +104,7 @@
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
 %type <opval> optdescripters listdescripter_infos descripter_infos enumvalues enumvalue declanonsub
 %type <opval> type pkgname fieldname subname package packages pkgalias optenumvalues
-%type <opval> forstatement whilestatement
+%type <opval> forstatement whilestatement expression
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -235,6 +235,10 @@ statement
     {
       $$ = $1;
     }
+  | expression ';'
+    {
+      $$ = $1;
+    }
   | ';'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
@@ -358,6 +362,20 @@ classblock
   : '{' optdeclusehassubs '}'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_CLASSBLOCK, $2, NULL);
+    }
+
+expression
+  : LAST
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_LAST, NULL, NULL);
+    }
+  | NEXT
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_NEXT, NULL, NULL);
+    }
+  | RETURN term
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_RETURN, $2, NULL);
     }
 
 optterms
@@ -534,18 +552,6 @@ term
     }
   | declmy
   | declanonsub
-  | LAST
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_LAST, NULL, NULL);
-    }
-  | NEXT
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_NEXT, NULL, NULL);
-    }
-  | RETURN term
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_RETURN, $2, NULL);
-    }
 
 block 
   : '{' optstatements '}'
