@@ -326,6 +326,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       SPerl_ARRAY* field_infos = SPerl_PARSER_new_array(parser, 0);
       SPerl_HASH* field_info_symtable = SPerl_PARSER_new_hash(parser, 0);
       SPerl_ARRAY* use_infos = SPerl_PARSER_new_array(parser, 0);
+      SPerl_HASH* use_info_symtable = SPerl_PARSER_new_hash(parser, 0);
       
       // Collect field and use information
       SPerl_OP* op_usehassubs = op_block->first;
@@ -334,25 +335,35 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         // Use
         if (op_usehassub->type == SPerl_OP_USE) {
           SPerl_USE_INFO* use_info = op_usehassub->uv.pv;
+          SPerl_char* use_class_name = use_info->class_name->value;
+          SPerl_USE_INFO* found_use_info
+            = SPerl_HASH_search(use_info_symtable, use_class_name, strlen(use_class_name));
           
-          SPerl_char* class_name = use_info->class_name->value;
-          SPerl_ARRAY_push(parser->class_stack, class_name);
-          SPerl_ARRAY_push(use_infos, use_info);
-          
-          if (use_info->alias_name) {
-            SPerl_char* alias_name = use_info->alias_name->value;
-            SPerl_HASH_insert(class_info->alias, alias_name, strlen(alias_name), class_info);
+          if (found_use_info) {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(use_class_name));
+            sprintf(message, "Error: redeclaration of use \"%s\" at %s line %d\n", use_class_name, use_info->op->file, use_info->op->line);
+            SPerl_yyerror(parser, message);
+          }
+          else {
+            SPerl_char* class_name = use_info->class_name->value;
+            SPerl_ARRAY_push(parser->class_stack, class_name);
+            SPerl_ARRAY_push(use_infos, use_info);
+            
+            if (use_info->alias_name) {
+              SPerl_char* alias_name = use_info->alias_name->value;
+              SPerl_HASH_insert(class_info->alias, alias_name, strlen(alias_name), class_info);
+            }
           }
         }
         // Field
         else if (op_usehassub->type == SPerl_OP_HAS) {
           SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_usehassub->uv.pv;
           SPerl_char* field_name = field_info->name->value;
-          SPerl_CLASS_INFO* found_field_info
+          SPerl_FIELD_INFO* found_field_info
             = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
           if (found_field_info) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_name));
-            sprintf(message, "Error: redeclaration of has \"%s\" at %s line %d\n", field_name, op_usehassub->file, op_usehassub->line);
+            sprintf(message, "Error: redeclaration of has \"%s\" at %s line %d\n", field_name, field_info->op->file, field_info->op->line);
             SPerl_yyerror(parser, message);
           }
           else {
