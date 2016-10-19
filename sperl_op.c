@@ -452,22 +452,22 @@ SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* o
   return op_use;
 }
 
-SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_desctype) {
+SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_descripters, SPerl_OP* op_type) {
 
   SPerl_OP_sibling_splice(parser, op_my, NULL, 0, op_var);
-  SPerl_OP_sibling_splice(parser, op_my, op_var, 0, op_desctype);
+  SPerl_OP_sibling_splice(parser, op_my, op_var, 0, op_descripters);
+  SPerl_OP_sibling_splice(parser, op_my, op_descripters, 0, op_type);
   
   // Create my var information
   SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new(parser);
   SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_var->uv.pv;
   my_var_info->name = var_info->name;
   
-  // type
-  my_var_info->type = op_desctype->first->uv.pv;
-  
   // descripter_infos
-  SPerl_OP* op_descripters = op_desctype->last;
   my_var_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
+  
+  // type
+  my_var_info->type = op_type->uv.pv;
   
   // Add my_var information to op
   op_my->uv.pv = my_var_info;

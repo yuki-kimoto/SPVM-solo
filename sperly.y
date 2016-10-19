@@ -319,9 +319,9 @@ declsub
      }
 
 declmy
-  : MY VAR ':' desctype
+  : MY VAR ':' optdescripters type
     {
-      $$ = SPerl_OP_build_MY(parser, $1, $2, $4);
+      $$ = SPerl_OP_build_MY(parser, $1, $2, $4, $5);
     }
 
 declanonsub
@@ -569,9 +569,9 @@ subargs
   | subarg
 
 subarg
-  : VAR ':' desctype
+  : VAR ':' optdescripters type
     {
-      $$ = SPerl_OP_build_MY(parser, SPerl_OP_newOP(parser, SPerl_OP_MY, NULL, NULL), $1, $3);
+      $$ = SPerl_OP_build_MY(parser, SPerl_OP_newOP(parser, SPerl_OP_MY, NULL, NULL), $1, $3, $4);
     }
 
 desctype
