@@ -102,7 +102,7 @@
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
-%type <opval> desctype optdescripters listdescripter_infos descripter_infos enumvalues enumvalue declanonsub
+%type <opval> optdescripters listdescripter_infos descripter_infos enumvalues enumvalue declanonsub
 %type <opval> type pkgname fieldname subname package packages pkgalias optenumvalues
 
 %right <opval> ASSIGNOP
@@ -307,9 +307,9 @@ decluse
     }
 
 declhas
-  : HAS fieldname ':' desctype ';'
+  : HAS fieldname ':' optdescripters type ';'
     {
-      $$ = SPerl_OP_build_HAS(parser, $1, $2, $4);
+      $$ = SPerl_OP_build_HAS(parser, $1, $2, $4, $5);
     }
 
 declsub
@@ -572,12 +572,6 @@ subarg
   : VAR ':' optdescripters type
     {
       $$ = SPerl_OP_build_MY(parser, SPerl_OP_newOP(parser, SPerl_OP_MY, NULL, NULL), $1, $3, $4);
-    }
-
-desctype
-  : optdescripters type
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_DESCTYPE, $2, $1);
     }
     
 optdescripters

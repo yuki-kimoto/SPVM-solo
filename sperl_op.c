@@ -470,21 +470,26 @@ SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_
   return op_my;
 }
 
-SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* op_desctype) {
+SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* op_descripters, SPerl_OP* op_type) {
+  
+  // Build OP
   SPerl_OP_sibling_splice(parser, op_has, NULL, 0, op_field_name);
-  SPerl_OP_sibling_splice(parser, op_has, op_field_name, 0, op_desctype);
+  SPerl_OP_sibling_splice(parser, op_has, op_field_name, 0, op_descripters);
+  SPerl_OP_sibling_splice(parser, op_has, op_descripters, 0, op_type);
   
   // Create field information
   SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new(parser);
+  
+  // Name
   field_info->name = op_field_name->uv.pv;
-  
-  // type
-  field_info->type = op_desctype->first->uv.pv;
-  
-  // descripter_infos
-  SPerl_OP* op_descripters = op_desctype->last;
+
+  // Descripters
   field_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
   
+  // Type
+  field_info->type = op_type->uv.pv;
+  
+  // Set field informaiton
   op_has->uv.pv = field_info;
   
   return op_has;
