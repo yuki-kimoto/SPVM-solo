@@ -84,7 +84,8 @@ SPerl_char* const SPerl_OP_names[] = {
   "enumblock",
   "enumvalue",
   "classblock",
-  "descripter"
+  "descripter",
+  "anonsub"
 };
 
 static SPerl_boolean _is_core_type (SPerl_char* type_name) {
@@ -556,6 +557,9 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   // Save block
   method_info->op_block = op_block;
   
+  // Add method information
+  SPerl_ARRAY_push(parser->current_method_infos, method_info);
+  
   // my var informations
   SPerl_ARRAY* my_var_infos = SPerl_PARSER_new_array(parser, 0);
   SPerl_HASH* my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
@@ -582,14 +586,28 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
     }
     
     // Add my var
-    if (op_cur->type == SPerl_OP_BLOCK) {
-      if (block_start) {
-        SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
-        *block_base_ptr = my_var_stack->length;
-        SPerl_ARRAY_push(block_base_stack, block_base_ptr);
+    if (op_cur->type == SPerl_OP_VAR) {
+      SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_cur->uv.pv;
+      
+      // Serach same name variable
+      SPerl_MY_VAR_INFO* my_var_info = NULL;
+      for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
+        SPerl_MY_VAR_INFO* my_var_info_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
+        if (strcmp(var_info->name->value, my_var_info_tmp->name->value) == 0) {
+          my_var_info = my_var_info_tmp;
+          break;
+        }
+      }
+      
+      if (my_var_info) {
+        // Add my var information to var
+        var_info->my_var_info = my_var_info;
       }
       else {
-        block_start = 1;
+        // Error
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var_info->name->value));
+        sprintf(message, "Error: \"%s\" undeclared at %s line %d\n", var_info->name->value, op_cur->file, op_cur->line);
+        SPerl_yyerror(parser, message);
       }
     }
     else if (op_cur->type == SPerl_OP_MY) {
@@ -620,28 +638,14 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
         SPerl_ARRAY_push(my_var_stack, my_var_info);
       }
     }
-    else if (op_cur->type == SPerl_OP_VAR) {
-      SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_cur->uv.pv;
-      
-      // Serach same name variable
-      SPerl_MY_VAR_INFO* my_var_info = NULL;
-      for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
-        SPerl_MY_VAR_INFO* my_var_info_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
-        if (strcmp(var_info->name->value, my_var_info_tmp->name->value) == 0) {
-          my_var_info = my_var_info_tmp;
-          break;
-        }
-      }
-      
-      if (my_var_info) {
-        // Add my var information to var
-        var_info->my_var_info = my_var_info;
+    else if (op_cur->type == SPerl_OP_BLOCK) {
+      if (block_start) {
+        SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
+        *block_base_ptr = my_var_stack->length;
+        SPerl_ARRAY_push(block_base_stack, block_base_ptr);
       }
       else {
-        // Error
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var_info->name->value));
-        sprintf(message, "Error: \"%s\" undeclared at %s line %d\n", var_info->name->value, op_cur->file, op_cur->line);
-        SPerl_yyerror(parser, message);
+        block_start = 1;
       }
     }
     

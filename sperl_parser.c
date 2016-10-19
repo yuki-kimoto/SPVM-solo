@@ -68,6 +68,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->cur_line = 1;
   parser->next_var_id = 1;
   
+  parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
+  
   return parser;
 }
 

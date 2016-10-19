@@ -66,6 +66,9 @@ struct SPerl_yy_parser_{
   
   // Variable id
   SPerl_int next_var_id;
+  
+  // Current methods(named sub + anon sub) in class 
+  SPerl_ARRAY* current_method_infos;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
