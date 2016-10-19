@@ -327,6 +327,7 @@ declmy
 declanonsub
  : SUB '(' optsubargs ')' ':' optdescripters type block
      {
+       $1->type = SPerl_OP_ANONSUB;
        $$ = SPerl_OP_build_SUB(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
      }
 
