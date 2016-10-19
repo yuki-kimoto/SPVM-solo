@@ -239,13 +239,7 @@ statement
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
     }
-  | RETURN term ';'
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_RETURN, $2, NULL);
-    }
 
-returnstatement
-  :
 forstatement
   : FOR '(' term ';' term ';' term ')' block
     {
@@ -547,6 +541,10 @@ term
   | NEXT
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_NEXT, NULL, NULL);
+    }
+  | RETURN term
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_RETURN, $2, NULL);
     }
 
 block 
