@@ -283,7 +283,13 @@ void SPerl_PARSER_dump_const_value(SPerl_PARSER* parser, SPerl_CONST_VALUE* cons
 
 void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* method_info) {
   if (method_info) {
-    printf("      name => \"%s\"\n", method_info->name->value);
+    if (method_info->anon) {
+      printf("      name => (NONE)\n");
+    }
+    else {
+      printf("      name => \"%s\"\n", method_info->name->value);
+    }
+    printf("      anon => %d\n", method_info->anon);
     printf("      return_type => \"%s\"\n", method_info->return_type->value);
     SPerl_int i;
     printf("      descripter_infos => ");

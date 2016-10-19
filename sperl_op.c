@@ -156,8 +156,6 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       // Search field and methods
       SPerl_ARRAY* field_infos = SPerl_PARSER_new_array(parser, 0);;
       SPerl_HASH* field_info_symtable = SPerl_PARSER_new_hash(parser, 0);
-      SPerl_ARRAY* method_infos = SPerl_PARSER_new_array(parser, 0);;
-      SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
       
       // Collect field and use information
       SPerl_OP* op_usehassubs = op_block->first;
@@ -193,30 +191,40 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             SPerl_HASH_insert(field_info_symtable, field_name, strlen(field_name), field_info);
           }
         }
-        // Method
-        else if (op_usehassub->type == SPerl_OP_SUB) {
-          SPerl_METHOD_INFO* method_info = op_usehassub->uv.pv;
-          SPerl_char* method_name = method_info->name->value;
+      }
+      // Set filed and method information
+      class_info->field_infos = field_infos;
+      class_info->field_info_symtable = field_info_symtable;
+
+
+      // Method information
+      SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
+      SPerl_int i;
+      for (i = 0; i < parser->current_method_infos->length; i++) {
+        SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(parser->current_method_infos, i);
+        
+        SPerl_METHOD_INFO* found_method_info = NULL;
+        SPerl_char* method_name;
+        if (!method_info->anon) {
+          method_name = method_info->name->value;
           SPerl_METHOD_INFO* found_method_info
             = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
-          
-          if (found_method_info) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
-            sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, op_usehassub->file, op_usehassub->line);
-            SPerl_yyerror(parser, message);
-          }
-          else {
-            method_info->class_info = class_info;
-            SPerl_ARRAY_push(method_infos, method_info);
+        }
+        
+        if (found_method_info) {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
+          sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, method_info->op->file, method_info->op->line);
+          SPerl_yyerror(parser, message);
+        }
+        else {
+          method_info->class_info = class_info;
+          if (!method_info->anon) {
             SPerl_HASH_insert(method_info_symtable, method_name, strlen(method_name), method_info);
           }
         }
       }
-      
-      // Set filed and method information
-      class_info->field_infos = field_infos;
-      class_info->field_info_symtable = field_info_symtable;
-      class_info->method_infos = method_infos;
+      class_info->method_infos = parser->current_method_infos;
+      parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
       class_info->method_info_symtable = method_info_symtable;
     }
     // Enum
@@ -534,7 +542,12 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   
   // Create method infomation
   SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new(parser);
-  method_info->name = op_subname->uv.pv;
+  if (op_subname->type == SPerl_OP_NULL) {
+    method_info->anon = 1;
+  }
+  else {
+    method_info->name = op_subname->uv.pv;
+  }
   
   // subargs
   SPerl_int argument_count = 0;
