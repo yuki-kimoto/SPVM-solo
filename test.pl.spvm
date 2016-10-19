@@ -5,7 +5,6 @@ package main {
   use Point;
   use Foo;
   use Foo::Point3D;
-  use AAA;
 }
 package EnumA : enum {
   ONE,
@@ -70,8 +69,6 @@ package Foo {
 package Foo::Point3D {
 
   use Point -pt;
-
-  use Point;
 
   has x : int;
   has last : int;

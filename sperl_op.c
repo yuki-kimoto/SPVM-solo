@@ -353,6 +353,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               SPerl_char* alias_name = use_info->alias_name->value;
               SPerl_HASH_insert(class_info->alias, alias_name, strlen(alias_name), class_info);
             }
+            SPerl_HASH_insert(use_info_symtable, use_class_name, strlen(use_class_name), use_info);
           }
         }
         // Field
@@ -378,6 +379,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       class_info->field_infos = field_infos;
       class_info->field_info_symtable = field_info_symtable;
       class_info->use_infos = use_infos;
+      class_info->use_info_symtable = use_info_symtable;
 
       // Method information
       SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
