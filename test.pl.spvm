@@ -1,3 +1,12 @@
+package main {
+  use EnumA;
+  use EnumB;
+  use EnumC;
+  use Point;
+  use Foo;
+  use Foo::Point3D;
+  
+}
 package EnumA : enum {
   ONE,
   TWO,
