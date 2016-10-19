@@ -114,17 +114,12 @@ SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   return op_grammer;
 }
 
-SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package_, SPerl_OP* op_pkgname_, SPerl_OP* op_block_, SPerl_OP* op_descripters_) {
+SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
   SPerl_int i;
   
-  SPerl_OP_sibling_splice(parser, op_package_, NULL, 0, op_pkgname_);
-  SPerl_OP_sibling_splice(parser, op_package_, op_pkgname_, 0, op_block_);
-  SPerl_OP_sibling_splice(parser, op_package_, op_block_, 0, op_descripters_);
-  
-  SPerl_OP* op_package = op_package_;
-  SPerl_OP* op_pkgname = op_package->first;
-  SPerl_OP* op_block = SPerl_OP_sibling(parser, op_pkgname);
-  SPerl_OP* op_descripters = SPerl_OP_sibling(parser, op_block);
+  SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_pkgname);
+  SPerl_OP_sibling_splice(parser, op_package, op_pkgname, 0, op_block);
+  SPerl_OP_sibling_splice(parser, op_package, op_block, 0, op_descripters);
   
   SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
   
