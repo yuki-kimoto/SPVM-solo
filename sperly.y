@@ -102,9 +102,9 @@
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
-%type <opval> optdescripters listdescripter_infos descripter_infos enumvalues enumvalue declanonsub
-%type <opval> type pkgname fieldname subname package packages pkgalias optenumvalues
-%type <opval> forstatement whilestatement expression
+%type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
+%type <opval> type packagename fieldname subname package packages packagealias optenumvalues
+%type <opval> forstatement whilestatement expression optpackages
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -125,11 +125,7 @@
 %%
 
 grammar
-  : /* NULL */
-    {
-      $$ = SPerl_OP_build_GRAMMER(parser, NULL);
-    }
-  | packages
+  : optpackages
     {
       $$ = SPerl_OP_build_GRAMMER(parser, $1);
 
@@ -143,6 +139,22 @@ grammar
       }
     }
 
+optpackages
+  :	/* Empty */
+    {
+      $$ = SPerl_OP_newOP_LIST(parser);
+    }
+  |	packages
+    {
+      if ($1->type == SPerl_OP_LIST) {
+        $$ = $1;
+      }
+      else {
+        $$ = SPerl_OP_newOP_LIST(parser);
+        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+      }
+    }
+    
 packages
   : packages package
     {
@@ -151,15 +163,15 @@ packages
   | package
 
 package
-  : PACKAGE pkgname classblock
+  : PACKAGE packagename classblock
     {
       $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser));
     }
-  | PACKAGE pkgname ':' listdescripter_infos classblock
+  | PACKAGE packagename ':' listdescripters classblock
     {
       $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
     }
-  | PACKAGE pkgname ':' ENUM enumblock
+  | PACKAGE packagename ':' ENUM enumblock
     {
       $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
     }
@@ -296,11 +308,11 @@ elsestatement
     }
 
 decluse
-  : USE pkgname ';'
+  : USE packagename ';'
     {
       $$ = SPerl_OP_build_USE(parser, $1, $2, SPerl_OP_newOP_NULL(parser));
     }
-  | USE pkgname '-' pkgalias';'
+  | USE packagename '-' packagealias';'
     {
       $$ = SPerl_OP_build_USE(parser, $1, $2, $4);
     }
@@ -541,7 +553,7 @@ term
         $4
       );
     }
-  | pkgname ARROW subname '(' optterms ')'
+  | packagename ARROW subname '(' optterms ')'
     {
       $$ = SPerl_OP_newOP(
         parser,
@@ -593,10 +605,10 @@ optdescripters
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	listdescripter_infos
+  |	listdescripters
 
-listdescripter_infos
-  :	descripter_infos
+listdescripters
+  :	descripters
     {
       if ($1->type == SPerl_OP_LIST) {
         $$ = $1;
@@ -607,8 +619,8 @@ listdescripter_infos
       }
     }
 
-descripter_infos
-  : descripter_infos DESCRIPTER
+descripters
+  : descripters DESCRIPTER
     {
       $$ = SPerl_OP_append_elem(parser, $1, $2);
     }
@@ -617,8 +629,8 @@ descripter_infos
 type : WORD
 fieldname : WORD
 subname : WORD
-pkgname : WORD
-pkgalias : WORD
+packagename : WORD
+packagealias : WORD
 
 %%
 
