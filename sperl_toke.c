@@ -693,9 +693,17 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           yylvalp->opval = (SPerl_OP*)op;
 
           if (expect == SPERL_OP_EXPECT_PACKAGENAME) {
-            if (strcmp(keyword, parser->current_use_class_name) != 0) {
-              fprintf(stderr, "Package name \"%s\" must be \"%s\" at %s line %d\n", keyword, parser->current_use_class_name, parser->cur_file, parser->cur_line);
-              exit(1);
+            // Template class
+            if (strchr(keyword, '_')) {
+              warn("Template class");
+            }
+            // Class
+            else {
+              if (strcmp(keyword, parser->current_use_class_name) != 0) {
+                fprintf(stderr, "Package name \"%s\" must be \"%s\" at %s line %d\n",
+                  keyword, parser->current_use_class_name, parser->cur_file, parser->cur_line);
+                exit(1);
+              }
             }
           }
           
