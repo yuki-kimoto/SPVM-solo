@@ -1,4 +1,4 @@
-package Class1 : value {
+package Test::Class1 : value {
   has re : const double;
   has im : const double;
 }

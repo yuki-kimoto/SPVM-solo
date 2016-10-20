@@ -1,6 +1,6 @@
-package Point {
-  use Class1;
-  sub get1 ($var1 : Class1, $var2 : int) : int {
+package Test::Point {
+  use Test::Class1;
+  sub get1 ($var1 : Test::Class1, $var2 : int) : int {
     my $var3 : int;
     my $var4 : int;
 

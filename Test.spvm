@@ -1,8 +1,8 @@
 package Test {
-  use EnumA;
-  use EnumB;
-  use EnumC;
-  use Point;
-  use Foo;
-  use Foo::Point3D;
+  use Test::EnumA;
+  use Test::EnumB;
+  use Test::EnumC;
+  use Test::Point;
+  use Test::Foo;
+  use Test::Foo::Point3D;
 }

@@ -56,7 +56,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               for (SPerl_int i = 0; i < parser->include_pathes->length; i++) {
                 SPerl_char* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
-                
                 // Change :: to /
                 SPerl_char* class_name_for_path = SPerl_PARSER_new_string(parser, strlen(class_name));
                 SPerl_char* bufptr_orig = class_name;
