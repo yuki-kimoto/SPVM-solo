@@ -89,7 +89,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                 }
               }
               if (!fh) {
-                fprintf(stderr, "Can't find file %s\n", cur_file);
+                if (use_info->op) {
+                  fprintf(stderr, "Can't find class \"%s\" at %s line %d\n", use_info->class_name->value, use_info->op->file, use_info->op->line);
+                }
+                else {
+                  fprintf(stderr, "Can't find file %s\n", cur_file);
+                }
                 exit(1);
               }
               parser->cur_file = cur_file;
@@ -101,7 +106,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               fseek(fh, 0, SEEK_SET);
               SPerl_char* src = SPerl_PARSER_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
-                fprintf(stderr, "Can't read file %s\n", parser->cur_file);
+                if (use_info->op) {
+                  fprintf(stderr, "Can't read file %s at %s line %d\n", cur_file, use_info->op->file, use_info->op->line);
+                }
+                else {
+                  fprintf(stderr, "Can't read file %s\n", cur_file);
+                }
                 exit(1);
               }
               fclose(fh);
