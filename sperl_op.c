@@ -345,8 +345,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             SPerl_yyerror(parser, message);
           }
           else {
-            SPerl_char* class_name = use_info->class_name->value;
-            SPerl_ARRAY_push(parser->class_stack, class_name);
+            SPerl_ARRAY_push(parser->use_info_stack, use_info);
             SPerl_ARRAY_push(use_infos, use_info);
             
             if (use_info->alias_name) {

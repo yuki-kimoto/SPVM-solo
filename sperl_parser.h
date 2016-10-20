@@ -62,7 +62,7 @@ struct SPerl_yy_parser_{
   SPerl_ARRAY* long_str_ptrs;
   
   // Class loading stack
-  SPerl_ARRAY* class_stack;
+  SPerl_ARRAY* use_info_stack;
   
   // Variable id
   SPerl_int next_var_id;

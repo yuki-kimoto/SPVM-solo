@@ -12,6 +12,7 @@
 #include "sperl_hash.h"
 #include "sperl_word_info.h"
 #include "sperl_descripter_info.h"
+#include "sperl_use_info.h"
 
 static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
   SPerl_OP* op = SPerl_OP_newOP(parser, type, NULL, NULL);
@@ -39,12 +40,14 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->cur_src = NULL;
         
         // If there are more module, load it
-        SPerl_ARRAY* class_stack = parser->class_stack;
+        SPerl_ARRAY* use_info_stack = parser->use_info_stack;
+        
         
         while (1) {
-          SPerl_char* class_name = (SPerl_char*)SPerl_ARRAY_pop(class_stack);
-          
-          if (class_name) {
+          SPerl_USE_INFO* use_info = SPerl_ARRAY_pop(use_info_stack);
+          if (use_info) {
+            SPerl_char* class_name = use_info->class_name->value;
+
             SPerl_CLASS_INFO* found_class_info = SPerl_HASH_search(parser->class_info_symtable, class_name, strlen(class_name));
             if (found_class_info) {
               continue;
