@@ -82,7 +82,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             }
             else {
               SPerl_char* cur_file = SPerl_PARSER_new_string(parser, strlen(class_name) + 8);
-              sprintf(cur_file, "%s.pm.spvm", class_name);
+              sprintf(cur_file, "%s.spvm", class_name);
               parser->cur_file = cur_file;
               // Open source file
               FILE* fh = fopen(parser->cur_file, "r");
