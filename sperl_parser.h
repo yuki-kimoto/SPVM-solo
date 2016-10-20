@@ -75,6 +75,9 @@ struct SPerl_yy_parser_{
   
   // Current package count
   SPerl_int current_package_count;
+  
+  // Current use class name
+  SPerl_char* current_use_class_name;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
@@ -99,7 +102,8 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 // Expected token
 enum SPerl_op_expect {
   SPerl_OP_EXPECT_NORMAL,
-  SPerl_OP_EXPECT_WORD
+  SPerl_OP_EXPECT_WORD,
+  SPERL_OP_EXPECT_PACKAGENAME
 };
 
 int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser);

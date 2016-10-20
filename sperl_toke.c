@@ -97,6 +97,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                 }
                 exit(1);
               }
+              
               parser->cur_file = cur_file;
               
               
@@ -120,6 +121,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               parser->bufptr = src;
               parser->befbufptr = src;
               parser->current_package_count = 0;
+              parser->current_use_class_name = class_name;
               break;
             }
           }
@@ -583,8 +585,11 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                 fprintf(stderr, "Can't write second package declaration in file at %s line %d\n", parser->cur_file, parser->cur_line);
                 exit(1);
               }
-              
               parser->current_package_count++;
+              
+              // Next is package name
+              parser->expect = SPERL_OP_EXPECT_PACKAGENAME;
+              
               yylvalp->opval = _newOP(parser, SPerl_OP_PACKAGE);
               return PACKAGE;
             }
@@ -686,6 +691,13 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           word_info->op = op;
           op->uv.pv = word_info;
           yylvalp->opval = (SPerl_OP*)op;
+
+          if (expect == SPERL_OP_EXPECT_PACKAGENAME) {
+            if (strcmp(keyword, parser->current_use_class_name) != 0) {
+              fprintf(stderr, "Package name \"%s\" must be \"%s\" at %s line %d\n", keyword, parser->current_use_class_name, parser->cur_file, parser->cur_line);
+              exit(1);
+            }
+          }
           
           return WORD;
         }
