@@ -1,0 +1,6 @@
+package EnumA : enum {
+  ONE,
+  TWO,
+  THREE = 4,
+  FORE
+}

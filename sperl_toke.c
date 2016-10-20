@@ -56,8 +56,29 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               for (SPerl_int i = 0; i < parser->include_pathes->length; i++) {
                 SPerl_char* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
-                cur_file = SPerl_PARSER_new_string(parser, strlen(include_path) + strlen(class_name) + 6);
-                sprintf(cur_file, "%s/%s.spvm", include_path, class_name);
+                
+                // Change :: to /
+                SPerl_char* class_name_for_path = SPerl_PARSER_new_string(parser, strlen(class_name));
+                SPerl_char* bufptr_orig = class_name;
+                SPerl_char* bufptr_to = class_name_for_path;
+                while (*bufptr_orig) {
+                  if (*bufptr_orig == ':' && *(bufptr_orig + 1) == ':') {
+                    *bufptr_to = '/';
+                    bufptr_orig += 2;
+                    bufptr_to++;
+                  }
+                  else {
+                    *bufptr_to = *bufptr_orig;
+                    bufptr_orig++;
+                    bufptr_to++;
+                  }
+                }
+                *bufptr_orig = '\0';
+                
+                // File name
+                cur_file = SPerl_PARSER_new_string(parser, strlen(include_path) + strlen(class_name_for_path) + 6);
+                sprintf(cur_file, "%s/%s.spvm", include_path, class_name_for_path);
+                
                 // Open source file
                 fh = fopen(cur_file, "r");
                 if (fh) {
@@ -86,6 +107,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               parser->cur_src = src;
               parser->bufptr = src;
               parser->befbufptr = src;
+              parser->current_package_count = 0;
               break;
             }
           }
@@ -544,6 +566,13 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               return SUB;
             }
             else if (memcmp(keyword, "package", str_len) == 0) {
+              // File can contains only one package
+              if (parser->current_package_count) {
+                fprintf(stderr, "Can't write second package declaration in file at %s line %d\n", parser->cur_file, parser->cur_line);
+                exit(1);
+              }
+              
+              parser->current_package_count++;
               yylvalp->opval = _newOP(parser, SPerl_OP_PACKAGE);
               return PACKAGE;
             }

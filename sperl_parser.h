@@ -72,6 +72,9 @@ struct SPerl_yy_parser_{
   
   // Include pathes
   SPerl_ARRAY* include_pathes;
+  
+  // Current package count
+  SPerl_int current_package_count;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
