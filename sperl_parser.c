@@ -69,6 +69,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->next_var_id = 1;
   
   parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
+  parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
   
   return parser;
 }
@@ -357,7 +358,6 @@ void SPerl_PARSER_dump_enum_value_info(SPerl_PARSER* parser, SPerl_ENUM_VALUE_IN
 void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_var_info) {
   if (my_var_info) {
     printf("          name => \"%s\"\n", my_var_info->name->value);
-    printf("          id => %d\n", my_var_info->id);
     printf("          type => \"%s\"\n", my_var_info->type->value);
     printf("          descripter_infos => ");
     SPerl_ARRAY* descripter_infos = my_var_info->descripter_infos;
@@ -376,3 +376,5 @@ void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_v
     printf("          None\n");
   }
 }
+
+

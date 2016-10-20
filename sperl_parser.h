@@ -69,6 +69,9 @@ struct SPerl_yy_parser_{
   
   // Current methods(named sub + anon sub) in class 
   SPerl_ARRAY* current_method_infos;
+  
+  // Include pathes
+  SPerl_ARRAY* include_pathes;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
