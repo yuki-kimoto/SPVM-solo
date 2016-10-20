@@ -13,13 +13,12 @@ int main(int argc, char *argv[])
   }
   
   /* Source file */
-  SPerl_char* file = argv[1];
+  SPerl_char* class_name = argv[1];
   
   /* initialize parser */
   SPerl_PARSER* parser = SPerl_PARSER_new();
   SPerl_ARRAY_push(parser->include_pathes, ".");
-  
-  parser->cur_file = file;
+  SPerl_ARRAY_push(parser->class_stack, class_name);
   
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;

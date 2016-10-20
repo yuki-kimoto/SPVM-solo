@@ -71,6 +71,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
   parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
   
+  parser->bufptr = "";
+  
   return parser;
 }
 
