@@ -97,8 +97,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                 }
               }
               if (!fh) {
-                printf("Can't find file %s\n", cur_file);
-                return -1;
+                fprintf(stderr, "Can't find file %s\n", cur_file);
+                exit(1);
               }
               parser->cur_file = cur_file;
               
@@ -109,8 +109,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               fseek(fh, 0, SEEK_SET);
               SPerl_char* src = SPerl_PARSER_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
-                printf("Can't read file %s\n", parser->cur_file);
-                return -1;
+                fprintf(stderr, "Can't read file %s\n", parser->cur_file);
+                exit(1);
               }
               fclose(fh);
               src[file_size] = '\0';
