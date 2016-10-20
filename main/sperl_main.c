@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../sperl_parser.h"
+#include "../sperl_array.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +17,8 @@ int main(int argc, char *argv[])
   
   /* initialize parser */
   SPerl_PARSER* parser = SPerl_PARSER_new();
+  SPerl_ARRAY_push(parser->include_pathes, ".");
+  
   parser->cur_file = file;
   
   /* call SPerl_yyparse */

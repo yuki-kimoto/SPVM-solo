@@ -81,20 +81,32 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               continue;
             }
             else {
-              SPerl_char* cur_file = SPerl_PARSER_new_string(parser, strlen(class_name) + 8);
-              sprintf(cur_file, "%s.spvm", class_name);
-              parser->cur_file = cur_file;
-              // Open source file
-              FILE* fh = fopen(parser->cur_file, "r");
-              if (fh == NULL) {
-                printf("Can't open file %s\n", parser->cur_file);
+              // Search class file
+              SPerl_char* cur_file;
+              FILE* fh;
+              for (SPerl_int i = 0; i < parser->include_pathes->length; i++) {
+                SPerl_char* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
+                
+                cur_file = SPerl_PARSER_new_string(parser, strlen(include_path) + strlen(class_name) + 6);
+                sprintf(cur_file, "%s/%s.spvm", include_path, class_name);
+                // Open source file
+                fh = fopen(cur_file, "r");
+                if (fh) {
+                  parser->cur_file = cur_file;
+                  break;
+                }
+              }
+              if (!fh) {
+                printf("Can't find file %s\n", cur_file);
                 return -1;
               }
-              // File size
+              parser->cur_file = cur_file;
+              
+              
+              // Read file content
               fseek(fh, 0, SEEK_END);
               SPerl_int file_size = ftell(fh);
               fseek(fh, 0, SEEK_SET);
-              // Read file
               SPerl_char* src = SPerl_PARSER_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
                 printf("Can't read file %s\n", parser->cur_file);
