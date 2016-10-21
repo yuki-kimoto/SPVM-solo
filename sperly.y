@@ -633,7 +633,7 @@ type
 subtype
   : SUB '(' optwordtypes ')' wordtype
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_SUBTYPE, $3, $5);
+      $$ = SPerl_OP_build_subtype(parser, $3, $5);
     }
 optwordtypes
   :	/* Empty */

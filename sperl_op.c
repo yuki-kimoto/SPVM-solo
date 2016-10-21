@@ -19,6 +19,7 @@
 #include "sperl_word_info.h"
 #include "sperl_enum_value_info.h"
 #include "sperl_descripter_info.h"
+#include "sperl_subtype_info.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_names[] = {
@@ -99,6 +100,23 @@ static SPerl_boolean _is_core_type (SPerl_char* type_name) {
   else {
     return 0;
   }
+}
+
+SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, SPerl_OP* op_wordtype) {
+  SPerl_OP* op_subtype = SPerl_OP_newOP(parser, SPerl_OP_SUBTYPE, op_wordtypes, op_wordtype);
+  
+  SPerl_SUBTYPE_INFO* subtype_info = SPerl_SUBTYPE_INFO_new(parser);
+  subtype_info->return_type = op_wordtype->uv.pv;
+  SPerl_ARRAY* argument_types = SPerl_PARSER_new_array(parser, 0);
+  {
+    SPerl_OP* op_wordtype = op_wordtypes->first;
+    while (op_wordtype = SPerl_OP_sibling(parser, op_wordtype)) {
+      SPerl_ARRAY_push(argument_types, op_wordtype->uv.pv);
+    }
+  }
+  subtype_info->argument_types = argument_types;
+  
+  return op_subtype;
 }
 
 SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
