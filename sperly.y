@@ -165,23 +165,23 @@ packages
 package
   : PACKAGE packagename type ';'
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, SPerl_OP_newOP_NULL(parser), SPerl_OP_newOP_LIST(parser));
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, SPerl_OP_newOP_LIST(parser), SPerl_OP_newOP_NULL(parser));
     }
   | PACKAGE packagename type classblock
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $4, SPerl_OP_newOP_LIST(parser));
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, SPerl_OP_newOP_LIST(parser), $4);
     }
   | PACKAGE packagename classblock
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser));
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, SPerl_OP_newOP_LIST(parser), $3);
     }
   | PACKAGE packagename ':' listdescripters classblock
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $4, $5);
     }
   | PACKAGE packagename ':' ENUM enumblock
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $4, $5);
     }
 
 enumblock 

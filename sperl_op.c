@@ -332,7 +332,7 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   }
 }
 
-SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_block, SPerl_OP* op_descripters) {
+SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_descripters, SPerl_OP* op_block) {
   SPerl_int i;
   
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_pkgname);
