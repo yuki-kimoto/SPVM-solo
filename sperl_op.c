@@ -104,7 +104,7 @@ static SPerl_boolean _is_core_type (SPerl_char* type_name) {
 }
 
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, SPerl_OP* op_wordtype) {
-  SPerl_OP* op_subtype = SPerl_OP_newOP(parser, SPerl_OP_TYPE_INFO, op_wordtypes, op_wordtype);
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPE_INFO, op_wordtypes, op_wordtype);
   
   SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
   type_info->type = SPerl_TYPE_INFO_TYPE_SUBTYPE;
@@ -123,7 +123,18 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
   
   type_info->value = subtype_info;
   
-  return op_subtype;
+  return op_type;
+}
+
+SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPE_INFO, op_wordtype, NULL);
+  
+  SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
+  type_info->type = SPerl_TYPE_INFO_TYPE_WORDTYPE;
+  
+  type_info->value = op_wordtype->uv.pv;
+  
+  return op_type;
 }
 
 SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
