@@ -324,7 +324,7 @@ declhas
     }
 
 declsub
- : SUB subname '(' optsubargs ')' ':' optdescripters type block
+ : SUB subname '(' optsubargs ')' ':' optdescripters wordtype block
      {
        $$ = SPerl_OP_build_SUB(parser, $1, $2, $4, $7, $8, $9);
      }
@@ -336,7 +336,7 @@ declmy
     }
 
 declanonsub
- : SUB '(' optsubargs ')' ':' optdescripters type block
+ : SUB '(' optsubargs ')' ':' optdescripters wordtype block
      {
        $1->type = SPerl_OP_ANONSUB;
        $$ = SPerl_OP_build_SUB(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
@@ -595,7 +595,7 @@ subargs
   | subarg
 
 subarg
-  : VAR ':' optdescripters type
+  : VAR ':' optdescripters wordtype
     {
       $$ = SPerl_OP_build_MY(parser, SPerl_OP_newOP(parser, SPerl_OP_MY, NULL, NULL), $1, $3, $4);
     }

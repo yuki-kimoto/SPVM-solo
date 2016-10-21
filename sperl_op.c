@@ -111,15 +111,15 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
   
   // sub type
   SPerl_SUBTYPE_INFO* subtype_info = SPerl_SUBTYPE_INFO_new(parser);
-  subtype_info->return_type = op_wordtype->uv.pv;
-  SPerl_ARRAY* argument_types = SPerl_PARSER_new_array(parser, 0);
+  subtype_info->return_type_info = op_wordtype->uv.pv;
+  SPerl_ARRAY* argument_type_infos = SPerl_PARSER_new_array(parser, 0);
   {
     SPerl_OP* op_wordtype = op_wordtypes->first;
     while (op_wordtype = SPerl_OP_sibling(parser, op_wordtype)) {
-      SPerl_ARRAY_push(argument_types, op_wordtype->uv.pv);
+      SPerl_ARRAY_push(argument_type_infos, op_wordtype->uv.pv);
     }
   }
-  subtype_info->argument_types = argument_types;
+  subtype_info->argument_type_infos = argument_type_infos;
   
   type_info->uv.subtype = subtype_info;
   
@@ -128,13 +128,12 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
   return op_type;
 }
 
-SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPE_INFO, op_wordtype, NULL);
-  
+SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_word) {
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPE_INFO, op_word, NULL);
   
   SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
   type_info->type = SPerl_TYPE_INFO_TYPE_WORDTYPE;
-  type_info->uv.name = op_wordtype->uv.pv;
+  type_info->uv.name = op_word->uv.pv;
   
   op_type->uv.pv = type_info;
   

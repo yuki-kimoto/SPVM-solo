@@ -7,8 +7,8 @@
 #include "sperl_array.h"
 
 struct SPerl_subtype_info {
-  SPerl_ARRAY* argument_types;
-  SPerl_WORD_INFO* return_type;
+  SPerl_ARRAY* argument_type_infos;
+  SPerl_TYPE_INFO* return_type_info;
 };
 
 SPerl_SUBTYPE_INFO* SPerl_SUBTYPE_INFO_new(SPerl_PARSER* parser);
