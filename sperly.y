@@ -163,7 +163,15 @@ packages
   | package
 
 package
-  : PACKAGE packagename classblock
+  : PACKAGE packagename type ';'
+    {
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, SPerl_OP_newOP_NULL(parser), SPerl_OP_newOP_LIST(parser));
+    }
+  | PACKAGE packagename type classblock
+    {
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $4, SPerl_OP_newOP_LIST(parser));
+    }
+  | PACKAGE packagename classblock
     {
       $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser));
     }
