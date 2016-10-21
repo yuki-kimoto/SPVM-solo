@@ -695,7 +695,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           if (expect == SPERL_OP_EXPECT_PACKAGENAME) {
             // Template class
             if (strchr(keyword, '_')) {
-              warn("Template class");
+
             }
             // Class
             else {

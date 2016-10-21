@@ -85,7 +85,8 @@ SPerl_char* const SPerl_OP_names[] = {
   "enumvalue",
   "classblock",
   "descripter",
-  "anonsub"
+  "anonsub",
+  "subtype"
 };
 
 static SPerl_boolean _is_core_type (SPerl_char* type_name) {

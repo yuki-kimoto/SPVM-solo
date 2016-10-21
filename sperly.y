@@ -104,7 +104,7 @@
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues
-%type <opval> forstatement whilestatement expression optpackages
+%type <opval> forstatement whilestatement expression optpackages wordtype wordtypes optwordtypes subtype
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -626,7 +626,39 @@ descripters
     }
   | DESCRIPTER
 
-type : WORD
+type
+  : wordtype
+  | subtype
+
+subtype
+  : SUB '(' optwordtypes ')' wordtype
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_SUBTYPE, $3, $5);
+    }
+optwordtypes
+  :	/* Empty */
+    {
+      $$ = SPerl_OP_newOP_LIST(parser);
+    }
+  |	wordtypes
+    {
+      if ($1->type == SPerl_OP_LIST) {
+        $$ = $1;
+      }
+      else {
+        $$ = SPerl_OP_newOP_LIST(parser);
+        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+      }
+    }
+
+wordtypes
+  : wordtypes ',' wordtype
+    {
+      $$ = SPerl_OP_append_elem(parser, $1, $3);
+    }
+  | wordtype
+
+wordtype : WORD
 fieldname : WORD
 subname : WORD
 packagename : WORD
