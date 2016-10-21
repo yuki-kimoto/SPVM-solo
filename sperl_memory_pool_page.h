@@ -1,7 +1,7 @@
 #ifndef SPERL_MEMORY_POOL_PAGE
 #define SPERL_MEMORY_POOL_PAGE
 
-#include "sperl_type.h"
+#include "sperl_core_type.h"
 
 struct SPerl_memory_pool_page {
   SPerl_char* data;

@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "sperl_type.h"
+#include "sperl_core_type.h"
 
 // Parser information
 struct SPerl_yy_parser_{

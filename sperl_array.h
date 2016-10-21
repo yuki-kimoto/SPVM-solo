@@ -1,7 +1,7 @@
 #ifndef SPERL_ARRAY_H
 #define SPERL_ARRAY_H
 
-#include "sperl_type.h"
+#include "sperl_core_type.h"
 
 // Array
 struct SPerl_array {

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sperl_type.h"
+#include "sperl_core_type.h"
 
 enum SPerl_class_info_type {
   SPerl_CLASS_INFO_TYPE_NORMAL,

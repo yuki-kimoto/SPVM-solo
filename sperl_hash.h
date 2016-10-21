@@ -1,7 +1,7 @@
 #ifndef SPERL_HASH_H
 #define SPERL_HASH_H
 
-#include "sperl_type.h"
+#include "sperl_core_type.h"
 
 // Hash table
 struct SPerl_hash {

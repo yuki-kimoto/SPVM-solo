@@ -1,7 +1,7 @@
 #ifndef SPERL_DESCRIPTER_INFO_H
 #define SPERL_DESCRIPTER_INFO_H
 
-#include "sperl_type.h"
+#include "sperl_core_type.h"
 
 enum SPerl_descripter_info_type {
   SPerl_DESCRIPTER_INFO_TYPE_CONST,

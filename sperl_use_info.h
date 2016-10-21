@@ -1,7 +1,7 @@
 #ifndef SPERL_USE_INFO_H
 #define SPERL_USE_INFO_H
 
-#include "sperl_type.h"
+#include "sperl_core_type.h"
 
 // Use information
 struct SPerl_use_info {

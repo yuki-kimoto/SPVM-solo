@@ -1,7 +1,7 @@
 #ifndef SPERL_WORD_INFO_H
 #define SPERL_WORD_INFO_H
 
-#include "sperl_type.h"
+#include "sperl_core_type.h"
 
 // Field information
 struct SPerl_word_info {

@@ -1,7 +1,7 @@
 #ifndef SPERL_MY_VAR_INFO_H
 #define SPERL_MY_VAR_INFO_H
 
-#include "sperl_type.h"
+#include "sperl_core_type.h"
 
 struct SPerl_my_var_info {
   SPerl_WORD_INFO* type;

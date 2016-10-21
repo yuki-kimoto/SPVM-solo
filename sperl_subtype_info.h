@@ -1,7 +1,7 @@
 #ifndef SPERL_SUBTYPE_INFO_H
 #define SPERL_SUBTYPE_INFO_H
 
-#include "sperl_type.h"
+#include "sperl_core_type.h"
 #include "sperl_memory_pool.h"
 #include "sperl_parser.h"
 #include "sperl_array.h"
