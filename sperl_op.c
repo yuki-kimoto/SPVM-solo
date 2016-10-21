@@ -20,6 +20,7 @@
 #include "sperl_enum_value_info.h"
 #include "sperl_descripter_info.h"
 #include "sperl_subtype_info.h"
+#include "sperl_type_info.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_names[] = {
@@ -87,7 +88,7 @@ SPerl_char* const SPerl_OP_names[] = {
   "classblock",
   "descripter",
   "anonsub",
-  "subtype"
+  "type",
 };
 
 static SPerl_boolean _is_core_type (SPerl_char* type_name) {
@@ -103,8 +104,12 @@ static SPerl_boolean _is_core_type (SPerl_char* type_name) {
 }
 
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, SPerl_OP* op_wordtype) {
-  SPerl_OP* op_subtype = SPerl_OP_newOP(parser, SPerl_OP_SUBTYPE, op_wordtypes, op_wordtype);
+  SPerl_OP* op_subtype = SPerl_OP_newOP(parser, SPerl_OP_TYPE_INFO, op_wordtypes, op_wordtype);
   
+  SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
+  type_info->type = SPerl_TYPE_INFO_TYPE_SUBTYPE;
+  
+  // sub type
   SPerl_SUBTYPE_INFO* subtype_info = SPerl_SUBTYPE_INFO_new(parser);
   subtype_info->return_type = op_wordtype->uv.pv;
   SPerl_ARRAY* argument_types = SPerl_PARSER_new_array(parser, 0);
@@ -115,6 +120,8 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
     }
   }
   subtype_info->argument_types = argument_types;
+  
+  type_info->value = subtype_info;
   
   return op_subtype;
 }
