@@ -121,7 +121,7 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
   }
   subtype_info->argument_types = argument_types;
   
-  type_info->value = subtype_info;
+  type_info->uv.subtype = subtype_info;
   
   return op_type;
 }
@@ -132,7 +132,7 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
   SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
   type_info->type = SPerl_TYPE_INFO_TYPE_WORDTYPE;
   
-  type_info->value = op_wordtype->uv.pv;
+  type_info->uv.name = op_wordtype->uv.pv;
   
   return op_type;
 }
@@ -143,7 +143,7 @@ SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 
 
   // Name and type check
-  SPerl_OP_check(parser);
+  //SPerl_OP_check(parser);
 
   // Build constant pool
   SPerl_OP_build_const_pool(parser);
@@ -179,14 +179,17 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       for (SPerl_int j = 0; j < field_infos->length; j++) {
         // Field type
         SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
-        if (
-          !_is_core_type(field_info->type->value)
-          && !SPerl_HASH_search(class_info_symtable, field_info->type->value, strlen(field_info->type->value))
-          )
-        {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_info->type->value));
-          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", field_info->type->value, field_info->type->op->file,field_info->type->op->line);
-          SPerl_yyerror(parser, message);
+        if (field_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
+          SPerl_WORD_INFO* type_name = field_info->type_info->uv.name;
+          if (
+            !_is_core_type(type_name->value)
+            && !SPerl_HASH_search(class_info_symtable, type_name->value, strlen(type_name->value))
+            )
+          {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name->value));
+            sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name->value, type_name->op->file, type_name->op->line);
+            SPerl_yyerror(parser, message);
+          }
         }
         
         // Field descripter_infos
@@ -208,14 +211,17 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       for (SPerl_int j = 0; j < method_infos->length; j++) {
         // Check method type
         SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
-        if (
-          !_is_core_type(method_info->return_type->value)
-          && !SPerl_HASH_search(class_info_symtable, method_info->return_type->value, strlen(method_info->return_type->value))
-          )
-        {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_info->return_type->value));
-          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", method_info->return_type->value, method_info->return_type->op->file,method_info->return_type->op->line);
-          SPerl_yyerror(parser, message);
+        if (method_info->return_type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
+          SPerl_WORD_INFO* return_type_name = method_info->return_type_info->uv.name;
+          if (
+            !_is_core_type(return_type_name->value)
+            && !SPerl_HASH_search(class_info_symtable, return_type_name->value, strlen(return_type_name->value))
+            )
+          {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(return_type_name->value));
+            sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", return_type_name->value, return_type_name->op->file, return_type_name->op->line);
+            SPerl_yyerror(parser, message);
+          }
         }
         
         // Check method descripter_infos
@@ -237,14 +243,17 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         for (SPerl_int k = 0; k < my_var_infos->length; k++) {
           SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(my_var_infos, k);
 
-          if (
-            !_is_core_type(my_var_info->type->value)
-            && !SPerl_HASH_search(class_info_symtable, my_var_info->type->value, strlen(my_var_info->type->value))
-            )
-          {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var_info->type->value));
-            sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", my_var_info->type->value, my_var_info->type->op->file,my_var_info->type->op->line);
-            SPerl_yyerror(parser, message);
+          if (my_var_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
+            SPerl_WORD_INFO* type_name = my_var_info->type_info->uv.name;
+            if (
+              !_is_core_type(type_name->value)
+              && !SPerl_HASH_search(class_info_symtable, type_name->value, strlen(type_name->value))
+              )
+            {
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name->value));
+              sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name->value, type_name->op->file, type_name->op->line);
+              SPerl_yyerror(parser, message);
+            }
           }
           
           // Check my_var descripter_infos
@@ -521,7 +530,7 @@ SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_
   my_var_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
   
   // type
-  my_var_info->type = op_type->uv.pv;
+  my_var_info->type_info = op_type->uv.pv;
   
   // Add my_var information to op
   op_my->uv.pv = my_var_info;
@@ -546,7 +555,7 @@ SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* o
   field_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
   
   // Type
-  field_info->type = op_type->uv.pv;
+  field_info->type_info = op_type->uv.pv;
   
   // Set field informaiton
   op_has->uv.pv = field_info;
@@ -613,7 +622,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   method_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
   
   // return type
-  method_info->return_type = op_type->uv.pv;
+  method_info->return_type_info = op_type->uv.pv;
   
   // Save block
   method_info->op_block = op_block;

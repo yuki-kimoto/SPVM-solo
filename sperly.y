@@ -658,7 +658,11 @@ wordtypes
     }
   | wordtype
 
-wordtype : WORD
+wordtype
+  : WORD
+    {
+      $$ = SPerl_OP_build_wordtype(parser, $1);
+    }
 fieldname : WORD
 subname : WORD
 packagename : WORD

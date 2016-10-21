@@ -17,6 +17,7 @@
 #include "sperl_word_info.h"
 #include "sperl_enum_value_info.h"
 #include "sperl_descripter_info.h"
+#include "sperl_type_info.h"
 
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
@@ -293,7 +294,10 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
       printf("      name => \"%s\"\n", method_info->name->value);
     }
     printf("      anon => %d\n", method_info->anon);
-    printf("      return_type => \"%s\"\n", method_info->return_type->value);
+    if (method_info->return_type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
+      SPerl_WORD_INFO* return_type_name = method_info->return_type_info->uv.name;
+      printf("      return_type => \"%s\"\n", return_type_name->value);
+    }
     SPerl_int i;
     printf("      descripter_infos => ");
     SPerl_ARRAY* descripter_infos = method_info->descripter_infos;
@@ -327,7 +331,13 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
 void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_info) {
   if (field_info) {
     printf("        name => \"%s\"\n", field_info->name->value);
-    printf("        type => \"%s\"\n", field_info->type->value);
+    if (field_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
+      SPerl_WORD_INFO* type_name = field_info->type_info->uv.name;
+      printf("        type => \"%s\"\n", type_name->value);
+    }
+    else {
+      
+    }
     printf("          descripter_infos => ");
     SPerl_ARRAY* descripter_infos = field_info->descripter_infos;
     if (descripter_infos->length) {
@@ -360,7 +370,10 @@ void SPerl_PARSER_dump_enum_value_info(SPerl_PARSER* parser, SPerl_ENUM_VALUE_IN
 void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_var_info) {
   if (my_var_info) {
     printf("          name => \"%s\"\n", my_var_info->name->value);
-    printf("          type => \"%s\"\n", my_var_info->type->value);
+    if (my_var_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
+      SPerl_WORD_INFO* type_name = my_var_info->type_info->uv.name;
+      printf("          type => \"%s\"\n", type_name->value);
+    }
     printf("          descripter_infos => ");
     SPerl_ARRAY* descripter_infos = my_var_info->descripter_infos;
     if (descripter_infos->length) {

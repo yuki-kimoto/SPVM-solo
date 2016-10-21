@@ -5,6 +5,8 @@
 #include "sperl_memory_pool.h"
 #include "sperl_parser.h"
 #include "sperl_array.h"
+#include "sperl_word_info.h"
+#include "sperl_subtype_info.h"
 
 enum SPerl_type_info_type {
   SPerl_TYPE_INFO_TYPE_WORDTYPE,
@@ -13,7 +15,10 @@ enum SPerl_type_info_type {
 
 struct SPerl_type_info {
   SPerl_char type;
-  void* value;
+  union {
+    SPerl_WORD_INFO* name;
+    SPerl_SUBTYPE_INFO* subtype;
+  } uv;
 };
 
 SPerl_TYPE_INFO* SPerl_TYPE_INFO_new(SPerl_PARSER* parser);

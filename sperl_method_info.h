@@ -2,11 +2,12 @@
 #define SPERL_METHOD_H
 
 #include "sperl_core_type.h"
+#include "sperl_type_info.h"
 
 // Method information
 struct SPerl_method_info {
   SPerl_WORD_INFO* name;
-  SPerl_WORD_INFO* return_type;
+  SPerl_TYPE_INFO* return_type_info;
   SPerl_ARRAY* descripter_infos;
   SPerl_int argument_count;
   SPerl_ARRAY* my_var_infos;

@@ -2,10 +2,11 @@
 #define SPERL_FIELD_INFO_H
 
 #include "sperl_core_type.h"
+#include "sperl_type_info.h"
 
 // Field information
 struct SPerl_field_info {
-  SPerl_WORD_INFO* type;
+  SPerl_TYPE_INFO* type_info;
   SPerl_WORD_INFO* name;
   SPerl_ARRAY* descripter_infos;
   SPerl_OP* op;
