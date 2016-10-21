@@ -103,7 +103,7 @@
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
-%type <opval> type packagename fieldname subname package packages packagealias optenumvalues optpackagedescripters
+%type <opval> type packagename fieldname subname package packages packagealias optenumvalues
 %type <opval> forstatement whilestatement expression optpackages wordtype wordtypes optwordtypes subtype
 
 %right <opval> ASSIGNOP
@@ -163,23 +163,17 @@ packages
   | package
 
 package
-  : PACKAGE packagename optpackagedescripters classblock
+  : PACKAGE packagename classblock
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, $4);
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser));
+    }
+  | PACKAGE packagename ':' listdescripters classblock
+    {
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
     }
   | PACKAGE packagename ':' ENUM enumblock
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $4, $5);
-    }
-
-optpackagedescripters
-  : /* Empty */
-    {
-      $$ = SPerl_OP_newOP_LIST(parser);
-    }
-  | ':' listdescripters
-    {
-      $$ = $2;
+      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $5, $4);
     }
 
 enumblock 
