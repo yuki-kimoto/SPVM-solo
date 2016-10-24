@@ -98,11 +98,11 @@
 
 %token <opval> '+' '-'
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER
+%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER TYPEDEF
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
-%type <opval> optterms terms term subargs subarg optsubargs decluse declusehassub declusehassubs optdeclusehassubs
-%type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
+%type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs optdeclclassattrs
+%type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub decltypedef
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues
 %type <opval> forstatement whilestatement expression optpackages wordtype wordtypes optwordtypes subtype
 
@@ -163,11 +163,7 @@ packages
   | package
 
 package
-  : PACKAGE packagename type ';'
-    {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser), SPerl_OP_newOP_NULL(parser));
-    }
-  | PACKAGE packagename classblock
+  : PACKAGE packagename classblock
     {
       $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, SPerl_OP_newOP_NULL(parser), SPerl_OP_newOP_LIST(parser), $3);
     }
@@ -321,6 +317,12 @@ decluse
       $$ = SPerl_OP_build_USE(parser, $1, $2, $4);
     }
 
+decltypedef
+  : TYPEDEF type
+    {
+      $$ = $1;
+    }
+
 declhas
   : HAS fieldname ':' optdescripters type ';'
     {
@@ -346,12 +348,12 @@ declanonsub
        $$ = SPerl_OP_build_SUB(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
      }
 
-optdeclusehassubs
+optdeclclassattrs
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	declusehassubs
+  |	declclassattrs
     {
       if ($1->type == SPerl_OP_LIST) {
         $$ = $1;
@@ -362,20 +364,21 @@ optdeclusehassubs
       }
     }
 
-declusehassubs
-  : declusehassubs declusehassub
+declclassattrs
+  : declclassattrs declclassattr
     {
       $$ = SPerl_OP_append_elem(parser, $1, $2);
     }
-  | declusehassub
+  | declclassattr
 
-declusehassub
+declclassattr
   : decluse
   | declhas
   | declsub
+  | decltypedef
 
 classblock
-  : '{' optdeclusehassubs '}'
+  : '{' optdeclclassattrs '}'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_CLASSBLOCK, $2, NULL);
     }

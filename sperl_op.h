@@ -69,7 +69,8 @@ enum SPerl_OP_type {
   SPerl_OP_CLASSBLOCK,
   SPerl_OP_DESCRIPTER,
   SPerl_OP_ANONSUB,
-  SPerl_OP_TYPE_INFO
+  SPerl_OP_TYPE_INFO,
+  SPerl_OP_TYPEDEF
 };
 
 extern SPerl_char* const SPerl_OP_names[];

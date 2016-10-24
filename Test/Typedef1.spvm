@@ -1,1 +1,3 @@
-package Test::Typedef1 int;
+package Test::Typedef1 {
+  typedef int;
+}

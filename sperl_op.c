@@ -89,6 +89,7 @@ SPerl_char* const SPerl_OP_names[] = {
   "descripter",
   "anonsub",
   "type",
+  "typedef"
 };
 
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, SPerl_OP* op_wordtype) {
