@@ -477,7 +477,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           
           SPerl_OP* op = _newOP(parser, SPerl_OP_VAR);
           SPerl_VAR_INFO* var_info = SPerl_VAR_INFO_new(parser);
-          var_info->name = word_info_var;
+          var_info->name_word_info = word_info_var;
           op->uv.pv = var_info;
           yylvalp->opval = (SPerl_OP*)op;
           

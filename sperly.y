@@ -56,7 +56,7 @@
         break;
       case VAR: {
         SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)((SPerl_OP*)yylval.opval)->uv.pv;
-        fprintf(file, "\"%s\"", var_info->name);
+        fprintf(file, "\"%s\"", var_info->name_word_info->value);
         break;
       }
       case CONSTVALUE: {

@@ -530,7 +530,7 @@ SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_
   // Create my var information
   SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new(parser);
   SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_var->uv.pv;
-  my_var_info->name = var_info->name;
+  my_var_info->name_word_info = var_info->name_word_info;
   
   // descripter_infos
   my_var_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
@@ -669,7 +669,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
       SPerl_MY_VAR_INFO* my_var_info = NULL;
       for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
         SPerl_MY_VAR_INFO* my_var_info_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
-        if (strcmp(var_info->name->value, my_var_info_tmp->name->value) == 0) {
+        if (strcmp(var_info->name_word_info->value, my_var_info_tmp->name_word_info->value) == 0) {
           my_var_info = my_var_info_tmp;
           break;
         }
@@ -681,8 +681,8 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
       }
       else {
         // Error
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var_info->name->value));
-        sprintf(message, "Error: \"%s\" undeclared at %s line %d\n", var_info->name->value, op_cur->file, op_cur->line);
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var_info->name_word_info->value));
+        sprintf(message, "Error: \"%s\" undeclared at %s line %d\n", var_info->name_word_info->value, op_cur->file, op_cur->line);
         SPerl_yyerror(parser, message);
       }
     }
@@ -694,15 +694,15 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
       
       for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
         SPerl_MY_VAR_INFO* bef_my_var_info = SPerl_ARRAY_fetch(my_var_stack, i);
-        if (strcmp(my_var_info->name->value, bef_my_var_info->name->value) == 0) {
+        if (strcmp(my_var_info->name_word_info->value, bef_my_var_info->name_word_info->value) == 0) {
           found = 1;
           break;
         }
       }
       
       if (found) {
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var_info->name->value));
-        sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var_info->name->value, op_cur->file, op_cur->line);
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var_info->name_word_info->value));
+        sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var_info->name_word_info->value, op_cur->file, op_cur->line);
         SPerl_yyerror(parser, message);
       }
       else {

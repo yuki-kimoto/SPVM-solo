@@ -168,7 +168,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
   }
   else if (type == SPerl_OP_VAR) {
     SPerl_VAR_INFO* var_info = op->uv.pv;
-    printf(" \"%s\"", var_info->name->value);
+    printf(" \"%s\"", var_info->name_word_info->value);
   }
   else if (type == SPerl_OP_WORD) {
     SPerl_WORD_INFO* word_info = op->uv.pv;
@@ -393,7 +393,7 @@ void SPerl_PARSER_dump_enum_value_info(SPerl_PARSER* parser, SPerl_ENUM_VALUE_IN
 
 void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_var_info) {
   if (my_var_info) {
-    printf("          name => \"%s\"\n", my_var_info->name->value);
+    printf("          name => \"%s\"\n", my_var_info->name_word_info->value);
     if (my_var_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
       SPerl_WORD_INFO* type_name = my_var_info->type_info->uv.name;
       printf("          type => \"%s\"\n", type_name->value);

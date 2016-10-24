@@ -6,7 +6,7 @@
 #include "sperl_parser.h"
 
 struct SPerl_var_info {
-  SPerl_WORD_INFO* name;
+  SPerl_WORD_INFO* name_word_info;
   SPerl_MY_VAR_INFO* my_var_info;
   SPerl_int version;
 };
