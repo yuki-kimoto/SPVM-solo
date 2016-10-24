@@ -314,8 +314,9 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   SPerl_int i;
   
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_pkgname);
-  SPerl_OP_sibling_splice(parser, op_package, op_pkgname, 0, op_block);
-  SPerl_OP_sibling_splice(parser, op_package, op_block, 0, op_descripters);
+  SPerl_OP_sibling_splice(parser, op_package, op_pkgname, 0, op_typedef);
+  SPerl_OP_sibling_splice(parser, op_package, op_typedef, 0, op_descripters);
+  SPerl_OP_sibling_splice(parser, op_package, op_descripters, 0, op_block);
   
   SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
   
