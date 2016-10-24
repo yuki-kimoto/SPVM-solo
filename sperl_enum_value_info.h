@@ -5,7 +5,7 @@
 
 // Field information
 struct SPerl_enum_value_info {
-  SPerl_WORD_INFO* name;
+  SPerl_WORD_INFO* name_word_info;
   SPerl_CONST_VALUE* value;
   SPerl_OP* op;
 };

@@ -383,7 +383,7 @@ void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_
 
 void SPerl_PARSER_dump_enum_value_info(SPerl_PARSER* parser, SPerl_ENUM_VALUE_INFO* enum_value_info) {
   if (enum_value_info) {
-    printf("      name => \"%s\"\n", enum_value_info->name->value);
+    printf("      name => \"%s\"\n", enum_value_info->name_word_info->value);
     printf("      value => %d\n", enum_value_info->value->uv.int_value);
   }
   else {

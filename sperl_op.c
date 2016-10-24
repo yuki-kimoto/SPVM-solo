@@ -451,7 +451,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_OP* op_enumvalue = op_enumvalues->first;
         while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
           SPerl_ENUM_VALUE_INFO* enum_value_info = SPerl_ENUM_VALUE_INFO_new(parser);
-          enum_value_info->name = op_enumvalue->first->uv.pv;
+          enum_value_info->name_word_info = op_enumvalue->first->uv.pv;
           if (op_enumvalue->last) {
             enum_value_info->value = op_enumvalue->last->uv.pv;
           }
