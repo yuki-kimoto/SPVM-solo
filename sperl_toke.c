@@ -122,6 +122,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               parser->befbufptr = src;
               parser->current_package_count = 0;
               parser->current_use_class_name = class_name;
+              parser->cur_line = 1;
               break;
             }
           }
