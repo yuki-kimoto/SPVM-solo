@@ -468,16 +468,16 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
 
           size_t str_len = parser->bufptr - cur_token_ptr;
-          SPerl_char* var = SPerl_PARSER_new_string(parser, str_len);
-          memcpy(var, cur_token_ptr, str_len);
-          var[str_len] = '\0';
+          SPerl_char* var_name = SPerl_PARSER_new_string(parser, str_len);
+          memcpy(var_name, cur_token_ptr, str_len);
+          var_name[str_len] = '\0';
           
-          SPerl_WORD_INFO* word_info_var = SPerl_WORD_INFO_new(parser);
-          word_info_var->value = var;
+          SPerl_WORD_INFO* var_name_word_info = SPerl_WORD_INFO_new(parser);
+          var_name_word_info->value = var_name;
           
           SPerl_OP* op = _newOP(parser, SPerl_OP_VAR);
           SPerl_VAR_INFO* var_info = SPerl_VAR_INFO_new(parser);
-          var_info->name_word_info = word_info_var;
+          var_info->name_word_info = var_name_word_info;
           op->uv.pv = var_info;
           yylvalp->opval = (SPerl_OP*)op;
           
