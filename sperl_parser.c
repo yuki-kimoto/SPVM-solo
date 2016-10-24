@@ -56,12 +56,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->array_ptrs = SPerl_ARRAY_new(0);
   parser->hash_ptrs = SPerl_ARRAY_new(0);
   parser->long_str_ptrs = SPerl_ARRAY_new(0);
-  parser->use_info_stack = SPerl_ARRAY_new(0);
   parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
   parser->class_infos = SPerl_PARSER_new_array(parser, 0);
   parser->class_info_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
+  parser->use_info_stack = SPerl_PARSER_new_array(parser, 0);
   
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
