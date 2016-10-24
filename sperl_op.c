@@ -334,7 +334,7 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   }
 }
 
-SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_typedef, SPerl_OP* op_descripters, SPerl_OP* op_block) {
   SPerl_int i;
   
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_pkgname);
@@ -363,10 +363,15 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     
     class_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
 
-    // Class type
-    if (op_descripters && op_descripters->type == SPerl_OP_ENUM) {
+    // Enum
+    if (op_descripters->type == SPerl_OP_ENUM) {
       class_info->type = SPerl_CLASS_INFO_TYPE_ENUM;
     }
+    // Typedef
+    else if (op_typedef->type != SPerl_OP_NULL) {
+
+    }
+    // Normal class
     else {
       class_info->type = SPerl_CLASS_INFO_TYPE_NORMAL;
     }
@@ -461,6 +466,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
       class_info->method_info_symtable = method_info_symtable;
     }
+    
     // Enum
     else if (class_info->type == SPerl_CLASS_INFO_TYPE_ENUM) {
       // Values

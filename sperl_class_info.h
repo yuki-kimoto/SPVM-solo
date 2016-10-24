@@ -10,7 +10,6 @@ enum SPerl_class_info_type {
   SPerl_CLASS_INFO_TYPE_CORE,
   SPerl_CLASS_INFO_TYPE_NORMAL,
   SPerl_CLASS_INFO_TYPE_VALUE,
-  SPerl_CLASS_INFO_TYPE_TYPEDEF,
   SPerl_CLASS_INFO_TYPE_ENUM
 };
 
@@ -29,7 +28,6 @@ struct SPerl_class_info {
   SPerl_OP* op_block;
   SPerl_HASH* alias;
   SPerl_OP* op;
-  SPerl_OP* class_info;
 };
 
 SPerl_CLASS_INFO* SPerl_CLASS_INFO_new(SPerl_PARSER* parser);
