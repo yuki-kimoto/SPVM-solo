@@ -386,7 +386,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           // Field
           else if (op_usehassub->type == SPerl_OP_HAS) {
             SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_usehassub->uv.pv;
-            SPerl_char* field_name = field_info->name->value;
+            SPerl_char* field_name = field_info->name_word_info->value;
             SPerl_FIELD_INFO* found_field_info
               = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
             if (found_field_info) {
@@ -555,7 +555,7 @@ SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* o
   SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new(parser);
   
   // Name
-  field_info->name = op_field_name->uv.pv;
+  field_info->name_word_info = op_field_name->uv.pv;
 
   // Descripters
   field_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);

@@ -7,7 +7,7 @@
 // Field information
 struct SPerl_field_info {
   SPerl_TYPE_INFO* type_info;
-  SPerl_WORD_INFO* name;
+  SPerl_WORD_INFO* name_word_info;
   SPerl_ARRAY* descripter_infos;
   SPerl_OP* op;
   SPerl_CLASS_INFO* class_info;

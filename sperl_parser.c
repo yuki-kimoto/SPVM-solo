@@ -347,7 +347,7 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
 
 void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_info) {
   if (field_info) {
-    printf("      name => \"%s\"\n", field_info->name->value);
+    printf("      name => \"%s\"\n", field_info->name_word_info->value);
     if (field_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
       SPerl_WORD_INFO* type_name = field_info->type_info->uv.name;
       printf("      type => \"%s\"\n", type_name->value);
