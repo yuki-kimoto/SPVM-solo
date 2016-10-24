@@ -5,8 +5,8 @@
 
 // Use information
 struct SPerl_use_info {
-  SPerl_WORD_INFO* class_name;
-  SPerl_WORD_INFO* alias_name;
+  SPerl_WORD_INFO* class_name_word_info;
+  SPerl_WORD_INFO* alias_name_word_info;
   SPerl_OP* op;
 };
 

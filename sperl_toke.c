@@ -46,7 +46,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         while (1) {
           SPerl_USE_INFO* use_info = SPerl_ARRAY_pop(use_info_stack);
           if (use_info) {
-            SPerl_char* class_name = use_info->class_name->value;
+            SPerl_char* class_name = use_info->class_name_word_info->value;
 
             SPerl_CLASS_INFO* found_class_info = SPerl_HASH_search(parser->class_info_symtable, class_name, strlen(class_name));
             if (found_class_info) {
@@ -90,7 +90,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               }
               if (!fh) {
                 if (use_info->op) {
-                  fprintf(stderr, "Can't find class \"%s\" at %s line %d\n", use_info->class_name->value, use_info->op->file, use_info->op->line);
+                  fprintf(stderr, "Can't find class \"%s\" at %s line %d\n", use_info->class_name_word_info->value, use_info->op->file, use_info->op->line);
                 }
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_file);

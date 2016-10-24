@@ -363,7 +363,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           // Use
           if (op_usehassub->type == SPerl_OP_USE) {
             SPerl_USE_INFO* use_info = op_usehassub->uv.pv;
-            SPerl_char* use_class_name = use_info->class_name->value;
+            SPerl_char* use_class_name = use_info->class_name_word_info->value;
             SPerl_USE_INFO* found_use_info
               = SPerl_HASH_search(use_info_symtable, use_class_name, strlen(use_class_name));
             
@@ -376,8 +376,8 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               SPerl_ARRAY_push(parser->use_info_stack, use_info);
               SPerl_ARRAY_push(use_infos, use_info);
               
-              if (use_info->alias_name) {
-                SPerl_char* alias_name = use_info->alias_name->value;
+              if (use_info->alias_name_word_info) {
+                SPerl_char* alias_name = use_info->alias_name_word_info->value;
                 SPerl_HASH_insert(class_info->alias, alias_name, strlen(alias_name), class_info);
               }
               SPerl_HASH_insert(use_info_symtable, use_class_name, strlen(use_class_name), use_info);
@@ -488,16 +488,16 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     // Typedef
     else {
       // Class name
-      SPerl_WORD_INFO* class_name = op_pkgname->uv.pv;
+      SPerl_WORD_INFO* class_name_word_info = op_pkgname->uv.pv;
       SPerl_TYPE_INFO* type_info = op_type->uv.pv;
-      SPerl_HASH_insert(parser->typemap, class_name->value, strlen(class_name->value), type_info);
+      SPerl_HASH_insert(parser->typemap, class_name_word_info->value, strlen(class_name_word_info->value), type_info);
       
       // Add use information
       SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_USE, NULL, NULL);
       op_use->file = op_type->file;
       op_use->line = op_type->line;
       SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
-      use_info->class_name = class_name;
+      use_info->class_name_word_info = class_name_word_info;
       op_use->uv.pv = use_info;
       SPerl_ARRAY_push(parser->use_info_stack, use_info);
     }
@@ -511,9 +511,9 @@ SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* o
   SPerl_OP_sibling_splice(parser, op_use, op_pkgname, 0, op_pkgalias);
   
   SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
-  use_info->class_name = op_pkgname->uv.pv;
+  use_info->class_name_word_info = op_pkgname->uv.pv;
   if (op_pkgalias->type != SPerl_OP_NULL) {
-    use_info->alias_name = op_pkgalias->uv.pv;
+    use_info->alias_name_word_info = op_pkgalias->uv.pv;
   }
   use_info->op = op_use;
   op_use->uv.pv = use_info;
