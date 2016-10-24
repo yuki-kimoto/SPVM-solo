@@ -322,7 +322,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
 
   SPerl_HASH* typemap_symtable = parser->typemap_symtable;
 
-  SPerl_CLASS_INFO* found_typemap = SPerl_HASH_search(
+  SPerl_TYPE_INFO* found_typemap = SPerl_HASH_search(
     parser->typemap_symtable,
     class_name,
     strlen(class_name)
@@ -482,7 +482,12 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       // Add class information
       SPerl_ARRAY_push(parser->class_infos, class_info);
       SPerl_HASH_insert(parser->class_info_symtable, class_name, strlen(class_name), class_info);
-      SPerl_HASH_insert(parser->typemap_symtable, class_name, strlen(class_name), class_name);
+
+      SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
+      type_info->type = SPerl_TYPE_INFO_TYPE_WORDTYPE;
+      type_info->uv.name = op_pkgname->uv.pv;
+      
+      SPerl_HASH_insert(parser->typemap_symtable, class_name, strlen(class_name), type_info);
     }
     // Typedef
     else {
