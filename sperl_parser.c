@@ -74,6 +74,22 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   parser->bufptr = "";
   
+  // Add core type
+  SPerl_char* core_types[] = {"boolean", "char", "byte", "short", "int", "long", "float", "double"};
+  for (SPerl_int i = 0; i < 8; i++) {
+    // Class name
+    SPerl_WORD_INFO* name = SPerl_WORD_INFO_new(parser);
+    name->value = core_types[i];
+    
+    // Class
+    SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new(parser);
+    class_info->type = SPerl_CLASS_INFO_TYPE_CORE;
+    class_info->name = name;
+    
+    SPerl_ARRAY_push(parser->class_infos, class_info);
+    SPerl_HASH_insert(parser->class_info_symtable, name->value, strlen(name->value), class_info);
+  }
+  
   return parser;
 }
 
@@ -201,7 +217,7 @@ void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_info
     printf("  name => \"%s\"\n", class_info->name->value);
     printf("  descripter_infos => ");
     SPerl_ARRAY* descripter_infos = class_info->descripter_infos;
-    if (descripter_infos->length) {
+    if (descripter_infos && descripter_infos->length) {
       for (SPerl_int i = 0; i < descripter_infos->length; i++) {
         SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, i);
         printf("%s ", SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]);

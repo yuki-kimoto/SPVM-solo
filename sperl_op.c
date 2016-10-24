@@ -164,18 +164,20 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     SPerl_CLASS_INFO* class_info = SPerl_ARRAY_fetch(class_infos, i);
     
     // Check descripter
-    SPerl_ARRAY* descripter_infos = class_info->descripter_infos;
-    for (SPerl_int j = 0; j < descripter_infos->length; j++) {
-      SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, j);
-      if (descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_VALUE && descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_ENUM)
-      {
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]));
-        sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
-          SPerl_DESCRIPTER_INFO_type_names[descripter_info->type], descripter_info->op->file, descripter_info->op->line);
-        SPerl_yyerror(parser, message);
+    if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
+      SPerl_ARRAY* descripter_infos = class_info->descripter_infos;
+      for (SPerl_int j = 0; j < descripter_infos->length; j++) {
+        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, j);
+        if (descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_VALUE && descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_ENUM)
+        {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]));
+          sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
+            SPerl_DESCRIPTER_INFO_type_names[descripter_info->type], descripter_info->op->file, descripter_info->op->line);
+          SPerl_yyerror(parser, message);
+        }
       }
     }
-
+    
     if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
       // Check field
       SPerl_ARRAY* field_infos = class_info->field_infos;

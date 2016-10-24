@@ -7,6 +7,7 @@
 #include "sperl_core_type.h"
 
 enum SPerl_class_info_type {
+  SPerl_CLASS_INFO_TYPE_CORE,
   SPerl_CLASS_INFO_TYPE_NORMAL,
   SPerl_CLASS_INFO_TYPE_VALUE,
   SPerl_CLASS_INFO_TYPE_INTERFACE,
