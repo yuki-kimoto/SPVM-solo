@@ -16,8 +16,8 @@ enum SPerl_type_info_type {
 struct SPerl_type_info {
   SPerl_char type;
   union {
-    SPerl_WORD_INFO* name;
-    SPerl_SUBTYPE_INFO* subtype;
+    SPerl_WORD_INFO* name_word_info;
+    SPerl_SUBTYPE_INFO* subtype_info;
   } uv;
 };
 

@@ -109,7 +109,7 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
   }
   subtype_info->argument_type_infos = argument_type_infos;
   
-  type_info->uv.subtype = subtype_info;
+  type_info->uv.subtype_info = subtype_info;
   
   op_type->uv.pv = type_info;
   
@@ -121,7 +121,7 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_word) {
   
   SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
   type_info->type = SPerl_TYPE_INFO_TYPE_WORDTYPE;
-  type_info->uv.name = op_word->uv.pv;
+  type_info->uv.name_word_info = op_word->uv.pv;
   
   op_type->uv.pv = type_info;
   
@@ -173,7 +173,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         // Field type
         SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
         if (field_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-          SPerl_WORD_INFO* type_name = field_info->type_info->uv.name;
+          SPerl_WORD_INFO* type_name = field_info->type_info->uv.name_word_info;
           if (!SPerl_HASH_search(class_info_symtable, type_name->value, strlen(type_name->value))) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name->value));
             sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name->value, type_name->op->file, type_name->op->line);
@@ -201,7 +201,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         // Check method type
         SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
         if (method_info->return_type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-          SPerl_WORD_INFO* return_type_name = method_info->return_type_info->uv.name;
+          SPerl_WORD_INFO* return_type_name = method_info->return_type_info->uv.name_word_info;
           if (!SPerl_HASH_search(class_info_symtable, return_type_name->value, strlen(return_type_name->value))) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(return_type_name->value));
             sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", return_type_name->value, return_type_name->op->file, return_type_name->op->line);
@@ -229,7 +229,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
           SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(my_var_infos, k);
 
           if (my_var_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-            SPerl_WORD_INFO* type_name = my_var_info->type_info->uv.name;
+            SPerl_WORD_INFO* type_name = my_var_info->type_info->uv.name_word_info;
             if (!SPerl_HASH_search(class_info_symtable, type_name->value, strlen(type_name->value))) {
               SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name->value));
               sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name->value, type_name->op->file, type_name->op->line);
@@ -481,7 +481,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
 
       SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
       type_info->type = SPerl_TYPE_INFO_TYPE_WORDTYPE;
-      type_info->uv.name = op_pkgname->uv.pv;
+      type_info->uv.name_word_info = op_pkgname->uv.pv;
       
       SPerl_HASH_insert(parser->typemap, class_name, strlen(class_name), type_info);
     }

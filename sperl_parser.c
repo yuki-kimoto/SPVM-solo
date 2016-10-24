@@ -311,7 +311,7 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
     }
     printf("      anon => %d\n", method_info->anon);
     if (method_info->return_type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-      SPerl_WORD_INFO* return_type_name = method_info->return_type_info->uv.name;
+      SPerl_WORD_INFO* return_type_name = method_info->return_type_info->uv.name_word_info;
       printf("      return_type => \"%s\"\n", return_type_name->value);
     }
     SPerl_int i;
@@ -348,19 +348,19 @@ void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_
   if (field_info) {
     printf("      name => \"%s\"\n", field_info->name_word_info->value);
     if (field_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-      SPerl_WORD_INFO* type_name = field_info->type_info->uv.name;
+      SPerl_WORD_INFO* type_name = field_info->type_info->uv.name_word_info;
       printf("      type => \"%s\"\n", type_name->value);
     }
     else if (field_info->type_info->type == SPerl_TYPE_INFO_TYPE_SUBTYPE) {
-      SPerl_SUBTYPE_INFO* subtype_info = field_info->type_info->uv.subtype;
+      SPerl_SUBTYPE_INFO* subtype_info = field_info->type_info->uv.subtype_info;
       printf("      type => sub (");
       for (SPerl_int i = 0; i < subtype_info->argument_type_infos->length; i++) {
         SPerl_TYPE_INFO* argument_type_info = SPerl_ARRAY_fetch(subtype_info->argument_type_infos, i);
-        printf("%s " , argument_type_info->uv.name->value);
+        printf("%s " , argument_type_info->uv.name_word_info->value);
       }
       printf(") ");
       SPerl_TYPE_INFO* return_type_info = subtype_info->return_type_info;
-      printf("%s\n", return_type_info->uv.name->value);
+      printf("%s\n", return_type_info->uv.name_word_info->value);
     }
     printf("      descripter_infos => ");
     SPerl_ARRAY* descripter_infos = field_info->descripter_infos;
@@ -395,19 +395,19 @@ void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_v
   if (my_var_info) {
     printf("          name => \"%s\"\n", my_var_info->name_word_info->value);
     if (my_var_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-      SPerl_WORD_INFO* type_name = my_var_info->type_info->uv.name;
-      printf("          type => \"%s\"\n", type_name->value);
+      SPerl_WORD_INFO* type_name_word_info = my_var_info->type_info->uv.name_word_info;
+      printf("          type => \"%s\"\n", type_name_word_info->value);
     }
     else if (my_var_info->type_info->type == SPerl_TYPE_INFO_TYPE_SUBTYPE) {
-      SPerl_SUBTYPE_INFO* subtype_info = my_var_info->type_info->uv.subtype;
+      SPerl_SUBTYPE_INFO* subtype_info = my_var_info->type_info->uv.subtype_info;
       printf("      type => sub (");
       for (SPerl_int i = 0; i < subtype_info->argument_type_infos->length; i++) {
         SPerl_TYPE_INFO* argument_type_info = SPerl_ARRAY_fetch(subtype_info->argument_type_infos, i);
-        printf("%s " , argument_type_info->uv.name->value);
+        printf("%s " , argument_type_info->uv.name_word_info->value);
       }
       printf(") ");
       SPerl_TYPE_INFO* return_type_info = subtype_info->return_type_info;
-      printf("%s\n", return_type_info->uv.name->value);
+      printf("%s\n", return_type_info->uv.name_word_info->value);
     }
 
     printf("          descripter_infos => ");
