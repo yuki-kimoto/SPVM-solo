@@ -318,23 +318,22 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   SPerl_OP_sibling_splice(parser, op_package, op_typedef, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_package, op_descripters, 0, op_block);
   
-  // Class or enum
-  if (op_typedef->type == SPerl_OP_NULL) {
-    SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
+  SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
+  
+  SPerl_CLASS_INFO* found_class_info = SPerl_HASH_search(
+    parser->class_info_symtable,
+    class_name,
+    strlen(class_name)
+  );
     
-    SPerl_CLASS_INFO* found_class_info = SPerl_HASH_search(
-      parser->class_info_symtable,
-      class_name,
-      strlen(class_name)
-    );
-      
-    if (found_class_info) {
-      SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(class_name));
-      sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", class_name, op_package->file, op_package->line);
-      SPerl_yyerror(parser, message);
-    }
-    else {
-
+  if (found_class_info) {
+    SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(class_name));
+    sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", class_name, op_package->file, op_package->line);
+    SPerl_yyerror(parser, message);
+  }
+  else {
+    // Class or enum
+    if (op_typedef->type == SPerl_OP_NULL) {
       SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new(parser);
       class_info->name = op_pkgname->uv.pv;
       class_info->op_block = op_block;
@@ -482,10 +481,10 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       SPerl_ARRAY_push(parser->class_infos, class_info);
       SPerl_HASH_insert(parser->class_info_symtable, class_name, strlen(class_name), class_info);
     }
-  }
-  // Typedef
-  else {
-    
+    // Typedef
+    else {
+      
+    }
   }
 
   return op_package;
