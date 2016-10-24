@@ -319,14 +319,16 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   SPerl_OP_sibling_splice(parser, op_package, op_descripters, 0, op_block);
   
   SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
-  
-  SPerl_CLASS_INFO* found_class_info = SPerl_HASH_search(
-    parser->class_info_symtable,
+
+  SPerl_HASH* typemap_symtable = parser->typemap_symtable;
+
+  SPerl_CLASS_INFO* found_typemap = SPerl_HASH_search(
+    parser->typemap_symtable,
     class_name,
     strlen(class_name)
   );
     
-  if (found_class_info) {
+  if (found_typemap) {
     SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(class_name));
     sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", class_name, op_package->file, op_package->line);
     SPerl_yyerror(parser, message);
@@ -480,6 +482,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       // Add class information
       SPerl_ARRAY_push(parser->class_infos, class_info);
       SPerl_HASH_insert(parser->class_info_symtable, class_name, strlen(class_name), class_info);
+      SPerl_HASH_insert(parser->typemap_symtable, class_name, strlen(class_name), class_name);
     }
     // Typedef
     else {
