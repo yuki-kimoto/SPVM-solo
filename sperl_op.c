@@ -310,24 +310,20 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   }
 }
 
-SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_typedef, SPerl_OP* op_descripters, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
   SPerl_int i;
   
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_pkgname);
-  SPerl_OP_sibling_splice(parser, op_package, op_pkgname, 0, op_typedef);
-  SPerl_OP_sibling_splice(parser, op_package, op_typedef, 0, op_descripters);
+  SPerl_OP_sibling_splice(parser, op_package, op_pkgname, 0, op_type);
+  SPerl_OP_sibling_splice(parser, op_package, op_type, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_package, op_descripters, 0, op_block);
   
   SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
 
-  SPerl_HASH* typemap_symtable = parser->typemap_symtable;
+  SPerl_HASH* typemap = parser->typemap;
 
-  SPerl_TYPE_INFO* found_typemap = SPerl_HASH_search(
-    parser->typemap_symtable,
-    class_name,
-    strlen(class_name)
-  );
-    
+  SPerl_TYPE_INFO* found_typemap = SPerl_HASH_search(parser->typemap, class_name, strlen(class_name));
+  
   if (found_typemap) {
     SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(class_name));
     sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", class_name, op_package->file, op_package->line);
@@ -335,7 +331,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   }
   else {
     // Class or enum
-    if (op_typedef->type == SPerl_OP_NULL) {
+    if (op_type->type == SPerl_OP_NULL) {
       SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new(parser);
       class_info->name = op_pkgname->uv.pv;
       class_info->op_block = op_block;
@@ -487,27 +483,23 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       type_info->type = SPerl_TYPE_INFO_TYPE_WORDTYPE;
       type_info->uv.name = op_pkgname->uv.pv;
       
-      SPerl_HASH_insert(parser->typemap_symtable, class_name, strlen(class_name), type_info);
+      SPerl_HASH_insert(parser->typemap, class_name, strlen(class_name), type_info);
     }
     // Typedef
     else {
-      /*
       // Class name
-      SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
-      
-      // Typedef name
-      SPerl_char* typedef_name = ((SPerl_WORD_INFO*)op_typedef->uv.pv)->value;
+      SPerl_WORD_INFO* class_name = op_pkgname->uv.pv;
+      SPerl_TYPE_INFO* type_info = op_type->uv.pv;
+      SPerl_HASH_insert(parser->typemap, class_name->value, strlen(class_name->value), type_info);
       
       // Add use information
       SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_USE, NULL, NULL);
-      op_use->file = op_typedef->file;
-      op_use->line = op_typedef->line;
+      op_use->file = op_type->file;
+      op_use->line = op_type->line;
       SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
-      use_info->class_name = typedef_name;
+      use_info->class_name = class_name;
       op_use->uv.pv = use_info;
       SPerl_ARRAY_push(parser->use_info_stack, use_info);
-      SPerl_HASH_insert(parser->typedef_symtable, class_name->value, strlen(class_name->value), typedef_name->value);
-      */
     }
   }
   
