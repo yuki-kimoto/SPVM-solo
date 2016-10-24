@@ -91,18 +91,6 @@ SPerl_char* const SPerl_OP_names[] = {
   "type",
 };
 
-static SPerl_boolean _is_core_type (SPerl_char* type_name) {
-  if (strcmp(type_name, "boolean") == 0 || strcmp(type_name, "char") == 0 || strcmp(type_name, "byte") == 0
-    || strcmp(type_name, "short") == 0 || strcmp(type_name, "int") == 0 || strcmp(type_name, "long") == 0
-    || strcmp(type_name, "float") == 0 || strcmp(type_name, "double") == 0)
-  {
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
-
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, SPerl_OP* op_wordtype) {
   SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPE_INFO, op_wordtypes, op_wordtype);
   
@@ -186,11 +174,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
         if (field_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
           SPerl_WORD_INFO* type_name = field_info->type_info->uv.name;
-          if (
-            !_is_core_type(type_name->value)
-            && !SPerl_HASH_search(class_info_symtable, type_name->value, strlen(type_name->value))
-            )
-          {
+          if (!SPerl_HASH_search(class_info_symtable, type_name->value, strlen(type_name->value))) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name->value));
             sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name->value, type_name->op->file, type_name->op->line);
             SPerl_yyerror(parser, message);
@@ -218,11 +202,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
         if (method_info->return_type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
           SPerl_WORD_INFO* return_type_name = method_info->return_type_info->uv.name;
-          if (
-            !_is_core_type(return_type_name->value)
-            && !SPerl_HASH_search(class_info_symtable, return_type_name->value, strlen(return_type_name->value))
-            )
-          {
+          if (!SPerl_HASH_search(class_info_symtable, return_type_name->value, strlen(return_type_name->value))) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(return_type_name->value));
             sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", return_type_name->value, return_type_name->op->file, return_type_name->op->line);
             SPerl_yyerror(parser, message);
@@ -250,11 +230,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
 
           if (my_var_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
             SPerl_WORD_INFO* type_name = my_var_info->type_info->uv.name;
-            if (
-              !_is_core_type(type_name->value)
-              && !SPerl_HASH_search(class_info_symtable, type_name->value, strlen(type_name->value))
-              )
-            {
+            if (!SPerl_HASH_search(class_info_symtable, type_name->value, strlen(type_name->value))) {
               SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name->value));
               sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name->value, type_name->op->file, type_name->op->line);
               SPerl_yyerror(parser, message);
