@@ -38,7 +38,7 @@ struct SPerl_yy_parser_{
   SPerl_HASH* class_info_symtable;
   
   // Typedef
-  SPerl_HASH* typedef_map;
+  SPerl_HASH* typedef_symtable;
   
   // Constant informations
   SPerl_ARRAY* const_values;

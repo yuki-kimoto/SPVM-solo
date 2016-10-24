@@ -483,10 +483,26 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     }
     // Typedef
     else {
+      /*
+      // Class name
+      SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
       
+      // Typedef name
+      SPerl_char* typedef_name = ((SPerl_WORD_INFO*)op_typedef->uv.pv)->value;
+      
+      // Add use information
+      SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_USE, NULL, NULL);
+      op_use->file = op_typedef->file;
+      op_use->line = op_typedef->line;
+      SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
+      use_info->class_name = typedef_name;
+      op_use->uv.pv = use_info;
+      SPerl_ARRAY_push(parser->use_info_stack, use_info);
+      SPerl_HASH_insert(parser->typedef_symtable, class_name->value, strlen(class_name->value), typedef_name->value);
+      */
     }
   }
-
+  
   return op_package;
 }
 
