@@ -230,10 +230,10 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
           SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
 
           if (my_var->type->type == SPerl_TYPE_TYPE_WORDTYPE) {
-            SPerl_WORD* type_name = my_var->type->uv.name_word;
-            if (!SPerl_HASH_search(class_symtable, type_name->value, strlen(type_name->value))) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name->value));
-              sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name->value, type_name->op->file, type_name->op->line);
+            SPerl_WORD* type_name_word = my_var->type->uv.name_word;
+            if (!SPerl_HASH_search(class_symtable, type_name_word->value, strlen(type_name_word->value))) {
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));
+              sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name_word->value, type_name_word->op->file, type_name_word->op->line);
               SPerl_yyerror(parser, message);
             }
           }
