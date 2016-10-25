@@ -4,8 +4,8 @@
 #include <ctype.h>
 
 #include "sperl_toke.h"
-#include "sperly.h"
-#include "sperly.tab.h"
+#include "sperl_yacc.h"
+#include "sperl_yacc.tab.h"
 #include "sperl_op.h"
 #include "sperl_parser.h"
 #include "sperl_const_value.h"

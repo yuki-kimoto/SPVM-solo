@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "../sperl_parser.h"
-#include "../sperly.h"
+#include "../sperl_yacc.h"
 #include "../sperl_array.h"
 #include "../sperl_use.h"
 #include "../sperl_word.h"

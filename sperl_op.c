@@ -6,7 +6,7 @@
 #include "sperl_array.h"
 #include "sperl_hash.h"
 #include "sperl_parser.h"
-#include "sperly.h"
+#include "sperl_yacc.h"
 #include "sperl_op.h"
 #include "sperl_method.h"
 #include "sperl_class.h"
