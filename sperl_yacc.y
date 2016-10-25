@@ -105,8 +105,8 @@
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs optdeclclassattrs
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub decltypedef
-%type <opval> type packagename fieldname subname package packages packagealias optenumvalues
-%type <opval> forstatement whilestatement expression optpackages wordtype wordtypes optwordtypes subtype
+%type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
+%type <opval> forstatement whilestatement expression optpackages subtype classortypedeftype types opttypes
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -332,7 +332,7 @@ declhas
     }
 
 declsub
- : SUB subname '(' optsubargs ')' ':' optdescripters wordtype block
+ : SUB subname '(' optsubargs ')' ':' optdescripters type block
      {
        $$ = SPerl_OP_build_SUB(parser, $1, $2, $4, $7, $8, $9);
      }
@@ -344,7 +344,7 @@ declmy
     }
 
 declanonsub
- : SUB '(' optsubargs ')' ':' optdescripters wordtype block
+ : SUB '(' optsubargs ')' ':' optdescripters type block
      {
        $1->type = SPerl_OP_C_TYPE_ANONSUB;
        $$ = SPerl_OP_build_SUB(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
@@ -604,7 +604,7 @@ subargs
   | subarg
 
 subarg
-  : VAR ':' optdescripters wordtype
+  : VAR ':' optdescripters type
     {
       $$ = SPerl_OP_build_MY(parser, SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_MY, NULL, NULL), $1, $3, $4);
     }
@@ -635,21 +635,19 @@ descripters
     }
   | DESCRIPTER
 
-type
-  : wordtype
-  | subtype
 
 subtype
-  : SUB '(' optwordtypes ')' wordtype
+  : SUB '(' opttypes ')' type
     {
       $$ = SPerl_OP_build_subtype(parser, $3, $5);
     }
-optwordtypes
+
+opttypes
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	wordtypes
+  |	types
     {
       if ($1->type == SPerl_OP_C_TYPE_LIST) {
         $$ = $1;
@@ -660,18 +658,30 @@ optwordtypes
       }
     }
 
-wordtypes
-  : wordtypes ',' wordtype
+types
+  : types ',' type
     {
       $$ = SPerl_OP_append_elem(parser, $1, $3);
     }
-  | wordtype
+  | type
 
-wordtype
-  : WORD
+type
+  : classortypedeftype
+  | arraytype
+  | subtype
+
+classortypedeftype : WORD;
+
+arraytype
+  : classortypedeftype '[' ']'
     {
-      $$ = SPerl_OP_build_wordtype(parser, $1);
+      $$ = $1;
     }
+  | SUB '[' ']' '(' opttypes ')' type
+    {
+      $$ = $1;
+    }
+
 fieldname : WORD
 subname : WORD
 packagename : WORD
