@@ -10,7 +10,7 @@ enum {
   SPerl_DESCRIPTER_C_CODE_ENUM
 };
 
-extern SPerl_char* const SPerl_DESCRIPTER_type_names[];
+extern SPerl_char* const SPerl_DESCRIPTER_NAMES[];
 
 // Field information
 struct SPerl_descripter {

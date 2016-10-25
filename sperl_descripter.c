@@ -8,7 +8,7 @@ SPerl_DESCRIPTER* SPerl_DESCRIPTER_new(SPerl_PARSER* parser) {
   return (SPerl_DESCRIPTER*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_DESCRIPTER));
 }
 
-SPerl_char* const SPerl_DESCRIPTER_type_names[] = {
+SPerl_char* const SPerl_DESCRIPTER_NAMES[] = {
   "const",
   "static",
   "value",
