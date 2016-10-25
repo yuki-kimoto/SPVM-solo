@@ -103,10 +103,10 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 
 /* sperl_toke.c */
 // Expected token
-enum SPerl_op_expect {
-  SPerl_OP_EXPECT_NORMAL,
-  SPerl_OP_EXPECT_WORD,
-  SPERL_OP_EXPECT_PACKAGENAME
+enum {
+  SPerl_TOKE_C_EXPECT_NORMAL,
+  SPerl_TOKE_C_EXPECT_WORD,
+  SPerl_TOKE_C_EXPECT_PACKAGENAME
 };
 
 int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser);

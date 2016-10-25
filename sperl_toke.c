@@ -27,7 +27,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
 
   // Get expected and retrun back to normal
   SPerl_char expect = parser->expect;
-  parser->expect = SPerl_OP_EXPECT_NORMAL;
+  parser->expect = SPerl_TOKE_C_EXPECT_NORMAL;
   
   while(1) {
     // Get current character
@@ -175,7 +175,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '>') {
           parser->bufptr++;
-          parser->expect = SPerl_OP_EXPECT_WORD;
+          parser->expect = SPerl_TOKE_C_EXPECT_WORD;
           yylvalp->opval = _newOP(parser, SPerl_OP_C_NULL);
           return ARROW;
         }
@@ -565,14 +565,14 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           keyword[str_len] = '\0';
           
           // Keyword
-          if (expect != SPerl_OP_EXPECT_WORD) {
+          if (expect != SPerl_TOKE_C_EXPECT_WORD) {
             if (memcmp(keyword, "my", str_len) == 0) {
               yylvalp->opval = _newOP(parser, SPerl_OP_C_MY);
               return MY;
             }
             else if (memcmp(keyword, "has", str_len) == 0) {
               yylvalp->opval = _newOP(parser, SPerl_OP_C_HAS);
-              parser->expect = SPerl_OP_EXPECT_WORD;
+              parser->expect = SPerl_TOKE_C_EXPECT_WORD;
               return HAS;
             }
             else if (memcmp(keyword, "typedef", str_len) == 0) {
@@ -581,7 +581,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             }
             else if (memcmp(keyword, "sub", str_len) == 0) {
               yylvalp->opval = _newOP(parser, SPerl_OP_C_SUB);
-              parser->expect = SPerl_OP_EXPECT_WORD;
+              parser->expect = SPerl_TOKE_C_EXPECT_WORD;
               return SUB;
             }
             else if (memcmp(keyword, "package", str_len) == 0) {
@@ -593,7 +593,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               parser->current_package_count++;
               
               // Next is package name
-              parser->expect = SPERL_OP_EXPECT_PACKAGENAME;
+              parser->expect = SPerl_TOKE_C_EXPECT_PACKAGENAME;
               
               yylvalp->opval = _newOP(parser, SPerl_OP_C_PACKAGE);
               return PACKAGE;
@@ -697,7 +697,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           op->uv.pv = word;
           yylvalp->opval = (SPerl_OP*)op;
 
-          if (expect == SPERL_OP_EXPECT_PACKAGENAME) {
+          if (expect == SPerl_TOKE_C_EXPECT_PACKAGENAME) {
             // Template class
             if (strchr(keyword, '_')) {
 
