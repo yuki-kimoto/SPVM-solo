@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "sperl_toke.h"
 #include "sperl_op.h"
 #include "sperl_parser.h"
 #include "sperly.tab.h"

@@ -9,13 +9,14 @@
   #include <string.h>
   
   #include "sperl_core_type.h"
+  #include "sperl_toke.h"
   #include "sperl_parser.h"
   #include "sperl_op.h"
   #include "sperl_var.h"
   #include "sperl_my_var.h"
   #include "sperl_const_value.h"
   #include "sperl_word.h"
-
+  
   /* Function for error */
   void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
   {
