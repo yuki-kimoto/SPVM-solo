@@ -130,6 +130,17 @@ SPerl_OP* SPerl_OP_build_classortypedeftype(SPerl_PARSER* parser, SPerl_OP* op_c
   return op_type;
 }
 
+SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_classortypedeftype) {
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_TYPE, op_type, NULL);
+  
+  SPerl_TYPE* type = SPerl_TYPE_new(parser);
+  type->type = SPerl_TYPE_C_ARRAY;
+  type->uv.type = op_classortypedeftype->uv.pv;
+  op_type->uv.pv = type;
+  
+  return op_type;
+}
+
 SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_GRAMMER, op_packages, NULL);
   parser->op_grammer = op_grammer;

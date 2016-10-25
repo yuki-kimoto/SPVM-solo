@@ -106,7 +106,7 @@
 %type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs optdeclclassattrs
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub decltypedef
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
-%type <opval> forstatement whilestatement expression optpackages subtype classortypedeftype types opttypes
+%type <opval> forstatement whilestatement expression optpackages subtype classortypedeftype classortypedeftypes optclassortypedeftypes
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -635,19 +635,23 @@ descripters
     }
   | DESCRIPTER
 
+type
+  : classortypedeftype
+  | arraytype
+  | subtype
 
 subtype
-  : SUB '(' opttypes ')' type
+  : SUB '(' optclassortypedeftypes ')' classortypedeftype
     {
       $$ = SPerl_OP_build_subtype(parser, $3, $5);
     }
 
-opttypes
+optclassortypedeftypes
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	types
+  |	classortypedeftypes
     {
       if ($1->type == SPerl_OP_C_TYPE_LIST) {
         $$ = $1;
@@ -658,19 +662,12 @@ opttypes
       }
     }
 
-types
-  : types ',' type
+classortypedeftypes
+  : classortypedeftypes ',' classortypedeftype
     {
       $$ = SPerl_OP_append_elem(parser, $1, $3);
     }
-  | type
-
-type
-  : classortypedeftype {
-  
-    }
-  | arraytype
-  | subtype
+  | classortypedeftype
 
 classortypedeftype : WORD
   {
@@ -680,11 +677,7 @@ classortypedeftype : WORD
 arraytype
   : classortypedeftype '[' ']'
     {
-      $$ = $1;
-    }
-  | SUB '[' ']' '(' opttypes ')' type
-    {
-      $$ = $1;
+      $$ = SPerl_OP_build_arraytype(parser, $1);
     }
 
 fieldname : WORD
