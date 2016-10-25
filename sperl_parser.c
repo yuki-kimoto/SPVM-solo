@@ -311,7 +311,7 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
     }
     printf("      anon => %d\n", method->anon);
     if (method->return_type->type == SPerl_TYPE_C_CLASS_OR_TYPEDEF) {
-      SPerl_WORD* return_type_name = method->return_type->name_word;
+      SPerl_WORD* return_type_name = method->return_type->uv.name_word;
       printf("      return_type => \"%s\"\n", return_type_name->value);
     }
     SPerl_int i;
@@ -348,7 +348,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
   if (field) {
     printf("      name => \"%s\"\n", field->name_word->value);
     if (field->type->type == SPerl_TYPE_C_CLASS_OR_TYPEDEF) {
-      SPerl_WORD* type_name = field->type->name_word;
+      SPerl_WORD* type_name = field->type->uv.name_word;
       printf("      type => \"%s\"\n", type_name->value);
     }
     else if (field->type->type == SPerl_TYPE_C_SUB) {
@@ -356,11 +356,11 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
       printf("      type => sub (");
       for (SPerl_int i = 0; i < subtype->argument_types->length; i++) {
         SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(subtype->argument_types, i);
-        printf("%s " , argument_type->name_word->value);
+        printf("%s " , argument_type->uv.name_word->value);
       }
       printf(") ");
       SPerl_TYPE* return_type = subtype->return_type;
-      printf("%s\n", return_type->name_word->value);
+      printf("%s\n", return_type->uv.name_word->value);
     }
     printf("      descripters => ");
     SPerl_ARRAY* descripters = field->descripters;
@@ -395,7 +395,7 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
   if (my_var) {
     printf("          name => \"%s\"\n", my_var->name_word->value);
     if (my_var->type->type == SPerl_TYPE_C_CLASS_OR_TYPEDEF) {
-      SPerl_WORD* type_name_word = my_var->type->name_word;
+      SPerl_WORD* type_name_word = my_var->type->uv.name_word;
       printf("          type => \"%s\"\n", type_name_word->value);
     }
     else if (my_var->type->type == SPerl_TYPE_C_SUB) {
@@ -403,11 +403,11 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
       printf("      type => sub (");
       for (SPerl_int i = 0; i < subtype->argument_types->length; i++) {
         SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(subtype->argument_types, i);
-        printf("%s " , argument_type->name_word->value);
+        printf("%s " , argument_type->uv.name_word->value);
       }
       printf(") ");
       SPerl_TYPE* return_type = subtype->return_type;
-      printf("%s\n", return_type->name_word->value);
+      printf("%s\n", return_type->uv.name_word->value);
     }
 
     printf("          descripters => ");
