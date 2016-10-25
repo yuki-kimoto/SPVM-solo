@@ -4,8 +4,8 @@
 
 #include "../sperl_parser.h"
 #include "../sperl_array.h"
-#include "../sperl_use_info.h"
-#include "../sperl_word_info.h"
+#include "../sperl_use.h"
+#include "../sperl_word.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,13 +22,13 @@ int main(int argc, char *argv[])
   SPerl_ARRAY_push(parser->include_pathes, ".");
   
   /* Build use information */
-  SPerl_USE_INFO* class_use_info = SPerl_USE_INFO_new(parser);
-  SPerl_WORD_INFO* class_name_word_info = SPerl_WORD_INFO_new(parser);
-  class_name_word_info->value = class_name;
-  class_use_info->class_name_word_info = class_name_word_info;
+  SPerl_USE* class_use = SPerl_USE_new(parser);
+  SPerl_WORD* class_name_word = SPerl_WORD_new(parser);
+  class_name_word->value = class_name;
+  class_use->class_name_word = class_name_word;
   
   /* Push class use infomation stack */
-  SPerl_ARRAY_push(parser->use_info_stack, class_use_info);
+  SPerl_ARRAY_push(parser->use_stack, class_use);
   
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;

@@ -6,18 +6,18 @@
 #include "sperl_array.h"
 #include "sperl_hash.h"
 #include "sperl_parser.h"
-#include "sperl_method_info.h"
-#include "sperl_class_info.h"
+#include "sperl_method.h"
+#include "sperl_class.h"
 #include "sperl_const_value.h"
-#include "sperl_my_var_info.h"
-#include "sperl_field_info.h"
+#include "sperl_my_var.h"
+#include "sperl_field.h"
 #include "sperl_memory_pool.h"
 #include "sperl_op.h"
-#include "sperl_var_info.h"
-#include "sperl_word_info.h"
-#include "sperl_enum_value_info.h"
-#include "sperl_descripter_info.h"
-#include "sperl_type_info.h"
+#include "sperl_var.h"
+#include "sperl_word.h"
+#include "sperl_enum_value.h"
+#include "sperl_descripter.h"
+#include "sperl_type.h"
 
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
@@ -58,10 +58,10 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->long_str_ptrs = SPerl_ARRAY_new(0);
   parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
-  parser->class_infos = SPerl_PARSER_new_array(parser, 0);
-  parser->class_info_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->classs = SPerl_PARSER_new_array(parser, 0);
+  parser->class_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
-  parser->use_info_stack = SPerl_PARSER_new_array(parser, 0);
+  parser->use_stack = SPerl_PARSER_new_array(parser, 0);
   parser->typemap = SPerl_PARSER_new_hash(parser, 0);
   
   parser->const_pool_capacity = 1024;
@@ -69,7 +69,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   parser->next_var_id = 1;
   
-  parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
+  parser->current_methods = SPerl_PARSER_new_array(parser, 0);
   parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
   
   parser->bufptr = "";
@@ -78,16 +78,16 @@ SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_char* core_types[] = {"boolean", "char", "byte", "short", "int", "long", "float", "double"};
   for (SPerl_int i = 0; i < 8; i++) {
     // Class name
-    SPerl_WORD_INFO* name = SPerl_WORD_INFO_new(parser);
+    SPerl_WORD* name = SPerl_WORD_new(parser);
     name->value = core_types[i];
     
     // Class
-    SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new(parser);
-    class_info->type = SPerl_CLASS_INFO_TYPE_CORE;
-    class_info->name = name;
+    SPerl_CLASS* class = SPerl_CLASS_new(parser);
+    class->type = SPerl_CLASS_TYPE_CORE;
+    class->name = name;
     
-    SPerl_ARRAY_push(parser->class_infos, class_info);
-    SPerl_HASH_insert(parser->class_info_symtable, name->value, strlen(name->value), class_info);
+    SPerl_ARRAY_push(parser->classs, class);
+    SPerl_HASH_insert(parser->class_symtable, name->value, strlen(name->value), class);
   }
   
   return parser;
@@ -167,12 +167,12 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
     }
   }
   else if (type == SPerl_OP_VAR) {
-    SPerl_VAR_INFO* var_info = op->uv.pv;
-    printf(" \"%s\"", var_info->name_word_info->value);
+    SPerl_VAR* var = op->uv.pv;
+    printf(" \"%s\"", var->name_word->value);
   }
   else if (type == SPerl_OP_WORD) {
-    SPerl_WORD_INFO* word_info = op->uv.pv;
-    printf(" \"%s\"", word_info->value);
+    SPerl_WORD* word = op->uv.pv;
+    printf(" \"%s\"", word->value);
   }
   printf("\n");
 
@@ -187,12 +187,12 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
   }
 }
 
-void SPerl_PARSER_dump_parser_info(SPerl_PARSER* parser) {
+void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
   SPerl_PARSER_dump_ast(parser, parser->op_grammer, 0);
   
   printf("\n[Class infomation]\n");
-  SPerl_PARSER_dump_class_infos(parser, parser->class_infos);
+  SPerl_PARSER_dump_classs(parser, parser->classs);
   
   printf("\n[Constant information]\n");
   SPerl_PARSER_dump_const_values(parser, parser->const_values);
@@ -209,54 +209,54 @@ void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_val
   }
 }
 
-void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_infos) {
-  for (SPerl_int i = 0; i < class_infos->length; i++) {
-    SPerl_CLASS_INFO* class_info = (SPerl_CLASS_INFO*)SPerl_ARRAY_fetch(class_infos, i);
+void SPerl_PARSER_dump_classs(SPerl_PARSER* parser, SPerl_ARRAY* classs) {
+  for (SPerl_int i = 0; i < classs->length; i++) {
+    SPerl_CLASS* class = (SPerl_CLASS*)SPerl_ARRAY_fetch(classs, i);
     
-    printf("class_info[%d]\n", i);
-    printf("  name => \"%s\"\n", class_info->name->value);
-    printf("  descripter_infos => ");
-    SPerl_ARRAY* descripter_infos = class_info->descripter_infos;
-    if (descripter_infos && descripter_infos->length) {
-      for (SPerl_int i = 0; i < descripter_infos->length; i++) {
-        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, i);
-        printf("%s ", SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]);
+    printf("class[%d]\n", i);
+    printf("  name => \"%s\"\n", class->name->value);
+    printf("  descripters => ");
+    SPerl_ARRAY* descripters = class->descripters;
+    if (descripters && descripters->length) {
+      for (SPerl_int i = 0; i < descripters->length; i++) {
+        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
+        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->type]);
       }
     }
     else {
       printf("(None)");
     }
     printf("\n");
-    printf("  op_block => %x\n", class_info->op_block);
+    printf("  op_block => %x\n", class->op_block);
     
     // Class
-    if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
+    if (class->type == SPerl_CLASS_TYPE_NORMAL) {
       // Field information
-      printf("  field_infos\n");
-      SPerl_ARRAY* field_infos = class_info->field_infos;
-      for (SPerl_int j = 0; j < field_infos->length; j++) {
-        SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
-        printf("    field_info[%" PRId32 "]\n", j);
-        SPerl_PARSER_dump_field_info(parser, field_info);
+      printf("  fields\n");
+      SPerl_ARRAY* fields = class->fields;
+      for (SPerl_int j = 0; j < fields->length; j++) {
+        SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
+        printf("    field[%" PRId32 "]\n", j);
+        SPerl_PARSER_dump_field(parser, field);
       }
       
       // Method information
-      printf("  method_infos\n");
-      SPerl_ARRAY* method_infos = class_info->method_infos;
-      for (SPerl_int j = 0; j < method_infos->length; j++) {
-        SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
-        printf("    method_info[%" PRId32 "]\n", j);
-        SPerl_PARSER_dump_method_info(parser, method_info);
+      printf("  methods\n");
+      SPerl_ARRAY* methods = class->methods;
+      for (SPerl_int j = 0; j < methods->length; j++) {
+        SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
+        printf("    method[%" PRId32 "]\n", j);
+        SPerl_PARSER_dump_method(parser, method);
       }
     }
-    else if (class_info->type == SPerl_CLASS_INFO_TYPE_ENUM) {
+    else if (class->type == SPerl_CLASS_TYPE_ENUM) {
       // Enum value information
-      printf("  enum_value_infos\n");
-      SPerl_ARRAY* enum_value_infos = class_info->enum_value_infos;
-      for (SPerl_int j = 0; j < enum_value_infos->length; j++) {
-        SPerl_ENUM_VALUE_INFO* enum_value_info = SPerl_ARRAY_fetch(enum_value_infos, j);
-        printf("    enum_value_info[%" PRId32 "]\n", j);
-        SPerl_PARSER_dump_enum_value_info(parser, enum_value_info);
+      printf("  enum_values\n");
+      SPerl_ARRAY* enum_values = class->enum_values;
+      for (SPerl_int j = 0; j < enum_values->length; j++) {
+        SPerl_ENUM_VALUE* enum_value = SPerl_ARRAY_fetch(enum_values, j);
+        printf("    enum_value[%" PRId32 "]\n", j);
+        SPerl_PARSER_dump_enum_value(parser, enum_value);
       }
     }
   }
@@ -301,42 +301,42 @@ void SPerl_PARSER_dump_const_value(SPerl_PARSER* parser, SPerl_CONST_VALUE* cons
   printf("      pool_pos => %d\n", const_value->pool_pos);
 }
 
-void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* method_info) {
-  if (method_info) {
-    if (method_info->anon) {
+void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
+  if (method) {
+    if (method->anon) {
       printf("      name => (NONE)\n");
     }
     else {
-      printf("      name => \"%s\"\n", method_info->name->value);
+      printf("      name => \"%s\"\n", method->name->value);
     }
-    printf("      anon => %d\n", method_info->anon);
-    if (method_info->return_type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-      SPerl_WORD_INFO* return_type_name = method_info->return_type_info->uv.name_word_info;
+    printf("      anon => %d\n", method->anon);
+    if (method->return_type->type == SPerl_TYPE_TYPE_WORDTYPE) {
+      SPerl_WORD* return_type_name = method->return_type->uv.name_word;
       printf("      return_type => \"%s\"\n", return_type_name->value);
     }
     SPerl_int i;
-    printf("      descripter_infos => ");
-    SPerl_ARRAY* descripter_infos = method_info->descripter_infos;
-    if (descripter_infos->length) {
-      for (SPerl_int i = 0; i < descripter_infos->length; i++) {
-        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, i);
-        printf("%s ", SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]);
+    printf("      descripters => ");
+    SPerl_ARRAY* descripters = method->descripters;
+    if (descripters->length) {
+      for (SPerl_int i = 0; i < descripters->length; i++) {
+        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
+        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->type]);
       }
     }
     else {
       printf("(None)");
     }
     printf("\n");
-    printf("      argument_count => %" PRId32 "\n", method_info->argument_count);
-    printf("      my_var_infos\n");
-    SPerl_ARRAY* my_var_infos = method_info->my_var_infos;
-    for (SPerl_int i = 0; i < my_var_infos->length; i++) {
-      SPerl_MY_VAR_INFO* my_var_info
-        = (SPerl_MY_VAR_INFO*)SPerl_ARRAY_fetch(method_info->my_var_infos, i);
-      printf("        my_var_info[%d]\n", i);
-      SPerl_PARSER_dump_my_var_info(parser, my_var_info);
+    printf("      argument_count => %" PRId32 "\n", method->argument_count);
+    printf("      my_vars\n");
+    SPerl_ARRAY* my_vars = method->my_vars;
+    for (SPerl_int i = 0; i < my_vars->length; i++) {
+      SPerl_MY_VAR* my_var
+        = (SPerl_MY_VAR*)SPerl_ARRAY_fetch(method->my_vars, i);
+      printf("        my_var[%d]\n", i);
+      SPerl_PARSER_dump_my_var(parser, my_var);
     }
-    printf("      op_block => %x\n", method_info->op_block);
+    printf("      op_block => %x\n", method->op_block);
   }
   else {
     printf("      None\n");
@@ -344,30 +344,30 @@ void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* meth
 }
 
 
-void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_info) {
-  if (field_info) {
-    printf("      name => \"%s\"\n", field_info->name_word_info->value);
-    if (field_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-      SPerl_WORD_INFO* type_name = field_info->type_info->uv.name_word_info;
+void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
+  if (field) {
+    printf("      name => \"%s\"\n", field->name_word->value);
+    if (field->type->type == SPerl_TYPE_TYPE_WORDTYPE) {
+      SPerl_WORD* type_name = field->type->uv.name_word;
       printf("      type => \"%s\"\n", type_name->value);
     }
-    else if (field_info->type_info->type == SPerl_TYPE_INFO_TYPE_SUBTYPE) {
-      SPerl_SUBTYPE_INFO* subtype_info = field_info->type_info->uv.subtype_info;
+    else if (field->type->type == SPerl_TYPE_TYPE_SUBTYPE) {
+      SPerl_SUBTYPE* subtype = field->type->uv.subtype;
       printf("      type => sub (");
-      for (SPerl_int i = 0; i < subtype_info->argument_type_infos->length; i++) {
-        SPerl_TYPE_INFO* argument_type_info = SPerl_ARRAY_fetch(subtype_info->argument_type_infos, i);
-        printf("%s " , argument_type_info->uv.name_word_info->value);
+      for (SPerl_int i = 0; i < subtype->argument_types->length; i++) {
+        SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(subtype->argument_types, i);
+        printf("%s " , argument_type->uv.name_word->value);
       }
       printf(") ");
-      SPerl_TYPE_INFO* return_type_info = subtype_info->return_type_info;
-      printf("%s\n", return_type_info->uv.name_word_info->value);
+      SPerl_TYPE* return_type = subtype->return_type;
+      printf("%s\n", return_type->uv.name_word->value);
     }
-    printf("      descripter_infos => ");
-    SPerl_ARRAY* descripter_infos = field_info->descripter_infos;
-    if (descripter_infos->length) {
-      for (SPerl_int i = 0; i < descripter_infos->length; i++) {
-        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, i);
-        printf("%s ", SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]);
+    printf("      descripters => ");
+    SPerl_ARRAY* descripters = field->descripters;
+    if (descripters->length) {
+      for (SPerl_int i = 0; i < descripters->length; i++) {
+        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
+        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->type]);
       }
     }
     else {
@@ -381,41 +381,41 @@ void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_
 }
 
 
-void SPerl_PARSER_dump_enum_value_info(SPerl_PARSER* parser, SPerl_ENUM_VALUE_INFO* enum_value_info) {
-  if (enum_value_info) {
-    printf("      name => \"%s\"\n", enum_value_info->name_word_info->value);
-    printf("      value => %d\n", enum_value_info->value->uv.int_value);
+void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_value) {
+  if (enum_value) {
+    printf("      name => \"%s\"\n", enum_value->name_word->value);
+    printf("      value => %d\n", enum_value->value->uv.int_value);
   }
   else {
     printf("      None\n");
   }
 }
 
-void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_var_info) {
-  if (my_var_info) {
-    printf("          name => \"%s\"\n", my_var_info->name_word_info->value);
-    if (my_var_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-      SPerl_WORD_INFO* type_name_word_info = my_var_info->type_info->uv.name_word_info;
-      printf("          type => \"%s\"\n", type_name_word_info->value);
+void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
+  if (my_var) {
+    printf("          name => \"%s\"\n", my_var->name_word->value);
+    if (my_var->type->type == SPerl_TYPE_TYPE_WORDTYPE) {
+      SPerl_WORD* type_name_word = my_var->type->uv.name_word;
+      printf("          type => \"%s\"\n", type_name_word->value);
     }
-    else if (my_var_info->type_info->type == SPerl_TYPE_INFO_TYPE_SUBTYPE) {
-      SPerl_SUBTYPE_INFO* subtype_info = my_var_info->type_info->uv.subtype_info;
+    else if (my_var->type->type == SPerl_TYPE_TYPE_SUBTYPE) {
+      SPerl_SUBTYPE* subtype = my_var->type->uv.subtype;
       printf("      type => sub (");
-      for (SPerl_int i = 0; i < subtype_info->argument_type_infos->length; i++) {
-        SPerl_TYPE_INFO* argument_type_info = SPerl_ARRAY_fetch(subtype_info->argument_type_infos, i);
-        printf("%s " , argument_type_info->uv.name_word_info->value);
+      for (SPerl_int i = 0; i < subtype->argument_types->length; i++) {
+        SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(subtype->argument_types, i);
+        printf("%s " , argument_type->uv.name_word->value);
       }
       printf(") ");
-      SPerl_TYPE_INFO* return_type_info = subtype_info->return_type_info;
-      printf("%s\n", return_type_info->uv.name_word_info->value);
+      SPerl_TYPE* return_type = subtype->return_type;
+      printf("%s\n", return_type->uv.name_word->value);
     }
 
-    printf("          descripter_infos => ");
-    SPerl_ARRAY* descripter_infos = my_var_info->descripter_infos;
-    if (descripter_infos->length) {
-      for (SPerl_int i = 0; i < descripter_infos->length; i++) {
-        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, i);
-        printf("%s ", SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]);
+    printf("          descripters => ");
+    SPerl_ARRAY* descripters = my_var->descripters;
+    if (descripters->length) {
+      for (SPerl_int i = 0; i < descripters->length; i++) {
+        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
+        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->type]);
       }
     }
     else {

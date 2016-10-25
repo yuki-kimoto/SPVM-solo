@@ -11,10 +11,10 @@
   #include "sperl_core_type.h"
   #include "sperl_parser.h"
   #include "sperl_op.h"
-  #include "sperl_var_info.h"
-  #include "sperl_my_var_info.h"
+  #include "sperl_var.h"
+  #include "sperl_my_var.h"
   #include "sperl_const_value.h"
-  #include "sperl_word_info.h"
+  #include "sperl_word.h"
 
   /* Function for error */
   void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
@@ -52,11 +52,11 @@
     
     switch(type) {
       case WORD:
-        fprintf(file, "\"%s\"", ((SPerl_WORD_INFO*)yylval.opval->uv.pv)->value);
+        fprintf(file, "\"%s\"", ((SPerl_WORD*)yylval.opval->uv.pv)->value);
         break;
       case VAR: {
-        SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)((SPerl_OP*)yylval.opval)->uv.pv;
-        fprintf(file, "\"%s\"", var_info->name_word_info->value);
+        SPerl_VAR* var = (SPerl_VAR*)((SPerl_OP*)yylval.opval)->uv.pv;
+        fprintf(file, "\"%s\"", var->name_word->value);
         break;
       }
       case CONSTVALUE: {
@@ -135,7 +135,7 @@ grammar
       }
       else {
         // Dump parser infomation
-        SPerl_PARSER_dump_parser_info(parser);
+        SPerl_PARSER_dump_parser(parser);
       }
     }
 

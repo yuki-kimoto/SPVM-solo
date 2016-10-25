@@ -7,20 +7,20 @@
 #include "sperl_hash.h"
 #include "sperl_parser.h"
 #include "sperl_op.h"
-#include "sperl_method_info.h"
-#include "sperl_class_info.h"
+#include "sperl_method.h"
+#include "sperl_class.h"
 #include "sperl_parser.h"
 #include "sperl_const_value.h"
-#include "sperl_field_info.h"
-#include "sperl_my_var_info.h"
-#include "sperl_var_info.h"
+#include "sperl_field.h"
+#include "sperl_my_var.h"
+#include "sperl_var.h"
 #include "sperl_memory_pool.h"
-#include "sperl_use_info.h"
-#include "sperl_word_info.h"
-#include "sperl_enum_value_info.h"
-#include "sperl_descripter_info.h"
-#include "sperl_subtype_info.h"
-#include "sperl_type_info.h"
+#include "sperl_use.h"
+#include "sperl_word.h"
+#include "sperl_enum_value.h"
+#include "sperl_descripter.h"
+#include "sperl_subtype.h"
+#include "sperl_type.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_names[] = {
@@ -93,38 +93,38 @@ SPerl_char* const SPerl_OP_names[] = {
 };
 
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, SPerl_OP* op_wordtype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPE_INFO, op_wordtypes, op_wordtype);
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPEOP, op_wordtypes, op_wordtype);
   
-  SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
-  type_info->type = SPerl_TYPE_INFO_TYPE_SUBTYPE;
+  SPerl_TYPE* type = SPerl_TYPE_new(parser);
+  type->type = SPerl_TYPE_TYPE_SUBTYPE;
   
   // sub type
-  SPerl_SUBTYPE_INFO* subtype_info = SPerl_SUBTYPE_INFO_new(parser);
-  subtype_info->return_type_info = op_wordtype->uv.pv;
-  SPerl_ARRAY* argument_type_infos = SPerl_PARSER_new_array(parser, 0);
+  SPerl_SUBTYPE* subtype = SPerl_SUBTYPE_new(parser);
+  subtype->return_type = op_wordtype->uv.pv;
+  SPerl_ARRAY* argument_types = SPerl_PARSER_new_array(parser, 0);
   {
     SPerl_OP* op_wordtype = op_wordtypes->first;
     while (op_wordtype = SPerl_OP_sibling(parser, op_wordtype)) {
-      SPerl_ARRAY_push(argument_type_infos, op_wordtype->uv.pv);
+      SPerl_ARRAY_push(argument_types, op_wordtype->uv.pv);
     }
   }
-  subtype_info->argument_type_infos = argument_type_infos;
+  subtype->argument_types = argument_types;
   
-  type_info->uv.subtype_info = subtype_info;
+  type->uv.subtype = subtype;
   
-  op_type->uv.pv = type_info;
+  op_type->uv.pv = type;
   
   return op_type;
 }
 
 SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_word) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPE_INFO, op_word, NULL);
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPEOP, op_word, NULL);
   
-  SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
-  type_info->type = SPerl_TYPE_INFO_TYPE_WORDTYPE;
-  type_info->uv.name_word_info = op_word->uv.pv;
+  SPerl_TYPE* type = SPerl_TYPE_new(parser);
+  type->type = SPerl_TYPE_TYPE_WORDTYPE;
+  type->uv.name_word = op_word->uv.pv;
   
-  op_type->uv.pv = type_info;
+  op_type->uv.pv = type;
   
   return op_type;
 }
@@ -144,109 +144,109 @@ SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 }
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
-  SPerl_ARRAY* class_infos = parser->class_infos;
-  SPerl_HASH* class_info_symtable = parser->class_info_symtable;
+  SPerl_ARRAY* classs = parser->classs;
+  SPerl_HASH* class_symtable = parser->class_symtable;
   
   // Check field info type and descripter
-  for (SPerl_int i = 0; i < class_infos->length; i++) {
+  for (SPerl_int i = 0; i < classs->length; i++) {
     
-    SPerl_CLASS_INFO* class_info = SPerl_ARRAY_fetch(class_infos, i);
+    SPerl_CLASS* class = SPerl_ARRAY_fetch(classs, i);
     
     // Check descripter
-    if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
-      SPerl_ARRAY* descripter_infos = class_info->descripter_infos;
-      for (SPerl_int j = 0; j < descripter_infos->length; j++) {
-        SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, j);
-        if (descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_VALUE && descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_ENUM)
+    if (class->type == SPerl_CLASS_TYPE_NORMAL) {
+      SPerl_ARRAY* descripters = class->descripters;
+      for (SPerl_int j = 0; j < descripters->length; j++) {
+        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
+        if (descripter->type != SPerl_DESCRIPTER_TYPE_VALUE && descripter->type != SPerl_DESCRIPTER_TYPE_ENUM)
         {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]));
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->type]));
           sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
-            SPerl_DESCRIPTER_INFO_type_names[descripter_info->type], descripter_info->op->file, descripter_info->op->line);
+            SPerl_DESCRIPTER_type_names[descripter->type], descripter->op->file, descripter->op->line);
           SPerl_yyerror(parser, message);
         }
       }
     }
     
-    if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
+    if (class->type == SPerl_CLASS_TYPE_NORMAL) {
       // Check field
-      SPerl_ARRAY* field_infos = class_info->field_infos;
-      for (SPerl_int j = 0; j < field_infos->length; j++) {
+      SPerl_ARRAY* fields = class->fields;
+      for (SPerl_int j = 0; j < fields->length; j++) {
         // Field type
-        SPerl_FIELD_INFO* field_info = SPerl_ARRAY_fetch(field_infos, j);
-        if (field_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-          SPerl_WORD_INFO* type_name = field_info->type_info->uv.name_word_info;
-          if (!SPerl_HASH_search(class_info_symtable, type_name->value, strlen(type_name->value))) {
+        SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
+        if (field->type->type == SPerl_TYPE_TYPE_WORDTYPE) {
+          SPerl_WORD* type_name = field->type->uv.name_word;
+          if (!SPerl_HASH_search(class_symtable, type_name->value, strlen(type_name->value))) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name->value));
             sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name->value, type_name->op->file, type_name->op->line);
             SPerl_yyerror(parser, message);
           }
         }
         
-        // Field descripter_infos
-        SPerl_ARRAY* descripter_infos = field_info->descripter_infos;
-        for (SPerl_int k = 0; k < descripter_infos->length; k++) {
-          SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, k);
-          if (descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_CONST)
+        // Field descripters
+        SPerl_ARRAY* descripters = field->descripters;
+        for (SPerl_int k = 0; k < descripters->length; k++) {
+          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
+          if (descripter->type != SPerl_DESCRIPTER_TYPE_CONST)
           {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]));
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->type]));
             sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n",
-              SPerl_DESCRIPTER_INFO_type_names[descripter_info->type], descripter_info->op->file, descripter_info->op->line);
+              SPerl_DESCRIPTER_type_names[descripter->type], descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
           }
         }
       }
       
       // Check method
-      SPerl_ARRAY* method_infos = class_info->method_infos;
-      for (SPerl_int j = 0; j < method_infos->length; j++) {
+      SPerl_ARRAY* methods = class->methods;
+      for (SPerl_int j = 0; j < methods->length; j++) {
         // Check method type
-        SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(method_infos, j);
-        if (method_info->return_type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-          SPerl_WORD_INFO* return_type_name = method_info->return_type_info->uv.name_word_info;
-          if (!SPerl_HASH_search(class_info_symtable, return_type_name->value, strlen(return_type_name->value))) {
+        SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
+        if (method->return_type->type == SPerl_TYPE_TYPE_WORDTYPE) {
+          SPerl_WORD* return_type_name = method->return_type->uv.name_word;
+          if (!SPerl_HASH_search(class_symtable, return_type_name->value, strlen(return_type_name->value))) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(return_type_name->value));
             sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", return_type_name->value, return_type_name->op->file, return_type_name->op->line);
             SPerl_yyerror(parser, message);
           }
         }
         
-        // Check method descripter_infos
-        SPerl_ARRAY* descripter_infos = method_info->descripter_infos;
+        // Check method descripters
+        SPerl_ARRAY* descripters = method->descripters;
         SPerl_int k;
-        for (SPerl_int k = 0; k < descripter_infos->length; k++) {
-          SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, k);
-          if (descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_STATIC)
+        for (SPerl_int k = 0; k < descripters->length; k++) {
+          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
+          if (descripter->type != SPerl_DESCRIPTER_TYPE_STATIC)
           {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]));
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->type]));
             sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
-              SPerl_DESCRIPTER_INFO_type_names[descripter_info->type], descripter_info->op->file, descripter_info->op->line);
+              SPerl_DESCRIPTER_type_names[descripter->type], descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
           }
         }
         
         // Check my var information
-        SPerl_ARRAY* my_var_infos = method_info->my_var_infos;
-        for (SPerl_int k = 0; k < my_var_infos->length; k++) {
-          SPerl_MY_VAR_INFO* my_var_info = SPerl_ARRAY_fetch(my_var_infos, k);
+        SPerl_ARRAY* my_vars = method->my_vars;
+        for (SPerl_int k = 0; k < my_vars->length; k++) {
+          SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
 
-          if (my_var_info->type_info->type == SPerl_TYPE_INFO_TYPE_WORDTYPE) {
-            SPerl_WORD_INFO* type_name = my_var_info->type_info->uv.name_word_info;
-            if (!SPerl_HASH_search(class_info_symtable, type_name->value, strlen(type_name->value))) {
+          if (my_var->type->type == SPerl_TYPE_TYPE_WORDTYPE) {
+            SPerl_WORD* type_name = my_var->type->uv.name_word;
+            if (!SPerl_HASH_search(class_symtable, type_name->value, strlen(type_name->value))) {
               SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name->value));
               sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name->value, type_name->op->file, type_name->op->line);
               SPerl_yyerror(parser, message);
             }
           }
           
-          // Check my_var descripter_infos
-          SPerl_ARRAY* descripter_infos = my_var_info->descripter_infos;
-          for (SPerl_int l = 0; l < descripter_infos->length; l++) {
-            SPerl_DESCRIPTER_INFO* descripter_info = SPerl_ARRAY_fetch(descripter_infos, l);
-            if (descripter_info->type != SPerl_DESCRIPTER_INFO_TYPE_CONST)
+          // Check my_var descripters
+          SPerl_ARRAY* descripters = my_var->descripters;
+          for (SPerl_int l = 0; l < descripters->length; l++) {
+            SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
+            if (descripter->type != SPerl_DESCRIPTER_TYPE_CONST)
             {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_INFO_type_names[descripter_info->type]));
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->type]));
               sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
-                SPerl_DESCRIPTER_INFO_type_names[descripter_info->type], descripter_info->op->file, descripter_info->op->line);
+                SPerl_DESCRIPTER_type_names[descripter->type], descripter->op->file, descripter->op->line);
               SPerl_yyerror(parser, message);
             }
           }
@@ -319,11 +319,11 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   SPerl_OP_sibling_splice(parser, op_package, op_type, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_package, op_descripters, 0, op_block);
   
-  SPerl_char* class_name = ((SPerl_WORD_INFO*)op_pkgname->uv.pv)->value;
+  SPerl_char* class_name = ((SPerl_WORD*)op_pkgname->uv.pv)->value;
 
   SPerl_HASH* typemap = parser->typemap;
 
-  SPerl_TYPE_INFO* found_typemap = SPerl_HASH_search(parser->typemap, class_name, strlen(class_name));
+  SPerl_TYPE* found_typemap = SPerl_HASH_search(parser->typemap, class_name, strlen(class_name));
   
   if (found_typemap) {
     SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(class_name));
@@ -333,29 +333,29 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   else {
     // Class or enum
     if (op_type->type == SPerl_OP_NULL) {
-      SPerl_CLASS_INFO* class_info = SPerl_CLASS_INFO_new(parser);
-      class_info->name = op_pkgname->uv.pv;
-      class_info->op_block = op_block;
-      class_info->alias = SPerl_PARSER_new_hash(parser, 0);
+      SPerl_CLASS* class = SPerl_CLASS_new(parser);
+      class->name = op_pkgname->uv.pv;
+      class->op_block = op_block;
+      class->alias = SPerl_PARSER_new_hash(parser, 0);
       
-      class_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
+      class->descripters = SPerl_OP_create_descripters(parser, op_descripters);
 
       // Enum
       if (op_descripters->type == SPerl_OP_ENUM) {
-        class_info->type = SPerl_CLASS_INFO_TYPE_ENUM;
+        class->type = SPerl_CLASS_TYPE_ENUM;
       }
       // Normal class
       else {
-        class_info->type = SPerl_CLASS_INFO_TYPE_NORMAL;
+        class->type = SPerl_CLASS_TYPE_NORMAL;
       }
       
       // Class
-      if (class_info->type == SPerl_CLASS_INFO_TYPE_NORMAL) {
+      if (class->type == SPerl_CLASS_TYPE_NORMAL) {
         // Search use and field
-        SPerl_ARRAY* field_infos = SPerl_PARSER_new_array(parser, 0);
-        SPerl_HASH* field_info_symtable = SPerl_PARSER_new_hash(parser, 0);
-        SPerl_ARRAY* use_infos = SPerl_PARSER_new_array(parser, 0);
-        SPerl_HASH* use_info_symtable = SPerl_PARSER_new_hash(parser, 0);
+        SPerl_ARRAY* fields = SPerl_PARSER_new_array(parser, 0);
+        SPerl_HASH* field_symtable = SPerl_PARSER_new_hash(parser, 0);
+        SPerl_ARRAY* uses = SPerl_PARSER_new_array(parser, 0);
+        SPerl_HASH* use_symtable = SPerl_PARSER_new_hash(parser, 0);
         
         // Collect field and use information
         SPerl_OP* op_usehassubs = op_block->first;
@@ -363,87 +363,87 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         while (op_usehassub = SPerl_OP_sibling(parser, op_usehassub)) {
           // Use
           if (op_usehassub->type == SPerl_OP_USE) {
-            SPerl_USE_INFO* use_info = op_usehassub->uv.pv;
-            SPerl_char* use_class_name = use_info->class_name_word_info->value;
-            SPerl_USE_INFO* found_use_info
-              = SPerl_HASH_search(use_info_symtable, use_class_name, strlen(use_class_name));
+            SPerl_USE* use = op_usehassub->uv.pv;
+            SPerl_char* use_class_name = use->class_name_word->value;
+            SPerl_USE* found_use
+              = SPerl_HASH_search(use_symtable, use_class_name, strlen(use_class_name));
             
-            if (found_use_info) {
+            if (found_use) {
               SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(use_class_name));
-              sprintf(message, "Error: redeclaration of use \"%s\" at %s line %d\n", use_class_name, use_info->op->file, use_info->op->line);
+              sprintf(message, "Error: redeclaration of use \"%s\" at %s line %d\n", use_class_name, use->op->file, use->op->line);
               SPerl_yyerror(parser, message);
             }
             else {
-              SPerl_ARRAY_push(parser->use_info_stack, use_info);
-              SPerl_ARRAY_push(use_infos, use_info);
+              SPerl_ARRAY_push(parser->use_stack, use);
+              SPerl_ARRAY_push(uses, use);
               
-              if (use_info->alias_name_word_info) {
-                SPerl_char* alias_name = use_info->alias_name_word_info->value;
-                SPerl_HASH_insert(class_info->alias, alias_name, strlen(alias_name), class_info);
+              if (use->alias_name_word) {
+                SPerl_char* alias_name = use->alias_name_word->value;
+                SPerl_HASH_insert(class->alias, alias_name, strlen(alias_name), class);
               }
-              SPerl_HASH_insert(use_info_symtable, use_class_name, strlen(use_class_name), use_info);
+              SPerl_HASH_insert(use_symtable, use_class_name, strlen(use_class_name), use);
             }
           }
           // Field
           else if (op_usehassub->type == SPerl_OP_HAS) {
-            SPerl_FIELD_INFO* field_info = (SPerl_FIELD_INFO*)op_usehassub->uv.pv;
-            SPerl_char* field_name = field_info->name_word_info->value;
-            SPerl_FIELD_INFO* found_field_info
-              = SPerl_HASH_search(field_info_symtable, field_name, strlen(field_name));
-            if (found_field_info) {
+            SPerl_FIELD* field = (SPerl_FIELD*)op_usehassub->uv.pv;
+            SPerl_char* field_name = field->name_word->value;
+            SPerl_FIELD* found_field
+              = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
+            if (found_field) {
               SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_name));
-              sprintf(message, "Error: redeclaration of has \"%s\" at %s line %d\n", field_name, field_info->op->file, field_info->op->line);
+              sprintf(message, "Error: redeclaration of has \"%s\" at %s line %d\n", field_name, field->op->file, field->op->line);
               SPerl_yyerror(parser, message);
             }
             else {
-              field_info->class_info = class_info;
-              field_info->op = op_usehassub;
-              SPerl_ARRAY_push(field_infos, field_info);
-              SPerl_HASH_insert(field_info_symtable, field_name, strlen(field_name), field_info);
+              field->class = class;
+              field->op = op_usehassub;
+              SPerl_ARRAY_push(fields, field);
+              SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
             }
           }
         }
         // Set filed and method information
-        class_info->field_infos = field_infos;
-        class_info->field_info_symtable = field_info_symtable;
-        class_info->use_infos = use_infos;
-        class_info->use_info_symtable = use_info_symtable;
+        class->fields = fields;
+        class->field_symtable = field_symtable;
+        class->uses = uses;
+        class->use_symtable = use_symtable;
 
         // Method information
-        SPerl_HASH* method_info_symtable = SPerl_PARSER_new_hash(parser, 0);
+        SPerl_HASH* method_symtable = SPerl_PARSER_new_hash(parser, 0);
         SPerl_int i;
-        for (i = 0; i < parser->current_method_infos->length; i++) {
-          SPerl_METHOD_INFO* method_info = SPerl_ARRAY_fetch(parser->current_method_infos, i);
+        for (i = 0; i < parser->current_methods->length; i++) {
+          SPerl_METHOD* method = SPerl_ARRAY_fetch(parser->current_methods, i);
           
-          SPerl_METHOD_INFO* found_method_info = NULL;
+          SPerl_METHOD* found_method = NULL;
           SPerl_char* method_name;
-          if (!method_info->anon) {
-            method_name = method_info->name->value;
-            SPerl_METHOD_INFO* found_method_info
-              = SPerl_HASH_search(method_info_symtable, method_name, strlen(method_name));
+          if (!method->anon) {
+            method_name = method->name->value;
+            SPerl_METHOD* found_method
+              = SPerl_HASH_search(method_symtable, method_name, strlen(method_name));
           }
           
-          if (found_method_info) {
+          if (found_method) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
-            sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, method_info->op->file, method_info->op->line);
+            sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, method->op->file, method->op->line);
             SPerl_yyerror(parser, message);
           }
           else {
-            method_info->class_info = class_info;
-            if (!method_info->anon) {
-              SPerl_HASH_insert(method_info_symtable, method_name, strlen(method_name), method_info);
+            method->class = class;
+            if (!method->anon) {
+              SPerl_HASH_insert(method_symtable, method_name, strlen(method_name), method);
             }
           }
         }
-        class_info->method_infos = parser->current_method_infos;
-        parser->current_method_infos = SPerl_PARSER_new_array(parser, 0);
-        class_info->method_info_symtable = method_info_symtable;
+        class->methods = parser->current_methods;
+        parser->current_methods = SPerl_PARSER_new_array(parser, 0);
+        class->method_symtable = method_symtable;
       }
       
       // Enum
-      else if (class_info->type == SPerl_CLASS_INFO_TYPE_ENUM) {
+      else if (class->type == SPerl_CLASS_TYPE_ENUM) {
         // Values
-        SPerl_ARRAY* enum_value_infos = SPerl_PARSER_new_array(parser, 0);
+        SPerl_ARRAY* enum_values = SPerl_PARSER_new_array(parser, 0);
         
         // Starting value
         SPerl_long start_value = 0;
@@ -451,56 +451,56 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_OP* op_enumvalues = op_block->first;
         SPerl_OP* op_enumvalue = op_enumvalues->first;
         while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
-          SPerl_ENUM_VALUE_INFO* enum_value_info = SPerl_ENUM_VALUE_INFO_new(parser);
-          enum_value_info->name_word_info = op_enumvalue->first->uv.pv;
+          SPerl_ENUM_VALUE* enum_value = SPerl_ENUM_VALUE_new(parser);
+          enum_value->name_word = op_enumvalue->first->uv.pv;
           if (op_enumvalue->last) {
-            enum_value_info->value = op_enumvalue->last->uv.pv;
+            enum_value->value = op_enumvalue->last->uv.pv;
           }
           
           SPerl_CONST_VALUE* const_value;
-          if (enum_value_info->value) {
-            const_value = enum_value_info->value;
+          if (enum_value->value) {
+            const_value = enum_value->value;
             start_value = const_value->uv.int_value + 1;
           }
           else {
             const_value = SPerl_CONST_VALUE_new(parser);
             const_value->type = SPerl_CONST_VALUE_TYPE_INT;
             const_value->uv.int_value = start_value;
-            enum_value_info->value = const_value;
+            enum_value->value = const_value;
             start_value++;
           }
           SPerl_ARRAY_push(parser->const_values, const_value);
-          SPerl_ARRAY_push(enum_value_infos, enum_value_info);
+          SPerl_ARRAY_push(enum_values, enum_value);
         }
         
-        class_info->enum_value_infos = enum_value_infos;
+        class->enum_values = enum_values;
       }
       
       // Add class information
-      SPerl_ARRAY_push(parser->class_infos, class_info);
-      SPerl_HASH_insert(parser->class_info_symtable, class_name, strlen(class_name), class_info);
+      SPerl_ARRAY_push(parser->classs, class);
+      SPerl_HASH_insert(parser->class_symtable, class_name, strlen(class_name), class);
 
-      SPerl_TYPE_INFO* type_info = SPerl_TYPE_INFO_new(parser);
-      type_info->type = SPerl_TYPE_INFO_TYPE_WORDTYPE;
-      type_info->uv.name_word_info = op_pkgname->uv.pv;
+      SPerl_TYPE* type = SPerl_TYPE_new(parser);
+      type->type = SPerl_TYPE_TYPE_WORDTYPE;
+      type->uv.name_word = op_pkgname->uv.pv;
       
-      SPerl_HASH_insert(parser->typemap, class_name, strlen(class_name), type_info);
+      SPerl_HASH_insert(parser->typemap, class_name, strlen(class_name), type);
     }
     // Typedef
     else {
       // Class name
-      SPerl_WORD_INFO* class_name_word_info = op_pkgname->uv.pv;
-      SPerl_TYPE_INFO* type_info = op_type->uv.pv;
-      SPerl_HASH_insert(parser->typemap, class_name_word_info->value, strlen(class_name_word_info->value), type_info);
+      SPerl_WORD* class_name_word = op_pkgname->uv.pv;
+      SPerl_TYPE* type = op_type->uv.pv;
+      SPerl_HASH_insert(parser->typemap, class_name_word->value, strlen(class_name_word->value), type);
       
       // Add use information
       SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_USE, NULL, NULL);
       op_use->file = op_type->file;
       op_use->line = op_type->line;
-      SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
-      use_info->class_name_word_info = class_name_word_info;
-      op_use->uv.pv = use_info;
-      SPerl_ARRAY_push(parser->use_info_stack, use_info);
+      SPerl_USE* use = SPerl_USE_new(parser);
+      use->class_name_word = class_name_word;
+      op_use->uv.pv = use;
+      SPerl_ARRAY_push(parser->use_stack, use);
     }
   }
   
@@ -511,13 +511,13 @@ SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* o
   SPerl_OP_sibling_splice(parser, op_use, NULL, 0, op_pkgname);
   SPerl_OP_sibling_splice(parser, op_use, op_pkgname, 0, op_pkgalias);
   
-  SPerl_USE_INFO* use_info = SPerl_USE_INFO_new(parser);
-  use_info->class_name_word_info = op_pkgname->uv.pv;
+  SPerl_USE* use = SPerl_USE_new(parser);
+  use->class_name_word = op_pkgname->uv.pv;
   if (op_pkgalias->type != SPerl_OP_NULL) {
-    use_info->alias_name_word_info = op_pkgalias->uv.pv;
+    use->alias_name_word = op_pkgalias->uv.pv;
   }
-  use_info->op = op_use;
-  op_use->uv.pv = use_info;
+  use->op = op_use;
+  op_use->uv.pv = use;
   
   return op_use;
 }
@@ -529,18 +529,18 @@ SPerl_OP* SPerl_OP_build_MY(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_
   SPerl_OP_sibling_splice(parser, op_my, op_descripters, 0, op_type);
   
   // Create my var information
-  SPerl_MY_VAR_INFO* my_var_info = SPerl_MY_VAR_INFO_new(parser);
-  SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_var->uv.pv;
-  my_var_info->name_word_info = var_info->name_word_info;
+  SPerl_MY_VAR* my_var = SPerl_MY_VAR_new(parser);
+  SPerl_VAR* var = (SPerl_VAR*)op_var->uv.pv;
+  my_var->name_word = var->name_word;
   
-  // descripter_infos
-  my_var_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
+  // descripters
+  my_var->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // type
-  my_var_info->type_info = op_type->uv.pv;
+  my_var->type = op_type->uv.pv;
   
   // Add my_var information to op
-  op_my->uv.pv = my_var_info;
+  op_my->uv.pv = my_var;
   
   return op_my;
 }
@@ -553,19 +553,19 @@ SPerl_OP* SPerl_OP_build_HAS(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* o
   SPerl_OP_sibling_splice(parser, op_has, op_descripters, 0, op_type);
   
   // Create field information
-  SPerl_FIELD_INFO* field_info = SPerl_FIELD_INFO_new(parser);
+  SPerl_FIELD* field = SPerl_FIELD_new(parser);
   
   // Name
-  field_info->name_word_info = op_field_name->uv.pv;
+  field->name_word = op_field_name->uv.pv;
 
   // Descripters
-  field_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
+  field->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // Type
-  field_info->type_info = op_type->uv.pv;
+  field->type = op_type->uv.pv;
   
   // Set field informaiton
-  op_has->uv.pv = field_info;
+  op_has->uv.pv = field;
   
   return op_has;
 }
@@ -578,24 +578,24 @@ SPerl_OP* SPerl_OP_build_CONST_VALUE(SPerl_PARSER* parser, SPerl_OP* op_const) {
   return op_const;
 }
 
-SPerl_ARRAY* SPerl_OP_create_descripter_infos(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
+SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
   
-  SPerl_ARRAY* descripter_infos = SPerl_PARSER_new_array(parser, 0);
+  SPerl_ARRAY* descripters = SPerl_PARSER_new_array(parser, 0);
 
-  // descripter_infos is enum or list of descripter
+  // descripters is enum or list of descripter
   if (op_descripters->type == SPerl_OP_ENUM) {
-    SPerl_DESCRIPTER_INFO* descripter_info = SPerl_DESCRIPTER_INFO_new(parser);
-    descripter_info->type = SPerl_DESCRIPTER_INFO_TYPE_ENUM;
-    SPerl_ARRAY_push(descripter_infos, descripter_info);
+    SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
+    descripter->type = SPerl_DESCRIPTER_TYPE_ENUM;
+    SPerl_ARRAY_push(descripters, descripter);
   }
   else {
     SPerl_OP* op_descripter = op_descripters->first;
     while (op_descripter = op_descripter->moresib ? op_descripter->sibparent : NULL) {
-      SPerl_ARRAY_push(descripter_infos, op_descripter->uv.pv);
+      SPerl_ARRAY_push(descripters, op_descripter->uv.pv);
     }
   }
   
-  return descripter_infos;
+  return descripters;
 }
 
 SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* op_descripters, SPerl_OP* op_type, SPerl_OP* op_block) {
@@ -608,12 +608,12 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   SPerl_OP_sibling_splice(parser, op_sub, op_type, 0, op_block);
   
   // Create method infomation
-  SPerl_METHOD_INFO* method_info = SPerl_METHOD_INFO_new(parser);
+  SPerl_METHOD* method = SPerl_METHOD_new(parser);
   if (op_subname->type == SPerl_OP_NULL) {
-    method_info->anon = 1;
+    method->anon = 1;
   }
   else {
-    method_info->name = op_subname->uv.pv;
+    method->name = op_subname->uv.pv;
   }
   
   // subargs
@@ -623,23 +623,23 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
     // Increment argument count
     argument_count++;
   }
-  method_info->argument_count = argument_count;
+  method->argument_count = argument_count;
 
-  // descripter_infos
-  method_info->descripter_infos = SPerl_OP_create_descripter_infos(parser, op_descripters);
+  // descripters
+  method->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // return type
-  method_info->return_type_info = op_type->uv.pv;
+  method->return_type = op_type->uv.pv;
   
   // Save block
-  method_info->op_block = op_block;
+  method->op_block = op_block;
   
   // Add method information
-  SPerl_ARRAY_push(parser->current_method_infos, method_info);
+  SPerl_ARRAY_push(parser->current_methods, method);
   
   // my var informations
-  SPerl_ARRAY* my_var_infos = SPerl_PARSER_new_array(parser, 0);
-  SPerl_HASH* my_var_info_symtable = SPerl_PARSER_new_hash(parser, 0);
+  SPerl_ARRAY* my_vars = SPerl_PARSER_new_array(parser, 0);
+  SPerl_HASH* my_var_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   // my variable stack
   SPerl_ARRAY* my_var_stack = SPerl_PARSER_new_array(parser, 0);
@@ -664,55 +664,55 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
     
     // Add my var
     if (op_cur->type == SPerl_OP_VAR) {
-      SPerl_VAR_INFO* var_info = (SPerl_VAR_INFO*)op_cur->uv.pv;
+      SPerl_VAR* var = (SPerl_VAR*)op_cur->uv.pv;
       
       // Serach same name variable
-      SPerl_MY_VAR_INFO* my_var_info = NULL;
+      SPerl_MY_VAR* my_var = NULL;
       for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
-        SPerl_MY_VAR_INFO* my_var_info_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
-        if (strcmp(var_info->name_word_info->value, my_var_info_tmp->name_word_info->value) == 0) {
-          my_var_info = my_var_info_tmp;
+        SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
+        if (strcmp(var->name_word->value, my_var_tmp->name_word->value) == 0) {
+          my_var = my_var_tmp;
           break;
         }
       }
       
-      if (my_var_info) {
+      if (my_var) {
         // Add my var information to var
-        var_info->my_var_info = my_var_info;
+        var->my_var = my_var;
       }
       else {
         // Error
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var_info->name_word_info->value));
-        sprintf(message, "Error: \"%s\" undeclared at %s line %d\n", var_info->name_word_info->value, op_cur->file, op_cur->line);
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var->name_word->value));
+        sprintf(message, "Error: \"%s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
         SPerl_yyerror(parser, message);
       }
     }
     else if (op_cur->type == SPerl_OP_MY) {
-      SPerl_MY_VAR_INFO* my_var_info = (SPerl_MY_VAR_INFO*)op_cur->uv.pv;
+      SPerl_MY_VAR* my_var = (SPerl_MY_VAR*)op_cur->uv.pv;
       
       // Serach same name variable
       SPerl_int found = 0;
       
       for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
-        SPerl_MY_VAR_INFO* bef_my_var_info = SPerl_ARRAY_fetch(my_var_stack, i);
-        if (strcmp(my_var_info->name_word_info->value, bef_my_var_info->name_word_info->value) == 0) {
+        SPerl_MY_VAR* bef_my_var = SPerl_ARRAY_fetch(my_var_stack, i);
+        if (strcmp(my_var->name_word->value, bef_my_var->name_word->value) == 0) {
           found = 1;
           break;
         }
       }
       
       if (found) {
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var_info->name_word_info->value));
-        sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var_info->name_word_info->value, op_cur->file, op_cur->line);
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var->name_word->value));
+        sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
         SPerl_yyerror(parser, message);
       }
       else {
         // Add my var information
-        my_var_info->id = parser->next_var_id++;
-        SPerl_ARRAY_push(my_var_infos, my_var_info);
-        my_var_info->method_info = method_info;
+        my_var->id = parser->next_var_id++;
+        SPerl_ARRAY_push(my_vars, my_var);
+        my_var->method = method;
         
-        SPerl_ARRAY_push(my_var_stack, my_var_info);
+        SPerl_ARRAY_push(my_var_stack, my_var);
       }
     }
     else if (op_cur->type == SPerl_OP_BLOCK) {
@@ -772,9 +772,9 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   }
   
   // Set my var information
-  method_info->my_var_infos = my_var_infos;
+  method->my_vars = my_vars;
   
-  op_sub->uv.pv = method_info;
+  op_sub->uv.pv = method;
   
   return op_sub;
 }

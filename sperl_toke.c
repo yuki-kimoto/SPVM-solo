@@ -7,12 +7,12 @@
 #include "sperl_parser.h"
 #include "sperly.tab.h"
 #include "sperl_const_value.h"
-#include "sperl_var_info.h"
+#include "sperl_var.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
-#include "sperl_word_info.h"
-#include "sperl_descripter_info.h"
-#include "sperl_use_info.h"
+#include "sperl_word.h"
+#include "sperl_descripter.h"
+#include "sperl_use.h"
 
 static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
   SPerl_OP* op = SPerl_OP_newOP(parser, type, NULL, NULL);
@@ -40,16 +40,16 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->cur_src = NULL;
         
         // If there are more module, load it
-        SPerl_ARRAY* use_info_stack = parser->use_info_stack;
+        SPerl_ARRAY* use_stack = parser->use_stack;
         
         
         while (1) {
-          SPerl_USE_INFO* use_info = SPerl_ARRAY_pop(use_info_stack);
-          if (use_info) {
-            SPerl_char* class_name = use_info->class_name_word_info->value;
+          SPerl_USE* use = SPerl_ARRAY_pop(use_stack);
+          if (use) {
+            SPerl_char* class_name = use->class_name_word->value;
 
-            SPerl_CLASS_INFO* found_class_info = SPerl_HASH_search(parser->class_info_symtable, class_name, strlen(class_name));
-            if (found_class_info) {
+            SPerl_CLASS* found_class = SPerl_HASH_search(parser->class_symtable, class_name, strlen(class_name));
+            if (found_class) {
               continue;
             }
             else {
@@ -89,8 +89,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                 }
               }
               if (!fh) {
-                if (use_info->op) {
-                  fprintf(stderr, "Can't find class \"%s\" at %s line %d\n", use_info->class_name_word_info->value, use_info->op->file, use_info->op->line);
+                if (use->op) {
+                  fprintf(stderr, "Can't find class \"%s\" at %s line %d\n", use->class_name_word->value, use->op->file, use->op->line);
                 }
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_file);
@@ -107,8 +107,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               fseek(fh, 0, SEEK_SET);
               SPerl_char* src = SPerl_PARSER_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
-                if (use_info->op) {
-                  fprintf(stderr, "Can't read file %s at %s line %d\n", cur_file, use_info->op->file, use_info->op->line);
+                if (use->op) {
+                  fprintf(stderr, "Can't read file %s at %s line %d\n", cur_file, use->op->file, use->op->line);
                 }
                 else {
                   fprintf(stderr, "Can't read file %s\n", cur_file);
@@ -472,13 +472,13 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
           
-          SPerl_WORD_INFO* var_name_word_info = SPerl_WORD_INFO_new(parser);
-          var_name_word_info->value = var_name;
+          SPerl_WORD* var_name_word = SPerl_WORD_new(parser);
+          var_name_word->value = var_name;
           
           SPerl_OP* op = _newOP(parser, SPerl_OP_VAR);
-          SPerl_VAR_INFO* var_info = SPerl_VAR_INFO_new(parser);
-          var_info->name_word_info = var_name_word_info;
-          op->uv.pv = var_info;
+          SPerl_VAR* var = SPerl_VAR_new(parser);
+          var->name_word = var_name_word;
+          op->uv.pv = var;
           yylvalp->opval = (SPerl_OP*)op;
           
           return VAR;
@@ -640,30 +640,30 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             }
             else if (memcmp(keyword, "const", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_DESCRIPTER);
-              SPerl_DESCRIPTER_INFO* descripter_info = SPerl_DESCRIPTER_INFO_new(parser);
-              descripter_info->type = SPerl_DESCRIPTER_INFO_TYPE_CONST;
-              descripter_info->op = op;
-              op->uv.pv = descripter_info;
+              SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
+              descripter->type = SPerl_DESCRIPTER_TYPE_CONST;
+              descripter->op = op;
+              op->uv.pv = descripter;
               yylvalp->opval = op;
               
               return DESCRIPTER;
             }
             else if (memcmp(keyword, "static", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_DESCRIPTER);
-              SPerl_DESCRIPTER_INFO* descripter_info = SPerl_DESCRIPTER_INFO_new(parser);
-              descripter_info->type = SPerl_DESCRIPTER_INFO_TYPE_STATIC;
-              descripter_info->op = op;
-              op->uv.pv = descripter_info;
+              SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
+              descripter->type = SPerl_DESCRIPTER_TYPE_STATIC;
+              descripter->op = op;
+              op->uv.pv = descripter;
               yylvalp->opval = op;
               
               return DESCRIPTER;
             }
             else if (memcmp(keyword, "value", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_DESCRIPTER);
-              SPerl_DESCRIPTER_INFO* descripter_info = SPerl_DESCRIPTER_INFO_new(parser);
-              descripter_info->type = SPerl_DESCRIPTER_INFO_TYPE_VALUE;
-              descripter_info->op = op;
-              op->uv.pv = descripter_info;
+              SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
+              descripter->type = SPerl_DESCRIPTER_TYPE_VALUE;
+              descripter->op = op;
+              op->uv.pv = descripter;
               yylvalp->opval = op;
               
               return DESCRIPTER;
@@ -691,10 +691,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           SPerl_OP* op = _newOP(parser, SPerl_OP_WORD);
-          SPerl_WORD_INFO* word_info = SPerl_WORD_INFO_new(parser);
-          word_info->value = keyword;
-          word_info->op = op;
-          op->uv.pv = word_info;
+          SPerl_WORD* word = SPerl_WORD_new(parser);
+          word->value = keyword;
+          word->op = op;
+          op->uv.pv = word;
           yylvalp->opval = (SPerl_OP*)op;
 
           if (expect == SPERL_OP_EXPECT_PACKAGENAME) {

@@ -32,10 +32,10 @@ struct SPerl_yy_parser_{
   SPerl_OP* op_grammer;
   
   // class informations
-  SPerl_ARRAY* class_infos;
+  SPerl_ARRAY* classs;
   
   // class information symbol table
-  SPerl_HASH* class_info_symtable;
+  SPerl_HASH* class_symtable;
   
   // Typemap
   SPerl_HASH* typemap;
@@ -65,13 +65,13 @@ struct SPerl_yy_parser_{
   SPerl_ARRAY* long_str_ptrs;
   
   // Class loading stack
-  SPerl_ARRAY* use_info_stack;
+  SPerl_ARRAY* use_stack;
   
   // Variable id
   SPerl_int next_var_id;
   
   // Current methods(named sub + anon sub) in class 
-  SPerl_ARRAY* current_method_infos;
+  SPerl_ARRAY* current_methods;
   
   // Include pathes
   SPerl_ARRAY* include_pathes;
@@ -84,15 +84,15 @@ struct SPerl_yy_parser_{
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
-void SPerl_PARSER_dump_parser_info(SPerl_PARSER* parser);
-void SPerl_PARSER_dump_class_infos(SPerl_PARSER* parser, SPerl_ARRAY* class_infos);
+void SPerl_PARSER_dump_parser(SPerl_PARSER* parser);
+void SPerl_PARSER_dump_classs(SPerl_PARSER* parser, SPerl_ARRAY* classs);
 void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_values);
 void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, SPerl_int size);
 void SPerl_PARSER_dump_const_value(SPerl_PARSER* parser, SPerl_CONST_VALUE* const_value);
-void SPerl_PARSER_dump_field_info(SPerl_PARSER* parser, SPerl_FIELD_INFO* field_info);
-void SPerl_PARSER_dump_method_info(SPerl_PARSER* parser, SPerl_METHOD_INFO* method_info);
-void SPerl_PARSER_dump_my_var_info(SPerl_PARSER* parser, SPerl_MY_VAR_INFO* my_var_info);
-void SPerl_PARSER_dump_enum_value_info(SPerl_PARSER* parser, SPerl_ENUM_VALUE_INFO* enum_value_info);
+void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field);
+void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method);
+void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var);
+void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_value);
 
 void SPerl_PARSER_free(SPerl_PARSER* parser);
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity);

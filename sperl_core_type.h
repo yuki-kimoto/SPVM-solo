@@ -1,5 +1,5 @@
-#ifndef SPERL_TYPE_H
-#define SPERL_TYPE_H
+#ifndef SPERL_CORE_TYPE_H
+#define SPERL_CORE_TYPE_H
 
 #include <stdint.h>
 
@@ -12,24 +12,24 @@ typedef int64_t SPerl_long;
 typedef float SPerl_float;
 typedef double SPerl_double;
 
-/* sperl_type_info_info.h */
-enum SPerl_type_info_type;
-typedef enum SPerl_type_info_type SPerl_TYPE_INFO_TYPE;
+/* sperl_type.h */
+enum SPerl_type_type;
+typedef enum SPerl_type_type SPerl_TYPE_TYPE;
 
-struct SPerl_type_info;
-typedef struct SPerl_type_info SPerl_TYPE_INFO;
+struct SPerl_type;
+typedef struct SPerl_type SPerl_TYPE;
 
-/* sperl_subtype_info_info.h */
-struct SPerl_subtype_info;
-typedef struct SPerl_subtype_info SPerl_SUBTYPE_INFO;
+/* sperl_subtype.h */
+struct SPerl_subtype;
+typedef struct SPerl_subtype SPerl_SUBTYPE;
 
-/* sperl_enum_value_info.h */
-struct SPerl_enum_value_info;
-typedef struct SPerl_enum_value_info SPerl_ENUM_VALUE_INFO;
+/* sperl_enum_value.h */
+struct SPerl_enum_value;
+typedef struct SPerl_enum_value SPerl_ENUM_VALUE;
 
-/* sperl_use_info.h */
-struct SPerl_use_info;
-typedef struct SPerl_use_info SPerl_USE_INFO;
+/* sperl_use.h */
+struct SPerl_use;
+typedef struct SPerl_use SPerl_USE;
 
 /* sperl_memory_pool_page.h */
 struct SPerl_memory_pool_page;
@@ -39,13 +39,13 @@ typedef struct SPerl_memory_pool_page SPerl_MEMORY_POOL_PAGE;
 struct SPerl_memory_pool;
 typedef struct SPerl_memory_pool SPerl_MEMORY_POOL;
 
-/* sperl_var_info.h */
-struct SPerl_var_info;
-typedef struct SPerl_var_info SPerl_VAR_INFO;
+/* sperl_var.h */
+struct SPerl_var;
+typedef struct SPerl_var SPerl_VAR;
 
-/* sperl_my_var_info.h */
-struct SPerl_my_var_info;
-typedef struct SPerl_my_var_info SPerl_MY_VAR_INFO;
+/* sperl_my_var.h */
+struct SPerl_my_var;
+typedef struct SPerl_my_var SPerl_MY_VAR;
 
 /* sperl_const_value.h */
 struct SPerl_const_value;
@@ -58,30 +58,30 @@ typedef struct SPerl_op SPerl_OP;
 enum SPerl_OP_type;
 typedef enum SPerl_OP_type SPerl_OP_TYPE;
 
-/* sperl_word_info.h */
-struct SPerl_word_info;
-typedef struct SPerl_word_info SPerl_WORD_INFO;
+/* sperl_word.h */
+struct SPerl_word;
+typedef struct SPerl_word SPerl_WORD;
 
-/* sperl_field_info.h */
-struct SPerl_field_info;
-typedef struct SPerl_field_info SPerl_FIELD_INFO;
+/* sperl_field.h */
+struct SPerl_field;
+typedef struct SPerl_field SPerl_FIELD;
 
-/* sperl_descripter_info.h */
-enum SPerl_descripter_info_type;
-typedef enum SPerl_descripter_info_type SPerl_DESCRIPTER_INFO_TYPE;
-struct SPerl_descripter_info;
-typedef struct SPerl_descripter_info SPerl_DESCRIPTER_INFO;
+/* sperl_descripter.h */
+enum SPerl_descripter_type;
+typedef enum SPerl_descripter_type SPerl_DESCRIPTER_TYPE;
+struct SPerl_descripter;
+typedef struct SPerl_descripter SPerl_DESCRIPTER;
 
-/* sperl_method_info.h */
-struct SPerl_method_info;
-typedef struct SPerl_method_info SPerl_METHOD_INFO;
+/* sperl_method.h */
+struct SPerl_method;
+typedef struct SPerl_method SPerl_METHOD;
 
-/* sperl_class_info.h */
-struct SPerl_class_info;
-typedef struct SPerl_class_info SPerl_CLASS_INFO;
+/* sperl_class.h */
+struct SPerl_class;
+typedef struct SPerl_class SPerl_CLASS;
 
-enum SPerl_class_info_type;
-typedef enum SPerl_class_info_type SPerl_CLASS_INFO_TYPE;
+enum SPerl_class_type;
+typedef enum SPerl_class_type SPerl_CLASS_TYPE;
 
 /* sperl_array.h */
 struct SPerl_array;
