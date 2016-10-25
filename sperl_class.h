@@ -7,15 +7,15 @@
 #include "sperl_core_type.h"
 
 enum {
-  SPerl_CLASS_C_TYPE_CORE,
-  SPerl_CLASS_C_TYPE_NORMAL,
-  SPerl_CLASS_C_TYPE_VALUE,
-  SPerl_CLASS_C_TYPE_ENUM
+  SPerl_CLASS_C_CODE_CORE,
+  SPerl_CLASS_C_CODE_NORMAL,
+  SPerl_CLASS_C_CODE_VALUE,
+  SPerl_CLASS_C_CODE_ENUM
 };
 
 // Class information
 struct SPerl_class {
-  SPerl_char type;
+  SPerl_char code;
   SPerl_WORD* name;
   SPerl_ARRAY* descripters;
   SPerl_ARRAY* fields;

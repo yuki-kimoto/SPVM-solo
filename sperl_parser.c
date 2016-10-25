@@ -83,7 +83,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     
     // Class
     SPerl_CLASS* class = SPerl_CLASS_new(parser);
-    class->type = SPerl_CLASS_C_TYPE_CORE;
+    class->code = SPerl_CLASS_C_CODE_CORE;
     class->name = name;
     
     SPerl_ARRAY_push(parser->classs, class);
@@ -132,45 +132,45 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
   for (SPerl_int i = 0; i < depth; i++) {
     printf(" ");
   }
-  SPerl_int type = op->type;
-  printf("%s", SPerl_OP_C_NAMES[type]);
-  if (type == SPerl_OP_C_TYPE_CONST_VALUE) {
+  SPerl_int code = op->code;
+  printf("%s", SPerl_OP_C_NAMES[code]);
+  if (code == SPerl_OP_C_CODE_CONST_VALUE) {
     SPerl_CONST_VALUE* const_value = op->uv.pv;
-    switch(const_value->type) {
-      case SPerl_CONST_VALUE_C_TYPE_BOOLEAN:
+    switch(const_value->code) {
+      case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
         printf(" boolean %d", const_value->uv.int_value);
         break;
-      case SPerl_CONST_VALUE_C_TYPE_CHAR:
+      case SPerl_CONST_VALUE_C_CODE_CHAR:
         printf(" char '%c'", const_value->uv.int_value);
         break;
-      case SPerl_CONST_VALUE_C_TYPE_BYTE:
+      case SPerl_CONST_VALUE_C_CODE_BYTE:
         printf(" byte %d", const_value->uv.int_value);
         break;
-      case SPerl_CONST_VALUE_C_TYPE_SHORT:
+      case SPerl_CONST_VALUE_C_CODE_SHORT:
         printf(" short %d", const_value->uv.int_value);
         break;
-      case SPerl_CONST_VALUE_C_TYPE_INT:
+      case SPerl_CONST_VALUE_C_CODE_INT:
         printf(" int %d", const_value->uv.int_value);
         break;
-      case SPerl_CONST_VALUE_C_TYPE_LONG:
+      case SPerl_CONST_VALUE_C_CODE_LONG:
         printf(" long %ld", const_value->uv.long_value);
         break;
-      case SPerl_CONST_VALUE_C_TYPE_FLOAT:
+      case SPerl_CONST_VALUE_C_CODE_FLOAT:
         printf(" float %f", const_value->uv.float_value);
         break;
-      case SPerl_CONST_VALUE_C_TYPE_DOUBLE:
+      case SPerl_CONST_VALUE_C_CODE_DOUBLE:
         printf(" double %f", const_value->uv.double_value);
         break;
-      case SPerl_CONST_VALUE_C_TYPE_STRING:
+      case SPerl_CONST_VALUE_C_CODE_STRING:
         printf(" string \"%s\"", const_value->uv.string_value);
         break;
     }
   }
-  else if (type == SPerl_OP_C_TYPE_VAR) {
+  else if (code == SPerl_OP_C_CODE_VAR) {
     SPerl_VAR* var = op->uv.pv;
     printf(" \"%s\"", var->name_word->value);
   }
-  else if (type == SPerl_OP_C_TYPE_WORD) {
+  else if (code == SPerl_OP_C_CODE_WORD) {
     SPerl_WORD* word = op->uv.pv;
     printf(" \"%s\"", word->value);
   }
@@ -220,7 +220,7 @@ void SPerl_PARSER_dump_classs(SPerl_PARSER* parser, SPerl_ARRAY* classs) {
     if (descripters && descripters->length) {
       for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
-        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->type]);
+        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->code]);
       }
     }
     else {
@@ -230,7 +230,7 @@ void SPerl_PARSER_dump_classs(SPerl_PARSER* parser, SPerl_ARRAY* classs) {
     printf("  op_block => %x\n", class->op_block);
     
     // Class
-    if (class->type == SPerl_CLASS_C_TYPE_NORMAL) {
+    if (class->code == SPerl_CLASS_C_CODE_NORMAL) {
       // Field information
       printf("  fields\n");
       SPerl_ARRAY* fields = class->fields;
@@ -249,7 +249,7 @@ void SPerl_PARSER_dump_classs(SPerl_PARSER* parser, SPerl_ARRAY* classs) {
         SPerl_PARSER_dump_method(parser, method);
       }
     }
-    else if (class->type == SPerl_CLASS_C_TYPE_ENUM) {
+    else if (class->code == SPerl_CLASS_C_CODE_ENUM) {
       // Enum value information
       printf("  enum_values\n");
       SPerl_ARRAY* enum_values = class->enum_values;
@@ -269,32 +269,32 @@ void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, S
 }
 
 void SPerl_PARSER_dump_const_value(SPerl_PARSER* parser, SPerl_CONST_VALUE* const_value) {
-  switch(const_value->type) {
-    case SPerl_CONST_VALUE_C_TYPE_BOOLEAN:
+  switch(const_value->code) {
+    case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
       printf("      boolean %" PRId32 "\n", const_value->uv.int_value);
       break;
-    case SPerl_CONST_VALUE_C_TYPE_CHAR:
+    case SPerl_CONST_VALUE_C_CODE_CHAR:
       printf("      char '%c'\n", const_value->uv.int_value);
       break;
-    case SPerl_CONST_VALUE_C_TYPE_BYTE:
+    case SPerl_CONST_VALUE_C_CODE_BYTE:
       printf("      byte %" PRId32 "\n", const_value->uv.int_value);
       break;
-    case SPerl_CONST_VALUE_C_TYPE_SHORT:
+    case SPerl_CONST_VALUE_C_CODE_SHORT:
       printf("      short %" PRId32 "\n", const_value->uv.int_value);
       break;
-    case SPerl_CONST_VALUE_C_TYPE_INT:
+    case SPerl_CONST_VALUE_C_CODE_INT:
       printf("      int %" PRId32 "\n", const_value->uv.int_value);
       break;
-    case SPerl_CONST_VALUE_C_TYPE_LONG:
+    case SPerl_CONST_VALUE_C_CODE_LONG:
       printf("      long %" PRId64 "\n", const_value->uv.long_value);
       break;
-    case SPerl_CONST_VALUE_C_TYPE_FLOAT:
+    case SPerl_CONST_VALUE_C_CODE_FLOAT:
       printf("      float %f\n", const_value->uv.float_value);
       break;
-    case SPerl_CONST_VALUE_C_TYPE_DOUBLE:
+    case SPerl_CONST_VALUE_C_CODE_DOUBLE:
       printf("      double %f\n", const_value->uv.double_value);
       break;
-    case SPerl_CONST_VALUE_C_TYPE_STRING:
+    case SPerl_CONST_VALUE_C_CODE_STRING:
       printf("      string \"%s\"\n", const_value->uv.string_value);
       break;
   }
@@ -320,7 +320,7 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
     if (descripters->length) {
       for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
-        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->type]);
+        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->code]);
       }
     }
     else {
@@ -367,7 +367,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     if (descripters->length) {
       for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
-        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->type]);
+        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->code]);
       }
     }
     else {
@@ -415,7 +415,7 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     if (descripters->length) {
       for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
-        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->type]);
+        printf("%s ", SPerl_DESCRIPTER_type_names[descripter->code]);
       }
     }
     else {

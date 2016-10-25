@@ -94,7 +94,7 @@ SPerl_char* const SPerl_OP_C_NAMES[] = {
 };
 
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, SPerl_OP* op_wordtype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_TYPE, op_wordtypes, op_wordtype);
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_wordtypes, op_wordtype);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->type = SPerl_TYPE_C_SUB;
@@ -119,7 +119,7 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
 }
 
 SPerl_OP* SPerl_OP_build_classortypedeftype(SPerl_PARSER* parser, SPerl_OP* op_classortypedeftype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_TYPE, op_classortypedeftype, NULL);
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_classortypedeftype, NULL);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->type = SPerl_TYPE_C_CLASS_OR_TYPEDEF;
@@ -131,7 +131,7 @@ SPerl_OP* SPerl_OP_build_classortypedeftype(SPerl_PARSER* parser, SPerl_OP* op_c
 }
 
 SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_classortypedeftype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_TYPE, op_type, NULL);
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_type, NULL);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->type = SPerl_TYPE_C_ARRAY;
@@ -141,7 +141,7 @@ SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_classortyp
 }
 
 SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
-  SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_GRAMMER, op_packages, NULL);
+  SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GRAMMER, op_packages, NULL);
   parser->op_grammer = op_grammer;
 
 
@@ -164,21 +164,21 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     SPerl_CLASS* class = SPerl_ARRAY_fetch(classs, i);
     
     // Check descripter
-    if (class->type == SPerl_CLASS_C_TYPE_NORMAL) {
+    if (class->code == SPerl_CLASS_C_CODE_NORMAL) {
       SPerl_ARRAY* descripters = class->descripters;
       for (SPerl_int j = 0; j < descripters->length; j++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
-        if (descripter->type != SPerl_DESCRIPTER_C_TYPE_VALUE && descripter->type != SPerl_DESCRIPTER_C_TYPE_ENUM)
+        if (descripter->code != SPerl_DESCRIPTER_C_CODE_VALUE && descripter->code != SPerl_DESCRIPTER_C_CODE_ENUM)
         {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->type]));
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->code]));
           sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
-            SPerl_DESCRIPTER_type_names[descripter->type], descripter->op->file, descripter->op->line);
+            SPerl_DESCRIPTER_type_names[descripter->code], descripter->op->file, descripter->op->line);
           SPerl_yyerror(parser, message);
         }
       }
     }
     
-    if (class->type == SPerl_CLASS_C_TYPE_NORMAL) {
+    if (class->code == SPerl_CLASS_C_CODE_NORMAL) {
       // Check field
       SPerl_ARRAY* fields = class->fields;
       for (SPerl_int j = 0; j < fields->length; j++) {
@@ -197,11 +197,11 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_ARRAY* descripters = field->descripters;
         for (SPerl_int k = 0; k < descripters->length; k++) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (descripter->type != SPerl_DESCRIPTER_C_TYPE_CONST)
+          if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
           {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->type]));
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->code]));
             sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n",
-              SPerl_DESCRIPTER_type_names[descripter->type], descripter->op->file, descripter->op->line);
+              SPerl_DESCRIPTER_type_names[descripter->code], descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
           }
         }
@@ -226,11 +226,11 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_int k;
         for (SPerl_int k = 0; k < descripters->length; k++) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (descripter->type != SPerl_DESCRIPTER_C_TYPE_STATIC)
+          if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
           {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->type]));
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->code]));
             sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
-              SPerl_DESCRIPTER_type_names[descripter->type], descripter->op->file, descripter->op->line);
+              SPerl_DESCRIPTER_type_names[descripter->code], descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
           }
         }
@@ -253,11 +253,11 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
           SPerl_ARRAY* descripters = my_var->descripters;
           for (SPerl_int l = 0; l < descripters->length; l++) {
             SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
-            if (descripter->type != SPerl_DESCRIPTER_C_TYPE_CONST)
+            if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
             {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->type]));
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_type_names[descripter->code]));
               sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
-                SPerl_DESCRIPTER_type_names[descripter->type], descripter->op->file, descripter->op->line);
+                SPerl_DESCRIPTER_type_names[descripter->code], descripter->op->file, descripter->op->line);
               SPerl_yyerror(parser, message);
             }
           }
@@ -293,27 +293,27 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     }
     
     SPerl_int* const_pool = parser->const_pool;
-    switch(const_value->type) {
-      case SPerl_CONST_VALUE_C_TYPE_BOOLEAN:
-      case SPerl_CONST_VALUE_C_TYPE_CHAR:
-      case SPerl_CONST_VALUE_C_TYPE_BYTE:
-      case SPerl_CONST_VALUE_C_TYPE_SHORT:
-      case SPerl_CONST_VALUE_C_TYPE_INT:
+    switch(const_value->code) {
+      case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
+      case SPerl_CONST_VALUE_C_CODE_CHAR:
+      case SPerl_CONST_VALUE_C_CODE_BYTE:
+      case SPerl_CONST_VALUE_C_CODE_SHORT:
+      case SPerl_CONST_VALUE_C_CODE_INT:
         const_value->pool_pos = parser->const_pool_pos;
         *(const_pool + parser->const_pool_pos) = const_value->uv.int_value;
         parser->const_pool_pos += 1;
         break;
-      case SPerl_CONST_VALUE_C_TYPE_LONG:
+      case SPerl_CONST_VALUE_C_CODE_LONG:
         const_value->pool_pos = parser->const_pool_pos;
         *(SPerl_long*)(const_pool + parser->const_pool_pos) = const_value->uv.long_value;
         parser->const_pool_pos += 2;
         break;
-      case SPerl_CONST_VALUE_C_TYPE_FLOAT:
+      case SPerl_CONST_VALUE_C_CODE_FLOAT:
         const_value->pool_pos = parser->const_pool_pos;
         *(SPerl_float*)(const_pool + parser->const_pool_pos) = const_value->uv.float_value;
         parser->const_pool_pos += 1;
         break;
-      case SPerl_CONST_VALUE_C_TYPE_DOUBLE:
+      case SPerl_CONST_VALUE_C_CODE_DOUBLE:
         const_value->pool_pos = parser->const_pool_pos;
         *(SPerl_double*)(const_pool + parser->const_pool_pos) = const_value->uv.double_value;
         parser->const_pool_pos += 2;
@@ -343,7 +343,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   }
   else {
     // Class or enum
-    if (op_type->type == SPerl_OP_C_TYPE_NULL) {
+    if (op_type->code == SPerl_OP_C_CODE_NULL) {
       SPerl_CLASS* class = SPerl_CLASS_new(parser);
       class->name = op_pkgname->uv.pv;
       class->op_block = op_block;
@@ -352,16 +352,16 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       class->descripters = SPerl_OP_create_descripters(parser, op_descripters);
 
       // Enum
-      if (op_descripters->type == SPerl_OP_C_TYPE_ENUM) {
-        class->type = SPerl_CLASS_C_TYPE_ENUM;
+      if (op_descripters->code == SPerl_OP_C_CODE_ENUM) {
+        class->code = SPerl_CLASS_C_CODE_ENUM;
       }
       // Normal class
       else {
-        class->type = SPerl_CLASS_C_TYPE_NORMAL;
+        class->code = SPerl_CLASS_C_CODE_NORMAL;
       }
       
       // Class
-      if (class->type == SPerl_CLASS_C_TYPE_NORMAL) {
+      if (class->code == SPerl_CLASS_C_CODE_NORMAL) {
         // Search use and field
         SPerl_ARRAY* fields = SPerl_PARSER_new_array(parser, 0);
         SPerl_HASH* field_symtable = SPerl_PARSER_new_hash(parser, 0);
@@ -373,7 +373,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_OP* op_usehassub = op_usehassubs->first;
         while (op_usehassub = SPerl_OP_sibling(parser, op_usehassub)) {
           // Use
-          if (op_usehassub->type == SPerl_OP_C_TYPE_USE) {
+          if (op_usehassub->code == SPerl_OP_C_CODE_USE) {
             SPerl_USE* use = op_usehassub->uv.pv;
             SPerl_char* use_class_name = use->class_name_word->value;
             SPerl_USE* found_use
@@ -396,7 +396,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             }
           }
           // Field
-          else if (op_usehassub->type == SPerl_OP_C_TYPE_HAS) {
+          else if (op_usehassub->code == SPerl_OP_C_CODE_HAS) {
             SPerl_FIELD* field = (SPerl_FIELD*)op_usehassub->uv.pv;
             SPerl_char* field_name = field->name_word->value;
             SPerl_FIELD* found_field
@@ -452,7 +452,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       }
       
       // Enum
-      else if (class->type == SPerl_CLASS_C_TYPE_ENUM) {
+      else if (class->code == SPerl_CLASS_C_CODE_ENUM) {
         // Values
         SPerl_ARRAY* enum_values = SPerl_PARSER_new_array(parser, 0);
         
@@ -475,7 +475,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           }
           else {
             const_value = SPerl_CONST_VALUE_new(parser);
-            const_value->type = SPerl_CONST_VALUE_C_TYPE_INT;
+            const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
             const_value->uv.int_value = start_value;
             enum_value->value = const_value;
             start_value++;
@@ -505,7 +505,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       SPerl_HASH_insert(parser->typemap, class_name_word->value, strlen(class_name_word->value), type);
       
       // Add use information
-      SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_USE, NULL, NULL);
+      SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_USE, NULL, NULL);
       op_use->file = op_type->file;
       op_use->line = op_type->line;
       SPerl_USE* use = SPerl_USE_new(parser);
@@ -524,7 +524,7 @@ SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* o
   
   SPerl_USE* use = SPerl_USE_new(parser);
   use->class_name_word = op_pkgname->uv.pv;
-  if (op_pkgalias->type != SPerl_OP_C_TYPE_NULL) {
+  if (op_pkgalias->code != SPerl_OP_C_CODE_NULL) {
     use->alias_name_word = op_pkgalias->uv.pv;
   }
   use->op = op_use;
@@ -594,9 +594,9 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
   SPerl_ARRAY* descripters = SPerl_PARSER_new_array(parser, 0);
 
   // descripters is enum or list of descripter
-  if (op_descripters->type == SPerl_OP_C_TYPE_ENUM) {
+  if (op_descripters->code == SPerl_OP_C_CODE_ENUM) {
     SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
-    descripter->type = SPerl_DESCRIPTER_C_TYPE_ENUM;
+    descripter->code = SPerl_DESCRIPTER_C_CODE_ENUM;
     SPerl_ARRAY_push(descripters, descripter);
   }
   else {
@@ -620,7 +620,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   
   // Create method infomation
   SPerl_METHOD* method = SPerl_METHOD_new(parser);
-  if (op_subname->type == SPerl_OP_C_TYPE_NULL) {
+  if (op_subname->code == SPerl_OP_C_CODE_NULL) {
     method->anon = 1;
   }
   else {
@@ -674,7 +674,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
     }
     
     // Add my var
-    if (op_cur->type == SPerl_OP_C_TYPE_VAR) {
+    if (op_cur->code == SPerl_OP_C_CODE_VAR) {
       SPerl_VAR* var = (SPerl_VAR*)op_cur->uv.pv;
       
       // Serach same name variable
@@ -698,7 +698,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
         SPerl_yyerror(parser, message);
       }
     }
-    else if (op_cur->type == SPerl_OP_C_TYPE_MY) {
+    else if (op_cur->code == SPerl_OP_C_CODE_MY) {
       SPerl_MY_VAR* my_var = (SPerl_MY_VAR*)op_cur->uv.pv;
       
       // Serach same name variable
@@ -726,7 +726,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
         SPerl_ARRAY_push(my_var_stack, my_var);
       }
     }
-    else if (op_cur->type == SPerl_OP_C_TYPE_BLOCK) {
+    else if (op_cur->code == SPerl_OP_C_CODE_BLOCK) {
       if (block_start) {
         SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
         *block_base_ptr = my_var_stack->length;
@@ -756,7 +756,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
           if (op_parent) {
             
             // End of scope
-            if (op_parent->type == SPerl_OP_C_TYPE_BLOCK) {
+            if (op_parent->code == SPerl_OP_C_CODE_BLOCK) {
               SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
               if (block_base_ptr) {
                 SPerl_int block_base = *block_base_ptr;
@@ -794,13 +794,13 @@ SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first,
   return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
 }
 
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
         
   SPerl_OP *op = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
   
   memset(op, 0, sizeof(SPerl_OP));
   
-  op->type = type;
+  op->code = code;
   op->first = first;
   op->flags = flags;
   op->private = private;
@@ -808,7 +808,7 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* f
   if (last) {
     if (!first) {
       first = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
-      first->type = SPerl_OP_C_TYPE_NULL;
+      first->code = SPerl_OP_C_CODE_NULL;
     }
     
     op->last = last;
@@ -830,7 +830,7 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *
   if (!last)
     return first;
   
-  if (first->type == SPerl_OP_C_TYPE_LIST) {
+  if (first->code == SPerl_OP_C_CODE_LIST) {
     SPerl_OP_sibling_splice(parser, first, first->last, 0, last);
     return first;
   }
@@ -845,14 +845,14 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *
 
 SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
   
-  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_PUSHMARK, NULL, NULL);
+  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PUSHMARK, NULL, NULL);
   
-  return SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_LIST, op_pushmark, NULL);
+  return SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LIST, op_pushmark, NULL);
 }
 
 SPerl_OP* SPerl_OP_newOP_NULL(SPerl_PARSER* parser) {
   
-  return SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_NULL, NULL, NULL);
+  return SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, NULL, NULL);
 }
 
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP* insert) {

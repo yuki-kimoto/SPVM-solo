@@ -4,19 +4,19 @@
 #include "sperl_core_type.h"
 
 enum {
-  SPerl_CONST_VALUE_C_TYPE_BOOLEAN,
-  SPerl_CONST_VALUE_C_TYPE_CHAR,
-  SPerl_CONST_VALUE_C_TYPE_BYTE,
-  SPerl_CONST_VALUE_C_TYPE_SHORT,
-  SPerl_CONST_VALUE_C_TYPE_INT,
-  SPerl_CONST_VALUE_C_TYPE_LONG,
-  SPerl_CONST_VALUE_C_TYPE_FLOAT,
-  SPerl_CONST_VALUE_C_TYPE_DOUBLE,
-  SPerl_CONST_VALUE_C_TYPE_STRING
+  SPerl_CONST_VALUE_C_CODE_BOOLEAN,
+  SPerl_CONST_VALUE_C_CODE_CHAR,
+  SPerl_CONST_VALUE_C_CODE_BYTE,
+  SPerl_CONST_VALUE_C_CODE_SHORT,
+  SPerl_CONST_VALUE_C_CODE_INT,
+  SPerl_CONST_VALUE_C_CODE_LONG,
+  SPerl_CONST_VALUE_C_CODE_FLOAT,
+  SPerl_CONST_VALUE_C_CODE_DOUBLE,
+  SPerl_CONST_VALUE_C_CODE_STRING
 };
 
 struct SPerl_const_value {
-  SPerl_char type;
+  SPerl_char code;
   union {
     SPerl_int int_value;
     SPerl_int long_value;
