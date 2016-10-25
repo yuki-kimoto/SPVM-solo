@@ -310,7 +310,7 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
       printf("      name => \"%s\"\n", method->name_word->value);
     }
     printf("      anon => %d\n", method->anon);
-    if (method->return_type->type == SPerl_TYPE_TYPE_WORDTYPE) {
+    if (method->return_type->type == SPerl_TYPE_TYPE_CLASS_OR_TYPEDEF) {
       SPerl_WORD* return_type_name = method->return_type->name_word;
       printf("      return_type => \"%s\"\n", return_type_name->value);
     }
@@ -347,7 +347,7 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
 void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
   if (field) {
     printf("      name => \"%s\"\n", field->name_word->value);
-    if (field->type->type == SPerl_TYPE_TYPE_WORDTYPE) {
+    if (field->type->type == SPerl_TYPE_TYPE_CLASS_OR_TYPEDEF) {
       SPerl_WORD* type_name = field->type->name_word;
       printf("      type => \"%s\"\n", type_name->value);
     }
@@ -394,7 +394,7 @@ void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_v
 void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
   if (my_var) {
     printf("          name => \"%s\"\n", my_var->name_word->value);
-    if (my_var->type->type == SPerl_TYPE_TYPE_WORDTYPE) {
+    if (my_var->type->type == SPerl_TYPE_TYPE_CLASS_OR_TYPEDEF) {
       SPerl_WORD* type_name_word = my_var->type->name_word;
       printf("          type => \"%s\"\n", type_name_word->value);
     }
