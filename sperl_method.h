@@ -6,7 +6,7 @@
 
 // Method information
 struct SPerl_method {
-  SPerl_WORD* name;
+  SPerl_WORD* name_word;
   SPerl_TYPE* return_type;
   SPerl_ARRAY* descripters;
   SPerl_int argument_count;

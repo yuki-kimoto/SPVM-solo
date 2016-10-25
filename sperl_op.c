@@ -418,7 +418,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           SPerl_METHOD* found_method = NULL;
           SPerl_char* method_name;
           if (!method->anon) {
-            method_name = method->name->value;
+            method_name = method->name_word->value;
             SPerl_METHOD* found_method
               = SPerl_HASH_search(method_symtable, method_name, strlen(method_name));
           }
@@ -613,7 +613,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
     method->anon = 1;
   }
   else {
-    method->name = op_subname->uv.pv;
+    method->name_word = op_subname->uv.pv;
   }
   
   // subargs

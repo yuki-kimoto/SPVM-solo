@@ -307,7 +307,7 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
       printf("      name => (NONE)\n");
     }
     else {
-      printf("      name => \"%s\"\n", method->name->value);
+      printf("      name => \"%s\"\n", method->name_word->value);
     }
     printf("      anon => %d\n", method->anon);
     if (method->return_type->type == SPerl_TYPE_TYPE_WORDTYPE) {
