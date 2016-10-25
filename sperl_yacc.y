@@ -666,11 +666,16 @@ types
   | type
 
 type
-  : classortypedeftype
+  : classortypedeftype {
+  
+    }
   | arraytype
   | subtype
 
-classortypedeftype : WORD;
+classortypedeftype : WORD
+  {
+    $$ = SPerl_OP_build_classortypedeftype(parser, $1);
+  }
 
 arraytype
   : classortypedeftype '[' ']'

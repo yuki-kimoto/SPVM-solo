@@ -94,7 +94,7 @@ SPerl_char* const SPerl_OP_C_NAMES[] = {
 };
 
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, SPerl_OP* op_wordtype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_TYPEOP, op_wordtypes, op_wordtype);
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_TYPE, op_wordtypes, op_wordtype);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->type = SPerl_TYPE_C_SUB;
@@ -118,12 +118,12 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
   return op_type;
 }
 
-SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_word) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_TYPEOP, op_word, NULL);
+SPerl_OP* SPerl_OP_build_classortypedeftype(SPerl_PARSER* parser, SPerl_OP* op_classortypedeftype) {
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_TYPE_TYPE, op_classortypedeftype, NULL);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->type = SPerl_TYPE_C_CLASS_OR_TYPEDEF;
-  type->name_word = op_word->uv.pv;
+  type->name_word = op_classortypedeftype->uv.pv;
   
   op_type->uv.pv = type;
   
