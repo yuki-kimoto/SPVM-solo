@@ -9,7 +9,7 @@
 #include "sperl_subtype.h"
 #include "sperl_class.h"
 
-enum SPerl_type_type {
+enum C_SPerl_type_type {
   C_SPerl_TYPE_ARRAY,
   C_SPerl_TYPE_CLASS,
   C_SPerl_TYPE_SUB,
