@@ -24,7 +24,7 @@
 #include "sperl_type.h"
 
 /* sperl_op.h */
-SPerl_char* const SPerl_OP_names[] = {
+SPerl_char* const SPerl_OP_C_NAMES[] = {
   "null",
   "const",
   "lt",

@@ -73,7 +73,7 @@ enum {
   SPerl_OP_C_TYPE_TYPEDEF
 };
 
-extern SPerl_char* const SPerl_OP_names[];
+extern SPerl_char* const SPerl_OP_C_NAMES[];
 
 /* Binary operation */
 struct SPerl_op {
