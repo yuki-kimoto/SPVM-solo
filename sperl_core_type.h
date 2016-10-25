@@ -13,9 +13,6 @@ typedef float SPerl_float;
 typedef double SPerl_double;
 
 /* sperl_type.h */
-enum SPerl_type_type;
-typedef enum SPerl_type_type SPerl_TYPE_TYPE;
-
 struct SPerl_type;
 typedef struct SPerl_type SPerl_TYPE;
 
@@ -55,9 +52,6 @@ typedef struct SPerl_const_value SPerl_CONST_VALUE;
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 
-enum SPerl_OP_type;
-typedef enum SPerl_OP_type SPerl_OP_TYPE;
-
 /* sperl_word.h */
 struct SPerl_word;
 typedef struct SPerl_word SPerl_WORD;
@@ -67,8 +61,6 @@ struct SPerl_field;
 typedef struct SPerl_field SPerl_FIELD;
 
 /* sperl_descripter.h */
-enum SPerl_descripter_type;
-typedef enum SPerl_descripter_type SPerl_DESCRIPTER_TYPE;
 struct SPerl_descripter;
 typedef struct SPerl_descripter SPerl_DESCRIPTER;
 
@@ -79,9 +71,6 @@ typedef struct SPerl_method SPerl_METHOD;
 /* sperl_class.h */
 struct SPerl_class;
 typedef struct SPerl_class SPerl_CLASS;
-
-enum SPerl_class_type;
-typedef enum SPerl_class_type SPerl_CLASS_TYPE;
 
 /* sperl_array.h */
 struct SPerl_array;
@@ -101,8 +90,5 @@ typedef SPerl_yy_parser SPerl_PARSER;
 
 union SPerl_yystype;
 typedef union SPerl_yystype SPerl_YYSTYPE;
-
-enum SPerl_op_expect;
-typedef enum SPerl_op_expect SPerl_OP_EXPECT;
 
 #endif
