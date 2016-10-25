@@ -13,8 +13,8 @@ typedef float SPerl_float;
 typedef double SPerl_double;
 
 /* sperl_type.h */
-enum C_SPerl_type_type;
-typedef enum C_SPerl_type_type C_SPerl_TYPE_TYPE;
+enum SPerl_type_type;
+typedef enum SPerl_type_type SPerl_TYPE_TYPE;
 
 struct SPerl_type;
 typedef struct SPerl_type SPerl_TYPE;

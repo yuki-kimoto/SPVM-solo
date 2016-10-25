@@ -9,12 +9,12 @@
 #include "sperl_subtype.h"
 #include "sperl_class.h"
 
-enum C_SPerl_type_type {
-  C_SPerl_TYPE_ARRAY,
-  C_SPerl_TYPE_CLASS,
-  C_SPerl_TYPE_SUB,
-  C_SPerl_TYPE_TYPEDEF,
-  C_SPerl_TYPE_CLASS_OR_TYPEDEF
+enum SPerl_type_c_type {
+  SPerl_TYPE_C_ARRAY,
+  SPerl_TYPE_C_CLASS,
+  SPerl_TYPE_C_SUB,
+  SPerl_TYPE_C_TYPEDEF,
+  SPerl_TYPE_C_CLASS_OR_TYPEDEF
 };
 
 struct SPerl_type {
