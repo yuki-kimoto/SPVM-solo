@@ -83,7 +83,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     
     // Class
     SPerl_CLASS* class = SPerl_CLASS_new(parser);
-    class->type = SPerl_CLASS_TYPE_CORE;
+    class->type = SPerl_CLASS_C_TYPE_CORE;
     class->name = name;
     
     SPerl_ARRAY_push(parser->classs, class);
@@ -230,7 +230,7 @@ void SPerl_PARSER_dump_classs(SPerl_PARSER* parser, SPerl_ARRAY* classs) {
     printf("  op_block => %x\n", class->op_block);
     
     // Class
-    if (class->type == SPerl_CLASS_TYPE_NORMAL) {
+    if (class->type == SPerl_CLASS_C_TYPE_NORMAL) {
       // Field information
       printf("  fields\n");
       SPerl_ARRAY* fields = class->fields;
@@ -249,7 +249,7 @@ void SPerl_PARSER_dump_classs(SPerl_PARSER* parser, SPerl_ARRAY* classs) {
         SPerl_PARSER_dump_method(parser, method);
       }
     }
-    else if (class->type == SPerl_CLASS_TYPE_ENUM) {
+    else if (class->type == SPerl_CLASS_C_TYPE_ENUM) {
       // Enum value information
       printf("  enum_values\n");
       SPerl_ARRAY* enum_values = class->enum_values;

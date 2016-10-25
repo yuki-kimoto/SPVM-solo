@@ -153,7 +153,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     SPerl_CLASS* class = SPerl_ARRAY_fetch(classs, i);
     
     // Check descripter
-    if (class->type == SPerl_CLASS_TYPE_NORMAL) {
+    if (class->type == SPerl_CLASS_C_TYPE_NORMAL) {
       SPerl_ARRAY* descripters = class->descripters;
       for (SPerl_int j = 0; j < descripters->length; j++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
@@ -167,7 +167,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       }
     }
     
-    if (class->type == SPerl_CLASS_TYPE_NORMAL) {
+    if (class->type == SPerl_CLASS_C_TYPE_NORMAL) {
       // Check field
       SPerl_ARRAY* fields = class->fields;
       for (SPerl_int j = 0; j < fields->length; j++) {
@@ -342,15 +342,15 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
 
       // Enum
       if (op_descripters->type == SPerl_OP_ENUM) {
-        class->type = SPerl_CLASS_TYPE_ENUM;
+        class->type = SPerl_CLASS_C_TYPE_ENUM;
       }
       // Normal class
       else {
-        class->type = SPerl_CLASS_TYPE_NORMAL;
+        class->type = SPerl_CLASS_C_TYPE_NORMAL;
       }
       
       // Class
-      if (class->type == SPerl_CLASS_TYPE_NORMAL) {
+      if (class->type == SPerl_CLASS_C_TYPE_NORMAL) {
         // Search use and field
         SPerl_ARRAY* fields = SPerl_PARSER_new_array(parser, 0);
         SPerl_HASH* field_symtable = SPerl_PARSER_new_hash(parser, 0);
@@ -441,7 +441,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       }
       
       // Enum
-      else if (class->type == SPerl_CLASS_TYPE_ENUM) {
+      else if (class->type == SPerl_CLASS_C_TYPE_ENUM) {
         // Values
         SPerl_ARRAY* enum_values = SPerl_PARSER_new_array(parser, 0);
         
