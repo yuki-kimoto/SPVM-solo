@@ -9,6 +9,7 @@
   #include <string.h>
   
   #include "sperl_core_type.h"
+  #include "sperly.h"
   #include "sperl_toke.h"
   #include "sperl_parser.h"
   #include "sperl_op.h"

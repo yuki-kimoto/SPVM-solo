@@ -4,9 +4,10 @@
 #include <ctype.h>
 
 #include "sperl_toke.h"
+#include "sperly.h"
+#include "sperly.tab.h"
 #include "sperl_op.h"
 #include "sperl_parser.h"
-#include "sperly.tab.h"
 #include "sperl_const_value.h"
 #include "sperl_var.h"
 #include "sperl_array.h"
