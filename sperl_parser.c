@@ -134,7 +134,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
   }
   SPerl_int type = op->type;
   printf("%s", SPerl_OP_names[type]);
-  if (type == SPerl_OP_CONST_VALUE) {
+  if (type == SPerl_OP_C_CONST_VALUE) {
     SPerl_CONST_VALUE* const_value = op->uv.pv;
     switch(const_value->type) {
       case SPerl_CONST_VALUE_C_TYPE_BOOLEAN:
@@ -166,11 +166,11 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
         break;
     }
   }
-  else if (type == SPerl_OP_VAR) {
+  else if (type == SPerl_OP_C_VAR) {
     SPerl_VAR* var = op->uv.pv;
     printf(" \"%s\"", var->name_word->value);
   }
-  else if (type == SPerl_OP_WORD) {
+  else if (type == SPerl_OP_C_WORD) {
     SPerl_WORD* word = op->uv.pv;
     printf(" \"%s\"", word->value);
   }

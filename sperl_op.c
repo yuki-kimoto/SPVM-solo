@@ -93,7 +93,7 @@ SPerl_char* const SPerl_OP_names[] = {
 };
 
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, SPerl_OP* op_wordtype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPEOP, op_wordtypes, op_wordtype);
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_TYPEOP, op_wordtypes, op_wordtype);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->type = SPerl_TYPE_C_SUB;
@@ -118,7 +118,7 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
 }
 
 SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_word) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_TYPEOP, op_word, NULL);
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_TYPEOP, op_word, NULL);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->type = SPerl_TYPE_C_CLASS_OR_TYPEDEF;
@@ -130,7 +130,7 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_word) {
 }
 
 SPerl_OP* SPerl_OP_build_GRAMMER(SPerl_PARSER* parser, SPerl_OP* op_packages) {
-  SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_GRAMMER, op_packages, NULL);
+  SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_C_GRAMMER, op_packages, NULL);
   parser->op_grammer = op_grammer;
 
 
@@ -332,7 +332,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   }
   else {
     // Class or enum
-    if (op_type->type == SPerl_OP_NULL) {
+    if (op_type->type == SPerl_OP_C_NULL) {
       SPerl_CLASS* class = SPerl_CLASS_new(parser);
       class->name = op_pkgname->uv.pv;
       class->op_block = op_block;
@@ -341,7 +341,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       class->descripters = SPerl_OP_create_descripters(parser, op_descripters);
 
       // Enum
-      if (op_descripters->type == SPerl_OP_ENUM) {
+      if (op_descripters->type == SPerl_OP_C_ENUM) {
         class->type = SPerl_CLASS_C_TYPE_ENUM;
       }
       // Normal class
@@ -362,7 +362,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_OP* op_usehassub = op_usehassubs->first;
         while (op_usehassub = SPerl_OP_sibling(parser, op_usehassub)) {
           // Use
-          if (op_usehassub->type == SPerl_OP_USE) {
+          if (op_usehassub->type == SPerl_OP_C_USE) {
             SPerl_USE* use = op_usehassub->uv.pv;
             SPerl_char* use_class_name = use->class_name_word->value;
             SPerl_USE* found_use
@@ -385,7 +385,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             }
           }
           // Field
-          else if (op_usehassub->type == SPerl_OP_HAS) {
+          else if (op_usehassub->type == SPerl_OP_C_HAS) {
             SPerl_FIELD* field = (SPerl_FIELD*)op_usehassub->uv.pv;
             SPerl_char* field_name = field->name_word->value;
             SPerl_FIELD* found_field
@@ -494,7 +494,7 @@ SPerl_OP* SPerl_OP_build_PACKAGE(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       SPerl_HASH_insert(parser->typemap, class_name_word->value, strlen(class_name_word->value), type);
       
       // Add use information
-      SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_USE, NULL, NULL);
+      SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_C_USE, NULL, NULL);
       op_use->file = op_type->file;
       op_use->line = op_type->line;
       SPerl_USE* use = SPerl_USE_new(parser);
@@ -513,7 +513,7 @@ SPerl_OP* SPerl_OP_build_USE(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* o
   
   SPerl_USE* use = SPerl_USE_new(parser);
   use->class_name_word = op_pkgname->uv.pv;
-  if (op_pkgalias->type != SPerl_OP_NULL) {
+  if (op_pkgalias->type != SPerl_OP_C_NULL) {
     use->alias_name_word = op_pkgalias->uv.pv;
   }
   use->op = op_use;
@@ -583,7 +583,7 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
   SPerl_ARRAY* descripters = SPerl_PARSER_new_array(parser, 0);
 
   // descripters is enum or list of descripter
-  if (op_descripters->type == SPerl_OP_ENUM) {
+  if (op_descripters->type == SPerl_OP_C_ENUM) {
     SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
     descripter->type = SPerl_DESCRIPTER_TYPE_ENUM;
     SPerl_ARRAY_push(descripters, descripter);
@@ -609,7 +609,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
   
   // Create method infomation
   SPerl_METHOD* method = SPerl_METHOD_new(parser);
-  if (op_subname->type == SPerl_OP_NULL) {
+  if (op_subname->type == SPerl_OP_C_NULL) {
     method->anon = 1;
   }
   else {
@@ -663,7 +663,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
     }
     
     // Add my var
-    if (op_cur->type == SPerl_OP_VAR) {
+    if (op_cur->type == SPerl_OP_C_VAR) {
       SPerl_VAR* var = (SPerl_VAR*)op_cur->uv.pv;
       
       // Serach same name variable
@@ -687,7 +687,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
         SPerl_yyerror(parser, message);
       }
     }
-    else if (op_cur->type == SPerl_OP_MY) {
+    else if (op_cur->type == SPerl_OP_C_MY) {
       SPerl_MY_VAR* my_var = (SPerl_MY_VAR*)op_cur->uv.pv;
       
       // Serach same name variable
@@ -715,7 +715,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
         SPerl_ARRAY_push(my_var_stack, my_var);
       }
     }
-    else if (op_cur->type == SPerl_OP_BLOCK) {
+    else if (op_cur->type == SPerl_OP_C_BLOCK) {
       if (block_start) {
         SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
         *block_base_ptr = my_var_stack->length;
@@ -745,7 +745,7 @@ SPerl_OP* SPerl_OP_build_SUB(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* o
           if (op_parent) {
             
             // End of scope
-            if (op_parent->type == SPerl_OP_BLOCK) {
+            if (op_parent->type == SPerl_OP_C_BLOCK) {
               SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
               if (block_base_ptr) {
                 SPerl_int block_base = *block_base_ptr;
@@ -797,7 +797,7 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* f
   if (last) {
     if (!first) {
       first = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
-      first->type = SPerl_OP_NULL;
+      first->type = SPerl_OP_C_NULL;
     }
     
     op->last = last;
@@ -819,7 +819,7 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *
   if (!last)
     return first;
   
-  if (first->type == SPerl_OP_LIST) {
+  if (first->type == SPerl_OP_C_LIST) {
     SPerl_OP_sibling_splice(parser, first, first->last, 0, last);
     return first;
   }
@@ -834,14 +834,14 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *
 
 SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
   
-  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_PUSHMARK, NULL, NULL);
+  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_C_PUSHMARK, NULL, NULL);
   
-  return SPerl_OP_newOP(parser, SPerl_OP_LIST, op_pushmark, NULL);
+  return SPerl_OP_newOP(parser, SPerl_OP_C_LIST, op_pushmark, NULL);
 }
 
 SPerl_OP* SPerl_OP_newOP_NULL(SPerl_PARSER* parser) {
   
-  return SPerl_OP_newOP(parser, SPerl_OP_NULL, NULL, NULL);
+  return SPerl_OP_newOP(parser, SPerl_OP_C_NULL, NULL, NULL);
 }
 
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP* insert) {
