@@ -10,11 +10,11 @@
 #include "sperl_class.h"
 
 enum SPerl_type_type {
-  SPerl_TYPE_TYPE_ARRAY,
-  SPerl_TYPE_TYPE_CLASS,
-  SPerl_TYPE_TYPE_SUBTYPE,
-  SPerl_TYPE_TYPE_TYPEDEF,
-  SPerl_TYPE_TYPE_CLASS_OR_TYPEDEF
+  C_SPerl_TYPE_ARRAY,
+  C_SPerl_TYPE_CLASS,
+  C_SPerl_TYPE_SUB,
+  C_SPerl_TYPE_TYPEDEF,
+  C_SPerl_TYPE_CLASS_OR_TYPEDEF
 };
 
 struct SPerl_type {
