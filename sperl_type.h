@@ -7,17 +7,23 @@
 #include "sperl_array.h"
 #include "sperl_word.h"
 #include "sperl_subtype.h"
+#include "sperl_class.h"
 
 enum SPerl_type_type {
-  SPerl_TYPE_TYPE_WORDTYPE,
-  SPerl_TYPE_TYPE_SUBTYPE
+  SPerl_TYPE_TYPE_CLASS,
+  SPerl_TYPE_TYPE_SUBTYPE,
+  SPerl_TYPE_TYPE_TYPEDEF,
+  SPerl_TYPE_TYPE_UNKNOWN,
+  SPerl_TYPE_TYPE_WORDTYPE
 };
 
 struct SPerl_type {
   SPerl_char type;
+  SPerl_WORD* name_word;
   union {
-    SPerl_WORD* name_word;
+    SPerl_CLASS* class;
     SPerl_SUBTYPE* subtype;
+    SPerl_TYPE* type;
   } uv;
 };
 
