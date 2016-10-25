@@ -643,7 +643,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             else if (memcmp(keyword, "const", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_C_DESCRIPTER);
               SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
-              descripter->type = SPerl_DESCRIPTER_TYPE_CONST;
+              descripter->type = SPerl_DESCRIPTER_C_TYPE_CONST;
               descripter->op = op;
               op->uv.pv = descripter;
               yylvalp->opval = op;
@@ -653,7 +653,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             else if (memcmp(keyword, "static", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_C_DESCRIPTER);
               SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
-              descripter->type = SPerl_DESCRIPTER_TYPE_STATIC;
+              descripter->type = SPerl_DESCRIPTER_C_TYPE_STATIC;
               descripter->op = op;
               op->uv.pv = descripter;
               yylvalp->opval = op;
@@ -663,7 +663,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             else if (memcmp(keyword, "value", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_C_DESCRIPTER);
               SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
-              descripter->type = SPerl_DESCRIPTER_TYPE_VALUE;
+              descripter->type = SPerl_DESCRIPTER_C_TYPE_VALUE;
               descripter->op = op;
               op->uv.pv = descripter;
               yylvalp->opval = op;

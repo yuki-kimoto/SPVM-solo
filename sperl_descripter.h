@@ -3,11 +3,11 @@
 
 #include "sperl_core_type.h"
 
-enum SPerl_descripter_type {
-  SPerl_DESCRIPTER_TYPE_CONST,
-  SPerl_DESCRIPTER_TYPE_STATIC,
-  SPerl_DESCRIPTER_TYPE_VALUE,
-  SPerl_DESCRIPTER_TYPE_ENUM
+enum {
+  SPerl_DESCRIPTER_C_TYPE_CONST,
+  SPerl_DESCRIPTER_C_TYPE_STATIC,
+  SPerl_DESCRIPTER_C_TYPE_VALUE,
+  SPerl_DESCRIPTER_C_TYPE_ENUM
 };
 
 extern SPerl_char* const SPerl_DESCRIPTER_type_names[];
