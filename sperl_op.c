@@ -390,6 +390,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           
           // Set enum type
           SPerl_TYPE_ENUM* type_enum = SPerl_TYPE_ENUM_new(parser);
+          type_enum->name_word = op_pkgname->uv.pv;
           type_enum->enum_values = enum_values;
           
           // Set type
