@@ -100,11 +100,11 @@
 
 %token <opval> '+' '-'
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER TYPEDEF CORETYPE
+%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs optdeclclassattrs
-%type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub decltypedef
+%type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
 %type <opval> forstatement whilestatement expression optpackages subtype simpletype simpletypes optsimpletypes
 
@@ -165,7 +165,11 @@ packages
   | package
 
 package
-  : PACKAGE packagename classblock
+  : PACKAGE packagename type ';'
+    {
+      $$ = SPerl_OP_build_package(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser), SPerl_OP_newOP_NULL(parser));
+    }
+  | PACKAGE packagename classblock
     {
       $$ = SPerl_OP_build_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), SPerl_OP_newOP_LIST(parser), $3);
     }
@@ -319,12 +323,6 @@ decluse
       $$ = SPerl_OP_build_decluse(parser, $1, $2, $4);
     }
 
-decltypedef
-  : TYPEDEF type
-    {
-      $$ = $1;
-    }
-
 declhas
   : HAS fieldname ':' optdescripters type ';'
     {
@@ -377,7 +375,6 @@ declclassattr
   : decluse
   | declhas
   | declsub
-  | decltypedef
 
 classblock
   : '{' optdeclclassattrs '}'
