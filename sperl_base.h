@@ -17,6 +17,10 @@ struct SPerl_type;
 typedef struct SPerl_type SPerl_TYPE;
 
 /* sperl_type_sub.h */
+struct SPerl_type_core;
+typedef struct SPerl_type_core SPerl_TYPE_CORE;
+
+/* sperl_type_sub.h */
 struct SPerl_type_sub;
 typedef struct SPerl_type_sub SPerl_TYPE_SUB;
 

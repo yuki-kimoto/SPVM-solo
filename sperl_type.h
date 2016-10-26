@@ -6,8 +6,9 @@
 #include "sperl_parser.h"
 #include "sperl_array.h"
 #include "sperl_word.h"
-#include "sperl_type_sub.h"
 #include "sperl_class.h"
+#include "sperl_type_sub.h"
+#include "sperl_type_core.h"
 
 enum {
   SPerl_TYPE_C_CODE_CORE,
@@ -25,6 +26,7 @@ struct SPerl_type {
     SPerl_CLASS* class;
     SPerl_TYPE* type;
     SPerl_TYPE_SUB* type_sub;
+    SPerl_TYPE_CORE* type_core;
   } uv;
 };
 
