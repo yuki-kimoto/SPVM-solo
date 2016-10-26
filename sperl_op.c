@@ -693,15 +693,6 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_WORD* class_name_word = op_pkgname->uv.pv;
         SPerl_TYPE* type = op_typedeftype->uv.pv;
         SPerl_HASH_insert(parser->typemap, class_name_word->value, strlen(class_name_word->value), type);
-        
-        // Add use information
-        SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_USE, NULL, NULL);
-        op_use->file = op_typedeftype->file;
-        op_use->line = op_typedeftype->line;
-        SPerl_USE* use = SPerl_USE_new(parser);
-        use->class_name_word = class_name_word;
-        op_use->uv.pv = use;
-        SPerl_ARRAY_push(parser->use_stack, use);
       }
     }
   }
