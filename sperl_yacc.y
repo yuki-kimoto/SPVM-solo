@@ -100,13 +100,13 @@
 
 %token <opval> '+' '-'
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER TYPEDEF
+%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER TYPEDEF CORETYPE
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
 %type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs optdeclclassattrs
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub decltypedef
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
-%type <opval> forstatement whilestatement expression optpackages subtype classortypedeftype classortypedeftypes optclassortypedeftypes
+%type <opval> forstatement whilestatement expression optpackages subtype simpletype simpletypes optsimpletypes
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -636,22 +636,22 @@ descripters
   | DESCRIPTER
 
 type
-  : classortypedeftype
+  : simpletype
   | arraytype
   | subtype
 
 subtype
-  : SUB '(' optclassortypedeftypes ')' classortypedeftype
+  : SUB '(' optsimpletypes ')' simpletype
     {
       $$ = SPerl_OP_build_subtype(parser, $3, $5);
     }
 
-optclassortypedeftypes
+optsimpletypes
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	classortypedeftypes
+  |	simpletypes
     {
       if ($1->code == SPerl_OP_C_CODE_LIST) {
         $$ = $1;
@@ -662,20 +662,25 @@ optclassortypedeftypes
       }
     }
 
-classortypedeftypes
-  : classortypedeftypes ',' classortypedeftype
+simpletypes
+  : simpletypes ',' simpletype
     {
       $$ = SPerl_OP_append_elem(parser, $1, $3);
     }
-  | classortypedeftype
+  | simpletype
 
-classortypedeftype : WORD
-  {
-    $$ = SPerl_OP_build_classortypedeftype(parser, $1);
-  }
+simpletype
+  : WORD
+    {
+      $$ = SPerl_OP_build_simpletype(parser, $1);
+    }
+  | CORETYPE
+    {
+      $$ = SPerl_OP_build_simpletype(parser, $1);
+    }
 
 arraytype
-  : classortypedeftype '[' ']'
+  : simpletype '[' ']'
     {
       $$ = SPerl_OP_build_arraytype(parser, $1);
     }

@@ -19,6 +19,8 @@ enum {
   SPerl_TYPE_C_CODE_SUB
 };
 
+extern SPerl_char* const SPerl_TYPE_C_NAMES[];
+
 struct SPerl_type {
   SPerl_char code;
   union {

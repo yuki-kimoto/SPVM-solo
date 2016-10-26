@@ -20,6 +20,15 @@
 #include "sperl_type.h"
 #include "sperl_type_core.h"
 
+static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
+  if (type->code == SPerl_TYPE_C_CODE_CORE) {
+    return SPerl_TYPE_CORE_C_NAMES[type->uv.type_core->code];
+  }
+  else if (type->code == SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF) {
+    return type->uv.name_word->value;
+  }
+}
+
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
   
@@ -77,7 +86,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   parser->bufptr = "";
   
-  // Add core type
+  // Add core type(old logic)
   SPerl_char* core_types[] = {"boolean", "char", "byte", "short", "int", "long", "float", "double"};
   for (SPerl_int i = 0; i < 8; i++) {
     // Class name
@@ -94,61 +103,100 @@ SPerl_PARSER* SPerl_PARSER_new() {
   }
   
   // Add boolean type
-  SPerl_TYPE_CORE* type_core_boolean = SPerl_TYPE_CORE_new(parser);
-  type_core_boolean->code = SPerl_TYPE_CORE_C_CODE_BOOLEAN;
-  type_core_boolean->size = 1;
-  SPerl_ARRAY_push(parser->types, type_core_boolean);
-  SPerl_HASH_insert(parser->type_symtable, "boolean", strlen("boolean"), type_core_boolean);
+  {
+    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
+    type_core->code = SPerl_TYPE_CORE_C_CODE_BOOLEAN;
+    type_core->size = 1;
+    SPerl_TYPE* type = SPerl_TYPE_new(parser);
+    type->code = SPerl_TYPE_C_CODE_CORE;
+    type->uv.type_core = type_core;
+    SPerl_ARRAY_push(parser->types, type);
+    SPerl_HASH_insert(parser->type_symtable, "boolean", strlen("boolean"), type);
+  }
   
   // Add char type
-  SPerl_TYPE_CORE* type_core_char = SPerl_TYPE_CORE_new(parser);
-  type_core_char->code = SPerl_TYPE_CORE_C_CODE_CHAR;
-  type_core_char->size = 1;
-  SPerl_ARRAY_push(parser->types, type_core_char);
-  SPerl_HASH_insert(parser->type_symtable, "char", strlen("char"), type_core_char);
+  {
+    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
+    type_core->code = SPerl_TYPE_CORE_C_CODE_CHAR;
+    type_core->size = 1;
+    SPerl_TYPE* type = SPerl_TYPE_new(parser);
+    type->code = SPerl_TYPE_C_CODE_CORE;
+    type->uv.type_core = type_core;
+    SPerl_ARRAY_push(parser->types, type);
+    SPerl_HASH_insert(parser->type_symtable, "char", strlen("char"), type);
+  }
   
   // Add byte type
-  SPerl_TYPE_CORE* type_core_byte = SPerl_TYPE_CORE_new(parser);
-  type_core_byte->code = SPerl_TYPE_CORE_C_CODE_BYTE;
-  type_core_byte->size = 1;
-  SPerl_ARRAY_push(parser->types, type_core_byte);
-  SPerl_HASH_insert(parser->type_symtable, "byte", strlen("byte"), type_core_byte);
+  {
+    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
+    type_core->code = SPerl_TYPE_CORE_C_CODE_BYTE;
+    type_core->size = 1;
+    SPerl_TYPE* type = SPerl_TYPE_new(parser);
+    type->code = SPerl_TYPE_C_CODE_CORE;
+    type->uv.type_core = type_core;
+    SPerl_ARRAY_push(parser->types, type);
+    SPerl_HASH_insert(parser->type_symtable, "byte", strlen("byte"), type);
+  }
   
   // Add short type
-  SPerl_TYPE_CORE* type_core_short = SPerl_TYPE_CORE_new(parser);
-  type_core_short->code = SPerl_TYPE_CORE_C_CODE_SHORT;
-  type_core_short->size = 2;
-  SPerl_ARRAY_push(parser->types, type_core_short);
-  SPerl_HASH_insert(parser->type_symtable, "short", strlen("short"), type_core_short);
+  {
+    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
+    type_core->code = SPerl_TYPE_CORE_C_CODE_SHORT;
+    type_core->size = 1;
+    SPerl_TYPE* type = SPerl_TYPE_new(parser);
+    type->code = SPerl_TYPE_C_CODE_CORE;
+    type->uv.type_core = type_core;
+    SPerl_ARRAY_push(parser->types, type);
+    SPerl_HASH_insert(parser->type_symtable, "short", strlen("short"), type);
+  }
   
   // Add int type
-  SPerl_TYPE_CORE* type_core_int = SPerl_TYPE_CORE_new(parser);
-  type_core_int->code = SPerl_TYPE_CORE_C_CODE_INT;
-  type_core_int->size = 4;
-  SPerl_ARRAY_push(parser->types, type_core_int);
-  SPerl_HASH_insert(parser->type_symtable, "int", strlen("int"), type_core_int);
+  {
+    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
+    type_core->code = SPerl_TYPE_CORE_C_CODE_INT;
+    type_core->size = 1;
+    SPerl_TYPE* type = SPerl_TYPE_new(parser);
+    type->code = SPerl_TYPE_C_CODE_CORE;
+    type->uv.type_core = type_core;
+    SPerl_ARRAY_push(parser->types, type);
+    SPerl_HASH_insert(parser->type_symtable, "int", strlen("int"), type);
+  }
   
   // Add long type
-  SPerl_TYPE_CORE* type_core_long = SPerl_TYPE_CORE_new(parser);
-  type_core_long->code = SPerl_TYPE_CORE_C_CODE_LONG;
-  type_core_long->size = 4;
-  SPerl_ARRAY_push(parser->types, type_core_long);
-  SPerl_HASH_insert(parser->type_symtable, "long", strlen("long"), type_core_long);
+  {
+    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
+    type_core->code = SPerl_TYPE_CORE_C_CODE_LONG;
+    type_core->size = 1;
+    SPerl_TYPE* type = SPerl_TYPE_new(parser);
+    type->code = SPerl_TYPE_C_CODE_CORE;
+    type->uv.type_core = type_core;
+    SPerl_ARRAY_push(parser->types, type);
+    SPerl_HASH_insert(parser->type_symtable, "long", strlen("long"), type);
+  }
   
   // Add float type
-  SPerl_TYPE_CORE* type_core_float = SPerl_TYPE_CORE_new(parser);
-  type_core_float->code = SPerl_TYPE_CORE_C_CODE_FLOAT;
-  type_core_float->size = 4;
-  SPerl_ARRAY_push(parser->types, type_core_float);
-  SPerl_HASH_insert(parser->type_symtable, "float", strlen("float"), type_core_float);
+  {
+    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
+    type_core->code = SPerl_TYPE_CORE_C_CODE_FLOAT;
+    type_core->size = 1;
+    SPerl_TYPE* type = SPerl_TYPE_new(parser);
+    type->code = SPerl_TYPE_C_CODE_CORE;
+    type->uv.type_core = type_core;
+    SPerl_ARRAY_push(parser->types, type);
+    SPerl_HASH_insert(parser->type_symtable, "float", strlen("float"), type);
+  }
   
   // Add double type
-  SPerl_TYPE_CORE* type_core_double = SPerl_TYPE_CORE_new(parser);
-  type_core_double->code = SPerl_TYPE_CORE_C_CODE_DOUBLE;
-  type_core_double->size = 4;
-  SPerl_ARRAY_push(parser->types, type_core_double);
-  SPerl_HASH_insert(parser->type_symtable, "double", strlen("double"), type_core_double);
-  
+  {
+    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
+    type_core->code = SPerl_TYPE_CORE_C_CODE_DOUBLE;
+    type_core->size = 1;
+    SPerl_TYPE* type = SPerl_TYPE_new(parser);
+    type->code = SPerl_TYPE_C_CODE_CORE;
+    type->uv.type_core = type_core;
+    SPerl_ARRAY_push(parser->types, type);
+    SPerl_HASH_insert(parser->type_symtable, "dobule", strlen("dobule"), type);
+  }
   return parser;
 }
 
@@ -402,24 +450,26 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
   }
 }
 
-
 void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
   if (field) {
     printf("      name => \"%s\"\n", field->name_word->value);
-    if (field->type->code == SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF) {
-      SPerl_WORD* type_name = field->type->uv.name_word;
-      printf("      type => \"%s\"\n", type_name->value);
+    SPerl_TYPE* type = field->type;
+    if (type->code == SPerl_TYPE_C_CODE_CORE) {
+      printf("      type => \"%s\"\n", _type_to_str(parser, type));
     }
-    else if (field->type->code == SPerl_TYPE_C_CODE_SUB) {
-      SPerl_TYPE_SUB* type_sub = field->type->uv.type_sub;
+    else if (type->code == SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF) {
+      printf("      type => \"%s\"\n", _type_to_str(parser, type));
+    }
+    else if (type->code == SPerl_TYPE_C_CODE_SUB) {
+      SPerl_TYPE_SUB* type_sub = type->uv.type_sub;
       printf("      type => sub (");
       for (SPerl_int i = 0; i < type_sub->argument_types->length; i++) {
         SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(type_sub->argument_types, i);
-        printf("%s " , argument_type->uv.name_word->value);
+        printf("%s " , _type_to_str(parser, argument_type));
       }
       printf(") ");
       SPerl_TYPE* return_type = type_sub->return_type;
-      printf("%s\n", return_type->uv.name_word->value);
+      printf("%s\n", _type_to_str(parser, return_type));
     }
     printf("      descripters => ");
     SPerl_ARRAY* descripters = field->descripters;
@@ -453,22 +503,25 @@ void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_v
 void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
   if (my_var) {
     printf("          name => \"%s\"\n", my_var->name_word->value);
-    if (my_var->type->code == SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF) {
-      SPerl_WORD* type_name_word = my_var->type->uv.name_word;
-      printf("          type => \"%s\"\n", type_name_word->value);
+    SPerl_TYPE* type = my_var->type;
+    if (my_var->type->code == SPerl_TYPE_C_CODE_CORE) {
+      printf("          type => \"%s\"\n", _type_to_str(parser, type));
+    }
+    else if (my_var->type->code == SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF) {
+      printf("          type => \"%s\"\n", _type_to_str(parser, type));
     }
     else if (my_var->type->code == SPerl_TYPE_C_CODE_SUB) {
       SPerl_TYPE_SUB* type_sub = my_var->type->uv.type_sub;
       printf("      type => sub (");
       for (SPerl_int i = 0; i < type_sub->argument_types->length; i++) {
         SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(type_sub->argument_types, i);
-        printf("%s " , argument_type->uv.name_word->value);
+        printf("%s " , _type_to_str(parser, argument_type));
       }
       printf(") ");
       SPerl_TYPE* return_type = type_sub->return_type;
-      printf("%s\n", return_type->uv.name_word->value);
+      printf("%s\n", _type_to_str(parser, return_type));
     }
-
+    
     printf("          descripters => ");
     SPerl_ARRAY* descripters = my_var->descripters;
     if (descripters->length) {

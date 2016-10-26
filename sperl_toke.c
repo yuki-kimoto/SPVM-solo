@@ -15,6 +15,7 @@
 #include "sperl_word.h"
 #include "sperl_descripter.h"
 #include "sperl_use.h"
+#include "sperl_type_core.h"
 
 static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
   SPerl_OP* op = SPerl_OP_newOP(parser, type, NULL, NULL);
@@ -676,7 +677,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               const_value->code = SPerl_CONST_VALUE_C_CODE_BOOLEAN;
               const_value->uv.int_value = 1;
               op->uv.pv = const_value;
-              yylvalp->opval = (SPerl_OP*)op;
+              yylvalp->opval = op;
 
               return CONSTVALUE;
             }
@@ -686,36 +687,66 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               const_value->code = SPerl_CONST_VALUE_C_CODE_BOOLEAN;
               const_value->uv.int_value = 0;
               op->uv.pv = const_value;
-              yylvalp->opval = (SPerl_OP*)op;
+              yylvalp->opval = op;
 
               return CONSTVALUE;
             }
-            /*
             else if (memcmp(keyword, "boolean", str_len) == 0) {
-              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CORETYPE);
+              op->uv.pv = SPerl_ARRAY_fetch(parser->types, SPerl_TYPE_CORE_C_CODE_BOOLEAN);
+              yylvalp->opval = op;
+              
+              return CORETYPE;
             }
             else if (memcmp(keyword, "char", str_len) == 0) {
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CORETYPE);
+              op->uv.pv = SPerl_ARRAY_fetch(parser->types, SPerl_TYPE_CORE_C_CODE_CHAR);
+              yylvalp->opval = op;
               
+              return CORETYPE;
             }
             else if (memcmp(keyword, "byte", str_len) == 0) {
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CORETYPE);
+              op->uv.pv = SPerl_ARRAY_fetch(parser->types, SPerl_TYPE_CORE_C_CODE_BYTE);
+              yylvalp->opval = op;
               
+              return CORETYPE;
             }
             else if (memcmp(keyword, "short", str_len) == 0) {
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CORETYPE);
+              op->uv.pv = SPerl_ARRAY_fetch(parser->types, SPerl_TYPE_CORE_C_CODE_SHORT);
+              yylvalp->opval = op;
               
+              return CORETYPE;
             }
             else if (memcmp(keyword, "int", str_len) == 0) {
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CORETYPE);
+              op->uv.pv = SPerl_ARRAY_fetch(parser->types, SPerl_TYPE_CORE_C_CODE_INT);
+              yylvalp->opval = op;
               
+              return CORETYPE;
             }
             else if (memcmp(keyword, "long", str_len) == 0) {
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CORETYPE);
+              op->uv.pv = SPerl_ARRAY_fetch(parser->types, SPerl_TYPE_CORE_C_CODE_LONG);
+              yylvalp->opval = op;
               
+              return CORETYPE;
             }
             else if (memcmp(keyword, "float", str_len) == 0) {
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CORETYPE);
+              op->uv.pv = SPerl_ARRAY_fetch(parser->types, SPerl_TYPE_CORE_C_CODE_FLOAT);
+              yylvalp->opval = op;
               
+              return CORETYPE;
             }
             else if (memcmp(keyword, "double", str_len) == 0) {
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CORETYPE);
+              op->uv.pv = SPerl_ARRAY_fetch(parser->types, SPerl_TYPE_CORE_C_CODE_DOUBLE);
+              yylvalp->opval = op;
               
+              return CORETYPE;
             }
-            */
           }
           
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_WORD);

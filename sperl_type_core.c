@@ -5,6 +5,17 @@
 #include "sperl_parser.h"
 #include "sperl_memory_pool.h"
 
+SPerl_char* const SPerl_TYPE_CORE_C_NAMES[] = {
+  "boolean",
+  "char",
+  "byte",
+  "short",
+  "int",
+  "long",
+  "float",
+  "double"
+};
+
 SPerl_TYPE_CORE* SPerl_TYPE_CORE_new(SPerl_PARSER* parser) {
   SPerl_TYPE_CORE* type_core = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_TYPE_CORE));
   
