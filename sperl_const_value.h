@@ -1,7 +1,7 @@
 #ifndef SPerl_CONST_VALUE_H
 #define SPerl_CONST_VALUE_H
 
-#include "sperl_core_type.h"
+#include "sperl_base.h"
 
 enum {
   SPerl_CONST_VALUE_C_CODE_BOOLEAN,

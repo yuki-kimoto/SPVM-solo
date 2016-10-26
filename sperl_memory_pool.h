@@ -1,7 +1,7 @@
 #ifndef SPERL_MEMORY_POOL
 #define SPERL_MEMORY_POOL
 
-#include "sperl_core_type.h"
+#include "sperl_base.h"
 
 struct SPerl_memory_pool {
   SPerl_int base_capacity;

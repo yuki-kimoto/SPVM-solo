@@ -8,7 +8,7 @@
   #include <stdlib.h>
   #include <string.h>
   
-  #include "sperl_core_type.h"
+  #include "sperl_base.h"
   #include "sperl_yacc.h"
   #include "sperl_toke.h"
   #include "sperl_parser.h"

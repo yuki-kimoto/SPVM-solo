@@ -1,7 +1,7 @@
 #ifndef SPERL_OP_H
 #define SPERL_OP_H
 
-#include "sperl_core_type.h"
+#include "sperl_base.h"
 
 /* Operation code */
 enum {

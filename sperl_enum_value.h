@@ -1,7 +1,7 @@
 #ifndef SPERL_ENUM_VALUE_H
 #define SPERL_ENUM_VALUE_H
 
-#include "sperl_core_type.h"
+#include "sperl_base.h"
 
 // Field information
 struct SPerl_enum_value {

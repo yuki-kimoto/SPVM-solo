@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sperl_core_type.h"
+#include "sperl_base.h"
 
 enum {
   SPerl_CLASS_C_CODE_CORE,

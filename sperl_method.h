@@ -1,7 +1,7 @@
 #ifndef SPERL_METHOD_H
 #define SPERL_METHOD_H
 
-#include "sperl_core_type.h"
+#include "sperl_base.h"
 #include "sperl_type.h"
 
 // Method information

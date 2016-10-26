@@ -1,7 +1,7 @@
 #ifndef SPERL_MY_VAR_H
 #define SPERL_MY_VAR_H
 
-#include "sperl_core_type.h"
+#include "sperl_base.h"
 #include "sperl_type.h"
 
 struct SPerl_my_var {

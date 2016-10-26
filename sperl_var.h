@@ -1,7 +1,7 @@
 #ifndef SPERL_VAR_H
 #define SPERL_VAR_H
 
-#include "sperl_core_type.h"
+#include "sperl_base.h"
 #include "sperl_memory_pool.h"
 #include "sperl_parser.h"
 

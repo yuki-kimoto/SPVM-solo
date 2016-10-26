@@ -1,7 +1,7 @@
 #ifndef SPERL_DESCRIPTER_H
 #define SPERL_DESCRIPTER_H
 
-#include "sperl_core_type.h"
+#include "sperl_base.h"
 
 enum {
   SPerl_DESCRIPTER_C_CODE_CONST,
