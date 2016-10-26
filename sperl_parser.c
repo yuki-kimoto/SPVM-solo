@@ -60,6 +60,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   parser->classs = SPerl_PARSER_new_array(parser, 0);
   parser->class_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->types = SPerl_PARSER_new_array(parser, 0);
+  parser->type_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
   parser->typemap = SPerl_PARSER_new_hash(parser, 0);
@@ -352,14 +354,14 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
       printf("      type => \"%s\"\n", type_name->value);
     }
     else if (field->type->code == SPerl_TYPE_C_CODE_SUB) {
-      SPerl_SUBTYPE* subtype = field->type->uv.subtype;
+      SPerl_TYPE_SUB* type_sub = field->type->uv.type_sub;
       printf("      type => sub (");
-      for (SPerl_int i = 0; i < subtype->argument_types->length; i++) {
-        SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(subtype->argument_types, i);
+      for (SPerl_int i = 0; i < type_sub->argument_types->length; i++) {
+        SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(type_sub->argument_types, i);
         printf("%s " , argument_type->uv.name_word->value);
       }
       printf(") ");
-      SPerl_TYPE* return_type = subtype->return_type;
+      SPerl_TYPE* return_type = type_sub->return_type;
       printf("%s\n", return_type->uv.name_word->value);
     }
     printf("      descripters => ");
@@ -399,14 +401,14 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
       printf("          type => \"%s\"\n", type_name_word->value);
     }
     else if (my_var->type->code == SPerl_TYPE_C_CODE_SUB) {
-      SPerl_SUBTYPE* subtype = my_var->type->uv.subtype;
+      SPerl_TYPE_SUB* type_sub = my_var->type->uv.type_sub;
       printf("      type => sub (");
-      for (SPerl_int i = 0; i < subtype->argument_types->length; i++) {
-        SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(subtype->argument_types, i);
+      for (SPerl_int i = 0; i < type_sub->argument_types->length; i++) {
+        SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(type_sub->argument_types, i);
         printf("%s " , argument_type->uv.name_word->value);
       }
       printf(") ");
-      SPerl_TYPE* return_type = subtype->return_type;
+      SPerl_TYPE* return_type = type_sub->return_type;
       printf("%s\n", return_type->uv.name_word->value);
     }
 

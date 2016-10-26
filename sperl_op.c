@@ -20,8 +20,8 @@
 #include "sperl_word.h"
 #include "sperl_enum_value.h"
 #include "sperl_descripter.h"
-#include "sperl_subtype.h"
 #include "sperl_type.h"
+#include "sperl_type_sub.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_C_NAMES[] = {
@@ -100,8 +100,8 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
   type->code = SPerl_TYPE_C_CODE_SUB;
   
   // sub type
-  SPerl_SUBTYPE* subtype = SPerl_SUBTYPE_new(parser);
-  subtype->return_type = op_wordtype->uv.pv;
+  SPerl_TYPE_SUB* type_sub = SPerl_TYPE_SUB_new(parser);
+  type_sub->return_type = op_wordtype->uv.pv;
   SPerl_ARRAY* argument_types = SPerl_PARSER_new_array(parser, 0);
   {
     SPerl_OP* op_wordtype = op_wordtypes->first;
@@ -109,9 +109,9 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
       SPerl_ARRAY_push(argument_types, op_wordtype->uv.pv);
     }
   }
-  subtype->argument_types = argument_types;
+  type_sub->argument_types = argument_types;
   
-  type->uv.subtype = subtype;
+  type->uv.type_sub = type_sub;
   
   op_type->uv.pv = type;
   

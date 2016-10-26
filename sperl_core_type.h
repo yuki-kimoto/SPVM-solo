@@ -16,9 +16,9 @@ typedef double SPerl_double;
 struct SPerl_type;
 typedef struct SPerl_type SPerl_TYPE;
 
-/* sperl_subtype.h */
-struct SPerl_subtype;
-typedef struct SPerl_subtype SPerl_SUBTYPE;
+/* sperl_type_sub.h */
+struct SPerl_type_sub;
+typedef struct SPerl_type_sub SPerl_TYPE_SUB;
 
 /* sperl_enum_value.h */
 struct SPerl_enum_value;

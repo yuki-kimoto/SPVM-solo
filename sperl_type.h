@@ -6,10 +6,11 @@
 #include "sperl_parser.h"
 #include "sperl_array.h"
 #include "sperl_word.h"
-#include "sperl_subtype.h"
+#include "sperl_type_sub.h"
 #include "sperl_class.h"
 
 enum {
+  SPerl_TYPE_C_CODE_CORE,
   SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF,
   SPerl_TYPE_C_CODE_CLASS,
   SPerl_TYPE_C_CODE_TYPEDEF,
@@ -23,7 +24,7 @@ struct SPerl_type {
     SPerl_WORD* name_word;
     SPerl_CLASS* class;
     SPerl_TYPE* type;
-    SPerl_SUBTYPE* subtype;
+    SPerl_TYPE_SUB* type_sub;
   } uv;
 };
 

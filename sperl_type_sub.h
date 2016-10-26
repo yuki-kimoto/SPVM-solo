@@ -6,11 +6,11 @@
 #include "sperl_parser.h"
 #include "sperl_array.h"
 
-struct SPerl_subtype {
+struct SPerl_type_sub {
   SPerl_ARRAY* argument_types;
   SPerl_TYPE* return_type;
 };
 
-SPerl_SUBTYPE* SPerl_SUBTYPE_new(SPerl_PARSER* parser);
+SPerl_TYPE_SUB* SPerl_TYPE_SUB_new(SPerl_PARSER* parser);
 
 #endif

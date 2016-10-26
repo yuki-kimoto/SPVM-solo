@@ -36,7 +36,13 @@ struct SPerl_yy_parser_{
   
   // class information symbol table
   SPerl_HASH* class_symtable;
+
+  // Type informations
+  SPerl_ARRAY* types;
   
+  // Type information symbol table
+  SPerl_HASH* type_symtable;
+
   // Typemap
   SPerl_HASH* typemap;
   
