@@ -22,6 +22,7 @@
 #include "sperl_descripter.h"
 #include "sperl_type.h"
 #include "sperl_type_sub.h"
+#include "sperl_type_enum.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_C_NAMES[] = {
@@ -336,37 +337,75 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   SPerl_OP_sibling_splice(parser, op_package, op_typedeftype, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_package, op_descripters, 0, op_block);
   
-  /*
   {
     SPerl_char* type_name = ((SPerl_WORD*)op_pkgname->uv.pv)->value;
     SPerl_HASH* type_symtable = parser->type_symtable;
     SPerl_TYPE* found_type = SPerl_HASH_search(type_symtable, type_name, strlen(type_name));
+    
+    // Redeclaration package error
     if (found_type) {
       SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name));
       sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", type_name, op_package->file, op_package->line);
       SPerl_yyerror(parser, message);
     }
     else {
-      // Class or enum
-      if (op_type->code == SPerl_OP_C_CODE_NULL) {
-        SPerl_CLASS* class = SPerl_CLASS_new(parser);
-        class->name = op_pkgname->uv.pv;
-        class->op_block = op_block;
-        class->alias = SPerl_PARSER_new_hash(parser, 0);
-        
-        class->descripters = SPerl_OP_create_descripters(parser, op_descripters);
-
-        // Enum
+      // Type
+      SPerl_TYPE* type = SPerl_TYPE_new(parser);
+      
+      // Class type or enum type
+      if (op_typedeftype->code == SPerl_OP_C_CODE_NULL) {
+        // Enum type
         if (op_descripters->code == SPerl_OP_C_CODE_ENUM) {
-          class->code = SPerl_CLASS_C_CODE_ENUM;
+
+          // Enum values
+          SPerl_ARRAY* enum_values = SPerl_PARSER_new_array(parser, 0);
+          
+          // Starting value
+          SPerl_long start_value = 0;
+          
+          SPerl_OP* op_enumvalues = op_block->first;
+          SPerl_OP* op_enumvalue = op_enumvalues->first;
+          while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
+            SPerl_ENUM_VALUE* enum_value = SPerl_ENUM_VALUE_new(parser);
+            enum_value->name_word = op_enumvalue->first->uv.pv;
+            if (op_enumvalue->last) {
+              enum_value->value = op_enumvalue->last->uv.pv;
+            }
+            
+            SPerl_CONST_VALUE* const_value;
+            if (enum_value->value) {
+              const_value = enum_value->value;
+              start_value = const_value->uv.int_value + 1;
+            }
+            else {
+              const_value = SPerl_CONST_VALUE_new(parser);
+              const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
+              const_value->uv.int_value = start_value;
+              enum_value->value = const_value;
+              start_value++;
+            }
+            SPerl_ARRAY_push(parser->const_values, const_value);
+            SPerl_ARRAY_push(enum_values, enum_value);
+          }
+          
+          // Set enum type
+          SPerl_TYPE_ENUM* type_enum = SPerl_TYPE_ENUM_new(parser);
+          type_enum->enum_values = enum_values;
+          
+          // Set type
+          type->code = SPerl_TYPE_C_CODE_ENUM;
+          type->uv.type_enum = type_enum;
         }
-        // Normal class
+        // Class type
         else {
+          SPerl_CLASS* class = SPerl_CLASS_new(parser);
+          class->name = op_pkgname->uv.pv;
+          class->op_block = op_block;
+          class->alias = SPerl_PARSER_new_hash(parser, 0);
+          class->descripters = SPerl_OP_create_descripters(parser, op_descripters);
+
           class->code = SPerl_CLASS_C_CODE_NORMAL;
-        }
-        
-        // Class
-        if (class->code == SPerl_CLASS_C_CODE_NORMAL) {
+          
           // Search use and field
           SPerl_ARRAY* fields = SPerl_PARSER_new_array(parser, 0);
           SPerl_HASH* field_symtable = SPerl_PARSER_new_hash(parser, 0);
@@ -454,73 +493,25 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           class->methods = parser->current_methods;
           parser->current_methods = SPerl_PARSER_new_array(parser, 0);
           class->method_symtable = method_symtable;
+          
+          // Set type
+          type->code = SPerl_TYPE_C_CODE_CLASS;
+          type->uv.class = class;
         }
-        
-        // Enum
-        else if (class->code == SPerl_CLASS_C_CODE_ENUM) {
-          // Values
-          SPerl_ARRAY* enum_values = SPerl_PARSER_new_array(parser, 0);
-          
-          // Starting value
-          SPerl_long start_value = 0;
-          
-          SPerl_OP* op_enumvalues = op_block->first;
-          SPerl_OP* op_enumvalue = op_enumvalues->first;
-          while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
-            SPerl_ENUM_VALUE* enum_value = SPerl_ENUM_VALUE_new(parser);
-            enum_value->name_word = op_enumvalue->first->uv.pv;
-            if (op_enumvalue->last) {
-              enum_value->value = op_enumvalue->last->uv.pv;
-            }
-            
-            SPerl_CONST_VALUE* const_value;
-            if (enum_value->value) {
-              const_value = enum_value->value;
-              start_value = const_value->uv.int_value + 1;
-            }
-            else {
-              const_value = SPerl_CONST_VALUE_new(parser);
-              const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
-              const_value->uv.int_value = start_value;
-              enum_value->value = const_value;
-              start_value++;
-            }
-            SPerl_ARRAY_push(parser->const_values, const_value);
-            SPerl_ARRAY_push(enum_values, enum_value);
-          }
-          
-          class->enum_values = enum_values;
-        }
-        
-        // Add class information
-        SPerl_ARRAY_push(parser->classs, class);
-        SPerl_HASH_insert(parser->class_symtable, class_name, strlen(class_name), class);
-
-        SPerl_TYPE* type = SPerl_TYPE_new(parser);
-        type->code = SPerl_TYPE_C_CODE_UNKNOWN;
-        type->uv.name_word = op_pkgname->uv.pv;
-        
-        SPerl_HASH_insert(parser->typemap, class_name, strlen(class_name), type);
       }
-      // Typedef
+      // Typedef type
       else {
         // Class name
-        SPerl_WORD* class_name_word = op_pkgname->uv.pv;
-        SPerl_TYPE* type = op_type->uv.pv;
-        SPerl_HASH_insert(parser->typemap, class_name_word->value, strlen(class_name_word->value), type);
-        
-        // Add use information
-        SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_USE, NULL, NULL);
-        op_use->file = op_type->file;
-        op_use->line = op_type->line;
-        SPerl_USE* use = SPerl_USE_new(parser);
-        use->class_name_word = class_name_word;
-        op_use->uv.pv = use;
-        SPerl_ARRAY_push(parser->use_stack, use);
+        SPerl_WORD* type_name_word = op_pkgname->uv.pv;
+        type = op_typedeftype->uv.pv;
+        SPerl_HASH_insert(parser->type_symtable, type_name_word->value, strlen(type_name_word->value), type);
       }
+      
+      // Add type information
+      SPerl_ARRAY_push(parser->types, type);
+      SPerl_HASH_insert(parser->type_symtable, type_name, strlen(type_name), type);
     }
   }
-  */
   
   {
     SPerl_char* class_name = ((SPerl_WORD*)op_pkgname->uv.pv)->value;
