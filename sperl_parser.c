@@ -100,6 +100,55 @@ SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_ARRAY_push(parser->types, type_core_boolean);
   SPerl_HASH_insert(parser->type_symtable, "boolean", strlen("boolean"), type_core_boolean);
   
+  // Add char type
+  SPerl_TYPE_CORE* type_core_char = SPerl_TYPE_CORE_new(parser);
+  type_core_char->code = SPerl_TYPE_CORE_C_CODE_CHAR;
+  type_core_char->size = 1;
+  SPerl_ARRAY_push(parser->types, type_core_char);
+  SPerl_HASH_insert(parser->type_symtable, "char", strlen("char"), type_core_char);
+  
+  // Add byte type
+  SPerl_TYPE_CORE* type_core_byte = SPerl_TYPE_CORE_new(parser);
+  type_core_byte->code = SPerl_TYPE_CORE_C_CODE_BYTE;
+  type_core_byte->size = 1;
+  SPerl_ARRAY_push(parser->types, type_core_byte);
+  SPerl_HASH_insert(parser->type_symtable, "byte", strlen("byte"), type_core_byte);
+  
+  // Add short type
+  SPerl_TYPE_CORE* type_core_short = SPerl_TYPE_CORE_new(parser);
+  type_core_short->code = SPerl_TYPE_CORE_C_CODE_SHORT;
+  type_core_short->size = 2;
+  SPerl_ARRAY_push(parser->types, type_core_short);
+  SPerl_HASH_insert(parser->type_symtable, "short", strlen("short"), type_core_short);
+  
+  // Add int type
+  SPerl_TYPE_CORE* type_core_int = SPerl_TYPE_CORE_new(parser);
+  type_core_int->code = SPerl_TYPE_CORE_C_CODE_INT;
+  type_core_int->size = 4;
+  SPerl_ARRAY_push(parser->types, type_core_int);
+  SPerl_HASH_insert(parser->type_symtable, "int", strlen("int"), type_core_int);
+  
+  // Add long type
+  SPerl_TYPE_CORE* type_core_long = SPerl_TYPE_CORE_new(parser);
+  type_core_long->code = SPerl_TYPE_CORE_C_CODE_LONG;
+  type_core_long->size = 4;
+  SPerl_ARRAY_push(parser->types, type_core_long);
+  SPerl_HASH_insert(parser->type_symtable, "long", strlen("long"), type_core_long);
+  
+  // Add float type
+  SPerl_TYPE_CORE* type_core_float = SPerl_TYPE_CORE_new(parser);
+  type_core_float->code = SPerl_TYPE_CORE_C_CODE_FLOAT;
+  type_core_float->size = 4;
+  SPerl_ARRAY_push(parser->types, type_core_float);
+  SPerl_HASH_insert(parser->type_symtable, "float", strlen("float"), type_core_float);
+  
+  // Add double type
+  SPerl_TYPE_CORE* type_core_double = SPerl_TYPE_CORE_new(parser);
+  type_core_double->code = SPerl_TYPE_CORE_C_CODE_DOUBLE;
+  type_core_double->size = 4;
+  SPerl_ARRAY_push(parser->types, type_core_double);
+  SPerl_HASH_insert(parser->type_symtable, "double", strlen("double"), type_core_double);
+  
   return parser;
 }
 
