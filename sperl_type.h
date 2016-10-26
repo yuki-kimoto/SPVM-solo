@@ -11,12 +11,13 @@
 #include "sperl_type_core.h"
 
 enum {
+  SPerl_TYPE_C_CODE_UNKNOWN,
   SPerl_TYPE_C_CODE_CORE,
-  SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF,
   SPerl_TYPE_C_CODE_CLASS,
   SPerl_TYPE_C_CODE_TYPEDEF,
   SPerl_TYPE_C_CODE_ARRAY,
-  SPerl_TYPE_C_CODE_SUB
+  SPerl_TYPE_C_CODE_SUB,
+  SPerl_TYPE_C_CODE_ENUM
 };
 
 extern SPerl_char* const SPerl_TYPE_C_NAMES[];

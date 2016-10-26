@@ -3,12 +3,13 @@
 #include "sperl_type.h"
 
 SPerl_char* const SPerl_TYPE_C_NAMES[] = {
+  "unknown",
   "core",
-  "class_or_typedef",
   "class",
   "typedef",
   "array",
-  "sub"
+  "sub",
+  "enum"
 };
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {

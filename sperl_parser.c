@@ -24,39 +24,9 @@ static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
   if (type->code == SPerl_TYPE_C_CODE_CORE) {
     return SPerl_TYPE_CORE_C_NAMES[type->uv.type_core->code];
   }
-  else if (type->code == SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF) {
+  else if (type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
     return type->uv.name_word->value;
   }
-}
-
-SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
-  SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
-  
-  SPerl_ARRAY_push(parser->array_ptrs, array);
-  
-  return array;
-}
-
-SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity) {
-  SPerl_HASH* hash = SPerl_HASH_new(capacity);
-  
-  SPerl_ARRAY_push(parser->hash_ptrs, hash);
-  
-  return hash;
-}
-
-SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
-  SPerl_char* str = (SPerl_char*)malloc(length + 1);
-  
-  if (length < 40) {
-    str = SPerl_MEMORY_POOL_alloc(parser->memory_pool, 40);
-  }
-  else {
-    str = (SPerl_char*)malloc(length + 1);
-    SPerl_ARRAY_push(parser->long_str_ptrs, str);
-  }
-  
-  return str;
 }
 
 SPerl_PARSER* SPerl_PARSER_new() {
@@ -198,6 +168,36 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_HASH_insert(parser->type_symtable, "dobule", strlen("dobule"), type);
   }
   return parser;
+}
+
+SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
+  SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
+  
+  SPerl_ARRAY_push(parser->array_ptrs, array);
+  
+  return array;
+}
+
+SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity) {
+  SPerl_HASH* hash = SPerl_HASH_new(capacity);
+  
+  SPerl_ARRAY_push(parser->hash_ptrs, hash);
+  
+  return hash;
+}
+
+SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
+  SPerl_char* str = (SPerl_char*)malloc(length + 1);
+  
+  if (length < 40) {
+    str = SPerl_MEMORY_POOL_alloc(parser->memory_pool, 40);
+  }
+  else {
+    str = (SPerl_char*)malloc(length + 1);
+    SPerl_ARRAY_push(parser->long_str_ptrs, str);
+  }
+  
+  return str;
 }
 
 void SPerl_PARSER_free(SPerl_PARSER* parser) {
@@ -417,7 +417,7 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
       printf("      name => \"%s\"\n", method->name_word->value);
     }
     printf("      anon => %d\n", method->anon);
-    if (method->return_type->code == SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF) {
+    if (method->return_type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
       SPerl_WORD* return_type_name = method->return_type->uv.name_word;
       printf("      return_type => \"%s\"\n", return_type_name->value);
     }
@@ -457,7 +457,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     if (type->code == SPerl_TYPE_C_CODE_CORE) {
       printf("      type => \"%s\"\n", _type_to_str(parser, type));
     }
-    else if (type->code == SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF) {
+    else if (type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
       printf("      type => \"%s\"\n", _type_to_str(parser, type));
     }
     else if (type->code == SPerl_TYPE_C_CODE_SUB) {
@@ -507,7 +507,7 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     if (my_var->type->code == SPerl_TYPE_C_CODE_CORE) {
       printf("          type => \"%s\"\n", _type_to_str(parser, type));
     }
-    else if (my_var->type->code == SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF) {
+    else if (my_var->type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
       printf("          type => \"%s\"\n", _type_to_str(parser, type));
     }
     else if (my_var->type->code == SPerl_TYPE_C_CODE_SUB) {
