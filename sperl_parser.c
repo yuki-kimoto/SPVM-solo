@@ -299,9 +299,6 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
   SPerl_PARSER_dump_ast(parser, parser->op_grammer, 0);
   
-  printf("\n[Class infomation]\n");
-  SPerl_PARSER_dump_classs(parser, parser->classs);
-
   printf("\n[Type infomation]\n");
   SPerl_PARSER_dump_types(parser, parser->types);
   
@@ -320,69 +317,24 @@ void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_val
   }
 }
 
-void SPerl_PARSER_dump_classs(SPerl_PARSER* parser, SPerl_ARRAY* classs) {
-  for (SPerl_int i = 0; i < classs->length; i++) {
-    SPerl_CLASS* class = (SPerl_CLASS*)SPerl_ARRAY_fetch(classs, i);
-    
-    printf("class[%d]\n", i);
-    printf("  name => \"%s\"\n", class->name->value);
-    printf("  descripters => ");
-    SPerl_ARRAY* descripters = class->descripters;
-    if (descripters && descripters->length) {
-      for (SPerl_int i = 0; i < descripters->length; i++) {
-        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
-        printf("%s ", SPerl_DESCRIPTER_NAMES[descripter->code]);
-      }
-    }
-    else {
-      printf("(None)");
-    }
-    printf("\n");
-    printf("  op_block => %x\n", class->op_block);
-    
-    // Class
-    if (class->code == SPerl_CLASS_C_CODE_NORMAL) {
-      // Field information
-      printf("  fields\n");
-      SPerl_ARRAY* fields = class->fields;
-      for (SPerl_int j = 0; j < fields->length; j++) {
-        SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
-        printf("    field[%" PRId32 "]\n", j);
-        SPerl_PARSER_dump_field(parser, field);
-      }
-      
-      // Method information
-      printf("  methods\n");
-      SPerl_ARRAY* methods = class->methods;
-      for (SPerl_int j = 0; j < methods->length; j++) {
-        SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
-        printf("    method[%" PRId32 "]\n", j);
-        SPerl_PARSER_dump_method(parser, method);
-      }
-    }
-    else if (class->code == SPerl_CLASS_C_CODE_ENUM) {
-      // Enum value information
-      printf("  enum_values\n");
-      SPerl_ARRAY* enum_values = class->enum_values;
-      for (SPerl_int j = 0; j < enum_values->length; j++) {
-        SPerl_ENUM_VALUE* enum_value = SPerl_ARRAY_fetch(enum_values, j);
-        printf("    enum_value[%" PRId32 "]\n", j);
-        SPerl_PARSER_dump_enum_value(parser, enum_value);
-      }
-    }
-  }
-}
-
 void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
   for (SPerl_int i = 0; i < types->length; i++) {
-    SPerl_TYPE* type = SPerl_ARRAY_fetch(types, i);
     
-    // Class type
+    // Type
+    SPerl_TYPE* type = SPerl_ARRAY_fetch(types, i);
     printf("type[%d]\n", i);
-    if (type->code == SPerl_TYPE_C_CODE_CLASS) {
+    
+    // Core type
+    if (type->code == SPerl_TYPE_C_CODE_CORE) {
+      SPerl_TYPE_CORE* type_core = type->uv.type_core;
+      printf("  code => \"core\"\n");
+      printf("  name => \"%s\"\n", SPerl_TYPE_CORE_C_NAMES[type_core->code]);
+    }
+    // Class type
+    else if (type->code == SPerl_TYPE_C_CODE_CLASS) {
       SPerl_CLASS* class = type->uv.class;
       
-      printf("  code => class\n");
+      printf("  code => \"class\"\n");
       printf("  name => \"%s\"\n", class->name->value);
       printf("  descripters => ");
       SPerl_ARRAY* descripters = class->descripters;
@@ -421,7 +373,7 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
       SPerl_TYPE_ENUM* type_enum = type->uv.type_enum;
       
       // Enum value information
-      printf("  code => enum\n");
+      printf("  code => \"enum\"\n");
       printf("  name => \"%s\"\n", type_enum->name_word->value);
       printf("  enum_values\n");
       SPerl_ARRAY* enum_values = type_enum->enum_values;
