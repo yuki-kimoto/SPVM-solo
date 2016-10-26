@@ -1,5 +1,5 @@
-#ifndef SPERL_CORE_TYPE_H
-#define SPERL_CORE_TYPE_H
+#ifndef SPERL_BASE_H
+#define SPERL_BASE_H
 
 #include <stdint.h>
 
