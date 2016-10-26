@@ -690,6 +690,32 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
 
               return CONSTVALUE;
             }
+            /*
+            else if (memcmp(keyword, "boolean", str_len) == 0) {
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_
+            }
+            else if (memcmp(keyword, "char", str_len) == 0) {
+              
+            }
+            else if (memcmp(keyword, "byte", str_len) == 0) {
+              
+            }
+            else if (memcmp(keyword, "short", str_len) == 0) {
+              
+            }
+            else if (memcmp(keyword, "int", str_len) == 0) {
+              
+            }
+            else if (memcmp(keyword, "long", str_len) == 0) {
+              
+            }
+            else if (memcmp(keyword, "float", str_len) == 0) {
+              
+            }
+            else if (memcmp(keyword, "double", str_len) == 0) {
+              
+            }
+            */
           }
           
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_WORD);

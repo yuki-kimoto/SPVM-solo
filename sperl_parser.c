@@ -18,6 +18,7 @@
 #include "sperl_enum_value.h"
 #include "sperl_descripter.h"
 #include "sperl_type.h"
+#include "sperl_type_core.h"
 
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
@@ -91,6 +92,13 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_ARRAY_push(parser->classs, class);
     SPerl_HASH_insert(parser->class_symtable, name->value, strlen(name->value), class);
   }
+  
+  // Add boolean type
+  SPerl_TYPE_CORE* type_core_boolean = SPerl_TYPE_CORE_new(parser);
+  type_core_boolean->code = SPerl_TYPE_CORE_C_CODE_BOOLEAN;
+  type_core_boolean->size = 1;
+  SPerl_ARRAY_push(parser->types, type_core_boolean);
+  SPerl_HASH_insert(parser->type_symtable, "boolean", strlen("boolean"), type_core_boolean);
   
   return parser;
 }
