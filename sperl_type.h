@@ -10,15 +10,15 @@
 #include "sperl_class.h"
 
 enum {
-  SPerl_TYPE_C_CLASS_OR_TYPEDEF,
-  SPerl_TYPE_C_CLASS,
-  SPerl_TYPE_C_TYPEDEF,
-  SPerl_TYPE_C_ARRAY,
-  SPerl_TYPE_C_SUB
+  SPerl_TYPE_C_CODE_CLASS_OR_TYPEDEF,
+  SPerl_TYPE_C_CODE_CLASS,
+  SPerl_TYPE_C_CODE_TYPEDEF,
+  SPerl_TYPE_C_CODE_ARRAY,
+  SPerl_TYPE_C_CODE_SUB
 };
 
 struct SPerl_type {
-  SPerl_char type;
+  SPerl_char code;
   union {
     SPerl_WORD* name_word;
     SPerl_CLASS* class;

@@ -129,7 +129,7 @@
 grammar
   : optpackages
     {
-      $$ = SPerl_OP_build_GRAMMER(parser, $1);
+      $$ = SPerl_OP_build_grammer(parser, $1);
 
       // Syntax error
       if (parser->error_count) {
@@ -167,15 +167,15 @@ packages
 package
   : PACKAGE packagename classblock
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, SPerl_OP_newOP_NULL(parser), SPerl_OP_newOP_LIST(parser), $3);
+      $$ = SPerl_OP_build_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), SPerl_OP_newOP_LIST(parser), $3);
     }
   | PACKAGE packagename ':' listdescripters classblock
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
+      $$ = SPerl_OP_build_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
     }
   | PACKAGE packagename ':' ENUM enumblock
     {
-      $$ = SPerl_OP_build_PACKAGE(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
+      $$ = SPerl_OP_build_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
     }
 
 enumblock 
@@ -312,11 +312,11 @@ elsestatement
 decluse
   : USE packagename ';'
     {
-      $$ = SPerl_OP_build_USE(parser, $1, $2, SPerl_OP_newOP_NULL(parser));
+      $$ = SPerl_OP_build_decluse(parser, $1, $2, SPerl_OP_newOP_NULL(parser));
     }
   | USE packagename '-' packagealias';'
     {
-      $$ = SPerl_OP_build_USE(parser, $1, $2, $4);
+      $$ = SPerl_OP_build_decluse(parser, $1, $2, $4);
     }
 
 decltypedef
@@ -328,26 +328,26 @@ decltypedef
 declhas
   : HAS fieldname ':' optdescripters type ';'
     {
-      $$ = SPerl_OP_build_HAS(parser, $1, $2, $4, $5);
+      $$ = SPerl_OP_build_declhas(parser, $1, $2, $4, $5);
     }
 
 declsub
  : SUB subname '(' optsubargs ')' ':' optdescripters type block
      {
-       $$ = SPerl_OP_build_SUB(parser, $1, $2, $4, $7, $8, $9);
+       $$ = SPerl_OP_build_declsub(parser, $1, $2, $4, $7, $8, $9);
      }
 
 declmy
   : MY VAR ':' optdescripters type
     {
-      $$ = SPerl_OP_build_MY(parser, $1, $2, $4, $5);
+      $$ = SPerl_OP_build_declmy(parser, $1, $2, $4, $5);
     }
 
 declanonsub
  : SUB '(' optsubargs ')' ':' optdescripters type block
      {
        $1->code = SPerl_OP_C_CODE_ANONSUB;
-       $$ = SPerl_OP_build_SUB(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
+       $$ = SPerl_OP_build_declsub(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
      }
 
 optdeclclassattrs
@@ -426,7 +426,7 @@ term
   : VAR
   | CONSTVALUE
     {
-      $$ = SPerl_OP_build_CONST_VALUE(parser, $1);
+      $$ = SPerl_OP_build_CONSTVALUE(parser, $1);
     }
   | '+' term %prec UMINUS
     {
@@ -606,7 +606,7 @@ subargs
 subarg
   : VAR ':' optdescripters type
     {
-      $$ = SPerl_OP_build_MY(parser, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_MY, NULL, NULL), $1, $3, $4);
+      $$ = SPerl_OP_build_declmy(parser, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_MY, NULL, NULL), $1, $3, $4);
     }
     
 optdescripters
