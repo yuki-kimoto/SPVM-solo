@@ -39,8 +39,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->long_str_ptrs = SPerl_ARRAY_new(0);
   parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
-  parser->classs = SPerl_PARSER_new_array(parser, 0);
-  parser->class_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->types = SPerl_PARSER_new_array(parser, 0);
   parser->type_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
@@ -56,22 +54,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
   
   parser->bufptr = "";
-  
-  // Add core type(old logic)
-  SPerl_char* core_types[] = {"boolean", "char", "byte", "short", "int", "long", "float", "double"};
-  for (SPerl_int i = 0; i < 8; i++) {
-    // Class name
-    SPerl_WORD* name = SPerl_WORD_new(parser);
-    name->value = core_types[i];
-    
-    // Class
-    SPerl_CLASS* class = SPerl_CLASS_new(parser);
-    class->code = SPerl_CLASS_C_CODE_CORE;
-    class->name = name;
-    
-    SPerl_ARRAY_push(parser->classs, class);
-    SPerl_HASH_insert(parser->class_symtable, name->value, strlen(name->value), class);
-  }
   
   // Add boolean type
   {

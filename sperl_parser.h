@@ -31,12 +31,6 @@ struct SPerl_yy_parser_{
   // AST grammer
   SPerl_OP* op_grammer;
   
-  // class informations
-  SPerl_ARRAY* classs;
-  
-  // class information symbol table
-  SPerl_HASH* class_symtable;
-
   // Type informations
   SPerl_ARRAY* types;
   
