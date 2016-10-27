@@ -77,7 +77,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "ne",
   "statement",
   "grammer",
-  "desctype",
   "word",
   "if",
   "elsif",
