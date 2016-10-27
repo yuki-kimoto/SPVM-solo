@@ -106,7 +106,7 @@
 %type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs optdeclclassattrs
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
-%type <opval> forstatement whilestatement expression optpackages subtype types opttypes
+%type <opval> forstatement whilestatement expression optpackages subtype types opttypes notsubtype
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -656,14 +656,17 @@ types
   | type
 
 type
+  : notsubtype
+  | subtype
+
+notsubtype
   : WORD
     {
       $$ = SPerl_OP_build_wordtype(parser, $1);
     }
   | CORETYPE
   | arraytype
-  | subtype
-
+  
 subtype
   : SUB '(' opttypes ')' type
     {
@@ -671,9 +674,13 @@ subtype
     }
 
 arraytype
-  : '[' ']' type
+  : notsubtype '[' ']'
     {
-      $$ = SPerl_OP_build_arraytype(parser, $3);
+      $$ = SPerl_OP_build_arraytype(parser, $1);
+    }
+  | '(' type ')' '[' ']'
+    {
+      $$ = SPerl_OP_build_arraytype(parser, $2);
     }
 
 fieldname : WORD

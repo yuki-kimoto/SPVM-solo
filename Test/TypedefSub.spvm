@@ -1,1 +1,1 @@
-package Test::TypedefSub sub (int, Test::Point) : []int;
+package Test::TypedefSub sub (int, Test::Point) : int;
