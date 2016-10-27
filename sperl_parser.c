@@ -368,7 +368,12 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
       printf("  name => \"%s\"\n", type->name_word->value);
       SPerl_TYPE* typedef_type = type->uv.type;
       
-      if (typedef_type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
+      printf("  typedef_type => %s\n", SPerl_TYPE_C_CODE_NAMES[typedef_type->code]);
+      if (typedef_type->code == SPerl_TYPE_C_CODE_CORE) {
+        SPerl_TYPE_CORE* type_core = type->uv.type_core;
+        printf("  typedef_name => \"%s\"\n", SPerl_TYPE_CORE_C_CODE_NAMES[type_core->code]);
+      }
+      else if (typedef_type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
         printf("  \"%s\"\n", typedef_type->name_word->value);
       }
       else if (typedef_type->code == SPerl_TYPE_C_CODE_ARRAY) {
