@@ -365,6 +365,9 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
         SPerl_PARSER_dump_enum_value(parser, enum_value);
       }
     }
+    else if (type->code == SPerl_TYPE_C_CODE_TYPEDEF) {
+      printf("  code => \"typedef\"\n");
+    }
   }
 }
 
