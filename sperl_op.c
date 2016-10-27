@@ -274,7 +274,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         }
       }
     }
-    else {
+    else if (type->code == SPerl_TYPE_C_CODE_TYPEDEF) {
       
     }
   }
@@ -507,10 +507,8 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     }
     // Typedef type
     else {
-      // Class name
-      SPerl_WORD* type_name_word = op_pkgname->uv.pv;
-      type = op_typedeftype->uv.pv;
-      SPerl_HASH_insert(parser->type_symtable, type_name_word->value, strlen(type_name_word->value), type);
+      type->code = SPerl_TYPE_C_CODE_TYPEDEF;
+      type->uv.type = op_typedeftype->uv.pv;
     }
     
     // Add type information
