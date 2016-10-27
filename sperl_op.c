@@ -94,20 +94,20 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "coretype"
 };
 
-SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, SPerl_OP* op_wordtype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_wordtypes, op_wordtype);
+SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_types, SPerl_OP* op_return_type) {
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_argument_types, op_return_type);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_SUB;
   
   // sub type
   SPerl_TYPE_SUB* type_sub = SPerl_TYPE_SUB_new(parser);
-  type_sub->return_type = op_wordtype->uv.pv;
+  type_sub->return_type = op_return_type->uv.pv;
   SPerl_ARRAY* argument_types = SPerl_PARSER_new_array(parser, 0);
   {
-    SPerl_OP* op_wordtype = op_wordtypes->first;
-    while (op_wordtype = SPerl_OP_sibling(parser, op_wordtype)) {
-      SPerl_ARRAY_push(argument_types, op_wordtype->uv.pv);
+    SPerl_OP* op_argument_type = op_argument_types->first;
+    while (op_argument_type = SPerl_OP_sibling(parser, op_argument_type)) {
+      SPerl_ARRAY_push(argument_types, op_argument_type->uv.pv);
     }
   }
   type_sub->argument_types = argument_types;

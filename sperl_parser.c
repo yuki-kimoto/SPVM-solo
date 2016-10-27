@@ -370,13 +370,13 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
       
       printf("  typedef_type => \"%s\"\n", SPerl_TYPE_C_CODE_NAMES[typedef_type->code]);
       if (typedef_type->code == SPerl_TYPE_C_CODE_CORE) {
-        printf("  typedef_name => \"%s\"\n", _type_to_str(parser, typedef_type));
+        printf("  typedef_str => \"%s\"\n", _type_to_str(parser, typedef_type));
       }
       else if (typedef_type->code == SPerl_TYPE_C_CODE_TYPEDEFORCLASS) {
-        printf("  typedef_name => \"%s\"\n", _type_to_str(parser, typedef_type));
+        printf("  typedef_str => \"%s\"\n", _type_to_str(parser, typedef_type));
       }
       else if (typedef_type->code == SPerl_TYPE_C_CODE_ARRAY) {
-        printf("  typedef_name => \"[]%s\"\n", _type_to_str(parser, typedef_type->uv.type));
+        printf("  typedef_str => \"[]%s\"\n", _type_to_str(parser, typedef_type->uv.type));
       }
       else if (typedef_type->code == SPerl_TYPE_C_CODE_SUB) {
         
