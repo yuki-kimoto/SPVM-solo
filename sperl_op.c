@@ -119,20 +119,15 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_wordtypes, S
   return op_type;
 }
 
-SPerl_OP* SPerl_OP_build_simpletype(SPerl_PARSER* parser, SPerl_OP* op_simpletype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_simpletype, NULL);
+SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_wordtype, NULL);
   
-  if (op_simpletype->code == SPerl_OP_C_CODE_CORETYPE) {
-    return op_simpletype;
-  }
-  else {
-    SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    type->code = SPerl_TYPE_C_CODE_TYPEDEFORCLASS;
-    type->name_word = op_simpletype->uv.pv;
-    op_type->uv.pv = type;
-    
-    return op_type;
-  }
+  SPerl_TYPE* type = SPerl_TYPE_new(parser);
+  type->code = SPerl_TYPE_C_CODE_TYPEDEFORCLASS;
+  type->name_word = op_wordtype->uv.pv;
+  op_type->uv.pv = type;
+  
+  return op_type;
 }
 
 SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_simpletype) {
