@@ -106,7 +106,7 @@
 %type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs optdeclclassattrs
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
-%type <opval> forstatement whilestatement expression optpackages subtype types opttypes notsubtype
+%type <opval> forstatement whilestatement expression optpackages subtype notsubtypes optnotsubtypes notsubtype
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -632,12 +632,12 @@ descripters
     }
   | DESCRIPTER
 
-opttypes
+optnotsubtypes
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	types
+  |	notsubtypes
     {
       if ($1->code == SPerl_OP_C_CODE_LIST) {
         $$ = $1;
@@ -648,12 +648,12 @@ opttypes
       }
     }
 
-types
-  : types ',' type
+notsubtypes
+  : notsubtypes ',' type
     {
       $$ = SPerl_OP_append_elem(parser, $1, $3);
     }
-  | type
+  | notsubtype
 
 type
   : notsubtype
@@ -668,7 +668,7 @@ notsubtype
   | arraytype
   
 subtype
-  : SUB '(' opttypes ')' type
+  : SUB '(' optnotsubtypes ')' notsubtype
     {
       $$ = SPerl_OP_build_subtype(parser, $3, $5);
     }
@@ -678,7 +678,7 @@ arraytype
     {
       $$ = SPerl_OP_build_arraytype(parser, $1);
     }
-  | '(' type ')' '[' ']'
+  | '(' subtype ')' '[' ']'
     {
       $$ = SPerl_OP_build_arraytype(parser, $2);
     }
