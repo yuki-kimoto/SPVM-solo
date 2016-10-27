@@ -130,12 +130,25 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
   return op_type;
 }
 
-SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_simpletype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_simpletype, NULL);
+SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_notsubtype) {
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_notsubtype, NULL);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_ARRAY;
-  type->uv.type = op_simpletype->uv.pv;
+  type->uv.type = op_notsubtype->uv.pv;
+  
+  SPerl_WORD* name_word = SPerl_WORD_new(parser);
+  name_word->op = op_notsubtype;
+  SPerl_int name_original_len = strlen(type->uv.type->name_word->value);
+  SPerl_int name_len =  name_original_len + 2;
+  SPerl_char* name = SPerl_PARSER_new_string(parser, name_len);
+  memcpy(name, type->uv.type->name_word->value, name_original_len);
+  name[name_original_len] = '[';
+  name[name_original_len + 1] = ']';
+  name[name_len] = '\0';
+  name_word->value = name;
+  type->name_word = name_word;
+  
   op_type->uv.pv = type;
   
   return op_type;

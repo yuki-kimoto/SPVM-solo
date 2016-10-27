@@ -51,6 +51,9 @@ static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
       }
     }
   }
+  else if (type->code == SPerl_TYPE_C_CODE_SUB) {
+    
+  }
 }
 
 SPerl_PARSER* SPerl_PARSER_new() {
@@ -86,6 +89,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
     type->uv.type_core = type_core;
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = "boolean";
+    type->name_word = name_word;
     SPerl_ARRAY_push(parser->types, type);
     SPerl_HASH_insert(parser->type_symtable, "boolean", strlen("boolean"), type);
   }
@@ -98,6 +104,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
     type->uv.type_core = type_core;
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = "char";
+    type->name_word = name_word;
     SPerl_ARRAY_push(parser->types, type);
     SPerl_HASH_insert(parser->type_symtable, "char", strlen("char"), type);
   }
@@ -110,6 +119,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
     type->uv.type_core = type_core;
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = "byte";
+    type->name_word = name_word;
     SPerl_ARRAY_push(parser->types, type);
     SPerl_HASH_insert(parser->type_symtable, "byte", strlen("byte"), type);
   }
@@ -122,6 +134,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
     type->uv.type_core = type_core;
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = "short";
+    type->name_word = name_word;
     SPerl_ARRAY_push(parser->types, type);
     SPerl_HASH_insert(parser->type_symtable, "short", strlen("short"), type);
   }
@@ -134,6 +149,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
     type->uv.type_core = type_core;
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = "int";
+    type->name_word = name_word;
     SPerl_ARRAY_push(parser->types, type);
     SPerl_HASH_insert(parser->type_symtable, "int", strlen("int"), type);
   }
@@ -146,6 +164,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
     type->uv.type_core = type_core;
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = "long";
+    type->name_word = name_word;
     SPerl_ARRAY_push(parser->types, type);
     SPerl_HASH_insert(parser->type_symtable, "long", strlen("long"), type);
   }
@@ -158,6 +179,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
     type->uv.type_core = type_core;
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = "float";
+    type->name_word = name_word;
     SPerl_ARRAY_push(parser->types, type);
     SPerl_HASH_insert(parser->type_symtable, "float", strlen("float"), type);
   }
@@ -170,6 +194,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
     type->uv.type_core = type_core;
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = "dobule";
+    type->name_word = name_word;
     SPerl_ARRAY_push(parser->types, type);
     SPerl_HASH_insert(parser->type_symtable, "dobule", strlen("dobule"), type);
   }
