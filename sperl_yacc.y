@@ -677,9 +677,9 @@ simpletype
     }
 
 arraytype
-  : simpletype '[' ']'
+  : '[' ']' simpletype
     {
-      $$ = SPerl_OP_build_arraytype(parser, $1);
+      $$ = SPerl_OP_build_arraytype(parser, $3);
     }
 
 fieldname : WORD

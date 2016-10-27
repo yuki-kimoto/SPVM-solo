@@ -1,1 +1,1 @@
-package Test::TypedefArray int[];
+package Test::TypedefArray []int;

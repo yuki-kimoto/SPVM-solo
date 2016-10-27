@@ -376,7 +376,7 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
         printf("  typedef_name => \"%s\"\n", _type_to_str(parser, typedef_type));
       }
       else if (typedef_type->code == SPerl_TYPE_C_CODE_ARRAY) {
-        printf("  typedef_name => \"%s[]\"\n", _type_to_str(parser, typedef_type->uv.type));
+        printf("  typedef_name => \"[]%s\"\n", _type_to_str(parser, typedef_type->uv.type));
       }
       else if (typedef_type->code == SPerl_TYPE_C_CODE_SUB) {
         
