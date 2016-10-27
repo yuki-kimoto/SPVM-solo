@@ -7,4 +7,5 @@ package Test {
   use Test::Foo::Point3D;
   use Test::TypedefCore;
   use Test::TypedefArray;
+  use Test::TypedefClass;
 }

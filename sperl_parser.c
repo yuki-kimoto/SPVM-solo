@@ -25,7 +25,7 @@ static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
   if (type->code == SPerl_TYPE_C_CODE_CORE) {
     return SPerl_TYPE_CORE_C_CODE_NAMES[type->uv.type_core->code];
   }
-  else if (type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
+  else if (type->code == SPerl_TYPE_C_CODE_TYPEDEFORCLASS) {
     return type->name_word->value;
   }
 }
@@ -368,11 +368,11 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
       printf("  name => \"%s\"\n", type->name_word->value);
       SPerl_TYPE* typedef_type = type->uv.type;
       
-      printf("  typedef_type => %s\n", SPerl_TYPE_C_CODE_NAMES[typedef_type->code]);
+      printf("  typedef_type => \"%s\"\n", SPerl_TYPE_C_CODE_NAMES[typedef_type->code]);
       if (typedef_type->code == SPerl_TYPE_C_CODE_CORE) {
         printf("  typedef_name => \"%s\"\n", _type_to_str(parser, typedef_type));
       }
-      else if (typedef_type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
+      else if (typedef_type->code == SPerl_TYPE_C_CODE_TYPEDEFORCLASS) {
         printf("  typedef_name => \"%s\"\n", _type_to_str(parser, typedef_type));
       }
       else if (typedef_type->code == SPerl_TYPE_C_CODE_ARRAY) {
@@ -433,7 +433,7 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
       printf("      name => \"%s\"\n", method->name_word->value);
     }
     printf("      anon => %d\n", method->anon);
-    if (method->return_type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
+    if (method->return_type->code == SPerl_TYPE_C_CODE_TYPEDEFORCLASS) {
       SPerl_WORD* return_type_name = method->return_type->name_word;
       printf("      return_type => \"%s\"\n", return_type_name->value);
     }
@@ -473,7 +473,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     if (type->code == SPerl_TYPE_C_CODE_CORE) {
       printf("      type => \"%s\"\n", _type_to_str(parser, type));
     }
-    else if (type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
+    else if (type->code == SPerl_TYPE_C_CODE_TYPEDEFORCLASS) {
       printf("      type => \"%s\"\n", _type_to_str(parser, type));
     }
     else if (type->code == SPerl_TYPE_C_CODE_SUB) {
@@ -523,7 +523,7 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     if (my_var->type->code == SPerl_TYPE_C_CODE_CORE) {
       printf("          type => \"%s\"\n", _type_to_str(parser, type));
     }
-    else if (my_var->type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
+    else if (my_var->type->code == SPerl_TYPE_C_CODE_TYPEDEFORCLASS) {
       printf("          type => \"%s\"\n", _type_to_str(parser, type));
     }
     else if (my_var->type->code == SPerl_TYPE_C_CODE_SUB) {

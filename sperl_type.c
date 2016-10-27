@@ -3,7 +3,7 @@
 #include "sperl_type.h"
 
 SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
-  "unknown",
+  "typedef or class",
   "core",
   "class",
   "typedef",
