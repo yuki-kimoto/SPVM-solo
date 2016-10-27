@@ -26,7 +26,7 @@ static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
     return SPerl_TYPE_CORE_C_CODE_NAMES[type->uv.type_core->code];
   }
   else if (type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
-    return type->uv.name_word->value;
+    return type->name_word->value;
   }
 }
 
@@ -317,7 +317,7 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
       SPerl_CLASS* class = type->uv.class;
       
       printf("  code => \"class\"\n");
-      printf("  name => \"%s\"\n", class->name->value);
+      printf("  name => \"%s\"\n", type->name_word->value);
       printf("  descripters => ");
       SPerl_ARRAY* descripters = class->descripters;
       if (descripters && descripters->length) {
@@ -420,7 +420,7 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
     }
     printf("      anon => %d\n", method->anon);
     if (method->return_type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
-      SPerl_WORD* return_type_name = method->return_type->uv.name_word;
+      SPerl_WORD* return_type_name = method->return_type->name_word;
       printf("      return_type => \"%s\"\n", return_type_name->value);
     }
     SPerl_int i;

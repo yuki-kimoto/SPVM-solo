@@ -24,10 +24,10 @@ extern SPerl_char* const SPerl_TYPE_C_NAMES[];
 
 struct SPerl_type {
   SPerl_char code;
+  SPerl_WORD* name_word;
   union {
-    SPerl_WORD* name_word;
-    SPerl_CLASS* class;
     SPerl_TYPE* type;
+    SPerl_CLASS* class;
     SPerl_TYPE_SUB* type_sub;
     SPerl_TYPE_CORE* type_core;
     SPerl_TYPE_ENUM* type_enum;

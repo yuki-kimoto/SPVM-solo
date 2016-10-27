@@ -16,13 +16,11 @@ enum {
 // Class information
 struct SPerl_class {
   SPerl_char code;
-  SPerl_WORD* name;
   SPerl_ARRAY* descripters;
   SPerl_ARRAY* fields;
   SPerl_HASH* field_symtable;
   SPerl_ARRAY* methods;
   SPerl_HASH* method_symtable;
-  SPerl_ARRAY* enum_values;
   SPerl_ARRAY* uses;
   SPerl_HASH* use_symtable;
   SPerl_OP* op_block;
