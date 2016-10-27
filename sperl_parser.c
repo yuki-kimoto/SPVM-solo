@@ -23,7 +23,7 @@
 
 static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
   if (type->code == SPerl_TYPE_C_CODE_CORE) {
-    return SPerl_TYPE_CORE_C_NAMES[type->uv.type_core->code];
+    return SPerl_TYPE_CORE_C_CODE_NAMES[type->uv.type_core->code];
   }
   else if (type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
     return type->uv.name_word->value;
@@ -223,7 +223,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
     printf(" ");
   }
   SPerl_int code = op->code;
-  printf("%s", SPerl_OP_C_NAMES[code]);
+  printf("%s", SPerl_OP_C_CODE_NAMES[code]);
   if (code == SPerl_OP_C_CODE_CONST_VALUE) {
     SPerl_CONST_VALUE* const_value = op->uv.pv;
     switch(const_value->code) {
@@ -310,7 +310,7 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
     if (type->code == SPerl_TYPE_C_CODE_CORE) {
       SPerl_TYPE_CORE* type_core = type->uv.type_core;
       printf("  code => \"core\"\n");
-      printf("  name => \"%s\"\n", SPerl_TYPE_CORE_C_NAMES[type_core->code]);
+      printf("  name => \"%s\"\n", SPerl_TYPE_CORE_C_CODE_NAMES[type_core->code]);
     }
     // Class type
     else if (type->code == SPerl_TYPE_C_CODE_CLASS) {
@@ -323,7 +323,7 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
       if (descripters && descripters->length) {
         for (SPerl_int i = 0; i < descripters->length; i++) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
-          printf("%s ", SPerl_DESCRIPTER_NAMES[descripter->code]);
+          printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
         }
       }
       else {
@@ -426,7 +426,7 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
     if (descripters->length) {
       for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
-        printf("%s ", SPerl_DESCRIPTER_NAMES[descripter->code]);
+        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
       }
     }
     else {
@@ -475,7 +475,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     if (descripters->length) {
       for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
-        printf("%s ", SPerl_DESCRIPTER_NAMES[descripter->code]);
+        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
       }
     }
     else {
@@ -526,7 +526,7 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     if (descripters->length) {
       for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
-        printf("%s ", SPerl_DESCRIPTER_NAMES[descripter->code]);
+        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
       }
     }
     else {

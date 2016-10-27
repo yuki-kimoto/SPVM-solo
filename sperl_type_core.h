@@ -15,7 +15,7 @@ enum {
   SPerl_TYPE_CORE_C_CODE_DOUBLE
 };
 
-extern SPerl_char* const SPerl_TYPE_CORE_C_NAMES[];
+extern SPerl_char* const SPerl_TYPE_CORE_C_CODE_NAMES[];
 
 struct SPerl_type_core {
   SPerl_char code;

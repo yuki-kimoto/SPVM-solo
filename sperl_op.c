@@ -25,7 +25,7 @@
 #include "sperl_type_enum.h"
 
 /* sperl_op.h */
-SPerl_char* const SPerl_OP_C_NAMES[] = {
+SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "null",
   "const",
   "lt",
@@ -183,9 +183,9 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
         if (descripter->code != SPerl_DESCRIPTER_C_CODE_VALUE && descripter->code != SPerl_DESCRIPTER_C_CODE_ENUM)
         {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_NAMES[descripter->code]));
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
           sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
-            SPerl_DESCRIPTER_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+            SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
           SPerl_yyerror(parser, message);
         }
       }
@@ -210,9 +210,9 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
           if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
           {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_NAMES[descripter->code]));
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
             sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n",
-              SPerl_DESCRIPTER_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+              SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
           }
         }
@@ -239,9 +239,9 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
           if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
           {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_NAMES[descripter->code]));
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
             sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
-              SPerl_DESCRIPTER_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+              SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
           }
         }
@@ -266,9 +266,9 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
             SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
             if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
             {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_NAMES[descripter->code]));
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
               sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
-                SPerl_DESCRIPTER_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+                SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
               SPerl_yyerror(parser, message);
             }
           }

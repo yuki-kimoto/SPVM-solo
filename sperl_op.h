@@ -74,7 +74,7 @@ enum {
   SPerl_OP_C_CODE_CORETYPE
 };
 
-extern SPerl_char* const SPerl_OP_C_NAMES[];
+extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 
 /* Binary operation */
 struct SPerl_op {

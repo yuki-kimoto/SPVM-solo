@@ -5,7 +5,7 @@
 #include "sperl_parser.h"
 #include "sperl_memory_pool.h"
 
-SPerl_char* const SPerl_TYPE_CORE_C_NAMES[] = {
+SPerl_char* const SPerl_TYPE_CORE_C_CODE_NAMES[] = {
   "boolean",
   "char",
   "byte",
