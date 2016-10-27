@@ -678,10 +678,7 @@ arraytype
     {
       $$ = SPerl_OP_build_arraytype(parser, $1);
     }
-  | '(' subtype ')' '[' ']'
-    {
-      $$ = SPerl_OP_build_arraytype(parser, $2);
-    }
+
 
 fieldname : WORD
 subname : WORD
