@@ -2,7 +2,7 @@
 
 #include "sperl_type.h"
 
-SPerl_char* const SPerl_TYPE_C_NAMES[] = {
+SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
   "unknown",
   "core",
   "class",

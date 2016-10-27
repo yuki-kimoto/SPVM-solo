@@ -6,7 +6,6 @@
 #include "sperl_array.h"
 
 struct SPerl_type_enum {
-  SPerl_WORD* name_word;
   SPerl_ARRAY* enum_values;
 };
 

@@ -305,18 +305,17 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
     // Type
     SPerl_TYPE* type = SPerl_ARRAY_fetch(types, i);
     printf("type[%d]\n", i);
+    printf("  code => \"%s\"\n", SPerl_TYPE_C_CODE_NAMES[type->code]);
     
     // Core type
     if (type->code == SPerl_TYPE_C_CODE_CORE) {
       SPerl_TYPE_CORE* type_core = type->uv.type_core;
-      printf("  code => \"core\"\n");
       printf("  name => \"%s\"\n", SPerl_TYPE_CORE_C_CODE_NAMES[type_core->code]);
     }
     // Class type
     else if (type->code == SPerl_TYPE_C_CODE_CLASS) {
       SPerl_CLASS* class = type->uv.class;
       
-      printf("  code => \"class\"\n");
       printf("  name => \"%s\"\n", type->name_word->value);
       printf("  descripters => ");
       SPerl_ARRAY* descripters = class->descripters;
@@ -355,8 +354,7 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
       SPerl_TYPE_ENUM* type_enum = type->uv.type_enum;
       
       // Enum value information
-      printf("  code => \"enum\"\n");
-      printf("  name => \"%s\"\n", type_enum->name_word->value);
+      printf("  name => \"%s\"\n", type->name_word->value);
       printf("  enum_values\n");
       SPerl_ARRAY* enum_values = type_enum->enum_values;
       for (SPerl_int j = 0; j < enum_values->length; j++) {
@@ -365,8 +363,20 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
         SPerl_PARSER_dump_enum_value(parser, enum_value);
       }
     }
+    // Typedef type
     else if (type->code == SPerl_TYPE_C_CODE_TYPEDEF) {
-      printf("  code => \"typedef\"\n");
+      printf("  name => \"%s\"\n", type->name_word->value);
+      SPerl_TYPE* typedef_type = type->uv.type;
+      
+      if (typedef_type->code == SPerl_TYPE_C_CODE_UNKNOWN) {
+        printf("  \"%s\"\n", typedef_type->name_word->value);
+      }
+      else if (typedef_type->code == SPerl_TYPE_C_CODE_ARRAY) {
+        
+      }
+      else if (typedef_type->code == SPerl_TYPE_C_CODE_SUB) {
+        
+      }
     }
   }
 }

@@ -20,7 +20,7 @@ enum {
   SPerl_TYPE_C_CODE_ENUM
 };
 
-extern SPerl_char* const SPerl_TYPE_C_NAMES[];
+extern SPerl_char* const SPerl_TYPE_C_CODE_NAMES[];
 
 struct SPerl_type {
   SPerl_char code;
