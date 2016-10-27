@@ -136,11 +136,12 @@ SPerl_OP* SPerl_OP_build_simpletype(SPerl_PARSER* parser, SPerl_OP* op_simpletyp
 }
 
 SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_simpletype) {
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_type, NULL);
+  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_simpletype, NULL);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_ARRAY;
   type->uv.type = op_simpletype->uv.pv;
+  op_type->uv.pv = type;
   
   return op_type;
 }
