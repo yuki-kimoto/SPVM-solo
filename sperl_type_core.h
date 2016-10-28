@@ -2,7 +2,6 @@
 #define SPERL_TYPE_CORE
 
 #include "sperl_base.h"
-#include "sperl_word.h"
 
 enum {
   SPerl_TYPE_CORE_C_CODE_BOOLEAN,

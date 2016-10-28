@@ -2,7 +2,6 @@
 #define SPERL_MY_VAR_H
 
 #include "sperl_base.h"
-#include "sperl_type.h"
 
 struct SPerl_my_var {
   SPerl_TYPE* type;

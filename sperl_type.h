@@ -2,13 +2,6 @@
 #define SPERL_TYPE_H
 
 #include "sperl_base.h"
-#include "sperl_memory_pool.h"
-#include "sperl_parser.h"
-#include "sperl_array.h"
-#include "sperl_word.h"
-#include "sperl_class.h"
-#include "sperl_type_sub.h"
-#include "sperl_type_core.h"
 
 enum {
   SPerl_TYPE_C_CODE_TYPEDEFORCLASS,

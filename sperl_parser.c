@@ -18,6 +18,7 @@
 #include "sperl_enum_value.h"
 #include "sperl_descripter.h"
 #include "sperl_type.h"
+#include "sperl_type_sub.h"
 #include "sperl_type_core.h"
 #include "sperl_type_enum.h"
 

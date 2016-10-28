@@ -2,7 +2,6 @@
 #define SPERL_FIELD_H
 
 #include "sperl_base.h"
-#include "sperl_type.h"
 
 // Field information
 struct SPerl_field {

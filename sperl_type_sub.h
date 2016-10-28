@@ -2,9 +2,6 @@
 #define SPERL_SUBTYPE_H
 
 #include "sperl_base.h"
-#include "sperl_memory_pool.h"
-#include "sperl_parser.h"
-#include "sperl_array.h"
 
 struct SPerl_type_sub {
   SPerl_ARRAY* argument_types;

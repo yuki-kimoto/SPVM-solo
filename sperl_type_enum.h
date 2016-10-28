@@ -2,8 +2,6 @@
 #define SPERL_TYPE_ENUM
 
 #include "sperl_base.h"
-#include "sperl_word.h"
-#include "sperl_array.h"
 
 struct SPerl_type_enum {
   SPerl_ARRAY* enum_values;

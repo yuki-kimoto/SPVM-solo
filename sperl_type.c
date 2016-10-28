@@ -1,6 +1,8 @@
 #include <stdlib.h>
 
 #include "sperl_type.h"
+#include "sperl_memory_pool.h"
+#include "sperl_parser.h"
 
 SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
   "typedef or class",

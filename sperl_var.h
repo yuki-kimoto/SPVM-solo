@@ -2,8 +2,6 @@
 #define SPERL_VAR_H
 
 #include "sperl_base.h"
-#include "sperl_memory_pool.h"
-#include "sperl_parser.h"
 
 struct SPerl_var {
   SPerl_WORD* name_word;
