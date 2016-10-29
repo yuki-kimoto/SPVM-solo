@@ -28,9 +28,9 @@ typedef struct SPerl_type_array SPerl_TYPE_ARRAY;
 struct SPerl_type;
 typedef struct SPerl_type SPerl_TYPE;
 
-/* sperl_core_data.h */
-struct SPerl_core_data;
-typedef struct SPerl_core_data SPerl_CORE_DATA;
+/* sperl_body_core.h */
+struct SPerl_body_core;
+typedef struct SPerl_body_core SPerl_BODY_CORE;
 
 /* sperl_type_sub.h */
 struct SPerl_type_sub;
