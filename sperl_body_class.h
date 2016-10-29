@@ -7,10 +7,8 @@
 #include "sperl_base.h"
 
 enum {
-  SPerl_BODY_CLASS_C_CODE_CORE,
   SPerl_BODY_CLASS_C_CODE_NORMAL,
   SPerl_BODY_CLASS_C_CODE_VALUE,
-  SPerl_BODY_CLASS_C_CODE_ENUM
 };
 
 // Class information
