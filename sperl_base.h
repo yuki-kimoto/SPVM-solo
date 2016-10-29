@@ -88,9 +88,9 @@ typedef struct SPerl_descripter SPerl_DESCRIPTER;
 struct SPerl_method;
 typedef struct SPerl_method SPerl_METHOD;
 
-/* sperl_class.h */
-struct SPerl_class;
-typedef struct SPerl_class SPerl_CLASS;
+/* sperl_body_class.h */
+struct SPerl_body_class;
+typedef struct SPerl_body_class SPerl_BODY_CLASS;
 
 /* sperl_array.h */
 struct SPerl_array;

@@ -51,8 +51,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           if (use) {
             SPerl_char* type_name = use->type_name_word->value;
 
-            SPerl_CLASS* found_class = SPerl_HASH_search(parser->package_symtable, type_name, strlen(type_name));
-            if (found_class) {
+            SPerl_BODY_CLASS* found_body_class = SPerl_HASH_search(parser->package_symtable, type_name, strlen(type_name));
+            if (found_body_class) {
               continue;
             }
             else {

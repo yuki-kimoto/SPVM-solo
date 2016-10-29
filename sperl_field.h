@@ -9,7 +9,7 @@ struct SPerl_field {
   SPerl_WORD* name_word;
   SPerl_ARRAY* descripters;
   SPerl_OP* op;
-  SPerl_CLASS* class;
+  SPerl_BODY_CLASS* body_class;
 };
 
 SPerl_FIELD* SPerl_FIELD_new(SPerl_PARSER* parser);

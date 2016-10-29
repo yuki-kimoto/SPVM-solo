@@ -20,8 +20,8 @@ struct SPerl_type {
   SPerl_WORD* name_word;
   union {
     SPerl_TYPE* type;
-    SPerl_CLASS* class;
     SPerl_TYPE_SUB* type_sub;
+    SPerl_BODY_CLASS* body_class;
     SPerl_BODY_CORE* body_core;
     SPerl_BODY_ENUM* body_enum;
   } uv;

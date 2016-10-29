@@ -1,5 +1,5 @@
-#ifndef SPERL_CLASS_H
-#define SPERL_CLASS_H
+#ifndef SPERL_BODY_CLASS_H
+#define SPERL_BODY_CLASS_H
 
 #include <stdlib.h>
 #include <string.h>
@@ -7,14 +7,14 @@
 #include "sperl_base.h"
 
 enum {
-  SPerl_CLASS_C_CODE_CORE,
-  SPerl_CLASS_C_CODE_NORMAL,
-  SPerl_CLASS_C_CODE_VALUE,
-  SPerl_CLASS_C_CODE_ENUM
+  SPerl_BODY_CLASS_C_CODE_CORE,
+  SPerl_BODY_CLASS_C_CODE_NORMAL,
+  SPerl_BODY_CLASS_C_CODE_VALUE,
+  SPerl_BODY_CLASS_C_CODE_ENUM
 };
 
 // Class information
-struct SPerl_class {
+struct SPerl_body_class {
   SPerl_char code;
   SPerl_ARRAY* descripters;
   SPerl_ARRAY* fields;
@@ -28,6 +28,6 @@ struct SPerl_class {
   SPerl_OP* op;
 };
 
-SPerl_CLASS* SPerl_CLASS_new(SPerl_PARSER* parser);
+SPerl_BODY_CLASS* SPerl_BODY_CLASS_new(SPerl_PARSER* parser);
 
 #endif

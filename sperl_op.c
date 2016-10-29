@@ -9,7 +9,6 @@
 #include "sperl_yacc.h"
 #include "sperl_op.h"
 #include "sperl_method.h"
-#include "sperl_class.h"
 #include "sperl_parser.h"
 #include "sperl_const_value.h"
 #include "sperl_field.h"
@@ -23,6 +22,7 @@
 #include "sperl_type.h"
 #include "sperl_type_sub.h"
 #include "sperl_body_enum.h"
+#include "sperl_body_class.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
@@ -86,7 +86,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "enum",
   "enumblock",
   "enumvalue",
-  "classblock",
+  "body_classblock",
   "descripter",
   "anonsub",
   "type",
@@ -182,10 +182,10 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     
     // Class type
     if (type->code == SPerl_TYPE_C_CODE_CLASS) {
-      SPerl_CLASS* class = type->uv.class;
+      SPerl_BODY_CLASS* body_class = type->uv.body_class;
       
       // Check descripter
-      SPerl_ARRAY* descripters = class->descripters;
+      SPerl_ARRAY* descripters = body_class->descripters;
       for (SPerl_int j = 0; j < descripters->length; j++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
         if (descripter->code != SPerl_DESCRIPTER_C_CODE_VALUE && descripter->code != SPerl_DESCRIPTER_C_CODE_ENUM)
@@ -198,7 +198,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       }
       
       // Check field
-      SPerl_ARRAY* fields = class->fields;
+      SPerl_ARRAY* fields = body_class->fields;
       for (SPerl_int j = 0; j < fields->length; j++) {
         // Field type
         SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
@@ -226,7 +226,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       }
       
       // Check method
-      SPerl_ARRAY* methods = class->methods;
+      SPerl_ARRAY* methods = body_class->methods;
       for (SPerl_int j = 0; j < methods->length; j++) {
         // Check method type
         SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
@@ -413,12 +413,12 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       }
       // Class type
       else {
-        SPerl_CLASS* class = SPerl_CLASS_new(parser);
-        class->op_block = op_block;
-        class->alias = SPerl_PARSER_new_hash(parser, 0);
-        class->descripters = SPerl_OP_create_descripters(parser, op_descripters);
+        SPerl_BODY_CLASS* body_class = SPerl_BODY_CLASS_new(parser);
+        body_class->op_block = op_block;
+        body_class->alias = SPerl_PARSER_new_hash(parser, 0);
+        body_class->descripters = SPerl_OP_create_descripters(parser, op_descripters);
 
-        class->code = SPerl_CLASS_C_CODE_NORMAL;
+        body_class->code = SPerl_BODY_CLASS_C_CODE_NORMAL;
         
         // Search use and field
         SPerl_ARRAY* fields = SPerl_PARSER_new_array(parser, 0);
@@ -448,7 +448,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               
               if (use->alias_name_word) {
                 SPerl_char* alias_name = use->alias_name_word->value;
-                SPerl_HASH_insert(class->alias, alias_name, strlen(alias_name), type);
+                SPerl_HASH_insert(body_class->alias, alias_name, strlen(alias_name), type);
               }
               SPerl_HASH_insert(use_symtable, use_type_name, strlen(use_type_name), use);
             }
@@ -465,7 +465,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               SPerl_yyerror(parser, message);
             }
             else {
-              field->class = class;
+              field->body_class = body_class;
               field->op = op_usehassub;
               SPerl_ARRAY_push(fields, field);
               SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
@@ -473,10 +473,10 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           }
         }
         // Set filed and method information
-        class->fields = fields;
-        class->field_symtable = field_symtable;
-        class->uses = uses;
-        class->use_symtable = use_symtable;
+        body_class->fields = fields;
+        body_class->field_symtable = field_symtable;
+        body_class->uses = uses;
+        body_class->use_symtable = use_symtable;
 
         // Method information
         SPerl_HASH* method_symtable = SPerl_PARSER_new_hash(parser, 0);
@@ -498,20 +498,20 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             SPerl_yyerror(parser, message);
           }
           else {
-            method->class = class;
+            method->body_class = body_class;
             if (!method->anon) {
               SPerl_HASH_insert(method_symtable, method_name, strlen(method_name), method);
             }
           }
         }
-        class->methods = parser->current_methods;
+        body_class->methods = parser->current_methods;
         parser->current_methods = SPerl_PARSER_new_array(parser, 0);
-        class->method_symtable = method_symtable;
+        body_class->method_symtable = method_symtable;
         
         // Set type
         type->code = SPerl_TYPE_C_CODE_CLASS;
         type->name_word = type_name_word;
-        type->uv.class = class;
+        type->uv.body_class = body_class;
       }
     }
     // Typedef type

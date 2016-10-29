@@ -7,7 +7,7 @@
 #include "sperl_hash.h"
 #include "sperl_parser.h"
 #include "sperl_method.h"
-#include "sperl_class.h"
+#include "sperl_body_class.h"
 #include "sperl_const_value.h"
 #include "sperl_my_var.h"
 #include "sperl_field.h"
@@ -364,11 +364,11 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
     }
     // Class type
     else if (type->code == SPerl_TYPE_C_CODE_CLASS) {
-      SPerl_CLASS* class = type->uv.class;
+      SPerl_BODY_CLASS* body_class = type->uv.body_class;
       
       printf("  name => \"%s\"\n", type->name_word->value);
       printf("  descripters => ");
-      SPerl_ARRAY* descripters = class->descripters;
+      SPerl_ARRAY* descripters = body_class->descripters;
       if (descripters && descripters->length) {
         for (SPerl_int i = 0; i < descripters->length; i++) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
@@ -379,11 +379,11 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
         printf("(None)");
       }
       printf("\n");
-      printf("  op_block => %x\n", class->op_block);
+      printf("  op_block => %x\n", body_class->op_block);
       
       // Field information
       printf("  fields\n");
-      SPerl_ARRAY* fields = class->fields;
+      SPerl_ARRAY* fields = body_class->fields;
       for (SPerl_int j = 0; j < fields->length; j++) {
         SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
         printf("    field[%" PRId32 "]\n", j);
@@ -392,7 +392,7 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
       
       // Method information
       printf("  methods\n");
-      SPerl_ARRAY* methods = class->methods;
+      SPerl_ARRAY* methods = body_class->methods;
       for (SPerl_int j = 0; j < methods->length; j++) {
         SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
         printf("    method[%" PRId32 "]\n", j);

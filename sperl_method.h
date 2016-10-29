@@ -12,7 +12,7 @@ struct SPerl_method {
   SPerl_ARRAY* my_vars;
   SPerl_OP* op_block;
   SPerl_OP* op;
-  SPerl_CLASS* class;
+  SPerl_BODY_CLASS* body_class;
   SPerl_boolean anon;
 };
 
