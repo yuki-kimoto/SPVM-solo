@@ -20,7 +20,7 @@
 #include "sperl_type.h"
 #include "sperl_type_sub.h"
 #include "sperl_body_core.h"
-#include "sperl_type_body_enum.h"
+#include "sperl_body_enum.h"
 
 static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
   if (type->code == SPerl_TYPE_C_CODE_CORE) {
@@ -401,12 +401,12 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
     }
     // Enum type
     else if (type->code == SPerl_TYPE_C_CODE_ENUM) {
-      SPerl_TYPE_BODY_ENUM* type_body_enum = type->uv.type_body_enum;
+      SPerl_BODY_ENUM* body_enum = type->uv.body_enum;
       
       // Enum value information
       printf("  name => \"%s\"\n", type->name_word->value);
       printf("  enum_values\n");
-      SPerl_ARRAY* enum_values = type_body_enum->enum_values;
+      SPerl_ARRAY* enum_values = body_enum->enum_values;
       for (SPerl_int j = 0; j < enum_values->length; j++) {
         SPerl_ENUM_VALUE* enum_value = SPerl_ARRAY_fetch(enum_values, j);
         printf("    enum_value[%" PRId32 "]\n", j);

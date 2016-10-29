@@ -23,7 +23,7 @@ struct SPerl_type {
     SPerl_CLASS* class;
     SPerl_TYPE_SUB* type_sub;
     SPerl_BODY_CORE* body_core;
-    SPerl_TYPE_BODY_ENUM* type_body_enum;
+    SPerl_BODY_ENUM* body_enum;
   } uv;
 };
 
