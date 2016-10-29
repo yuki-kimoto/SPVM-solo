@@ -16,6 +16,18 @@ typedef double SPerl_double;
 struct SPerl_base;
 typedef struct SPerl_base SPerl_BASE;
 
+/* sperl_type_expr.h */
+struct SPerl_type_expr;
+typedef struct SPerl_type_expr SPerl_TYPE_EXPR;
+
+/* sperl_type_expr_sub.h */
+struct SPerl_type_expr_sub;
+typedef struct SPerl_type_expr_sub SPerl_TYPE_EXPR_SUB;
+
+/* sperl_type_expr_array.h */
+struct SPerl_type_expr_array;
+typedef struct SPerl_type_expr_array SPerl_TYPE_EXPR_ARRAY;
+
 /* sperl_type.h */
 struct SPerl_type;
 typedef struct SPerl_type SPerl_TYPE;
