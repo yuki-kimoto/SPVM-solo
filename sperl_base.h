@@ -32,9 +32,9 @@ typedef struct SPerl_type_expr_array SPerl_TYPE_EXPR_ARRAY;
 struct SPerl_type;
 typedef struct SPerl_type SPerl_TYPE;
 
-/* sperl_type_core.h */
-struct SPerl_type_core;
-typedef struct SPerl_type_core SPerl_TYPE_CORE;
+/* sperl_core_data.h */
+struct SPerl_core_data;
+typedef struct SPerl_core_data SPerl_CORE_DATA;
 
 /* sperl_type_sub.h */
 struct SPerl_type_sub;

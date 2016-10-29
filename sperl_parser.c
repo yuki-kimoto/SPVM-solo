@@ -19,12 +19,12 @@
 #include "sperl_descripter.h"
 #include "sperl_type.h"
 #include "sperl_type_sub.h"
-#include "sperl_type_core.h"
+#include "sperl_core_data.h"
 #include "sperl_type_enum.h"
 
 static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
   if (type->code == SPerl_TYPE_C_CODE_CORE) {
-    return SPerl_TYPE_CORE_C_CODE_NAMES[type->uv.type_core->code];
+    return SPerl_CORE_DATA_C_CODE_NAMES[type->uv.core_data->code];
   }
   else if (type->code == SPerl_TYPE_C_CODE_TYPEDEFORCLASS) {
     return type->name_word->value;
@@ -83,12 +83,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   // Add boolean type
   {
-    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
-    type_core->code = SPerl_TYPE_CORE_C_CODE_BOOLEAN;
-    type_core->size = 1;
+    SPerl_CORE_DATA* core_data = SPerl_CORE_DATA_new(parser);
+    core_data->code = SPerl_CORE_DATA_C_CODE_BOOLEAN;
+    core_data->size = 1;
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.type_core = type_core;
+    type->uv.core_data = core_data;
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "boolean";
     type->name_word = name_word;
@@ -98,12 +98,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   // Add char type
   {
-    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
-    type_core->code = SPerl_TYPE_CORE_C_CODE_CHAR;
-    type_core->size = 1;
+    SPerl_CORE_DATA* core_data = SPerl_CORE_DATA_new(parser);
+    core_data->code = SPerl_CORE_DATA_C_CODE_CHAR;
+    core_data->size = 1;
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.type_core = type_core;
+    type->uv.core_data = core_data;
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "char";
     type->name_word = name_word;
@@ -113,12 +113,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   // Add byte type
   {
-    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
-    type_core->code = SPerl_TYPE_CORE_C_CODE_BYTE;
-    type_core->size = 1;
+    SPerl_CORE_DATA* core_data = SPerl_CORE_DATA_new(parser);
+    core_data->code = SPerl_CORE_DATA_C_CODE_BYTE;
+    core_data->size = 1;
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.type_core = type_core;
+    type->uv.core_data = core_data;
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "byte";
     type->name_word = name_word;
@@ -128,12 +128,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   // Add short type
   {
-    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
-    type_core->code = SPerl_TYPE_CORE_C_CODE_SHORT;
-    type_core->size = 1;
+    SPerl_CORE_DATA* core_data = SPerl_CORE_DATA_new(parser);
+    core_data->code = SPerl_CORE_DATA_C_CODE_SHORT;
+    core_data->size = 1;
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.type_core = type_core;
+    type->uv.core_data = core_data;
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "short";
     type->name_word = name_word;
@@ -143,12 +143,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   // Add int type
   {
-    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
-    type_core->code = SPerl_TYPE_CORE_C_CODE_INT;
-    type_core->size = 1;
+    SPerl_CORE_DATA* core_data = SPerl_CORE_DATA_new(parser);
+    core_data->code = SPerl_CORE_DATA_C_CODE_INT;
+    core_data->size = 1;
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.type_core = type_core;
+    type->uv.core_data = core_data;
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "int";
     type->name_word = name_word;
@@ -158,12 +158,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   // Add long type
   {
-    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
-    type_core->code = SPerl_TYPE_CORE_C_CODE_LONG;
-    type_core->size = 1;
+    SPerl_CORE_DATA* core_data = SPerl_CORE_DATA_new(parser);
+    core_data->code = SPerl_CORE_DATA_C_CODE_LONG;
+    core_data->size = 1;
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.type_core = type_core;
+    type->uv.core_data = core_data;
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "long";
     type->name_word = name_word;
@@ -173,12 +173,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   // Add float type
   {
-    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
-    type_core->code = SPerl_TYPE_CORE_C_CODE_FLOAT;
-    type_core->size = 1;
+    SPerl_CORE_DATA* core_data = SPerl_CORE_DATA_new(parser);
+    core_data->code = SPerl_CORE_DATA_C_CODE_FLOAT;
+    core_data->size = 1;
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.type_core = type_core;
+    type->uv.core_data = core_data;
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "float";
     type->name_word = name_word;
@@ -188,12 +188,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   // Add double type
   {
-    SPerl_TYPE_CORE* type_core = SPerl_TYPE_CORE_new(parser);
-    type_core->code = SPerl_TYPE_CORE_C_CODE_DOUBLE;
-    type_core->size = 1;
+    SPerl_CORE_DATA* core_data = SPerl_CORE_DATA_new(parser);
+    core_data->code = SPerl_CORE_DATA_C_CODE_DOUBLE;
+    core_data->size = 1;
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.type_core = type_core;
+    type->uv.core_data = core_data;
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "dobule";
     type->name_word = name_word;
@@ -359,8 +359,8 @@ void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
     
     // Core type
     if (type->code == SPerl_TYPE_C_CODE_CORE) {
-      SPerl_TYPE_CORE* type_core = type->uv.type_core;
-      printf("  name => \"%s\"\n", SPerl_TYPE_CORE_C_CODE_NAMES[type_core->code]);
+      SPerl_CORE_DATA* core_data = type->uv.core_data;
+      printf("  name => \"%s\"\n", SPerl_CORE_DATA_C_CODE_NAMES[core_data->code]);
     }
     // Class type
     else if (type->code == SPerl_TYPE_C_CODE_CLASS) {

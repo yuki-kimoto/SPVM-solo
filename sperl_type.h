@@ -22,7 +22,7 @@ struct SPerl_type {
     SPerl_TYPE* type;
     SPerl_CLASS* class;
     SPerl_TYPE_SUB* type_sub;
-    SPerl_TYPE_CORE* type_core;
+    SPerl_CORE_DATA* core_data;
     SPerl_TYPE_ENUM* type_enum;
   } uv;
 };
