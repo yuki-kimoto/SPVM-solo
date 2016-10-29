@@ -36,9 +36,6 @@ struct SPerl_yy_parser_{
   
   // Type information symbol table
   SPerl_HASH* type_symtable;
-
-  // Typemap
-  SPerl_HASH* typemap;
   
   // Constant informations
   SPerl_ARRAY* const_values;

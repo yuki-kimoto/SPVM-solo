@@ -70,7 +70,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->type_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
-  parser->typemap = SPerl_PARSER_new_hash(parser, 0);
   
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
