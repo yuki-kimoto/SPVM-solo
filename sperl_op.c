@@ -123,7 +123,7 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
   SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_wordtype, NULL);
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
-  type->code = SPerl_TYPE_C_CODE_TYPEDEFORCLASS;
+  type->code = SPerl_TYPE_C_CODE_WORD;
   type->name_word = op_wordtype->uv.pv;
   op_type->uv.pv = type;
   
@@ -202,7 +202,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       for (SPerl_int j = 0; j < fields->length; j++) {
         // Field type
         SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
-        if (field->type->code == SPerl_TYPE_C_CODE_TYPEDEFORCLASS) {
+        if (field->type->code == SPerl_TYPE_C_CODE_WORD) {
           SPerl_WORD* type_name_word = field->type->name_word;
           if (!SPerl_HASH_search(package_symtable, type_name_word->value, strlen(type_name_word->value))) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));
@@ -230,7 +230,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       for (SPerl_int j = 0; j < methods->length; j++) {
         // Check method type
         SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
-        if (method->return_type->code == SPerl_TYPE_C_CODE_TYPEDEFORCLASS) {
+        if (method->return_type->code == SPerl_TYPE_C_CODE_WORD) {
           SPerl_WORD* return_type_name_word = method->return_type->name_word;
           if (!SPerl_HASH_search(package_symtable, return_type_name_word->value, strlen(return_type_name_word->value))) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(return_type_name_word->value));
@@ -258,7 +258,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         for (SPerl_int k = 0; k < my_vars->length; k++) {
           SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
 
-          if (my_var->type->code == SPerl_TYPE_C_CODE_TYPEDEFORCLASS) {
+          if (my_var->type->code == SPerl_TYPE_C_CODE_WORD) {
             SPerl_WORD* type_name_word = my_var->type->name_word;
             if (!SPerl_HASH_search(package_symtable, type_name_word->value, strlen(type_name_word->value))) {
               SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));

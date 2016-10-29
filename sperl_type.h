@@ -4,7 +4,7 @@
 #include "sperl_base.h"
 
 enum {
-  SPerl_TYPE_C_CODE_TYPEDEFORCLASS,
+  SPerl_TYPE_C_CODE_WORD,
   SPerl_TYPE_C_CODE_CORE,
   SPerl_TYPE_C_CODE_CLASS,
   SPerl_TYPE_C_CODE_TYPEDEF,
