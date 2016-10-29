@@ -8,12 +8,13 @@
 
 enum {
   SPerl_BODY_CLASS_C_CODE_NORMAL,
-  SPerl_BODY_CLASS_C_CODE_VALUE,
+  SPerl_BODY_CLASS_C_CODE_VALUE
 };
 
 // Class information
 struct SPerl_body_class {
   SPerl_char code;
+  SPerl_char* name;
   SPerl_ARRAY* descripters;
   SPerl_ARRAY* fields;
   SPerl_HASH* field_symtable;

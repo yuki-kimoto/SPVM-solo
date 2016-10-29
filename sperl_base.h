@@ -89,6 +89,10 @@ struct SPerl_method;
 typedef struct SPerl_method SPerl_METHOD;
 
 /* sperl_body_class.h */
+struct SPerl_body;
+typedef struct SPerl_body SPerl_BODY;
+
+/* sperl_body_class.h */
 struct SPerl_body_class;
 typedef struct SPerl_body_class SPerl_BODY_CLASS;
 
