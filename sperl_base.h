@@ -36,9 +36,9 @@ typedef struct SPerl_core_data SPerl_CORE_DATA;
 struct SPerl_type_sub;
 typedef struct SPerl_type_sub SPerl_TYPE_SUB;
 
-/* sperl_type_enum.h */
-struct SPerl_type_enum;
-typedef struct SPerl_type_enum SPerl_TYPE_ENUM;
+/* sperl_enum.h */
+struct SPerl_type_body_enum;
+typedef struct SPerl_type_body_enum SPerl_TYPE_BODY_ENUM;
 
 /* sperl_enum_value.h */
 struct SPerl_enum_value;

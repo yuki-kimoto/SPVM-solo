@@ -22,7 +22,7 @@
 #include "sperl_descripter.h"
 #include "sperl_type.h"
 #include "sperl_type_sub.h"
-#include "sperl_type_enum.h"
+#include "sperl_type_body_enum.h"
 
 /* sperl_op.h */
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
@@ -403,13 +403,13 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         }
         
         // Set enum type
-        SPerl_TYPE_ENUM* type_enum = SPerl_TYPE_ENUM_new(parser);
-        type_enum->enum_values = enum_values;
+        SPerl_TYPE_BODY_ENUM* type_body_enum = SPerl_TYPE_BODY_ENUM_new(parser);
+        type_body_enum->enum_values = enum_values;
         
         // Set type
         type->code = SPerl_TYPE_C_CODE_ENUM;
         type->name_word = type_name_word;
-        type->uv.type_enum = type_enum;
+        type->uv.type_body_enum = type_body_enum;
       }
       // Class type
       else {
