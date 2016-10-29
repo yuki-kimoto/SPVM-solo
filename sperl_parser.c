@@ -66,8 +66,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->long_str_ptrs = SPerl_ARRAY_new(0);
   parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
-  parser->types = SPerl_PARSER_new_array(parser, 0);
-  parser->type_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->packages = SPerl_PARSER_new_array(parser, 0);
+  parser->package_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
   
@@ -92,8 +92,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "boolean";
     type->name_word = name_word;
-    SPerl_ARRAY_push(parser->types, type);
-    SPerl_HASH_insert(parser->type_symtable, "boolean", strlen("boolean"), type);
+    SPerl_ARRAY_push(parser->packages, type);
+    SPerl_HASH_insert(parser->package_symtable, "boolean", strlen("boolean"), type);
   }
   
   // Add char type
@@ -107,8 +107,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "char";
     type->name_word = name_word;
-    SPerl_ARRAY_push(parser->types, type);
-    SPerl_HASH_insert(parser->type_symtable, "char", strlen("char"), type);
+    SPerl_ARRAY_push(parser->packages, type);
+    SPerl_HASH_insert(parser->package_symtable, "char", strlen("char"), type);
   }
   
   // Add byte type
@@ -122,8 +122,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "byte";
     type->name_word = name_word;
-    SPerl_ARRAY_push(parser->types, type);
-    SPerl_HASH_insert(parser->type_symtable, "byte", strlen("byte"), type);
+    SPerl_ARRAY_push(parser->packages, type);
+    SPerl_HASH_insert(parser->package_symtable, "byte", strlen("byte"), type);
   }
   
   // Add short type
@@ -137,8 +137,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "short";
     type->name_word = name_word;
-    SPerl_ARRAY_push(parser->types, type);
-    SPerl_HASH_insert(parser->type_symtable, "short", strlen("short"), type);
+    SPerl_ARRAY_push(parser->packages, type);
+    SPerl_HASH_insert(parser->package_symtable, "short", strlen("short"), type);
   }
   
   // Add int type
@@ -152,8 +152,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "int";
     type->name_word = name_word;
-    SPerl_ARRAY_push(parser->types, type);
-    SPerl_HASH_insert(parser->type_symtable, "int", strlen("int"), type);
+    SPerl_ARRAY_push(parser->packages, type);
+    SPerl_HASH_insert(parser->package_symtable, "int", strlen("int"), type);
   }
   
   // Add long type
@@ -167,8 +167,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "long";
     type->name_word = name_word;
-    SPerl_ARRAY_push(parser->types, type);
-    SPerl_HASH_insert(parser->type_symtable, "long", strlen("long"), type);
+    SPerl_ARRAY_push(parser->packages, type);
+    SPerl_HASH_insert(parser->package_symtable, "long", strlen("long"), type);
   }
   
   // Add float type
@@ -182,8 +182,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "float";
     type->name_word = name_word;
-    SPerl_ARRAY_push(parser->types, type);
-    SPerl_HASH_insert(parser->type_symtable, "float", strlen("float"), type);
+    SPerl_ARRAY_push(parser->packages, type);
+    SPerl_HASH_insert(parser->package_symtable, "float", strlen("float"), type);
   }
   
   // Add double type
@@ -197,8 +197,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = "dobule";
     type->name_word = name_word;
-    SPerl_ARRAY_push(parser->types, type);
-    SPerl_HASH_insert(parser->type_symtable, "dobule", strlen("dobule"), type);
+    SPerl_ARRAY_push(parser->packages, type);
+    SPerl_HASH_insert(parser->package_symtable, "dobule", strlen("dobule"), type);
   }
   return parser;
 }
@@ -331,8 +331,8 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
   SPerl_PARSER_dump_ast(parser, parser->op_grammer, 0);
   
-  printf("\n[Type infomation]\n");
-  SPerl_PARSER_dump_types(parser, parser->types);
+  printf("\n[Package infomation]\n");
+  SPerl_PARSER_dump_packages(parser, parser->packages);
   
   printf("\n[Constant information]\n");
   SPerl_PARSER_dump_const_values(parser, parser->const_values);
@@ -349,11 +349,11 @@ void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_val
   }
 }
 
-void SPerl_PARSER_dump_types(SPerl_PARSER* parser, SPerl_ARRAY* types) {
-  for (SPerl_int i = 0; i < types->length; i++) {
+void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
+  for (SPerl_int i = 0; i < packages->length; i++) {
     
     // Type
-    SPerl_TYPE* type = SPerl_ARRAY_fetch(types, i);
+    SPerl_TYPE* type = SPerl_ARRAY_fetch(packages, i);
     printf("type[%d]\n", i);
     printf("  code => \"%s\"\n", SPerl_TYPE_C_CODE_NAMES[type->code]);
     
