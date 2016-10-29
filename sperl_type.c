@@ -5,10 +5,9 @@
 #include "sperl_parser.h"
 
 SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
-  "typedef or class",
+  "word",
   "core",
   "class",
-  "typedef",
   "array",
   "sub",
   "enum"

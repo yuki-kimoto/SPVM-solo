@@ -282,9 +282,6 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         }
       }
     }
-    else if (type->code == SPerl_TYPE_C_CODE_TYPEDEF) {
-      
-    }
   }
 }
 
@@ -514,9 +511,9 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         type->uv.body_class = body_class;
       }
     }
-    // Typedef type
+    // Word type
     else {
-      type->code = SPerl_TYPE_C_CODE_TYPEDEF;
+      type->code = SPerl_TYPE_C_CODE_WORD;
       type->name_word = type_name_word;
       type->uv.type = op_typedeftype->uv.pv;
     }

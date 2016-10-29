@@ -311,7 +311,7 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
       }
     }
     // Typedef type
-    else if (type->code == SPerl_TYPE_C_CODE_TYPEDEF) {
+    else if (type->code == SPerl_TYPE_C_CODE_WORD) {
       printf("  name => \"%s\"\n", type->name_word->value);
       SPerl_TYPE* typedef_type = type->uv.type;
       
