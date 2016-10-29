@@ -81,125 +81,22 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   parser->bufptr = "";
   
-  // Add boolean type
-  {
+  // Add core type
+  for (SPerl_int i = 0; i < 8; i++) {
     SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
-    body_core->code = SPerl_BODY_CORE_C_CODE_BOOLEAN;
-    body_core->size = 1;
+    body_core->code = i;
+    body_core->size = SPerl_BODY_CORE_C_SIZES[i];
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
     type->uv.body_core = body_core;
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = "boolean";
+    SPerl_char* name = SPerl_BODY_CORE_C_CODE_NAMES[i];
+    name_word->value = name;
     type->name_word = name_word;
     SPerl_ARRAY_push(parser->packages, type);
-    SPerl_HASH_insert(parser->package_symtable, "boolean", strlen("boolean"), type);
+    SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
   
-  // Add char type
-  {
-    SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
-    body_core->code = SPerl_BODY_CORE_C_CODE_CHAR;
-    body_core->size = 1;
-    SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.body_core = body_core;
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = "char";
-    type->name_word = name_word;
-    SPerl_ARRAY_push(parser->packages, type);
-    SPerl_HASH_insert(parser->package_symtable, "char", strlen("char"), type);
-  }
-  
-  // Add byte type
-  {
-    SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
-    body_core->code = SPerl_BODY_CORE_C_CODE_BYTE;
-    body_core->size = 1;
-    SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.body_core = body_core;
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = "byte";
-    type->name_word = name_word;
-    SPerl_ARRAY_push(parser->packages, type);
-    SPerl_HASH_insert(parser->package_symtable, "byte", strlen("byte"), type);
-  }
-  
-  // Add short type
-  {
-    SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
-    body_core->code = SPerl_BODY_CORE_C_CODE_SHORT;
-    body_core->size = 1;
-    SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.body_core = body_core;
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = "short";
-    type->name_word = name_word;
-    SPerl_ARRAY_push(parser->packages, type);
-    SPerl_HASH_insert(parser->package_symtable, "short", strlen("short"), type);
-  }
-  
-  // Add int type
-  {
-    SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
-    body_core->code = SPerl_BODY_CORE_C_CODE_INT;
-    body_core->size = 1;
-    SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.body_core = body_core;
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = "int";
-    type->name_word = name_word;
-    SPerl_ARRAY_push(parser->packages, type);
-    SPerl_HASH_insert(parser->package_symtable, "int", strlen("int"), type);
-  }
-  
-  // Add long type
-  {
-    SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
-    body_core->code = SPerl_BODY_CORE_C_CODE_LONG;
-    body_core->size = 1;
-    SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.body_core = body_core;
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = "long";
-    type->name_word = name_word;
-    SPerl_ARRAY_push(parser->packages, type);
-    SPerl_HASH_insert(parser->package_symtable, "long", strlen("long"), type);
-  }
-  
-  // Add float type
-  {
-    SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
-    body_core->code = SPerl_BODY_CORE_C_CODE_FLOAT;
-    body_core->size = 1;
-    SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.body_core = body_core;
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = "float";
-    type->name_word = name_word;
-    SPerl_ARRAY_push(parser->packages, type);
-    SPerl_HASH_insert(parser->package_symtable, "float", strlen("float"), type);
-  }
-  
-  // Add double type
-  {
-    SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
-    body_core->code = SPerl_BODY_CORE_C_CODE_DOUBLE;
-    body_core->size = 1;
-    SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.body_core = body_core;
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = "dobule";
-    type->name_word = name_word;
-    SPerl_ARRAY_push(parser->packages, type);
-    SPerl_HASH_insert(parser->package_symtable, "dobule", strlen("dobule"), type);
-  }
   return parser;
 }
 

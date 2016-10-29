@@ -16,7 +16,7 @@ SPerl_char* const SPerl_BODY_CORE_C_CODE_NAMES[] = {
   "double"
 };
 
-SPerl_int const SPerl_BODY_CORE_C_CODE_SIZES[] = {
+SPerl_int const SPerl_BODY_CORE_C_SIZES[] = {
   1,
   1,
   1,
