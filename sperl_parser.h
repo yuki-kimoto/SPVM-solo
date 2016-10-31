@@ -37,6 +37,12 @@ struct SPerl_yy_parser_{
   // Type information symbol table
   SPerl_HASH* package_symtable;
   
+  SPerl_ARRAY* pkgs;
+  SPerl_HASH* pkg_symtable;
+  
+  SPerl_ARRAY* bodys;
+  SPerl_HASH* body_symtable;
+  
   // Constant informations
   SPerl_ARRAY* const_values;
   

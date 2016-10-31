@@ -12,9 +12,11 @@ enum {
 struct SPerl_body {
   SPerl_char code;
   SPerl_char* name;
-  uv {
+  union {
     SPerl_BODY_CLASS* body_class;
     SPerl_BODY_ENUM* body_enum;
     SPerl_BODY_CORE* body_core;
-  }
+  } uv;
 };
+
+SPerl_BODY* SPerl_BODY_new(SPerl_PARSER* parser);

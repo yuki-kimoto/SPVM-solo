@@ -3,23 +3,23 @@
 #include <string.h>
 #include <inttypes.h>
 
+#include "sperl_parser.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
-#include "sperl_parser.h"
-#include "sperl_method.h"
-#include "sperl_body_class.h"
 #include "sperl_const_value.h"
-#include "sperl_my_var.h"
 #include "sperl_field.h"
+#include "sperl_method.h"
+#include "sperl_my_var.h"
+#include "sperl_var.h"
 #include "sperl_memory_pool.h"
 #include "sperl_op.h"
-#include "sperl_var.h"
 #include "sperl_word.h"
 #include "sperl_enum_value.h"
 #include "sperl_descripter.h"
 #include "sperl_type.h"
 #include "sperl_type_sub.h"
 #include "sperl_body_core.h"
+#include "sperl_body_class.h"
 #include "sperl_body_enum.h"
 
 static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
@@ -68,6 +68,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   parser->packages = SPerl_PARSER_new_array(parser, 0);
   parser->package_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->pkgs = SPerl_PARSER_new_array(parser, 0);
+  parser->pkg_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
   

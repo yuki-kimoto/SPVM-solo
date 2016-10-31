@@ -3,10 +3,7 @@
 
 #include "sperl_base.h"
 
-extern SPerl_char* const SPerl_PACKAGE_C_CODE_NAMES[];
-
 struct SPerl_package {
-  SPerl_char code;
   SPerl_WORD* name_word;
   SPerl_TYPE* type;
 };
