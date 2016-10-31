@@ -64,8 +64,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->long_str_ptrs = SPerl_ARRAY_new(0);
   parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
-  parser->pkgs = SPerl_PARSER_new_array(parser, 0);
-  parser->pkg_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->packages = SPerl_PARSER_new_array(parser, 0);
+  parser->package_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
 
@@ -108,8 +108,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     name_word->value = name;
     type->name_word = name_word;
     
-    SPerl_ARRAY_push(parser->pkgs, type);
-    SPerl_HASH_insert(parser->pkg_symtable, name, strlen(name), type);
+    SPerl_ARRAY_push(parser->packages, type);
+    SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
   
   return parser;

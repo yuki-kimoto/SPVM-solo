@@ -32,8 +32,8 @@ struct SPerl_yy_parser_{
   SPerl_OP* op_grammer;
   
   // Packages
-  SPerl_ARRAY* pkgs;
-  SPerl_HASH* pkg_symtable;
+  SPerl_ARRAY* packages;
+  SPerl_HASH* package_symtable;
   
   // Bodys
   SPerl_ARRAY* bodys;
@@ -79,7 +79,7 @@ struct SPerl_yy_parser_{
   SPerl_int current_package_count;
   
   // Current use class name
-  SPerl_char* current_use_pkg_name;
+  SPerl_char* current_use_package_name;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();

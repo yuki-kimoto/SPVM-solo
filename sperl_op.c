@@ -344,29 +344,29 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   }
 }
 
-SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_pkgname, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_packagename, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
   SPerl_int i;
   
-  SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_pkgname);
-  SPerl_OP_sibling_splice(parser, op_package, op_pkgname, 0, op_type);
+  SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_packagename);
+  SPerl_OP_sibling_splice(parser, op_package, op_packagename, 0, op_type);
   SPerl_OP_sibling_splice(parser, op_package, op_type, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_package, op_descripters, 0, op_block);
   
-  SPerl_WORD* pkg_name_word = op_pkgname->uv.pv;
-  SPerl_char* pkg_name = pkg_name_word->value;
-  SPerl_HASH* pkg_symtable = parser->pkg_symtable;
+  SPerl_WORD* package_name_word = op_packagename->uv.pv;
+  SPerl_char* package_name = package_name_word->value;
+  SPerl_HASH* package_symtable = parser->package_symtable;
   
   // Redeclaration package error
-  SPerl_TYPE* found_pkg = SPerl_HASH_search(pkg_symtable, pkg_name, strlen(pkg_name));
-  if (found_pkg) {
-    SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(pkg_name));
-    sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", pkg_name, op_package->file, op_package->line);
+  SPerl_TYPE* found_package = SPerl_HASH_search(package_symtable, package_name, strlen(package_name));
+  if (found_package) {
+    SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(package_name));
+    sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", package_name, op_package->file, op_package->line);
     SPerl_yyerror(parser, message);
   }
   else {
     // Package
-    SPerl_PACKAGE* pkg = SPerl_PACKAGE_new(parser);
-    pkg->name_word = pkg_name_word;
+    SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
+    package->name_word = package_name_word;
     
     // Type
     SPerl_TYPE* type;
@@ -376,11 +376,11 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       // Type(type is same as package name)
       type = SPerl_TYPE_new(parser);
       type->code = SPerl_TYPE_C_CODE_WORD;
-      type->name_word = pkg_name_word;
+      type->name_word = package_name_word;
 
       // Body
       SPerl_BODY* body = SPerl_BODY_new(parser);
-      body->name = pkg_name;
+      body->name = package_name;
       
       // Enum type
       if (op_descripters->code == SPerl_OP_C_CODE_ENUM) {
@@ -445,7 +445,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           // Use
           if (op_usehassub->code == SPerl_OP_C_CODE_USE) {
             SPerl_USE* use = op_usehassub->uv.pv;
-            SPerl_char* use_type_name = use->pkg_name_word->value;
+            SPerl_char* use_type_name = use->package_name_word->value;
             SPerl_USE* found_use
               = SPerl_HASH_search(use_symtable, use_type_name, strlen(use_type_name));
             
@@ -531,24 +531,24 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       type = op_type->uv.pv;
     }
     
-    pkg->type = type;
+    package->type = type;
     
     // Add type information
-    SPerl_ARRAY_push(parser->pkgs, pkg);
-    SPerl_HASH_insert(parser->pkg_symtable, pkg_name, strlen(pkg_name), type);
+    SPerl_ARRAY_push(parser->packages, package);
+    SPerl_HASH_insert(parser->package_symtable, package_name, strlen(package_name), type);
   }
   
   return op_package;
 }
 
-SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_pkgname, SPerl_OP* op_pkgalias) {
-  SPerl_OP_sibling_splice(parser, op_use, NULL, 0, op_pkgname);
-  SPerl_OP_sibling_splice(parser, op_use, op_pkgname, 0, op_pkgalias);
+SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_packagename, SPerl_OP* op_packagealias) {
+  SPerl_OP_sibling_splice(parser, op_use, NULL, 0, op_packagename);
+  SPerl_OP_sibling_splice(parser, op_use, op_packagename, 0, op_packagealias);
   
   SPerl_USE* use = SPerl_USE_new(parser);
-  use->pkg_name_word = op_pkgname->uv.pv;
-  if (op_pkgalias->code != SPerl_OP_C_CODE_NULL) {
-    use->alias_name_word = op_pkgalias->uv.pv;
+  use->package_name_word = op_packagename->uv.pv;
+  if (op_packagealias->code != SPerl_OP_C_CODE_NULL) {
+    use->alias_name_word = op_packagealias->uv.pv;
   }
   use->op = op_use;
   op_use->uv.pv = use;
