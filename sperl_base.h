@@ -20,21 +20,25 @@ typedef struct SPerl_base SPerl_BASE;
 struct SPerl_package;
 typedef struct SPerl_package SPerl_PACKAGE;
 
-/* sperl_type_array.h */
-struct SPerl_type_array;
-typedef struct SPerl_type_array SPerl_TYPE_ARRAY;
-
 /* sperl_type.h */
 struct SPerl_type;
 typedef struct SPerl_type SPerl_TYPE;
 
-/* sperl_body_core.h */
-struct SPerl_body_core;
-typedef struct SPerl_body_core SPerl_BODY_CORE;
+/* sperl_type_array.h */
+struct SPerl_type_word;
+typedef struct SPerl_type_word SPerl_TYPE_WORD;
+
+/* sperl_type_array.h */
+struct SPerl_type_array;
+typedef struct SPerl_type_array SPerl_TYPE_ARRAY;
 
 /* sperl_type_sub.h */
 struct SPerl_type_sub;
 typedef struct SPerl_type_sub SPerl_TYPE_SUB;
+
+/* sperl_body_core.h */
+struct SPerl_body_core;
+typedef struct SPerl_body_core SPerl_BODY_CORE;
 
 /* sperl_enum.h */
 struct SPerl_body_enum;
