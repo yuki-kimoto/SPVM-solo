@@ -18,6 +18,7 @@
 #include "sperl_descripter.h"
 #include "sperl_type.h"
 #include "sperl_type_sub.h"
+#include "sperl_body.h"
 #include "sperl_body_core.h"
 #include "sperl_body_class.h"
 #include "sperl_body_enum.h"
@@ -72,6 +73,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->pkg_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
+
+  parser->bodys = SPerl_PARSER_new_array(parser, 0);
+  parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
@@ -85,18 +89,35 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   // Add core type
   for (SPerl_int i = 0; i < 8; i++) {
+    // Name
+    SPerl_char* name = SPerl_BODY_CORE_C_CODE_NAMES[i];
+    
+    // Body core
     SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
     body_core->code = i;
     body_core->size = SPerl_BODY_CORE_C_SIZES[i];
+    
+    // Body
+    SPerl_BODY* body = SPerl_BODY_new(parser);
+    body->code = SPerl_BODY_C_CODE_CORE;
+    body->name = name;
+    body->uv.body_core = body_core;
+    
+    SPerl_ARRAY_push(parser->bodys, body);
+    SPerl_HASH_insert(parser->body_symtable, body->name, strlen(body->name), body);
+    
+    // Type
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_CORE;
-    type->uv.body_core = body_core;
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    SPerl_char* name = SPerl_BODY_CORE_C_CODE_NAMES[i];
     name_word->value = name;
     type->name_word = name_word;
+    
     SPerl_ARRAY_push(parser->packages, type);
     SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
+    
+    SPerl_ARRAY_push(parser->pkgs, type);
+    SPerl_HASH_insert(parser->pkg_symtable, name, strlen(name), type);
   }
   
   return parser;
@@ -230,8 +251,8 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
   SPerl_PARSER_dump_ast(parser, parser->op_grammer, 0);
   
-  printf("\n[Package infomation]\n");
-  SPerl_PARSER_dump_packages(parser, parser->packages);
+  printf("\n[Body infomation]\n");
+  SPerl_PARSER_dump_bodys(parser, parser->bodys);
   
   printf("\n[Constant information]\n");
   SPerl_PARSER_dump_const_values(parser, parser->const_values);
@@ -248,24 +269,26 @@ void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_val
   }
 }
 
-void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
-  for (SPerl_int i = 0; i < packages->length; i++) {
+void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
+  
+  for (SPerl_int i = 0; i < bodys->length; i++) {
+    // Body
+    SPerl_BODY* body = SPerl_ARRAY_fetch(bodys, i);
+
+    printf("body[%d]\n", i);
+    printf("  code => \"%s\"\n", SPerl_BODY_C_CODE_NAMES[body->code]);
+    printf("  name => \"%s\"\n", body->name);
     
-    // Type
-    SPerl_TYPE* type = SPerl_ARRAY_fetch(packages, i);
-    printf("type[%d]\n", i);
-    printf("  code => \"%s\"\n", SPerl_TYPE_C_CODE_NAMES[type->code]);
-    
-    // Core type
-    if (type->code == SPerl_TYPE_C_CODE_CORE) {
-      SPerl_BODY_CORE* body_core = type->uv.body_core;
-      printf("  name => \"%s\"\n", SPerl_BODY_CORE_C_CODE_NAMES[body_core->code]);
+    // Core body
+    if (body->code == SPerl_BODY_C_CODE_CORE) {
+      SPerl_BODY_CORE* body_core = body->uv.body_core;
+      printf("  code => \"%s\"\n", SPerl_BODY_CORE_C_CODE_NAMES[body_core->code]);
+      printf("  size => %d\n", body_core->size);
     }
-    // Class type
-    else if (type->code == SPerl_TYPE_C_CODE_CLASS) {
-      SPerl_BODY_CLASS* body_class = type->uv.body_class;
+    // Class body
+    else if (body->code == SPerl_BODY_C_CODE_CLASS) {
+      SPerl_BODY_CLASS* body_class = body->uv.body_class;
       
-      printf("  name => \"%s\"\n", type->name_word->value);
       printf("  descripters => ");
       SPerl_ARRAY* descripters = body_class->descripters;
       if (descripters && descripters->length) {
@@ -298,37 +321,17 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
         SPerl_PARSER_dump_method(parser, method);
       }
     }
-    // Enum type
-    else if (type->code == SPerl_TYPE_C_CODE_ENUM) {
-      SPerl_BODY_ENUM* body_enum = type->uv.body_enum;
+    // Enum body
+    else if (body->code == SPerl_BODY_C_CODE_ENUM) {
+      SPerl_BODY_ENUM* body_enum = body->uv.body_enum;
       
       // Enum value information
-      printf("  name => \"%s\"\n", type->name_word->value);
       printf("  enum_values\n");
       SPerl_ARRAY* enum_values = body_enum->enum_values;
       for (SPerl_int j = 0; j < enum_values->length; j++) {
         SPerl_ENUM_VALUE* enum_value = SPerl_ARRAY_fetch(enum_values, j);
         printf("    enum_value[%" PRId32 "]\n", j);
         SPerl_PARSER_dump_enum_value(parser, enum_value);
-      }
-    }
-    // Typedef type
-    else if (type->code == SPerl_TYPE_C_CODE_WORD) {
-      printf("  name => \"%s\"\n", type->name_word->value);
-      SPerl_TYPE* typedef_type = type->uv.type;
-      
-      printf("  typedef_type => \"%s\"\n", SPerl_TYPE_C_CODE_NAMES[typedef_type->code]);
-      if (typedef_type->code == SPerl_TYPE_C_CODE_CORE) {
-        printf("  typedef_name => \"%s\"\n", _type_to_str(parser, typedef_type));
-      }
-      else if (typedef_type->code == SPerl_TYPE_C_CODE_WORD) {
-        printf("  typedef_name => \"%s\"\n", _type_to_str(parser, typedef_type));
-      }
-      else if (typedef_type->code == SPerl_TYPE_C_CODE_ARRAY) {
-        printf("  typedef_name => \"%s\"\n", _type_to_str(parser, typedef_type));
-      }
-      else if (typedef_type->code == SPerl_TYPE_C_CODE_SUB) {
-        
       }
     }
   }
