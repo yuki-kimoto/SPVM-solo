@@ -17,12 +17,10 @@ struct SPerl_type {
   union {
     SPerl_TYPE* type;
     SPerl_TYPE_SUB* type_sub;
-    SPerl_BODY_CLASS* body_class;
-    SPerl_BODY_CORE* body_core;
-    SPerl_BODY_ENUM* body_enum;
   } uv;
 };
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser);
+SPerl_char* SPerl_TYPE_to_string(SPerl_PARSER* parser, SPerl_TYPE* type);
 
 #endif
