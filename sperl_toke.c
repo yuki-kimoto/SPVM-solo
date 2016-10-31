@@ -49,10 +49,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         while (1) {
           SPerl_USE* use = SPerl_ARRAY_pop(use_stack);
           if (use) {
-            SPerl_char* type_name = use->type_name_word->value;
+            SPerl_char* pkg_name = use->pkg_name_word->value;
 
-            SPerl_BODY_CLASS* found_body_class = SPerl_HASH_search(parser->package_symtable, type_name, strlen(type_name));
-            if (found_body_class) {
+            SPerl_BODY_CLASS* found_pkg = SPerl_HASH_search(parser->pkg_symtable, pkg_name, strlen(pkg_name));
+            if (found_pkg) {
               continue;
             }
             else {
@@ -63,9 +63,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                 SPerl_char* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
                 // Change :: to /
-                SPerl_char* type_name_for_path = SPerl_PARSER_new_string(parser, strlen(type_name));
-                SPerl_char* bufptr_orig = type_name;
-                SPerl_char* bufptr_to = type_name_for_path;
+                SPerl_char* pkg_name_for_path = SPerl_PARSER_new_string(parser, strlen(pkg_name));
+                SPerl_char* bufptr_orig = pkg_name;
+                SPerl_char* bufptr_to = pkg_name_for_path;
                 while (*bufptr_orig) {
                   if (*bufptr_orig == ':' && *(bufptr_orig + 1) == ':') {
                     *bufptr_to = '/';
@@ -81,8 +81,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                 *bufptr_orig = '\0';
                 
                 // File name
-                cur_file = SPerl_PARSER_new_string(parser, strlen(include_path) + strlen(type_name_for_path) + 6);
-                sprintf(cur_file, "%s/%s.spvm", include_path, type_name_for_path);
+                cur_file = SPerl_PARSER_new_string(parser, strlen(include_path) + strlen(pkg_name_for_path) + 6);
+                sprintf(cur_file, "%s/%s.spvm", include_path, pkg_name_for_path);
                 
                 // Open source file
                 fh = fopen(cur_file, "r");
@@ -93,7 +93,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               }
               if (!fh) {
                 if (use->op) {
-                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->type_name_word->value, use->op->file, use->op->line);
+                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->pkg_name_word->value, use->op->file, use->op->line);
                 }
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_file);
@@ -124,7 +124,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               parser->bufptr = src;
               parser->befbufptr = src;
               parser->current_package_count = 0;
-              parser->current_use_type_name = type_name;
+              parser->current_use_pkg_name = pkg_name;
               parser->cur_line = 1;
               break;
             }
@@ -703,9 +703,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             }
             // Class
             else {
-              if (strcmp(keyword, parser->current_use_type_name) != 0) {
+              if (strcmp(keyword, parser->current_use_pkg_name) != 0) {
                 fprintf(stderr, "Package name \"%s\" must be \"%s\" at %s line %d\n",
-                  keyword, parser->current_use_type_name, parser->cur_file, parser->cur_line);
+                  keyword, parser->current_use_pkg_name, parser->cur_file, parser->cur_line);
                 exit(1);
               }
             }

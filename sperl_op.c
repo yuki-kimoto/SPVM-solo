@@ -443,7 +443,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           // Use
           if (op_usehassub->code == SPerl_OP_C_CODE_USE) {
             SPerl_USE* use = op_usehassub->uv.pv;
-            SPerl_char* use_type_name = use->type_name_word->value;
+            SPerl_char* use_type_name = use->pkg_name_word->value;
             SPerl_USE* found_use
               = SPerl_HASH_search(use_symtable, use_type_name, strlen(use_type_name));
             
@@ -536,180 +536,6 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     SPerl_HASH_insert(parser->pkg_symtable, pkg_name, strlen(pkg_name), type);
   }
   
-  SPerl_WORD* type_name_word = op_pkgname->uv.pv;
-  SPerl_char* type_name = type_name_word->value;
-  SPerl_HASH* package_symtable = parser->package_symtable;
-  SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, type_name, strlen(type_name));
-  // Redeclaration package error
-  if (found_type) {
-    SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name));
-    sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", type_name, op_package->file, op_package->line);
-    SPerl_yyerror(parser, message);
-  }
-  else {
-    // Type
-    SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    
-    // Class type or enum type
-    if (op_type->code == SPerl_OP_C_CODE_NULL) {
-      // Enum type
-      if (op_descripters->code == SPerl_OP_C_CODE_ENUM) {
-
-        // Enum values
-        SPerl_ARRAY* enum_values = SPerl_PARSER_new_array(parser, 0);
-        
-        // Starting value
-        SPerl_long start_value = 0;
-        
-        SPerl_OP* op_enumvalues = op_block->first;
-        SPerl_OP* op_enumvalue = op_enumvalues->first;
-        while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
-          SPerl_ENUM_VALUE* enum_value = SPerl_ENUM_VALUE_new(parser);
-          enum_value->name_word = op_enumvalue->first->uv.pv;
-          if (op_enumvalue->last) {
-            enum_value->value = op_enumvalue->last->uv.pv;
-          }
-          
-          SPerl_CONST_VALUE* const_value;
-          if (enum_value->value) {
-            const_value = enum_value->value;
-            start_value = const_value->uv.int_value + 1;
-          }
-          else {
-            const_value = SPerl_CONST_VALUE_new(parser);
-            const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
-            const_value->uv.int_value = start_value;
-            enum_value->value = const_value;
-            start_value++;
-          }
-          SPerl_ARRAY_push(parser->const_values, const_value);
-          SPerl_ARRAY_push(enum_values, enum_value);
-        }
-        
-        // Set enum type
-        SPerl_BODY_ENUM* body_enum = SPerl_BODY_ENUM_new(parser);
-        body_enum->enum_values = enum_values;
-        
-        // Set type
-        type->code = SPerl_TYPE_C_CODE_ENUM;
-        type->name_word = type_name_word;
-        type->uv.body_enum = body_enum;
-      }
-      // Class type
-      else {
-        SPerl_BODY_CLASS* body_class = SPerl_BODY_CLASS_new(parser);
-        body_class->op_block = op_block;
-        body_class->alias = SPerl_PARSER_new_hash(parser, 0);
-        body_class->descripters = SPerl_OP_create_descripters(parser, op_descripters);
-
-        body_class->code = SPerl_BODY_CLASS_C_CODE_NORMAL;
-        
-        // Search use and field
-        SPerl_ARRAY* fields = SPerl_PARSER_new_array(parser, 0);
-        SPerl_HASH* field_symtable = SPerl_PARSER_new_hash(parser, 0);
-        SPerl_ARRAY* uses = SPerl_PARSER_new_array(parser, 0);
-        SPerl_HASH* use_symtable = SPerl_PARSER_new_hash(parser, 0);
-        
-        // Collect field and use information
-        SPerl_OP* op_usehassubs = op_block->first;
-        SPerl_OP* op_usehassub = op_usehassubs->first;
-        while (op_usehassub = SPerl_OP_sibling(parser, op_usehassub)) {
-          // Use
-          if (op_usehassub->code == SPerl_OP_C_CODE_USE) {
-            SPerl_USE* use = op_usehassub->uv.pv;
-            SPerl_char* use_type_name = use->type_name_word->value;
-            SPerl_USE* found_use
-              = SPerl_HASH_search(use_symtable, use_type_name, strlen(use_type_name));
-            
-            if (found_use) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(use_type_name));
-              sprintf(message, "Error: redeclaration of use \"%s\" at %s line %d\n", use_type_name, use->op->file, use->op->line);
-              SPerl_yyerror(parser, message);
-            }
-            else {
-              SPerl_ARRAY_push(parser->use_stack, use);
-              SPerl_ARRAY_push(uses, use);
-              
-              if (use->alias_name_word) {
-                SPerl_char* alias_name = use->alias_name_word->value;
-                SPerl_HASH_insert(body_class->alias, alias_name, strlen(alias_name), type);
-              }
-              SPerl_HASH_insert(use_symtable, use_type_name, strlen(use_type_name), use);
-            }
-          }
-          // Field
-          else if (op_usehassub->code == SPerl_OP_C_CODE_HAS) {
-            SPerl_FIELD* field = (SPerl_FIELD*)op_usehassub->uv.pv;
-            SPerl_char* field_name = field->name_word->value;
-            SPerl_FIELD* found_field
-              = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
-            if (found_field) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_name));
-              sprintf(message, "Error: redeclaration of has \"%s\" at %s line %d\n", field_name, field->op->file, field->op->line);
-              SPerl_yyerror(parser, message);
-            }
-            else {
-              field->body_class = body_class;
-              field->op = op_usehassub;
-              SPerl_ARRAY_push(fields, field);
-              SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
-            }
-          }
-        }
-        // Set filed and method information
-        body_class->fields = fields;
-        body_class->field_symtable = field_symtable;
-        body_class->uses = uses;
-        body_class->use_symtable = use_symtable;
-
-        // Method information
-        SPerl_HASH* method_symtable = SPerl_PARSER_new_hash(parser, 0);
-        SPerl_int i;
-        for (i = 0; i < parser->current_methods->length; i++) {
-          SPerl_METHOD* method = SPerl_ARRAY_fetch(parser->current_methods, i);
-          
-          SPerl_METHOD* found_method = NULL;
-          SPerl_char* method_name;
-          if (!method->anon) {
-            method_name = method->name_word->value;
-            SPerl_METHOD* found_method
-              = SPerl_HASH_search(method_symtable, method_name, strlen(method_name));
-          }
-          
-          if (found_method) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
-            sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, method->op->file, method->op->line);
-            SPerl_yyerror(parser, message);
-          }
-          else {
-            method->body_class = body_class;
-            if (!method->anon) {
-              SPerl_HASH_insert(method_symtable, method_name, strlen(method_name), method);
-            }
-          }
-        }
-        body_class->methods = parser->current_methods;
-        parser->current_methods = SPerl_PARSER_new_array(parser, 0);
-        body_class->method_symtable = method_symtable;
-        
-        // Set type
-        type->code = SPerl_TYPE_C_CODE_CLASS;
-        type->name_word = type_name_word;
-        type->uv.body_class = body_class;
-      }
-    }
-    // Word type
-    else {
-      type->code = SPerl_TYPE_C_CODE_WORD;
-      type->name_word = type_name_word;
-      type->uv.type = op_type->uv.pv;
-    }
-    
-    // Add type information
-    SPerl_ARRAY_push(parser->packages, type);
-    SPerl_HASH_insert(parser->package_symtable, type_name, strlen(type_name), type);
-  }
-  
   return op_package;
 }
 
@@ -718,7 +544,7 @@ SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_O
   SPerl_OP_sibling_splice(parser, op_use, op_pkgname, 0, op_pkgalias);
   
   SPerl_USE* use = SPerl_USE_new(parser);
-  use->type_name_word = op_pkgname->uv.pv;
+  use->pkg_name_word = op_pkgname->uv.pv;
   if (op_pkgalias->code != SPerl_OP_C_CODE_NULL) {
     use->alias_name_word = op_pkgalias->uv.pv;
   }

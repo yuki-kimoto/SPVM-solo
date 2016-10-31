@@ -83,7 +83,7 @@ struct SPerl_yy_parser_{
   SPerl_int current_package_count;
   
   // Current use class name
-  SPerl_char* current_use_type_name;
+  SPerl_char* current_use_pkg_name;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
