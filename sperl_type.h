@@ -5,11 +5,8 @@
 
 enum {
   SPerl_TYPE_C_CODE_WORD,
-  SPerl_TYPE_C_CODE_CORE,
-  SPerl_TYPE_C_CODE_CLASS,
   SPerl_TYPE_C_CODE_ARRAY,
   SPerl_TYPE_C_CODE_SUB,
-  SPerl_TYPE_C_CODE_ENUM
 };
 
 extern SPerl_char* const SPerl_TYPE_C_CODE_NAMES[];

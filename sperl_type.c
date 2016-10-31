@@ -6,11 +6,8 @@
 
 SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
   "word",
-  "core",
-  "class",
   "array",
   "sub",
-  "enum"
 };
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {

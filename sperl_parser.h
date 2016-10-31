@@ -31,15 +31,11 @@ struct SPerl_yy_parser_{
   // AST grammer
   SPerl_OP* op_grammer;
   
-  // Type informations
-  SPerl_ARRAY* packages;
-  
-  // Type information symbol table
-  SPerl_HASH* package_symtable;
-  
+  // Packages
   SPerl_ARRAY* pkgs;
   SPerl_HASH* pkg_symtable;
   
+  // Bodys
   SPerl_ARRAY* bodys;
   SPerl_HASH* body_symtable;
   

@@ -162,7 +162,7 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 
 
   // Name and type check
-  SPerl_OP_check(parser);
+  // SPerl_OP_check(parser);
 
   // Build constant pool
   SPerl_OP_build_const_pool(parser);
@@ -170,6 +170,7 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   return op_grammer;
 }
 
+/*
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Types
@@ -286,6 +287,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     }
   }
 }
+*/
 
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
 
