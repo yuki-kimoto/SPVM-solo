@@ -17,6 +17,8 @@
 #include "sperl_enum_value.h"
 #include "sperl_descripter.h"
 #include "sperl_type.h"
+#include "sperl_type_word.h"
+#include "sperl_type_array.h"
 #include "sperl_type_sub.h"
 #include "sperl_body.h"
 #include "sperl_body_core.h"
@@ -25,14 +27,14 @@
 
 static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
   if (type->code == SPerl_TYPE_C_CODE_WORD) {
-    return type->name_word->value;
+    return type->uv.type_word->name_word->value;
   }
   else if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
     SPerl_int depth = 0;
     while (1) {
       if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
         depth++;
-        type = type->uv.type;
+        type = type->uv.type_array->type;
       }
       else {
         SPerl_char* str_first = _type_to_str(parser, type);
@@ -101,12 +103,15 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_ARRAY_push(parser->bodys, body);
     SPerl_HASH_insert(parser->body_symtable, body->name, strlen(body->name), body);
     
+    // Type word
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
+    type_word->name_word = name_word;
+
     // Type
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_WORD;
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = name;
-    type->name_word = name_word;
+    type->uv.type_word = type_word;
     
     SPerl_ARRAY_push(parser->packages, type);
     SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
@@ -378,7 +383,7 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
     }
     printf("      anon => %d\n", method->anon);
     if (method->return_type->code == SPerl_TYPE_C_CODE_WORD) {
-      SPerl_WORD* return_type_name = method->return_type->name_word;
+      SPerl_WORD* return_type_name = method->return_type->uv.type_word->name_word;
       printf("      return_type => \"%s\"\n", return_type_name->value);
     }
     SPerl_int i;

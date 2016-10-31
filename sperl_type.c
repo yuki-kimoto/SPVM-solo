@@ -2,6 +2,9 @@
 #include <string.h>
 
 #include "sperl_type.h"
+#include "sperl_type_word.h"
+#include "sperl_type_array.h"
+#include "sperl_type_sub.h"
 #include "sperl_memory_pool.h"
 #include "sperl_parser.h"
 #include "sperl_word.h"
@@ -19,14 +22,14 @@ SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
 SPerl_char* SPerl_TYPE_to_string(SPerl_PARSER* parser, SPerl_TYPE* type) {
   
   if (type->code == SPerl_TYPE_C_CODE_WORD) {
-    return type->name_word->value;
+    return type->uv.type_word->name_word->value;
   }
   else if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
     SPerl_int depth = 0;
     while (1) {
       if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
         depth++;
-        type = type->uv.type;
+        type = type->uv.type_array->type;
       }
       else {
         SPerl_char* str_first = SPerl_TYPE_to_string(parser, type);
