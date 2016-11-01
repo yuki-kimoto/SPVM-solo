@@ -17,8 +17,8 @@ struct SPerl_type {
   SPerl_char code;
   SPerl_ARRAY* parts;
   SPerl_ARRAY* resolved_parts;
-  SPerl_int resolved_parts_total_length;
   SPerl_char* resolved_string;
+  SPerl_int resolved_string_length;
   SPerl_int index;
   union {
     SPerl_TYPE_WORD* type_word;

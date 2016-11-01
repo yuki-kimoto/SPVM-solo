@@ -167,6 +167,45 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   return op_grammer;
 }
 
+/*
+void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
+  SPerl_HASH* package_symtable = parser->package_symtable;
+  
+  if (type->resolved_string) {
+    return;
+  }
+  else {
+    SPerl_ARRAY* parts = type->parts;
+    SPerl_ARRAY* resolved_parts = SPerl_PARSER_new_array(parser, 0);
+    SPerl_int resolved_string_length = 0;
+    
+    for (SPerl_int j = 0; j < parts->length; j++) {
+      SPerl_char* part = SPerl_ARRAY_fetch(parts, j);
+      if (strcmp(part, "sub") == 0) {
+        resolved_string_length += 3;
+        SPerl_ARRAY_push(resolved_parts, part);
+      }
+      else if (part[0] == '(' && part[0] == ')' && part[0] == '[' || part[0] == ']' || part[0] == ',') {
+        resolved_string_length++;
+        SPerl_ARRAY_push(resolved_parts, part);
+      }
+      else {
+        SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part, strlen(part));
+        if (found_type) {
+          
+        }
+        else {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));
+          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name_word->value, type_name_word->op->file, type_name_word->op->line);
+          SPerl_yyerror(parser, message);
+        }
+      }
+    }
+  }
+}
+*/
+
+
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Packages
@@ -174,7 +213,34 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   SPerl_HASH* package_symtable = parser->package_symtable;
   for (SPerl_int i = 0; i < packages->length; i++) {
     SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
-    
+    SPerl_TYPE* type = package->type;
+    SPerl_ARRAY* parts = type->parts;
+    SPerl_ARRAY* resolved_parts = SPerl_PARSER_new_array(parser, 0);
+    SPerl_int resolved_string_length = 0;
+    for (SPerl_int j = 0; j < parts->length; j++) {
+      SPerl_char* part = SPerl_ARRAY_fetch(parts, j);
+      if (strcmp(part, "sub") == 0) {
+        resolved_string_length += 3;
+        SPerl_ARRAY_push(resolved_parts, part);
+      }
+      else if (part[0] == '(' && part[0] == ')' && part[0] == '[' || part[0] == ']' || part[0] == ',') {
+        resolved_string_length++;
+        SPerl_ARRAY_push(resolved_parts, part);
+      }
+      else {
+        SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part, strlen(part));
+        if (found_type) {
+          
+        }
+        else {
+          /*
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));
+          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name_word->value, type_name_word->op->file, type_name_word->op->line);
+          SPerl_yyerror(parser, message);
+          */
+        }
+      }
+    }
   }
   
   // Types

@@ -25,6 +25,10 @@ struct SPerl_type;
 typedef struct SPerl_type SPerl_TYPE;
 
 /* sperl_type_array.h */
+struct SPerl_type_part;
+typedef struct SPerl_type_part SPerl_TYPE_PART;
+
+/* sperl_type_array.h */
 struct SPerl_type_word;
 typedef struct SPerl_type_word SPerl_TYPE_WORD;
 
