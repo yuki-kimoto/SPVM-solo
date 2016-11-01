@@ -8,6 +8,7 @@
 #include "sperl_memory_pool.h"
 #include "sperl_parser.h"
 #include "sperl_word.h"
+#include "sperl_array.h"
 
 SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
   "word",
@@ -19,35 +20,33 @@ SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
   return SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_TYPE));
 }
 
-SPerl_char* SPerl_TYPE_to_string(SPerl_PARSER* parser, SPerl_TYPE* type) {
+void SPerl_TYPE_to_string_parts(SPerl_PARSER* parser, SPerl_ARRAY* string_parts, SPerl_TYPE* type) {
   
   if (type->code == SPerl_TYPE_C_CODE_WORD) {
-    return type->uv.type_word->name_word->value;
+    SPerl_ARRAY_push(string_parts, type->uv.type_word->name_word->value);
   }
   else if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
-    SPerl_int depth = 0;
-    while (1) {
-      if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
-        depth++;
-        type = type->uv.type_array->type;
-      }
-      else {
-        SPerl_char* str_first = SPerl_TYPE_to_string(parser, type);
-        SPerl_int str_first_len = strlen(str_first);
-        SPerl_int str_len = str_first_len + 2 * depth;
-        SPerl_char* str = SPerl_PARSER_new_string(parser, str_len);
-        memcpy(str, str_first, strlen(str_first));
-        for (SPerl_int j = 0; j < depth; j++) {
-          str[str_first_len + (j * 2)] = '[';
-          str[str_first_len + (j * 2) + 1] = ']';
-        }
-        str[str_len] = '\0';
-        
-        return str;
-      }
-    }
+    SPerl_TYPE_ARRAY* type_array = type->uv.type_array;
+    SPerl_TYPE_to_string_parts(parser, string_parts, type_array->type);
+    
+    SPerl_ARRAY_push(string_parts, "[");
+    SPerl_ARRAY_push(string_parts, "]");
   }
   else if (type->code == SPerl_TYPE_C_CODE_SUB) {
+    SPerl_ARRAY_push(string_parts, "(sub(");
     
+    SPerl_TYPE_SUB* type_sub = type->uv.type_sub;
+    SPerl_ARRAY* argument_types = type_sub->argument_types;
+    for (SPerl_int i = 0; i < argument_types->length; i++) {
+      SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(argument_types, i);
+      SPerl_TYPE_to_string_parts(parser, string_parts, argument_type);
+      if (i != argument_types->length - 1) {
+        SPerl_ARRAY_push(string_parts, ",");
+      }
+    }
+    SPerl_ARRAY_push(string_parts, ")");
+    SPerl_TYPE* return_type = type_sub->return_type;
+    SPerl_TYPE_to_string_parts(parser, string_parts, return_type);
+    SPerl_ARRAY_push(string_parts, ")");
   }
 }

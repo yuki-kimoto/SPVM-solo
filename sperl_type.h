@@ -21,6 +21,6 @@ struct SPerl_type {
 };
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser);
-SPerl_char* SPerl_TYPE_to_string(SPerl_PARSER* parser, SPerl_TYPE* type);
+void SPerl_TYPE_to_string_parts(SPerl_PARSER* parser, SPerl_ARRAY* string_parts, SPerl_TYPE* type);
 
 #endif
