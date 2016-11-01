@@ -670,6 +670,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   
   // return type
   method->return_type = op_type->uv.pv;
+  SPerl_TYPE_build_string_parts(parser, method->return_type);
   
   // Save block
   method->op_block = op_block;

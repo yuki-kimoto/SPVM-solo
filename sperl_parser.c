@@ -382,10 +382,11 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
       printf("      name => \"%s\"\n", method->name_word->value);
     }
     printf("      anon => %d\n", method->anon);
-    if (method->return_type->code == SPerl_TYPE_C_CODE_WORD) {
-      SPerl_WORD* return_type_name = method->return_type->uv.type_word->name_word;
-      printf("      return_type => \"%s\"\n", return_type_name->value);
-    }
+
+    printf("      return_type => \"");
+    SPerl_TYPE_print(parser, method->return_type, stdout);
+    printf("\"\n");
+
     SPerl_int i;
     printf("      descripters => ");
     SPerl_ARRAY* descripters = method->descripters;
@@ -418,10 +419,12 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
 void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
   if (field) {
     printf("      name => \"%s\"\n", field->name_word->value);
+    
     SPerl_TYPE* type = field->type;
     printf("      type => \"");
     SPerl_TYPE_print(parser, type, stdout);
     printf("\"\n");
+
     printf("      descripters => ");
     SPerl_ARRAY* descripters = field->descripters;
     if (descripters->length) {
