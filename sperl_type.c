@@ -57,7 +57,7 @@ void SPerl_TYPE_build_string_parts(SPerl_PARSER* parser, SPerl_TYPE* type) {
   type->string_parts = string_parts;
 }
 
-void SPerl_TYPE_print_string_parts(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh) {
+void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh) {
   SPerl_ARRAY* string_parts = type->string_parts;
   for (SPerl_int i = 0; i < string_parts->length; i++) {
     SPerl_char* string_part = SPerl_ARRAY_fetch(string_parts, i);

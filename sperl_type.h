@@ -26,6 +26,6 @@ struct SPerl_type {
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser);
 void SPerl_TYPE_to_string_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* string_parts);
 void SPerl_TYPE_build_string_parts(SPerl_PARSER* parser, SPerl_TYPE* type);
-void SPerl_TYPE_print_string_parts(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh);
+void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh);
 
 #endif

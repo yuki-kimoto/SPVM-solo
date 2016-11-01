@@ -419,20 +419,9 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
   if (field) {
     printf("      name => \"%s\"\n", field->name_word->value);
     SPerl_TYPE* type = field->type;
-    if (type->code == SPerl_TYPE_C_CODE_WORD) {
-      printf("      type => \"%s\"\n", _type_to_str(parser, type));
-    }
-    else if (type->code == SPerl_TYPE_C_CODE_SUB) {
-      SPerl_TYPE_SUB* type_sub = type->uv.type_sub;
-      printf("      type => sub (");
-      for (SPerl_int i = 0; i < type_sub->argument_types->length; i++) {
-        SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(type_sub->argument_types, i);
-        printf("%s " , _type_to_str(parser, argument_type));
-      }
-      printf(") ");
-      SPerl_TYPE* return_type = type_sub->return_type;
-      printf("%s\n", _type_to_str(parser, return_type));
-    }
+    printf("      type => \"");
+    SPerl_TYPE_print(parser, type, stdout);
+    printf("\"\n");
     printf("      descripters => ");
     SPerl_ARRAY* descripters = field->descripters;
     if (descripters->length) {
