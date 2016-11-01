@@ -50,3 +50,10 @@ void SPerl_TYPE_to_string_parts(SPerl_PARSER* parser, SPerl_ARRAY* string_parts,
     SPerl_ARRAY_push(string_parts, ")");
   }
 }
+
+SPerl_char* SPerl_TYPE_string_parts_fprint(FILE* fh, SPerl_PARSER* parser, SPerl_ARRAY* string_parts) {
+  for (SPerl_int i = 0; i < string_parts->length; i++) {
+    SPerl_char* string_part = SPerl_ARRAY_fetch(string_parts, i);
+    fprintf(fh, string_part);
+  }
+}
