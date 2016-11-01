@@ -600,6 +600,10 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   // Type
   field->type = op_type->uv.pv;
   
+  // Create type string parts
+  SPerl_TYPE_build_string_parts(parser, field->type);
+  // SPerl_TYPE_print_string_parts(parser, field->type, stderr);
+  
   // Set field informaiton
   op_has->uv.pv = field;
   
