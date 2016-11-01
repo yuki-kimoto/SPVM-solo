@@ -171,6 +171,14 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
+  // Packages
+  SPerl_ARRAY* packages = parser->packages;
+  SPerl_HASH* package_symtable = parser->package_symtable;
+  for (SPerl_int i = 0; i < packages->length; i++) {
+    SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
+    
+  }
+  
   // Types
   SPerl_ARRAY* bodys = parser->bodys;
   SPerl_HASH* body_symtable = parser->body_symtable;
