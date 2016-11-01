@@ -68,9 +68,7 @@ enum {
   SPerl_OP_C_CODE_CLASSBLOCK,
   SPerl_OP_C_CODE_DESCRIPTER,
   SPerl_OP_C_CODE_ANONSUB,
-  SPerl_OP_C_CODE_TYPE,
-  SPerl_OP_C_CODE_TYPEDEF,
-  SPerl_OP_C_CODE_CORETYPE
+  SPerl_OP_C_CODE_TYPE
 };
 
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];

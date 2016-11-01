@@ -91,12 +91,10 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "enum",
   "enumblock",
   "enumvalue",
-  "body_classblock",
+  "classblock",
   "descripter",
   "anonsub",
-  "type",
-  "typedef",
-  "coretype"
+  "type"
 };
 
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_types, SPerl_OP* op_return_type) {
