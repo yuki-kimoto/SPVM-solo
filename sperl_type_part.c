@@ -6,8 +6,8 @@
 
 SPerl_char* const SPerl_TYPE_PART_C_CODE_NAMES[] = {
   "sub",
-  "char",
   "word",
+  "char"
 };
 
 SPerl_TYPE_PART* SPerl_TYPE_PART_new(SPerl_PARSER* parser) {
