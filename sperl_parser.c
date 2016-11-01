@@ -24,6 +24,7 @@
 #include "sperl_body_core.h"
 #include "sperl_body_class.h"
 #include "sperl_body_enum.h"
+#include "sperl_package.h"
 
 static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
   if (type->code == SPerl_TYPE_C_CODE_WORD) {
@@ -105,6 +106,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     
     // Type word
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = name;
     SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
     type_word->name_word = name_word;
 
@@ -112,8 +114,14 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_WORD;
     type->uv.type_word = type_word;
+    SPerl_TYPE_build_string_parts(parser, type);
     
-    SPerl_ARRAY_push(parser->packages, type);
+    // Package
+    SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
+    package->name_word = name_word;
+    package->type = type;
+    
+    SPerl_ARRAY_push(parser->packages, package);
     SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
   
@@ -247,6 +255,9 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
 void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
   SPerl_PARSER_dump_ast(parser, parser->op_grammer, 0);
+
+  printf("\n[Package infomation]\n");
+  SPerl_PARSER_dump_packages(parser, parser->packages);
   
   printf("\n[Body infomation]\n");
   SPerl_PARSER_dump_bodys(parser, parser->bodys);
@@ -263,6 +274,18 @@ void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_val
     SPerl_CONST_VALUE* const_value = (SPerl_CONST_VALUE*)SPerl_ARRAY_fetch(const_values, i);
     printf("    const_value[%" PRId32 "]\n", i);
     SPerl_PARSER_dump_const_value(parser, const_value);
+  }
+}
+
+void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
+  for (SPerl_int i = 0; i < packages->length; i++) {
+    printf("package[%d]\n", i);
+    SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
+    printf("    name => \"%s\"\n", package->name_word->value);
+
+    printf("    type => \"");
+    SPerl_TYPE_print(parser, package->type, stdout);
+    printf("\"\n");
   }
 }
 

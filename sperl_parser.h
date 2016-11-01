@@ -94,6 +94,7 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var);
 void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_value);
 void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* types);
 void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys);
+void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages);
 
 void SPerl_PARSER_free(SPerl_PARSER* parser);
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity);

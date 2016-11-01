@@ -533,6 +533,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       type = op_type->uv.pv;
     }
     
+    SPerl_TYPE_build_string_parts(parser, type);
     package->type = type;
     
     // Add type information
