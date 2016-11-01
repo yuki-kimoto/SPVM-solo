@@ -26,38 +26,6 @@
 #include "sperl_body_enum.h"
 #include "sperl_package.h"
 
-static SPerl_char* _type_to_str(SPerl_PARSER* parser, SPerl_TYPE* type) {
-  if (type->code == SPerl_TYPE_C_CODE_WORD) {
-    return type->uv.type_word->name_word->value;
-  }
-  else if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
-    SPerl_int depth = 0;
-    while (1) {
-      if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
-        depth++;
-        type = type->uv.type_array->type;
-      }
-      else {
-        SPerl_char* str_first = _type_to_str(parser, type);
-        SPerl_int str_first_len = strlen(str_first);
-        SPerl_int str_len = str_first_len + 2 * depth;
-        SPerl_char* str = SPerl_PARSER_new_string(parser, str_len);
-        memcpy(str, str_first, strlen(str_first));
-        for (SPerl_int j = 0; j < depth; j++) {
-          str[str_first_len + (j * 2)] = '[';
-          str[str_first_len + (j * 2) + 1] = ']';
-        }
-        str[str_len] = '\0';
-        
-        return str;
-      }
-    }
-  }
-  else if (type->code == SPerl_TYPE_C_CODE_SUB) {
-    
-  }
-}
-
 SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_PARSER* parser = (SPerl_PARSER*)calloc(1, sizeof(SPerl_PARSER));
   

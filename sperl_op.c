@@ -24,6 +24,7 @@
 #include "sperl_type_array.h"
 #include "sperl_type_sub.h"
 #include "sperl_body.h"
+#include "sperl_body_core.h"
 #include "sperl_body_enum.h"
 #include "sperl_body_class.h"
 #include "sperl_package.h"
@@ -158,33 +159,31 @@ SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_type) {
 SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GRAMMER, op_packages, NULL);
   parser->op_grammer = op_grammer;
-
-
-  // Name and type check
-  // SPerl_OP_check(parser);
-
+  
+  // Check types and descripters. Resolve types. Index types.
+  SPerl_OP_check(parser);
+  
   // Build constant pool
   SPerl_OP_build_const_pool(parser);
-
+  
   return op_grammer;
 }
 
-/*
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Types
-  SPerl_ARRAY* packages = parser->packages;
-  SPerl_HASH* package_symtable = parser->package_symtable;
+  SPerl_ARRAY* bodys = parser->bodys;
+  SPerl_HASH* body_symtable = parser->body_symtable;
   
-  // Check packages
-  for (SPerl_int i = 0; i < packages->length; i++) {
+  // Check bodys
+  for (SPerl_int i = 0; i < bodys->length; i++) {
     
     // Type
-    SPerl_TYPE* type = SPerl_ARRAY_fetch(packages, i);
+    SPerl_BODY* body = SPerl_ARRAY_fetch(bodys, i);
     
-    // Class type
-    if (type->code == SPerl_TYPE_C_CODE_CLASS) {
-      SPerl_BODY_CLASS* body_class = type->uv.body_class;
+    // Class body
+    if (body->code == SPerl_BODY_C_CODE_CLASS) {
+      SPerl_BODY_CLASS* body_class = body->uv.body_class;
       
       // Check descripter
       SPerl_ARRAY* descripters = body_class->descripters;
@@ -202,16 +201,19 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       // Check field
       SPerl_ARRAY* fields = body_class->fields;
       for (SPerl_int j = 0; j < fields->length; j++) {
-        // Field type
         SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
+
+        /*
+        // Field type
         if (field->type->code == SPerl_TYPE_C_CODE_WORD) {
           SPerl_WORD* type_name_word = field->type->name_word;
-          if (!SPerl_HASH_search(package_symtable, type_name_word->value, strlen(type_name_word->value))) {
+          if (!SPerl_HASH_search(body_symtable, type_name_word->value, strlen(type_name_word->value))) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));
             sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name_word->value, type_name_word->op->file, type_name_word->op->line);
             SPerl_yyerror(parser, message);
           }
         }
+        */
         
         // Field descripters
         SPerl_ARRAY* descripters = field->descripters;
@@ -230,16 +232,18 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       // Check method
       SPerl_ARRAY* methods = body_class->methods;
       for (SPerl_int j = 0; j < methods->length; j++) {
-        // Check method type
         SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
+        /*
+        // Check method type
         if (method->return_type->code == SPerl_TYPE_C_CODE_WORD) {
           SPerl_WORD* return_type_name_word = method->return_type->name_word;
-          if (!SPerl_HASH_search(package_symtable, return_type_name_word->value, strlen(return_type_name_word->value))) {
+          if (!SPerl_HASH_search(body_symtable, return_type_name_word->value, strlen(return_type_name_word->value))) {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(return_type_name_word->value));
             sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", return_type_name_word->value, return_type_name_word->op->file, return_type_name_word->op->line);
             SPerl_yyerror(parser, message);
           }
         }
+        */
         
         // Check method descripters
         SPerl_ARRAY* descripters = method->descripters;
@@ -259,15 +263,18 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_ARRAY* my_vars = method->my_vars;
         for (SPerl_int k = 0; k < my_vars->length; k++) {
           SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
-
+          
+          /*
+          // Check my type
           if (my_var->type->code == SPerl_TYPE_C_CODE_WORD) {
             SPerl_WORD* type_name_word = my_var->type->name_word;
-            if (!SPerl_HASH_search(package_symtable, type_name_word->value, strlen(type_name_word->value))) {
+            if (!SPerl_HASH_search(body_symtable, type_name_word->value, strlen(type_name_word->value))) {
               SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));
               sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name_word->value, type_name_word->op->file, type_name_word->op->line);
               SPerl_yyerror(parser, message);
             }
           }
+          */
           
           // Check my_var descripters
           SPerl_ARRAY* descripters = my_var->descripters;
@@ -276,7 +283,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
             if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
             {
               SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-              sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
+              sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n",
                 SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
               SPerl_yyerror(parser, message);
             }
@@ -286,7 +293,6 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     }
   }
 }
-*/
 
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
 
