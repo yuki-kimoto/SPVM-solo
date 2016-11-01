@@ -574,6 +574,7 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   
   // type
   my_var->type = op_type->uv.pv;
+  SPerl_TYPE_build_string_parts(parser, my_var->type);
   
   // Add my_var information to op
   op_my->uv.pv = my_var;

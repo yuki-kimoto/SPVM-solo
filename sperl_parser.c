@@ -454,21 +454,11 @@ void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_v
 void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
   if (my_var) {
     printf("          name => \"%s\"\n", my_var->name_word->value);
+    
     SPerl_TYPE* type = my_var->type;
-    if (my_var->type->code == SPerl_TYPE_C_CODE_WORD) {
-      printf("          type => \"%s\"\n", _type_to_str(parser, type));
-    }
-    else if (my_var->type->code == SPerl_TYPE_C_CODE_SUB) {
-      SPerl_TYPE_SUB* type_sub = my_var->type->uv.type_sub;
-      printf("      type => sub (");
-      for (SPerl_int i = 0; i < type_sub->argument_types->length; i++) {
-        SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(type_sub->argument_types, i);
-        printf("%s " , _type_to_str(parser, argument_type));
-      }
-      printf(") ");
-      SPerl_TYPE* return_type = type_sub->return_type;
-      printf("%s\n", _type_to_str(parser, return_type));
-    }
+    printf("          type => \"");
+    SPerl_TYPE_print(parser, type, stdout);
+    printf("\"\n");
     
     printf("          descripters => ");
     SPerl_ARRAY* descripters = my_var->descripters;
