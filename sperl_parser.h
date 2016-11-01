@@ -80,6 +80,9 @@ struct SPerl_yy_parser_{
   
   // Current use class name
   SPerl_char* current_use_package_name;
+  
+  // Current type index
+  SPerl_char* current_type_index;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();

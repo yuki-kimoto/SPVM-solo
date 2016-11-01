@@ -16,6 +16,10 @@ extern SPerl_char* const SPerl_TYPE_C_CODE_NAMES[];
 struct SPerl_type {
   SPerl_char code;
   SPerl_ARRAY* parts;
+  SPerl_ARRAY* resolved_parts;
+  SPerl_int resolved_parts_total_length;
+  SPerl_char* resolved_string;
+  SPerl_int index;
   union {
     SPerl_TYPE_WORD* type_word;
     SPerl_TYPE_ARRAY* type_array;
