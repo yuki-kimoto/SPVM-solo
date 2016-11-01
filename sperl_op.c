@@ -539,7 +539,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       type = op_type->uv.pv;
     }
     
-    SPerl_TYPE_build_string_parts(parser, type);
+    SPerl_TYPE_build_parts(parser, type);
     package->type = type;
     
     // Add type information
@@ -581,7 +581,7 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   
   // type
   my_var->type = op_type->uv.pv;
-  SPerl_TYPE_build_string_parts(parser, my_var->type);
+  SPerl_TYPE_build_parts(parser, my_var->type);
   
   // Add my_var information to op
   op_my->uv.pv = my_var;
@@ -609,7 +609,7 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   field->type = op_type->uv.pv;
   
   // Create type string parts
-  SPerl_TYPE_build_string_parts(parser, field->type);
+  SPerl_TYPE_build_parts(parser, field->type);
   
   // Set field informaiton
   op_has->uv.pv = field;
@@ -677,7 +677,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   
   // return type
   method->return_type = op_type->uv.pv;
-  SPerl_TYPE_build_string_parts(parser, method->return_type);
+  SPerl_TYPE_build_parts(parser, method->return_type);
   
   // Save block
   method->op_block = op_block;

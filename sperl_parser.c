@@ -82,7 +82,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_WORD;
     type->uv.type_word = type_word;
-    SPerl_TYPE_build_string_parts(parser, type);
+    SPerl_TYPE_build_parts(parser, type);
     
     // Package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
