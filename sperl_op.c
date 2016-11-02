@@ -23,6 +23,7 @@
 #include "sperl_type_word.h"
 #include "sperl_type_array.h"
 #include "sperl_type_sub.h"
+#include "sperl_type_part.h"
 #include "sperl_body.h"
 #include "sperl_body_core.h"
 #include "sperl_body_enum.h"
@@ -167,7 +168,6 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   return op_grammer;
 }
 
-/*
 void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
   SPerl_HASH* package_symtable = parser->package_symtable;
   
@@ -183,27 +183,29 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, j);
       if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
         resolved_string_length += 3;
-        SPerl_ARRAY_push(resolved_part_names, "sub");
+        SPerl_ARRAY_push(type->resolved_part_names, "sub");
       }
       else if (part->code == SPerl_TYPE_PART_C_CODE_CHAR) {
         resolved_string_length++;
-        SPerl_ARRAY_push(resolved_parts, part->uv.char_name);
+        SPerl_ARRAY_push(type->resolved_part_names, part->uv.char_name);
       }
       else {
-        SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part, strlen(part));
+        SPerl_WORD* part_name_word = part->uv.name_word;
+        SPerl_char* part_name = part_name_word->value;
+        
+        SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
         if (found_type) {
           
         }
         else {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));
-          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name_word->value, type_name_word->op->file, type_name_word->op->line);
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(part_name));
+          sprintf(message, "Error: unknown package \"%s\" at %s line %d\n", part_name, part_name_word->op->file, part_name_word->op->line);
           SPerl_yyerror(parser, message);
         }
       }
     }
   }
 }
-*/
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
