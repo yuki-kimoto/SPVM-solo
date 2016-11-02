@@ -3,15 +3,7 @@
 
 #include "sperl_hash.h"
 #include "sperl_hash_entry.h"
-
-SPerl_int SPerl_hash_func(SPerl_char* str, SPerl_int len) {
-  SPerl_char* str_tmp = str;
-  SPerl_int hash = 5381;
-  while (len--) {
-    hash = ((hash << 5) + hash) + *str_tmp++;
-  }
-  return hash;
-}
+#include "sperl_hash_func.h"
 
 SPerl_HASH* SPerl_HASH_new(SPerl_int capacity) {
   
@@ -48,7 +40,7 @@ SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl_char* key, SPerl_int length, void* 
 
 void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, SPerl_char* key, SPerl_int length, void* value) {
 
-  SPerl_int hash_value = SPerl_hash_func(key, length);
+  SPerl_int hash_value = SPerl_HASH_FUNC_calc_hash(key, length);
   SPerl_int index = hash_value % hash->capacity;
   
   SPerl_HASH_ENTRY** next_entry_ptr = hash->entries + index;
@@ -139,7 +131,7 @@ void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_int length) {
   if (!hash) {
     return 0;
   }
-  SPerl_int hash_value = SPerl_hash_func(key, length);
+  SPerl_int hash_value = SPerl_HASH_FUNC_calc_hash(key, length);
   SPerl_int index = hash_value % hash->capacity;
   
   SPerl_HASH_ENTRY* next_entry = hash->entries[index];

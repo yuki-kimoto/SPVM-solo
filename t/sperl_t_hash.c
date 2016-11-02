@@ -2,6 +2,7 @@
 
 #include "../sperl_hash.h"
 #include "../sperl_hash_entry.h"
+#include "../sperl_hash_func.h"
 
 #define OK(condition) \
   if (condition) {\
@@ -49,7 +50,7 @@ int main(int argc, char *argv[])
     SPerl_HASH* hash = SPerl_HASH_new(101);
     SPerl_int value1 = 3;
     SPerl_HASH_insert_norehash(hash, "key1", 4, &value1);
-    SPerl_int hash_value1 = SPerl_hash_func("key1", 4);
+    SPerl_int hash_value1 = SPerl_HASH_FUNC_calc_hash("key1", 4);
     SPerl_int index1 = hash_value1 % 101;
     
     OK(*(SPerl_int*)hash->entries[index1]->value == 3);
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
 
     SPerl_int value2 = 5;
     SPerl_HASH_insert_norehash(hash, "key2", 4, &value2);
-    SPerl_int hash_value2 = SPerl_hash_func("key2", 4);
+    SPerl_int hash_value2 = SPerl_HASH_FUNC_calc_hash("key2", 4);
     SPerl_int index2 = hash_value2 % 101;
     
     OK(*(SPerl_int*)hash->entries[index2]->value == 5);
@@ -67,7 +68,7 @@ int main(int argc, char *argv[])
     // Replace
     SPerl_int value3 = 7;
     SPerl_int return_value3 = *(SPerl_int*)SPerl_HASH_insert_norehash(hash, "key1", 4, &value3);
-    SPerl_int hash_value3 = SPerl_hash_func("key1", 4);
+    SPerl_int hash_value3 = SPerl_HASH_FUNC_calc_hash("key1", 4);
     SPerl_int index3 = hash_value3 % 101;
     
     OK(*(SPerl_int*)hash->entries[index3]->value == 7);
