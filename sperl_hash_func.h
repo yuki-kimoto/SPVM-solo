@@ -4,6 +4,6 @@
 #include "sperl_base.h"
 
 // Hash function
-SPerl_int SPerl_HASH_FUNC_calc_hash(SPerl_char* str, SPerl_int len);
+SPerl_long SPerl_HASH_FUNC_calc_hash(SPerl_char* str, SPerl_int len);
 
 #endif

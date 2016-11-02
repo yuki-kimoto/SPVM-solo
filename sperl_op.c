@@ -172,6 +172,17 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
       cur_pos += resolved_part_name_length;
     }
     type->resolved_string = resolved_string;
+    
+    // Create type id
+    SPerl_int* id = SPerl_HASH_search(parser->type_resolved_string_symtable, resolved_string, strlen(resolved_string));
+    if (id) {
+      type->id = *id;
+    }
+    else {
+      SPerl_int* new_id = SPerl_PARSER_new_int(parser);
+      type->id = *new_id = parser->current_type_id++;
+      SPerl_HASH_insert(parser->type_resolved_string_symtable, resolved_string, strlen(resolved_string), new_id);
+    }
   }
 }
 

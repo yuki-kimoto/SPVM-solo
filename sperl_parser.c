@@ -42,6 +42,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
 
   parser->bodys = SPerl_PARSER_new_array(parser, 0);
   parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
+
+  parser->type_resolved_string_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
@@ -110,6 +112,12 @@ SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity) {
   SPerl_ARRAY_push(parser->hash_ptrs, hash);
   
   return hash;
+}
+
+SPerl_int* SPerl_PARSER_new_int(SPerl_PARSER* parser) {
+  SPerl_int* value = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
+  
+  return value;
 }
 
 SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
@@ -256,6 +264,7 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
     printf("\"\n");
     
     printf("    resolved_type => \"%s\"\n", package->type->resolved_string);
+    printf("    type_id => %d\n", package->type->id);
   }
 }
 

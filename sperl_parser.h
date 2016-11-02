@@ -82,7 +82,10 @@ struct SPerl_yy_parser_{
   SPerl_char* current_use_package_name;
   
   // Current type index
-  SPerl_char* current_type_index;
+  SPerl_int current_type_id;
+  
+  // Resolved type string symbol table
+  SPerl_HASH* type_resolved_string_symtable;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
@@ -103,6 +106,7 @@ void SPerl_PARSER_free(SPerl_PARSER* parser);
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity);
 SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity);
 SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length);
+SPerl_int* SPerl_PARSER_new_int(SPerl_PARSER* parser);
 
 void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 
