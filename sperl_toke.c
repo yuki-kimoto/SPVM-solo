@@ -32,6 +32,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
   SPerl_char expect = parser->expect;
   parser->expect = SPerl_TOKE_C_EXPECT_NORMAL;
   
+  // Save buf pointer
+  parser->befbufptr = parser->bufptr;
+  
   while(1) {
     // Get current character
     SPerl_char c = *parser->bufptr;
