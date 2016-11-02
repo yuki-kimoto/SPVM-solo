@@ -195,11 +195,22 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
         
         SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
         if (found_type) {
-          SPerl_OP_resolve_type(parser, found_type);
-          type->resolved_string_length = found_type->resolved_string_length;
-          for (SPerl_int j = 0; j < type->resolved_part_names->length; j++) {
-            SPerl_char* found_part_name = SPerl_ARRAY_fetch(found_type->resolved_part_names, j);
+          SPerl_boolean is_self
+            = type->code == SPerl_TYPE_C_CODE_WORD && found_type->code == SPerl_TYPE_C_CODE_WORD
+            && strcmp(type->uv.type_word->name_word->value, found_type->uv.type_word->name_word->value) == 0;
+          
+          if (is_self) {
+            type->resolved_string_length += strlen(found_type->uv.type_word->name_word->value);
+            SPerl_char* found_part_name = found_type->uv.type_word->name_word->value;
             SPerl_ARRAY_push(type->resolved_part_names, found_part_name);
+          }
+          else {
+            SPerl_OP_resolve_type(parser, found_type);
+            type->resolved_string_length += found_type->resolved_string_length;
+            for (SPerl_int j = 0; j < type->resolved_part_names->length; j++) {
+              SPerl_char* found_part_name = SPerl_ARRAY_fetch(found_type->resolved_part_names, j);
+              SPerl_ARRAY_push(type->resolved_part_names, found_part_name);
+            }
           }
         }
         else {
@@ -223,39 +234,13 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
-  // Packages
+  // Packages - resolve type
   SPerl_ARRAY* packages = parser->packages;
   SPerl_HASH* package_symtable = parser->package_symtable;
   for (SPerl_int i = 0; i < packages->length; i++) {
     SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
     SPerl_TYPE* type = package->type;
-    SPerl_ARRAY* parts = type->parts;
-    SPerl_ARRAY* resolved_parts = SPerl_PARSER_new_array(parser, 0);
-    SPerl_int resolved_string_length = 0;
-    for (SPerl_int j = 0; j < parts->length; j++) {
-      SPerl_char* part = SPerl_ARRAY_fetch(parts, j);
-      if (strcmp(part, "sub") == 0) {
-        resolved_string_length += 3;
-        SPerl_ARRAY_push(resolved_parts, part);
-      }
-      else if (part[0] == '(' && part[0] == ')' && part[0] == '[' || part[0] == ']' || part[0] == ',') {
-        resolved_string_length++;
-        SPerl_ARRAY_push(resolved_parts, part);
-      }
-      else {
-        SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part, strlen(part));
-        if (found_type) {
-          
-        }
-        else {
-          /*
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));
-          sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name_word->value, type_name_word->op->file, type_name_word->op->line);
-          SPerl_yyerror(parser, message);
-          */
-        }
-      }
-    }
+    SPerl_OP_resolve_type(parser, type);
   }
   
   // Types

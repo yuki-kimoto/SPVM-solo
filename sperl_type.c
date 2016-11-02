@@ -18,7 +18,12 @@ SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
 };
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
-  return SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_TYPE));
+  SPerl_TYPE* type = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_TYPE));
+  
+  type->parts = SPerl_PARSER_new_array(parser, 0);
+  type->resolved_part_names = SPerl_PARSER_new_array(parser, 0);
+  
+  return type;
 }
 
 void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* parts) {
