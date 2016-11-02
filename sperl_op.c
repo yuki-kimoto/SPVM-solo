@@ -168,6 +168,7 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   return op_grammer;
 }
 
+// Resolve type and index type
 void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
   SPerl_HASH* package_symtable = parser->package_symtable;
   
@@ -177,16 +178,15 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
   else {
     SPerl_ARRAY* parts = type->parts;
     SPerl_ARRAY* resolved_parts = SPerl_PARSER_new_array(parser, 0);
-    SPerl_int resolved_string_length = 0;
     
-    for (SPerl_int j = 0; j < parts->length; j++) {
-      SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, j);
+    for (SPerl_int i = 0; i < parts->length; i++) {
+      SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
       if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
-        resolved_string_length += 3;
+        type->resolved_string_length += 3;
         SPerl_ARRAY_push(type->resolved_part_names, "sub");
       }
       else if (part->code == SPerl_TYPE_PART_C_CODE_CHAR) {
-        resolved_string_length++;
+        type->resolved_string_length++;
         SPerl_ARRAY_push(type->resolved_part_names, part->uv.char_name);
       }
       else {
@@ -195,7 +195,12 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
         
         SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
         if (found_type) {
-          
+          SPerl_OP_resolve_type(parser, found_type);
+          type->resolved_string_length = found_type->resolved_string_length;
+          for (SPerl_int j = 0; j < type->resolved_part_names->length; j++) {
+            SPerl_char* found_part_name = SPerl_ARRAY_fetch(found_type->resolved_part_names, j);
+            SPerl_ARRAY_push(type->resolved_part_names, found_part_name);
+          }
         }
         else {
           SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(part_name));
@@ -204,6 +209,15 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
         }
       }
     }
+    SPerl_char* resolved_string = SPerl_PARSER_new_string(parser, type->resolved_string_length);
+    SPerl_int cur_pos = 0;
+    for (SPerl_int i = 0; i < type->resolved_part_names->length; i++) {
+      SPerl_char* resolved_part_name = SPerl_ARRAY_fetch(type->resolved_part_names, i);
+      SPerl_int resolved_part_name_length = strlen(resolved_part_name);
+      memcpy(resolved_string + cur_pos, resolved_part_name, resolved_part_name_length);
+      cur_pos += resolved_part_name_length;
+    }
+    type->resolved_string = resolved_string;
   }
 }
 

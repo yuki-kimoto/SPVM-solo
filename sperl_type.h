@@ -19,7 +19,7 @@ struct SPerl_type {
   SPerl_ARRAY* resolved_part_names;
   SPerl_char* resolved_string;
   SPerl_int resolved_string_length;
-  SPerl_int index;
+  SPerl_int id;
   union {
     SPerl_TYPE_WORD* type_word;
     SPerl_TYPE_ARRAY* type_array;
