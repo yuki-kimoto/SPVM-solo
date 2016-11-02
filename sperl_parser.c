@@ -250,10 +250,12 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
     printf("package[%d]\n", i);
     SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
     printf("    name => \"%s\"\n", package->name_word->value);
-
+    
     printf("    type => \"");
     SPerl_TYPE_print(parser, package->type, stdout);
     printf("\"\n");
+    
+    printf("    resolved_type => \"%s\"\n", package->type->resolved_string);
   }
 }
 
