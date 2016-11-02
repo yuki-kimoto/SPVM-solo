@@ -207,7 +207,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
           else {
             SPerl_OP_resolve_type(parser, found_type);
             type->resolved_string_length += found_type->resolved_string_length;
-            for (SPerl_int j = 0; j < type->resolved_part_names->length; j++) {
+            for (SPerl_int j = 0; j < found_type->resolved_part_names->length; j++) {
               SPerl_char* found_part_name = SPerl_ARRAY_fetch(found_type->resolved_part_names, j);
               SPerl_ARRAY_push(type->resolved_part_names, found_part_name);
             }
