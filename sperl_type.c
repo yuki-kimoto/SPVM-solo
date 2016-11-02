@@ -36,19 +36,19 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     
     SPerl_TYPE_PART* type_part_openbracket = SPerl_TYPE_PART_new(parser);
     type_part_openbracket->code = SPerl_TYPE_PART_C_CODE_CHAR;
-    type_part_openbracket->uv.c = '[';
+    type_part_openbracket->uv.char_string = "[";
     SPerl_ARRAY_push(parts, type_part_openbracket);
     
     SPerl_TYPE_PART* type_part_closebracket = SPerl_TYPE_PART_new(parser);
     type_part_closebracket->code = SPerl_TYPE_PART_C_CODE_CHAR;
-    type_part_closebracket->uv.c = ']';
+    type_part_closebracket->uv.char_string = "]";
     SPerl_ARRAY_push(parts, type_part_closebracket);
   }
   else if (type->code == SPerl_TYPE_C_CODE_SUB) {
     // (
     SPerl_TYPE_PART* type_part_openparen1 = SPerl_TYPE_PART_new(parser);
     type_part_openparen1->code = SPerl_TYPE_PART_C_CODE_CHAR;
-    type_part_openparen1->uv.c = '(';
+    type_part_openparen1->uv.char_string = "(";
     SPerl_ARRAY_push(parts, type_part_openparen1);
     
     // sub
@@ -59,7 +59,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     // (
     SPerl_TYPE_PART* type_part_openparen2 = SPerl_TYPE_PART_new(parser);
     type_part_openparen2->code = SPerl_TYPE_PART_C_CODE_CHAR;
-    type_part_openparen2->uv.c = '(';
+    type_part_openparen2->uv.char_string = "(";
     SPerl_ARRAY_push(parts, type_part_openparen2);
     
     // Argument types
@@ -71,7 +71,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
       if (i != argument_types->length - 1) {
         SPerl_TYPE_PART* type_part_comma = SPerl_TYPE_PART_new(parser);
         type_part_comma->code = SPerl_TYPE_PART_C_CODE_CHAR;
-        type_part_comma->uv.c = ',';
+        type_part_comma->uv.char_string = ",";
         SPerl_ARRAY_push(parts, type_part_comma);
       }
     }
@@ -79,7 +79,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     // )
     SPerl_TYPE_PART* type_part_closeparen1 = SPerl_TYPE_PART_new(parser);
     type_part_closeparen1->code = SPerl_TYPE_PART_C_CODE_CHAR;
-    type_part_closeparen1->uv.c = ')';
+    type_part_closeparen1->uv.char_string = ")";
     SPerl_ARRAY_push(parts, type_part_closeparen1);
     
     // Return type
@@ -89,7 +89,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     // )
     SPerl_TYPE_PART* type_part_closeparen2 = SPerl_TYPE_PART_new(parser);
     type_part_closeparen2->code = SPerl_TYPE_PART_C_CODE_CHAR;
-    type_part_closeparen2->uv.c = ')';
+    type_part_closeparen2->uv.char_string = ")";
     SPerl_ARRAY_push(parts, type_part_closeparen2);
   }
 }
@@ -107,7 +107,7 @@ void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh) {
     SPerl_char code = part->code;
     
     if (code == SPerl_TYPE_PART_C_CODE_CHAR) {
-      fprintf(fh, "%c", part->uv.c);
+      fprintf(fh, "%s", part->uv.char_string);
     }
     else if (code == SPerl_TYPE_PART_C_CODE_WORD) {
       fprintf(fh, "%s", part->uv.name_word->value);

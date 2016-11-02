@@ -15,7 +15,7 @@ struct SPerl_type_part {
   SPerl_char code;
   union {
     SPerl_WORD* name_word;
-    SPerl_char c;
+    SPerl_char* char_string;
   } uv;
 };
 

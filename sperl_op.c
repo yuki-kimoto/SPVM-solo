@@ -180,14 +180,14 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
     SPerl_int resolved_string_length = 0;
     
     for (SPerl_int j = 0; j < parts->length; j++) {
-      SPerl_char* part = SPerl_ARRAY_fetch(parts, j);
-      if (strcmp(part, "sub") == 0) {
+      SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, j);
+      if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
         resolved_string_length += 3;
-        SPerl_ARRAY_push(resolved_parts, part);
+        SPerl_ARRAY_push(resolved_part_names, "sub");
       }
-      else if (part[0] == '(' && part[0] == ')' && part[0] == '[' || part[0] == ']' || part[0] == ',') {
+      else if (part->code == SPerl_TYPE_PART_C_CODE_CHAR) {
         resolved_string_length++;
-        SPerl_ARRAY_push(resolved_parts, part);
+        SPerl_ARRAY_push(resolved_parts, );
       }
       else {
         SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part, strlen(part));
@@ -204,7 +204,6 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
   }
 }
 */
-
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
