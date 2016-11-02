@@ -9,4 +9,5 @@ package Test {
   use Test::TypedefClass;
   use Test::TypedefArray;
   use Test::TypedefArray2;
+  use Test::TypedefSub;
 }
