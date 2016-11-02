@@ -187,7 +187,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
       }
       else if (part->code == SPerl_TYPE_PART_C_CODE_CHAR) {
         resolved_string_length++;
-        SPerl_ARRAY_push(resolved_parts, );
+        SPerl_ARRAY_push(resolved_parts, part->uv.char_name);
       }
       else {
         SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part, strlen(part));
