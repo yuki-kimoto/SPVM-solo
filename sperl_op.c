@@ -30,7 +30,6 @@
 #include "sperl_body_class.h"
 #include "sperl_package.h"
 
-/* sperl_op.h */
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "null",
   "const",
