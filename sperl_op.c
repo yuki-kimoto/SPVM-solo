@@ -98,6 +98,112 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "type"
 };
 
+void SPerl_OP_check(SPerl_PARSER* parser) {
+  
+  // Resolve package type
+  SPerl_ARRAY* packages = parser->packages;
+  SPerl_HASH* package_symtable = parser->package_symtable;
+  for (SPerl_int i = 0; i < packages->length; i++) {
+    SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
+    SPerl_TYPE* type = package->type;
+    SPerl_OP_resolve_type(parser, type);
+  }
+  
+  // Bodys
+  SPerl_ARRAY* bodys = parser->bodys;
+  SPerl_HASH* body_symtable = parser->body_symtable;
+  
+  // Check bodys
+  for (SPerl_int i = 0; i < bodys->length; i++) {
+    
+    // Type
+    SPerl_BODY* body = SPerl_ARRAY_fetch(bodys, i);
+    
+    // Class body
+    if (body->code == SPerl_BODY_C_CODE_CLASS) {
+      SPerl_BODY_CLASS* body_class = body->uv.body_class;
+      
+      // Check descripter
+      SPerl_ARRAY* descripters = body_class->descripters;
+      for (SPerl_int j = 0; j < descripters->length; j++) {
+        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
+        if (descripter->code != SPerl_DESCRIPTER_C_CODE_VALUE && descripter->code != SPerl_DESCRIPTER_C_CODE_ENUM)
+        {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
+          sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
+            SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+          SPerl_yyerror(parser, message);
+        }
+      }
+      
+      // Check field
+      SPerl_ARRAY* fields = body_class->fields;
+      for (SPerl_int j = 0; j < fields->length; j++) {
+        SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
+
+        // Resolve field type
+        SPerl_OP_resolve_type(parser, field->type);
+        
+        // Check field descripters
+        SPerl_ARRAY* descripters = field->descripters;
+        for (SPerl_int k = 0; k < descripters->length; k++) {
+          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
+          if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
+          {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
+            sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n",
+              SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+            SPerl_yyerror(parser, message);
+          }
+        }
+      }
+      
+      // Check method
+      SPerl_ARRAY* methods = body_class->methods;
+      for (SPerl_int j = 0; j < methods->length; j++) {
+        SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
+
+        // Resolve method return type
+        SPerl_OP_resolve_type(parser, method->return_type);
+        
+        // Check method descripters
+        SPerl_ARRAY* descripters = method->descripters;
+        SPerl_int k;
+        for (SPerl_int k = 0; k < descripters->length; k++) {
+          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
+          if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
+          {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
+            sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
+              SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+            SPerl_yyerror(parser, message);
+          }
+        }
+        
+        // Check my var information
+        SPerl_ARRAY* my_vars = method->my_vars;
+        for (SPerl_int k = 0; k < my_vars->length; k++) {
+          SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
+          SPerl_OP_resolve_type(parser, my_var->type);
+          
+          // Check my_var descripters
+          SPerl_ARRAY* descripters = my_var->descripters;
+          for (SPerl_int l = 0; l < descripters->length; l++) {
+            SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
+            if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
+            {
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
+              sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n",
+                SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+              SPerl_yyerror(parser, message);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GRAMMER, op_packages, NULL);
   parser->op_grammer = op_grammer;
@@ -182,140 +288,6 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
       SPerl_int* new_id = SPerl_PARSER_new_int(parser);
       type->id = *new_id = parser->current_type_id++;
       SPerl_HASH_insert(parser->type_resolved_string_symtable, resolved_string, strlen(resolved_string), new_id);
-    }
-  }
-}
-
-void SPerl_OP_check(SPerl_PARSER* parser) {
-  
-  // Packages - resolve type
-  SPerl_ARRAY* packages = parser->packages;
-  SPerl_HASH* package_symtable = parser->package_symtable;
-  for (SPerl_int i = 0; i < packages->length; i++) {
-    SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
-    SPerl_TYPE* type = package->type;
-    SPerl_OP_resolve_type(parser, type);
-  }
-  
-  // Types
-  SPerl_ARRAY* bodys = parser->bodys;
-  SPerl_HASH* body_symtable = parser->body_symtable;
-  
-  // Check bodys
-  for (SPerl_int i = 0; i < bodys->length; i++) {
-    
-    // Type
-    SPerl_BODY* body = SPerl_ARRAY_fetch(bodys, i);
-    
-    // Class body
-    if (body->code == SPerl_BODY_C_CODE_CLASS) {
-      SPerl_BODY_CLASS* body_class = body->uv.body_class;
-      
-      // Check descripter
-      SPerl_ARRAY* descripters = body_class->descripters;
-      for (SPerl_int j = 0; j < descripters->length; j++) {
-        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
-        if (descripter->code != SPerl_DESCRIPTER_C_CODE_VALUE && descripter->code != SPerl_DESCRIPTER_C_CODE_ENUM)
-        {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-          sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
-            SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
-          SPerl_yyerror(parser, message);
-        }
-      }
-      
-      // Check field
-      SPerl_ARRAY* fields = body_class->fields;
-      for (SPerl_int j = 0; j < fields->length; j++) {
-        SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
-
-        /*
-        // Field type
-        if (field->type->code == SPerl_TYPE_C_CODE_WORD) {
-          SPerl_WORD* type_name_word = field->type->name_word;
-          if (!SPerl_HASH_search(body_symtable, type_name_word->value, strlen(type_name_word->value))) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));
-            sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name_word->value, type_name_word->op->file, type_name_word->op->line);
-            SPerl_yyerror(parser, message);
-          }
-        }
-        */
-        
-        // Field descripters
-        SPerl_ARRAY* descripters = field->descripters;
-        for (SPerl_int k = 0; k < descripters->length; k++) {
-          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
-          {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-            sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n",
-              SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
-            SPerl_yyerror(parser, message);
-          }
-        }
-      }
-      
-      // Check method
-      SPerl_ARRAY* methods = body_class->methods;
-      for (SPerl_int j = 0; j < methods->length; j++) {
-        SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
-        /*
-        // Check method type
-        if (method->return_type->code == SPerl_TYPE_C_CODE_WORD) {
-          SPerl_WORD* return_type_name_word = method->return_type->name_word;
-          if (!SPerl_HASH_search(body_symtable, return_type_name_word->value, strlen(return_type_name_word->value))) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(return_type_name_word->value));
-            sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", return_type_name_word->value, return_type_name_word->op->file, return_type_name_word->op->line);
-            SPerl_yyerror(parser, message);
-          }
-        }
-        */
-        
-        // Check method descripters
-        SPerl_ARRAY* descripters = method->descripters;
-        SPerl_int k;
-        for (SPerl_int k = 0; k < descripters->length; k++) {
-          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
-          {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-            sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
-              SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
-            SPerl_yyerror(parser, message);
-          }
-        }
-        
-        // Check my var information
-        SPerl_ARRAY* my_vars = method->my_vars;
-        for (SPerl_int k = 0; k < my_vars->length; k++) {
-          SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
-          
-          /*
-          // Check my type
-          if (my_var->type->code == SPerl_TYPE_C_CODE_WORD) {
-            SPerl_WORD* type_name_word = my_var->type->name_word;
-            if (!SPerl_HASH_search(body_symtable, type_name_word->value, strlen(type_name_word->value))) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(type_name_word->value));
-              sprintf(message, "Error: unknown type \"%s\" at %s line %d\n", type_name_word->value, type_name_word->op->file, type_name_word->op->line);
-              SPerl_yyerror(parser, message);
-            }
-          }
-          */
-          
-          // Check my_var descripters
-          SPerl_ARRAY* descripters = my_var->descripters;
-          for (SPerl_int l = 0; l < descripters->length; l++) {
-            SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
-            if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
-            {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-              sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n",
-                SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
-              SPerl_yyerror(parser, message);
-            }
-          }
-        }
-      }
     }
   }
 }

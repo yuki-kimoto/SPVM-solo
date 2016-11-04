@@ -388,6 +388,8 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
     printf("      return_type => \"");
     SPerl_TYPE_print(parser, method->return_type, stdout);
     printf("\"\n");
+    printf("      resolved_type => \"%s\"\n", method->return_type->resolved_string);
+    printf("      type_id => %d\n", method->return_type->id);
 
     SPerl_int i;
     printf("      descripters => ");
@@ -426,6 +428,8 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     printf("      type => \"");
     SPerl_TYPE_print(parser, type, stdout);
     printf("\"\n");
+    printf("      resolved_type => \"%s\"\n", type->resolved_string);
+    printf("      type_id => %d\n", type->id);
 
     printf("      descripters => ");
     SPerl_ARRAY* descripters = field->descripters;
@@ -464,6 +468,8 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     printf("          type => \"");
     SPerl_TYPE_print(parser, type, stdout);
     printf("\"\n");
+    printf("          resolved_type => \"%s\"\n", my_var->type->resolved_string);
+    printf("          type_id => %d\n", my_var->type->id);
     
     printf("          descripters => ");
     SPerl_ARRAY* descripters = my_var->descripters;
