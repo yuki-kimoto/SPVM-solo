@@ -43,7 +43,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->bodys = SPerl_PARSER_new_array(parser, 0);
   parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
   
-  parser->method_global_name_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->method_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   parser->type_resolved_string_symtable = SPerl_PARSER_new_hash(parser, 0);
   

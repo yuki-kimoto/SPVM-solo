@@ -88,7 +88,7 @@ struct SPerl_yy_parser_{
   SPerl_HASH* type_resolved_string_symtable;
   
   // Method global name symbol table(Class name, method name, argument count)
-  SPerl_HASH* method_global_name_symtable;
+  SPerl_HASH* method_complete_name_symtable;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
