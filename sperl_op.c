@@ -115,7 +115,6 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Check bodys
   for (SPerl_int i = 0; i < bodys->length; i++) {
-    
     // Type
     SPerl_BODY* body = SPerl_ARRAY_fetch(bodys, i);
     
@@ -208,7 +207,7 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GRAMMER, op_packages, NULL);
   parser->op_grammer = op_grammer;
   
-  // Check types and descripters. Resolve types. Index types.
+  // Resovle types, check types and descripters.
   SPerl_OP_check(parser);
   
   // Build constant pool
@@ -506,8 +505,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           SPerl_char* method_name;
           if (!method->anon) {
             method_name = method->name_word->value;
-            SPerl_METHOD* found_method
-              = SPerl_HASH_search(method_symtable, method_name, strlen(method_name));
+            found_method = SPerl_HASH_search(method_symtable, method_name, strlen(method_name));
           }
           
           if (found_method) {

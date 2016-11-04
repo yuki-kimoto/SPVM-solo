@@ -39,10 +39,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->package_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
-
+  
   parser->bodys = SPerl_PARSER_new_array(parser, 0);
   parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
-
+  
+  parser->method_global_name_symtable = SPerl_PARSER_new_hash(parser, 0);
+  
   parser->type_resolved_string_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   parser->const_pool_capacity = 1024;
@@ -79,7 +81,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     name_word->value = name;
     SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
     type_word->name_word = name_word;
-
+    
     // Type
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_WORD;
