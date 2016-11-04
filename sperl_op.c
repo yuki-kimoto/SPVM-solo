@@ -346,6 +346,34 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   }
 }
 
+SPerl_char* SPerl_OP_create_method_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* method_name, SPerl_int argument_count) {
+  // Method complete name - package_name::method_name(arg1...arg2);
+  SPerl_int length = strlen(package_name) + 2 + strlen(method_name) + 2;
+  if (argument_count == 1) {
+    length += 4;
+  }
+  else if (argument_count > 1) {
+    SPerl_char argument_count_str[6];
+    sprintf(argument_count_str, "%d", argument_count);
+    argument_count_str[5] = '\0';
+    length += 4 + 3 + 3 + strlen(argument_count_str);
+  }
+  
+  SPerl_char* method_complete_name = SPerl_PARSER_new_string(parser, length);
+  
+  if (argument_count == 0) {
+    sprintf(method_complete_name, "%s::%s()", package_name, method_name);
+  }
+  else if (argument_count == 1) {
+    sprintf(method_complete_name, "%s::%s(arg1)", package_name, method_name);
+  }
+  else if (argument_count > 1) {
+    sprintf(method_complete_name, "%s::%s(arg1...arg%d)", package_name, method_name, argument_count);
+  }
+  
+  return method_complete_name;
+}
+
 SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_packagename, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
   SPerl_int i;
   
@@ -508,11 +536,17 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             found_method = SPerl_HASH_search(method_symtable, method_name, strlen(method_name));
           }
           
+          // Found method
           if (found_method) {
+            
+            
+            
+            
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
             sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, method->op->file, method->op->line);
             SPerl_yyerror(parser, message);
           }
+          // Unknown method
           else {
             method->body_class = body_class;
             if (!method->anon) {
