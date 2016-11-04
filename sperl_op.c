@@ -529,31 +529,28 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         for (i = 0; i < parser->current_methods->length; i++) {
           SPerl_METHOD* method = SPerl_ARRAY_fetch(parser->current_methods, i);
           
-          SPerl_METHOD* found_method = NULL;
-          SPerl_char* method_name;
           if (!method->anon) {
+            SPerl_METHOD* found_method = NULL;
+            SPerl_char* method_name;
             method_name = method->name_word->value;
             found_method = SPerl_HASH_search(method_symtable, method_name, strlen(method_name));
-          }
-          
-          // Found method
-          if (found_method) {
             
-            
-            
-            
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
-            sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, method->op->file, method->op->line);
-            SPerl_yyerror(parser, message);
-          }
-          // Unknown method
-          else {
-            method->body_class = body_class;
-            if (!method->anon) {
-              SPerl_HASH_insert(method_symtable, method_name, strlen(method_name), method);
+            if (found_method) {
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
+              sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, method->op->file, method->op->line);
+              SPerl_yyerror(parser, message);
+            }
+            // Unknown method
+            else {
+              method->body_class = body_class;
+              if (!method->anon) {
+                SPerl_HASH_insert(method_symtable, method_name, strlen(method_name), method);
+              }
             }
           }
+          method->body_class = body_class;
         }
+        
         body_class->methods = parser->current_methods;
         parser->current_methods = SPerl_PARSER_new_array(parser, 0);
         body_class->method_symtable = method_symtable;
