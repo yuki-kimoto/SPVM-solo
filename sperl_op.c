@@ -524,28 +524,27 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         body_class->use_symtable = use_symtable;
 
         // Method information
-        SPerl_HASH* method_symtable = SPerl_PARSER_new_hash(parser, 0);
+        SPerl_HASH* method_complete_name_symtable = parser->method_complete_name_symtable;
         SPerl_int i;
         for (i = 0; i < parser->current_methods->length; i++) {
           SPerl_METHOD* method = SPerl_ARRAY_fetch(parser->current_methods, i);
           
           if (!method->anon) {
+            SPerl_char* method_name = method->name_word->value;
+            SPerl_char* method_complete_name = SPerl_OP_create_method_complete_name(parser, package_name, method_name, method->argument_count);
+            
             SPerl_METHOD* found_method = NULL;
-            SPerl_char* method_name;
-            method_name = method->name_word->value;
-            found_method = SPerl_HASH_search(method_symtable, method_name, strlen(method_name));
+            found_method = SPerl_HASH_search(method_complete_name_symtable, method_complete_name, strlen(method_complete_name));
             
             if (found_method) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_name));
-              sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_name, method->op->file, method->op->line);
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_complete_name));
+              sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_complete_name, method->op->file, method->op->line);
               SPerl_yyerror(parser, message);
             }
             // Unknown method
             else {
               method->body_class = body_class;
-              if (!method->anon) {
-                SPerl_HASH_insert(method_symtable, method_name, strlen(method_name), method);
-              }
+              SPerl_HASH_insert(method_complete_name_symtable, method_complete_name, strlen(method_complete_name), method);
             }
           }
           method->body_class = body_class;
@@ -553,7 +552,6 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         
         body_class->methods = parser->current_methods;
         parser->current_methods = SPerl_PARSER_new_array(parser, 0);
-        body_class->method_symtable = method_symtable;
         
         // Set body
         body->uv.body_class = body_class;
@@ -708,6 +706,9 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   
   // Save block
   method->op_block = op_block;
+  
+  // Save op
+  method->op = op_sub;
   
   // Add method information
   SPerl_ARRAY_push(parser->current_methods, method);
