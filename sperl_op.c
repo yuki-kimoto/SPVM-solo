@@ -29,6 +29,7 @@
 #include "sperl_body_enum.h"
 #include "sperl_body_class.h"
 #include "sperl_package.h"
+#include "sperl_callsub.h"
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "null",
@@ -861,6 +862,24 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   SPerl_OP_sibling_splice(parser, op_callsub, NULL, 0, op_invocant);
   SPerl_OP_sibling_splice(parser, op_callsub, op_invocant, 0, op_subname);
   SPerl_OP_sibling_splice(parser, op_callsub, op_subname, 0, op_terms);
+  
+  SPerl_CALLSUB* callsub = SPerl_CALLSUB_new(parser);
+  if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
+    callsub->var = op_invocant->uv.pv;
+  }
+  else if (op_invocant->code == SPerl_OP_C_CODE_WORD) {
+    callsub->package_name_word = op_invocant->uv.pv;
+  }
+  
+  if (op_subname->code == SPerl_OP_C_CODE_WORD) {
+    callsub->method_name_word = op_subname->uv.pv;
+  }
+  
+  callsub->anon = anon;
+  
+  SPerl_ARRAY_push(parser->callsubs, callsub);
+  
+  op_callsub->uv.pv = callsub;
   
   return op_callsub;
 }
