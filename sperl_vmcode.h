@@ -1,6 +1,8 @@
 #ifndef SPERL_VMCODE_H
 #define SPERL_VMCODE_H
 
+#include "sperl_base.h"
+
 enum {
   SPerl_VMCODE_C_CODE_AALOAD,
   SPerl_VMCODE_C_CODE_AASTORE,
@@ -206,4 +208,4 @@ enum {
   SPerl_VMCODE_C_CODE_WIDE
 };
 
-#ifndef
+#endif
