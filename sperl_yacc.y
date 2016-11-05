@@ -102,11 +102,12 @@
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE
 
-%type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement block enumblock classblock declsub
-%type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs optdeclclassattrs
+%type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement
+%type <opval> block enumblock classblock declsub optdeclclassattrs callsub
+%type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs 
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
-%type <opval> forstatement whilestatement expression optpackages subtype types opttypes notsubtype
+%type <opval> forstatement whilestatement expression optpackages subtype types opttypes notsubtype 
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -519,10 +520,7 @@ term
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_FIELD, $1, $3);
     }
-  | subname '(' optterms  ')'
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALLSUB, $1, $3);
-    }
+  | callsub
   | term ASSIGNOP term
     {
       SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
@@ -571,6 +569,12 @@ term
   | declmy
   | declanonsub
 
+callsub
+  : subname '(' optterms  ')'
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALLSUB, $1, $3);
+    }
+    
 block 
   : '{' optstatements '}'
     {
