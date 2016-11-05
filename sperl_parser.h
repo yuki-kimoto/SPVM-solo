@@ -69,8 +69,8 @@ struct SPerl_yy_parser_{
   // Variable id
   SPerl_int next_var_id;
   
-  // Current methods(named sub + anon sub) in class 
-  SPerl_ARRAY* current_methods;
+  // Current subs(named sub + anon sub) in class 
+  SPerl_ARRAY* current_subs;
   
   // Include pathes
   SPerl_ARRAY* include_pathes;
@@ -87,8 +87,8 @@ struct SPerl_yy_parser_{
   // Resolved type string symbol table
   SPerl_HASH* type_resolved_string_symtable;
   
-  // Method global name symbol table(Class name, method name, argument count)
-  SPerl_HASH* method_complete_name_symtable;
+  // Method global name symbol table(Class name, sub name, argument count)
+  SPerl_HASH* sub_complete_name_symtable;
   
   // Call subroutines
   SPerl_ARRAY* callsubs;
@@ -101,7 +101,7 @@ void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_val
 void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, SPerl_int size);
 void SPerl_PARSER_dump_const_value(SPerl_PARSER* parser, SPerl_CONST_VALUE* const_value);
 void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field);
-void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method);
+void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub);
 void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var);
 void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_value);
 void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* types);

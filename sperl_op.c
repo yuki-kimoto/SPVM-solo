@@ -8,7 +8,7 @@
 #include "sperl_parser.h"
 #include "sperl_yacc.h"
 #include "sperl_op.h"
-#include "sperl_method.h"
+#include "sperl_sub.h"
 #include "sperl_parser.h"
 #include "sperl_const_value.h"
 #include "sperl_field.h"
@@ -157,16 +157,16 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         }
       }
       
-      // Check method
-      SPerl_ARRAY* methods = body_class->methods;
-      for (SPerl_int j = 0; j < methods->length; j++) {
-        SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
+      // Check sub
+      SPerl_ARRAY* subs = body_class->subs;
+      for (SPerl_int j = 0; j < subs->length; j++) {
+        SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, j);
 
-        // Resolve method return type
-        SPerl_OP_resolve_type(parser, method->return_type);
+        // Resolve sub return type
+        SPerl_OP_resolve_type(parser, sub->return_type);
         
-        // Check method descripters
-        SPerl_ARRAY* descripters = method->descripters;
+        // Check sub descripters
+        SPerl_ARRAY* descripters = sub->descripters;
         SPerl_int k;
         for (SPerl_int k = 0; k < descripters->length; k++) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
@@ -180,7 +180,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         }
         
         // Check my var information
-        SPerl_ARRAY* my_vars = method->my_vars;
+        SPerl_ARRAY* my_vars = sub->my_vars;
         for (SPerl_int k = 0; k < my_vars->length; k++) {
           SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
           SPerl_OP_resolve_type(parser, my_var->type);
@@ -346,9 +346,9 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   }
 }
 
-SPerl_char* SPerl_OP_create_method_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* method_name, SPerl_int argument_count) {
-  // Method complete name - package_name::method_name(arg1...arg2);
-  SPerl_int length = strlen(package_name) + 2 + strlen(method_name) + 2;
+SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* sub_name, SPerl_int argument_count) {
+  // Method complete name - package_name::sub_name(arg1...arg2);
+  SPerl_int length = strlen(package_name) + 2 + strlen(sub_name) + 2;
   if (argument_count == 1) {
     length += 4;
   }
@@ -359,19 +359,19 @@ SPerl_char* SPerl_OP_create_method_complete_name(SPerl_PARSER* parser, SPerl_cha
     length += 4 + 3 + 3 + strlen(argument_count_str);
   }
   
-  SPerl_char* method_complete_name = SPerl_PARSER_new_string(parser, length);
+  SPerl_char* sub_complete_name = SPerl_PARSER_new_string(parser, length);
   
   if (argument_count == 0) {
-    sprintf(method_complete_name, "%s::%s()", package_name, method_name);
+    sprintf(sub_complete_name, "%s::%s()", package_name, sub_name);
   }
   else if (argument_count == 1) {
-    sprintf(method_complete_name, "%s::%s(arg1)", package_name, method_name);
+    sprintf(sub_complete_name, "%s::%s(arg1)", package_name, sub_name);
   }
   else if (argument_count > 1) {
-    sprintf(method_complete_name, "%s::%s(arg1...arg%d)", package_name, method_name, argument_count);
+    sprintf(sub_complete_name, "%s::%s(arg1...arg%d)", package_name, sub_name, argument_count);
   }
   
-  return method_complete_name;
+  return sub_complete_name;
 }
 
 SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_packagename, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
@@ -517,41 +517,41 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             }
           }
         }
-        // Set filed and method information
+        // Set filed and sub information
         body_class->fields = fields;
         body_class->field_symtable = field_symtable;
         body_class->uses = uses;
         body_class->use_symtable = use_symtable;
 
         // Method information
-        SPerl_HASH* method_complete_name_symtable = parser->method_complete_name_symtable;
+        SPerl_HASH* sub_complete_name_symtable = parser->sub_complete_name_symtable;
         SPerl_int i;
-        for (i = 0; i < parser->current_methods->length; i++) {
-          SPerl_METHOD* method = SPerl_ARRAY_fetch(parser->current_methods, i);
+        for (i = 0; i < parser->current_subs->length; i++) {
+          SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->current_subs, i);
           
-          if (!method->anon) {
-            SPerl_char* method_name = method->name_word->value;
-            SPerl_char* method_complete_name = SPerl_OP_create_method_complete_name(parser, package_name, method_name, method->argument_count);
+          if (!sub->anon) {
+            SPerl_char* sub_name = sub->name_word->value;
+            SPerl_char* sub_complete_name = SPerl_OP_create_sub_complete_name(parser, package_name, sub_name, sub->argument_count);
             
-            SPerl_METHOD* found_method = NULL;
-            found_method = SPerl_HASH_search(method_complete_name_symtable, method_complete_name, strlen(method_complete_name));
+            SPerl_SUB* found_sub = NULL;
+            found_sub = SPerl_HASH_search(sub_complete_name_symtable, sub_complete_name, strlen(sub_complete_name));
             
-            if (found_method) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(method_complete_name));
-              sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", method_complete_name, method->op->file, method->op->line);
+            if (found_sub) {
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(sub_complete_name));
+              sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", sub_complete_name, sub->op->file, sub->op->line);
               SPerl_yyerror(parser, message);
             }
-            // Unknown method
+            // Unknown sub
             else {
-              method->body_class = body_class;
-              SPerl_HASH_insert(method_complete_name_symtable, method_complete_name, strlen(method_complete_name), method);
+              sub->body_class = body_class;
+              SPerl_HASH_insert(sub_complete_name_symtable, sub_complete_name, strlen(sub_complete_name), sub);
             }
           }
-          method->body_class = body_class;
+          sub->body_class = body_class;
         }
         
-        body_class->methods = parser->current_methods;
-        parser->current_methods = SPerl_PARSER_new_array(parser, 0);
+        body_class->subs = parser->current_subs;
+        parser->current_subs = SPerl_PARSER_new_array(parser, 0);
         
         // Set body
         body->uv.body_class = body_class;
@@ -679,13 +679,13 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   SPerl_OP_sibling_splice(parser, op_sub, op_descripters, 0, op_type);
   SPerl_OP_sibling_splice(parser, op_sub, op_type, 0, op_block);
   
-  // Create method infomation
-  SPerl_METHOD* method = SPerl_METHOD_new(parser);
+  // Create sub infomation
+  SPerl_SUB* sub = SPerl_SUB_new(parser);
   if (op_subname->code == SPerl_OP_C_CODE_NULL) {
-    method->anon = 1;
+    sub->anon = 1;
   }
   else {
-    method->name_word = op_subname->uv.pv;
+    sub->name_word = op_subname->uv.pv;
   }
   
   // subargs
@@ -695,23 +695,23 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
     // Increment argument count
     argument_count++;
   }
-  method->argument_count = argument_count;
+  sub->argument_count = argument_count;
 
   // descripters
-  method->descripters = SPerl_OP_create_descripters(parser, op_descripters);
+  sub->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // return type
-  method->return_type = op_type->uv.pv;
-  SPerl_TYPE_build_parts(parser, method->return_type);
+  sub->return_type = op_type->uv.pv;
+  SPerl_TYPE_build_parts(parser, sub->return_type);
   
   // Save block
-  method->op_block = op_block;
+  sub->op_block = op_block;
   
   // Save op
-  method->op = op_sub;
+  sub->op = op_sub;
   
-  // Add method information
-  SPerl_ARRAY_push(parser->current_methods, method);
+  // Add sub information
+  SPerl_ARRAY_push(parser->current_subs, sub);
   
   // my var informations
   SPerl_ARRAY* my_vars = SPerl_PARSER_new_array(parser, 0);
@@ -786,7 +786,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
         // Add my var information
         my_var->id = parser->next_var_id++;
         SPerl_ARRAY_push(my_vars, my_var);
-        my_var->method = method;
+        my_var->sub = sub;
         
         SPerl_ARRAY_push(my_var_stack, my_var);
       }
@@ -848,9 +848,9 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   }
   
   // Set my var information
-  method->my_vars = my_vars;
+  sub->my_vars = my_vars;
   
-  op_sub->uv.pv = method;
+  op_sub->uv.pv = sub;
   
   return op_sub;
 }
@@ -872,7 +872,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   }
   
   if (op_subname->code == SPerl_OP_C_CODE_WORD) {
-    callsub->method_name_word = op_subname->uv.pv;
+    callsub->sub_name_word = op_subname->uv.pv;
   }
   
   callsub->anon = anon;

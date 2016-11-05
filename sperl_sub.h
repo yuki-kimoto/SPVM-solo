@@ -1,10 +1,10 @@
-#ifndef SPERL_METHOD_H
-#define SPERL_METHOD_H
+#ifndef SPERL_SUB_H
+#define SPERL_SUB_H
 
 #include "sperl_base.h"
 
 // Method information
-struct SPerl_method {
+struct SPerl_sub {
   SPerl_WORD* name_word;
   SPerl_TYPE* return_type;
   SPerl_ARRAY* descripters;
@@ -16,6 +16,6 @@ struct SPerl_method {
   SPerl_boolean anon;
 };
 
-SPerl_METHOD* SPerl_METHOD_new(SPerl_PARSER* parser);
+SPerl_SUB* SPerl_SUB_new(SPerl_PARSER* parser);
 
 #endif

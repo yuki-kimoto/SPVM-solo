@@ -8,7 +8,7 @@
 #include "sperl_hash.h"
 #include "sperl_const_value.h"
 #include "sperl_field.h"
-#include "sperl_method.h"
+#include "sperl_sub.h"
 #include "sperl_my_var.h"
 #include "sperl_var.h"
 #include "sperl_memory_pool.h"
@@ -45,7 +45,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->bodys = SPerl_PARSER_new_array(parser, 0);
   parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
   
-  parser->method_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->sub_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   parser->type_resolved_string_symtable = SPerl_PARSER_new_hash(parser, 0);
   
@@ -54,7 +54,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   parser->next_var_id = 1;
   
-  parser->current_methods = SPerl_PARSER_new_array(parser, 0);
+  parser->current_subs = SPerl_PARSER_new_array(parser, 0);
   parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
   
   parser->bufptr = "";
@@ -316,12 +316,12 @@ void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
       }
       
       // Method information
-      printf("  methods\n");
-      SPerl_ARRAY* methods = body_class->methods;
-      for (SPerl_int j = 0; j < methods->length; j++) {
-        SPerl_METHOD* method = SPerl_ARRAY_fetch(methods, j);
-        printf("    method[%" PRId32 "]\n", j);
-        SPerl_PARSER_dump_method(parser, method);
+      printf("  subs\n");
+      SPerl_ARRAY* subs = body_class->subs;
+      for (SPerl_int j = 0; j < subs->length; j++) {
+        SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, j);
+        printf("    sub[%" PRId32 "]\n", j);
+        SPerl_PARSER_dump_sub(parser, sub);
       }
     }
     // Enum body
@@ -379,25 +379,25 @@ void SPerl_PARSER_dump_const_value(SPerl_PARSER* parser, SPerl_CONST_VALUE* cons
   printf("      pool_pos => %d\n", const_value->pool_pos);
 }
 
-void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
-  if (method) {
-    if (method->anon) {
+void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
+  if (sub) {
+    if (sub->anon) {
       printf("      name => (NONE)\n");
     }
     else {
-      printf("      name => \"%s\"\n", method->name_word->value);
+      printf("      name => \"%s\"\n", sub->name_word->value);
     }
-    printf("      anon => %d\n", method->anon);
+    printf("      anon => %d\n", sub->anon);
 
     printf("      return_type => \"");
-    SPerl_TYPE_print(parser, method->return_type, stdout);
+    SPerl_TYPE_print(parser, sub->return_type, stdout);
     printf("\"\n");
-    printf("      resolved_type => \"%s\"\n", method->return_type->resolved_string);
-    printf("      type_id => %d\n", method->return_type->id);
+    printf("      resolved_type => \"%s\"\n", sub->return_type->resolved_string);
+    printf("      type_id => %d\n", sub->return_type->id);
 
     SPerl_int i;
     printf("      descripters => ");
-    SPerl_ARRAY* descripters = method->descripters;
+    SPerl_ARRAY* descripters = sub->descripters;
     if (descripters->length) {
       for (SPerl_int i = 0; i < descripters->length; i++) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
@@ -408,16 +408,16 @@ void SPerl_PARSER_dump_method(SPerl_PARSER* parser, SPerl_METHOD* method) {
       printf("(None)");
     }
     printf("\n");
-    printf("      argument_count => %" PRId32 "\n", method->argument_count);
+    printf("      argument_count => %" PRId32 "\n", sub->argument_count);
     printf("      my_vars\n");
-    SPerl_ARRAY* my_vars = method->my_vars;
+    SPerl_ARRAY* my_vars = sub->my_vars;
     for (SPerl_int i = 0; i < my_vars->length; i++) {
       SPerl_MY_VAR* my_var
-        = (SPerl_MY_VAR*)SPerl_ARRAY_fetch(method->my_vars, i);
+        = (SPerl_MY_VAR*)SPerl_ARRAY_fetch(sub->my_vars, i);
       printf("        my_var[%d]\n", i);
       SPerl_PARSER_dump_my_var(parser, my_var);
     }
-    printf("      op_block => %x\n", method->op_block);
+    printf("      op_block => %x\n", sub->op_block);
   }
   else {
     printf("      None\n");

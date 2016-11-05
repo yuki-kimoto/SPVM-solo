@@ -7,7 +7,7 @@ struct SPerl_my_var {
   SPerl_TYPE* type;
   SPerl_WORD* name_word;
   SPerl_int id;
-  SPerl_METHOD* method;
+  SPerl_SUB* sub;
   SPerl_ARRAY* descripters;
   SPerl_OP* op;
 };
