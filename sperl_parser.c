@@ -462,6 +462,10 @@ void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_v
   }
 }
 
+SPerl_int* SPerl_PARSER_alloc_memory_pool(SPerl_PARSER* parser, SPerl_int size) {
+  return SPerl_MEMORY_POOL_alloc(parser->memory_pool, size);
+}
+
 void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
   if (my_var) {
     printf("          name => \"%s\"\n", my_var->name_word->value);

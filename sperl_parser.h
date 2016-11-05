@@ -111,6 +111,8 @@ SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity);
 SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length);
 SPerl_int* SPerl_PARSER_new_int(SPerl_PARSER* parser);
 
+SPerl_int* SPerl_PARSER_alloc_memory_pool(SPerl_PARSER* parser, SPerl_int size);
+
 void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth);
 
 #endif
