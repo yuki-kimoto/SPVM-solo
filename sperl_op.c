@@ -854,6 +854,17 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   return op_sub;
 }
 
+SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_subname, SPerl_OP* op_terms, SPerl_boolean anon) {
+  
+  // Build OP_SUB
+  SPerl_OP* op_callsub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALLSUB, NULL, NULL);
+  SPerl_OP_sibling_splice(parser, op_callsub, NULL, 0, op_invocant);
+  SPerl_OP_sibling_splice(parser, op_callsub, op_invocant, 0, op_subname);
+  SPerl_OP_sibling_splice(parser, op_callsub, op_subname, 0, op_terms);
+  
+  return op_callsub;
+}
+
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_types, SPerl_OP* op_return_type) {
   SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_argument_types, op_return_type);
   

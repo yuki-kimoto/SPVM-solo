@@ -548,34 +548,19 @@ callop
 callsub
   : subname '(' optterms  ')'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALLSUB, $1, $3);
+      $$ = SPerl_OP_build_callsub(parser, SPerl_OP_newOP_NULL(parser), $1, $3, 0);
     }
   | VAR ARROW subname '(' optterms ')'
     {
-      $$ = SPerl_OP_newOP(
-        parser,
-        SPerl_OP_C_CODE_CALLSUB,
-        $3,
-        SPerl_OP_append_elem(parser, $1, $5)
-      );
+      $$ = SPerl_OP_build_callsub(parser, $1, $3, $5, 0);
     }
   | VAR ARROW '(' optterms ')'
     {
-      $$ = SPerl_OP_newOP(
-        parser,
-        SPerl_OP_C_CODE_CALLSUB,
-        $1,
-        $4
-      );
+      $$ = SPerl_OP_build_callsub(parser, $1, SPerl_OP_newOP_NULL(parser), $4, 1);
     }
   | packagename ARROW subname '(' optterms ')'
     {
-      $$ = SPerl_OP_newOP(
-        parser,
-        SPerl_OP_C_CODE_CALLSUB,
-        SPerl_OP_append_elem(parser, $1, $3),
-        $5
-      );
+      $$ = SPerl_OP_build_callsub(parser, $1, $3, $5, 0);
     }
 
 block 

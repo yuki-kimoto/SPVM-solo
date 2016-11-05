@@ -5,5 +5,5 @@
 #include "sperl_parser.h"
 
 SPerl_FIELD* SPerl_FIELD_new(SPerl_PARSER* parser) {
-  return (SPerl_FIELD*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_FIELD));
+  return SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_FIELD));
 }
