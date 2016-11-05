@@ -5,7 +5,6 @@
 #include "sperl_type_word.h"
 #include "sperl_type_array.h"
 #include "sperl_type_sub.h"
-#include "sperl_memory_pool.h"
 #include "sperl_parser.h"
 #include "sperl_word.h"
 #include "sperl_array.h"
@@ -18,7 +17,7 @@ SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
 };
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
-  SPerl_TYPE* type = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_TYPE));
+  SPerl_TYPE* type = SPerl_PARSER_alloc_memory_pool(parser, sizeof(SPerl_TYPE));
   
   type->parts = SPerl_PARSER_new_array(parser, 0);
   type->resolved_part_names = SPerl_PARSER_new_array(parser, 0);
