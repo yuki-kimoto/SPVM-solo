@@ -103,7 +103,7 @@
 %token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE
 
 %type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement
-%type <opval> block enumblock classblock declsub optdeclclassattrs callsub
+%type <opval> block enumblock classblock declsub optdeclclassattrs callsub callop
 %type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs 
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
@@ -426,7 +426,21 @@ term
     {
       $$ = SPerl_OP_build_CONSTVALUE(parser, $1);
     }
-  | '+' term %prec UMINUS
+  | VAR ARROW '[' term ']'
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_AELEM, $1, $4);
+    }
+  | VAR ARROW fieldname
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_FIELD, $1, $3);
+    }
+  | declmy
+  | declanonsub
+  | callsub
+  | callop
+
+callop
+  : '+' term %prec UMINUS
     {
       $$ = $2;
     }
@@ -512,14 +526,6 @@ term
       SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
-  | VAR ARROW '[' term ']'
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_AELEM, $1, $4);
-    }
-  | VAR ARROW fieldname
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_FIELD, $1, $3);
-    }
   | term ASSIGNOP term
     {
       SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
@@ -538,9 +544,6 @@ term
       SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
-  | declmy
-  | declanonsub
-  | callsub
 
 callsub
   : subname '(' optterms  ')'
