@@ -914,6 +914,11 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   else if (op_invocant->code == SPerl_OP_C_CODE_WORD) {
     callsub->package_name_word = op_invocant->uv.pv;
   }
+  else {
+    SPerl_WORD* package_name_word = SPerl_WORD_new(parser);
+    package_name_word->value = "CORE";
+    callsub->package_name_word = package_name_word;
+  }
   
   if (op_subname->code == SPerl_OP_C_CODE_WORD) {
     callsub->sub_name_word = op_subname->uv.pv;

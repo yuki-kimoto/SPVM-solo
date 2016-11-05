@@ -155,9 +155,8 @@ package Test::Foo::Point3D {
     "abcde";
     "";
 
-    _sum();
-    sum_foo();
-    sum::foo();
+    # _sum();
+    # sum_foo();
     
     $title->[3];
     $title->[3] = 4;
@@ -165,8 +164,8 @@ package Test::Foo::Point3D {
     my $title8 : int = true;
     my $title9 : int = false;
 
-    sum();
-    sum(1, 3, 5);
+    # sum();
+    # sum(1, 3, 5);
 
     my $char : char = 'a';
   }
