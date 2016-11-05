@@ -89,6 +89,9 @@ struct SPerl_yy_parser_{
   
   // Method global name symbol table(Class name, method name, argument count)
   SPerl_HASH* method_complete_name_symtable;
+  
+  // Call subroutines
+  SPerl_ARRAY* callsubs;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();

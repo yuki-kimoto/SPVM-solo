@@ -40,6 +40,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->const_values = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
   
+  parser->callsubs = SPerl_PARSER_new_array(parser, 0);
+  
   parser->bodys = SPerl_PARSER_new_array(parser, 0);
   parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
   
