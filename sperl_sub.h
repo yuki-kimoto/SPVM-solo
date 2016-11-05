@@ -14,6 +14,7 @@ struct SPerl_sub {
   SPerl_OP* op;
   SPerl_BODY_CLASS* body_class;
   SPerl_boolean anon;
+  SPerl_int id;
 };
 
 SPerl_SUB* SPerl_SUB_new(SPerl_PARSER* parser);

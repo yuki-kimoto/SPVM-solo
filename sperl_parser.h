@@ -81,8 +81,11 @@ struct SPerl_yy_parser_{
   // Current use class name
   SPerl_char* current_use_package_name;
   
-  // Current type index
+  // Current type id
   SPerl_int current_type_id;
+  
+  // Current subroutine id
+  SPerl_int current_sub_id;
   
   // Resolved type string symbol table
   SPerl_HASH* type_resolved_string_symtable;

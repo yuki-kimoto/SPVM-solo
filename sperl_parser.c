@@ -387,6 +387,7 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     else {
       printf("      name => \"%s\"\n", sub->name_word->value);
     }
+    printf("      id => %d\n", sub->id);
     printf("      anon => %d\n", sub->anon);
 
     printf("      return_type => \"");

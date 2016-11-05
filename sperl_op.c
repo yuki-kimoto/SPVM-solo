@@ -850,6 +850,9 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   // Set my var information
   sub->my_vars = my_vars;
   
+  // ID
+  sub->id = parser->current_sub_id++;
+  
   op_sub->uv.pv = sub;
   
   return op_sub;
