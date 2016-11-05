@@ -71,6 +71,9 @@ struct SPerl_yy_parser_{
   
   // Current subs(named sub + anon sub) in class 
   SPerl_ARRAY* current_subs;
+
+  // Current subs(named sub + anon sub) in class 
+  SPerl_ARRAY* subs;
   
   // Include pathes
   SPerl_ARRAY* include_pathes;

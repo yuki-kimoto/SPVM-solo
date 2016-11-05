@@ -55,6 +55,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->next_var_id = 1;
   
   parser->current_subs = SPerl_PARSER_new_array(parser, 0);
+  parser->subs = SPerl_PARSER_new_array(parser, 0);
   parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
   
   parser->bufptr = "";
@@ -236,11 +237,21 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
   SPerl_PARSER_dump_ast(parser, parser->op_grammer, 0);
 
-  printf("\n[Package infomation]\n");
+  printf("\n[Packages information]\n");
   SPerl_PARSER_dump_packages(parser, parser->packages);
   
-  printf("\n[Body infomation]\n");
+  printf("\n[Body information]\n");
   SPerl_PARSER_dump_bodys(parser, parser->bodys);
+  
+  printf("\n[Subroutine information]\n");
+  // Method information
+  printf("  subs\n");
+  SPerl_ARRAY* subs = parser->subs;
+  for (SPerl_int i = 0; i < subs->length; i++) {
+    SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, i);
+    printf("    sub[%" PRId32 "]\n", i);
+    SPerl_PARSER_dump_sub(parser, sub);
+  }
   
   printf("\n[Constant information]\n");
   SPerl_PARSER_dump_const_values(parser, parser->const_values);
@@ -314,15 +325,6 @@ void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
         printf("    field[%" PRId32 "]\n", j);
         SPerl_PARSER_dump_field(parser, field);
       }
-      
-      // Method information
-      printf("  subs\n");
-      SPerl_ARRAY* subs = body_class->subs;
-      for (SPerl_int j = 0; j < subs->length; j++) {
-        SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, j);
-        printf("    sub[%" PRId32 "]\n", j);
-        SPerl_PARSER_dump_sub(parser, sub);
-      }
     }
     // Enum body
     else if (body->code == SPerl_BODY_C_CODE_ENUM) {
@@ -381,6 +383,7 @@ void SPerl_PARSER_dump_const_value(SPerl_PARSER* parser, SPerl_CONST_VALUE* cons
 
 void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
   if (sub) {
+    printf("      package_name => \"%s\"\n", sub->package_name);
     if (sub->anon) {
       printf("      name => (NONE)\n");
     }

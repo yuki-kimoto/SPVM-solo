@@ -201,6 +201,45 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       }
     }
   }
+
+  // Check callsub name
+  SPerl_ARRAY* callsubs = parser->callsubs;
+  for (SPerl_int i = 0; i < callsubs->length; i++) {
+    SPerl_CALLSUB* callsub = SPerl_ARRAY_fetch(callsubs, i);
+    if (!callsub->anon) {
+      
+      SPerl_char* package_name;
+      if (callsub->package_name_word) {
+        SPerl_WORD* package_name_word = callsub->package_name_word;
+        package_name = package_name_word->value;
+      }
+      else if (callsub->var) {
+        package_name = callsub->var->my_var->sub->package_name;
+      }
+      
+      SPerl_WORD* sub_name_word = callsub->sub_name_word;
+      SPerl_char* sub_name = sub_name_word->value;
+      
+      SPerl_int argument_count = callsub->argument_count;
+      
+      SPerl_char* sub_complete_name
+        = SPerl_OP_create_sub_complete_name(parser, package_name, sub_name, argument_count);
+      
+      callsub->sub_complete_name = sub_complete_name;
+      
+      SPerl_SUB* found_sub= SPerl_HASH_search(
+        parser->sub_complete_name_symtable,
+        sub_complete_name,
+        strlen(sub_complete_name)
+      );
+      if (!found_sub) {
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(sub_complete_name));
+        sprintf(message, "Error: unknown sub \"%s\" at %s line %d\n",
+          sub_complete_name, sub_name_word->op->file, sub_name_word->op->line);
+        SPerl_yyerror(parser, message);
+      }
+    }
+  }
 }
 
 SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
@@ -347,7 +386,7 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
 }
 
 SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* sub_name, SPerl_int argument_count) {
-  // Method complete name - package_name::sub_name(arg1...arg2);
+  // Method complete name - package_name->sub_name(arg1...arg2);
   SPerl_int length = strlen(package_name) + 2 + strlen(sub_name) + 2;
   if (argument_count == 1) {
     length += 4;
@@ -548,6 +587,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             }
           }
           sub->body_class = body_class;
+          sub->package_name = package_name;
         }
         
         body_class->subs = parser->current_subs;
@@ -712,6 +752,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   
   // Add sub information
   SPerl_ARRAY_push(parser->current_subs, sub);
+  SPerl_ARRAY_push(parser->subs, sub);
   
   // my var informations
   SPerl_ARRAY* my_vars = SPerl_PARSER_new_array(parser, 0);
@@ -879,6 +920,14 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   }
   
   callsub->anon = anon;
+  
+  // Argument count
+  SPerl_int argument_count = 0;
+  SPerl_OP* op_term = op_terms->first;
+  while (op_term = SPerl_OP_sibling(parser, op_term)) {
+    argument_count++;
+  }
+  callsub->argument_count = argument_count;
   
   SPerl_ARRAY_push(parser->callsubs, callsub);
   
