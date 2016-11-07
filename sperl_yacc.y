@@ -441,7 +441,7 @@ term
 getfield
   : VAR ARROW fieldname
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_FIELD, $1, $3);
+      $$ = SPerl_OP_build_getfield(parser, $1, $3);
     }
 
 getenumvalue

@@ -219,6 +219,7 @@ void SPerl_OP_check_bodys(SPerl_PARSER* parser) {
 void SPerl_OP_check_names(SPerl_PARSER* parser) {
   // Check names
   SPerl_ARRAY* name_checked_ops = parser->name_checked_ops;
+  
   for (SPerl_int i = 0; i < name_checked_ops->length; i++) {
     SPerl_OP* op = SPerl_ARRAY_fetch(name_checked_ops, i);
     SPerl_NAME* name = op->uv.pv;
@@ -271,7 +272,7 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
       SPerl_char* complete_name = SPerl_OP_create_complete_name(parser, package_name, call_name);
       name->complete_name = complete_name;
       
-      SPerl_SUB* found_enum= SPerl_HASH_search(
+      SPerl_ENUM_VALUE* found_enum= SPerl_HASH_search(
         parser->enum_complete_name_symtable,
         complete_name,
         strlen(complete_name)
@@ -284,19 +285,17 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
         SPerl_yyerror(parser, message);
       }
     }
-    /*
     else if (op->code == SPerl_OP_C_CODE_GETFIELD) {
-      SPerl_WORD* package_name_word = name->package_name_word;
-      SPerl_char* package_name = package_name_word->value;
+      SPerl_char* package_name = name->var->my_var->sub->package_name;
       SPerl_WORD* call_name_word = name->call_name_word;
       SPerl_char* call_name = call_name_word->value;
-     
+      
       SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(call_name);
       
       SPerl_char* complete_name = SPerl_OP_create_complete_name(parser, package_name, call_name);
       name->complete_name = complete_name;
       
-      SPerl_SUB* found_field= SPerl_HASH_search(
+      SPerl_FIELD* found_field= SPerl_HASH_search(
         parser->field_complete_name_symtable,
         complete_name,
         strlen(complete_name)
@@ -309,7 +308,6 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
         SPerl_yyerror(parser, message);
       }
     }
-    */
   }
 }
 
@@ -330,14 +328,14 @@ SPerl_OP* SPerl_OP_build_getenumvalue(SPerl_PARSER* parser, SPerl_OP* op_package
   return op_getenumvalue;
 }
 
-SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_packagename, SPerl_OP* op_fieldname) {
+SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_fieldname) {
   SPerl_OP* op_getfield = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETFIELD, NULL, NULL);
-  SPerl_OP_sibling_splice(parser, op_getfield, NULL, 0, op_packagename);
-  SPerl_OP_sibling_splice(parser, op_getfield, op_packagename, 0, op_fieldname);
+  SPerl_OP_sibling_splice(parser, op_getfield, NULL, 0, op_var);
+  SPerl_OP_sibling_splice(parser, op_getfield, op_var, 0, op_fieldname);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_FIELD;
-  name->package_name_word = op_packagename->uv.pv;
+  name->var = op_var->uv.pv;
   name->call_name_word = op_fieldname->uv.pv;
   
   SPerl_ARRAY_push(parser->name_checked_ops, op_getfield);
@@ -673,7 +671,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               
               // Field complete name
               SPerl_char* field_complete_name = SPerl_OP_create_complete_name(parser, package_name, field_name);
-              SPerl_HASH_insert(parser->field_complete_name_symtable, field_name, strlen(field_name), field);
+              SPerl_HASH_insert(parser->field_complete_name_symtable, field_complete_name, strlen(field_complete_name), field);
             }
           }
         }
