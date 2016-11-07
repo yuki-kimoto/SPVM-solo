@@ -201,7 +201,11 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
       }
     }
   }
+  
+  SPerl_OP_check_names(parser);
+}
 
+void SPerl_OP_check_names(SPerl_PARSER* parser) {
   // Check names
   SPerl_ARRAY* name_checked_ops = parser->name_checked_ops;
   for (SPerl_int i = 0; i < name_checked_ops->length; i++) {
@@ -269,6 +273,32 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         SPerl_yyerror(parser, message);
       }
     }
+    /*
+    else if (op->code == SPerl_OP_C_CODE_GETFIELD) {
+      SPerl_WORD* package_name_word = name->package_name_word;
+      SPerl_char* package_name = package_name_word->value;
+      SPerl_WORD* call_name_word = name->call_name_word;
+      SPerl_char* call_name = call_name_word->value;
+     
+      SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(call_name);
+      
+      SPerl_char* complete_name = SPerl_OP_create_complete_name(parser, package_name, call_name);
+      name->complete_name = complete_name;
+      
+      SPerl_SUB* found_field= SPerl_HASH_search(
+        parser->field_complete_name_symtable,
+        complete_name,
+        strlen(complete_name)
+      );
+      
+      if (!found_field) {
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(complete_name));
+        sprintf(message, "Error: unknown field \"%s\" at %s line %d\n",
+          complete_name, call_name_word->op->file, call_name_word->op->line);
+        SPerl_yyerror(parser, message);
+      }
+    }
+    */
   }
 }
 
