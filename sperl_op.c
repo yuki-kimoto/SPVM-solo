@@ -244,7 +244,31 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         }
       }
     }
-    
+    else if (op->code = SPerl_OP_C_CODE_GETENUMVALUE) {
+      SPerl_WORD* package_name_word = name->package_name_word;
+      SPerl_char* package_name = package_name_word->value;
+      SPerl_WORD* call_name_word = name->call_name_word;
+      SPerl_char* call_name = call_name_word->value;
+      
+      SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(call_name);
+      
+      SPerl_char* complete_name;
+      sprintf(complete_name, "%s::%s", package_name, call_name);
+      
+      name->complete_name = complete_name;
+      
+      SPerl_SUB* found_enum= SPerl_HASH_search(
+        parser->enum_complete_name_symtable,
+        complete_name,
+        strlen(complete_name)
+      );
+      if (!found_enum) {
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(complete_name));
+        sprintf(message, "Error: unknown enum \"%s\" at %s line %d\n",
+          complete_name, call_name_word->op->file, call_name_word->op->line);
+        SPerl_yyerror(parser, message);
+      }
+    }
   }
 }
 
