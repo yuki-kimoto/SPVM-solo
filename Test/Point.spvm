@@ -27,7 +27,7 @@ package Test::Point {
       
     };
     
-    Test::EnumA->ONE;
+    Test::EnumA::ONE;
   }
   
   sub get2 () : static long {

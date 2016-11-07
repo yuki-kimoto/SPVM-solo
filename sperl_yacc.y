@@ -442,9 +442,9 @@ getfield
     }
 
 getenumvalue
-  : packagename ARROW enumname
+  : enumname
     {
-      $$ = SPerl_OP_build_getenumvalue(parser, $1, $3);
+      $$ = SPerl_OP_build_getenumvalue(parser, $1);
     }
 
 callop

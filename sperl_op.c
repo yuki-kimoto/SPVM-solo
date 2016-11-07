@@ -262,14 +262,9 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
     }
     // Check enum names
     else if (op->code == SPerl_OP_C_CODE_GETENUMVALUE) {
-      SPerl_WORD* package_name_word = name->package_name_word;
-      SPerl_char* package_name = package_name_word->value;
-      SPerl_WORD* base_name_word = name->base_name_word;
-      SPerl_char* base_name = base_name_word->value;
-     
-      SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(base_name);
-      
-      SPerl_char* complete_name = SPerl_OP_create_complete_name(parser, package_name, base_name);
+      SPerl_WORD* abs_name_word = name->abs_name_word;
+      SPerl_char* abs_name = abs_name_word->value;
+      SPerl_char* complete_name = abs_name;
       name->complete_name = complete_name;
       
       SPerl_ENUM_VALUE* found_enum= SPerl_HASH_search(
@@ -277,11 +272,11 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
         complete_name,
         strlen(complete_name)
       );
-
+      
       if (!found_enum) {
         SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(complete_name));
         sprintf(message, "Error: unknown enum \"%s\" at %s line %d\n",
-          complete_name, base_name_word->op->file, base_name_word->op->line);
+          complete_name, abs_name_word->op->file, abs_name_word->op->line);
         SPerl_yyerror(parser, message);
       }
     }
@@ -311,15 +306,12 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
   }
 }
 
-SPerl_OP* SPerl_OP_build_getenumvalue(SPerl_PARSER* parser, SPerl_OP* op_packagename, SPerl_OP* op_enumname) {
-  SPerl_OP* op_getenumvalue = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETENUMVALUE, NULL, NULL);
-  SPerl_OP_sibling_splice(parser, op_getenumvalue, NULL, 0, op_packagename);
-  SPerl_OP_sibling_splice(parser, op_getenumvalue, op_packagename, 0, op_enumname);
+SPerl_OP* SPerl_OP_build_getenumvalue(SPerl_PARSER* parser, SPerl_OP* op_enumname) {
+  SPerl_OP* op_getenumvalue = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETENUMVALUE, op_enumname, NULL);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_ENUM;
-  name->package_name_word = op_packagename->uv.pv;
-  name->base_name_word = op_enumname->uv.pv;
+  name->abs_name_word = op_enumname->uv.pv;
   
   SPerl_ARRAY_push(parser->name_checked_ops, op_getenumvalue);
   
