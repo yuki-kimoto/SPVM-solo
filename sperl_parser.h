@@ -103,7 +103,7 @@ struct SPerl_yy_parser_{
   SPerl_HASH* enum_complete_name_symtable;
   
   // Call subroutines
-  SPerl_ARRAY* callsubs;
+  SPerl_ARRAY* name_checked_ops;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();

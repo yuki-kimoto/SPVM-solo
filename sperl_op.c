@@ -203,9 +203,9 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   }
 
   // Check callsub name
-  SPerl_ARRAY* callsubs = parser->callsubs;
-  for (SPerl_int i = 0; i < callsubs->length; i++) {
-    SPerl_CALLSUB* callsub = SPerl_ARRAY_fetch(callsubs, i);
+  SPerl_ARRAY* name_checked_ops = parser->name_checked_ops;
+  for (SPerl_int i = 0; i < name_checked_ops->length; i++) {
+    SPerl_CALLSUB* callsub = SPerl_ARRAY_fetch(name_checked_ops, i);
     if (!callsub->anon) {
       
       SPerl_char* package_name;
@@ -934,7 +934,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   }
   callsub->argument_count = argument_count;
   
-  SPerl_ARRAY_push(parser->callsubs, callsub);
+  SPerl_ARRAY_push(parser->name_checked_ops, callsub);
   
   op_callsub->uv.pv = callsub;
   
