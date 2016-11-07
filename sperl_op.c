@@ -106,6 +106,25 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   SPerl_OP_check_packages(parser);
   
   // Check bodys
+  SPerl_OP_check_bodys(parser);
+  
+  // Check names
+  SPerl_OP_check_names(parser);
+}
+
+void SPerl_OP_check_packages(SPerl_PARSER* parser) {
+  // Resolve package type
+  SPerl_ARRAY* packages = parser->packages;
+  SPerl_HASH* package_symtable = parser->package_symtable;
+  for (SPerl_int i = 0; i < packages->length; i++) {
+    SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
+    SPerl_TYPE* type = package->type;
+    SPerl_OP_resolve_type(parser, type);
+  }
+}
+
+void SPerl_OP_check_bodys(SPerl_PARSER* parser) {
+  // Check bodys
   SPerl_ARRAY* bodys = parser->bodys;
   SPerl_HASH* body_symtable = parser->body_symtable;
   for (SPerl_int i = 0; i < bodys->length; i++) {
@@ -194,19 +213,6 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         }
       }
     }
-  }
-  
-  SPerl_OP_check_names(parser);
-}
-
-void SPerl_OP_check_packages(SPerl_PARSER* parser) {
-  // Resolve package type
-  SPerl_ARRAY* packages = parser->packages;
-  SPerl_HASH* package_symtable = parser->package_symtable;
-  for (SPerl_int i = 0; i < packages->length; i++) {
-    SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
-    SPerl_TYPE* type = package->type;
-    SPerl_OP_resolve_type(parser, type);
   }
 }
 
