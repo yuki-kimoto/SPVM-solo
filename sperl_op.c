@@ -237,7 +237,7 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
           package_name = name->var->my_var->sub->package_name;
         }
         
-        SPerl_WORD* sub_name_word = name->call_name_word;
+        SPerl_WORD* sub_name_word = name->base_name_word;
         SPerl_char* sub_name = sub_name_word->value;
         
         SPerl_int argument_count = name->argument_count;
@@ -264,12 +264,12 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
     else if (op->code == SPerl_OP_C_CODE_GETENUMVALUE) {
       SPerl_WORD* package_name_word = name->package_name_word;
       SPerl_char* package_name = package_name_word->value;
-      SPerl_WORD* call_name_word = name->call_name_word;
-      SPerl_char* call_name = call_name_word->value;
+      SPerl_WORD* base_name_word = name->base_name_word;
+      SPerl_char* base_name = base_name_word->value;
      
-      SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(call_name);
+      SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(base_name);
       
-      SPerl_char* complete_name = SPerl_OP_create_complete_name(parser, package_name, call_name);
+      SPerl_char* complete_name = SPerl_OP_create_complete_name(parser, package_name, base_name);
       name->complete_name = complete_name;
       
       SPerl_ENUM_VALUE* found_enum= SPerl_HASH_search(
@@ -281,18 +281,18 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
       if (!found_enum) {
         SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(complete_name));
         sprintf(message, "Error: unknown enum \"%s\" at %s line %d\n",
-          complete_name, call_name_word->op->file, call_name_word->op->line);
+          complete_name, base_name_word->op->file, base_name_word->op->line);
         SPerl_yyerror(parser, message);
       }
     }
     else if (op->code == SPerl_OP_C_CODE_GETFIELD) {
       SPerl_char* package_name = name->var->my_var->sub->package_name;
-      SPerl_WORD* call_name_word = name->call_name_word;
-      SPerl_char* call_name = call_name_word->value;
+      SPerl_WORD* base_name_word = name->base_name_word;
+      SPerl_char* base_name = base_name_word->value;
       
-      SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(call_name);
+      SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(base_name);
       
-      SPerl_char* complete_name = SPerl_OP_create_complete_name(parser, package_name, call_name);
+      SPerl_char* complete_name = SPerl_OP_create_complete_name(parser, package_name, base_name);
       name->complete_name = complete_name;
       
       SPerl_FIELD* found_field= SPerl_HASH_search(
@@ -304,7 +304,7 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
       if (!found_field) {
         SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(complete_name));
         sprintf(message, "Error: unknown field \"%s\" at %s line %d\n",
-          complete_name, call_name_word->op->file, call_name_word->op->line);
+          complete_name, base_name_word->op->file, base_name_word->op->line);
         SPerl_yyerror(parser, message);
       }
     }
@@ -319,7 +319,7 @@ SPerl_OP* SPerl_OP_build_getenumvalue(SPerl_PARSER* parser, SPerl_OP* op_package
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_ENUM;
   name->package_name_word = op_packagename->uv.pv;
-  name->call_name_word = op_enumname->uv.pv;
+  name->base_name_word = op_enumname->uv.pv;
   
   SPerl_ARRAY_push(parser->name_checked_ops, op_getenumvalue);
   
@@ -336,7 +336,7 @@ SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_FIELD;
   name->var = op_var->uv.pv;
-  name->call_name_word = op_fieldname->uv.pv;
+  name->base_name_word = op_fieldname->uv.pv;
   
   SPerl_ARRAY_push(parser->name_checked_ops, op_getfield);
   
@@ -516,12 +516,12 @@ SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* 
   return sub_complete_name;
 }
 
-SPerl_char* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* call_name) {
-  SPerl_int length = strlen(package_name) + 2 + strlen(call_name);
+SPerl_char* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* base_name) {
+  SPerl_int length = strlen(package_name) + 2 + strlen(base_name);
   
   SPerl_char* complete_name = SPerl_PARSER_new_string(parser, length);
   
-  sprintf(complete_name, "%s::%s", package_name, call_name);
+  sprintf(complete_name, "%s::%s", package_name, base_name);
   
   return complete_name;
 }
@@ -1041,7 +1041,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   }
   
   if (op_subname->code == SPerl_OP_C_CODE_WORD) {
-    name->call_name_word = op_subname->uv.pv;
+    name->base_name_word = op_subname->uv.pv;
   }
   
   name->anon = anon;
