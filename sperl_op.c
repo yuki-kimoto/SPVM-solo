@@ -96,7 +96,8 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "descripter",
   "anonsub",
   "type",
-  "getenumvalue"
+  "getenumvalue",
+  "getfield"
 };
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
@@ -248,7 +249,6 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
 }
 
 SPerl_OP* SPerl_OP_build_getenumvalue(SPerl_PARSER* parser, SPerl_OP* op_packagename, SPerl_OP* op_enumname) {
-  // Build OP_SUB
   SPerl_OP* op_getenumvalue = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETENUMVALUE, NULL, NULL);
   SPerl_OP_sibling_splice(parser, op_getenumvalue, NULL, 0, op_packagename);
   SPerl_OP_sibling_splice(parser, op_getenumvalue, op_packagename, 0, op_enumname);
@@ -262,6 +262,22 @@ SPerl_OP* SPerl_OP_build_getenumvalue(SPerl_PARSER* parser, SPerl_OP* op_package
   op_getenumvalue->uv.pv = name;
   
   return op_getenumvalue;
+}
+
+SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_packagename, SPerl_OP* op_fieldname) {
+  SPerl_OP* op_getfield = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETFIELD, NULL, NULL);
+  SPerl_OP_sibling_splice(parser, op_getfield, NULL, 0, op_packagename);
+  SPerl_OP_sibling_splice(parser, op_getfield, op_packagename, 0, op_fieldname);
+  
+  SPerl_NAME* name = SPerl_NAME_new(parser);
+  name->package_name_word = op_packagename->uv.pv;
+  name->call_name_word = op_fieldname->uv.pv;
+  
+  SPerl_ARRAY_push(parser->name_checked_ops, op_getfield);
+  
+  op_getfield->uv.pv = name;
+  
+  return op_getfield;
 }
 
 SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
