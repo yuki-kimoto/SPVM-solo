@@ -109,16 +109,14 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     SPerl_OP_resolve_type(parser, type);
   }
   
-  // Bodys
+  // Check bodys
   SPerl_ARRAY* bodys = parser->bodys;
   SPerl_HASH* body_symtable = parser->body_symtable;
-  
-  // Check bodys
   for (SPerl_int i = 0; i < bodys->length; i++) {
-    // Type
+    // Body
     SPerl_BODY* body = SPerl_ARRAY_fetch(bodys, i);
     
-    // Class body
+    // Check class
     if (body->code == SPerl_BODY_C_CODE_CLASS) {
       SPerl_BODY_CLASS* body_class = body->uv.body_class;
       
@@ -205,38 +203,42 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   // Check callsub name
   SPerl_ARRAY* name_checked_ops = parser->name_checked_ops;
   for (SPerl_int i = 0; i < name_checked_ops->length; i++) {
-    SPerl_CALLSUB* callsub = SPerl_ARRAY_fetch(name_checked_ops, i);
-    if (!callsub->anon) {
-      
-      SPerl_char* package_name;
-      if (callsub->package_name_word) {
-        SPerl_WORD* package_name_word = callsub->package_name_word;
-        package_name = package_name_word->value;
-      }
-      else if (callsub->var) {
-        package_name = callsub->var->my_var->sub->package_name;
-      }
-      
-      SPerl_WORD* sub_name_word = callsub->sub_name_word;
-      SPerl_char* sub_name = sub_name_word->value;
-      
-      SPerl_int argument_count = callsub->argument_count;
-      
-      SPerl_char* sub_complete_name
-        = SPerl_OP_create_sub_complete_name(parser, package_name, sub_name, argument_count);
-      
-      callsub->sub_complete_name = sub_complete_name;
-      
-      SPerl_SUB* found_sub= SPerl_HASH_search(
-        parser->sub_complete_name_symtable,
-        sub_complete_name,
-        strlen(sub_complete_name)
-      );
-      if (!found_sub) {
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(sub_complete_name));
-        sprintf(message, "Error: unknown sub \"%s\" at %s line %d\n",
-          sub_complete_name, sub_name_word->op->file, sub_name_word->op->line);
-        SPerl_yyerror(parser, message);
+    SPerl_OP* op = SPerl_ARRAY_fetch(name_checked_ops, i);
+    
+    if (op->code = SPerl_OP_C_CODE_CALLSUB) {
+      SPerl_CALLSUB* callsub = op->uv.pv;
+      if (!callsub->anon) {
+        
+        SPerl_char* package_name;
+        if (callsub->package_name_word) {
+          SPerl_WORD* package_name_word = callsub->package_name_word;
+          package_name = package_name_word->value;
+        }
+        else if (callsub->var) {
+          package_name = callsub->var->my_var->sub->package_name;
+        }
+        
+        SPerl_WORD* sub_name_word = callsub->sub_name_word;
+        SPerl_char* sub_name = sub_name_word->value;
+        
+        SPerl_int argument_count = callsub->argument_count;
+        
+        SPerl_char* sub_complete_name
+          = SPerl_OP_create_sub_complete_name(parser, package_name, sub_name, argument_count);
+        
+        callsub->sub_complete_name = sub_complete_name;
+        
+        SPerl_SUB* found_sub= SPerl_HASH_search(
+          parser->sub_complete_name_symtable,
+          sub_complete_name,
+          strlen(sub_complete_name)
+        );
+        if (!found_sub) {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(sub_complete_name));
+          sprintf(message, "Error: unknown sub \"%s\" at %s line %d\n",
+            sub_complete_name, sub_name_word->op->file, sub_name_word->op->line);
+          SPerl_yyerror(parser, message);
+        }
       }
     }
   }
@@ -934,7 +936,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   }
   callsub->argument_count = argument_count;
   
-  SPerl_ARRAY_push(parser->name_checked_ops, callsub);
+  SPerl_ARRAY_push(parser->name_checked_ops, op_callsub);
   
   op_callsub->uv.pv = callsub;
   
