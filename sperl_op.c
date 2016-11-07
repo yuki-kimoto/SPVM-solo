@@ -244,6 +244,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         }
       }
     }
+    // Check enum names
     else if (op->code == SPerl_OP_C_CODE_GETENUMVALUE) {
       SPerl_WORD* package_name_word = name->package_name_word;
       SPerl_char* package_name = package_name_word->value;
@@ -252,8 +253,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
      
       SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(call_name);
       
-      SPerl_char* complete_name = SPerl_PARSER_new_string(parser, complete_name_length);
-      sprintf(complete_name, "%s::%s", package_name, call_name);
+      SPerl_char* complete_name = SPerl_OP_create_complete_name(parser, package_name, call_name);
       name->complete_name = complete_name;
       
       SPerl_SUB* found_enum= SPerl_HASH_search(
@@ -629,6 +629,10 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               field->op = op_usehassub;
               SPerl_ARRAY_push(fields, field);
               SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
+              
+              // Field complete name
+              SPerl_char* field_complete_name = SPerl_OP_create_complete_name(parser, package_name, field_name);
+              SPerl_HASH_insert(parser->field_complete_name_symtable, field_name, strlen(field_name), field);
             }
           }
         }
