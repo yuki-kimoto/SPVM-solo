@@ -106,7 +106,7 @@
 %type <opval> block enumblock classblock declsub optdeclclassattrs callsub callop
 %type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs 
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
-%type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
+%type <opval> type packagename fieldname subname package packages optenumvalues arraytype
 %type <opval> forstatement whilestatement expression optpackages subtype types opttypes notsubtype
 %type <opval> simplename complexname enumname getenumvalue getfield
 
@@ -320,10 +320,7 @@ decluse
     {
       $$ = SPerl_OP_build_decluse(parser, $1, $2, SPerl_OP_newOP_NULL(parser));
     }
-  | USE packagename '-' packagealias';'
-    {
-      $$ = SPerl_OP_build_decluse(parser, $1, $2, $4);
-    }
+
 
 declhas
   : HAS fieldname ':' optdescripters type ';'
@@ -690,7 +687,6 @@ enumname : simplename
 fieldname : simplename
 subname : simplename
 packagename : complexname
-packagealias : simplename
 
 complexname : WORD
 simplename : WORD

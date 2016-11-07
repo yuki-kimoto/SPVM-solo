@@ -645,10 +645,6 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               SPerl_ARRAY_push(parser->use_stack, use);
               SPerl_ARRAY_push(uses, use);
               
-              if (use->alias_name_word) {
-                SPerl_char* alias_name = use->alias_name_word->value;
-                SPerl_HASH_insert(body_class->alias, alias_name, strlen(alias_name), type);
-              }
               SPerl_HASH_insert(use_symtable, use_type_name, strlen(use_type_name), use);
             }
           }
@@ -740,9 +736,6 @@ SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_O
   
   SPerl_USE* use = SPerl_USE_new(parser);
   use->package_name_word = op_packagename->uv.pv;
-  if (op_packagealias->code != SPerl_OP_C_CODE_NULL) {
-    use->alias_name_word = op_packagealias->uv.pv;
-  }
   use->op = op_use;
   op_use->uv.pv = use;
   

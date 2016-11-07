@@ -1,6 +1,6 @@
 package Test::Foo::Point3D {
 
-  use Test::Point -pt;
+  use Test::Point;
 
   has x : int;
   has last : int;
