@@ -29,7 +29,7 @@
 #include "sperl_body_enum.h"
 #include "sperl_body_class.h"
 #include "sperl_package.h"
-#include "sperl_callsub.h"
+#include "sperl_name.h"
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "null",
@@ -200,33 +200,34 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     }
   }
 
-  // Check callsub name
+  // Check names
   SPerl_ARRAY* name_checked_ops = parser->name_checked_ops;
   for (SPerl_int i = 0; i < name_checked_ops->length; i++) {
     SPerl_OP* op = SPerl_ARRAY_fetch(name_checked_ops, i);
+    SPerl_NAME* name = op->uv.pv;
     
+    // Check sub name
     if (op->code = SPerl_OP_C_CODE_CALLSUB) {
-      SPerl_CALLSUB* callsub = op->uv.pv;
-      if (!callsub->anon) {
+      if (!name->anon) {
         
         SPerl_char* package_name;
-        if (callsub->package_name_word) {
-          SPerl_WORD* package_name_word = callsub->package_name_word;
+        if (name->package_name_word) {
+          SPerl_WORD* package_name_word = name->package_name_word;
           package_name = package_name_word->value;
         }
-        else if (callsub->var) {
-          package_name = callsub->var->my_var->sub->package_name;
+        else if (name->var) {
+          package_name = name->var->my_var->sub->package_name;
         }
         
-        SPerl_WORD* sub_name_word = callsub->sub_name_word;
+        SPerl_WORD* sub_name_word = name->call_name_word;
         SPerl_char* sub_name = sub_name_word->value;
         
-        SPerl_int argument_count = callsub->argument_count;
+        SPerl_int argument_count = name->argument_count;
         
         SPerl_char* sub_complete_name
           = SPerl_OP_create_sub_complete_name(parser, package_name, sub_name, argument_count);
         
-        callsub->sub_complete_name = sub_complete_name;
+        name->complete_name = sub_complete_name;
         
         SPerl_SUB* found_sub= SPerl_HASH_search(
           parser->sub_complete_name_symtable,
@@ -241,6 +242,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         }
       }
     }
+    
   }
 }
 
@@ -909,24 +911,24 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   SPerl_OP_sibling_splice(parser, op_callsub, op_invocant, 0, op_subname);
   SPerl_OP_sibling_splice(parser, op_callsub, op_subname, 0, op_terms);
   
-  SPerl_CALLSUB* callsub = SPerl_CALLSUB_new(parser);
+  SPerl_NAME* name = SPerl_NAME_new(parser);
   if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
-    callsub->var = op_invocant->uv.pv;
+    name->var = op_invocant->uv.pv;
   }
   else if (op_invocant->code == SPerl_OP_C_CODE_WORD) {
-    callsub->package_name_word = op_invocant->uv.pv;
+    name->package_name_word = op_invocant->uv.pv;
   }
   else {
     SPerl_WORD* package_name_word = SPerl_WORD_new(parser);
     package_name_word->value = "CORE";
-    callsub->package_name_word = package_name_word;
+    name->package_name_word = package_name_word;
   }
   
   if (op_subname->code == SPerl_OP_C_CODE_WORD) {
-    callsub->sub_name_word = op_subname->uv.pv;
+    name->call_name_word = op_subname->uv.pv;
   }
   
-  callsub->anon = anon;
+  name->anon = anon;
   
   // Argument count
   SPerl_int argument_count = 0;
@@ -934,11 +936,11 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   while (op_term = SPerl_OP_sibling(parser, op_term)) {
     argument_count++;
   }
-  callsub->argument_count = argument_count;
+  name->argument_count = argument_count;
   
   SPerl_ARRAY_push(parser->name_checked_ops, op_callsub);
   
-  op_callsub->uv.pv = callsub;
+  op_callsub->uv.pv = name;
   
   return op_callsub;
 }

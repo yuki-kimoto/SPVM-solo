@@ -21,8 +21,8 @@ struct SPerl_package;
 typedef struct SPerl_package SPerl_PACKAGE;
 
 /* sperl_type.h */
-struct SPerl_callsub;
-typedef struct SPerl_callsub SPerl_CALLSUB;
+struct SPerl_name;
+typedef struct SPerl_name SPerl_NAME;
 
 /* sperl_type.h */
 struct SPerl_type;
