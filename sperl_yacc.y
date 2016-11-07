@@ -444,7 +444,7 @@ term
 getenumvalue
   : packagename ARROW enumname
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETENUMVALUE, $1, $3);
+      $$ = SPerl_OP_build_getenumvalue(parser, $1, $3);
     }
 
 callop
