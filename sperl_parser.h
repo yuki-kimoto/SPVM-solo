@@ -93,8 +93,14 @@ struct SPerl_yy_parser_{
   // Resolved type string symbol table
   SPerl_HASH* type_resolved_string_symtable;
   
-  // Method global name symbol table(Class name, sub name, argument count)
+  // Method global name symbol table(package name, sub name, argument count)
   SPerl_HASH* sub_complete_name_symtable;
+  
+  // Field complete name symbol table(package name, field_name)
+  SPerl_HASH* field_complete_name_symtable;
+  
+  // Enum complete name symbol table(package name, enum_name)
+  SPerl_HASH* enum_complete_name_symtable;
   
   // Call subroutines
   SPerl_ARRAY* callsubs;

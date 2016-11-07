@@ -46,6 +46,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   parser->sub_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->field_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->enum_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   parser->type_resolved_string_symtable = SPerl_PARSER_new_hash(parser, 0);
   
