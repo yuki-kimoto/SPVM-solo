@@ -107,7 +107,8 @@
 %type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs 
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
-%type <opval> forstatement whilestatement expression optpackages subtype types opttypes notsubtype 
+%type <opval> forstatement whilestatement expression optpackages subtype types opttypes notsubtype
+%type <opval> simplename complexname
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -675,10 +676,13 @@ arraytype
       $$ = SPerl_OP_build_arraytype(parser, $2);
     }
 
-fieldname : WORD
-subname : WORD
-packagename : WORD
-packagealias : WORD
+fieldname : simplename
+subname : simplename
+packagename : complexname
+packagealias : simplename
+
+complexname : WORD
+simplename : WORD
 
 %%
 
