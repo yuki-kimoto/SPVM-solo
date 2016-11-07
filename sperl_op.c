@@ -209,7 +209,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
     SPerl_NAME* name = op->uv.pv;
     
     // Check sub name
-    if (op->code = SPerl_OP_C_CODE_CALLSUB) {
+    if (op->code == SPerl_OP_C_CODE_CALLSUB) {
       if (!name->anon) {
         
         SPerl_char* package_name;
@@ -244,17 +244,16 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         }
       }
     }
-    else if (op->code = SPerl_OP_C_CODE_GETENUMVALUE) {
+    else if (op->code == SPerl_OP_C_CODE_GETENUMVALUE) {
       SPerl_WORD* package_name_word = name->package_name_word;
       SPerl_char* package_name = package_name_word->value;
       SPerl_WORD* call_name_word = name->call_name_word;
       SPerl_char* call_name = call_name_word->value;
-      
+     
       SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(call_name);
       
-      SPerl_char* complete_name;
+      SPerl_char* complete_name = SPerl_PARSER_new_string(parser, complete_name_length);
       sprintf(complete_name, "%s::%s", package_name, call_name);
-      
       name->complete_name = complete_name;
       
       SPerl_SUB* found_enum= SPerl_HASH_search(
@@ -262,6 +261,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
         complete_name,
         strlen(complete_name)
       );
+
       if (!found_enum) {
         SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(complete_name));
         sprintf(message, "Error: unknown enum \"%s\" at %s line %d\n",
@@ -278,6 +278,7 @@ SPerl_OP* SPerl_OP_build_getenumvalue(SPerl_PARSER* parser, SPerl_OP* op_package
   SPerl_OP_sibling_splice(parser, op_getenumvalue, op_packagename, 0, op_enumname);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
+  name->code = SPerl_NAME_C_CODE_ENUM;
   name->package_name_word = op_packagename->uv.pv;
   name->call_name_word = op_enumname->uv.pv;
   
@@ -294,6 +295,7 @@ SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_packagename
   SPerl_OP_sibling_splice(parser, op_getfield, op_packagename, 0, op_fieldname);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
+  name->code = SPerl_NAME_C_CODE_FIELD;
   name->package_name_word = op_packagename->uv.pv;
   name->call_name_word = op_fieldname->uv.pv;
   
@@ -475,6 +477,16 @@ SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* 
   return sub_complete_name;
 }
 
+SPerl_char* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* call_name) {
+  SPerl_int length = strlen(package_name) + 2 + strlen(call_name);
+  
+  SPerl_char* complete_name = SPerl_PARSER_new_string(parser, length);
+  
+  sprintf(complete_name, "%s::%s", package_name, call_name);
+  
+  return complete_name;
+}
+
 SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_packagename, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
   SPerl_int i;
   
@@ -549,6 +561,8 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           }
           SPerl_ARRAY_push(parser->const_values, const_value);
           SPerl_ARRAY_push(enum_values, enum_value);
+          SPerl_char* enum_complete_name = SPerl_OP_create_complete_name(parser, package_name, enum_value->name_word->value);
+          SPerl_HASH_insert(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name), enum_value);
         }
         
         // Set enum body
@@ -970,6 +984,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   SPerl_OP_sibling_splice(parser, op_callsub, op_subname, 0, op_terms);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
+  name->code = SPerl_NAME_C_CODE_SUB;
   if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
     name->var = op_invocant->uv.pv;
   }
