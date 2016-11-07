@@ -108,7 +108,7 @@
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type packagename fieldname subname package packages packagealias optenumvalues arraytype
 %type <opval> forstatement whilestatement expression optpackages subtype types opttypes notsubtype
-%type <opval> simplename complexname enumname
+%type <opval> simplename complexname enumname getenumvalue
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -435,14 +435,17 @@ term
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_FIELD, $1, $3);
     }
-  | packagename ARROW enumname
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ENUMVALUE, $1, $3);
-    }
   | declmy
   | declanonsub
   | callsub
   | callop
+  | getenumvalue
+
+getenumvalue
+  : packagename ARROW enumname
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETENUMVALUE, $1, $3);
+    }
 
 callop
   : '+' term %prec UMINUS
