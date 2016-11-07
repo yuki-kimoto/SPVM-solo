@@ -95,7 +95,8 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "classblock",
   "descripter",
   "anonsub",
-  "type"
+  "type",
+  "getenumvalue"
 };
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
