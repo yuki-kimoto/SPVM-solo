@@ -1152,8 +1152,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   
   // Build OP_SUB
   SPerl_OP* op_callsub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALLSUB, NULL, NULL);
-  SPerl_OP_sibling_splice(parser, op_callsub, NULL, 0, op_invocant);
-  SPerl_OP_sibling_splice(parser, op_callsub, op_invocant, 0, op_subname);
+  SPerl_OP_sibling_splice(parser, op_callsub, NULL, 0, op_subname);
   SPerl_OP_sibling_splice(parser, op_callsub, op_subname, 0, op_terms);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
@@ -1179,6 +1178,11 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
         name->abs_name_word = sub_abs_name_word;
       }
     }
+  }
+  
+  // Add invocant to arguments
+  if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
+    SPerl_OP_sibling_splice(parser, op_terms, op_terms->first, 0, op_invocant);
   }
   
   name->anon = anon;
