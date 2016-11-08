@@ -16,6 +16,7 @@
 #include "sperl_descripter.h"
 #include "sperl_use.h"
 #include "sperl_body_core.h"
+#include "sperl_assign.h"
 
 static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
   SPerl_OP* op = SPerl_OP_newOP(parser, type, NULL, NULL);
@@ -166,7 +167,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          op->uv.iv = SPerl_OP_C_CODE_ADD;
+          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
+          assign->code = SPerl_OP_C_CODE_ADD;
+          op->uv.pv = assign;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -193,7 +196,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          op->uv.iv = SPerl_OP_C_CODE_SUBTRACT;
+          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
+          assign->code = SPerl_OP_C_CODE_SUBTRACT;
+          op->uv.pv = assign;
+
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -207,7 +213,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          op->uv.iv = SPerl_OP_C_CODE_MULTIPLY;
+          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
+          assign->code = SPerl_OP_C_CODE_MULTIPLY;
+          op->uv.pv = assign;
+
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -222,7 +231,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          op->uv.iv = SPerl_OP_C_CODE_DIVIDE;
+          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
+          assign->code = SPerl_OP_C_CODE_DIVIDE;
+          op->uv.pv = assign;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -236,7 +247,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          op->uv.iv = SPerl_OP_C_CODE_MODULO;
+          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
+          assign->code = SPerl_OP_C_CODE_MODULO;
+          op->uv.pv = assign;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -250,7 +263,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          op->uv.iv = SPerl_OP_C_CODE_BIT_XOR;
+          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
+          assign->code = SPerl_OP_C_CODE_BIT_XOR;
+          op->uv.pv = assign;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -267,7 +282,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           if (*parser->bufptr == '=') {
             parser->bufptr++;
             SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-            op->uv.iv = SPerl_OP_C_CODE_OR;
+            SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
+            assign->code = SPerl_OP_C_CODE_OR;
+            op->uv.pv = assign;
             yylvalp->opval = op;
             return ASSIGNOP;
           }
@@ -290,7 +307,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           if (*parser->bufptr == '=') {
             parser->bufptr++;
             SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-            op->uv.iv = SPerl_OP_C_CODE_AND;
+            SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
+            assign->code = SPerl_OP_C_CODE_AND;
+            op->uv.pv = assign;
             yylvalp->opval = op;
             return ASSIGNOP;
           }
