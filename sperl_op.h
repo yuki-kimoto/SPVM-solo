@@ -92,6 +92,7 @@ struct SPerl_op {
   SPerl_int line;
 };
 
+void SPerl_OP_create_vmcode(SPerl_PARSER* parser);
 void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type);
 void SPerl_OP_check(SPerl_PARSER* parser);
 void SPerl_OP_check_names(SPerl_PARSER* parser);
