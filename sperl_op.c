@@ -122,9 +122,8 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         }
         // Next is parent
         else {
-          SPerl_OP* op_parent;
           while (1) {
-            op_parent = op_cur->sibparent;
+            SPerl_OP* op_parent = op_cur->sibparent;
             if (op_parent && op_parent != op_base) {
               
               // Postorder traversal position
@@ -1022,9 +1021,8 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
       }
       // Next is parent
       else {
-        SPerl_OP* op_parent;
         while (1) {
-          op_parent = op_cur->sibparent;
+          SPerl_OP* op_parent = op_cur->sibparent;
           if (op_parent && op_parent != op_base) {
             
             // Postorder traversal position
