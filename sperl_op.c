@@ -943,8 +943,8 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   SPerl_ARRAY* block_base_stack = SPerl_PARSER_new_array(parser, 0);
   
   // Run in AST
-  SPerl_ARRAY* op_stack = SPerl_PARSER_new_array(parser, 0);
-  SPerl_OP* op_cur = op_sub;
+  SPerl_OP* op_base = op_sub;
+  SPerl_OP* op_cur = op_base;
   SPerl_boolean block_start;
   while (op_cur) {
     // Current block base
@@ -1022,7 +1022,6 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
     }
     
     if (op_cur->first) {
-      SPerl_ARRAY_push(op_stack, op_cur);
       op_cur = op_cur->first;
     }
     else {
@@ -1034,8 +1033,8 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
       else {
         SPerl_OP* op_parent;
         while (1) {
-          op_parent = SPerl_ARRAY_pop(op_stack);
-          if (op_parent) {
+          op_parent = op_cur->sibparent;
+          if (op_parent && op_parent != op_base) {
             
             // End of scope
             if (op_parent->code == SPerl_OP_C_CODE_BLOCK) {
@@ -1053,6 +1052,9 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
               // Next is parent's sibling
               op_cur = op_parent_sib;
               break;
+            }
+            else {
+              op_cur = op_parent;
             }
           }
           else {
