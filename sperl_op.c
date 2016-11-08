@@ -167,14 +167,14 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   // Check packages
   SPerl_OP_check_packages(parser);
   
-  // Check constants
-  // SPerl_OP_check_const_values(parser);
-  
   // Check bodys
   SPerl_OP_check_bodys(parser);
   
   // Check names
   SPerl_OP_check_names(parser);
+
+  // Check constants
+  SPerl_OP_check_const_values(parser);
   
   // Check types
   SPerl_OP_check_types(parser);
@@ -191,7 +191,6 @@ void SPerl_OP_check_packages(SPerl_PARSER* parser) {
   }
 }
 
-/*
 void SPerl_OP_check_const_values(SPerl_PARSER* parser) {
   // Resolve const_value type
   SPerl_ARRAY* const_values = parser->const_values;
@@ -201,7 +200,6 @@ void SPerl_OP_check_const_values(SPerl_PARSER* parser) {
     SPerl_OP_resolve_type(parser, type);
   }
 }
-*/
 
 void SPerl_OP_check_bodys(SPerl_PARSER* parser) {
   // Check bodys
@@ -674,6 +672,10 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             const_value = SPerl_CONST_VALUE_new(parser);
             const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
             const_value->uv.int_value = start_value;
+            SPerl_TYPE* type = SPerl_TYPE_create_word_type(parser, "int");
+            SPerl_TYPE_build_parts(parser, type);
+            const_value->type = type;
+
             enum_value->value = const_value;
             start_value++;
           }
