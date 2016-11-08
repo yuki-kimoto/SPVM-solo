@@ -1026,11 +1026,9 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
       op_cur = op_cur->first;
     }
     else {
-      SPerl_OP* op_sib = SPerl_OP_sibling(parser, op_cur);
-      
       // Next sibling
-      if (op_sib) {
-        op_cur = op_sib;
+      if (op_cur->moresib) {
+        op_cur = SPerl_OP_sibling(parser, op_cur);
       }
       // Next is parent
       else {
