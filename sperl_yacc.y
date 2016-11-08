@@ -424,10 +424,6 @@ term
     {
       $$ = SPerl_OP_build_CONSTVALUE(parser, $1);
     }
-  | VAR ARROW '[' term ']'
-    {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_AELEM, $1, $4);
-    }
   | declmy
   | declanonsub
   | callsub
@@ -551,6 +547,10 @@ callop
       SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
       SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
+    }
+  | VAR ARROW '[' term ']'
+    {
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_AELEM, $1, $4);
     }
 
 callsub

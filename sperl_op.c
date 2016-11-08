@@ -224,7 +224,6 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
     SPerl_OP* op = SPerl_ARRAY_fetch(name_checked_ops, i);
     SPerl_NAME* name = op->uv.pv;
     
-    
     // Check sub name
     if (op->code == SPerl_OP_C_CODE_CALLSUB) {
       SPerl_char* sub_abs_name;
