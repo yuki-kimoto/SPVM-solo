@@ -101,7 +101,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
 };
 
 void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
-  /*
   for (SPerl_int i = 0; i < parser->subs->length; i++) {
     SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
     SPerl_OP* op_sub = sub->op;
@@ -109,80 +108,17 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
     // Run OPs
     SPerl_ARRAY* op_stack = SPerl_PARSER_new_array(parser, 0);
     SPerl_OP* op_cur = op_sub;
-    SPerl_boolean block_start;
     while (op_cur) {
-      // Current block base
-      SPerl_int block_base;
-      if (block_base_stack->length == 0) {
-        block_base = 0;
-      }
-      else {
-        SPerl_int* block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
-        block_base = *block_base_ptr;
-      }
       
       // Add my var
       if (op_cur->code == SPerl_OP_C_CODE_VAR) {
-        SPerl_VAR* var = (SPerl_VAR*)op_cur->uv.pv;
         
-        // Serach same name variable
-        SPerl_MY_VAR* my_var = NULL;
-        for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
-          SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
-          if (strcmp(var->name_word->value, my_var_tmp->name_word->value) == 0) {
-            my_var = my_var_tmp;
-            break;
-          }
-        }
-        
-        if (my_var) {
-          // Add my var information to var
-          var->my_var = my_var;
-        }
-        else {
-          // Error
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var->name_word->value));
-          sprintf(message, "Error: \"%s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
-          SPerl_yyerror(parser, message);
-        }
       }
       else if (op_cur->code == SPerl_OP_C_CODE_MY) {
-        SPerl_MY_VAR* my_var = (SPerl_MY_VAR*)op_cur->uv.pv;
         
-        // Serach same name variable
-        SPerl_int found = 0;
-        
-        for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
-          SPerl_MY_VAR* bef_my_var = SPerl_ARRAY_fetch(my_var_stack, i);
-          if (strcmp(my_var->name_word->value, bef_my_var->name_word->value) == 0) {
-            found = 1;
-            break;
-          }
-        }
-        
-        if (found) {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var->name_word->value));
-          sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
-          SPerl_yyerror(parser, message);
-        }
-        else {
-          // Add my var information
-          my_var->id = parser->next_var_id++;
-          SPerl_ARRAY_push(my_vars, my_var);
-          my_var->sub = sub;
-          
-          SPerl_ARRAY_push(my_var_stack, my_var);
-        }
       }
       else if (op_cur->code == SPerl_OP_C_CODE_BLOCK) {
-        if (block_start) {
-          SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
-          *block_base_ptr = my_var_stack->length;
-          SPerl_ARRAY_push(block_base_stack, block_base_ptr);
-        }
-        else {
-          block_start = 1;
-        }
+        
       }
       
       if (op_cur->first) {
@@ -205,13 +141,6 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               // End of scope
               if (op_parent->code == SPerl_OP_C_CODE_BLOCK) {
-                SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
-                if (block_base_ptr) {
-                  SPerl_int block_base = *block_base_ptr;
-                  for (SPerl_int j = 0; j < my_var_stack->length - block_base; j++) {
-                    SPerl_ARRAY_pop(my_var_stack);
-                  }
-                }
               }
               
               SPerl_OP* op_parent_sib = SPerl_OP_sibling(parser, op_parent);
@@ -230,7 +159,6 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
       }
     }
   }
-  */
 }
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
