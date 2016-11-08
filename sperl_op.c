@@ -106,49 +106,37 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
     SPerl_OP* op_sub = sub->op;
     
     // Run OPs
-    SPerl_ARRAY* op_stack = SPerl_PARSER_new_array(parser, 0);
-    SPerl_OP* op_cur = op_sub;
+    SPerl_OP* op_base = op_sub;
+    SPerl_OP* op_cur = op_base;
     while (op_cur) {
       
-      // Do preorder traversal
-      if (op_cur->code == SPerl_OP_C_CODE_VAR) {
-        
-      }
-      else if (op_cur->code == SPerl_OP_C_CODE_MY) {
-        
-      }
-      else if (op_cur->code == SPerl_OP_C_CODE_BLOCK) {
-        
-      }
+      // Preorder traversal position
       
-      // Most left node
       if (op_cur->first) {
-        SPerl_ARRAY_push(op_stack, op_cur);
         op_cur = op_cur->first;
       }
       else {
-        SPerl_OP* op_sib = SPerl_OP_sibling(parser, op_cur);
-        
         // Next sibling
-        if (op_sib) {
-          op_cur = op_sib;
+        if (op_cur->moresib) {
+          op_cur = SPerl_OP_sibling(parser, op_cur);
         }
         // Next is parent
         else {
           SPerl_OP* op_parent;
           while (1) {
-            op_parent = SPerl_ARRAY_pop(op_stack);
-            if (op_parent) {
+            op_parent = op_cur->sibparent;
+            if (op_parent && op_parent != op_base) {
               
-              // Do postorder traversal
-              if (op_parent->code == SPerl_OP_C_CODE_BLOCK) {
-              }
+              // Postorder traversal position
               
               SPerl_OP* op_parent_sib = SPerl_OP_sibling(parser, op_parent);
               if (op_parent_sib) {
                 // Next is parent's sibling
                 op_cur = op_parent_sib;
                 break;
+              }
+              else {
+                op_cur = op_parent;
               }
             }
             else {
@@ -942,11 +930,14 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   // block base position stack
   SPerl_ARRAY* block_base_stack = SPerl_PARSER_new_array(parser, 0);
   
-  // Run in AST
+  // Run OPs
   SPerl_OP* op_base = op_sub;
   SPerl_OP* op_cur = op_base;
   SPerl_boolean block_start;
   while (op_cur) {
+
+    // Preorder traversal position
+
     // Current block base
     SPerl_int block_base;
     if (block_base_stack->length == 0) {
@@ -1035,6 +1026,8 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
         while (1) {
           op_parent = op_cur->sibparent;
           if (op_parent && op_parent != op_base) {
+            
+            // Postorder traversal position
             
             // End of scope
             if (op_parent->code == SPerl_OP_C_CODE_BLOCK) {
