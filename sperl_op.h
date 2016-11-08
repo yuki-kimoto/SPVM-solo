@@ -83,7 +83,6 @@ struct SPerl_op {
   SPerl_OP* last;
   SPerl_OP* sibparent;
   union {
-    SPerl_int iv;
     void* pv;
   } uv;
   SPerl_char* file;
