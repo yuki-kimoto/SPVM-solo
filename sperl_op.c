@@ -110,7 +110,9 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
     SPerl_OP* op_cur = op_base;
     while (op_cur) {
       
-      // Preorder traversal position
+      // [START]Preorder traversal position
+
+      // [END]Preorder traversal position
       
       if (op_cur->first) {
         op_cur = op_cur->first;
@@ -126,7 +128,9 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
             SPerl_OP* op_parent = op_cur->sibparent;
             if (op_parent && op_parent != op_base) {
               
-              // Postorder traversal position
+              // [START]Postorder traversal position
+              
+              // [END]Postorder traversal position
               
               SPerl_OP* op_parent_sib = SPerl_OP_sibling(parser, op_parent);
               if (op_parent_sib) {
