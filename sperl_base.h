@@ -12,9 +12,9 @@ typedef int64_t SPerl_long;
 typedef float SPerl_float;
 typedef double SPerl_double;
 
-/* sperl_base.h */
-struct SPerl_base;
-typedef struct SPerl_base SPerl_BASE;
+/* sperl_assign.h */
+struct SPerl_assign;
+typedef struct SPerl_assign SPerl_ASSIGN;
 
 /* sperl_package.h */
 struct SPerl_package;

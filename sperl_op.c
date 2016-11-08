@@ -1205,8 +1205,6 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* f
   
   op->code = code;
   op->first = first;
-  op->flags = flags;
-  op->private = private;
   
   if (last) {
     if (!first) {

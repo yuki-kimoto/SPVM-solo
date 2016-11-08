@@ -78,8 +78,6 @@ extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 /* Binary operation */
 struct SPerl_op {
   SPerl_char code;
-  SPerl_char flags;
-  SPerl_char private;
   SPerl_boolean moresib;
   SPerl_OP* first;
   SPerl_OP* last;
