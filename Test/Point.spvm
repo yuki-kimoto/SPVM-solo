@@ -30,7 +30,7 @@ package Test::Point {
     Test::EnumA::ONE;
   }
   
-  sub get2 () : static long {
+  sub get2 () : long {
     1;
     my $var1 : int;
     my $var2 : int;
@@ -38,11 +38,6 @@ package Test::Point {
 
   sub get3 () : int {}
   sub get4 ($foo : int) : int {}
-  sub get5 ($foo : const int) : int {}
-  sub get6 ($foo : const int) : int {}
-
   sub get7 ($foo : int, $bar : int) : int {}
-  sub get8 ($foo : const int, $bar : const int) : int {}
-  sub get9 ($foo : const int, $bar : const int) : int {}
 }
 

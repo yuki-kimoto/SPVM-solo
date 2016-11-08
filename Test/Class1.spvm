@@ -1,4 +1,4 @@
 package Test::Class1 : value {
-  has re : const double;
-  has im : const double;
+  has re : double;
+  has im : double;
 }

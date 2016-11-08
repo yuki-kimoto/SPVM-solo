@@ -156,17 +156,17 @@ void SPerl_OP_check_bodys(SPerl_PARSER* parser) {
         // Resolve field type
         SPerl_OP_resolve_type(parser, field->type);
         
-        // Check field descripters
+        // Check field descripters(Not used)
         SPerl_ARRAY* descripters = field->descripters;
         for (SPerl_int k = 0; k < descripters->length; k++) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
-          {
+          //if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
+          //{
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
             sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n",
               SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
-          }
+          //}
         }
       }
       
@@ -178,18 +178,18 @@ void SPerl_OP_check_bodys(SPerl_PARSER* parser) {
         // Resolve sub return type
         SPerl_OP_resolve_type(parser, sub->return_type);
         
-        // Check sub descripters
+        // Check sub descripters(Not used)
         SPerl_ARRAY* descripters = sub->descripters;
         SPerl_int k;
         for (SPerl_int k = 0; k < descripters->length; k++) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
-          {
+          //if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
+          //{
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
             sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
               SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
-          }
+          //}
         }
         
         // Check my var information
@@ -198,17 +198,17 @@ void SPerl_OP_check_bodys(SPerl_PARSER* parser) {
           SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
           SPerl_OP_resolve_type(parser, my_var->type);
           
-          // Check my_var descripters
+          // Check my_var descripters(Not used)
           SPerl_ARRAY* descripters = my_var->descripters;
           for (SPerl_int l = 0; l < descripters->length; l++) {
             SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
-            if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
-            {
+            //if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
+            //{
               SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
               sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n",
                 SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
               SPerl_yyerror(parser, message);
-            }
+            //}
           }
         }
       }

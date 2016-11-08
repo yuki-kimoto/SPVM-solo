@@ -641,26 +641,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_ENUM);
               return ENUM;
             }
-            else if (memcmp(keyword, "const", str_len) == 0) {
-              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DESCRIPTER);
-              SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
-              descripter->code = SPerl_DESCRIPTER_C_CODE_CONST;
-              descripter->op = op;
-              op->uv.pv = descripter;
-              yylvalp->opval = op;
-              
-              return DESCRIPTER;
-            }
-            else if (memcmp(keyword, "static", str_len) == 0) {
-              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DESCRIPTER);
-              SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
-              descripter->code = SPerl_DESCRIPTER_C_CODE_STATIC;
-              descripter->op = op;
-              op->uv.pv = descripter;
-              yylvalp->opval = op;
-              
-              return DESCRIPTER;
-            }
             else if (memcmp(keyword, "value", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DESCRIPTER);
               SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);

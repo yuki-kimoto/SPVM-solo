@@ -5,7 +5,7 @@ package Test::Foo::Point3D {
   has x : int;
   has last : int;
 
-  has title : const int;
+  has title : int;
 
   sub last ($foo : int) : int { }
 
@@ -19,7 +19,7 @@ package Test::Foo::Point3D {
     4;
     "abcdefghijklnm";
   }
-  sub sum2 ($foo : const int, $bar : const int) : static int { }
+  sub sum2 ($foo : int, $bar : int) : int { }
 
   sub sum3 ($foo : int, $bar : float) : int {
     
@@ -60,14 +60,14 @@ package Test::Foo::Point3D {
     return 1;
   }
 
-  sub sum4 ($self : Test::Foo::Point3D) : static int {
+  sub sum4 ($self : Test::Foo::Point3D) : int {
     
     my $title : int;
     my $title1 : double = 4.1567;
    
     my $title2 : int;
-    my $title3 : const int;
-    my $title4 : const const int;
+    my $title3 : int;
+    my $title4 : int;
     my $title5 : int = 1;
     my $title6 : int;
     my $title7 : int = 4;
