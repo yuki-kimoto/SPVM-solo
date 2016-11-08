@@ -100,7 +100,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "getfield"
 };
 
-void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
+void SPerl_OP_check_types(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->subs->length; i++) {
     SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
     SPerl_OP* op_sub = sub->op;
@@ -111,6 +111,15 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
     while (op_cur) {
       
       // [START]Preorder traversal position
+      switch(op_cur->code) {
+        SPerl_OP* op_first = op_cur->first;
+        SPerl_OP* op_last = op_cur->last;
+        
+        case SPerl_OP_C_CODE_ADD:
+          
+        
+        break;
+      }
 
       // [END]Preorder traversal position
       
@@ -164,7 +173,8 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   // Check names
   SPerl_OP_check_names(parser);
   
-  
+  // Check types
+  SPerl_OP_check_types(parser);
 }
 
 void SPerl_OP_check_packages(SPerl_PARSER* parser) {
@@ -391,15 +401,13 @@ SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_
 SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GRAMMER, op_packages, NULL);
   parser->op_grammer = op_grammer;
+
+  // Build constant pool
+  SPerl_OP_build_const_pool(parser);
   
   // Resovle types, check types, descripters, and names.
   SPerl_OP_check(parser);
   
-  // Build constant pool
-  SPerl_OP_build_const_pool(parser);
-  
-  // Create byte code(contains check types)
-  SPerl_OP_create_vmcode(parser);
   
   return op_grammer;
 }

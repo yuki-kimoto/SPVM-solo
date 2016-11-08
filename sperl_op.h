@@ -95,9 +95,10 @@ struct SPerl_op {
 void SPerl_OP_create_vmcode(SPerl_PARSER* parser);
 void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type);
 void SPerl_OP_check(SPerl_PARSER* parser);
-void SPerl_OP_check_names(SPerl_PARSER* parser);
-void SPerl_OP_check_bodys(SPerl_PARSER* parser);
 void SPerl_OP_check_packages(SPerl_PARSER* parser);
+void SPerl_OP_check_bodys(SPerl_PARSER* parser);
+void SPerl_OP_check_names(SPerl_PARSER* parser);
+void SPerl_OP_check_types(SPerl_PARSER* parser);
 
 SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype);
 SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_simpletype);
