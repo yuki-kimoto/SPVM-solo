@@ -110,7 +110,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
     SPerl_OP* op_cur = op_sub;
     while (op_cur) {
       
-      // Add my var
+      // Do preorder traversal
       if (op_cur->code == SPerl_OP_C_CODE_VAR) {
         
       }
@@ -121,6 +121,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         
       }
       
+      // Most left node
       if (op_cur->first) {
         SPerl_ARRAY_push(op_stack, op_cur);
         op_cur = op_cur->first;
@@ -136,10 +137,10 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         else {
           SPerl_OP* op_parent;
           while (1) {
-            op_parent = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
+            op_parent = SPerl_ARRAY_pop(op_stack);
             if (op_parent) {
               
-              // End of scope
+              // Do postorder traversal
               if (op_parent->code == SPerl_OP_C_CODE_BLOCK) {
               }
               
