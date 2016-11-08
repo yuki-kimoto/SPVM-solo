@@ -1036,7 +1036,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
       else {
         SPerl_OP* op_parent;
         while (1) {
-          op_parent = (SPerl_OP*)SPerl_ARRAY_pop(op_stack);
+          op_parent = SPerl_ARRAY_pop(op_stack);
           if (op_parent) {
             
             // End of scope
@@ -1196,7 +1196,7 @@ SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first,
 
 SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
         
-  SPerl_OP *op = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
+  SPerl_OP *op = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
   
   memset(op, 0, sizeof(SPerl_OP));
   
@@ -1207,17 +1207,17 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* f
   
   if (last) {
     if (!first) {
-      first = (SPerl_OP*)SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
+      first = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
       first->code = SPerl_OP_C_CODE_NULL;
     }
     
     op->last = last;
     SPerl_OP_moresib_set(parser, first, last);
     if (op->last)
-      SPerl_OP_lastsib_set(parser, op->last, (SPerl_OP*)op);
+      SPerl_OP_lastsib_set(parser, op->last, op);
   }
   else if (first) {
-    SPerl_OP_lastsib_set(parser, op->first, (SPerl_OP*)op);
+    SPerl_OP_lastsib_set(parser, op->first, op);
   }
 
   return (SPerl_OP *)op;
