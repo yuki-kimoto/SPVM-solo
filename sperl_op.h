@@ -82,11 +82,9 @@ struct SPerl_op {
   SPerl_OP* first;
   SPerl_OP* last;
   SPerl_OP* sibparent;
-  union {
-    void* pv;
-  } uv;
   SPerl_char* file;
   SPerl_int line;
+  void* info;
 };
 
 void SPerl_OP_create_vmcode(SPerl_PARSER* parser);

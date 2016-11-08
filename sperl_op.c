@@ -287,7 +287,7 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
   
   for (SPerl_int i = 0; i < name_checked_ops->length; i++) {
     SPerl_OP* op = SPerl_ARRAY_fetch(name_checked_ops, i);
-    SPerl_NAME* name = op->uv.pv;
+    SPerl_NAME* name = op->info;
     
     // Check sub name
     if (op->code == SPerl_OP_C_CODE_CALLSUB) {
@@ -372,11 +372,11 @@ SPerl_OP* SPerl_OP_build_getenumvalue(SPerl_PARSER* parser, SPerl_OP* op_enumnam
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_ENUM;
-  name->abs_name_word = op_enumname->uv.pv;
+  name->abs_name_word = op_enumname->info;
   
   SPerl_ARRAY_push(parser->name_checked_ops, op_getenumvalue);
   
-  op_getenumvalue->uv.pv = name;
+  op_getenumvalue->info = name;
   
   return op_getenumvalue;
 }
@@ -388,12 +388,12 @@ SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_FIELD;
-  name->var = op_var->uv.pv;
-  name->base_name_word = op_fieldname->uv.pv;
+  name->var = op_var->info;
+  name->base_name_word = op_fieldname->info;
   
   SPerl_ARRAY_push(parser->name_checked_ops, op_getfield);
   
-  op_getfield->uv.pv = name;
+  op_getfield->info = name;
   
   return op_getfield;
 }
@@ -598,7 +598,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   SPerl_OP_sibling_splice(parser, op_package, op_type, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_package, op_descripters, 0, op_block);
   
-  SPerl_WORD* package_name_word = op_packagename->uv.pv;
+  SPerl_WORD* package_name_word = op_packagename->info;
   SPerl_char* package_name = package_name_word->value;
   SPerl_HASH* package_symtable = parser->package_symtable;
   
@@ -645,9 +645,9 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_OP* op_enumvalue = op_enumvalues->first;
         while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
           SPerl_ENUM_VALUE* enum_value = SPerl_ENUM_VALUE_new(parser);
-          enum_value->name_word = op_enumvalue->first->uv.pv;
+          enum_value->name_word = op_enumvalue->first->info;
           if (op_enumvalue->last) {
-            enum_value->value = op_enumvalue->last->uv.pv;
+            enum_value->value = op_enumvalue->last->info;
           }
           
           SPerl_CONST_VALUE* const_value;
@@ -695,7 +695,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         while (op_usehassub = SPerl_OP_sibling(parser, op_usehassub)) {
           // Use
           if (op_usehassub->code == SPerl_OP_C_CODE_USE) {
-            SPerl_USE* use = op_usehassub->uv.pv;
+            SPerl_USE* use = op_usehassub->info;
             SPerl_char* use_type_name = use->package_name_word->value;
             SPerl_USE* found_use
               = SPerl_HASH_search(use_symtable, use_type_name, strlen(use_type_name));
@@ -714,7 +714,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           }
           // Field
           else if (op_usehassub->code == SPerl_OP_C_CODE_HAS) {
-            SPerl_FIELD* field = (SPerl_FIELD*)op_usehassub->uv.pv;
+            SPerl_FIELD* field = op_usehassub->info;
             SPerl_char* field_name = field->name_word->value;
             SPerl_FIELD* found_field
               = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
@@ -781,7 +781,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     }
     // Typedef
     else {
-      type = op_type->uv.pv;
+      type = op_type->info;
     }
     
     SPerl_TYPE_build_parts(parser, type);
@@ -800,9 +800,9 @@ SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_O
   SPerl_OP_sibling_splice(parser, op_use, op_packagename, 0, op_packagealias);
   
   SPerl_USE* use = SPerl_USE_new(parser);
-  use->package_name_word = op_packagename->uv.pv;
+  use->package_name_word = op_packagename->info;
   use->op = op_use;
-  op_use->uv.pv = use;
+  op_use->info = use;
   
   return op_use;
 }
@@ -815,18 +815,18 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   
   // Create my var information
   SPerl_MY_VAR* my_var = SPerl_MY_VAR_new(parser);
-  SPerl_VAR* var = (SPerl_VAR*)op_var->uv.pv;
+  SPerl_VAR* var = op_var->info;
   my_var->name_word = var->name_word;
   
   // descripters
   my_var->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // type
-  my_var->type = op_type->uv.pv;
+  my_var->type = op_type->info;
   SPerl_TYPE_build_parts(parser, my_var->type);
   
   // Add my_var information to op
-  op_my->uv.pv = my_var;
+  op_my->info = my_var;
   
   return op_my;
 }
@@ -842,26 +842,26 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   SPerl_FIELD* field = SPerl_FIELD_new(parser);
   
   // Name
-  field->name_word = op_field_name->uv.pv;
+  field->name_word = op_field_name->info;
 
   // Descripters
   field->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // Type
-  field->type = op_type->uv.pv;
+  field->type = op_type->info;
   
   // Create type string parts
   SPerl_TYPE_build_parts(parser, field->type);
   
   // Set field informaiton
-  op_has->uv.pv = field;
+  op_has->info = field;
   
   return op_has;
 }
 
 SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl_PARSER* parser, SPerl_OP* op_const) {
 
-  SPerl_CONST_VALUE* const_value = op_const->uv.pv;
+  SPerl_CONST_VALUE* const_value = op_const->info;
   SPerl_ARRAY_push(parser->const_values, const_value);
   
   return op_const;
@@ -880,7 +880,7 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
   else {
     SPerl_OP* op_descripter = op_descripters->first;
     while (op_descripter = op_descripter->moresib ? op_descripter->sibparent : NULL) {
-      SPerl_ARRAY_push(descripters, op_descripter->uv.pv);
+      SPerl_ARRAY_push(descripters, op_descripter->info);
     }
   }
   
@@ -902,7 +902,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
     sub->anon = 1;
   }
   else {
-    sub->name_word = op_subname->uv.pv;
+    sub->name_word = op_subname->info;
   }
   
   // subargs
@@ -918,7 +918,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   sub->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // return type
-  sub->return_type = op_type->uv.pv;
+  sub->return_type = op_type->info;
   SPerl_TYPE_build_parts(parser, sub->return_type);
   
   // Save block
@@ -961,7 +961,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
     
     // Add my var
     if (op_cur->code == SPerl_OP_C_CODE_VAR) {
-      SPerl_VAR* var = (SPerl_VAR*)op_cur->uv.pv;
+      SPerl_VAR* var = op_cur->info;
       
       // Serach same name variable
       SPerl_MY_VAR* my_var = NULL;
@@ -985,7 +985,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
       }
     }
     else if (op_cur->code == SPerl_OP_C_CODE_MY) {
-      SPerl_MY_VAR* my_var = (SPerl_MY_VAR*)op_cur->uv.pv;
+      SPerl_MY_VAR* my_var = op_cur->info;
       
       // Serach same name variable
       SPerl_int found = 0;
@@ -1075,7 +1075,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   // ID
   sub->id = parser->current_sub_id++;
   
-  op_sub->uv.pv = sub;
+  op_sub->info = sub;
   
   return op_sub;
 }
@@ -1091,7 +1091,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   name->code = SPerl_NAME_C_CODE_SUB;
   
   if (!anon) {
-    SPerl_WORD* sub_name_word = op_subname->uv.pv;
+    SPerl_WORD* sub_name_word = op_subname->info;
     SPerl_char* sub_name = sub_name_word->value;
     
     if (strstr(sub_name, ":")) {
@@ -1099,7 +1099,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
     }
     else {
       if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
-        name->var = op_invocant->uv.pv;
+        name->var = op_invocant->info;
         name->base_name_word = sub_name_word;
       }
       else {
@@ -1131,7 +1131,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
     SPerl_ARRAY_push(parser->name_checked_ops, op_callsub);
   }
   
-  op_callsub->uv.pv = name;
+  op_callsub->info = name;
   
   return op_callsub;
 }
@@ -1144,19 +1144,19 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_typ
   
   // sub type
   SPerl_TYPE_SUB* type_sub = SPerl_TYPE_SUB_new(parser);
-  type_sub->return_type = op_return_type->uv.pv;
+  type_sub->return_type = op_return_type->info;
   SPerl_ARRAY* argument_types = SPerl_PARSER_new_array(parser, 0);
   {
     SPerl_OP* op_argument_type = op_argument_types->first;
     while (op_argument_type = SPerl_OP_sibling(parser, op_argument_type)) {
-      SPerl_ARRAY_push(argument_types, op_argument_type->uv.pv);
+      SPerl_ARRAY_push(argument_types, op_argument_type->info);
     }
   }
   type_sub->argument_types = argument_types;
   
   type->uv.type_sub = type_sub;
   
-  op_type->uv.pv = type;
+  op_type->info = type;
   
   return op_type;
 }
@@ -1168,10 +1168,10 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
   type->code = SPerl_TYPE_C_CODE_WORD;
   
   SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
-  type_word->name_word = op_wordtype->uv.pv;
+  type_word->name_word = op_wordtype->info;
   type->uv.type_word = type_word;
   
-  op_type->uv.pv = type;
+  op_type->info = type;
   
   return op_type;
 }
@@ -1181,14 +1181,14 @@ SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_type) {
   
   // Type array
   SPerl_TYPE_ARRAY* type_array = SPerl_TYPE_ARRAY_new(parser);
-  type_array->type = op_type->uv.pv;
+  type_array->type = op_type->info;
   
   // Type
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_ARRAY;
   type->uv.type_array = type_array;
   
-  op_type_array->uv.pv = type;
+  op_type_array->info = type;
   
   return op_type_array;
 }

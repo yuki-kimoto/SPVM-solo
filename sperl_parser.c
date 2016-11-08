@@ -183,7 +183,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
   SPerl_int code = op->code;
   printf("%s", SPerl_OP_C_CODE_NAMES[code]);
   if (code == SPerl_OP_C_CODE_CONST_VALUE) {
-    SPerl_CONST_VALUE* const_value = op->uv.pv;
+    SPerl_CONST_VALUE* const_value = op->info;
     switch(const_value->code) {
       case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
         printf(" boolean %d", const_value->uv.int_value);
@@ -215,11 +215,11 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
     }
   }
   else if (code == SPerl_OP_C_CODE_VAR) {
-    SPerl_VAR* var = op->uv.pv;
+    SPerl_VAR* var = op->info;
     printf(" \"%s\"", var->name_word->value);
   }
   else if (code == SPerl_OP_C_CODE_WORD) {
-    SPerl_WORD* word = op->uv.pv;
+    SPerl_WORD* word = op->info;
     printf(" \"%s\"", word->value);
   }
   printf("\n");

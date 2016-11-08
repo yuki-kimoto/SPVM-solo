@@ -54,15 +54,15 @@
     
     switch(type) {
       case WORD:
-        fprintf(file, "\"%s\"", ((SPerl_WORD*)yylval.opval->uv.pv)->value);
+        fprintf(file, "\"%s\"", ((SPerl_WORD*)yylval.opval->info)->value);
         break;
       case VAR: {
-        SPerl_VAR* var = (SPerl_VAR*)((SPerl_OP*)yylval.opval)->uv.pv;
+        SPerl_VAR* var = yylval.opval->info;
         fprintf(file, "\"%s\"", var->name_word->value);
         break;
       }
       case CONSTVALUE: {
-        SPerl_CONST_VALUE* const_value = (SPerl_CONST_VALUE*)((SPerl_OP*)yylval.opval)->uv.pv;
+        SPerl_CONST_VALUE* const_value = yylval.opval->info;
         
         switch(const_value->code) {
           case SPerl_CONST_VALUE_C_CODE_BOOLEAN:

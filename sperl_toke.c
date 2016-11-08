@@ -169,7 +169,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
           SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
           assign->code = SPerl_OP_C_CODE_ADD;
-          op->uv.pv = assign;
+          op->info = assign;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -198,7 +198,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
           SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
           assign->code = SPerl_OP_C_CODE_SUBTRACT;
-          op->uv.pv = assign;
+          op->info = assign;
 
           yylvalp->opval = op;
           return ASSIGNOP;
@@ -215,7 +215,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
           SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
           assign->code = SPerl_OP_C_CODE_MULTIPLY;
-          op->uv.pv = assign;
+          op->info = assign;
 
           yylvalp->opval = op;
           return ASSIGNOP;
@@ -233,7 +233,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
           SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
           assign->code = SPerl_OP_C_CODE_DIVIDE;
-          op->uv.pv = assign;
+          op->info = assign;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -249,7 +249,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
           SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
           assign->code = SPerl_OP_C_CODE_MODULO;
-          op->uv.pv = assign;
+          op->info = assign;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -265,7 +265,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
           SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
           assign->code = SPerl_OP_C_CODE_BIT_XOR;
-          op->uv.pv = assign;
+          op->info = assign;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -284,7 +284,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
             SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
             assign->code = SPerl_OP_C_CODE_OR;
-            op->uv.pv = assign;
+            op->info = assign;
             yylvalp->opval = op;
             return ASSIGNOP;
           }
@@ -309,7 +309,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
             SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
             assign->code = SPerl_OP_C_CODE_AND;
-            op->uv.pv = assign;
+            op->info = assign;
             yylvalp->opval = op;
             return ASSIGNOP;
           }
@@ -434,7 +434,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
         const_value->code = SPerl_CONST_VALUE_C_CODE_CHAR;
         const_value->uv.int_value = ch;
-        op->uv.pv = const_value;
+        op->info = const_value;
         yylvalp->opval = op;
         
         
@@ -474,7 +474,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
         const_value->code = SPerl_CONST_VALUE_C_CODE_STRING;
         const_value->uv.string_value = str;
-        op->uv.pv = const_value;
+        op->info = const_value;
         yylvalp->opval = (SPerl_OP*)op;
 
         return CONSTVALUE;
@@ -504,7 +504,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_VAR* var = SPerl_VAR_new(parser);
           var->name_word = var_name_word;
           var->op = op;
-          op->uv.pv = var;
+          op->info = var;
           yylvalp->opval = op;
           
           return VAR;
@@ -546,7 +546,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
             const_value->code = SPerl_CONST_VALUE_C_CODE_DOUBLE;
             const_value->uv.double_value = num;
-            op->uv.pv = const_value;
+            op->info = const_value;
             yylvalp->opval = (SPerl_OP*)op;
             
             return CONSTVALUE;
@@ -560,7 +560,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
             const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
             const_value->uv.int_value = num;
-            op->uv.pv = const_value;
+            op->info = const_value;
             yylvalp->opval = (SPerl_OP*)op;
             
             return CONSTVALUE;
@@ -665,7 +665,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
               descripter->code = SPerl_DESCRIPTER_C_CODE_VALUE;
               descripter->op = op;
-              op->uv.pv = descripter;
+              op->info = descripter;
               yylvalp->opval = op;
               
               return DESCRIPTER;
@@ -675,7 +675,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
               const_value->code = SPerl_CONST_VALUE_C_CODE_BOOLEAN;
               const_value->uv.int_value = 1;
-              op->uv.pv = const_value;
+              op->info = const_value;
               yylvalp->opval = op;
 
               return CONSTVALUE;
@@ -685,7 +685,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
               const_value->code = SPerl_CONST_VALUE_C_CODE_BOOLEAN;
               const_value->uv.int_value = 0;
-              op->uv.pv = const_value;
+              op->info = const_value;
               yylvalp->opval = op;
 
               return CONSTVALUE;
@@ -696,7 +696,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_WORD* word = SPerl_WORD_new(parser);
           word->value = keyword;
           word->op = op;
-          op->uv.pv = word;
+          op->info = word;
           yylvalp->opval = (SPerl_OP*)op;
 
           if (expect == SPerl_TOKE_C_EXPECT_PACKAGENAME) {
