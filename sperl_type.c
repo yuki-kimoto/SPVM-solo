@@ -25,6 +25,43 @@ SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
   return type;
 }
 
+SPerl_TYPE* SPerl_TYPE_create_word_type(SPerl_PARSER* parser, SPerl_char* type_name) {
+
+  SPerl_WORD* type_name_word = SPerl_WORD_new(parser);
+  type_name_word->value = type_name;
+  
+  SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
+  type_word->name_word = type_name_word;
+  
+  SPerl_TYPE* type = SPerl_TYPE_new(parser);
+  type->code = SPerl_TYPE_C_CODE_WORD;
+  type->uv.type_word = type_word;
+  
+  return type;
+}
+
+SPerl_TYPE* SPerl_TYPE_create_array_type(SPerl_PARSER* parser, SPerl_char* type_name) {
+
+  SPerl_WORD* type_name_word = SPerl_WORD_new(parser);
+  type_name_word->value = type_name;
+  
+  SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
+  type_word->name_word = type_name_word;
+  
+  SPerl_TYPE* type_w = SPerl_TYPE_new(parser);
+  type_w->code = SPerl_TYPE_C_CODE_WORD;
+  type_w->uv.type_word = type_word;
+  
+  SPerl_TYPE_ARRAY* type_array = SPerl_TYPE_ARRAY_new(parser);
+  type_array->type = type_w;
+
+  SPerl_TYPE* type = SPerl_TYPE_new(parser);
+  type->code = SPerl_TYPE_C_CODE_ARRAY;
+  type->uv.type_array = type_array;
+  
+  return type;
+}
+
 void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* parts) {
   
   if (type->code == SPerl_TYPE_C_CODE_WORD) {

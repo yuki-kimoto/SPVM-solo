@@ -167,6 +167,9 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   // Check packages
   SPerl_OP_check_packages(parser);
   
+  // Check constants
+  // SPerl_OP_check_const_values(parser);
+  
   // Check bodys
   SPerl_OP_check_bodys(parser);
   
@@ -187,6 +190,18 @@ void SPerl_OP_check_packages(SPerl_PARSER* parser) {
     SPerl_OP_resolve_type(parser, type);
   }
 }
+
+/*
+void SPerl_OP_check_const_values(SPerl_PARSER* parser) {
+  // Resolve const_value type
+  SPerl_ARRAY* const_values = parser->const_values;
+  for (SPerl_int i = 0; i < const_values->length; i++) {
+    SPerl_CONST_VALUE* const_value = SPerl_ARRAY_fetch(const_values, i);
+    SPerl_TYPE* type = const_value->type;
+    SPerl_OP_resolve_type(parser, type);
+  }
+}
+*/
 
 void SPerl_OP_check_bodys(SPerl_PARSER* parser) {
   // Check bodys

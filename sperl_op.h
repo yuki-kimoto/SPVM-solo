@@ -94,6 +94,7 @@ void SPerl_OP_check_packages(SPerl_PARSER* parser);
 void SPerl_OP_check_bodys(SPerl_PARSER* parser);
 void SPerl_OP_check_names(SPerl_PARSER* parser);
 void SPerl_OP_check_types(SPerl_PARSER* parser);
+void SPerl_OP_check_const_values(SPerl_PARSER* parser);
 
 SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype);
 SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_simpletype);
