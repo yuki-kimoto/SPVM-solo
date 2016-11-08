@@ -142,9 +142,9 @@ package Test::Foo::Point3D {
     $test->sum(1);
     $test->sum(1, 2);
 
-    Test::Foo::Point3D->sum();
-    Test::Foo::Point3D->sum(1);
-    Test::Foo::Point3D->sum(1, 2);
+    Test::Foo::Point3D::sum();
+    Test::Foo::Point3D::sum(1);
+    Test::Foo::Point3D::sum(1, 2);
 
     $self->x = 3;
     $test->last;

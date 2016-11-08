@@ -566,10 +566,6 @@ callsub
     {
       $$ = SPerl_OP_build_callsub(parser, $1, SPerl_OP_newOP_NULL(parser), $4, 1);
     }
-  | packagename ARROW subname '(' optterms ')'
-    {
-      $$ = SPerl_OP_build_callsub(parser, $1, $3, $5, 0);
-    }
 
 block 
   : '{' optstatements '}'

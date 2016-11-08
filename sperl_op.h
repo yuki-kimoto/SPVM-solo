@@ -116,11 +116,11 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser);
 SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser);
 SPerl_OP* SPerl_OP_newOP_NULL(SPerl_PARSER* parser);
 
+SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* sub_abs_name, SPerl_int argument_count);
 SPerl_char* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* call_name);
-SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* sub_name, SPerl_int argument_count);
+SPerl_char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* base_name);
 
 SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_descripters);
-SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* sub_name, SPerl_int argument_count);
 
 SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP *first, SPerl_OP *last);
 SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
