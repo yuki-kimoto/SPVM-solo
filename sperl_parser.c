@@ -25,9 +25,10 @@
 #include "sperl_body_class.h"
 #include "sperl_body_enum.h"
 #include "sperl_package.h"
+#include "sperl_opdef.h"
 
 SPerl_PARSER* SPerl_PARSER_new() {
-  SPerl_PARSER* parser = (SPerl_PARSER*)calloc(1, sizeof(SPerl_PARSER));
+  SPerl_PARSER* parser = calloc(1, sizeof(SPerl_PARSER));
   
   // Manipulate memory
   parser->array_ptrs = SPerl_ARRAY_new(0);
@@ -61,6 +62,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
   
   parser->bufptr = "";
+  
+  parser->opdefs = SPerl_PARSER_new_array(parser, 0);
   
   // Add core type
   for (SPerl_int i = 0; i < 8; i++) {
@@ -103,7 +106,15 @@ SPerl_PARSER* SPerl_PARSER_new() {
   }
   
   // Add core opdef
-  
+  for (SPerl_int i = 0; i < 14; i++) {
+    SPerl_OPDEF* opdef = SPerl_OPDEF_new(parser);
+    
+    // Return type
+    SPerl_TYPE* return_type = SPerl_TYPE_create_word_type(parser, SPerl_OPDEF_C_RETURN_TYPE_NAMES[i]);
+    SPerl_TYPE_build_parts(parser, return_type);
+    opdef->return_type = return_type;
+    
+  }
   
   return parser;
 }

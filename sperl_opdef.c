@@ -18,7 +18,7 @@ SPerl_char* const SPerl_OPDEF_C_CODE_NAMES[] = {
   "ddivide"
 };
 
-SPerl_char* const SPerl_OPDEF_C_CODE_RETURN_TYPE_NAMES[] = {
+SPerl_char* const SPerl_OPDEF_C_RETURN_TYPE_NAMES[] = {
   "int",    // iadd
   "long",   // ladd
   "float",  // fadd
@@ -35,7 +35,7 @@ SPerl_char* const SPerl_OPDEF_C_CODE_RETURN_TYPE_NAMES[] = {
   "double", // ddivide
 };
 
-SPerl_char* const SPerl_OPDEF_C_CODE_ARGUMENT_TYPE_NAMES[] = {
+SPerl_char* const SPerl_OPDEF_C_ARGUMENT_TYPE_NAMES[] = {
   "int",    // iadd
   "long",   // ladd
   "float",  // fadd
@@ -52,7 +52,7 @@ SPerl_char* const SPerl_OPDEF_C_CODE_ARGUMENT_TYPE_NAMES[] = {
   "double", // ddivide
 };
 
-SPerl_int const SPerl_OPDEF_C_CODE_ARGUMENT_COUNTS[] = {
+SPerl_int const SPerl_OPDEF_C_ARGUMENT_COUNTS[] = {
   2, // iadd
   2, // ladd
   2, // fadd

@@ -104,6 +104,9 @@ struct SPerl_yy_parser_{
   
   // Call subroutines
   SPerl_ARRAY* name_checked_ops;
+  
+  // opdefs
+  SPerl_ARRAY* opdefs;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();

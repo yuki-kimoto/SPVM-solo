@@ -3,6 +3,10 @@
 
 #include "sperl_base.h"
 
+
+
+
+// 14 count
 enum {
   SPerl_OPDEF_C_CODE_IADD,
   SPerl_OPDEF_C_CODE_LADD,
@@ -21,9 +25,9 @@ enum {
 };
 
 extern SPerl_char* const SPerl_OPDEF_C_CODE_NAMES[];
-extern SPerl_char* const SPerl_OPDEF_C_CODE_RETURN_TYPE_NAMES[];
-extern SPerl_char* const SPerl_OPDEF_C_CODE_ARGUMENT_TYPE_NAMES[];
-extern SPerl_int const SPerl_OPDEF_C_CODE_ARGUMENT_COUNTS[];
+extern SPerl_char* const SPerl_OPDEF_C_RETURN_TYPE_NAMES[];
+extern SPerl_char* const SPerl_OPDEF_C_ARGUMENT_TYPE_NAMES[];
+extern SPerl_int const SPerl_OPDEF_C_ARGUMENT_COUNTS[];
 
 // Field information
 struct SPerl_opdef {
