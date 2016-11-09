@@ -111,10 +111,6 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
     SPerl_OP* op_cur = op_base;
     SPerl_boolean finish = 0;
     while (op_cur) {
-      if (finish) {
-        break;
-      }
-      
       // [START]Preorder traversal position
       
       // [END]Preorder traversal position
@@ -142,6 +138,9 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
           else {
             op_cur = op_cur->sibparent;
           }
+        }
+        if (finish) {
+          break;
         }
       }
     }
@@ -967,10 +966,6 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   SPerl_boolean block_start;
   SPerl_boolean finish = 0;
   while (op_cur) {
-    if (finish) {
-      break;
-    }
-
     // [START]Preorder traversal position
 
     // Current block base
@@ -1083,6 +1078,10 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
         else {
           op_cur = op_cur->sibparent;
         }
+      }
+      
+      if (finish) {
+        break;
       }
     }
   }
