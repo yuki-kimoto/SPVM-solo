@@ -182,10 +182,12 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
               SPerl_OP* last = op_cur->last;
               SPerl_int first_type_id = SPerl_OP_get_return_type_id(parser, first);
               SPerl_int last_type_id = SPerl_OP_get_return_type_id(parser, last);
+              SPerl_OPDEF* opdef = op_cur->info;
               
               if (!SPerl_TYPE_is_core_type(parser, first_type_id) || !SPerl_TYPE_is_core_type(parser, last_type_id)) {
-                SPerl_char* message = SPerl_PARSER_new_string(parser, 200);
-                sprintf(message, "Error: operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
+                sprintf(message, "Error: %s operator can receive only core type at %s line %d\n",
+                  opdef->symbol, op_cur->file, op_cur->line);
                 SPerl_yyerror(parser, message);
               }
             }
@@ -1221,6 +1223,22 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   op_callsub->info = name;
   
   return op_callsub;
+}
+
+SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl_OP* op_first, SPerl_OP* op_last, SPerl_char* symbol) {
+  
+  // Build OP_SUB
+  SPerl_OP_sibling_splice(parser, op_callop, NULL, 0, op_first);
+  if (op_last) {
+    SPerl_OP_sibling_splice(parser, op_callop, op_first, 0, op_last);
+  }
+  
+  SPerl_OPDEF* opdef = SPerl_OPDEF_new(parser);
+  opdef->symbol = symbol;
+  
+  op_callop->info = opdef;
+  
+  return op_callop;
 }
 
 SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_types, SPerl_OP* op_return_type) {

@@ -35,6 +35,7 @@ struct SPerl_opdef {
   SPerl_TYPE* return_type;
   SPerl_ARRAY* argument_types;
   SPerl_int argument_count;
+  SPerl_char* symbol;
 };
 
 SPerl_OPDEF* SPerl_OPDEF_new(SPerl_PARSER* parser);

@@ -493,9 +493,7 @@ callop
   | term '+' term %prec ADDOP
     {
       $2->code = SPerl_OP_C_CODE_ADD;
-      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
-      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
-      $$ = $2;
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3, "+");
     }
   | term '-' term %prec ADDOP
     {
