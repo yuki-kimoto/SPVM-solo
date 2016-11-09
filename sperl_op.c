@@ -114,8 +114,6 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
       switch(op_cur->code) {
         SPerl_OP* op_first = op_cur->first;
         SPerl_OP* op_last = op_cur->last;
-        
-        case SPerl_OP_C_CODE_ADD:
           
         
         break;
@@ -138,6 +136,13 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
             if (op_parent && op_parent != op_base) {
               
               // [START]Postorder traversal position
+              switch(op_cur->code) {
+                SPerl_OP* op_first = op_cur->first;
+                SPerl_OP* op_last = op_cur->last;
+                  
+                
+                break;
+              }
               
               // [END]Postorder traversal position
               
@@ -962,9 +967,13 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   SPerl_OP* op_base = op_sub;
   SPerl_OP* op_cur = op_base;
   SPerl_boolean block_start;
+  SPerl_boolean finish = 0;
   while (op_cur) {
+    if (finish) {
+      break;
+    }
 
-    // Preorder traversal position
+    // [START]Preorder traversal position
 
     // Current block base
     SPerl_int block_base;
@@ -1040,47 +1049,41 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
       }
     }
     
+    // [END]Preorder traversal position
+
     if (op_cur->first) {
       op_cur = op_cur->first;
     }
     else {
-      // Next sibling
-      if (op_cur->moresib) {
-        op_cur = SPerl_OP_sibling(parser, op_cur);
-      }
-      // Next is parent
-      else {
-        while (1) {
-          SPerl_OP* op_parent = op_cur->sibparent;
-          if (op_parent && op_parent != op_base) {
-            
-            // Postorder traversal position
-            
-            // End of scope
-            if (op_parent->code == SPerl_OP_C_CODE_BLOCK) {
-              SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
-              if (block_base_ptr) {
-                SPerl_int block_base = *block_base_ptr;
-                for (SPerl_int j = 0; j < my_var_stack->length - block_base; j++) {
-                  SPerl_ARRAY_pop(my_var_stack);
-                }
-              }
-            }
-            
-            SPerl_OP* op_parent_sib = SPerl_OP_sibling(parser, op_parent);
-            if (op_parent_sib) {
-              // Next is parent's sibling
-              op_cur = op_parent_sib;
-              break;
-            }
-            else {
-              op_cur = op_parent;
+      while (1) {
+        // [START]Postorder traversal position
+        
+        // End of scope
+        if (op_cur->code == SPerl_OP_C_CODE_BLOCK) {
+          SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
+          if (block_base_ptr) {
+            SPerl_int block_base = *block_base_ptr;
+            for (SPerl_int j = 0; j < my_var_stack->length - block_base; j++) {
+              SPerl_ARRAY_pop(my_var_stack);
             }
           }
-          else {
-            op_cur = NULL;
-            break;
-          }
+        }
+        
+        // [END]Postorder traversal position
+        
+        if (op_cur == op_base) {
+          finish = 1;
+          break;
+        }
+        
+        // Next sibling
+        if (op_cur->moresib) {
+          op_cur = SPerl_OP_sibling(parser, op_cur);
+          break;
+        }
+        // Next is parent
+        else {
+          op_cur = op_cur->sibparent;
         }
       }
     }
