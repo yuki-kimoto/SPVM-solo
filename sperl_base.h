@@ -13,6 +13,10 @@ typedef float SPerl_float;
 typedef double SPerl_double;
 
 /* sperl_assign.h */
+struct SPerl_opdef;
+typedef struct SPerl_opdef SPerl_OPDEF;
+
+/* sperl_assign.h */
 struct SPerl_assign;
 typedef struct SPerl_assign SPerl_ASSIGN;
 
