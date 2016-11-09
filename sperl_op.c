@@ -108,58 +108,38 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
     // Run OPs
     SPerl_OP* op_base = op_sub;
     SPerl_OP* op_cur = op_base;
+    SPerl_boolean finish = 0;
     while (op_cur) {
-      
-      // [START]Preorder traversal position
-      switch(op_cur->code) {
-        SPerl_OP* op_first = op_cur->first;
-        SPerl_OP* op_last = op_cur->last;
-          
-        
+      if (finish) {
         break;
       }
-
+      
+      // [START]Preorder traversal position
+      
       // [END]Preorder traversal position
       
       if (op_cur->first) {
         op_cur = op_cur->first;
       }
       else {
-        // Next sibling
-        if (op_cur->moresib) {
-          op_cur = SPerl_OP_sibling(parser, op_cur);
-        }
-        // Next is parent
-        else {
-          while (1) {
-            SPerl_OP* op_parent = op_cur->sibparent;
-            if (op_parent && op_parent != op_base) {
-              
-              // [START]Postorder traversal position
-              switch(op_cur->code) {
-                SPerl_OP* op_first = op_cur->first;
-                SPerl_OP* op_last = op_cur->last;
-                  
-                
-                break;
-              }
-              
-              // [END]Postorder traversal position
-              
-              SPerl_OP* op_parent_sib = SPerl_OP_sibling(parser, op_parent);
-              if (op_parent_sib) {
-                // Next is parent's sibling
-                op_cur = op_parent_sib;
-                break;
-              }
-              else {
-                op_cur = op_parent;
-              }
-            }
-            else {
-              op_cur = NULL;
-              break;
-            }
+        while (1) {
+          // [START]Postorder traversal position
+          
+          // [END]Postorder traversal position
+          
+          if (op_cur == op_base) {
+            finish = 1;
+            break;
+          }
+          
+          // Next sibling
+          if (op_cur->moresib) {
+            op_cur = SPerl_OP_sibling(parser, op_cur);
+            break;
+          }
+          // Next is parent
+          else {
+            op_cur = op_cur->sibparent;
           }
         }
       }
