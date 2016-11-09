@@ -32,24 +32,24 @@ SPerl_char* const SPerl_OPDEF_C_RETURN_TYPE_NAMES[] = {
   "float",  // fmultiply
   "double", // dmultiply
   "float",  // fdivide
-  "double", // ddivide
+  "double"  // ddivide
 };
 
-SPerl_char* const SPerl_OPDEF_C_ARGUMENT_TYPE_NAMES[] = {
-  "int",    // iadd
-  "long",   // ladd
-  "float",  // fadd
-  "double", // dadd
-  "int",    // isubtract
-  "long",   // lsubtract
-  "float",  // fsubtract
-  "double", // dsubtract
-  "int",    // imultiply
-  "long",   // lmultiply
-  "float",  // fmultiply
-  "double", // dmultiply
-  "float",  // fdivide
-  "double", // ddivide
+SPerl_char* const SPerl_OPDEF_C_ARGUMENT_TYPE_NAMES[14][2] = {
+  {"int", "int"},       // iadd
+  {"long", "long"},     // ladd
+  {"float", "float"},   // fadd
+  {"double", "double"}, // dadd
+  {"int", "int"},       // isubtract
+  {"long", "long"},     // lsubtract
+  {"float", "float"},   // fsubtract
+  {"double", "double"}, // dsubtract
+  {"int", "int"},       // imultiply
+  {"long", "long"},     // lmultiply
+  {"float", "float"},   // fmultiply
+  {"double", "double"}, // dmultiply
+  {"float", "float"},   // fdivide
+  {"double", "double"}  // ddivide
 };
 
 SPerl_int const SPerl_OPDEF_C_ARGUMENT_COUNTS[] = {
