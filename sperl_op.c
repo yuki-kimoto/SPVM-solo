@@ -177,9 +177,18 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
-            case SPerl_OP_C_CODE_ADD:
-            
-            warn("AAAAAAAAAAA");
+            case SPerl_OP_C_CODE_ADD: {
+              SPerl_OP* first = op_cur->first;
+              SPerl_OP* last = op_cur->last;
+              SPerl_int first_type_id = SPerl_OP_get_return_type_id(parser, first);
+              SPerl_int last_type_id = SPerl_OP_get_return_type_id(parser, last);
+              
+              if (!SPerl_TYPE_is_core_type(parser, first_type_id) || !SPerl_TYPE_is_core_type(parser, last_type_id)) {
+                SPerl_char* message = SPerl_PARSER_new_string(parser, 200);
+                sprintf(message, "Error: operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror(parser, message);
+              }
+            }
           }
           
           

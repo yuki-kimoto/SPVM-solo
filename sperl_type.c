@@ -25,6 +25,15 @@ SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
   return type;
 }
 
+SPerl_boolean SPerl_TYPE_is_core_type(SPerl_PARSER* parser, SPerl_int type_id) {
+  if (type_id >= 0 && type_id <= 8) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 SPerl_TYPE* SPerl_TYPE_create_word_type(SPerl_PARSER* parser, SPerl_char* type_name) {
 
   SPerl_WORD* type_name_word = SPerl_WORD_new(parser);
