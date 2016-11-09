@@ -31,6 +31,8 @@
 #include "sperl_package.h"
 #include "sperl_name.h"
 #include "sperl_opdef.h"
+#include "sperl_name.h"
+#include "sperl_opdef.h"
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "null",
@@ -102,6 +104,58 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "plus"
 };
 
+SPerl_int SPerl_OP_get_return_type_id(SPerl_PARSER* parser, SPerl_OP* op) {
+  SPerl_int type_id;
+  
+  switch (op->code) {
+    case SPerl_OP_C_CODE_CONST_VALUE: {
+      SPerl_CONST_VALUE* const_value = op->info;
+      type_id = const_value->type->id;
+      break;
+    }
+    case SPerl_OP_C_CODE_VAR: {
+      SPerl_VAR* var = op->info;
+      type_id = var->my_var->type->id;
+      break;
+    }
+    case SPerl_OP_C_CODE_CALLSUB: {
+      SPerl_NAME* name = op->info;
+      SPerl_char* complete_name = name->complete_name;
+      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
+      type_id = sub->return_type->id;
+      break;
+    }
+    case SPerl_OP_C_CODE_GETENUMVALUE: {
+      SPerl_NAME* name = op->info;
+      SPerl_char* complete_name = name->complete_name;
+      SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
+      type_id = enum_value->value->type->id;
+      break;
+    }
+    case SPerl_OP_C_CODE_GETFIELD: {
+      SPerl_NAME* name = op->info;
+      SPerl_char* complete_name = name->complete_name;
+      SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
+      type_id = field->type->id;
+      break;
+    }
+    case SPerl_OP_C_CODE_ADD:
+    case SPerl_OP_C_CODE_SUBTRACT:
+    case SPerl_OP_C_CODE_MULTIPLY:
+    case SPerl_OP_C_CODE_DIVIDE:
+    {
+      SPerl_OPDEF* opdef = op->info;
+      type_id = opdef->return_type->id;
+      break;
+    }
+    default: {
+      type_id = -1;
+    }
+  }
+  
+  return type_id;
+}
+
 void SPerl_OP_check_types(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->subs->length; i++) {
     SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
@@ -124,8 +178,8 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
             case SPerl_OP_C_CODE_ADD:
+            
             warn("AAAAAAAAAAA");
-            1;
           }
           
           
