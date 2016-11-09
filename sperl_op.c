@@ -30,6 +30,7 @@
 #include "sperl_body_class.h"
 #include "sperl_package.h"
 #include "sperl_name.h"
+#include "sperl_opdef.h"
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "null",
@@ -161,6 +162,9 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   // Check constants
   SPerl_OP_check_const_values(parser);
   
+  // Check opdefs
+  SPerl_OP_check_opdefs(parser);
+  
   // Check types
   SPerl_OP_check_types(parser);
 }
@@ -173,6 +177,20 @@ void SPerl_OP_check_packages(SPerl_PARSER* parser) {
     SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
     SPerl_TYPE* type = package->type;
     SPerl_OP_resolve_type(parser, type);
+  }
+}
+
+void SPerl_OP_check_opdefs(SPerl_PARSER* parser) {
+  // Resolve opdef type
+  SPerl_ARRAY* opdefs = parser->opdefs;
+  for (SPerl_int i = 0; i < opdefs->length; i++) {
+    SPerl_OPDEF* opdef = SPerl_ARRAY_fetch(opdefs, i);
+    SPerl_OP_resolve_type(parser, opdef->return_type);
+    
+    for (SPerl_int j = 0; j < opdef->argument_count; j) {
+      SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(opdef->argument_types, j);
+      SPerl_OP_resolve_type(parser, argument_type);
+    }
   }
 }
 
