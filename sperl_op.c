@@ -98,7 +98,8 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "anonsub",
   "type",
   "getenumvalue",
-  "getfield"
+  "getfield",
+  "plus"
 };
 
 void SPerl_OP_check_types(SPerl_PARSER* parser) {
@@ -121,6 +122,12 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
       else {
         while (1) {
           // [START]Postorder traversal position
+          switch (op_cur->code) {
+            case SPerl_OP_C_CODE_ADD:
+            warn("AAAAAAAAAAA");
+            1;
+          }
+          
           
           // [END]Postorder traversal position
           

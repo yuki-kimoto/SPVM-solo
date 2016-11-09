@@ -70,7 +70,8 @@ enum {
   SPerl_OP_C_CODE_ANONSUB,
   SPerl_OP_C_CODE_TYPE,
   SPerl_OP_C_CODE_GETENUMVALUE,
-  SPerl_OP_C_CODE_GETFIELD
+  SPerl_OP_C_CODE_GETFIELD,
+  SPerl_OP_C_CODE_PLUS
 };
 
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];

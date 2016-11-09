@@ -139,7 +139,7 @@ grammar
       }
       else {
         // Dump parser infomation
-        SPerl_PARSER_dump_parser(parser);
+        // SPerl_PARSER_dump_parser(parser);
       }
     }
 
@@ -446,6 +446,7 @@ getenumvalue
 callop
   : '+' term %prec UMINUS
     {
+      $1->code = SPerl_OP_C_CODE_PLUS;
       $$ = $2;
     }
   | INCOP term
@@ -479,6 +480,7 @@ callop
     }
   | '~' term
     {
+      $2->code = SPerl_OP_C_CODE_BIT_NOT;
       SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
       $$ = $1;
     }
@@ -490,12 +492,14 @@ callop
     }
   | term '+' term %prec ADDOP
     {
+      $2->code = SPerl_OP_C_CODE_ADD;
       SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
       SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
   | term '-' term %prec ADDOP
     {
+      $2->code = SPerl_OP_C_CODE_SUBTRACT;
       SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
       SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
