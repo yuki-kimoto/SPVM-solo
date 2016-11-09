@@ -114,6 +114,15 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE_build_parts(parser, return_type);
     opdef->return_type = return_type;
     
+    // Argument types
+    SPerl_int argument_count = SPerl_OPDEF_C_ARGUMENT_COUNTS[i];
+    opdef->argument_count = argument_count;
+    opdef->argument_types = SPerl_PARSER_new_array(parser, 0);
+    for (SPerl_int j = 0; j < argument_count; j++) {
+      SPerl_TYPE* argument_type = SPerl_TYPE_create_word_type(parser, SPerl_OPDEF_C_RETURN_TYPE_NAMES[i]);
+      SPerl_TYPE_build_parts(parser, argument_type);
+      SPerl_ARRAY_push(opdef->argument_types, argument_type);
+    }
   }
   
   return parser;
