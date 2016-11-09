@@ -177,7 +177,10 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
-            case SPerl_OP_C_CODE_ADD: {
+            case SPerl_OP_C_CODE_ADD:
+            case SPerl_OP_C_CODE_SUBTRACT:
+            case SPerl_OP_C_CODE_MULTIPLY:
+            {
               SPerl_OP* first = op_cur->first;
               SPerl_OP* last = op_cur->last;
               SPerl_int first_type_id = SPerl_OP_get_return_type_id(parser, first);

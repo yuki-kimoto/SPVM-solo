@@ -86,8 +86,8 @@ package Test::Foo::Point3D {
 
     +$test;
     -$test;
-    +$test - -$test;
-
+    # +$test - -$test;
+        
     1 + 2;
     
     my $i : int;
