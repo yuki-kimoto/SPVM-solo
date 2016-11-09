@@ -21,12 +21,15 @@ enum {
 };
 
 extern SPerl_char* const SPerl_OPDEF_C_CODE_NAMES[];
+extern SPerl_char* const SPerl_OPDEF_C_CODE_RETURN_TYPE_NAMES[];
+extern SPerl_char* const SPerl_OPDEF_C_CODE_ARGUMENT_TYPE_NAMES[];
+extern SPerl_int const SPerl_OPDEF_C_CODE_ARGUMENT_COUNTS[];
 
 // Field information
 struct SPerl_opdef {
   SPerl_char code;
   SPerl_TYPE* return_type;
-  SPerl_ARRAY* argument_types;
+  SPerl_TYPE* argument_type;
   SPerl_int argument_count;
 };
 

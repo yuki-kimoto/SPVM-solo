@@ -102,6 +102,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
   
+  // Add core opdef
+  
+  
   return parser;
 }
 
