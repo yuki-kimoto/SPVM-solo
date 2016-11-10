@@ -4,81 +4,83 @@
 #include "sperl_base.h"
 
 /* Operation code */
-enum {
-  SPerl_OP_C_CODE_NULL,
-  SPerl_OP_C_CODE_CONST_VALUE,
-  SPerl_OP_C_CODE_LT,
-  SPerl_OP_C_CODE_LE,
-  SPerl_OP_C_CODE_GT,
-  SPerl_OP_C_CODE_GE,
-  SPerl_OP_C_CODE_ADD,
-  SPerl_OP_C_CODE_SUBTRACT,
-  SPerl_OP_C_CODE_MULTIPLY,
-  SPerl_OP_C_CODE_DIVIDE,
-  SPerl_OP_C_CODE_AND,
-  SPerl_OP_C_CODE_OR,
-  SPerl_OP_C_CODE_BIT_AND,
-  SPerl_OP_C_CODE_BIT_OR,
-  SPerl_OP_C_CODE_MODULO,
-  SPerl_OP_C_CODE_BIT_XOR,
-  SPerl_OP_C_CODE_NOT,
-  SPerl_OP_C_CODE_LEFT_SHIFT,
-  SPerl_OP_C_CODE_RIGHT_SHIFT,
-  SPerl_OP_C_CODE_INC,
-  SPerl_OP_C_CODE_DEC,
-  SPerl_OP_C_CODE_BIT_NOT,
-  SPerl_OP_C_CODE_PREINC,
-  SPerl_OP_C_CODE_POSTINC,
-  SPerl_OP_C_CODE_PREDEC,
-  SPerl_OP_C_CODE_POSTDEC,
-  SPerl_OP_C_CODE_COMPLEMENT,
-  SPerl_OP_C_CODE_NEGATE,
-  SPerl_OP_C_CODE_LIST,
-  SPerl_OP_C_CODE_PUSHMARK,
-  SPerl_OP_C_CODE_AELEM,
-  SPerl_OP_C_CODE_FIELD,
-  SPerl_OP_C_CODE_ASSIGN,
-  SPerl_OP_C_CODE_CALLSUB,
-  SPerl_OP_C_CODE_SUBARG,
-  SPerl_OP_C_CODE_BLOCK,
-  SPerl_OP_C_CODE_MY,
-  SPerl_OP_C_CODE_HAS,
-  SPerl_OP_C_CODE_COND,
-  SPerl_OP_C_CODE_USE,
-  SPerl_OP_C_CODE_RETURN,
-  SPerl_OP_C_CODE_LAST,
-  SPerl_OP_C_CODE_NEXT,
-  SPerl_OP_C_CODE_PACKAGE,
-  SPerl_OP_C_CODE_LOOP,
-  SPerl_OP_C_CODE_SUB,
-  SPerl_OP_C_CODE_VAR,
-  SPerl_OP_C_CODE_EQ,
-  SPerl_OP_C_CODE_NE,
-  SPerl_OP_C_CODE_STATEMENT,
-  SPerl_OP_C_CODE_GRAMMER,
-  SPerl_OP_C_CODE_WORD,
-  SPerl_OP_C_CODE_IF,
-  SPerl_OP_C_CODE_ELSIF,
-  SPerl_OP_C_CODE_ELSE,
-  SPerl_OP_C_CODE_FOR,
-  SPerl_OP_C_CODE_WHILE,
-  SPerl_OP_C_CODE_ENUM,
-  SPerl_OP_C_CODE_ENUMBLOCK,
-  SPerl_OP_C_CODE_ENUMVALUE,
-  SPerl_OP_C_CODE_CLASSBLOCK,
-  SPerl_OP_C_CODE_DESCRIPTER,
-  SPerl_OP_C_CODE_ANONSUB,
-  SPerl_OP_C_CODE_TYPE,
-  SPerl_OP_C_CODE_GETENUMVALUE,
-  SPerl_OP_C_CODE_GETFIELD,
-  SPerl_OP_C_CODE_PLUS
+enum {                          // [GROUP]
+  SPerl_OP_C_CODE_NULL,         // UNKNOWN
+  SPerl_OP_C_CODE_CONST_VALUE,  // UNKNOWN
+  SPerl_OP_C_CODE_LT,           // RELOP
+  SPerl_OP_C_CODE_LE,           // RELOP
+  SPerl_OP_C_CODE_GT,           // RELOP
+  SPerl_OP_C_CODE_GE,           // RELOP
+  SPerl_OP_C_CODE_ADD,          // BINOP
+  SPerl_OP_C_CODE_SUBTRACT,     // BINOP
+  SPerl_OP_C_CODE_MULTIPLY,     // BINOP
+  SPerl_OP_C_CODE_DIVIDE,       // BINOP
+  SPerl_OP_C_CODE_AND,          // RELOP
+  SPerl_OP_C_CODE_OR,           // RELOP
+  SPerl_OP_C_CODE_BIT_AND,      // BINOP
+  SPerl_OP_C_CODE_BIT_OR,       // BINOP
+  SPerl_OP_C_CODE_MODULO,       // BINOP
+  SPerl_OP_C_CODE_BIT_XOR,      // BINOP
+  SPerl_OP_C_CODE_NOT,          // UNIOP
+  SPerl_OP_C_CODE_LEFT_SHIFT,   // SHIFTOP
+  SPerl_OP_C_CODE_RIGHT_SHIFT,  // SHIFTOP
+  SPerl_OP_C_CODE_INC,          // UNIOP
+  SPerl_OP_C_CODE_DEC,          // UNIOP
+  SPerl_OP_C_CODE_BIT_NOT,      // UNIOP
+  SPerl_OP_C_CODE_PREINC,       // UNIOP
+  SPerl_OP_C_CODE_POSTINC,      // UNIOP
+  SPerl_OP_C_CODE_PREDEC,       // UNIOP
+  SPerl_OP_C_CODE_POSTDEC,      // UNIOP
+  SPerl_OP_C_CODE_COMPLEMENT,   // UNIOP
+  SPerl_OP_C_CODE_NEGATE,       // UNIOP
+  SPerl_OP_C_CODE_LIST,         // UNKNOWN
+  SPerl_OP_C_CODE_PUSHMARK,     // UNKNOWN
+  SPerl_OP_C_CODE_AELEM,        // UNKNOWN
+  SPerl_OP_C_CODE_FIELD,        // UNKNOWN
+  SPerl_OP_C_CODE_ASSIGN,       // UNKNOWN
+  SPerl_OP_C_CODE_CALLSUB,      // UNKNOWN
+  SPerl_OP_C_CODE_SUBARG,       // UNKNOWN
+  SPerl_OP_C_CODE_BLOCK,        // UNKNOWN
+  SPerl_OP_C_CODE_MY,           // UNKNOWN
+  SPerl_OP_C_CODE_HAS,          // UNKNOWN
+  SPerl_OP_C_CODE_COND,         // UNKNOWN
+  SPerl_OP_C_CODE_USE,          // UNKNOWN
+  SPerl_OP_C_CODE_RETURN,       // UNKNOWN
+  SPerl_OP_C_CODE_LAST,         // UNKNOWN
+  SPerl_OP_C_CODE_NEXT,         // UNKNOWN
+  SPerl_OP_C_CODE_PACKAGE,      // UNKNOWN
+  SPerl_OP_C_CODE_LOOP,         // UNKNOWN
+  SPerl_OP_C_CODE_SUB,          // UNKNOWN
+  SPerl_OP_C_CODE_VAR,          // UNKNOWN
+  SPerl_OP_C_CODE_EQ,           // RELOP
+  SPerl_OP_C_CODE_NE,           // RELOP
+  SPerl_OP_C_CODE_STATEMENT,    // UNKNOWN
+  SPerl_OP_C_CODE_GRAMMER,      // UNKNOWN
+  SPerl_OP_C_CODE_WORD,         // UNKNOWN
+  SPerl_OP_C_CODE_IF,           // UNKNOWN
+  SPerl_OP_C_CODE_ELSIF,        // UNKNOWN
+  SPerl_OP_C_CODE_ELSE,         // UNKNOWN
+  SPerl_OP_C_CODE_FOR,          // UNKNOWN
+  SPerl_OP_C_CODE_WHILE,        // UNKNOWN
+  SPerl_OP_C_CODE_ENUM,         // UNKNOWN
+  SPerl_OP_C_CODE_ENUMBLOCK,    // UNKNOWN
+  SPerl_OP_C_CODE_ENUMVALUE,    // UNKNOWN
+  SPerl_OP_C_CODE_CLASSBLOCK,   // UNKNOWN
+  SPerl_OP_C_CODE_DESCRIPTER,   // UNKNOWN
+  SPerl_OP_C_CODE_ANONSUB,      // UNKNOWN
+  SPerl_OP_C_CODE_TYPE,         // UNKNOWN
+  SPerl_OP_C_CODE_GETENUMVALUE, // UNKNOWN
+  SPerl_OP_C_CODE_GETFIELD,     // UNKNOWN
+  SPerl_OP_C_CODE_PLUS          // UNIOP
 };
 
 enum {
   SPerl_OP_C_GROUP_UNKNOWN,
   SPerl_OP_C_GROUP_UNIOP,
   SPerl_OP_C_GROUP_BINOP,
-  SPerl_OP_C_GROUP_RELOP
+  SPerl_OP_C_GROUP_RELOP,
+  SPerl_OP_C_GROUP_SHIFTOP,
+  SPerl_OP_C_GROUP_ASSIGNOP,
 };
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 
