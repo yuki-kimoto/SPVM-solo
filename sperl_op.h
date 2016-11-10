@@ -80,6 +80,21 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_ASSIGN_BIT_XOR,  // ASSIGNOP
   SPerl_OP_C_CODE_ASSIGN_OR,       // ASSIGNOP
   SPerl_OP_C_CODE_ASSIGN_AND,      // ASSIGNOP
+  SPerl_OP_C_CODE_D2F, // UNIOP
+  SPerl_OP_C_CODE_D2I, // UNIOP
+  SPerl_OP_C_CODE_D2L, // UNIOP
+  SPerl_OP_C_CODE_F2D, // UNIOP
+  SPerl_OP_C_CODE_F2I, // UNIOP
+  SPerl_OP_C_CODE_F2L, // UNIOP
+  SPerl_OP_C_CODE_I2B, // UNIOP
+  SPerl_OP_C_CODE_I2C, // UNIOP
+  SPerl_OP_C_CODE_I2D, // UNIOP
+  SPerl_OP_C_CODE_I2F, // UNIOP
+  SPerl_OP_C_CODE_I2L, // UNIOP
+  SPerl_OP_C_CODE_I2S, // UNIOP
+  SPerl_OP_C_CODE_L2D, // UNIOP
+  SPerl_OP_C_CODE_L2F, // UNIOP
+  SPerl_OP_C_CODE_L2I  // UNIOP
 };
 
 enum {
@@ -116,6 +131,7 @@ void SPerl_OP_check_const_values(SPerl_PARSER* parser);
 void SPerl_OP_check_opdefs(SPerl_PARSER* parser);
 SPerl_int SPerl_OP_get_return_type_id(SPerl_PARSER* parser, SPerl_OP* op);
 SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl_OP* op_first, SPerl_OP* op_last);
+void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int first_type_id, SPerl_int last_type_id);
 
 SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype);
 SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_simpletype);

@@ -110,6 +110,21 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "assign_bit_xor",
   "assign_or",
   "assign_and",
+  "d2f",
+  "d2i",
+  "d2l",
+  "f2d",
+  "f2i",
+  "f2l",
+  "i2b",
+  "i2c",
+  "i2d",
+  "i2f",
+  "i2l",
+  "i2s",
+  "l2d",
+  "l2f",
+  "l2i"
 };
 
 SPerl_int SPerl_OP_get_return_type_id(SPerl_PARSER* parser, SPerl_OP* op) {
@@ -164,6 +179,92 @@ SPerl_int SPerl_OP_get_return_type_id(SPerl_PARSER* parser, SPerl_OP* op) {
   return type_id;
 }
 
+void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int first_type_id, SPerl_int last_type_id) {
+  // last int
+  if (first_type_id < 4) {
+    first_type_id = 4;
+  }
+  
+  // last int
+  if (last_type_id < 4) {
+    first_type_id = 4;
+  }
+  
+  if (first_type_id != last_type_id) {
+    SPerl_boolean replace_first = 0;
+    
+    SPerl_OP* type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, NULL, NULL);
+    type_convert_op->group = SPerl_OP_C_GROUP_UNIOP;
+    if (first_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+      if (last_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+        type_convert_op->code = SPerl_OP_C_CODE_I2L;
+        replace_first = 1;
+      }
+      else if (last_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+        type_convert_op->code = SPerl_OP_C_CODE_I2F;
+        replace_first = 1;
+      }
+      else if (last_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+        type_convert_op->code = SPerl_OP_C_CODE_I2D;
+        replace_first = 1;
+      }
+    }
+    else if (first_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+      if (last_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+        type_convert_op->code = SPerl_OP_C_CODE_I2L;
+      }
+      else if (last_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+        type_convert_op->code = SPerl_OP_C_CODE_L2F;
+        replace_first = 1;
+      }
+      else if (last_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+        type_convert_op->code = SPerl_OP_C_CODE_L2D;
+        replace_first = 1;
+      }
+    }
+    else if (first_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+      if (last_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+        type_convert_op->code = SPerl_OP_C_CODE_I2F;
+      }
+      else if (last_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+        type_convert_op->code = SPerl_OP_C_CODE_L2F;
+      }
+      else if (last_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+        type_convert_op->code = SPerl_OP_C_CODE_F2D;
+        replace_first = 1;
+      }
+    }
+    else if (first_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+      if (last_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+        type_convert_op->code = SPerl_OP_C_CODE_I2D;
+      }
+      else if (last_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+        type_convert_op->code = SPerl_OP_C_CODE_L2D;
+      }
+      else if (last_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+        type_convert_op->code = SPerl_OP_C_CODE_F2D;
+      }
+    }
+    
+    if (replace_first) {
+      type_convert_op->sibparent = op->first->sibparent;
+      type_convert_op->moresib = op->first->moresib;
+      type_convert_op->first = op->first;
+      op->first->sibparent = type_convert_op;
+      op->first->moresib = 0;
+      op->first = type_convert_op;
+    }
+    else {
+      type_convert_op->sibparent = op->last->sibparent;
+      type_convert_op->moresib = op->last->moresib;
+      type_convert_op->first = op->last;
+      op->last->sibparent = type_convert_op;
+      op->last->moresib = 0;
+      op->last = type_convert_op;
+    }
+  }
+}
+
 void SPerl_OP_check_types(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->subs->length; i++) {
     SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
@@ -184,26 +285,27 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
       else {
         while (1) {
           // [START]Postorder traversal position
-          switch (op_cur->code) {
-            case SPerl_OP_C_CODE_ADD:
-            case SPerl_OP_C_CODE_SUBTRACT:
-            case SPerl_OP_C_CODE_MULTIPLY:
-            {
+          switch (op_cur->group) {
+            case SPerl_OP_C_GROUP_BINOP: {
               SPerl_OP* first = op_cur->first;
               SPerl_OP* last = op_cur->last;
               SPerl_int first_type_id = SPerl_OP_get_return_type_id(parser, first);
               SPerl_int last_type_id = SPerl_OP_get_return_type_id(parser, last);
               SPerl_OPDEF* opdef = op_cur->info;
               
+              // Can receive only core type
               if (!SPerl_TYPE_is_core_type(parser, first_type_id) || !SPerl_TYPE_is_core_type(parser, last_type_id)) {
                 SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
                 sprintf(message, "Error: %s operator can receive only core type at %s line %d\n",
                   opdef->symbol, op_cur->file, op_cur->line);
                 SPerl_yyerror(parser, message);
               }
+              
+              // Insert type converting op
+              SPerl_OP_insert_type_convert_op(parser, op_cur, first_type_id, last_type_id);
+              warn("BBBBBBBBBBBB");
             }
           }
-          
           
           // [END]Postorder traversal position
           
