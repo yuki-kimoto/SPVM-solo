@@ -1268,7 +1268,7 @@ SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl
       symbol = "&";
       break;
     case SPerl_OP_C_CODE_BIT_OR:
-      symbol = "&";
+      symbol = "|";
       break;
     case SPerl_OP_C_CODE_LEFT_SHIFT:
       symbol = "<<";
@@ -1281,6 +1281,24 @@ SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl
       break;
     case SPerl_OP_C_CODE_OR:
       symbol = "||";
+      break;
+    case SPerl_OP_C_CODE_LT:
+      symbol = "<";
+      break;
+    case SPerl_OP_C_CODE_LE:
+      symbol = "=<";
+      break;
+    case SPerl_OP_C_CODE_GT:
+      symbol = ">";
+      break;
+    case SPerl_OP_C_CODE_GE:
+      symbol = "=>";
+      break;
+    case SPerl_OP_C_CODE_EQ:
+      symbol = "==";
+      break;
+    case SPerl_OP_C_CODE_NE:
+      symbol = "!=";
       break;
   }
   opdef->symbol = symbol;
