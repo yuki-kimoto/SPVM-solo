@@ -74,11 +74,18 @@ enum {
   SPerl_OP_C_CODE_PLUS
 };
 
+enum {
+  SPerl_OP_C_GROUP_UNKNOWN,
+  SPerl_OP_C_GROUP_UNIOP,
+  SPerl_OP_C_GROUP_BINOP,
+  SPerl_OP_C_GROUP_RELOP
+};
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 
 /* Binary operation */
 struct SPerl_op {
   SPerl_char code;
+  SPerl_char group;
   SPerl_boolean moresib;
   SPerl_OP* first;
   SPerl_OP* last;
