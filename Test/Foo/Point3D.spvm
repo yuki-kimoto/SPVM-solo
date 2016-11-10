@@ -132,9 +132,6 @@ package Test::Foo::Point3D {
     !$title;
     ~$title;
 
-    $title ||= 1;
-    $title &&= 2;
-
     $title << 2;
     $title >> 2;
 
