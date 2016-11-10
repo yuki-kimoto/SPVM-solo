@@ -80,7 +80,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_ASSIGN_BIT_XOR,  // ASSIGNOP
   SPerl_OP_C_CODE_ASSIGN_OR,       // ASSIGNOP
   SPerl_OP_C_CODE_ASSIGN_AND,      // ASSIGNOP
-  SPerl_OP_C_CODE_ASSIGN_MODUL0,   // ASSIGNOP
 };
 
 enum {
