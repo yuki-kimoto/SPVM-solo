@@ -98,7 +98,7 @@ void SPerl_OP_check_types(SPerl_PARSER* parser);
 void SPerl_OP_check_const_values(SPerl_PARSER* parser);
 void SPerl_OP_check_opdefs(SPerl_PARSER* parser);
 SPerl_int SPerl_OP_get_return_type_id(SPerl_PARSER* parser, SPerl_OP* op);
-SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl_OP* op_first, SPerl_OP* op_last, SPerl_char* symbol);
+SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl_OP* op_first, SPerl_OP* op_last);
 
 SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype);
 SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_simpletype);

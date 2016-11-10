@@ -1228,7 +1228,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   return op_callsub;
 }
 
-SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl_OP* op_first, SPerl_OP* op_last, SPerl_char* symbol) {
+SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl_OP* op_first, SPerl_OP* op_last) {
   
   // Build OP_SUB
   SPerl_OP_sibling_splice(parser, op_callop, NULL, 0, op_first);
@@ -1237,6 +1237,52 @@ SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl
   }
   
   SPerl_OPDEF* opdef = SPerl_OPDEF_new(parser);
+  SPerl_char* symbol;
+  switch (op_callop->code) {
+    case SPerl_OP_C_CODE_PLUS:
+    case SPerl_OP_C_CODE_ADD:
+      symbol = "+";
+      break;
+    case SPerl_OP_C_CODE_PREINC:
+    case SPerl_OP_C_CODE_POSTINC:
+      symbol = "++";
+      break;
+    case SPerl_OP_C_CODE_PREDEC:
+    case SPerl_OP_C_CODE_POSTDEC:
+      symbol = "--";
+      break;
+    case SPerl_OP_C_CODE_BIT_NOT:
+      symbol = "~";
+      break;
+    case SPerl_OP_C_CODE_NOT:
+      symbol = "!";
+      break;
+    case SPerl_OP_C_CODE_SUBTRACT:
+    case SPerl_OP_C_CODE_NEGATE:
+      symbol = "-";
+      break;
+    case SPerl_OP_C_CODE_MULTIPLY:
+      symbol = "*";
+      break;
+    case SPerl_OP_C_CODE_BIT_AND:
+      symbol = "&";
+      break;
+    case SPerl_OP_C_CODE_BIT_OR:
+      symbol = "&";
+      break;
+    case SPerl_OP_C_CODE_LEFT_SHIFT:
+      symbol = "<<";
+      break;
+    case SPerl_OP_C_CODE_RIGHT_SHIFT:
+      symbol = ">>";
+      break;
+    case SPerl_OP_C_CODE_AND:
+      symbol = "&&";
+      break;
+    case SPerl_OP_C_CODE_OR:
+      symbol = "||";
+      break;
+  }
   opdef->symbol = symbol;
   
   op_callop->info = opdef;

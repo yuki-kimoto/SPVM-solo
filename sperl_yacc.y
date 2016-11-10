@@ -108,7 +108,7 @@
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type packagename fieldname subname package packages optenumvalues arraytype
 %type <opval> forstatement whilestatement expression optpackages subtype types opttypes notsubtype
-%type <opval> enumname getenumvalue getfield
+%type <opval> enumname getenumvalue getfield getarrayelem
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -430,6 +430,7 @@ term
   | callop
   | getenumvalue
   | getfield
+  | getarrayelem
 
 getfield
   : VAR ARROW fieldname
@@ -447,82 +448,77 @@ callop
   : '+' term %prec UMINUS
     {
       $1->code = SPerl_OP_C_CODE_PLUS;
-      $$ = $2;
+      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
     }
   | INCOP term
     {
       $1->code = SPerl_OP_C_CODE_PREINC;
-      SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
-      $$ = $1;
+      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
     }
   | term INCOP
     {
       $2->code = SPerl_OP_C_CODE_POSTINC;
-      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
-      $$ = $2;
+      $$ = SPerl_OP_build_callop(parser, $2, $1, NULL);
     }
   | DECOP term
     {
       $1->code = SPerl_OP_C_CODE_PREDEC;
-      SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
-      $$ = $1;
+      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
     }
   | term DECOP
     {
       $2->code = SPerl_OP_C_CODE_POSTDEC;
-      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
-      $$ = $2;
+      $$ = SPerl_OP_build_callop(parser, $2, $1, NULL);
     }
   | NOTOP term
     {
-      SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
-      $$ = $1;
+      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
     }
   | '~' term
     {
       $2->code = SPerl_OP_C_CODE_BIT_NOT;
-      SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
-      $$ = $1;
+      $$ = SPerl_OP_build_callop(parser, $2, $1, NULL);
     }
   | '-' term %prec UMINUS
     {
       $1->code = SPerl_OP_C_CODE_NEGATE;
-      SPerl_OP_sibling_splice(parser, $1, NULL, 0, $2);
-      $$ = $1;
+      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
     }
   | term '+' term %prec ADDOP
     {
       $2->code = SPerl_OP_C_CODE_ADD;
-      $$ = SPerl_OP_build_callop(parser, $2, $1, $3, "+");
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
     }
   | term '-' term %prec ADDOP
     {
       $2->code = SPerl_OP_C_CODE_SUBTRACT;
-      $$ = SPerl_OP_build_callop(parser, $2, $1, $3, "-");
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
     }
   | term MULOP term
     {
-      $$ = SPerl_OP_build_callop(parser, $2, $1, $3, "*");
-    }
-  | term RELOP term
-    {
-      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
-      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
-      $$ = $2;
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
     }
   | term BITANDOP term
     {
-      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
-      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
-      $$ = $2;
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
     }
   | term BITOROP term
     {
-      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
-      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
-      $$ = $2;
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
     }
   | term SHIFTOP term
+    {
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
+    }
+  | term ANDOP term
+    {
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
+    }
+  | term OROP term
+    {
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
+    }
+  | term RELOP term
     {
       SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
       SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
@@ -534,19 +530,9 @@ callop
       SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
       $$ = $2;
     }
-  | term ANDOP term
-    {
-      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
-      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
-      $$ = $2;
-    }
-  | term OROP term
-    {
-      SPerl_OP_sibling_splice(parser, $2, NULL, 0, $1);
-      SPerl_OP_sibling_splice(parser, $2, $1, 0, $3);
-      $$ = $2;
-    }
-  | VAR ARROW '[' term ']'
+
+getarrayelem
+  : VAR ARROW '[' term ']'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_AELEM, $1, $4);
     }
