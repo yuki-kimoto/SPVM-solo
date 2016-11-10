@@ -16,7 +16,6 @@
 #include "sperl_descripter.h"
 #include "sperl_use.h"
 #include "sperl_body_core.h"
-#include "sperl_assign.h"
 #include "sperl_type.h"
 
 static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
@@ -167,10 +166,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
-          assign->code = SPerl_OP_C_CODE_ADD;
-          op->info = assign;
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_ADD);
+          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -196,11 +193,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
-          assign->code = SPerl_OP_C_CODE_SUBTRACT;
-          op->info = assign;
-
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_SUBTRACT);
+          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -213,11 +207,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
-          assign->code = SPerl_OP_C_CODE_MULTIPLY;
-          op->info = assign;
-
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_MULTIPLY);
+          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
+          yylvalp->opval = op;
+          
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -231,10 +224,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
-          assign->code = SPerl_OP_C_CODE_DIVIDE;
-          op->info = assign;
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_DIVIDE);
+          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -247,10 +238,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
-          assign->code = SPerl_OP_C_CODE_MODULO;
-          op->info = assign;
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_MODUL0);
+          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -263,10 +252,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         if (*parser->bufptr == '=') {
           parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
-          assign->code = SPerl_OP_C_CODE_BIT_XOR;
-          op->info = assign;
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_BIT_XOR);
+          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -282,10 +269,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
           if (*parser->bufptr == '=') {
             parser->bufptr++;
-            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-            SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
-            assign->code = SPerl_OP_C_CODE_OR;
-            op->info = assign;
+            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_OR);
+            op->group = SPerl_OP_C_GROUP_ASSIGNOP;
             yylvalp->opval = op;
             return ASSIGNOP;
           }
@@ -307,10 +292,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
           if (*parser->bufptr == '=') {
             parser->bufptr++;
-            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-            SPerl_ASSIGN* assign = SPerl_ASSIGN_new(parser);
-            assign->code = SPerl_OP_C_CODE_AND;
-            op->info = assign;
+            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_AND);
+            op->group = SPerl_OP_C_GROUP_ASSIGNOP;
             yylvalp->opval = op;
             return ASSIGNOP;
           }
@@ -348,7 +331,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         /* = */
         else {
-          yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
+          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
+          yylvalp->opval = op;
           return ASSIGNOP;
         }
         

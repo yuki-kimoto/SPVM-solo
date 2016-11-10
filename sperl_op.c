@@ -102,6 +102,14 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "getenumvalue",
   "getfield",
   "plus"
+  "assign_add",
+  "assign_subtract",
+  "assign_multiply",
+  "assign_divide",
+  "assign_modulo",
+  "assign_bit_xor",
+  "assign_or",
+  "assign_and",
 };
 
 SPerl_int SPerl_OP_get_return_type_id(SPerl_PARSER* parser, SPerl_OP* op) {
