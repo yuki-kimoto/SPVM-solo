@@ -154,13 +154,13 @@ SPerl_int* SPerl_PARSER_new_int(SPerl_PARSER* parser) {
 }
 
 SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
-  SPerl_char* str = (SPerl_char*)malloc(length + 1);
+  SPerl_char* str = malloc(length + 1);
   
   if (length < 40) {
     str = SPerl_MEMORY_POOL_alloc(parser->memory_pool, 40);
   }
   else {
-    str = (SPerl_char*)malloc(length + 1);
+    str = malloc(length + 1);
     SPerl_ARRAY_push(parser->long_str_ptrs, str);
   }
   
