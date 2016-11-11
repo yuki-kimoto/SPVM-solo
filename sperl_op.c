@@ -348,34 +348,20 @@ void SPerl_OP_resolve_types(SPerl_PARSER* parser) {
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
-  // Check packages
-  SPerl_OP_check_packages(parser);
-  
-  // Check bodys
-  SPerl_OP_check_bodys(parser);
-  
   // Check names
   SPerl_OP_check_names(parser);
   
   // Resolve types
   SPerl_OP_resolve_types(parser);
   
+  // Check descripters
+  SPerl_OP_check_descripters(parser);
+  
   // Check types
   SPerl_OP_check_types(parser);
 }
 
-void SPerl_OP_check_packages(SPerl_PARSER* parser) {
-  // Resolve package type
-  SPerl_ARRAY* packages = parser->packages;
-  SPerl_HASH* package_symtable = parser->package_symtable;
-  for (SPerl_int i = 0; i < packages->length; i++) {
-    SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
-    SPerl_TYPE* type = package->type;
-    SPerl_OP_resolve_type(parser, type);
-  }
-}
-
-void SPerl_OP_check_bodys(SPerl_PARSER* parser) {
+void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
   // Check bodys
   SPerl_ARRAY* bodys = parser->bodys;
   SPerl_HASH* body_symtable = parser->body_symtable;
@@ -405,20 +391,17 @@ void SPerl_OP_check_bodys(SPerl_PARSER* parser) {
       for (SPerl_int j = 0; j < fields->length; j++) {
         SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
 
-        // Resolve field type
-        SPerl_OP_resolve_type(parser, field->type);
-        
         // Check field descripters(Not used)
         SPerl_ARRAY* descripters = field->descripters;
         for (SPerl_int k = 0; k < descripters->length; k++) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
-          //if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
-          //{
+          if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
+          {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
             sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n",
               SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
-          //}
+          }
         }
       }
       
@@ -426,41 +409,37 @@ void SPerl_OP_check_bodys(SPerl_PARSER* parser) {
       SPerl_ARRAY* subs = body_class->subs;
       for (SPerl_int j = 0; j < subs->length; j++) {
         SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, j);
-
-        // Resolve sub return type
-        SPerl_OP_resolve_type(parser, sub->return_type);
         
         // Check sub descripters(Not used)
         SPerl_ARRAY* descripters = sub->descripters;
         SPerl_int k;
         for (SPerl_int k = 0; k < descripters->length; k++) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
-          //if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
-          //{
+          if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
+          {
             SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
             sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
               SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
             SPerl_yyerror(parser, message);
-          //}
+          }
         }
         
         // Check my var information
         SPerl_ARRAY* my_vars = sub->my_vars;
         for (SPerl_int k = 0; k < my_vars->length; k++) {
           SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
-          SPerl_OP_resolve_type(parser, my_var->type);
           
           // Check my_var descripters(Not used)
           SPerl_ARRAY* descripters = my_var->descripters;
           for (SPerl_int l = 0; l < descripters->length; l++) {
             SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
-            //if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
-            //{
+            if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
+            {
               SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
               sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n",
                 SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
               SPerl_yyerror(parser, message);
-            //}
+            }
           }
         }
       }
@@ -861,7 +840,10 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             start_value++;
           }
           SPerl_ARRAY_push(parser->const_values, const_value);
+          
+          // Add type
           SPerl_ARRAY_push(parser->types, const_value->type);
+          
           SPerl_ARRAY_push(enum_values, enum_value);
           SPerl_char* enum_complete_name = SPerl_OP_create_complete_name(parser, package_name, enum_value->name_word->value);
           SPerl_HASH_insert(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name), enum_value);
@@ -985,8 +967,9 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     
     SPerl_TYPE_build_parts(parser, type);
     package->type = type;
+    SPerl_ARRAY_push(parser->types, type);
     
-    // Add type information
+    // Add package
     SPerl_ARRAY_push(parser->packages, package);
     SPerl_HASH_insert(parser->package_symtable, package_name, strlen(package_name), type);
   }
@@ -1051,6 +1034,9 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   
   // Create type string parts
   SPerl_TYPE_build_parts(parser, field->type);
+  
+  // Add type
+  SPerl_ARRAY_push(parser->types, field->type);
   
   // Set field informaiton
   op_has->info = field;
@@ -1122,6 +1108,9 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   // return type
   sub->return_type = op_type->info;
   SPerl_TYPE_build_parts(parser, sub->return_type);
+  
+  // Add type
+  SPerl_ARRAY_push(parser->types, sub->return_type);
   
   // Save block
   sub->op_block = op_block;
@@ -1271,6 +1260,12 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   
   // Set my var information
   sub->my_vars = my_vars;
+  
+  // Add argument type
+  for (SPerl_int i = 0; i < my_vars->length; i++) {
+    SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, i);
+    SPerl_ARRAY_push(parser->types, my_var->type);
+  }
   
   // ID
   sub->id = parser->current_sub_id++;
