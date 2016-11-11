@@ -338,7 +338,12 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
 }
 
 void SPerl_OP_resolve_types(SPerl_PARSER* parser) {
+  SPerl_ARRAY* types = parser->types;
   
+  for (SPerl_int i = 0; i < types->length; i++) {
+    SPerl_TYPE* type = SPerl_ARRAY_fetch(types, i);
+    SPerl_OP_resolve_type(parser, type);
+  }
 }
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
@@ -351,9 +356,9 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Check names
   SPerl_OP_check_names(parser);
-
-  // Check constants
-  SPerl_OP_check_const_values(parser);
+  
+  // Resolve types
+  SPerl_OP_resolve_types(parser);
   
   // Check opdefs
   SPerl_OP_check_opdefs(parser);
@@ -384,16 +389,6 @@ void SPerl_OP_check_opdefs(SPerl_PARSER* parser) {
       SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(opdef->argument_types, j);
       SPerl_OP_resolve_type(parser, argument_type);
     }
-  }
-}
-
-void SPerl_OP_check_const_values(SPerl_PARSER* parser) {
-  // Resolve const_value type
-  SPerl_ARRAY* const_values = parser->const_values;
-  for (SPerl_int i = 0; i < const_values->length; i++) {
-    SPerl_CONST_VALUE* const_value = SPerl_ARRAY_fetch(const_values, i);
-    SPerl_TYPE* type = const_value->type;
-    SPerl_OP_resolve_type(parser, type);
   }
 }
 
@@ -883,6 +878,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             start_value++;
           }
           SPerl_ARRAY_push(parser->const_values, const_value);
+          SPerl_ARRAY_push(parser->types, const_value->type);
           SPerl_ARRAY_push(enum_values, enum_value);
           SPerl_char* enum_complete_name = SPerl_OP_create_complete_name(parser, package_name, enum_value->name_word->value);
           SPerl_HASH_insert(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name), enum_value);
@@ -1083,6 +1079,9 @@ SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl_PARSER* parser, SPerl_OP* op_const) {
 
   SPerl_CONST_VALUE* const_value = op_const->info;
   SPerl_ARRAY_push(parser->const_values, const_value);
+  
+  // Add types
+  SPerl_ARRAY_push(parser->types, const_value->type);
   
   return op_const;
 }
