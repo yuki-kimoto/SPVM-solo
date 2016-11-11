@@ -239,7 +239,6 @@ void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_i
     }
     else if (first_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
       if (last_type_id == SPerl_BODY_CORE_C_CODE_INT) {
-        warn("BBBBBBBBBBBB %d %d", first_type_id, last_type_id);
         type_convert_op->code = SPerl_OP_C_CODE_I2D;
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
@@ -265,7 +264,8 @@ void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_i
       op->last->sibparent = type_convert_op;
       op->last->moresib = 0;
       op->last = type_convert_op;
-      warn("PPPPPPPPPPPP %s", SPerl_OP_C_CODE_NAMES[op->last->code]);
+      
+      op->first->sibparent = type_convert_op;
     }
   }
 }
@@ -356,7 +356,6 @@ void _dump(SPerl_PARSER* parser) {
       else {
         while (1) {
           // [START]Postorder traversal position
-          // warn("QQQQQQQQQQQQQQQQQQ %s", SPerl_OP_C_CODE_NAMES[op_cur->code]);
           
           // [END]Postorder traversal position
           
