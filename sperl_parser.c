@@ -194,7 +194,8 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
   free(parser);
 }
 
-void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) {
+/*
+void SPerl_PARSER_dump_ast_(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) {
       
   if (!op) {
     return;
@@ -257,10 +258,101 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int depth) 
     SPerl_PARSER_dump_ast(parser, SPerl_OP_sibling(parser, op), depth);
   }
 }
+*/
+void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
+  SPerl_int depth = 0;
+  
+  // Run OPs
+  SPerl_OP* op_cur = op_base;
+  SPerl_boolean finish = 0;
+  while (op_cur) {
+    // [START]Preorder traversal position
+    
+    for (SPerl_int i = 0; i < depth; i++) {
+      printf(" ");
+    }
+    SPerl_int code = op_cur->code;
+    printf("%s", SPerl_OP_C_CODE_NAMES[code]);
+    if (code == SPerl_OP_C_CODE_CONST_VALUE) {
+      SPerl_CONST_VALUE* const_value = op_cur->info;
+      switch(const_value->code) {
+        case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
+          printf(" boolean %d", const_value->uv.int_value);
+          break;
+        case SPerl_CONST_VALUE_C_CODE_CHAR:
+          printf(" char '%c'", const_value->uv.int_value);
+          break;
+        case SPerl_CONST_VALUE_C_CODE_BYTE:
+          printf(" byte %d", const_value->uv.int_value);
+          break;
+        case SPerl_CONST_VALUE_C_CODE_SHORT:
+          printf(" short %d", const_value->uv.int_value);
+          break;
+        case SPerl_CONST_VALUE_C_CODE_INT:
+          printf(" int %d", const_value->uv.int_value);
+          break;
+        case SPerl_CONST_VALUE_C_CODE_LONG:
+          printf(" long %ld", const_value->uv.long_value);
+          break;
+        case SPerl_CONST_VALUE_C_CODE_FLOAT:
+          printf(" float %f", const_value->uv.float_value);
+          break;
+        case SPerl_CONST_VALUE_C_CODE_DOUBLE:
+          printf(" double %f", const_value->uv.double_value);
+          break;
+        case SPerl_CONST_VALUE_C_CODE_STRING:
+          printf(" string \"%s\"", const_value->uv.string_value);
+          break;
+      }
+    }
+    else if (code == SPerl_OP_C_CODE_VAR) {
+      SPerl_VAR* var = op_cur->info;
+      printf(" \"%s\"", var->name_word->value);
+    }
+    else if (code == SPerl_OP_C_CODE_WORD) {
+      SPerl_WORD* word = op_cur->info;
+      printf(" \"%s\"", word->value);
+    }
+    printf("\n");
+    
+    // [END]Preorder traversal position
+    
+    if (op_cur->first) {
+      op_cur = op_cur->first;
+      depth++;
+    }
+    else {
+      while (1) {
+        // [START]Postorder traversal position
+        
+        // [END]Postorder traversal position
+        
+        if (op_cur == op_base) {
+          finish = 1;
+          break;
+        }
+        
+        // Next sibling
+        if (op_cur->moresib) {
+          op_cur = SPerl_OP_sibling(parser, op_cur);
+          break;
+        }
+        // Next is parent
+        else {
+          op_cur = op_cur->sibparent;
+          depth--;
+        }
+      }
+      if (finish) {
+        break;
+      }
+    }
+  }
+}
 
 void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
-  SPerl_PARSER_dump_ast(parser, parser->op_grammer, 0);
+  SPerl_PARSER_dump_ast(parser, parser->op_grammer);
 
   printf("\n[Packages information]\n");
   SPerl_PARSER_dump_packages(parser, parser->packages);
