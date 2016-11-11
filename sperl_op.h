@@ -131,7 +131,6 @@ void SPerl_OP_check_packages(SPerl_PARSER* parser);
 void SPerl_OP_check_bodys(SPerl_PARSER* parser);
 void SPerl_OP_check_names(SPerl_PARSER* parser);
 void SPerl_OP_check_types(SPerl_PARSER* parser);
-void SPerl_OP_check_opdefs(SPerl_PARSER* parser);
 SPerl_int SPerl_OP_get_return_type_id(SPerl_PARSER* parser, SPerl_OP* op);
 SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl_OP* op_first, SPerl_OP* op_last);
 void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int first_type_id, SPerl_int last_type_id);

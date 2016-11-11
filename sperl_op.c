@@ -360,9 +360,6 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   // Resolve types
   SPerl_OP_resolve_types(parser);
   
-  // Check opdefs
-  SPerl_OP_check_opdefs(parser);
-  
   // Check types
   SPerl_OP_check_types(parser);
 }
@@ -375,20 +372,6 @@ void SPerl_OP_check_packages(SPerl_PARSER* parser) {
     SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
     SPerl_TYPE* type = package->type;
     SPerl_OP_resolve_type(parser, type);
-  }
-}
-
-void SPerl_OP_check_opdefs(SPerl_PARSER* parser) {
-  // Resolve opdef type
-  SPerl_ARRAY* opdefs = parser->opdefs;
-  for (SPerl_int i = 0; i < opdefs->length; i++) {
-    SPerl_OPDEF* opdef = SPerl_ARRAY_fetch(opdefs, i);
-    SPerl_OP_resolve_type(parser, opdef->return_type);
-    
-    for (SPerl_int j = 0; j < opdef->argument_count; j) {
-      SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(opdef->argument_types, j);
-      SPerl_OP_resolve_type(parser, argument_type);
-    }
   }
 }
 
