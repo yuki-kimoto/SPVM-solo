@@ -63,7 +63,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   parser->bufptr = "";
   
-  parser->opdefs = SPerl_PARSER_new_array(parser, 0);
   parser->types = SPerl_PARSER_new_array(parser, 0);
 
   // Add core type

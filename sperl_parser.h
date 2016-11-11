@@ -105,9 +105,6 @@ struct SPerl_yy_parser_{
   // Call subroutines
   SPerl_ARRAY* name_checked_ops;
   
-  // opdefs
-  SPerl_ARRAY* opdefs;
-  
   // Types
   SPerl_ARRAY* types;
 };
