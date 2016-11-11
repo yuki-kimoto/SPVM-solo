@@ -568,6 +568,10 @@ SPerl_OP* SPerl_OP_build_converttype(SPerl_PARSER* parser, SPerl_OP* op_type, SP
   
   SPerl_OP* op_converttype = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERTTYPE, op_type, op_term);
   
+  // Add type
+  SPerl_TYPE* type = op_type->info;
+  SPerl_ARRAY_push(parser->types, type);
+  
   return op_converttype;
 }
 
