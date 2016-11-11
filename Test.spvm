@@ -14,6 +14,6 @@ package Test {
   sub main() : int {
     1 + 1.2;
     1.2 + 3;
+    my $foo : double = (double)1;
   }
-
 }

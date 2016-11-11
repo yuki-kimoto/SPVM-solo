@@ -97,7 +97,8 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_I2S, // UNIOP
   SPerl_OP_C_CODE_L2D, // UNIOP
   SPerl_OP_C_CODE_L2F, // UNIOP
-  SPerl_OP_C_CODE_L2I  // UNIOP
+  SPerl_OP_C_CODE_L2I,  // UNIOP
+  SPerl_OP_C_CODE_CONVERTTYPE // UNKNOWN
 };
 
 enum {
@@ -153,6 +154,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser);
 SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser);
 SPerl_OP* SPerl_OP_newOP_NULL(SPerl_PARSER* parser);
+SPerl_OP* SPerl_OP_build_converttype(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term);
 
 SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* sub_abs_name, SPerl_int argument_count);
 SPerl_char* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* call_name);

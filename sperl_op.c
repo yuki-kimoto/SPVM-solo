@@ -127,7 +127,8 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "i2s",
   "l2d",
   "l2f",
-  "l2i"
+  "l2i",
+  "converttype"
 };
 
 SPerl_int SPerl_OP_get_return_type_id(SPerl_PARSER* parser, SPerl_OP* op) {
@@ -336,52 +337,6 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
   }
 }
 
-void _dump(SPerl_PARSER* parser) {
-  for (SPerl_int i = 0; i < parser->subs->length; i++) {
-    SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
-    SPerl_OP* op_sub = sub->op;
-    
-    // Run OPs
-    SPerl_OP* op_base = op_sub;
-    SPerl_OP* op_cur = op_base;
-    SPerl_boolean finish = 0;
-    while (op_cur) {
-      // [START]Preorder traversal position
-      
-      // [END]Preorder traversal position
-      
-      if (op_cur->first) {
-        op_cur = op_cur->first;
-      }
-      else {
-        while (1) {
-          // [START]Postorder traversal position
-          
-          // [END]Postorder traversal position
-          
-          if (op_cur == op_base) {
-            finish = 1;
-            break;
-          }
-          
-          // Next sibling
-          if (op_cur->moresib) {
-            op_cur = SPerl_OP_sibling(parser, op_cur);
-            break;
-          }
-          // Next is parent
-          else {
-            op_cur = op_cur->sibparent;
-          }
-        }
-        if (finish) {
-          break;
-        }
-      }
-    }
-  }
-}
-
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Check packages
@@ -401,8 +356,6 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Check types
   SPerl_OP_check_types(parser);
-  
-  _dump(parser);
 }
 
 void SPerl_OP_check_packages(SPerl_PARSER* parser) {
@@ -648,6 +601,13 @@ SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_
   op_getfield->info = name;
   
   return op_getfield;
+}
+
+SPerl_OP* SPerl_OP_build_converttype(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term) {
+  
+  SPerl_OP* op_converttype = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERTTYPE, op_type, op_term);
+  
+  return op_converttype;
 }
 
 SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {

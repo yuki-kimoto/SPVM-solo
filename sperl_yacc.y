@@ -108,7 +108,7 @@
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
 %type <opval> type packagename fieldname subname package packages optenumvalues arraytype
 %type <opval> forstatement whilestatement expression optpackages subtype types opttypes notsubtype
-%type <opval> enumname getenumvalue getfield getarrayelem
+%type <opval> enumname getenumvalue getfield getarrayelem converttype
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -431,6 +431,13 @@ term
   | getenumvalue
   | getfield
   | getarrayelem
+  | converttype
+
+converttype
+  : '(' type ')' term
+    {
+      $$ = SPerl_OP_build_converttype(parser, $2, $4);
+    }
 
 getfield
   : VAR ARROW fieldname
