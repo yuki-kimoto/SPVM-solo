@@ -337,6 +337,10 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
   }
 }
 
+void SPerl_OP_resolve_types(SPerl_PARSER* parser) {
+  
+}
+
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Check packages

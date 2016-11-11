@@ -107,6 +107,9 @@ struct SPerl_yy_parser_{
   
   // opdefs
   SPerl_ARRAY* opdefs;
+  
+  // Types
+  SPerl_ARRAY* types;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
