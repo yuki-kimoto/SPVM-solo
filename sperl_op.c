@@ -350,12 +350,12 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Check names
   SPerl_OP_check_names(parser);
+
+  // Check descripters(Not used)
+  SPerl_OP_check_descripters(parser);
   
   // Resolve types
   SPerl_OP_resolve_types(parser);
-  
-  // Check descripters
-  SPerl_OP_check_descripters(parser);
   
   // Check types
   SPerl_OP_check_types(parser);
@@ -593,6 +593,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
     return;
   }
   else {
+    SPerl_TYPE_build_parts(parser, type);
     SPerl_ARRAY* parts = type->parts;
     SPerl_ARRAY* resolved_parts = SPerl_PARSER_new_array(parser, 0);
     
@@ -833,7 +834,6 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
             const_value->uv.int_value = start_value;
             SPerl_TYPE* type = SPerl_TYPE_create_word_type(parser, "int");
-            SPerl_TYPE_build_parts(parser, type);
             const_value->type = type;
 
             enum_value->value = const_value;
@@ -965,7 +965,6 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       type = op_type->info;
     }
     
-    SPerl_TYPE_build_parts(parser, type);
     package->type = type;
     SPerl_ARRAY_push(parser->types, type);
     
@@ -1005,7 +1004,6 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   
   // type
   my_var->type = op_type->info;
-  SPerl_TYPE_build_parts(parser, my_var->type);
   
   // Add my_var information to op
   op_my->info = my_var;
@@ -1031,9 +1029,6 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   
   // Type
   field->type = op_type->info;
-  
-  // Create type string parts
-  SPerl_TYPE_build_parts(parser, field->type);
   
   // Add type
   SPerl_ARRAY_push(parser->types, field->type);
@@ -1107,7 +1102,6 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   
   // return type
   sub->return_type = op_type->info;
-  SPerl_TYPE_build_parts(parser, sub->return_type);
   
   // Add type
   SPerl_ARRAY_push(parser->types, sub->return_type);
