@@ -310,7 +310,6 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
             }
           }
           
-          /*
           switch (op_cur->code) {
             case SPerl_OP_C_CODE_CONVERTTYPE: {
               SPerl_OP* op_type_dist = op_cur->first;
@@ -321,14 +320,15 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
               
               // Can receive only core type
               if (!SPerl_TYPE_is_core_type(parser, type_src->id) || !SPerl_TYPE_is_core_type(parser, type_dist->id)) {
+                warn("AAAAAAAAA");
                 SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
+                warn("BBBBBBBB");
                 sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
                   type_src->resolved_string, type_dist->resolved_string, op_cur->file, op_cur->line);
                 SPerl_yyerror(parser, message);
               }
             }
           }
-          */
           
           // [END]Postorder traversal position
           
@@ -585,6 +585,8 @@ SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_
 SPerl_OP* SPerl_OP_build_converttype(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term) {
   
   SPerl_OP* op_converttype = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERTTYPE, op_type, op_term);
+  op_converttype->file = op_type->file;
+  op_converttype->line = op_type->line;
   
   // Add type
   SPerl_TYPE* type = op_type->info;
@@ -1433,21 +1435,34 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_typ
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_SUB;
   
+  SPerl_char* file = NULL;
+  SPerl_int line = -1;
+  
   // sub type
   SPerl_TYPE_SUB* type_sub = SPerl_TYPE_SUB_new(parser);
-  type_sub->return_type = op_return_type->info;
   SPerl_ARRAY* argument_types = SPerl_PARSER_new_array(parser, 0);
   {
     SPerl_OP* op_argument_type = op_argument_types->first;
     while (op_argument_type = SPerl_OP_sibling(parser, op_argument_type)) {
+      if (file == NULL) {
+        file = op_argument_type->file;
+        line = op_argument_type->line;
+      }
       SPerl_ARRAY_push(argument_types, op_argument_type->info);
     }
+  }
+  type_sub->return_type = op_return_type->info;
+  if (file == NULL) {
+    file = op_return_type->file;
+    line = op_return_type->line;
   }
   type_sub->argument_types = argument_types;
   
   type->uv.type_sub = type_sub;
   
   op_type->info = type;
+  op_type->file = file;
+  op_type->line = line;
   
   return op_type;
 }
@@ -1463,6 +1478,8 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
   type->uv.type_word = type_word;
   
   op_type->info = type;
+  op_type->file = op_wordtype->file;
+  op_type->line = op_wordtype->line;
   
   return op_type;
 }
@@ -1480,6 +1497,8 @@ SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_type) {
   type->uv.type_array = type_array;
   
   op_type_array->info = type;
+  op_type_array->file = op_type->file;
+  op_type_array->line = op_type->line;
   
   return op_type_array;
 }
