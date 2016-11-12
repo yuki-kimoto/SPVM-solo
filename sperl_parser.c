@@ -328,10 +328,7 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
     SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
     printf("    name => \"%s\"\n", package->name_word->value);
     
-    printf("    type => \"");
-    SPerl_TYPE_print(parser, package->type, stdout);
-    printf("\"\n");
-    
+    printf("    type => \"%s\"\n", package->type->name);
     printf("    resolved_type => \"%s\"\n", package->type->resolved_name);
     printf("    type_id => %d\n", package->type->id);
   }
@@ -447,9 +444,7 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("      id => %d\n", sub->id);
     printf("      anon => %d\n", sub->anon);
 
-    printf("      return_type => \"");
-    SPerl_TYPE_print(parser, sub->return_type, stdout);
-    printf("\"\n");
+    printf("      return_type => \"%s\"\n", sub->return_type->name);
     printf("      resolved_type => \"%s\"\n", sub->return_type->resolved_name);
     printf("      type_id => %d\n", sub->return_type->id);
 
@@ -487,9 +482,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     printf("      name => \"%s\"\n", field->name_word->value);
     
     SPerl_TYPE* type = field->type;
-    printf("      type => \"");
-    SPerl_TYPE_print(parser, type, stdout);
-    printf("\"\n");
+    printf("      type => \"%s\"\n", type->name);
     printf("      resolved_type => \"%s\"\n", type->resolved_name);
     printf("      type_id => %d\n", type->id);
 
@@ -531,9 +524,7 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     printf("          name => \"%s\"\n", my_var->name_word->value);
     
     SPerl_TYPE* type = my_var->type;
-    printf("          type => \"");
-    SPerl_TYPE_print(parser, type, stdout);
-    printf("\"\n");
+    printf("          type => \"%s\"\n", my_var->type->name);
     printf("          resolved_type => \"%s\"\n", my_var->type->resolved_name);
     printf("          type_id => %d\n", my_var->type->id);
     

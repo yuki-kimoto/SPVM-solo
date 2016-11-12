@@ -320,9 +320,7 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
               
               // Can receive only core type
               if (!SPerl_TYPE_is_core_type(parser, type_src->id) || !SPerl_TYPE_is_core_type(parser, type_dist->id)) {
-                warn("AAAAAAAAA");
                 SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
-                warn("BBBBBBBB");
                 sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
                   type_src->resolved_name, type_dist->resolved_name, op_cur->file, op_cur->line);
                 SPerl_yyerror(parser, message);
@@ -618,8 +616,9 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
   }
   else {
     SPerl_TYPE_build_parts(parser, type);
+    SPerl_TYPE_build_name(parser, type);
+    
     SPerl_ARRAY* parts = type->parts;
-    SPerl_ARRAY* resolved_parts = SPerl_PARSER_new_array(parser, 0);
     
     for (SPerl_int i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);

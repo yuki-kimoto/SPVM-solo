@@ -168,3 +168,53 @@ void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh) {
   }
 }
 
+void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
+  
+  if (type->name) {
+    return;
+  }
+  else {
+    SPerl_ARRAY* parts = type->parts;
+    SPerl_int total_length = 0;
+
+    for (SPerl_int i = 0; i < parts->length; i++) {
+      SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
+      SPerl_char code = part->code;
+      
+      if (code == SPerl_TYPE_PART_C_CODE_CHAR) {
+        total_length += 1;
+      }
+      else if (code == SPerl_TYPE_PART_C_CODE_WORD) {
+        total_length += strlen(part->uv.name_word->value);
+      }
+      else if (code == SPerl_TYPE_PART_C_CODE_SUB) {
+        total_length += 3;
+      }
+    }
+    
+    SPerl_char* type_name = SPerl_PARSER_new_string(parser, total_length);
+    
+    SPerl_int pos = 0;
+    for (SPerl_int i = 0; i < parts->length; i++) {
+      SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
+      SPerl_char code = part->code;
+      
+      SPerl_int length = 0;
+      if (code == SPerl_TYPE_PART_C_CODE_CHAR) {
+        length = 1;
+        memcpy(type_name + pos, part->uv.char_name, length);
+      }
+      else if (code == SPerl_TYPE_PART_C_CODE_WORD) {
+        length = strlen(part->uv.name_word->value);
+        memcpy(type_name + pos, part->uv.name_word->value, length);
+      }
+      else if (code == SPerl_TYPE_PART_C_CODE_SUB) {
+        length = 3;
+        memcpy(type_name + pos, "sub", length);
+      }
+      pos += length;
+    }
+    
+    type->name = type_name;
+  }
+}

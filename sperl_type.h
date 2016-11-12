@@ -16,6 +16,7 @@ extern SPerl_char* const SPerl_TYPE_C_CODE_NAMES[];
 struct SPerl_type {
   SPerl_char code;
   SPerl_ARRAY* parts;
+  SPerl_char* name;
   SPerl_ARRAY* resolved_part_names;
   SPerl_char* resolved_name;
   SPerl_int resolved_name_length;
@@ -34,5 +35,6 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
 void SPerl_TYPE_build_parts(SPerl_PARSER* parser, SPerl_TYPE* type);
 void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh);
 SPerl_boolean SPerl_TYPE_is_core_type(SPerl_PARSER* parser, SPerl_int type_id);
+void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type);
 
 #endif
