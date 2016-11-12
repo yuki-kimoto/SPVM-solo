@@ -175,6 +175,8 @@ SPerl_TYPE* SPerl_OP_get_return_type(SPerl_PARSER* parser, SPerl_OP* op) {
       type = opdef->return_type;
       break;
     }
+    defaut:
+      type = NULL;
   }
   
   return type;
@@ -303,11 +305,30 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
                   opdef->symbol, op_cur->file, op_cur->line);
                 SPerl_yyerror(parser, message);
               }
-              
               // Insert type converting op
               SPerl_OP_insert_type_convert_op(parser, op_cur, first_type->id, last_type->id);
             }
           }
+          
+          /*
+          switch (op_cur->code) {
+            case SPerl_OP_C_CODE_CONVERTTYPE: {
+              SPerl_OP* op_type_dist = op_cur->first;
+              SPerl_TYPE* type_dist = op_type_dist->info;
+              
+              SPerl_OP* op_term = op_cur->last;
+              SPerl_TYPE* type_src = SPerl_OP_get_return_type(parser, op_term);
+              
+              // Can receive only core type
+              if (!SPerl_TYPE_is_core_type(parser, type_src->id) || !SPerl_TYPE_is_core_type(parser, type_dist->id)) {
+                SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
+                sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
+                  type_src->resolved_string, type_dist->resolved_string, op_cur->file, op_cur->line);
+                SPerl_yyerror(parser, message);
+              }
+            }
+          }
+          */
           
           // [END]Postorder traversal position
           

@@ -26,7 +26,7 @@ SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
 }
 
 SPerl_boolean SPerl_TYPE_is_core_type(SPerl_PARSER* parser, SPerl_int type_id) {
-  if (type_id >= 0 && type_id <= 8) {
+  if (type_id >= 0 && type_id < 8) {
     return 1;
   }
   else {
