@@ -324,7 +324,7 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
                 SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
                 warn("BBBBBBBB");
                 sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
-                  type_src->resolved_string, type_dist->resolved_string, op_cur->file, op_cur->line);
+                  type_src->resolved_name, type_dist->resolved_name, op_cur->file, op_cur->line);
                 SPerl_yyerror(parser, message);
               }
             }
@@ -613,7 +613,7 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
   SPerl_HASH* package_symtable = parser->package_symtable;
   
-  if (type->resolved_string) {
+  if (type->resolved_name) {
     return;
   }
   else {
@@ -624,11 +624,11 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
     for (SPerl_int i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
       if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
-        type->resolved_string_length += 3;
+        type->resolved_name_length += 3;
         SPerl_ARRAY_push(type->resolved_part_names, "sub");
       }
       else if (part->code == SPerl_TYPE_PART_C_CODE_CHAR) {
-        type->resolved_string_length++;
+        type->resolved_name_length++;
         SPerl_ARRAY_push(type->resolved_part_names, part->uv.char_name);
       }
       else {
@@ -642,13 +642,13 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
             && strcmp(type->uv.type_word->name_word->value, found_type->uv.type_word->name_word->value) == 0;
           
           if (is_self) {
-            type->resolved_string_length += strlen(found_type->uv.type_word->name_word->value);
+            type->resolved_name_length += strlen(found_type->uv.type_word->name_word->value);
             SPerl_char* found_part_name = found_type->uv.type_word->name_word->value;
             SPerl_ARRAY_push(type->resolved_part_names, found_part_name);
           }
           else {
             SPerl_OP_resolve_type(parser, found_type);
-            type->resolved_string_length += found_type->resolved_string_length;
+            type->resolved_name_length += found_type->resolved_name_length;
             for (SPerl_int j = 0; j < found_type->resolved_part_names->length; j++) {
               SPerl_char* found_part_name = SPerl_ARRAY_fetch(found_type->resolved_part_names, j);
               SPerl_ARRAY_push(type->resolved_part_names, found_part_name);
@@ -662,25 +662,25 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
         }
       }
     }
-    SPerl_char* resolved_string = SPerl_PARSER_new_string(parser, type->resolved_string_length);
+    SPerl_char* resolved_name = SPerl_PARSER_new_string(parser, type->resolved_name_length);
     SPerl_int cur_pos = 0;
     for (SPerl_int i = 0; i < type->resolved_part_names->length; i++) {
       SPerl_char* resolved_part_name = SPerl_ARRAY_fetch(type->resolved_part_names, i);
       SPerl_int resolved_part_name_length = strlen(resolved_part_name);
-      memcpy(resolved_string + cur_pos, resolved_part_name, resolved_part_name_length);
+      memcpy(resolved_name + cur_pos, resolved_part_name, resolved_part_name_length);
       cur_pos += resolved_part_name_length;
     }
-    type->resolved_string = resolved_string;
+    type->resolved_name = resolved_name;
     
     // Create type id
-    SPerl_int* id = SPerl_HASH_search(parser->type_resolved_string_symtable, resolved_string, strlen(resolved_string));
+    SPerl_int* id = SPerl_HASH_search(parser->type_resolved_name_symtable, resolved_name, strlen(resolved_name));
     if (id) {
       type->id = *id;
     }
     else {
       SPerl_int* new_id = SPerl_PARSER_new_int(parser);
       type->id = *new_id = parser->current_type_id++;
-      SPerl_HASH_insert(parser->type_resolved_string_symtable, resolved_string, strlen(resolved_string), new_id);
+      SPerl_HASH_insert(parser->type_resolved_name_symtable, resolved_name, strlen(resolved_name), new_id);
     }
   }
 }

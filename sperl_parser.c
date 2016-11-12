@@ -50,7 +50,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->field_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->enum_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   
-  parser->type_resolved_string_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->type_resolved_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
@@ -332,7 +332,7 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
     SPerl_TYPE_print(parser, package->type, stdout);
     printf("\"\n");
     
-    printf("    resolved_type => \"%s\"\n", package->type->resolved_string);
+    printf("    resolved_type => \"%s\"\n", package->type->resolved_name);
     printf("    type_id => %d\n", package->type->id);
   }
 }
@@ -450,7 +450,7 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("      return_type => \"");
     SPerl_TYPE_print(parser, sub->return_type, stdout);
     printf("\"\n");
-    printf("      resolved_type => \"%s\"\n", sub->return_type->resolved_string);
+    printf("      resolved_type => \"%s\"\n", sub->return_type->resolved_name);
     printf("      type_id => %d\n", sub->return_type->id);
 
     SPerl_int i;
@@ -490,7 +490,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     printf("      type => \"");
     SPerl_TYPE_print(parser, type, stdout);
     printf("\"\n");
-    printf("      resolved_type => \"%s\"\n", type->resolved_string);
+    printf("      resolved_type => \"%s\"\n", type->resolved_name);
     printf("      type_id => %d\n", type->id);
 
     printf("      descripters => ");
@@ -534,7 +534,7 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     printf("          type => \"");
     SPerl_TYPE_print(parser, type, stdout);
     printf("\"\n");
-    printf("          resolved_type => \"%s\"\n", my_var->type->resolved_string);
+    printf("          resolved_type => \"%s\"\n", my_var->type->resolved_name);
     printf("          type_id => %d\n", my_var->type->id);
     
     printf("          descripters => ");
