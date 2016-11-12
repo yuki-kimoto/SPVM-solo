@@ -270,6 +270,59 @@ void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_i
   }
 }
 
+void SPerl_OP_resolve_op_converttype(SPerl_PARSER* parser, SPerl_OP* op_converttype, SPerl_int src_type_id, SPerl_int dist_type_id) {
+  
+  op_converttype->code = SPerl_OP_C_CODE_NULL;
+  
+  if (src_type_id != dist_type_id) {
+    op_converttype->group = SPerl_OP_C_GROUP_UNIOP;
+    if (src_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+      if (dist_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+        op_converttype->code = SPerl_OP_C_CODE_I2L;
+      }
+      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+        op_converttype->code = SPerl_OP_C_CODE_I2F;
+      }
+      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+       op_converttype->code = SPerl_OP_C_CODE_I2D;
+      }
+    }
+    else if (src_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+      if (dist_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+        op_converttype->code = SPerl_OP_C_CODE_I2L;
+      }
+      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+        op_converttype->code = SPerl_OP_C_CODE_L2F;
+      }
+      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+        op_converttype->code = SPerl_OP_C_CODE_L2D;
+      }
+    }
+    else if (src_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+      if (dist_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+        op_converttype->code = SPerl_OP_C_CODE_I2F;
+      }
+      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+        op_converttype->code = SPerl_OP_C_CODE_L2F;
+      }
+      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+        op_converttype->code = SPerl_OP_C_CODE_F2D;
+      }
+    }
+    else if (src_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+      if (dist_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+        op_converttype->code = SPerl_OP_C_CODE_I2D;
+      }
+      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+        op_converttype->code = SPerl_OP_C_CODE_L2D;
+      }
+      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+        op_converttype->code = SPerl_OP_C_CODE_F2D;
+      }
+    }
+  }
+}
+
 void SPerl_OP_check_types(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->subs->length; i++) {
     SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
@@ -290,6 +343,28 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
       else {
         while (1) {
           // [START]Postorder traversal position
+
+          switch (op_cur->code) {
+            case SPerl_OP_C_CODE_CONVERTTYPE: {
+              SPerl_OP* op_type_dist = op_cur->first;
+              SPerl_TYPE* type_dist = op_type_dist->info;
+              
+              SPerl_OP* op_term = op_cur->last;
+              SPerl_TYPE* type_src = SPerl_OP_get_return_type(parser, op_term);
+              
+              // Can receive only core type
+              if (!SPerl_TYPE_is_core_type(parser, type_src->id) || !SPerl_TYPE_is_core_type(parser, type_dist->id)) {
+                SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
+                sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
+                  type_src->resolved_name, type_dist->resolved_name, op_cur->file, op_cur->line);
+                SPerl_yyerror(parser, message);
+              }
+              
+              // Convert type converting op
+              SPerl_OP_resolve_op_converttype(parser, op_cur, type_src->id, type_dist->id);
+            }
+          }
+          
           switch (op_cur->group) {
             case SPerl_OP_C_GROUP_BINOP: {
               SPerl_OP* first = op_cur->first;
@@ -307,24 +382,6 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
               }
               // Insert type converting op
               SPerl_OP_insert_type_convert_op(parser, op_cur, first_type->id, last_type->id);
-            }
-          }
-          
-          switch (op_cur->code) {
-            case SPerl_OP_C_CODE_CONVERTTYPE: {
-              SPerl_OP* op_type_dist = op_cur->first;
-              SPerl_TYPE* type_dist = op_type_dist->info;
-              
-              SPerl_OP* op_term = op_cur->last;
-              SPerl_TYPE* type_src = SPerl_OP_get_return_type(parser, op_term);
-              
-              // Can receive only core type
-              if (!SPerl_TYPE_is_core_type(parser, type_src->id) || !SPerl_TYPE_is_core_type(parser, type_dist->id)) {
-                SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
-                sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
-                  type_src->resolved_name, type_dist->resolved_name, op_cur->file, op_cur->line);
-                SPerl_yyerror(parser, message);
-              }
             }
           }
           
