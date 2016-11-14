@@ -1613,6 +1613,55 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* f
       op->group = SPerl_OP_C_GROUP_ASSIGNOP;
       break;
     
+    // Binary OP
+    case SPerl_OP_C_CODE_LT:
+    case SPerl_OP_C_CODE_LE:
+    case SPerl_OP_C_CODE_GT:
+    case SPerl_OP_C_CODE_GE:
+    case SPerl_OP_C_CODE_ADD:
+    case SPerl_OP_C_CODE_SUBTRACT:
+    case SPerl_OP_C_CODE_MULTIPLY:
+    case SPerl_OP_C_CODE_DIVIDE:
+    case SPerl_OP_C_CODE_BIT_AND:
+    case SPerl_OP_C_CODE_BIT_OR:
+    case SPerl_OP_C_CODE_MODULO:
+    case SPerl_OP_C_CODE_BIT_XOR:
+    case SPerl_OP_C_CODE_EQ:
+    case SPerl_OP_C_CODE_NE:
+    case SPerl_OP_C_CODE_LEFT_SHIFT:
+    case SPerl_OP_C_CODE_RIGHT_SHIFT:
+      op->group = SPerl_OP_C_GROUP_BINOP;
+      break;
+    
+    // Unary op
+    case SPerl_OP_C_CODE_NOT:
+    case SPerl_OP_C_CODE_INC:
+    case SPerl_OP_C_CODE_DEC:
+    case SPerl_OP_C_CODE_BIT_NOT:
+    case SPerl_OP_C_CODE_PREINC:
+    case SPerl_OP_C_CODE_POSTINC:
+    case SPerl_OP_C_CODE_PREDEC:
+    case SPerl_OP_C_CODE_POSTDEC:
+    case SPerl_OP_C_CODE_COMPLEMENT:
+    case SPerl_OP_C_CODE_NEGATE:
+    case SPerl_OP_C_CODE_PLUS:
+    case SPerl_OP_C_CODE_D2F:
+    case SPerl_OP_C_CODE_D2I:
+    case SPerl_OP_C_CODE_D2L:
+    case SPerl_OP_C_CODE_F2D:
+    case SPerl_OP_C_CODE_F2I:
+    case SPerl_OP_C_CODE_F2L:
+    case SPerl_OP_C_CODE_I2B:
+    case SPerl_OP_C_CODE_I2C:
+    case SPerl_OP_C_CODE_I2D:
+    case SPerl_OP_C_CODE_I2F:
+    case SPerl_OP_C_CODE_I2L:
+    case SPerl_OP_C_CODE_I2S:
+    case SPerl_OP_C_CODE_L2D:
+    case SPerl_OP_C_CODE_L2F:
+    case SPerl_OP_C_CODE_L2I:
+      op->group = SPerl_OP_C_GROUP_UNIOP;
+      break;
   }
   
   return (SPerl_OP *)op;
