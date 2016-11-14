@@ -1591,6 +1591,7 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* f
   
   // Set group
   switch (code) {
+    // Constant value
     case SPerl_OP_C_CODE_CONSTBOOLEAN:
     case SPerl_OP_C_CODE_CONSTCHAR:
     case SPerl_OP_C_CODE_CONSTINT:
@@ -1599,6 +1600,13 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* f
     case SPerl_OP_C_CODE_CONSTDOUBLE:
     case SPerl_OP_C_CODE_CONSTSTRING:
       op->group = SPerl_OP_C_GROUP_CONST;
+      break;
+    
+    // Logical OP
+    case SPerl_OP_C_CODE_AND:
+    case SPerl_OP_C_CODE_OR:
+      op->group = SPerl_OP_C_GROUP_LOGICALOP;
+      break;
   }
   
   return (SPerl_OP *)op;

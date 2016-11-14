@@ -17,8 +17,8 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_SUBTRACT,     // BINOP
   SPerl_OP_C_CODE_MULTIPLY,     // BINOP
   SPerl_OP_C_CODE_DIVIDE,       // BINOP
-  SPerl_OP_C_CODE_AND,          // RELOP
-  SPerl_OP_C_CODE_OR,           // RELOP
+  SPerl_OP_C_CODE_AND,          // LOGICALOP
+  SPerl_OP_C_CODE_OR,           // LOGICALOP
   SPerl_OP_C_CODE_BIT_AND,      // BINOP
   SPerl_OP_C_CODE_BIT_OR,       // BINOP
   SPerl_OP_C_CODE_MODULO,       // BINOP
@@ -107,6 +107,7 @@ enum {
   SPerl_OP_C_GROUP_SHIFTOP,
   SPerl_OP_C_GROUP_ASSIGNOP,
   SPerl_OP_C_GROUP_CONST,
+  SPerl_OP_C_GROUP_LOGICALOP,
 };
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 
