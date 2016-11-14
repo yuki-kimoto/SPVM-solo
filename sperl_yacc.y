@@ -448,33 +448,28 @@ getenumvalue
 callop
   : '+' term %prec UMINUS
     {
-      $1->code = SPerl_OP_C_CODE_PLUS;
-      $1->group = SPerl_OP_C_GROUP_UNIOP;
-      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PLUS, NULL, NULL);
+      $$ = SPerl_OP_build_callop(parser, op, $2, NULL);
     }
   | INCOP term
     {
-      $1->code = SPerl_OP_C_CODE_PREINC;
-      $1->group = SPerl_OP_C_GROUP_UNIOP;
-      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PREINC, NULL, NULL);
+      $$ = SPerl_OP_build_callop(parser, op, $2, NULL);
     }
   | term INCOP
     {
-      $2->code = SPerl_OP_C_CODE_POSTINC;
-      $2->group = SPerl_OP_C_GROUP_UNIOP;
-      $$ = SPerl_OP_build_callop(parser, $2, $1, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POSTINC, NULL, NULL);
+      $$ = SPerl_OP_build_callop(parser, op, $1, NULL);
     }
   | DECOP term
     {
-      $1->code = SPerl_OP_C_CODE_PREDEC;
-      $1->group = SPerl_OP_C_GROUP_UNIOP;
-      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PREDEC, NULL, NULL);
+      $$ = SPerl_OP_build_callop(parser, op, $2, NULL);
     }
   | term DECOP
     {
-      $2->code = SPerl_OP_C_CODE_POSTDEC;
-      $2->group = SPerl_OP_C_GROUP_UNIOP;
-      $$ = SPerl_OP_build_callop(parser, $2, $1, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POSTDEC, NULL, NULL);
+      $$ = SPerl_OP_build_callop(parser, op, $1, NULL);
     }
   | NOTOP term
     {
@@ -486,21 +481,18 @@ callop
     }
   | '-' term %prec UMINUS
     {
-      $1->code = SPerl_OP_C_CODE_NEGATE;
-      $1->group = SPerl_OP_C_GROUP_UNIOP;
-      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEGATE, NULL, NULL);
+      $$ = SPerl_OP_build_callop(parser, op, $2, NULL);
     }
   | term '+' term %prec ADDOP
     {
-      $2->code = SPerl_OP_C_CODE_ADD;
-      $2->group = SPerl_OP_C_GROUP_BINOP;
-      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ADD, NULL, NULL);
+      $$ = SPerl_OP_build_callop(parser, op, $1, $3);
     }
   | term '-' term %prec ADDOP
     {
-      $2->code = SPerl_OP_C_CODE_SUBTRACT;
-      $2->group = SPerl_OP_C_GROUP_BINOP;
-      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_SUBTRACT, NULL, NULL);
+      $$ = SPerl_OP_build_callop(parser, op, $1, $3);
     }
   | term MULOP term
     {

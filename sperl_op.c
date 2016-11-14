@@ -1640,7 +1640,7 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
     case SPerl_OP_C_CODE_L2D:
     case SPerl_OP_C_CODE_L2F:
     case SPerl_OP_C_CODE_L2I:
-      group = SPerl_OP_C_GROUP_UNIOP;
+      group = SPerl_OP_C_GROUP_UNOP;
       break;
   }
   
