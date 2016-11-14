@@ -24,7 +24,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_POSTDEC,      // UNOP
   SPerl_OP_C_CODE_COMPLEMENT,   // UNOP
   SPerl_OP_C_CODE_NEGATE,       // UNOP
-  SPerl_OP_C_CODE_NOT,          // UNOP
   SPerl_OP_C_CODE_PLUS,         // UNOP
   SPerl_OP_C_CODE_D2F,          // UNOP
   SPerl_OP_C_CODE_D2I,          // UNOP
@@ -60,6 +59,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_RIGHT_SHIFT,  // BINOP
   SPerl_OP_C_CODE_AND,          // LOGICALOP
   SPerl_OP_C_CODE_OR,           // LOGICALOP
+  SPerl_OP_C_CODE_NOT,          // LOGICALOP
   SPerl_OP_C_CODE_LIST,         // UNKNOWN
   SPerl_OP_C_CODE_PUSHMARK,     // UNKNOWN
   SPerl_OP_C_CODE_AELEM,        // UNKNOWN

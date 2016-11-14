@@ -54,7 +54,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "postdec",
   "complement",
   "negate",
-  "not",
   "plus",
   "d2f",
   "d2i",
@@ -90,6 +89,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "right_shift",
   "and",
   "or",
+  "not",
   "list",
   "pushmark",
   "aelem",
@@ -348,6 +348,14 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
           // [START]Postorder traversal position
 
           switch (op_cur->group) {
+            case SPerl_OP_C_GROUP_UNOP: {
+              SPerl_OP* first = op_cur->first;
+              SPerl_TYPE* first_type = SPerl_OP_get_return_type(parser, first);
+              SPerl_OPDEF* opdef = op_cur->info;
+              
+              
+              
+            }
             case SPerl_OP_C_GROUP_BINOP: {
               SPerl_OP* first = op_cur->first;
               SPerl_OP* last = op_cur->last;
@@ -1588,6 +1596,7 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
     // Logical OP
     case SPerl_OP_C_CODE_AND:
     case SPerl_OP_C_CODE_OR:
+    case SPerl_OP_C_CODE_NOT:
       group = SPerl_OP_C_GROUP_LOGICALOP;
       break;
     
@@ -1617,7 +1626,6 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
       break;
     
     // Unary op
-    case SPerl_OP_C_CODE_NOT:
     case SPerl_OP_C_CODE_INC:
     case SPerl_OP_C_CODE_DEC:
     case SPerl_OP_C_CODE_BIT_NOT:

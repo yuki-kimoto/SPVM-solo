@@ -451,49 +451,61 @@ callop
   : '+' term %prec UMINUS
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PLUS, NULL, NULL);
+      op->file = $1->file;
+      op->line = $1->line;
+      $$ = SPerl_OP_build_callop(parser, op, $2, NULL);
+    }
+  | '-' term %prec UMINUS
+    {
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEGATE, NULL, NULL);
+      op->file = $1->file;
+      op->line = $1->line;
       $$ = SPerl_OP_build_callop(parser, op, $2, NULL);
     }
   | INCOP term
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PREINC, NULL, NULL);
+      op->file = $1->file;
+      op->line = $1->line;
       $$ = SPerl_OP_build_callop(parser, op, $2, NULL);
     }
   | term INCOP
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POSTINC, NULL, NULL);
+      op->file = $2->file;
+      op->line = $2->line;
       $$ = SPerl_OP_build_callop(parser, op, $1, NULL);
     }
   | DECOP term
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PREDEC, NULL, NULL);
+      op->file = $1->file;
+      op->line = $1->line;
       $$ = SPerl_OP_build_callop(parser, op, $2, NULL);
     }
   | term DECOP
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POSTDEC, NULL, NULL);
+      op->file = $2->file;
+      op->line = $2->line;
       $$ = SPerl_OP_build_callop(parser, op, $1, NULL);
-    }
-  | NOTOP term
-    {
-      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
     }
   | '~' term
     {
       $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
     }
-  | '-' term %prec UMINUS
-    {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEGATE, NULL, NULL);
-      $$ = SPerl_OP_build_callop(parser, op, $2, NULL);
-    }
   | term '+' term %prec ADDOP
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ADD, NULL, NULL);
+      op->file = $2->file;
+      op->line = $2->line;
       $$ = SPerl_OP_build_callop(parser, op, $1, $3);
     }
   | term '-' term %prec ADDOP
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_SUBTRACT, NULL, NULL);
+      op->file = $2->file;
+      op->line = $2->line;
       $$ = SPerl_OP_build_callop(parser, op, $1, $3);
     }
   | term MULOP term
@@ -512,6 +524,14 @@ callop
     {
       $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
     }
+  | term RELOP term
+    {
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
+    }
+  | term ASSIGNOP term
+    {
+      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
+    }
   | term ANDOP term
     {
       $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
@@ -520,13 +540,9 @@ callop
     {
       $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
     }
-  | term RELOP term
+  | NOTOP term
     {
-      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
-    }
-  | term ASSIGNOP term
-    {
-      $$ = SPerl_OP_build_callop(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_callop(parser, $1, $2, NULL);
     }
 
 getarrayelem
