@@ -31,7 +31,7 @@ extern SPerl_int const SPerl_OPDEF_C_ARGUMENT_COUNTS[];
 
 // Field information
 struct SPerl_opdef {
-  SPerl_char code;
+  SPerl_int code;
   SPerl_TYPE* return_type;
   SPerl_ARRAY* argument_types;
   SPerl_int argument_count;

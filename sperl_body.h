@@ -12,7 +12,7 @@ extern SPerl_char* const SPerl_BODY_C_CODE_NAMES[];
 
 // Class information
 struct SPerl_body {
-  SPerl_char code;
+  SPerl_int code;
   SPerl_char* name;
   union {
     SPerl_BODY_CLASS* body_class;

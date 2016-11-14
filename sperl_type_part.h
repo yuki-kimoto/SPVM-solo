@@ -12,7 +12,7 @@ enum {
 extern SPerl_char* const SPerl_TYPE_PART_C_CODE_NAMES[];
 
 struct SPerl_type_part {
-  SPerl_char code;
+  SPerl_int code;
   union {
     SPerl_WORD* name_word;
     SPerl_char* char_name;

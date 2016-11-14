@@ -13,7 +13,7 @@ extern SPerl_char* const SPerl_NAME_C_CODE_NAMES[];
 
 // Field information
 struct SPerl_name {
-  SPerl_char code;
+  SPerl_int code;
   SPerl_VAR* var;
   SPerl_WORD* package_name_word;
   SPerl_WORD* base_name_word;

@@ -1564,7 +1564,7 @@ SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first,
   return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
 }
 
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int code, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
         
   SPerl_OP *op = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
   

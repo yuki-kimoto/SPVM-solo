@@ -13,7 +13,7 @@ enum {
 
 // Class information
 struct SPerl_body_class {
-  SPerl_char code;
+  SPerl_int code;
   SPerl_char* name;
   SPerl_ARRAY* descripters;
   SPerl_ARRAY* fields;

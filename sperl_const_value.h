@@ -14,7 +14,7 @@ enum {
 };
 
 struct SPerl_const_value {
-  SPerl_char code;
+  SPerl_int code;
   union {
     SPerl_int int_value;
     SPerl_int long_value;

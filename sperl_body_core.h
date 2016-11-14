@@ -18,7 +18,7 @@ extern SPerl_char* const SPerl_BODY_CORE_C_CODE_NAMES[];
 extern SPerl_int const SPerl_BODY_CORE_C_SIZES[];
 
 struct SPerl_body_core {
-  SPerl_char code;
+  SPerl_int code;
   SPerl_int size;
 };
 

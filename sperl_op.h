@@ -111,8 +111,8 @@ extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 
 /* Binary operation */
 struct SPerl_op {
-  SPerl_char code;
-  SPerl_char group;
+  SPerl_int code;
+  SPerl_int group;
   SPerl_boolean moresib;
   SPerl_OP* first;
   SPerl_OP* last;
@@ -159,7 +159,7 @@ SPerl_char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_char* package_n
 SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_descripters);
 
 SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP *first, SPerl_OP *last);
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP* first, SPerl_OP* last);
 

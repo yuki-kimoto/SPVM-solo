@@ -14,7 +14,7 @@ extern SPerl_char* const SPerl_DESCRIPTER_CODE_NAMES[];
 
 // Field information
 struct SPerl_descripter {
-  SPerl_char code;
+  SPerl_int code;
   SPerl_OP* op;
 };
 
