@@ -198,56 +198,55 @@ void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_i
   if (first_type_id != last_type_id) {
     SPerl_boolean replace_first = 0;
     
-    SPerl_OP* type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, NULL, NULL);
-    type_convert_op->group = SPerl_OP_C_GROUP_UNIOP;
+    SPerl_OP* type_convert_op;
     if (first_type_id == SPerl_BODY_CORE_C_CODE_INT) {
       if (last_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
-        type_convert_op->code = SPerl_OP_C_CODE_I2L;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_I2L, NULL, NULL);
         replace_first = 1;
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-        type_convert_op->code = SPerl_OP_C_CODE_I2F;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_I2F, NULL, NULL);
         replace_first = 1;
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-       type_convert_op->code = SPerl_OP_C_CODE_I2D;
+       type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_I2D, NULL, NULL);
        replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
       if (last_type_id == SPerl_BODY_CORE_C_CODE_INT) {
-        type_convert_op->code = SPerl_OP_C_CODE_I2L;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_I2L, NULL, NULL);
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-        type_convert_op->code = SPerl_OP_C_CODE_L2F;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_L2F, NULL, NULL);
         replace_first = 1;
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-        type_convert_op->code = SPerl_OP_C_CODE_L2D;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_L2D, NULL, NULL);
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
       if (last_type_id == SPerl_BODY_CORE_C_CODE_INT) {
-        type_convert_op->code = SPerl_OP_C_CODE_I2F;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_I2F, NULL, NULL);
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
-        type_convert_op->code = SPerl_OP_C_CODE_L2F;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_L2F, NULL, NULL);
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-        type_convert_op->code = SPerl_OP_C_CODE_F2D;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_F2D, NULL, NULL);
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
       if (last_type_id == SPerl_BODY_CORE_C_CODE_INT) {
-        type_convert_op->code = SPerl_OP_C_CODE_I2D;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_I2D, NULL, NULL);
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
-        type_convert_op->code = SPerl_OP_C_CODE_L2D;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_L2D, NULL, NULL);
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-        type_convert_op->code = SPerl_OP_C_CODE_F2D;
+        type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_F2D, NULL, NULL);
       }
     }
     
@@ -272,7 +271,7 @@ void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_i
   }
 }
 
-void SPerl_OP_resolve_op_converttype(SPerl_PARSER* parser, SPerl_OP* op_converttype, SPerl_int src_type_id, SPerl_int dist_type_id) {
+void SPerl_OP_resolve_op_converttype(SPerl_PARSER* parser, SPerl_OP* op_converttypetmp, SPerl_int src_type_id, SPerl_int dist_type_id) {
   
   op_converttype->code = SPerl_OP_C_CODE_NULL;
   
