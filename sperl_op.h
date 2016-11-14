@@ -9,20 +9,22 @@
 /* Operation code */
 enum {                          // [GROUP]
   SPerl_OP_C_CODE_NULL,         // UNKNOWN
-  SPerl_OP_C_CODE_LT,           // RELOP
-  SPerl_OP_C_CODE_LE,           // RELOP
-  SPerl_OP_C_CODE_GT,           // RELOP
-  SPerl_OP_C_CODE_GE,           // RELOP
+  SPerl_OP_C_CODE_LT,           // BINOP
+  SPerl_OP_C_CODE_LE,           // BINOP
+  SPerl_OP_C_CODE_GT,           // BINOP
+  SPerl_OP_C_CODE_GE,           // BINOP
   SPerl_OP_C_CODE_ADD,          // BINOP
   SPerl_OP_C_CODE_SUBTRACT,     // BINOP
   SPerl_OP_C_CODE_MULTIPLY,     // BINOP
   SPerl_OP_C_CODE_DIVIDE,       // BINOP
-  SPerl_OP_C_CODE_AND,          // LOGICALOP
-  SPerl_OP_C_CODE_OR,           // LOGICALOP
   SPerl_OP_C_CODE_BIT_AND,      // BINOP
   SPerl_OP_C_CODE_BIT_OR,       // BINOP
   SPerl_OP_C_CODE_MODULO,       // BINOP
   SPerl_OP_C_CODE_BIT_XOR,      // BINOP
+  SPerl_OP_C_CODE_EQ,           // BINOP
+  SPerl_OP_C_CODE_NE,           // BINOP
+  SPerl_OP_C_CODE_AND,          // LOGICALOP
+  SPerl_OP_C_CODE_OR,           // LOGICALOP
   SPerl_OP_C_CODE_NOT,          // UNIOP
   SPerl_OP_C_CODE_LEFT_SHIFT,   // SHIFTOP
   SPerl_OP_C_CODE_RIGHT_SHIFT,  // SHIFTOP
@@ -39,7 +41,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_PUSHMARK,     // UNKNOWN
   SPerl_OP_C_CODE_AELEM,        // UNKNOWN
   SPerl_OP_C_CODE_FIELD,        // UNKNOWN
-  SPerl_OP_C_CODE_ASSIGN,       // UNKNOWN
+  SPerl_OP_C_CODE_ASSIGN,       // ASSIGN
   SPerl_OP_C_CODE_CALLSUB,      // UNKNOWN
   SPerl_OP_C_CODE_SUBARG,       // UNKNOWN
   SPerl_OP_C_CODE_BLOCK,        // UNKNOWN
@@ -54,8 +56,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_LOOP,         // UNKNOWN
   SPerl_OP_C_CODE_SUB,          // UNKNOWN
   SPerl_OP_C_CODE_VAR,          // UNKNOWN
-  SPerl_OP_C_CODE_EQ,           // RELOP
-  SPerl_OP_C_CODE_NE,           // RELOP
   SPerl_OP_C_CODE_STATEMENT,    // UNKNOWN
   SPerl_OP_C_CODE_GRAMMER,      // UNKNOWN
   SPerl_OP_C_CODE_WORD,         // UNKNOWN

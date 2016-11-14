@@ -47,12 +47,14 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "subtract",
   "multiply",
   "divide",
-  "and",
-  "or",
   "bit_and",
   "bit_or",
   "modulo",
   "bit_xor",
+  "eq",
+  "ne",
+  "and",
+  "or",
   "not",
   "left_shift",
   "right_shift",
@@ -84,8 +86,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "loop",
   "sub",
   "var",
-  "eq",
-  "ne",
   "statement",
   "grammer",
   "word",
@@ -1607,6 +1607,12 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* f
     case SPerl_OP_C_CODE_OR:
       op->group = SPerl_OP_C_GROUP_LOGICALOP;
       break;
+    
+    // Assign OP
+    case SPerl_OP_C_CODE_ASSIGN:
+      op->group = SPerl_OP_C_GROUP_ASSIGNOP;
+      break;
+    
   }
   
   return (SPerl_OP *)op;
