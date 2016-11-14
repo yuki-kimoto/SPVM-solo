@@ -8,6 +8,39 @@
 
 /* Operation code */
 enum {                          // [GROUP]
+  SPerl_OP_C_CODE_CONSTBOOLEAN, // CONST
+  SPerl_OP_C_CODE_CONSTCHAR,    // CONST
+  SPerl_OP_C_CODE_CONSTINT,     // CONST
+  SPerl_OP_C_CODE_CONSTLONG,    // CONST
+  SPerl_OP_C_CODE_CONSTFLOAT,   // CONST
+  SPerl_OP_C_CODE_CONSTDOUBLE,  // CONST
+  SPerl_OP_C_CODE_CONSTSTRING,  // CONST
+  SPerl_OP_C_CODE_INC,          // UNOP
+  SPerl_OP_C_CODE_DEC,          // UNOP
+  SPerl_OP_C_CODE_BIT_NOT,      // UNOP
+  SPerl_OP_C_CODE_PREINC,       // UNOP
+  SPerl_OP_C_CODE_POSTINC,      // UNOP
+  SPerl_OP_C_CODE_PREDEC,       // UNOP
+  SPerl_OP_C_CODE_POSTDEC,      // UNOP
+  SPerl_OP_C_CODE_COMPLEMENT,   // UNOP
+  SPerl_OP_C_CODE_NEGATE,       // UNOP
+  SPerl_OP_C_CODE_NOT,          // UNOP
+  SPerl_OP_C_CODE_PLUS,         // UNOP
+  SPerl_OP_C_CODE_D2F,          // UNOP
+  SPerl_OP_C_CODE_D2I,          // UNOP
+  SPerl_OP_C_CODE_D2L,          // UNOP
+  SPerl_OP_C_CODE_F2D,          // UNOP
+  SPerl_OP_C_CODE_F2I,          // UNOP
+  SPerl_OP_C_CODE_F2L,          // UNOP
+  SPerl_OP_C_CODE_I2B,          // UNOP
+  SPerl_OP_C_CODE_I2C,          // UNOP
+  SPerl_OP_C_CODE_I2D,          // UNOP
+  SPerl_OP_C_CODE_I2F,          // UNOP
+  SPerl_OP_C_CODE_I2L,          // UNOP
+  SPerl_OP_C_CODE_I2S,          // UNOP
+  SPerl_OP_C_CODE_L2D,          // UNOP
+  SPerl_OP_C_CODE_L2F,          // UNOP
+  SPerl_OP_C_CODE_L2I,          // UNOP
   SPerl_OP_C_CODE_NULL,         // UNKNOWN
   SPerl_OP_C_CODE_LT,           // BINOP
   SPerl_OP_C_CODE_LE,           // BINOP
@@ -23,20 +56,10 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_BIT_XOR,      // BINOP
   SPerl_OP_C_CODE_EQ,           // BINOP
   SPerl_OP_C_CODE_NE,           // BINOP
-  SPerl_OP_C_CODE_AND,          // LOGICALOP
-  SPerl_OP_C_CODE_OR,           // LOGICALOP
-  SPerl_OP_C_CODE_NOT,          // UNOP
   SPerl_OP_C_CODE_LEFT_SHIFT,   // BINOP
   SPerl_OP_C_CODE_RIGHT_SHIFT,  // BINOP
-  SPerl_OP_C_CODE_INC,          // UNOP
-  SPerl_OP_C_CODE_DEC,          // UNOP
-  SPerl_OP_C_CODE_BIT_NOT,      // UNOP
-  SPerl_OP_C_CODE_PREINC,       // UNOP
-  SPerl_OP_C_CODE_POSTINC,      // UNOP
-  SPerl_OP_C_CODE_PREDEC,       // UNOP
-  SPerl_OP_C_CODE_POSTDEC,      // UNOP
-  SPerl_OP_C_CODE_COMPLEMENT,   // UNOP
-  SPerl_OP_C_CODE_NEGATE,       // UNOP
+  SPerl_OP_C_CODE_AND,          // LOGICALOP
+  SPerl_OP_C_CODE_OR,           // LOGICALOP
   SPerl_OP_C_CODE_LIST,         // UNKNOWN
   SPerl_OP_C_CODE_PUSHMARK,     // UNKNOWN
   SPerl_OP_C_CODE_AELEM,        // UNKNOWN
@@ -73,30 +96,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_TYPE,         // UNKNOWN
   SPerl_OP_C_CODE_GETENUMVALUE, // UNKNOWN
   SPerl_OP_C_CODE_GETFIELD,     // UNKNOWN
-  SPerl_OP_C_CODE_PLUS,         // UNOP
-  SPerl_OP_C_CODE_D2F, // UNOP
-  SPerl_OP_C_CODE_D2I, // UNOP
-  SPerl_OP_C_CODE_D2L, // UNOP
-  SPerl_OP_C_CODE_F2D, // UNOP
-  SPerl_OP_C_CODE_F2I, // UNOP
-  SPerl_OP_C_CODE_F2L, // UNOP
-  SPerl_OP_C_CODE_I2B, // UNOP
-  SPerl_OP_C_CODE_I2C, // UNOP
-  SPerl_OP_C_CODE_I2D, // UNOP
-  SPerl_OP_C_CODE_I2F, // UNOP
-  SPerl_OP_C_CODE_I2L, // UNOP
-  SPerl_OP_C_CODE_I2S, // UNOP
-  SPerl_OP_C_CODE_L2D, // UNOP
-  SPerl_OP_C_CODE_L2F, // UNOP
-  SPerl_OP_C_CODE_L2I,  // UNOP
   SPerl_OP_C_CODE_CONVERTTYPE, // UNKNOWN
-  SPerl_OP_C_CODE_CONSTBOOLEAN,    // CONST
-  SPerl_OP_C_CODE_CONSTCHAR,       // CONST
-  SPerl_OP_C_CODE_CONSTINT,        // CONST
-  SPerl_OP_C_CODE_CONSTLONG,       // CONST
-  SPerl_OP_C_CODE_CONSTFLOAT,      // CONST
-  SPerl_OP_C_CODE_CONSTDOUBLE,     // CONST
-  SPerl_OP_C_CODE_CONSTSTRING,     // CONST
 };
 
 enum {
