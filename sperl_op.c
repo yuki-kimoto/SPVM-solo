@@ -711,6 +711,13 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
     SPerl_TYPE_build_parts(parser, type);
     SPerl_TYPE_build_name(parser, type);
     
+    // Name is same as resolved name
+    SPerl_int* type_id_ptr = SPerl_HASH_search(parser->type_resolved_name_symtable, type->name, strlen(type->name));
+    if (type_id_ptr) {
+      type->resolved_name = type->name;
+      type->id = *type_id_ptr;
+    }
+    
     SPerl_ARRAY* parts = type->parts;
     
     for (SPerl_int i = 0; i < parts->length; i++) {
