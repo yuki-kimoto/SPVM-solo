@@ -273,10 +273,11 @@ void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_i
 
 void SPerl_OP_resolve_op_converttype(SPerl_PARSER* parser, SPerl_OP* op_converttype, SPerl_int src_type_id, SPerl_int dist_type_id) {
   
-  op_converttype->code = SPerl_OP_C_CODE_NULL;
-  
-  if (src_type_id != dist_type_id) {
-    op_converttype->group = SPerl_OP_C_GROUP_UNIOP;
+  if (src_type_id == dist_type_id) {
+    op_converttype->code = SPerl_OP_C_CODE_NULL;
+    op_converttype->group = SPerl_OP_get_group(parser, op_converttype->code);
+  }
+  else if (src_type_id != dist_type_id) {
     if (src_type_id == SPerl_BODY_CORE_C_CODE_INT) {
       if (dist_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
         op_converttype->code = SPerl_OP_C_CODE_I2L;
@@ -321,6 +322,7 @@ void SPerl_OP_resolve_op_converttype(SPerl_PARSER* parser, SPerl_OP* op_convertt
         op_converttype->code = SPerl_OP_C_CODE_F2D;
       }
     }
+    op_converttype->group = SPerl_OP_get_group(parser, op_converttype->code);
   }
 }
 
@@ -1564,32 +1566,11 @@ SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first,
   return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
 }
 
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int code, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
-        
-  SPerl_OP *op = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
+SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
   
-  memset(op, 0, sizeof(SPerl_OP));
-  
-  op->code = code;
-  op->first = first;
-  
-  if (last) {
-    if (!first) {
-      first = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
-      first->code = SPerl_OP_C_CODE_NULL;
-    }
-    
-    op->last = last;
-    SPerl_OP_moresib_set(parser, first, last);
-    if (op->last)
-      SPerl_OP_lastsib_set(parser, op->last, op);
-  }
-  else if (first) {
-    SPerl_OP_lastsib_set(parser, op->first, op);
-  }
-  
-  // Set group
-  switch (code) {
+  // Group
+  SPerl_int group = 0;
+  switch (op_code) {
     // Constant value
     case SPerl_OP_C_CODE_CONSTBOOLEAN:
     case SPerl_OP_C_CODE_CONSTCHAR:
@@ -1598,18 +1579,18 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int code, SPerl_OP* fi
     case SPerl_OP_C_CODE_CONSTFLOAT:
     case SPerl_OP_C_CODE_CONSTDOUBLE:
     case SPerl_OP_C_CODE_CONSTSTRING:
-      op->group = SPerl_OP_C_GROUP_CONST;
+      group = SPerl_OP_C_GROUP_CONST;
       break;
     
     // Logical OP
     case SPerl_OP_C_CODE_AND:
     case SPerl_OP_C_CODE_OR:
-      op->group = SPerl_OP_C_GROUP_LOGICALOP;
+      group = SPerl_OP_C_GROUP_LOGICALOP;
       break;
     
     // Assign OP
     case SPerl_OP_C_CODE_ASSIGN:
-      op->group = SPerl_OP_C_GROUP_ASSIGNOP;
+      group = SPerl_OP_C_GROUP_ASSIGNOP;
       break;
     
     // Binary OP
@@ -1629,7 +1610,7 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int code, SPerl_OP* fi
     case SPerl_OP_C_CODE_NE:
     case SPerl_OP_C_CODE_LEFT_SHIFT:
     case SPerl_OP_C_CODE_RIGHT_SHIFT:
-      op->group = SPerl_OP_C_GROUP_BINOP;
+      group = SPerl_OP_C_GROUP_BINOP;
       break;
     
     // Unary op
@@ -1659,9 +1640,39 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int code, SPerl_OP* fi
     case SPerl_OP_C_CODE_L2D:
     case SPerl_OP_C_CODE_L2F:
     case SPerl_OP_C_CODE_L2I:
-      op->group = SPerl_OP_C_GROUP_UNIOP;
+      group = SPerl_OP_C_GROUP_UNIOP;
       break;
   }
+  
+  return group;
+}
+
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int code, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
+        
+  SPerl_OP *op = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
+  
+  memset(op, 0, sizeof(SPerl_OP));
+  
+  op->code = code;
+  op->first = first;
+  
+  if (last) {
+    if (!first) {
+      first = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
+      first->code = SPerl_OP_C_CODE_NULL;
+    }
+    
+    op->last = last;
+    SPerl_OP_moresib_set(parser, first, last);
+    if (op->last)
+      SPerl_OP_lastsib_set(parser, op->last, op);
+  }
+  else if (first) {
+    SPerl_OP_lastsib_set(parser, op->first, op);
+  }
+  
+  // Set group
+  op->group = SPerl_OP_get_group(parser, code);
   
   return op;
 }
