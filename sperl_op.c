@@ -271,7 +271,7 @@ void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_i
   }
 }
 
-void SPerl_OP_resolve_op_converttype(SPerl_PARSER* parser, SPerl_OP* op_converttypetmp, SPerl_int src_type_id, SPerl_int dist_type_id) {
+void SPerl_OP_resolve_op_converttype(SPerl_PARSER* parser, SPerl_OP* op_converttype, SPerl_int src_type_id, SPerl_int dist_type_id) {
   
   op_converttype->code = SPerl_OP_C_CODE_NULL;
   
