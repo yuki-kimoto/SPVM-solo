@@ -9,7 +9,6 @@
 /* Operation code */
 enum {                          // [GROUP]
   SPerl_OP_C_CODE_NULL,         // UNKNOWN
-  SPerl_OP_C_CODE_CONST_VALUE,  // UNKNOWN
   SPerl_OP_C_CODE_LT,           // RELOP
   SPerl_OP_C_CODE_LE,           // RELOP
   SPerl_OP_C_CODE_GT,           // RELOP
@@ -98,7 +97,14 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_L2D, // UNIOP
   SPerl_OP_C_CODE_L2F, // UNIOP
   SPerl_OP_C_CODE_L2I,  // UNIOP
-  SPerl_OP_C_CODE_CONVERTTYPE // UNKNOWN
+  SPerl_OP_C_CODE_CONVERTTYPE, // UNKNOWN
+  SPerl_OP_C_CODE_CONSTBOOLEAN,    // CONST
+  SPerl_OP_C_CODE_CONSTCHAR,       // CONST
+  SPerl_OP_C_CODE_CONSTINT,        // CONST
+  SPerl_OP_C_CODE_CONSTLONG,       // CONST
+  SPerl_OP_C_CODE_CONSTFLOAT,      // CONST
+  SPerl_OP_C_CODE_CONSTDOUBLE,     // CONST
+  SPerl_OP_C_CODE_CONSTSTRING,     // CONST
 };
 
 enum {
@@ -108,6 +114,7 @@ enum {
   SPerl_OP_C_GROUP_RELOP,
   SPerl_OP_C_GROUP_SHIFTOP,
   SPerl_OP_C_GROUP_ASSIGNOP,
+  SPerl_OP_C_GROUP_CONST,
 };
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 

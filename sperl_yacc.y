@@ -71,12 +71,6 @@
           case SPerl_CONST_VALUE_C_CODE_CHAR:
             fprintf(file, "char '%c'", (SPerl_char)const_value->uv.int_value);
             break;
-          case SPerl_CONST_VALUE_C_CODE_BYTE:
-            fprintf(file, "byte %d", const_value->uv.int_value);
-            break;
-          case SPerl_CONST_VALUE_C_CODE_SHORT:
-            fprintf(file, "short %d", const_value->uv.int_value);
-            break;
           case SPerl_CONST_VALUE_C_CODE_INT:
             fprintf(file, "int %d", const_value->uv.int_value);
             break;

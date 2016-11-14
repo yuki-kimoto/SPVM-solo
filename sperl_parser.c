@@ -210,35 +210,29 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
     }
     SPerl_int code = op_cur->code;
     printf("%s", SPerl_OP_C_CODE_NAMES[code]);
-    if (code == SPerl_OP_C_CODE_CONST_VALUE) {
+    if (op_cur->group == SPerl_OP_C_GROUP_CONST) {
       SPerl_CONST_VALUE* const_value = op_cur->info;
-      switch(const_value->code) {
-        case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
-          printf(" boolean %d", const_value->uv.int_value);
+      switch(op_cur->code) {
+        case SPerl_OP_C_CODE_CONSTBOOLEAN:
+          printf(" %d", const_value->uv.int_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_CHAR:
-          printf(" char '%c'", const_value->uv.int_value);
+        case SPerl_OP_C_CODE_CONSTCHAR:
+          printf(" '%c'", const_value->uv.int_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_BYTE:
-          printf(" byte %d", const_value->uv.int_value);
+        case SPerl_OP_C_CODE_CONSTINT:
+          printf(" %d", const_value->uv.int_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_SHORT:
-          printf(" short %d", const_value->uv.int_value);
+        case SPerl_OP_C_CODE_CONSTLONG:
+          printf(" %ld", const_value->uv.long_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_INT:
-          printf(" int %d", const_value->uv.int_value);
+        case SPerl_OP_C_CODE_CONSTFLOAT:
+          printf(" %f", const_value->uv.float_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_LONG:
-          printf(" long %ld", const_value->uv.long_value);
+        case SPerl_OP_C_CODE_CONSTDOUBLE:
+          printf(" %f", const_value->uv.double_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_FLOAT:
-          printf(" float %f", const_value->uv.float_value);
-          break;
-        case SPerl_CONST_VALUE_C_CODE_DOUBLE:
-          printf(" double %f", const_value->uv.double_value);
-          break;
-        case SPerl_CONST_VALUE_C_CODE_STRING:
-          printf(" string \"%s\"", const_value->uv.string_value);
+        case SPerl_OP_C_CODE_CONSTSTRING:
+          printf(" \"%s\"", const_value->uv.string_value);
           break;
       }
     }
@@ -406,12 +400,6 @@ void SPerl_PARSER_dump_const_value(SPerl_PARSER* parser, SPerl_CONST_VALUE* cons
       break;
     case SPerl_CONST_VALUE_C_CODE_CHAR:
       printf("      char '%c'\n", const_value->uv.int_value);
-      break;
-    case SPerl_CONST_VALUE_C_CODE_BYTE:
-      printf("      byte %" PRId32 "\n", const_value->uv.int_value);
-      break;
-    case SPerl_CONST_VALUE_C_CODE_SHORT:
-      printf("      short %" PRId32 "\n", const_value->uv.int_value);
       break;
     case SPerl_CONST_VALUE_C_CODE_INT:
       printf("      int %" PRId32 "\n", const_value->uv.int_value);

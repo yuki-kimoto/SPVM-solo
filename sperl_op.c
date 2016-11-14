@@ -39,7 +39,6 @@
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "null",
-  "const",
   "lt",
   "le",
   "gt",
@@ -128,55 +127,66 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "l2d",
   "l2f",
   "l2i",
-  "converttype"
+  "converttype",
+  "constboolean",    // CONST
+  "constchar",       // CONST
+  "constint",        // CONST
+  "constlong",       // CONST
+  "constfloat",      // CONST
+  "constdouble",     // CONST
+  "conststring",     // CONST
 };
 
 SPerl_TYPE* SPerl_OP_get_return_type(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_TYPE* type;
   
-  switch (op->code) {
-    case SPerl_OP_C_CODE_CONST_VALUE: {
+  switch (op->group) {
+    case SPerl_OP_C_GROUP_CONST: {
       SPerl_CONST_VALUE* const_value = op->info;
       type = const_value->type;
       break;
     }
-    case SPerl_OP_C_CODE_VAR: {
-      SPerl_VAR* var = op->info;
-      type = var->my_var->type;
-      break;
+    
+    default:
+    switch (op->code) {
+      case SPerl_OP_C_CODE_VAR: {
+        SPerl_VAR* var = op->info;
+        type = var->my_var->type;
+        break;
+      }
+      case SPerl_OP_C_CODE_CALLSUB: {
+        SPerl_NAME* name = op->info;
+        SPerl_char* complete_name = name->complete_name;
+        SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
+        type = sub->return_type;
+        break;
+      }
+      case SPerl_OP_C_CODE_GETENUMVALUE: {
+        SPerl_NAME* name = op->info;
+        SPerl_char* complete_name = name->complete_name;
+        SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
+        type = enum_value->value->type;
+        break;
+      }
+      case SPerl_OP_C_CODE_GETFIELD: {
+        SPerl_NAME* name = op->info;
+        SPerl_char* complete_name = name->complete_name;
+        SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
+        type = field->type;
+        break;
+      }
+      case SPerl_OP_C_CODE_ADD:
+      case SPerl_OP_C_CODE_SUBTRACT:
+      case SPerl_OP_C_CODE_MULTIPLY:
+      case SPerl_OP_C_CODE_DIVIDE:
+      {
+        SPerl_OPDEF* opdef = op->info;
+        type = opdef->return_type;
+        break;
+      }
+      defaut:
+        type = NULL;
     }
-    case SPerl_OP_C_CODE_CALLSUB: {
-      SPerl_NAME* name = op->info;
-      SPerl_char* complete_name = name->complete_name;
-      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
-      type = sub->return_type;
-      break;
-    }
-    case SPerl_OP_C_CODE_GETENUMVALUE: {
-      SPerl_NAME* name = op->info;
-      SPerl_char* complete_name = name->complete_name;
-      SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
-      type = enum_value->value->type;
-      break;
-    }
-    case SPerl_OP_C_CODE_GETFIELD: {
-      SPerl_NAME* name = op->info;
-      SPerl_char* complete_name = name->complete_name;
-      SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
-      type = field->type;
-      break;
-    }
-    case SPerl_OP_C_CODE_ADD:
-    case SPerl_OP_C_CODE_SUBTRACT:
-    case SPerl_OP_C_CODE_MULTIPLY:
-    case SPerl_OP_C_CODE_DIVIDE:
-    {
-      SPerl_OPDEF* opdef = op->info;
-      type = opdef->return_type;
-      break;
-    }
-    defaut:
-      type = NULL;
   }
   
   return type;
@@ -770,8 +780,6 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     switch(const_value->code) {
       case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
       case SPerl_CONST_VALUE_C_CODE_CHAR:
-      case SPerl_CONST_VALUE_C_CODE_BYTE:
-      case SPerl_CONST_VALUE_C_CODE_SHORT:
       case SPerl_CONST_VALUE_C_CODE_INT:
         const_value->pool_pos = parser->const_pool_pos;
         *(const_pool + parser->const_pool_pos) = const_value->uv.int_value;
@@ -1588,7 +1596,19 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* f
   else if (first) {
     SPerl_OP_lastsib_set(parser, op->first, op);
   }
-
+  
+  // Set group
+  switch (code) {
+    case SPerl_OP_C_CODE_CONSTBOOLEAN:
+    case SPerl_OP_C_CODE_CONSTCHAR:
+    case SPerl_OP_C_CODE_CONSTINT:
+    case SPerl_OP_C_CODE_CONSTLONG:
+    case SPerl_OP_C_CODE_CONSTFLOAT:
+    case SPerl_OP_C_CODE_CONSTDOUBLE:
+    case SPerl_OP_C_CODE_CONSTSTRING:
+      op->group = SPerl_OP_C_GROUP_CONST;
+  }
+  
   return (SPerl_OP *)op;
 }
 
