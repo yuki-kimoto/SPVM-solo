@@ -1625,10 +1625,6 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
     
     // Unary op
     case SPerl_OP_C_CODE_BIT_NOT:
-    case SPerl_OP_C_CODE_PREINC:
-    case SPerl_OP_C_CODE_POSTINC:
-    case SPerl_OP_C_CODE_PREDEC:
-    case SPerl_OP_C_CODE_POSTDEC:
     case SPerl_OP_C_CODE_COMPLEMENT:
     case SPerl_OP_C_CODE_NEGATE:
     case SPerl_OP_C_CODE_PLUS:
@@ -1648,6 +1644,12 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
     case SPerl_OP_C_CODE_L2F:
     case SPerl_OP_C_CODE_L2I:
       group = SPerl_OP_C_GROUP_UNOP;
+      break;
+    case SPerl_OP_C_CODE_PREINC:
+    case SPerl_OP_C_CODE_POSTINC:
+    case SPerl_OP_C_CODE_PREDEC:
+    case SPerl_OP_C_CODE_POSTDEC:
+      group = SPerl_OP_C_GROUP_INCDEC;
       break;
   }
   
