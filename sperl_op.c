@@ -45,8 +45,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "constfloat",
   "constdouble",
   "conststring",
-  "inc",
-  "dec",
   "bit_not",
   "preinc",
   "postinc",
@@ -1626,8 +1624,6 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
       break;
     
     // Unary op
-    case SPerl_OP_C_CODE_INC:
-    case SPerl_OP_C_CODE_DEC:
     case SPerl_OP_C_CODE_BIT_NOT:
     case SPerl_OP_C_CODE_PREINC:
     case SPerl_OP_C_CODE_POSTINC:
