@@ -192,7 +192,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
       case '*':
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_MULTIPLY);
-        op->group = SPerl_OP_C_GROUP_BINOP;
         yylvalp->opval = op;
         return MULOP;
       
@@ -200,21 +199,18 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
       case '/': {
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DIVIDE);
-        op->group = SPerl_OP_C_GROUP_BINOP;
         yylvalp->opval = op;
         return MULOP;
       }
       case '%': {
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_MODULO);
-        op->group = SPerl_OP_C_GROUP_BINOP;
         yylvalp->opval = op;
         return MULOP;
       }
       case '^': {
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_XOR);
-        op->group = SPerl_OP_C_GROUP_BINOP;
         yylvalp->opval = op;
         return MULOP;
       }
@@ -224,14 +220,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '|') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_OR);
-          op->group = SPerl_OP_C_GROUP_BINOP;
           yylvalp->opval = op;
           return OROP;
         }
         /* Bit or */
         else {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_OR);
-          op->group = SPerl_OP_C_GROUP_BINOP;
           yylvalp->opval = op;
           return BITOROP;
         }
@@ -242,14 +236,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '&') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_AND);
-          op->group = SPerl_OP_C_GROUP_LOGICALOP;
           yylvalp->opval = op;
           return ANDOP;
         }
         /* Bit and */
         else {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_AND);
-          op->group = SPerl_OP_C_GROUP_LOGICALOP;
           yylvalp->opval = op;
           return BITANDOP;
         }
@@ -273,14 +265,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_EQ);
-          op->group = SPerl_OP_C_GROUP_BINOP;
           yylvalp->opval = op;
           return RELOP;
         }
         /* = */
         else {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN);
-          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
           yylvalp->opval = op;
           return ASSIGNOP;
         }
@@ -291,7 +281,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '<') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_LEFT_SHIFT);
-          op->group = SPerl_OP_C_GROUP_BINOP;
           yylvalp->opval = op;
           return SHIFTOP;
         }
@@ -299,14 +288,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_LE);
-          op->group = SPerl_OP_C_GROUP_BINOP;
           yylvalp->opval = op;
           return RELOP;
         }
         /* < */
         else {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_LT);
-          op->group = SPerl_OP_C_GROUP_BINOP;
           yylvalp->opval = op;
           return RELOP;
         }
@@ -317,7 +304,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '>') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_RIGHT_SHIFT);
-          op->group = SPerl_OP_C_GROUP_BINOP;
           yylvalp->opval = op;
           return SHIFTOP;
         }
@@ -325,14 +311,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         else if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_GE);
-          op->group = SPerl_OP_C_GROUP_BINOP;
           yylvalp->opval = op;
           return RELOP;
         }
         /* < */
         else {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_GT);
-          op->group = SPerl_OP_C_GROUP_BINOP;
           yylvalp->opval = op;
           return RELOP;
         }
@@ -342,13 +326,11 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         if (*parser->bufptr == '=') {
           parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_NE);
-          op->group = SPerl_OP_C_GROUP_BINOP;
           yylvalp->opval = op;
           return RELOP;
         }
         else {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_NOT);
-          op->group = SPerl_OP_C_GROUP_UNIOP;
           yylvalp->opval = op;
           return NOTOP;
         }
@@ -356,7 +338,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
       case '~': {
         parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_COMPLEMENT);
-          op->group = SPerl_OP_C_GROUP_UNIOP;
           yylvalp->opval = op;
         return '~';
       }

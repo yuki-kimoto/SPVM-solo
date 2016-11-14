@@ -1664,7 +1664,7 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_char code, SPerl_OP* f
       break;
   }
   
-  return (SPerl_OP *)op;
+  return op;
 }
 
 SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last) {
