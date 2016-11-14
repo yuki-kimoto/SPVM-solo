@@ -336,6 +336,31 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
     while (op_cur) {
       // [START]Preorder traversal position
       
+      /*
+      switch (op_cur->group) {
+        case SPerl_OP_C_GROUP_INCDEC: {
+          SPerl_OP* op_assign = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ASSIGN, op_cur->first, NULL);
+          op_assign->file = op_cur->file;
+          op_assign->line = op_cur->line;
+          
+          switch (op_cur->code) {
+            SPerl_OP_C_CODE_PREINC: {
+              
+            }
+            SPerl_OP_C_CODE_PREDEC: {
+              
+            }
+            SPerl_OP_C_CODE_POSTINC: {
+              
+            }
+            SPerl_OP_C_CODE_POSTDEC: {
+              
+            }
+          }
+        }
+      }
+      */
+      
       // [END]Preorder traversal position
       
       if (op_cur->first) {
@@ -351,8 +376,7 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
               SPerl_TYPE* first_type = SPerl_OP_get_return_type(parser, first);
               SPerl_OPDEF* opdef = op_cur->info;
               
-              
-              
+              break;
             }
             case SPerl_OP_C_GROUP_BINOP: {
               SPerl_OP* first = op_cur->first;
@@ -370,8 +394,8 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
               }
               // Insert type converting op
               SPerl_OP_insert_type_convert_op(parser, op_cur, first_type->id, last_type->id);
+              break;
             }
-            break;
             
             default:
             switch (op_cur->code) {
