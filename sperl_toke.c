@@ -164,13 +164,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_NULL);
           return INCOP;
         }
-        else if (*parser->bufptr == '=') {
-          parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_ADD);
-          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
-          yylvalp->opval = op;
-          return ASSIGNOP;
-        }
         else {
           yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_NULL);
           return '+';
@@ -191,13 +184,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_NULL);
           return DECOP;
         }
-        else if (*parser->bufptr == '=') {
-          parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_SUBTRACT);
-          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
-          yylvalp->opval = op;
-          return ASSIGNOP;
-        }
         else {
           yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_NULL);;
           return '-';
@@ -205,89 +191,42 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
       /* Multiply */
       case '*':
         parser->bufptr++;
-        if (*parser->bufptr == '=') {
-          parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_MULTIPLY);
-          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
-          yylvalp->opval = op;
-          
-          yylvalp->opval = op;
-          return ASSIGNOP;
-        }
-        else {
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_MULTIPLY);
-          op->group = SPerl_OP_C_GROUP_BINOP;
-          yylvalp->opval = op;
-          return MULOP;
-        }
+        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_MULTIPLY);
+        op->group = SPerl_OP_C_GROUP_BINOP;
+        yylvalp->opval = op;
+        return MULOP;
       
       /* Divide */
-      case '/':
+      case '/': {
         parser->bufptr++;
-        if (*parser->bufptr == '=') {
-          parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_DIVIDE);
-          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
-          yylvalp->opval = op;
-          return ASSIGNOP;
-        }
-        else {
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DIVIDE);
-          op->group = SPerl_OP_C_GROUP_BINOP;
-          yylvalp->opval = op;
-          return MULOP;
-        }
-
-      case '%':
+        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DIVIDE);
+        op->group = SPerl_OP_C_GROUP_BINOP;
+        yylvalp->opval = op;
+        return MULOP;
+      }
+      case '%': {
         parser->bufptr++;
-        if (*parser->bufptr == '=') {
-          parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_MODULO);
-          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
-          yylvalp->opval = op;
-          return ASSIGNOP;
-        }
-        else {
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_MODULO);
-          op->group = SPerl_OP_C_GROUP_BINOP;
-          yylvalp->opval = op;
-          return MULOP;
-        }
-
-      case '^':
+        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_MODULO);
+        op->group = SPerl_OP_C_GROUP_BINOP;
+        yylvalp->opval = op;
+        return MULOP;
+      }
+      case '^': {
         parser->bufptr++;
-        if (*parser->bufptr == '=') {
-          parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_BIT_XOR);
-          op->group = SPerl_OP_C_GROUP_ASSIGNOP;
-          yylvalp->opval = op;
-          return ASSIGNOP;
-        }
-        else {
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_XOR);
-          op->group = SPerl_OP_C_GROUP_BINOP;
-          yylvalp->opval = op;
-          return MULOP;
-        }
-            
+        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_XOR);
+        op->group = SPerl_OP_C_GROUP_BINOP;
+        yylvalp->opval = op;
+        return MULOP;
+      }
       case '|':
         parser->bufptr++;
         /* Or */
         if (*parser->bufptr == '|') {
           parser->bufptr++;
-          if (*parser->bufptr == '=') {
-            parser->bufptr++;
-            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_OR);
-            op->group = SPerl_OP_C_GROUP_ASSIGNOP;
-            yylvalp->opval = op;
-            return ASSIGNOP;
-          }
-          else {
-            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_OR);
-            op->group = SPerl_OP_C_GROUP_RELOP;
-            yylvalp->opval = op;
-            return OROP;
-          }
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_OR);
+          op->group = SPerl_OP_C_GROUP_RELOP;
+          yylvalp->opval = op;
+          return OROP;
         }
         /* Bit or */
         else {
@@ -302,19 +241,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         /* Or */
         if (*parser->bufptr == '&') {
           parser->bufptr++;
-          if (*parser->bufptr == '=') {
-            parser->bufptr++;
-            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ASSIGN_AND);
-            op->group = SPerl_OP_C_GROUP_ASSIGNOP;
-            yylvalp->opval = op;
-            return ASSIGNOP;
-          }
-          else {
-            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_AND);
-            op->group = SPerl_OP_C_GROUP_RELOP;
-            yylvalp->opval = op;
-            return ANDOP;
-          }
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_AND);
+          op->group = SPerl_OP_C_GROUP_RELOP;
+          yylvalp->opval = op;
+          return ANDOP;
         }
         /* Bit and */
         else {
@@ -423,13 +353,13 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           return NOTOP;
         }
         
-      case '~':
+      case '~': {
         parser->bufptr++;
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_COMPLEMENT);
           op->group = SPerl_OP_C_GROUP_UNIOP;
           yylvalp->opval = op;
         return '~';
-      
+      }
       case '\'': {
         parser->bufptr++;
         

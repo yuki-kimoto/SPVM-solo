@@ -116,18 +116,9 @@ package Test::Foo::Point3D {
     1 && 2;
     1 & 3;
 
-    $title += 1;
-
-    $title -= 1;
-
-    $title *= 1;
-    $title /= 2;
-
     $title % $title;
-    $title %= $title;
 
     $title ^ $title;
-    $title ^= $title;
 
     !$title;
     ~$title;
