@@ -1069,10 +1069,11 @@ SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_O
 }
 
 SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_descripters, SPerl_OP* op_type) {
-
-  SPerl_OP_sibling_splice(parser, op_my, NULL, 0, op_var);
-  SPerl_OP_sibling_splice(parser, op_my, op_var, 0, op_descripters);
+  
+  SPerl_OP_sibling_splice(parser, op_my, NULL, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_my, op_descripters, 0, op_type);
+  
+  SPerl_OP_sibling_splice(parser, op_var, NULL, 0, op_my);
   
   // Create my var information
   SPerl_MY_VAR* my_var = SPerl_MY_VAR_new(parser);
@@ -1088,7 +1089,7 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   // Add my_var information to op
   op_my->info = my_var;
   
-  return op_my;
+  return op_var;
 }
 
 SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* op_descripters, SPerl_OP* op_type) {
@@ -1224,60 +1225,8 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
       block_base = *block_base_ptr;
     }
     
-    // Add my var
-    if (op_cur->code == SPerl_OP_C_CODE_VAR) {
-      SPerl_VAR* var = op_cur->info;
-      
-      // Serach same name variable
-      SPerl_MY_VAR* my_var = NULL;
-      for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
-        SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
-        if (strcmp(var->name_word->value, my_var_tmp->name_word->value) == 0) {
-          my_var = my_var_tmp;
-          break;
-        }
-      }
-      
-      if (my_var) {
-        // Add my var information to var
-        var->my_var = my_var;
-      }
-      else {
-        // Error
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var->name_word->value));
-        sprintf(message, "Error: \"%s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
-        SPerl_yyerror(parser, message);
-      }
-    }
-    else if (op_cur->code == SPerl_OP_C_CODE_MY) {
-      SPerl_MY_VAR* my_var = op_cur->info;
-      
-      // Serach same name variable
-      SPerl_int found = 0;
-      
-      for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
-        SPerl_MY_VAR* bef_my_var = SPerl_ARRAY_fetch(my_var_stack, i);
-        if (strcmp(my_var->name_word->value, bef_my_var->name_word->value) == 0) {
-          found = 1;
-          break;
-        }
-      }
-      
-      if (found) {
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var->name_word->value));
-        sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
-        SPerl_yyerror(parser, message);
-      }
-      else {
-        // Add my var information
-        my_var->id = parser->next_var_id++;
-        SPerl_ARRAY_push(my_vars, my_var);
-        my_var->sub = sub;
-        
-        SPerl_ARRAY_push(my_var_stack, my_var);
-      }
-    }
-    else if (op_cur->code == SPerl_OP_C_CODE_BLOCK) {
+    // Start of scope
+    if (op_cur->code == SPerl_OP_C_CODE_BLOCK) {
       if (block_start) {
         SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
         *block_base_ptr = my_var_stack->length;
@@ -1305,6 +1254,59 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
             for (SPerl_int j = 0; j < my_var_stack->length - block_base; j++) {
               SPerl_ARRAY_pop(my_var_stack);
             }
+          }
+        }
+        // Add my var
+        else if (op_cur->code == SPerl_OP_C_CODE_VAR) {
+          SPerl_VAR* var = op_cur->info;
+          
+          // Serach same name variable
+          SPerl_MY_VAR* my_var = NULL;
+          for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
+            SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
+            if (strcmp(var->name_word->value, my_var_tmp->name_word->value) == 0) {
+              my_var = my_var_tmp;
+              break;
+            }
+          }
+          
+          if (my_var) {
+            // Add my var information to var
+            var->my_var = my_var;
+          }
+          else {
+            // Error
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var->name_word->value));
+            sprintf(message, "Error: \"my %s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
+            SPerl_yyerror(parser, message);
+          }
+        }
+        else if (op_cur->code == SPerl_OP_C_CODE_MY) {
+          SPerl_MY_VAR* my_var = op_cur->info;
+          
+          // Serach same name variable
+          SPerl_int found = 0;
+          
+          for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
+            SPerl_MY_VAR* bef_my_var = SPerl_ARRAY_fetch(my_var_stack, i);
+            if (strcmp(my_var->name_word->value, bef_my_var->name_word->value) == 0) {
+              found = 1;
+              break;
+            }
+          }
+          
+          if (found) {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var->name_word->value));
+            sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
+            SPerl_yyerror(parser, message);
+          }
+          else {
+            // Add my var information
+            my_var->id = parser->next_var_id++;
+            SPerl_ARRAY_push(my_vars, my_var);
+            my_var->sub = sub;
+            
+            SPerl_ARRAY_push(my_var_stack, my_var);
           }
         }
         
