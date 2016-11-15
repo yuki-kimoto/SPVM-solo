@@ -410,13 +410,9 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
               case SPerl_OP_C_CODE_GETENUMVALUE: {
                 SPerl_NAME* name = op_cur->info;
                 SPerl_char* enum_complete_name = name->complete_name;
-                warn("PPPPPPPPPP %s", enum_complete_name);
                 SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
-                warn("QQQQQ %x", enum_value);
                 SPerl_CONST_VALUE* const_value = enum_value->value;
-                warn("AAAAAAAAAA %x", const_value);
                 SPerl_CONST_VALUE* new_const_value = SPerl_CONST_VALUE_copy(parser, const_value);
-                warn("BBBBBBBBBBB");
                 SPerl_ARRAY_push(sub->const_values, new_const_value);
                 break;
               }
@@ -817,17 +813,13 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     // Set constant informations
     SPerl_ARRAY* const_values = sub->const_values;
     
-    warn("AAAAAAAAAAAA");
     // Create constant pool
     for (SPerl_int j = 0; j < const_values->length; j++) {
-      warn("BBBBBBBBBBBBBB");
       
       SPerl_CONST_VALUE* const_value = SPerl_ARRAY_fetch(const_values, j);
-      warn("DDDDDDDDDD %x", const_value);
       
       const_value->pool_pos = parser->const_pool_pos;
-      
-      warn("CCCCCCCCCCCCCCCCC");
+
       // Realloc
       if (parser->const_pool_pos - 1 >= parser->const_pool_capacity) {
         
