@@ -28,5 +28,6 @@ struct SPerl_const_value {
 };
 
 SPerl_CONST_VALUE* SPerl_CONST_VALUE_new(SPerl_PARSER* parser);
+SPerl_CONST_VALUE* SPerl_CONST_VALUE_copy(SPerl_PARSER* parser, SPerl_CONST_VALUE* const_value);
 
 #endif
