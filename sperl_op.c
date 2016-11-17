@@ -723,7 +723,7 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
   SPerl_HASH* package_symtable = parser->package_symtable;
   
-  if (type->resolved_name) {
+  if (type->resolved) {
     return;
   }
   else {
@@ -789,6 +789,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
       cur_pos += resolved_part_name_length;
     }
     type->resolved_name = resolved_name;
+    type->resolved = 1;
     
     // Create type id
     SPerl_int* id = SPerl_HASH_search(parser->type_resolved_name_symtable, resolved_name, strlen(resolved_name));
