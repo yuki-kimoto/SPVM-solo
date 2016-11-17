@@ -1,0 +1,4 @@
+package Test::ValueClass : value {
+  has x : int;
+  has y : int;
+}

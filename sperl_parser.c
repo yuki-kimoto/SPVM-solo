@@ -366,6 +366,8 @@ void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
         printf("    field[%" PRId32 "]\n", j);
         SPerl_PARSER_dump_field(parser, field);
       }
+      
+      printf("  is_value_class => %d\n", body_class->is_value_class);
     }
     // Enum body
     else if (body->code == SPerl_BODY_C_CODE_ENUM) {

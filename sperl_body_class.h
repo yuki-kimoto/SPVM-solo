@@ -24,6 +24,7 @@ struct SPerl_body_class {
   SPerl_OP* op_block;
   SPerl_HASH* alias;
   SPerl_OP* op;
+  SPerl_boolean is_value_class;
 };
 
 SPerl_BODY_CLASS* SPerl_BODY_CLASS_new(SPerl_PARSER* parser);

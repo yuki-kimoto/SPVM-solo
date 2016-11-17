@@ -1012,6 +1012,15 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         body_class->descripters = SPerl_OP_create_descripters(parser, op_descripters);
         body_class->code = SPerl_BODY_CLASS_C_CODE_NORMAL;
         
+        // Class is value class
+        for (SPerl_int i = 0; i < body_class->descripters->length; i++) {
+          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(body_class->descripters, i);
+          if (descripter->code == SPerl_DESCRIPTER_C_CODE_VALUE) {
+            body_class->is_value_class = 1;
+            break;
+          }
+        }
+        
         // Search use and field
         SPerl_ARRAY* fields = SPerl_PARSER_new_array(parser, 0);
         SPerl_HASH* field_symtable = SPerl_PARSER_new_hash(parser, 0);
