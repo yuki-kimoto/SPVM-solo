@@ -733,11 +733,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
     return;
   }
   else {
-    SPerl_TYPE_build_parts(parser, type);
-    SPerl_TYPE_build_name(parser, type);
-    
     SPerl_ARRAY* parts = type->parts;
-    
     for (SPerl_int i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
       if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
