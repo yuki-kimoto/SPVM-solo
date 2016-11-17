@@ -468,6 +468,12 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
 
 void SPerl_OP_resolve_types(SPerl_PARSER* parser) {
   SPerl_ARRAY* types = parser->types;
+
+  for (SPerl_int i = 0; i < types->length; i++) {
+    SPerl_TYPE* type = SPerl_ARRAY_fetch(types, i);
+    SPerl_TYPE_build_parts(parser, type);
+    SPerl_TYPE_build_name(parser, type);
+  }
   
   for (SPerl_int i = 0; i < types->length; i++) {
     SPerl_TYPE* type = SPerl_ARRAY_fetch(types, i);
