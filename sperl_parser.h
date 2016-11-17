@@ -90,9 +90,6 @@ struct SPerl_yy_parser_{
   // Current subroutine id
   SPerl_int current_sub_id;
   
-  // Resolved type string symbol table
-  SPerl_HASH* type_resolved_name_symtable;
-  
   // Method global name symbol table(package name, sub name, argument count)
   SPerl_HASH* sub_complete_name_symtable;
   
@@ -110,6 +107,9 @@ struct SPerl_yy_parser_{
   
   // Resovled types
   SPerl_ARRAY* resolved_types;
+
+  // Resolved type string symbol table
+  SPerl_HASH* resolved_type_symtable;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();

@@ -397,14 +397,14 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
               SPerl_OPDEF* opdef = op_cur->info;
               
               // Can receive only core type
-              if (!SPerl_TYPE_is_core_type(parser, first_type->id) || !SPerl_TYPE_is_core_type(parser, last_type->id)) {
+              if (!SPerl_TYPE_is_core_type(parser, first_type->resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_type->resolved_type->id)) {
                 SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
                 sprintf(message, "Error: %s operator can receive only core type at %s line %d\n",
                   opdef->symbol, op_cur->file, op_cur->line);
                 SPerl_yyerror(parser, message);
               }
               // Insert type converting op
-              SPerl_OP_insert_type_convert_op(parser, op_cur, first_type->id, last_type->id);
+              SPerl_OP_insert_type_convert_op(parser, op_cur, first_type->resolved_type->id, last_type->resolved_type->id);
               break;
             }
             
@@ -427,15 +427,15 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
                 SPerl_TYPE* type_src = SPerl_OP_get_return_type(parser, op_term);
                 
                 // Can receive only core type
-                if (!SPerl_TYPE_is_core_type(parser, type_src->id) || !SPerl_TYPE_is_core_type(parser, type_dist->id)) {
+                if (!SPerl_TYPE_is_core_type(parser, type_src->resolved_type->id) || !SPerl_TYPE_is_core_type(parser, type_dist->resolved_type->id)) {
                   SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
                   sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
-                    type_src->resolved_name, type_dist->resolved_name, op_cur->file, op_cur->line);
+                    type_src->resolved_type->name, type_dist->resolved_type->name, op_cur->file, op_cur->line);
                   SPerl_yyerror(parser, message);
                 }
                 
                 // Convert type converting op
-                SPerl_OP_resolve_op_converttype(parser, op_cur, type_src->id, type_dist->id);
+                SPerl_OP_resolve_op_converttype(parser, op_cur, type_src->resolved_type->id, type_dist->resolved_type->id);
               }
               break;
             }
@@ -733,18 +733,19 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
     return;
   }
   else {
-    SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
+    SPerl_int resolved_type_name_length = 0;
+    SPerl_ARRAY* resolved_type_part_names = SPerl_PARSER_new_array(parser, 0);
     
     SPerl_ARRAY* parts = type->parts;
     for (SPerl_int i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
       if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
-        resolved_type->name_length += 3;
-        SPerl_ARRAY_push(resolved_type->part_names, "sub");
+        resolved_type_name_length += 3;
+        SPerl_ARRAY_push(resolved_type_part_names, "sub");
       }
       else if (part->code == SPerl_TYPE_PART_C_CODE_CHAR) {
-        resolved_type->name_length++;
-        SPerl_ARRAY_push(resolved_type->part_names, part->uv.char_name);
+        resolved_type_name_length++;
+        SPerl_ARRAY_push(resolved_type_part_names, part->uv.char_name);
       }
       else {
         SPerl_WORD* part_name_word = part->uv.name_word;
@@ -757,16 +758,16 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
             && strcmp(type->uv.type_word->name_word->value, found_type->uv.type_word->name_word->value) == 0;
           
           if (is_self) {
-            resolved_type->name_length += strlen(found_type->uv.type_word->name_word->value);
+            resolved_type_name_length += strlen(found_type->uv.type_word->name_word->value);
             SPerl_char* found_part_name = found_type->uv.type_word->name_word->value;
-            SPerl_ARRAY_push(resolved_type->part_names, found_part_name);
+            SPerl_ARRAY_push(resolved_type_part_names, found_part_name);
           }
           else {
             SPerl_OP_resolve_type(parser, found_type);
-            resolved_type->name_length += found_type->resolved_type->name_length;
+            resolved_type_name_length += found_type->resolved_type->name_length;
             for (SPerl_int j = 0; j < found_type->resolved_type->part_names->length; j++) {
               SPerl_char* found_part_name = SPerl_ARRAY_fetch(found_type->resolved_type->part_names, j);
-              SPerl_ARRAY_push(resolved_type->part_names, found_part_name);
+              SPerl_ARRAY_push(resolved_type_part_names, found_part_name);
             }
           }
         }
@@ -777,28 +778,30 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
         }
       }
     }
-    SPerl_char* resolved_type_name = SPerl_PARSER_new_string(parser, resolved_type->name_length);
+    SPerl_char* resolved_type_name = SPerl_PARSER_new_string(parser, resolved_type_name_length);
     SPerl_int cur_pos = 0;
-    for (SPerl_int i = 0; i < resolved_type->part_names->length; i++) {
-      SPerl_char* resolved_type_part_name = SPerl_ARRAY_fetch(resolved_type->part_names, i);
+    for (SPerl_int i = 0; i < resolved_type_part_names->length; i++) {
+      SPerl_char* resolved_type_part_name = SPerl_ARRAY_fetch(resolved_type_part_names, i);
       SPerl_int resolved_type_part_name_length = strlen(resolved_type_part_name);
       memcpy(resolved_type_name + cur_pos, resolved_type_part_name, resolved_type_part_name_length);
       cur_pos += resolved_type_part_name_length;
     }
-    resolved_type->name = resolved_type_name;
-    type->resolved_type = resolved_type;
-    type->resolved = 1;
     
-    // Create type id
-    SPerl_int* id = SPerl_HASH_search(parser->type_resolved_name_symtable, resolved_type_name, strlen(resolved_type_name));
-    if (id) {
-      type->id = *id;
+    // Create resolved type id
+    SPerl_RESOLVED_TYPE* found_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name));
+    if (found_resolved_type) {
+      type->resolved_type = found_resolved_type;
     }
     else {
-      SPerl_int* new_id = SPerl_PARSER_new_int(parser);
-      type->id = *new_id = parser->current_type_id++;
-      SPerl_HASH_insert(parser->type_resolved_name_symtable, resolved_type_name, strlen(resolved_type_name), new_id);
+      SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
+      resolved_type->id = parser->resolved_types->length;
+      resolved_type->name = resolved_type_name;
+      resolved_type->part_names = resolved_type_part_names;
+      SPerl_ARRAY_push(parser->resolved_types, resolved_type);
+      SPerl_HASH_insert(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
+      type->resolved_type = resolved_type;
     }
+    type->resolved = 1;
   }
 }
 

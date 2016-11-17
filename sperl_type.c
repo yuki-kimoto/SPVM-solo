@@ -20,7 +20,6 @@ SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
   SPerl_TYPE* type = SPerl_PARSER_alloc_memory_pool(parser, sizeof(SPerl_TYPE));
   
   type->parts = SPerl_PARSER_new_array(parser, 0);
-  type->resolved_part_names = SPerl_PARSER_new_array(parser, 0);
   
   return type;
 }

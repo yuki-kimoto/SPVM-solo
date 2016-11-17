@@ -17,10 +17,6 @@ struct SPerl_type {
   SPerl_int code;
   SPerl_ARRAY* parts;
   SPerl_char* name;
-  SPerl_ARRAY* resolved_part_names;
-  SPerl_char* resolved_name;
-  SPerl_int resolved_name_length;
-  SPerl_int id;
   SPerl_RESOLVED_TYPE* resolved_type;
   SPerl_boolean resolved;
   union {

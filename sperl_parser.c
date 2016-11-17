@@ -51,8 +51,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->field_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->enum_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   
-  parser->type_resolved_name_symtable = SPerl_PARSER_new_hash(parser, 0);
-  
   parser->const_pool_capacity = 1024;
   parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
   
@@ -67,6 +65,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->types = SPerl_PARSER_new_array(parser, 0);
   
   parser->resolved_types = SPerl_PARSER_new_array(parser, 0);
+  parser->resolved_type_symtable = SPerl_PARSER_new_hash(parser, 0);
 
   // Add core type
   for (SPerl_int i = 0; i < 8; i++) {
@@ -87,6 +86,17 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_ARRAY_push(parser->bodys, body);
     SPerl_HASH_insert(parser->body_symtable, body->name, strlen(body->name), body);
     
+    // Resolved type
+    SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
+    resolved_type->code = SPerl_RESOLVED_TYPE_C_CODE_CORE;
+    SPerl_ARRAY_push(resolved_type->part_names, name);
+    resolved_type->name = name;
+    resolved_type->name_length = strlen(name);
+    resolved_type->id = i;
+    resolved_type->body = body;
+    SPerl_ARRAY_push(parser->resolved_types, resolved_type);
+    SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
+    
     // Type word
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = name;
@@ -97,6 +107,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_WORD;
     type->uv.type_word = type_word;
+    type->resolved_type = resolved_type;
+    type->resolved = 1;
     
     // Add type
     SPerl_ARRAY_push(parser->types, type);
@@ -323,7 +335,7 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
     
     printf("    type => \"%s\"\n", package->type->name);
     printf("    resolved_type => \"%s\"\n", package->type->resolved_type->name);
-    printf("    type_id => %d\n", package->type->id);
+    printf("    resolved_type_id => %d\n", package->type->resolved_type->id);
   }
 }
 
@@ -435,7 +447,7 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
 
     printf("      return_type => \"%s\"\n", sub->return_type->name);
     printf("      resolved_type => \"%s\"\n", sub->return_type->resolved_type->name);
-    printf("      type_id => %d\n", sub->return_type->id);
+    printf("      resolved_type_id => %d\n", sub->return_type->resolved_type->id);
 
     SPerl_int i;
     printf("      descripters => ");
@@ -476,7 +488,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     SPerl_TYPE* type = field->type;
     printf("      type => \"%s\"\n", type->name);
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
-    printf("      type_id => %d\n", type->id);
+    printf("      resolved_type_id => %d\n", type->resolved_type->id);
 
     printf("      descripters => ");
     SPerl_ARRAY* descripters = field->descripters;
@@ -518,7 +530,7 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     SPerl_TYPE* type = my_var->type;
     printf("          type => \"%s\"\n", my_var->type->name);
     printf("          resolved_type => \"%s\"\n", my_var->type->resolved_type->name);
-    printf("          type_id => %d\n", my_var->type->id);
+    printf("          resolved_type_id => %d\n", my_var->type->resolved_type->id);
     
     printf("          descripters => ");
     SPerl_ARRAY* descripters = my_var->descripters;

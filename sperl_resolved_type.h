@@ -18,10 +18,7 @@ struct SPerl_resolved_type {
   SPerl_char* name;
   SPerl_int name_length;
   SPerl_int id;
-  union {
-    SPerl_BODY_CLASS* body_class;
-    SPerl_BODY_CORE* body_core;
-  } uv;
+  SPerl_BODY* body;
 };
 
 SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl_PARSER* parser);
