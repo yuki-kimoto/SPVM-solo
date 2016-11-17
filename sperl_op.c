@@ -330,6 +330,9 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
     SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
     SPerl_OP* op_sub = sub->op;
     
+    SPerl_int ppp = 1;
+    ppp = ++ppp + 1;
+    
     // Run OPs
     SPerl_OP* op_base = op_sub;
     SPerl_OP* op_cur = op_base;
@@ -1205,7 +1208,7 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
   }
   else {
     SPerl_OP* op_descripter = op_descripters->first;
-    while (op_descripter = op_descripter->moresib ? op_descripter->sibparent : NULL) {
+    while (op_descripter = SPerl_OP_sibling(parser, op_descripter)) {
       SPerl_ARRAY_push(descripters, op_descripter->info);
     }
   }
