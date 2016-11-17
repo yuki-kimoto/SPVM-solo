@@ -133,7 +133,7 @@ grammar
       }
       else {
         // Dump parser infomation
-        SPerl_PARSER_dump_parser(parser);
+        // SPerl_PARSER_dump_parser(parser);
       }
     }
 
