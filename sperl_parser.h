@@ -107,6 +107,9 @@ struct SPerl_yy_parser_{
   
   // Types
   SPerl_ARRAY* types;
+  
+  // Resovled types
+  SPerl_ARRAY* resolved_types;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
