@@ -12,7 +12,7 @@ typedef int64_t SPerl_long;
 typedef float SPerl_float;
 typedef double SPerl_double;
 
-/* sperl_assign.h */
+/* sperl_resolved_type.h */
 struct SPerl_resolved_type;
 typedef struct SPerl_resolved_type SPerl_RESOLVED_TYPE;
 

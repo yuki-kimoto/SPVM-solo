@@ -16,11 +16,14 @@ struct SPerl_resolved_type {
   SPerl_int code;
   SPerl_ARRAY* part_names;
   SPerl_char* name;
+  SPerl_int name_length;
   SPerl_int id;
   union {
     SPerl_BODY_CLASS* body_class;
     SPerl_BODY_CORE* body_core;
   } uv;
 };
+
+SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl_PARSER* parser);
 
 #endif

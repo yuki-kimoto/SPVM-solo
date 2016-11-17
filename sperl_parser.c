@@ -26,6 +26,7 @@
 #include "sperl_body_enum.h"
 #include "sperl_package.h"
 #include "sperl_opdef.h"
+#include "sperl_resolved_type.h"
 
 SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_PARSER* parser = calloc(1, sizeof(SPerl_PARSER));
@@ -319,7 +320,7 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
     printf("    name => \"%s\"\n", package->name_word->value);
     
     printf("    type => \"%s\"\n", package->type->name);
-    printf("    resolved_type => \"%s\"\n", package->type->resolved_name);
+    printf("    resolved_type => \"%s\"\n", package->type->resolved_type->name);
     printf("    type_id => %d\n", package->type->id);
   }
 }
@@ -431,7 +432,7 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("      anon => %d\n", sub->anon);
 
     printf("      return_type => \"%s\"\n", sub->return_type->name);
-    printf("      resolved_type => \"%s\"\n", sub->return_type->resolved_name);
+    printf("      resolved_type => \"%s\"\n", sub->return_type->resolved_type->name);
     printf("      type_id => %d\n", sub->return_type->id);
 
     SPerl_int i;
@@ -472,7 +473,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     
     SPerl_TYPE* type = field->type;
     printf("      type => \"%s\"\n", type->name);
-    printf("      resolved_type => \"%s\"\n", type->resolved_name);
+    printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
     printf("      type_id => %d\n", type->id);
 
     printf("      descripters => ");
@@ -514,7 +515,7 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     
     SPerl_TYPE* type = my_var->type;
     printf("          type => \"%s\"\n", my_var->type->name);
-    printf("          resolved_type => \"%s\"\n", my_var->type->resolved_name);
+    printf("          resolved_type => \"%s\"\n", my_var->type->resolved_type->name);
     printf("          type_id => %d\n", my_var->type->id);
     
     printf("          descripters => ");
