@@ -479,7 +479,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Check names
   SPerl_OP_check_names(parser);
-
+  
   // Check descripters(Not used)
   SPerl_OP_check_descripters(parser);
   
@@ -1062,6 +1062,16 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               SPerl_yyerror(parser, message);
             }
             else {
+              // Value class only have core type field
+              if (body_class->is_value_class) {
+                SPerl_boolean is_core_type = SPerl_TYPE_is_core_type_name(parser, field->type);
+                if (!is_core_type) {
+                  SPerl_char* message = SPerl_PARSER_new_string(parser, 200);
+                  sprintf(message, "Error: value class has only core type field at %s line %d\n", field->op->file, field->op->line);
+                  SPerl_yyerror(parser, message);
+                }
+              }
+              
               field->body_class = body_class;
               field->op = op_usehassub;
               SPerl_ARRAY_push(fields, field);
@@ -1187,6 +1197,9 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   
   // Type
   field->type = op_type->info;
+  
+  // OP
+  field->op = op_has;
   
   // Add type
   SPerl_ARRAY_push(parser->types, field->type);
