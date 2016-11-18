@@ -1209,13 +1209,6 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   return op_has;
 }
 
-SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl_PARSER* parser, SPerl_OP* op_const) {
-
-  SPerl_CONST_VALUE* const_value = op_const->info;
-  
-  return op_const;
-}
-
 SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
   
   SPerl_ARRAY* descripters = SPerl_PARSER_new_array(parser, 0);

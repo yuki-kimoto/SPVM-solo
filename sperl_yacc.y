@@ -415,9 +415,6 @@ terms
 term
   : VAR
   | CONSTVALUE
-    {
-      $$ = SPerl_OP_build_CONSTVALUE(parser, $1);
-    }
   | declmy
   | declanonsub
   | callsub
