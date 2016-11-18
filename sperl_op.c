@@ -128,14 +128,14 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "pop",
 };
 
-SPerl_TYPE* SPerl_OP_get_return_type(SPerl_PARSER* parser, SPerl_OP* op) {
-  SPerl_TYPE* type;
+SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op) {
+  SPerl_RESOLVED_TYPE*  resolved_type;
   
   op->group;
   switch (op->group) {
     case SPerl_OP_C_GROUP_CONST: {
       SPerl_CONST_VALUE* const_value = op->info;
-      type = const_value->type;
+      resolved_type = const_value->type->resolved_type;
       break;
     }
     
@@ -143,28 +143,28 @@ SPerl_TYPE* SPerl_OP_get_return_type(SPerl_PARSER* parser, SPerl_OP* op) {
     switch (op->code) {
       case SPerl_OP_C_CODE_VAR: {
         SPerl_VAR* var = op->info;
-        type = var->my_var->type;
+        resolved_type = var->my_var->type->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_CALLSUB: {
         SPerl_NAME* name = op->info;
         SPerl_char* complete_name = name->complete_name;
         SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
-        type = sub->return_type;
+        resolved_type = sub->return_type->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_GETENUMVALUE: {
         SPerl_NAME* name = op->info;
         SPerl_char* complete_name = name->complete_name;
         SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
-        type = enum_value->const_value->type;
+        resolved_type = enum_value->const_value->type->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_GETFIELD: {
         SPerl_NAME* name = op->info;
         SPerl_char* complete_name = name->complete_name;
         SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
-        type = field->type;
+        resolved_type = field->type->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_ADD:
@@ -173,15 +173,15 @@ SPerl_TYPE* SPerl_OP_get_return_type(SPerl_PARSER* parser, SPerl_OP* op) {
       case SPerl_OP_C_CODE_DIVIDE:
       {
         SPerl_OPDEF* opdef = op->info;
-        type = opdef->return_type;
+        resolved_type = opdef->return_type->resolved_type;
         break;
       }
       defaut:
-        type = NULL;
+        resolved_type = NULL;
     }
   }
   
-  return type;
+  return resolved_type;
 }
 
 void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int first_type_id, SPerl_int last_type_id) {
@@ -385,7 +385,7 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
             
             case SPerl_OP_C_GROUP_UNOP: {
               SPerl_OP* first = op_cur->first;
-              SPerl_TYPE* first_type = SPerl_OP_get_return_type(parser, first);
+              SPerl_RESOLVED_TYPE* first_type = SPerl_OP_get_resolved_type(parser, first);
               SPerl_OPDEF* opdef = op_cur->info;
               
               break;
@@ -393,19 +393,19 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
             case SPerl_OP_C_GROUP_BINOP: {
               SPerl_OP* first = op_cur->first;
               SPerl_OP* last = op_cur->last;
-              SPerl_TYPE* first_type = SPerl_OP_get_return_type(parser, first);
-              SPerl_TYPE* last_type = SPerl_OP_get_return_type(parser, last);
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, last);
               SPerl_OPDEF* opdef = op_cur->info;
               
               // Can receive only core type
-              if (!SPerl_TYPE_is_core_type(parser, first_type->resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_type->resolved_type->id)) {
+              if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
                 SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
                 sprintf(message, "Error: %s operator can receive only core type at %s line %d\n",
                   opdef->symbol, op_cur->file, op_cur->line);
                 SPerl_yyerror(parser, message);
               }
               // Insert type converting op
-              SPerl_OP_insert_type_convert_op(parser, op_cur, first_type->resolved_type->id, last_type->resolved_type->id);
+              SPerl_OP_insert_type_convert_op(parser, op_cur, first_resolved_type->id, last_resolved_type->id);
               break;
             }
             
@@ -422,21 +422,21 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_CONVERTTYPE: {
                 SPerl_OP* op_type_dist = op_cur->first;
-                SPerl_TYPE* type_dist = op_type_dist->info;
+                SPerl_RESOLVED_TYPE* resolved_type_dist = op_type_dist->info;
                 
                 SPerl_OP* op_term = op_cur->last;
-                SPerl_TYPE* type_src = SPerl_OP_get_return_type(parser, op_term);
+                SPerl_RESOLVED_TYPE* resolved_type_src = SPerl_OP_get_resolved_type(parser, op_term);
                 
                 // Can receive only core type
-                if (!SPerl_TYPE_is_core_type(parser, type_src->resolved_type->id) || !SPerl_TYPE_is_core_type(parser, type_dist->resolved_type->id)) {
+                if (!SPerl_TYPE_is_core_type(parser, resolved_type_src->id) || !SPerl_TYPE_is_core_type(parser, resolved_type_dist->id)) {
                   SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
                   sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
-                    type_src->resolved_type->name, type_dist->resolved_type->name, op_cur->file, op_cur->line);
+                    resolved_type_src->name, resolved_type_dist->name, op_cur->file, op_cur->line);
                   SPerl_yyerror(parser, message);
                 }
                 
                 // Convert type converting op
-                SPerl_OP_resolve_op_converttype(parser, op_cur, type_src->resolved_type->id, type_dist->resolved_type->id);
+                SPerl_OP_resolve_op_converttype(parser, op_cur, resolved_type_src->id, resolved_type_dist->id);
               }
               break;
             }
