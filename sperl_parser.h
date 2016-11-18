@@ -42,15 +42,6 @@ struct SPerl_yy_parser_{
   // Constant informations
   SPerl_ARRAY* const_values;
   
-  // Constant pool
-  SPerl_int* const_pool;
-  
-  // Constant pool capacity
-  SPerl_int const_pool_capacity;
-  
-  // Constant pool length
-  SPerl_int const_pool_pos;
-  
   // Memory_pool
   SPerl_MEMORY_POOL* memory_pool;
   

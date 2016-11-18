@@ -51,9 +51,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->field_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->enum_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   
-  parser->const_pool_capacity = 1024;
-  parser->const_pool = (SPerl_int*)calloc(parser->const_pool_capacity, sizeof(SPerl_int));
-  
   parser->next_var_id = 1;
   
   parser->current_subs = SPerl_PARSER_new_array(parser, 0);
@@ -207,7 +204,6 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
   // Free memory pool */
   SPerl_MEMORY_POOL_free(parser->memory_pool);
   
-  free(parser->const_pool);
   free(parser);
 }
 
@@ -317,9 +313,6 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
     printf("    sub[%" PRId32 "]\n", i);
     SPerl_PARSER_dump_sub(parser, sub);
   }
-  
-  printf("\n[Constant pool]\n");
-  SPerl_PARSER_dump_const_pool(parser, parser->const_pool, parser->const_pool_pos);
 }
 
 void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_values) {
@@ -414,7 +407,7 @@ void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
 
 void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, SPerl_int const_pool_pos) {
   for (SPerl_int i = 0; i < const_pool_pos; i++) {
-    printf("const_pool[%d] %d\n", i, const_pool[i]);
+    printf("        const_pool[%d] %d\n", i, const_pool[i]);
   }
 }
 
@@ -487,6 +480,9 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
   
     printf("      constant_values\n");
     SPerl_PARSER_dump_const_values(parser, sub->const_values);
+  
+    printf("      const_pool\n");
+    SPerl_PARSER_dump_const_pool(parser, sub->const_pool, sub->const_pool_length);
   }
   else {
     printf("      None\n");

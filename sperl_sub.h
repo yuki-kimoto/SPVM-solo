@@ -17,6 +17,8 @@ struct SPerl_sub {
   SPerl_int id;
   SPerl_char* package_name;
   SPerl_ARRAY* const_values;
+  SPerl_int* const_pool;
+  SPerl_int const_pool_length;
 };
 
 SPerl_SUB* SPerl_SUB_new(SPerl_PARSER* parser);

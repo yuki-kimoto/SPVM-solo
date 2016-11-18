@@ -810,7 +810,6 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   // Subroutines
   SPerl_ARRAY* subs = parser->subs;
   
-  
   for (SPerl_int i = 0; i < subs->length; i++) {
     // Subroutine
     SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, i);
@@ -818,52 +817,63 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     // Set constant informations
     SPerl_ARRAY* const_values = sub->const_values;
     
-    // Create constant pool
+    // Constant pool length
+    SPerl_int const_pool_length = 0;
     for (SPerl_int j = 0; j < const_values->length; j++) {
-      
       SPerl_CONST_VALUE* const_value = SPerl_ARRAY_fetch(const_values, j);
-      
-      const_value->pool_pos = parser->const_pool_pos;
-
-      // Realloc
-      if (parser->const_pool_pos - 1 >= parser->const_pool_capacity) {
-        
-        SPerl_int new_const_pool_capacity = parser->const_pool_capacity * 2;
-        parser->const_pool = realloc(parser->const_pool, new_const_pool_capacity * sizeof(SPerl_int));
-        memset(
-          parser->const_pool + parser->const_pool_capacity,
-          0,
-          (new_const_pool_capacity - parser->const_pool_capacity) * sizeof(SPerl_int)
-        );
-        parser->const_pool_capacity = new_const_pool_capacity;
-      }
-      
-      SPerl_int* const_pool = parser->const_pool;
       switch(const_value->code) {
         case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
         case SPerl_CONST_VALUE_C_CODE_CHAR:
         case SPerl_CONST_VALUE_C_CODE_INT:
-          const_value->pool_pos = parser->const_pool_pos;
-          *(const_pool + parser->const_pool_pos) = const_value->uv.int_value;
-          parser->const_pool_pos += 1;
+          const_pool_length += 1;
           break;
         case SPerl_CONST_VALUE_C_CODE_LONG:
-          const_value->pool_pos = parser->const_pool_pos;
-          *(SPerl_long*)(const_pool + parser->const_pool_pos) = const_value->uv.long_value;
-          parser->const_pool_pos += 2;
+          const_pool_length += 2;
           break;
         case SPerl_CONST_VALUE_C_CODE_FLOAT:
-          const_value->pool_pos = parser->const_pool_pos;
-          *(SPerl_float*)(const_pool + parser->const_pool_pos) = const_value->uv.float_value;
-          parser->const_pool_pos += 1;
+          const_pool_length += 1;
           break;
         case SPerl_CONST_VALUE_C_CODE_DOUBLE:
-          const_value->pool_pos = parser->const_pool_pos;
-          *(SPerl_double*)(const_pool + parser->const_pool_pos) = const_value->uv.double_value;
-          parser->const_pool_pos += 2;
+          const_pool_length += 2;
           break;
       }
     }
+    sub->const_pool_length = const_pool_length;
+    
+    // Create constant pool
+    SPerl_int* const_pool = calloc(const_pool_length, sizeof(SPerl_int));
+    SPerl_int const_pool_pos = 0;
+    for (SPerl_int j = 0; j < const_values->length; j++) {
+      SPerl_CONST_VALUE* const_value = SPerl_ARRAY_fetch(const_values, j);
+      
+      const_value->pool_pos = const_pool_pos;
+      
+      switch(const_value->code) {
+        case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
+        case SPerl_CONST_VALUE_C_CODE_CHAR:
+        case SPerl_CONST_VALUE_C_CODE_INT:
+          const_value->pool_pos = const_pool_pos;
+          *(const_pool + const_pool_pos) = const_value->uv.int_value;
+          const_pool_pos += 1;
+          break;
+        case SPerl_CONST_VALUE_C_CODE_LONG:
+          const_value->pool_pos = const_pool_pos;
+          *(SPerl_long*)(const_pool + const_pool_pos) = const_value->uv.long_value;
+          const_pool_pos += 2;
+          break;
+        case SPerl_CONST_VALUE_C_CODE_FLOAT:
+          const_value->pool_pos = const_pool_pos;
+          *(SPerl_float*)(const_pool + const_pool_pos) = const_value->uv.float_value;
+          const_pool_pos += 1;
+          break;
+        case SPerl_CONST_VALUE_C_CODE_DOUBLE:
+          const_value->pool_pos = const_pool_pos;
+          *(SPerl_double*)(const_pool + const_pool_pos) = const_value->uv.double_value;
+          const_pool_pos += 2;
+          break;
+      }
+    }
+    sub->const_pool = const_pool;
   }
 }
 
