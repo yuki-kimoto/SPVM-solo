@@ -40,7 +40,7 @@
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "constboolean",
   "constchar",
-  "constant",
+  "constint",
   "constlong",
   "constfloat",
   "constdouble",
@@ -127,6 +127,187 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "converttype",
   "pop",
 };
+
+SPerl_OP* SPerl_OP_prev_sibparent(SPerl_PARSER* parser, SPerl_OP* op) {
+  SPerl_OP* cur_op = op;
+  
+  while (cur_op->moresib) {
+    cur_op = SPerl_OP_sibling(parser, cur_op);
+  }
+  
+  SPerl_OP* op_parent = cur_op->sibparent;
+  
+  SPerl_OP* prev_sibparent;
+  cur_op = op_parent->first;
+  if (cur_op == op) {
+    prev_sibparent = op_parent;
+  }
+  else {
+    while (cur_op->moresib) {
+      SPerl_OP* prev_cur_op = cur_op;
+      cur_op = SPerl_OP_sibling(parser, cur_op);
+      if (cur_op == op) {
+        prev_sibparent = prev_cur_op;
+        break;
+      }
+    }
+  }
+  
+  return prev_sibparent;
+}
+
+void SPerl_OP_check_types(SPerl_PARSER* parser) {
+  for (SPerl_int i = 0; i < parser->subs->length; i++) {
+    SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
+    SPerl_OP* op_sub = sub->op;
+    
+    SPerl_int ppp = 1;
+    ppp = ++ppp + 1;
+    
+    // Run OPs
+    SPerl_OP* op_base = op_sub;
+    SPerl_OP* op_cur = op_base;
+    SPerl_boolean finish = 0;
+    while (op_cur) {
+      // [START]Preorder traversal position
+      
+      /*
+      switch (op_cur->group) {
+        case SPerl_OP_C_GROUP_INCDEC: {
+          SPerl_OP* op_assign = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ASSIGN, op_cur->first, NULL);
+          op_assign->file = op_cur->file;
+          op_assign->line = op_cur->line;
+          
+          switch (op_cur->code) {
+            SPerl_OP_C_CODE_PREINC: {
+              
+            }
+            SPerl_OP_C_CODE_PREDEC: {
+              
+            }
+            SPerl_OP_C_CODE_POSTINC: {
+              
+            }
+            SPerl_OP_C_CODE_POSTDEC: {
+              
+            }
+          }
+        }
+      }
+      */
+      
+      // [END]Preorder traversal position
+      
+      if (op_cur->first) {
+        op_cur = op_cur->first;
+      }
+      else {
+        while (1) {
+          // [START]Postorder traversal position
+
+          switch (op_cur->group) {
+            case SPerl_OP_C_GROUP_CONST: {
+              SPerl_SUB* sub = op_sub->info;
+              SPerl_CONST_VALUE* const_value = op_cur->info;
+              SPerl_ARRAY_push(sub->const_values, const_value);
+              break;
+            }
+            
+            case SPerl_OP_C_GROUP_UNOP: {
+              SPerl_OP* first = op_cur->first;
+              SPerl_RESOLVED_TYPE* first_type = SPerl_OP_get_resolved_type(parser, first);
+              SPerl_OPDEF* opdef = op_cur->info;
+              
+              break;
+            }
+            case SPerl_OP_C_GROUP_BINOP: {
+              SPerl_OP* first = op_cur->first;
+              SPerl_OP* last = op_cur->last;
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, last);
+              SPerl_OPDEF* opdef = op_cur->info;
+              
+              // Can receive only core type
+              if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
+                SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
+                sprintf(message, "Error: %s operator can receive only core type at %s line %d\n",
+                  opdef->symbol, op_cur->file, op_cur->line);
+                SPerl_yyerror(parser, message);
+              }
+              // Insert type converting op
+              SPerl_OP_insert_type_convert_op(parser, op_cur, first_resolved_type->id, last_resolved_type->id);
+              break;
+            }
+            
+            default:
+            switch (op_cur->code) {
+              case SPerl_OP_C_CODE_GETENUMVALUE: {
+                SPerl_NAME* name = op_cur->info;
+                SPerl_char* enum_complete_name = name->complete_name;
+                SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
+                SPerl_CONST_VALUE* const_value = enum_value->const_value;
+                
+                // new const value
+                SPerl_CONST_VALUE* new_const_value = SPerl_CONST_VALUE_new(parser);
+                new_const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
+                new_const_value->uv.int_value = const_value->uv.int_value;
+                new_const_value->resolved_type = const_value->resolved_type;
+                SPerl_ARRAY_push(sub->const_values, new_const_value);
+                
+                // Replace getenumvalue to const
+                op_cur->code = SPerl_OP_C_CODE_CONSTINT;
+                op_cur->group = SPerl_OP_get_group(parser, op_cur->code);
+                op_cur->info = new_const_value;
+                op_cur->first = NULL;
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_CONVERTTYPE: {
+                SPerl_OP* op_type_dist = op_cur->first;
+                SPerl_RESOLVED_TYPE* resolved_type_dist = op_type_dist->info;
+                
+                SPerl_OP* op_term = op_cur->last;
+                SPerl_RESOLVED_TYPE* resolved_type_src = SPerl_OP_get_resolved_type(parser, op_term);
+                
+                // Can receive only core type
+                if (!SPerl_TYPE_is_core_type(parser, resolved_type_src->id) || !SPerl_TYPE_is_core_type(parser, resolved_type_dist->id)) {
+                  SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
+                  sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
+                    resolved_type_src->name, resolved_type_dist->name, op_cur->file, op_cur->line);
+                  SPerl_yyerror(parser, message);
+                }
+                
+                // Convert type converting op
+                SPerl_OP_resolve_op_converttype(parser, op_cur, resolved_type_src->id, resolved_type_dist->id);
+              }
+              break;
+            }
+          }
+          
+          // [END]Postorder traversal position
+          
+          if (op_cur == op_base) {
+            finish = 1;
+            break;
+          }
+          
+          // Next sibling
+          if (op_cur->moresib) {
+            op_cur = SPerl_OP_sibling(parser, op_cur);
+            break;
+          }
+          // Next is parent
+          else {
+            op_cur = op_cur->sibparent;
+          }
+        }
+        if (finish) {
+          break;
+        }
+      }
+    }
+  }
+}
 
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_RESOLVED_TYPE*  resolved_type;
@@ -323,146 +504,6 @@ void SPerl_OP_resolve_op_converttype(SPerl_PARSER* parser, SPerl_OP* op_convertt
       }
     }
     op_converttype->group = SPerl_OP_get_group(parser, op_converttype->code);
-  }
-}
-
-void SPerl_OP_check_types(SPerl_PARSER* parser) {
-  for (SPerl_int i = 0; i < parser->subs->length; i++) {
-    SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
-    SPerl_OP* op_sub = sub->op;
-    
-    SPerl_int ppp = 1;
-    ppp = ++ppp + 1;
-    
-    // Run OPs
-    SPerl_OP* op_base = op_sub;
-    SPerl_OP* op_cur = op_base;
-    SPerl_boolean finish = 0;
-    while (op_cur) {
-      // [START]Preorder traversal position
-      
-      /*
-      switch (op_cur->group) {
-        case SPerl_OP_C_GROUP_INCDEC: {
-          SPerl_OP* op_assign = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ASSIGN, op_cur->first, NULL);
-          op_assign->file = op_cur->file;
-          op_assign->line = op_cur->line;
-          
-          switch (op_cur->code) {
-            SPerl_OP_C_CODE_PREINC: {
-              
-            }
-            SPerl_OP_C_CODE_PREDEC: {
-              
-            }
-            SPerl_OP_C_CODE_POSTINC: {
-              
-            }
-            SPerl_OP_C_CODE_POSTDEC: {
-              
-            }
-          }
-        }
-      }
-      */
-      
-      // [END]Preorder traversal position
-      
-      if (op_cur->first) {
-        op_cur = op_cur->first;
-      }
-      else {
-        while (1) {
-          // [START]Postorder traversal position
-
-          switch (op_cur->group) {
-            case SPerl_OP_C_GROUP_CONST: {
-              SPerl_SUB* sub = op_sub->info;
-              SPerl_CONST_VALUE* const_value = op_cur->info;
-              SPerl_ARRAY_push(sub->const_values, const_value);
-              break;
-            }
-            
-            case SPerl_OP_C_GROUP_UNOP: {
-              SPerl_OP* first = op_cur->first;
-              SPerl_RESOLVED_TYPE* first_type = SPerl_OP_get_resolved_type(parser, first);
-              SPerl_OPDEF* opdef = op_cur->info;
-              
-              break;
-            }
-            case SPerl_OP_C_GROUP_BINOP: {
-              SPerl_OP* first = op_cur->first;
-              SPerl_OP* last = op_cur->last;
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, last);
-              SPerl_OPDEF* opdef = op_cur->info;
-              
-              // Can receive only core type
-              if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
-                SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
-                sprintf(message, "Error: %s operator can receive only core type at %s line %d\n",
-                  opdef->symbol, op_cur->file, op_cur->line);
-                SPerl_yyerror(parser, message);
-              }
-              // Insert type converting op
-              SPerl_OP_insert_type_convert_op(parser, op_cur, first_resolved_type->id, last_resolved_type->id);
-              break;
-            }
-            
-            default:
-            switch (op_cur->code) {
-              case SPerl_OP_C_CODE_GETENUMVALUE: {
-                SPerl_NAME* name = op_cur->info;
-                SPerl_char* enum_complete_name = name->complete_name;
-                SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
-                SPerl_CONST_VALUE* const_value = enum_value->const_value;
-                SPerl_ARRAY_push(sub->const_values, const_value);
-                break;
-              }
-              case SPerl_OP_C_CODE_CONVERTTYPE: {
-                SPerl_OP* op_type_dist = op_cur->first;
-                SPerl_RESOLVED_TYPE* resolved_type_dist = op_type_dist->info;
-                
-                SPerl_OP* op_term = op_cur->last;
-                SPerl_RESOLVED_TYPE* resolved_type_src = SPerl_OP_get_resolved_type(parser, op_term);
-                
-                // Can receive only core type
-                if (!SPerl_TYPE_is_core_type(parser, resolved_type_src->id) || !SPerl_TYPE_is_core_type(parser, resolved_type_dist->id)) {
-                  SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
-                  sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
-                    resolved_type_src->name, resolved_type_dist->name, op_cur->file, op_cur->line);
-                  SPerl_yyerror(parser, message);
-                }
-                
-                // Convert type converting op
-                SPerl_OP_resolve_op_converttype(parser, op_cur, resolved_type_src->id, resolved_type_dist->id);
-              }
-              break;
-            }
-          }
-          
-          // [END]Postorder traversal position
-          
-          if (op_cur == op_base) {
-            finish = 1;
-            break;
-          }
-          
-          // Next sibling
-          if (op_cur->moresib) {
-            op_cur = SPerl_OP_sibling(parser, op_cur);
-            break;
-          }
-          // Next is parent
-          else {
-            op_cur = op_cur->sibparent;
-          }
-        }
-        if (finish) {
-          break;
-        }
-      }
-    }
   }
 }
 
