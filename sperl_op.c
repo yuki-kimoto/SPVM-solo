@@ -157,7 +157,7 @@ SPerl_TYPE* SPerl_OP_get_return_type(SPerl_PARSER* parser, SPerl_OP* op) {
         SPerl_NAME* name = op->info;
         SPerl_char* complete_name = name->complete_name;
         SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
-        type = enum_value->value->type;
+        type = enum_value->const_value->type;
         break;
       }
       case SPerl_OP_C_CODE_GETFIELD: {
@@ -415,7 +415,7 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
                 SPerl_NAME* name = op_cur->info;
                 SPerl_char* enum_complete_name = name->complete_name;
                 SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
-                SPerl_CONST_VALUE* const_value = enum_value->value;
+                SPerl_CONST_VALUE* const_value = enum_value->const_value;
                 SPerl_CONST_VALUE* new_const_value = SPerl_CONST_VALUE_copy(parser, const_value);
                 SPerl_ARRAY_push(sub->const_values, new_const_value);
                 break;
@@ -973,12 +973,12 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           SPerl_ENUM_VALUE* enum_value = SPerl_ENUM_VALUE_new(parser);
           enum_value->name_word = op_enumvalue->first->info;
           if (op_enumvalue->last) {
-            enum_value->value = op_enumvalue->last->info;
+            enum_value->const_value = op_enumvalue->last->info;
           }
           
           SPerl_CONST_VALUE* const_value;
-          if (enum_value->value) {
-            const_value = enum_value->value;
+          if (enum_value->const_value) {
+            const_value = enum_value->const_value;
             start_value = const_value->uv.int_value + 1;
           }
           else {
@@ -988,7 +988,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             SPerl_TYPE* type = SPerl_TYPE_create_word_type(parser, "int");
             const_value->type = type;
 
-            enum_value->value = const_value;
+            enum_value->const_value = const_value;
             start_value++;
           }
           

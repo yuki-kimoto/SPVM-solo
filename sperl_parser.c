@@ -325,7 +325,7 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
 void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_values) {
   for (SPerl_int i = 0; i < const_values->length; i++) {
     SPerl_CONST_VALUE* const_value = (SPerl_CONST_VALUE*)SPerl_ARRAY_fetch(const_values, i);
-    printf("    const_value[%" PRId32 "]\n", i);
+    printf("        const_value[%" PRId32 "]\n", i);
     SPerl_PARSER_dump_const_value(parser, const_value);
   }
 }
@@ -524,7 +524,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
 void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_value) {
   if (enum_value) {
     printf("      name => \"%s\"\n", enum_value->name_word->value);
-    printf("      value => %d\n", enum_value->value->uv.int_value);
+    printf("      value => %d\n", enum_value->const_value->uv.int_value);
   }
   else {
     printf("      None\n");
