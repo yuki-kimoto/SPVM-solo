@@ -125,6 +125,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "getenumvalue",
   "getfield",
   "converttype",
+  "pop",
 };
 
 SPerl_TYPE* SPerl_OP_get_return_type(SPerl_PARSER* parser, SPerl_OP* op) {

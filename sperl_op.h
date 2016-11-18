@@ -94,7 +94,8 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_TYPE,         // UNKNOWN
   SPerl_OP_C_CODE_GETENUMVALUE, // UNKNOWN
   SPerl_OP_C_CODE_GETFIELD,     // UNKNOWN
-  SPerl_OP_C_CODE_CONVERTTYPE, // UNKNOWN
+  SPerl_OP_C_CODE_CONVERTTYPE,  // UNKNOWN
+  SPerl_OP_C_CODE_POP,          // UNKNOWN
 };
 
 enum {
@@ -112,6 +113,8 @@ extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 struct SPerl_op {
   SPerl_int code;
   SPerl_int group;
+  SPerl_char operand1;
+  SPerl_char operand2;
   SPerl_boolean moresib;
   SPerl_OP* first;
   SPerl_OP* last;

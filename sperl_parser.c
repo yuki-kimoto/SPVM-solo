@@ -306,6 +306,9 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   printf("\n[Body information]\n");
   SPerl_PARSER_dump_bodys(parser, parser->bodys);
   
+  printf("\n[Resolved types]\n");
+  SPerl_PARSER_dump_resolved_types(parser, parser->resolved_types);
+  
   printf("\n[Subroutine information]\n");
   printf("  subs\n");
   SPerl_ARRAY* subs = parser->subs;
@@ -336,6 +339,15 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
     printf("    type => \"%s\"\n", package->type->name);
     printf("    resolved_type => \"%s\"\n", package->type->resolved_type->name);
     printf("    resolved_type_id => %d\n", package->type->resolved_type->id);
+  }
+}
+
+void SPerl_PARSER_dump_resolved_types(SPerl_PARSER* parser, SPerl_ARRAY* resolved_types) {
+  for (SPerl_int i = 0; i < resolved_types->length; i++) {
+    printf("resolved_type[%d]\n", i);
+    SPerl_RESOLVED_TYPE* resolved_type = SPerl_ARRAY_fetch(resolved_types, i);
+    printf("    name => \"%s\"\n", resolved_type->name);
+    printf("    id => \"%d\"\n", resolved_type->id);
   }
 }
 
