@@ -15,7 +15,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_CONSTFLOAT,   // CONST
   SPerl_OP_C_CODE_CONSTDOUBLE,  // CONST
   SPerl_OP_C_CODE_CONSTSTRING,  // CONST
-  SPerl_OP_C_CODE_BIT_NOT,      // UNOP
+  SPerl_OP_C_CODE_BITNOT,       // UNOP
   SPerl_OP_C_CODE_PREINC,       // INTDEC
   SPerl_OP_C_CODE_POSTINC,      // INTDEC
   SPerl_OP_C_CODE_PREDEC,       // INTDEC
@@ -47,14 +47,14 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_SUBTRACT,     // BINOP
   SPerl_OP_C_CODE_MULTIPLY,     // BINOP
   SPerl_OP_C_CODE_DIVIDE,       // BINOP
-  SPerl_OP_C_CODE_BIT_AND,      // BINOP
-  SPerl_OP_C_CODE_BIT_OR,       // BINOP
+  SPerl_OP_C_CODE_BITAND,       // BINOP
+  SPerl_OP_C_CODE_BITOR,        // BINOP
   SPerl_OP_C_CODE_MODULO,       // BINOP
-  SPerl_OP_C_CODE_BIT_XOR,      // BINOP
+  SPerl_OP_C_CODE_BITXOR,       // BINOP
   SPerl_OP_C_CODE_EQ,           // BINOP
   SPerl_OP_C_CODE_NE,           // BINOP
-  SPerl_OP_C_CODE_LEFT_SHIFT,   // BINOP
-  SPerl_OP_C_CODE_RIGHT_SHIFT,  // BINOP
+  SPerl_OP_C_CODE_LEFTSHIFT,    // BINOP
+  SPerl_OP_C_CODE_RIGHTSHIFT,   // BINOP
   SPerl_OP_C_CODE_AND,          // LOGICALOP
   SPerl_OP_C_CODE_OR,           // LOGICALOP
   SPerl_OP_C_CODE_NOT,          // LOGICALOP

@@ -45,7 +45,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "constfloat",
   "constdouble",
   "conststring",
-  "bit_not",
+  "bitnot",
   "preinc",
   "postinc",
   "predec",
@@ -77,14 +77,14 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "subtract",
   "multiply",
   "divide",
-  "bit_and",
-  "bit_or",
+  "bitand",
+  "bitor",
   "modulo",
-  "bit_xor",
+  "bitxor",
   "eq",
   "ne",
-  "left_shift",
-  "right_shift",
+  "leftshift",
+  "rightshift",
   "and",
   "or",
   "not",
@@ -1520,7 +1520,7 @@ SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl
     case SPerl_OP_C_CODE_POSTDEC:
       symbol = "--";
       break;
-    case SPerl_OP_C_CODE_BIT_NOT:
+    case SPerl_OP_C_CODE_BITNOT:
       symbol = "~";
       break;
     case SPerl_OP_C_CODE_NOT:
@@ -1533,16 +1533,16 @@ SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl
     case SPerl_OP_C_CODE_MULTIPLY:
       symbol = "*";
       break;
-    case SPerl_OP_C_CODE_BIT_AND:
+    case SPerl_OP_C_CODE_BITAND:
       symbol = "&";
       break;
-    case SPerl_OP_C_CODE_BIT_OR:
+    case SPerl_OP_C_CODE_BITOR:
       symbol = "|";
       break;
-    case SPerl_OP_C_CODE_LEFT_SHIFT:
+    case SPerl_OP_C_CODE_LEFTSHIFT:
       symbol = "<<";
       break;
-    case SPerl_OP_C_CODE_RIGHT_SHIFT:
+    case SPerl_OP_C_CODE_RIGHTSHIFT:
       symbol = ">>";
       break;
     case SPerl_OP_C_CODE_AND:
@@ -1692,19 +1692,19 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
     case SPerl_OP_C_CODE_SUBTRACT:
     case SPerl_OP_C_CODE_MULTIPLY:
     case SPerl_OP_C_CODE_DIVIDE:
-    case SPerl_OP_C_CODE_BIT_AND:
-    case SPerl_OP_C_CODE_BIT_OR:
+    case SPerl_OP_C_CODE_BITAND:
+    case SPerl_OP_C_CODE_BITOR:
     case SPerl_OP_C_CODE_MODULO:
-    case SPerl_OP_C_CODE_BIT_XOR:
+    case SPerl_OP_C_CODE_BITXOR:
     case SPerl_OP_C_CODE_EQ:
     case SPerl_OP_C_CODE_NE:
-    case SPerl_OP_C_CODE_LEFT_SHIFT:
-    case SPerl_OP_C_CODE_RIGHT_SHIFT:
+    case SPerl_OP_C_CODE_LEFTSHIFT:
+    case SPerl_OP_C_CODE_RIGHTSHIFT:
       group = SPerl_OP_C_GROUP_BINOP;
       break;
     
     // Unary op
-    case SPerl_OP_C_CODE_BIT_NOT:
+    case SPerl_OP_C_CODE_BITNOT:
     case SPerl_OP_C_CODE_COMPLEMENT:
     case SPerl_OP_C_CODE_NEGATE:
     case SPerl_OP_C_CODE_PLUS:

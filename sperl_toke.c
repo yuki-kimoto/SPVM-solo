@@ -210,7 +210,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
       }
       case '^': {
         parser->bufptr++;
-        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_XOR);
+        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BITXOR);
         yylvalp->opval = op;
         return MULOP;
       }
@@ -225,7 +225,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         /* Bit or */
         else {
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_OR);
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BITOR);
           yylvalp->opval = op;
           return BITOROP;
         }
@@ -241,7 +241,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         /* Bit and */
         else {
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_AND);
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BITAND);
           yylvalp->opval = op;
           return BITANDOP;
         }
@@ -280,7 +280,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '<') {
           parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_LEFT_SHIFT);
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_LEFTSHIFT);
           yylvalp->opval = op;
           return SHIFTOP;
         }
@@ -303,7 +303,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '>') {
           parser->bufptr++;
-          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_RIGHT_SHIFT);
+          SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_RIGHTSHIFT);
           yylvalp->opval = op;
           return SHIFTOP;
         }
