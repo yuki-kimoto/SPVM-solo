@@ -247,7 +247,7 @@ statement
   | block
   | term ';'
     {
-      $$ = $1;
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POP, $1, NULL);
     }
   | expression ';'
     {
