@@ -10,7 +10,7 @@ SPerl_CONST_VALUE* SPerl_CONST_VALUE_copy(SPerl_PARSER* parser, SPerl_CONST_VALU
   new_const_value->code = const_value->code;
   new_const_value->uv = const_value->uv;
   
-  new_const_value->type = const_value->type;
+  new_const_value->resolved_type = const_value->resolved_type;
   new_const_value->op = const_value->op;
   
   return new_const_value;

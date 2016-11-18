@@ -22,7 +22,7 @@ struct SPerl_const_value {
     SPerl_double double_value;
     SPerl_char* string_value;
   } uv;
-  SPerl_TYPE* type;
+  SPerl_RESOLVED_TYPE* resolved_type;
   SPerl_int pool_pos;
   SPerl_OP* op;
 };

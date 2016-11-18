@@ -367,8 +367,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
         const_value->code = SPerl_CONST_VALUE_C_CODE_CHAR;
         const_value->uv.int_value = ch;
-        SPerl_TYPE* type = SPerl_TYPE_create_word_type(parser, "char");
-        const_value->type = type;
+        const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "char", strlen("char"));
         
         op->info = const_value;
         yylvalp->opval = op;
@@ -409,8 +408,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
         const_value->code = SPerl_CONST_VALUE_C_CODE_STRING;
         const_value->uv.string_value = str;
-        SPerl_TYPE* type = SPerl_TYPE_create_array_type(parser, "char");
-        const_value->type = type;
+        const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "char", strlen("char"));
         op->info = const_value;
         yylvalp->opval = (SPerl_OP*)op;
 
@@ -483,8 +481,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
             const_value->code = SPerl_CONST_VALUE_C_CODE_DOUBLE;
             const_value->uv.double_value = num;
-            SPerl_TYPE* type = SPerl_TYPE_create_word_type(parser, "double");
-            const_value->type = type;
+            const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
             op->info = const_value;
             yylvalp->opval = (SPerl_OP*)op;
             
@@ -499,8 +496,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
             const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
             const_value->uv.int_value = num;
-            SPerl_TYPE* type = SPerl_TYPE_create_word_type(parser, "int");
-            const_value->type = type;
+            const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
             op->info = const_value;
             yylvalp->opval = (SPerl_OP*)op;
             
@@ -616,8 +612,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
               const_value->code = SPerl_CONST_VALUE_C_CODE_BOOLEAN;
               const_value->uv.int_value = 1;
-              SPerl_TYPE* type = SPerl_TYPE_create_word_type(parser, "boolean");
-              const_value->type = type;
+              const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
               op->info = const_value;
               yylvalp->opval = op;
 
@@ -628,8 +623,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
               const_value->code = SPerl_CONST_VALUE_C_CODE_BOOLEAN;
               const_value->uv.int_value = 0;
-              SPerl_TYPE* type = SPerl_TYPE_create_word_type(parser, "boolean");
-              const_value->type = type;
+              const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
               op->info = const_value;
               yylvalp->opval = op;
 

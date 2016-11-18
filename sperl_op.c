@@ -135,7 +135,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   switch (op->group) {
     case SPerl_OP_C_GROUP_CONST: {
       SPerl_CONST_VALUE* const_value = op->info;
-      resolved_type = const_value->type->resolved_type;
+      resolved_type = const_value->resolved_type;
       break;
     }
     
@@ -157,7 +157,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
         SPerl_NAME* name = op->info;
         SPerl_char* complete_name = name->complete_name;
         SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
-        resolved_type = enum_value->const_value->type->resolved_type;
+        resolved_type = enum_value->const_value->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_GETFIELD: {
@@ -985,15 +985,11 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             const_value = SPerl_CONST_VALUE_new(parser);
             const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
             const_value->uv.int_value = start_value;
-            SPerl_TYPE* type = SPerl_TYPE_create_word_type(parser, "int");
-            const_value->type = type;
-
+            const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+            
             enum_value->const_value = const_value;
             start_value++;
           }
-          
-          // Add type
-          SPerl_ARRAY_push(parser->types, const_value->type);
           
           SPerl_ARRAY_push(enum_values, enum_value);
           SPerl_char* enum_complete_name = SPerl_OP_create_complete_name(parser, package_name, enum_value->name_word->value);
@@ -1216,7 +1212,6 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
 SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl_PARSER* parser, SPerl_OP* op_const) {
 
   SPerl_CONST_VALUE* const_value = op_const->info;
-  SPerl_ARRAY_push(parser->types, const_value->type);
   
   return op_const;
 }
