@@ -24,7 +24,6 @@ struct SPerl_const_value {
   } uv;
   SPerl_RESOLVED_TYPE* resolved_type;
   SPerl_int pool_pos;
-  SPerl_OP* op;
 };
 
 SPerl_CONST_VALUE* SPerl_CONST_VALUE_new(SPerl_PARSER* parser);

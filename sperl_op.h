@@ -113,14 +113,13 @@ extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 struct SPerl_op {
   SPerl_int code;
   SPerl_int group;
-  SPerl_char operand1;
-  SPerl_char operand2;
   SPerl_boolean moresib;
   SPerl_OP* first;
   SPerl_OP* last;
   SPerl_OP* sibparent;
   SPerl_char* file;
   SPerl_int line;
+  SPerl_int iv;
   void* info;
 };
 
