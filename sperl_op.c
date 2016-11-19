@@ -128,35 +128,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "pop",
 };
 
-SPerl_OP* SPerl_OP_prev_sibparent(SPerl_PARSER* parser, SPerl_OP* op) {
-  SPerl_OP* cur_op = op;
-  
-  while (cur_op->moresib) {
-    cur_op = SPerl_OP_sibling(parser, cur_op);
-  }
-  
-  SPerl_OP* op_parent = cur_op->sibparent;
-  
-  SPerl_OP* prev_sibparent;
-  cur_op = op_parent->first;
-  if (cur_op == op) {
-    prev_sibparent = op_parent;
-  }
-  else {
-    while (cur_op->moresib) {
-      SPerl_OP* prev_cur_op = cur_op;
-      cur_op = SPerl_OP_sibling(parser, cur_op);
-      if (cur_op == op) {
-        prev_sibparent = prev_cur_op;
-        break;
-      }
-    }
-  }
-  
-  return prev_sibparent;
-}
-
-void SPerl_OP_check_types(SPerl_PARSER* parser) {
+void SPerl_OP_check_ops(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->subs->length; i++) {
     SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
     SPerl_OP* op_sub = sub->op;
@@ -277,7 +249,7 @@ void SPerl_OP_check_types(SPerl_PARSER* parser) {
                   SPerl_yyerror(parser, message);
                 }
                 
-                // Convert type converting op
+                // Resolve converttype op
                 SPerl_OP_resolve_op_converttype(parser, op_cur, resolved_type_src->id, resolved_type_dist->id);
               }
               break;
@@ -534,7 +506,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   SPerl_OP_resolve_types(parser);
   
   // Check types
-  SPerl_OP_check_types(parser);
+  SPerl_OP_check_ops(parser);
 }
 
 void SPerl_OP_check_descripters(SPerl_PARSER* parser) {

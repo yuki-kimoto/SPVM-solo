@@ -128,7 +128,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type);
 void SPerl_OP_check(SPerl_PARSER* parser);
 void SPerl_OP_check_descripters(SPerl_PARSER* parser);
 void SPerl_OP_check_names(SPerl_PARSER* parser);
-void SPerl_OP_check_types(SPerl_PARSER* parser);
+void SPerl_OP_check_ops(SPerl_PARSER* parser);
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op);
 SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl_OP* op_first, SPerl_OP* op_last);
 void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int first_type_id, SPerl_int last_type_id);
@@ -169,7 +169,5 @@ SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* o);
 void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib);
 void SPerl_OP_lastsib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* parent);
 void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
-
-SPerl_OP* SPerl_OP_prev_sibparent(SPerl_PARSER* parser, SPerl_OP* op);
 
 #endif
