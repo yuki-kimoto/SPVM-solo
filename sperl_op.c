@@ -1323,14 +1323,17 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
     }
     
     // Start of scope
-    if (op_cur->code == SPerl_OP_C_CODE_BLOCK) {
-      if (block_start) {
-        SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
-        *block_base_ptr = my_var_stack->length;
-        SPerl_ARRAY_push(block_base_stack, block_base_ptr);
-      }
-      else {
-        block_start = 1;
+    switch (op_cur->code) {
+      case SPerl_OP_C_CODE_BLOCK: {
+        if (block_start) {
+          SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
+          *block_base_ptr = my_var_stack->length;
+          SPerl_ARRAY_push(block_base_stack, block_base_ptr);
+        }
+        else {
+          block_start = 1;
+        }
+        break;
       }
     }
     
@@ -1344,66 +1347,71 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
         // [START]Postorder traversal position
         
         // End of scope
-        if (op_cur->code == SPerl_OP_C_CODE_BLOCK) {
-          SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
-          if (block_base_ptr) {
-            SPerl_int block_base = *block_base_ptr;
-            for (SPerl_int j = 0; j < my_var_stack->length - block_base; j++) {
-              SPerl_ARRAY_pop(my_var_stack);
+        switch (op_cur->code) {
+          case SPerl_OP_C_CODE_BLOCK: {
+            SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
+            if (block_base_ptr) {
+              SPerl_int block_base = *block_base_ptr;
+              for (SPerl_int j = 0; j < my_var_stack->length - block_base; j++) {
+                SPerl_ARRAY_pop(my_var_stack);
+              }
             }
+            break;
           }
-        }
-        // Add my var
-        else if (op_cur->code == SPerl_OP_C_CODE_VAR) {
-          SPerl_VAR* var = op_cur->info;
-          
-          // Serach same name variable
-          SPerl_MY_VAR* my_var = NULL;
-          for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
-            SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
-            if (strcmp(var->name_word->value, my_var_tmp->name_word->value) == 0) {
-              my_var = my_var_tmp;
-              break;
-            }
-          }
-          
-          if (my_var) {
-            // Add my var information to var
-            var->my_var = my_var;
-          }
-          else {
-            // Error
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var->name_word->value));
-            sprintf(message, "Error: \"my %s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
-            SPerl_yyerror(parser, message);
-          }
-        }
-        else if (op_cur->code == SPerl_OP_C_CODE_MY) {
-          SPerl_MY_VAR* my_var = op_cur->info;
-          
-          // Serach same name variable
-          SPerl_int found = 0;
-          
-          for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
-            SPerl_MY_VAR* bef_my_var = SPerl_ARRAY_fetch(my_var_stack, i);
-            if (strcmp(my_var->name_word->value, bef_my_var->name_word->value) == 0) {
-              found = 1;
-              break;
-            }
-          }
-          
-          if (found) {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var->name_word->value));
-            sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
-            SPerl_yyerror(parser, message);
-          }
-          else {
-            // Add my var information
-            my_var->id = parser->next_var_id++;
-            SPerl_ARRAY_push(my_vars, my_var);
-            my_var->sub = sub;
+          // Add my var
+          case SPerl_OP_C_CODE_VAR: {
+            SPerl_VAR* var = op_cur->info;
             
-            SPerl_ARRAY_push(my_var_stack, my_var);
+            // Serach same name variable
+            SPerl_MY_VAR* my_var = NULL;
+            for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
+              SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
+              if (strcmp(var->name_word->value, my_var_tmp->name_word->value) == 0) {
+                my_var = my_var_tmp;
+                break;
+              }
+            }
+            
+            if (my_var) {
+              // Add my var information to var
+              var->my_var = my_var;
+            }
+            else {
+              // Error
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var->name_word->value));
+              sprintf(message, "Error: \"my %s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
+              SPerl_yyerror(parser, message);
+            }
+            break;
+          }
+          case SPerl_OP_C_CODE_MY: {
+            SPerl_MY_VAR* my_var = op_cur->info;
+            
+            // Serach same name variable
+            SPerl_int found = 0;
+            
+            for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
+              SPerl_MY_VAR* bef_my_var = SPerl_ARRAY_fetch(my_var_stack, i);
+              if (strcmp(my_var->name_word->value, bef_my_var->name_word->value) == 0) {
+                found = 1;
+                break;
+              }
+            }
+            
+            if (found) {
+              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var->name_word->value));
+              sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
+              SPerl_yyerror(parser, message);
+            }
+            else {
+              // Add my var information
+              my_var->id = parser->next_var_id++;
+              SPerl_ARRAY_push(my_vars, my_var);
+              my_var->sub = sub;
+              
+              SPerl_ARRAY_push(my_var_stack, my_var);
+            }
+            break;
           }
         }
         
