@@ -684,14 +684,14 @@ void SPerl_OP_check_names(SPerl_PARSER* parser) {
         SPerl_OP_check_sub_name(parser, name);
         break;
       }
-      case SPerl_OP_C_CODE_GETENUMVALUE: {
-        SPerl_NAME* name = cur_op->info;
-        SPerl_OP_check_enum_name(parser, name);
-        break;
-      }
       case SPerl_OP_C_CODE_GETFIELD: {
         SPerl_NAME* name = cur_op->info;
         SPerl_OP_check_field_name(parser, name);
+        break;
+      }
+      case SPerl_OP_C_CODE_GETENUMVALUE: {
+        SPerl_NAME* name = cur_op->info;
+        SPerl_OP_check_enum_name(parser, name);
         break;
       }
     }
