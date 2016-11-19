@@ -496,14 +496,14 @@ void SPerl_OP_resolve_types(SPerl_PARSER* parser) {
 
 void SPerl_OP_check(SPerl_PARSER* parser) {
   
-  // Check names
-  SPerl_OP_check_names(parser);
-  
   // Check descripters(Not used)
   SPerl_OP_check_descripters(parser);
   
   // Resolve types
   SPerl_OP_resolve_types(parser);
+  
+  // Check names
+  SPerl_OP_check_names(parser);
   
   // Check types
   SPerl_OP_check_ops(parser);
