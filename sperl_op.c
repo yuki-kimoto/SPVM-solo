@@ -643,43 +643,43 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
           }
         }
       }
+    }
+  }
+
+  // Check subs
+  SPerl_ARRAY* subs = parser->subs;
+  for (SPerl_int i = 0; i < subs->length; i++) {
+    SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, i);
+    
+    // Check sub descripters(Not used)
+    SPerl_ARRAY* descripters = sub->descripters;
+    SPerl_int k;
+    for (SPerl_int j = 0; j < descripters->length; j++) {
+      SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
+      if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
+      {
+        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
+        sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
+          SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+        SPerl_yyerror(parser, message);
+      }
+    }
+    
+    // Check my var information
+    SPerl_ARRAY* my_vars = sub->my_vars;
+    for (SPerl_int j = 0; j < my_vars->length; j++) {
+      SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
       
-      // Check sub
-      SPerl_ARRAY* subs = body_class->subs;
-      for (SPerl_int j = 0; j < subs->length; j++) {
-        SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, j);
-        
-        // Check sub descripters(Not used)
-        SPerl_ARRAY* descripters = sub->descripters;
-        SPerl_int k;
-        for (SPerl_int k = 0; k < descripters->length; k++) {
-          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
-          if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
-          {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-            sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
-              SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
-            SPerl_yyerror(parser, message);
-          }
-        }
-        
-        // Check my var information
-        SPerl_ARRAY* my_vars = sub->my_vars;
-        for (SPerl_int k = 0; k < my_vars->length; k++) {
-          SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
-          
-          // Check my_var descripters(Not used)
-          SPerl_ARRAY* descripters = my_var->descripters;
-          for (SPerl_int l = 0; l < descripters->length; l++) {
-            SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
-            if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
-            {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-              sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n",
-                SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
-              SPerl_yyerror(parser, message);
-            }
-          }
+      // Check my_var descripters(Not used)
+      SPerl_ARRAY* descripters = my_var->descripters;
+      for (SPerl_int l = 0; l < descripters->length; l++) {
+        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
+        if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
+        {
+          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
+          sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n",
+            SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+          SPerl_yyerror(parser, message);
         }
       }
     }
@@ -1216,7 +1216,6 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           sub->package_name = package_name;
         }
         
-        body_class->subs = parser->current_subs;
         parser->current_subs = SPerl_PARSER_new_array(parser, 0);
         
         // Set body
