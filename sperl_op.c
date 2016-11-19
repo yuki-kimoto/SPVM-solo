@@ -1304,6 +1304,8 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   // block base position stack
   SPerl_ARRAY* block_base_stack = SPerl_PARSER_new_array(parser, 0);
   
+  SPerl_int block_base = 0;
+  
   // Run OPs
   SPerl_OP* op_base = op_sub;
   SPerl_OP* op_cur = op_base;
@@ -1312,23 +1314,13 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   while (op_cur) {
     // [START]Preorder traversal position
 
-    // Current block base
-    SPerl_int block_base;
-    if (block_base_stack->length == 0) {
-      block_base = 0;
-    }
-    else {
-      SPerl_int* block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
-      block_base = *block_base_ptr;
-    }
-    
-    // Start of scope
     switch (op_cur->code) {
       case SPerl_OP_C_CODE_BLOCK: {
         if (block_start) {
           SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
           *block_base_ptr = my_var_stack->length;
           SPerl_ARRAY_push(block_base_stack, block_base_ptr);
+          block_base = *block_base_ptr;
         }
         else {
           block_start = 1;
@@ -1356,6 +1348,14 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
                 SPerl_ARRAY_pop(my_var_stack);
               }
             }
+            SPerl_int* before_block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
+            if (before_block_base_ptr) {
+              block_base = *before_block_base_ptr;
+            }
+            else {
+              block_base = 0;
+            }
+            
             break;
           }
           // Add my var
