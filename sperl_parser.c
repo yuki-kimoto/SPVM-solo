@@ -329,9 +329,11 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
     SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
     printf("    name => \"%s\"\n", package->name_word->value);
     
-    printf("    type => \"%s\"\n", package->type->name);
-    printf("    resolved_type => \"%s\"\n", package->type->resolved_type->name);
-    printf("    resolved_type_id => %d\n", package->type->resolved_type->id);
+    if (package->type) {
+      printf("    type => \"%s\"\n", package->type->name);
+      printf("    resolved_type => \"%s\"\n", package->type->resolved_type->name);
+      printf("    resolved_type_id => %d\n", package->type->resolved_type->id);
+    }
   }
 }
 

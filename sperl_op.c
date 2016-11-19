@@ -971,9 +971,6 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       type_word->name_word = package_name_word;
       type->uv.type_word = type_word;
       
-      // Add type
-      SPerl_ARRAY_push(parser->types, type);
-      
       // Body
       SPerl_BODY* body = SPerl_BODY_new(parser);
       body->name = package_name;
@@ -1024,6 +1021,10 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       }
       // Class type
       else {
+        // Add type
+        package->type = type;
+        SPerl_ARRAY_push(parser->types, type);
+      
         body->code = SPerl_BODY_C_CODE_CLASS;
 
         SPerl_BODY_CLASS* body_class = SPerl_BODY_CLASS_new(parser);
@@ -1150,9 +1151,9 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     // Typedef
     else {
       type = op_type->info;
+      package->type = type;
     }
     
-    package->type = type;
     
     // Add package
     SPerl_ARRAY_push(parser->packages, package);
