@@ -1303,13 +1303,12 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   
   // block base position stack
   SPerl_ARRAY* block_base_stack = SPerl_PARSER_new_array(parser, 0);
-  
   SPerl_int block_base = 0;
+  SPerl_boolean block_start = 0;
   
   // Run OPs
   SPerl_OP* op_base = op_sub;
   SPerl_OP* op_cur = op_base;
-  SPerl_boolean block_start;
   SPerl_boolean finish = 0;
   while (op_cur) {
     // [START]Preorder traversal position
