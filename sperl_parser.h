@@ -75,9 +75,6 @@ struct SPerl_yy_parser_{
   // Current use class name
   SPerl_char* current_use_package_name;
   
-  // Current type id
-  SPerl_int current_type_id;
-  
   // Current subroutine id
   SPerl_int current_sub_id;
   
