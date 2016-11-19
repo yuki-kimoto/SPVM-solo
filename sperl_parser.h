@@ -90,9 +90,6 @@ struct SPerl_yy_parser_{
   // Enum complete name symbol table(package name, enum_name)
   SPerl_HASH* enum_complete_name_symtable;
   
-  // Call subroutines
-  SPerl_ARRAY* name_checked_ops;
-  
   // Types
   SPerl_ARRAY* types;
   

@@ -769,8 +769,6 @@ SPerl_OP* SPerl_OP_build_getenumvalue(SPerl_PARSER* parser, SPerl_OP* op_enumnam
   name->code = SPerl_NAME_C_CODE_ENUM;
   name->abs_name_word = op_enumname->info;
   
-  SPerl_ARRAY_push(parser->name_checked_ops, op_getenumvalue);
-  
   op_getenumvalue->info = name;
   
   return op_getenumvalue;
@@ -785,8 +783,6 @@ SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_
   name->code = SPerl_NAME_C_CODE_FIELD;
   name->var = op_var->info;
   name->base_name_word = op_fieldname->info;
-  
-  SPerl_ARRAY_push(parser->name_checked_ops, op_getfield);
   
   op_getfield->info = name;
   
@@ -1425,10 +1421,6 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
     argument_count++;
   }
   name->argument_count = argument_count;
-  
-  if (!anon) {
-    SPerl_ARRAY_push(parser->name_checked_ops, op_callsub);
-  }
   
   op_callsub->info = name;
   
