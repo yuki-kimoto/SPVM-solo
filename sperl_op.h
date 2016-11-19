@@ -128,6 +128,10 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type);
 void SPerl_OP_check(SPerl_PARSER* parser);
 void SPerl_OP_check_descripters(SPerl_PARSER* parser);
 void SPerl_OP_check_names(SPerl_PARSER* parser);
+void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name);
+void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name);
+void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name);
+
 void SPerl_OP_check_ops(SPerl_PARSER* parser);
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op);
 SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl_OP* op_first, SPerl_OP* op_last);
