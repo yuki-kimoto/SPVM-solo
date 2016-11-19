@@ -127,7 +127,6 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser);
 void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type);
 void SPerl_OP_check(SPerl_PARSER* parser);
 void SPerl_OP_check_descripters(SPerl_PARSER* parser);
-void SPerl_OP_check_names(SPerl_PARSER* parser);
 void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name);
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name);
 void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name);

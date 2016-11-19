@@ -213,8 +213,25 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             
             default:
             switch (op_cur->code) {
-              case SPerl_OP_C_CODE_GETENUMVALUE: {
+              case SPerl_OP_C_CODE_CALLSUB: {
+                // Check sub name
                 SPerl_NAME* name = op_cur->info;
+                if (!name->anon) {
+                  SPerl_OP_check_sub_name(parser, name);
+                }
+                break;
+              }
+              case SPerl_OP_C_CODE_GETFIELD: {
+                // Check field name
+                SPerl_NAME* name = op_cur->info;
+                SPerl_OP_check_field_name(parser, name);
+                break;
+              }
+              case SPerl_OP_C_CODE_GETENUMVALUE: {
+                // Check enum name
+                SPerl_NAME* name = op_cur->info;
+                SPerl_OP_check_enum_name(parser, name);
+
                 SPerl_char* enum_complete_name = name->complete_name;
                 SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
                 SPerl_CONST_VALUE* const_value = enum_value->const_value;
@@ -502,9 +519,6 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   // Resolve types
   SPerl_OP_resolve_types(parser);
   
-  // Check names
-  SPerl_OP_check_names(parser);
-  
   // Check types
   SPerl_OP_check_ops(parser);
 }
@@ -668,33 +682,6 @@ void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name) {
     sprintf(message, "Error: unknown enum \"%s\" at %s line %d\n",
       complete_name, abs_name_word->op->file, abs_name_word->op->line);
     SPerl_yyerror(parser, message);
-  }
-}
-
-void SPerl_OP_check_names(SPerl_PARSER* parser) {
-  // Check names
-  SPerl_ARRAY* name_checked_ops = parser->name_checked_ops;
-  
-  for (SPerl_int i = 0; i < name_checked_ops->length; i++) {
-    SPerl_OP* cur_op = SPerl_ARRAY_fetch(name_checked_ops, i);
-    
-    switch (cur_op->code) {
-      case SPerl_OP_C_CODE_CALLSUB: {
-        SPerl_NAME* name = cur_op->info;
-        SPerl_OP_check_sub_name(parser, name);
-        break;
-      }
-      case SPerl_OP_C_CODE_GETFIELD: {
-        SPerl_NAME* name = cur_op->info;
-        SPerl_OP_check_field_name(parser, name);
-        break;
-      }
-      case SPerl_OP_C_CODE_GETENUMVALUE: {
-        SPerl_NAME* name = cur_op->info;
-        SPerl_OP_check_enum_name(parser, name);
-        break;
-      }
-    }
   }
 }
 
