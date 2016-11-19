@@ -1214,12 +1214,10 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             }
             // Unknown sub
             else {
-              sub->body_class = body_class;
               SPerl_HASH_insert(sub_complete_name_symtable, sub_complete_name, strlen(sub_complete_name), sub);
             }
             i--;
           }
-          sub->body_class = body_class;
           sub->package_name = package_name;
         }
         

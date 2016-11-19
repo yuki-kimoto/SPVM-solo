@@ -12,7 +12,6 @@ struct SPerl_sub {
   SPerl_ARRAY* my_vars;
   SPerl_OP* op_block;
   SPerl_OP* op;
-  SPerl_BODY_CLASS* body_class;
   SPerl_boolean anon;
   SPerl_int id;
   SPerl_char* package_name;
