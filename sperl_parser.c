@@ -51,7 +51,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   parser->next_var_id = 1;
   
-  parser->current_subs = SPerl_PARSER_new_array(parser, 0);
   parser->subs = SPerl_PARSER_new_array(parser, 0);
   parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
   

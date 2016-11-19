@@ -1189,9 +1189,15 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
 
         // Method information
         SPerl_HASH* sub_complete_name_symtable = parser->sub_complete_name_symtable;
-        SPerl_int i;
-        for (i = 0; i < parser->current_subs->length; i++) {
-          SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->current_subs, i);
+        SPerl_int i = parser->subs->length - 1;
+        while (1) {
+          if (i < 0) {
+            break;
+          }
+          SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
+          if (sub->package_name) {
+            break;
+          }
           
           if (!sub->anon) {
             SPerl_char* sub_name = sub->name_word->value;
@@ -1211,12 +1217,11 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               sub->body_class = body_class;
               SPerl_HASH_insert(sub_complete_name_symtable, sub_complete_name, strlen(sub_complete_name), sub);
             }
+            i--;
           }
           sub->body_class = body_class;
           sub->package_name = package_name;
         }
-        
-        parser->current_subs = SPerl_PARSER_new_array(parser, 0);
         
         // Set body
         body->uv.body_class = body_class;
@@ -1366,7 +1371,6 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   sub->id = parser->subs->length;
   
   // Add sub information
-  SPerl_ARRAY_push(parser->current_subs, sub);
   SPerl_ARRAY_push(parser->subs, sub);
   
   op_sub->info = sub;
