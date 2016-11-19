@@ -133,8 +133,17 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
     SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
     SPerl_OP* op_sub = sub->op;
     
-    SPerl_int ppp = 1;
-    ppp = ++ppp + 1;
+    // my var informations
+    SPerl_ARRAY* my_vars = SPerl_PARSER_new_array(parser, 0);
+    SPerl_HASH* my_var_symtable = SPerl_PARSER_new_hash(parser, 0);
+    
+    // my variable stack
+    SPerl_ARRAY* my_var_stack = SPerl_PARSER_new_array(parser, 0);
+    
+    // block base position stack
+    SPerl_ARRAY* block_base_stack = SPerl_PARSER_new_array(parser, 0);
+    SPerl_int block_base = 0;
+    SPerl_boolean block_start = 0;
     
     // Run OPs
     SPerl_OP* op_base = op_sub;
@@ -143,30 +152,21 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
     while (op_cur) {
       // [START]Preorder traversal position
       
-      /*
-      switch (op_cur->group) {
-        case SPerl_OP_C_GROUP_INCDEC: {
-          SPerl_OP* op_assign = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ASSIGN, op_cur->first, NULL);
-          op_assign->file = op_cur->file;
-          op_assign->line = op_cur->line;
-          
-          switch (op_cur->code) {
-            SPerl_OP_C_CODE_PREINC: {
-              
-            }
-            SPerl_OP_C_CODE_PREDEC: {
-              
-            }
-            SPerl_OP_C_CODE_POSTINC: {
-              
-            }
-            SPerl_OP_C_CODE_POSTDEC: {
-              
-            }
+      switch (op_cur->code) {
+        // Start scope
+        case SPerl_OP_C_CODE_BLOCK: {
+          if (block_start) {
+            SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
+            *block_base_ptr = my_var_stack->length;
+            SPerl_ARRAY_push(block_base_stack, block_base_ptr);
+            block_base = *block_base_ptr;
           }
+          else {
+            block_start = 1;
+          }
+          break;
         }
       }
-      */
       
       // [END]Preorder traversal position
       
@@ -213,6 +213,81 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             
             default:
             switch (op_cur->code) {
+              // End of scope
+              case SPerl_OP_C_CODE_BLOCK: {
+                SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
+                if (block_base_ptr) {
+                  SPerl_int block_base = *block_base_ptr;
+                  for (SPerl_int j = 0; j < my_var_stack->length - block_base; j++) {
+                    SPerl_ARRAY_pop(my_var_stack);
+                  }
+                }
+                SPerl_int* before_block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
+                if (before_block_base_ptr) {
+                  block_base = *before_block_base_ptr;
+                }
+                else {
+                  block_base = 0;
+                }
+                
+                break;
+              }
+              // Add my var
+              case SPerl_OP_C_CODE_VAR: {
+                SPerl_VAR* var = op_cur->info;
+                
+                // Serach same name variable
+                SPerl_MY_VAR* my_var = NULL;
+                for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
+                  SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
+                  if (strcmp(var->name_word->value, my_var_tmp->name_word->value) == 0) {
+                    my_var = my_var_tmp;
+                    break;
+                  }
+                }
+                
+                if (my_var) {
+                  // Add my var information to var
+                  var->my_var = my_var;
+                }
+                else {
+                  // Error
+                  SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var->name_word->value));
+                  sprintf(message, "Error: \"my %s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
+                  SPerl_yyerror(parser, message);
+                }
+                break;
+              }
+              case SPerl_OP_C_CODE_MY: {
+                SPerl_MY_VAR* my_var = op_cur->info;
+                
+                // Serach same name variable
+                SPerl_int found = 0;
+                
+                for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
+                  SPerl_MY_VAR* bef_my_var = SPerl_ARRAY_fetch(my_var_stack, i);
+                  if (strcmp(my_var->name_word->value, bef_my_var->name_word->value) == 0) {
+                    found = 1;
+                    break;
+                  }
+                }
+                
+                if (found) {
+                  SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var->name_word->value));
+                  sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
+                  SPerl_yyerror(parser, message);
+                }
+                else {
+                  // Add my var information
+                  my_var->id = parser->next_var_id++;
+                  SPerl_ARRAY_push(my_vars, my_var);
+                  my_var->sub = sub;
+                  
+                  SPerl_ARRAY_push(my_var_stack, my_var);
+                }
+                break;
+              }
+
               case SPerl_OP_C_CODE_CALLSUB: {
                 // Check sub name
                 SPerl_NAME* name = op_cur->info;
@@ -295,6 +370,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         }
       }
     }
+    // Set my var information
+    sub->my_vars = my_vars;
   }
 }
 
@@ -1293,153 +1370,6 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   // Add sub information
   SPerl_ARRAY_push(parser->current_subs, sub);
   SPerl_ARRAY_push(parser->subs, sub);
-  
-  // my var informations
-  SPerl_ARRAY* my_vars = SPerl_PARSER_new_array(parser, 0);
-  SPerl_HASH* my_var_symtable = SPerl_PARSER_new_hash(parser, 0);
-  
-  // my variable stack
-  SPerl_ARRAY* my_var_stack = SPerl_PARSER_new_array(parser, 0);
-  
-  // block base position stack
-  SPerl_ARRAY* block_base_stack = SPerl_PARSER_new_array(parser, 0);
-  SPerl_int block_base = 0;
-  SPerl_boolean block_start = 0;
-  
-  // Run OPs
-  SPerl_OP* op_base = op_sub;
-  SPerl_OP* op_cur = op_base;
-  SPerl_boolean finish = 0;
-  while (op_cur) {
-    // [START]Preorder traversal position
-
-    switch (op_cur->code) {
-      case SPerl_OP_C_CODE_BLOCK: {
-        if (block_start) {
-          SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
-          *block_base_ptr = my_var_stack->length;
-          SPerl_ARRAY_push(block_base_stack, block_base_ptr);
-          block_base = *block_base_ptr;
-        }
-        else {
-          block_start = 1;
-        }
-        break;
-      }
-    }
-    
-    // [END]Preorder traversal position
-
-    if (op_cur->first) {
-      op_cur = op_cur->first;
-    }
-    else {
-      while (1) {
-        // [START]Postorder traversal position
-        
-        // End of scope
-        switch (op_cur->code) {
-          case SPerl_OP_C_CODE_BLOCK: {
-            SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
-            if (block_base_ptr) {
-              SPerl_int block_base = *block_base_ptr;
-              for (SPerl_int j = 0; j < my_var_stack->length - block_base; j++) {
-                SPerl_ARRAY_pop(my_var_stack);
-              }
-            }
-            SPerl_int* before_block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
-            if (before_block_base_ptr) {
-              block_base = *before_block_base_ptr;
-            }
-            else {
-              block_base = 0;
-            }
-            
-            break;
-          }
-          // Add my var
-          case SPerl_OP_C_CODE_VAR: {
-            SPerl_VAR* var = op_cur->info;
-            
-            // Serach same name variable
-            SPerl_MY_VAR* my_var = NULL;
-            for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
-              SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
-              if (strcmp(var->name_word->value, my_var_tmp->name_word->value) == 0) {
-                my_var = my_var_tmp;
-                break;
-              }
-            }
-            
-            if (my_var) {
-              // Add my var information to var
-              var->my_var = my_var;
-            }
-            else {
-              // Error
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var->name_word->value));
-              sprintf(message, "Error: \"my %s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
-              SPerl_yyerror(parser, message);
-            }
-            break;
-          }
-          case SPerl_OP_C_CODE_MY: {
-            SPerl_MY_VAR* my_var = op_cur->info;
-            
-            // Serach same name variable
-            SPerl_int found = 0;
-            
-            for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
-              SPerl_MY_VAR* bef_my_var = SPerl_ARRAY_fetch(my_var_stack, i);
-              if (strcmp(my_var->name_word->value, bef_my_var->name_word->value) == 0) {
-                found = 1;
-                break;
-              }
-            }
-            
-            if (found) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var->name_word->value));
-              sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
-              SPerl_yyerror(parser, message);
-            }
-            else {
-              // Add my var information
-              my_var->id = parser->next_var_id++;
-              SPerl_ARRAY_push(my_vars, my_var);
-              my_var->sub = sub;
-              
-              SPerl_ARRAY_push(my_var_stack, my_var);
-            }
-            break;
-          }
-        }
-        
-        // [END]Postorder traversal position
-        
-        if (op_cur == op_base) {
-          finish = 1;
-          break;
-        }
-        
-        // Next sibling
-        if (op_cur->moresib) {
-          op_cur = SPerl_OP_sibling(parser, op_cur);
-          break;
-        }
-        // Next is parent
-        else {
-          op_cur = op_cur->sibparent;
-        }
-      }
-      
-      if (finish) {
-        break;
-      }
-    }
-  }
-  
-  // Set my var information
-  sub->my_vars = my_vars;
   
   // ID
   sub->id = parser->current_sub_id++;
