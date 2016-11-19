@@ -75,9 +75,6 @@ struct SPerl_yy_parser_{
   // Current use class name
   SPerl_char* current_use_package_name;
   
-  // Current subroutine id
-  SPerl_int current_sub_id;
-  
   // Method global name symbol table(package name, sub name, argument count)
   SPerl_HASH* sub_complete_name_symtable;
   

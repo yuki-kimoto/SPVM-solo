@@ -1362,13 +1362,13 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   
   // Save op
   sub->op = op_sub;
+
+  // ID
+  sub->id = parser->subs->length;
   
   // Add sub information
   SPerl_ARRAY_push(parser->current_subs, sub);
   SPerl_ARRAY_push(parser->subs, sub);
-  
-  // ID
-  sub->id = parser->current_sub_id++;
   
   op_sub->info = sub;
   
