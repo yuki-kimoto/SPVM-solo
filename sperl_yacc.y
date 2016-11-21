@@ -7,6 +7,7 @@
   #include <ctype.h>
   #include <stdlib.h>
   #include <string.h>
+  #include <stdarg.h>
   
   #include "sperl_base.h"
   #include "sperl_yacc.h"
@@ -18,8 +19,53 @@
   #include "sperl_const_value.h"
   #include "sperl_word.h"
 
-  void SPerl_yyerror_format(SPerl_PARSER* parser, SPerl_char* file, SPerl_int line, SPerl_char* message, ...) {
-  
+  void SPerl_yyerror_format(SPerl_PARSER* parser, SPerl_char* message_template, ...) {
+    va_list args;
+
+    SPerl_int message_length = 0;
+    
+    // Prefix
+    SPerl_char* prefix = "Error:";
+    SPerl_int prefix_length = strlen(prefix);
+     
+    // Message template
+    SPerl_int message_template_length = strlen(message_template);
+    
+    // Messsage template with prefix
+    SPerl_int message_template_with_prefix_length =  prefix_length + message_template_length;
+    SPerl_char* message_template_with_prefix = SPerl_PARSER_new_string(parser, message_template_with_prefix_length);
+    memcpy(message_template_with_prefix, prefix, prefix_length);
+    memcpy(message_template_with_prefix + prefix_length, message_template, message_template_length);
+    message_length += message_template_with_prefix_length;
+    
+    va_start(args, message_template);
+    
+    // File
+    SPerl_char* file = va_arg(args, SPerl_char*);
+    message_length += strlen(file);
+    
+    // Line number
+    SPerl_int line = va_arg(args, SPerl_int);
+    SPerl_int line_length;
+    for(SPerl_int line_length = 0; line_length != 0; line_length++) {
+      line_length /= 10;
+    }
+    message_length += line_length;
+    
+    // Arguments
+    for (SPerl_int i = 0; i < message_length; i++) {
+      SPerl_char* arg = va_arg(args , SPerl_char*);
+      message_length += strlen(arg);
+    }
+    va_end(args);
+    
+    SPerl_char* message = SPerl_PARSER_new_string(parser, message_length);
+    
+    va_start(args, message_template);
+    vsprintf(message, message_template_with_prefix, args);
+    va_end(args);
+    
+    SPerl_yyerror(parser, message);
   }
 
   // Print error
