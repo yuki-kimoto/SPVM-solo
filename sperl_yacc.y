@@ -19,12 +19,12 @@
   #include "sperl_word.h"
   
   /* Function for error */
-  void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s)
+  void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* message)
   {
     parser->error_count++;
     
-    if (memcmp(s, "Error:", 6) == 0) {
-      fprintf(stderr, "%s", s);
+    if (memcmp(message, "Error:", 6) == 0) {
+      fprintf(stderr, "%s", message);
     }
     // Syntax structure error
     else {
