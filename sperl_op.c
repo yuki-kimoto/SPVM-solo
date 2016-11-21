@@ -351,7 +351,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_CONVERTTYPE: {
                 SPerl_OP* op_type_dist = op_cur->first;
-                SPerl_RESOLVED_TYPE* resolved_type_dist = op_type_dist->info;
+                SPerl_TYPE* type_dist = op_type_dist->info;
+                SPerl_RESOLVED_TYPE* resolved_type_dist = type_dist->resolved_type;
                 
                 SPerl_OP* op_term = op_cur->last;
                 SPerl_RESOLVED_TYPE* resolved_type_src = SPerl_OP_get_resolved_type(parser, op_term);
