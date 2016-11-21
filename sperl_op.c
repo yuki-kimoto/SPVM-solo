@@ -365,7 +365,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 
                 // Resolve converttype op
-                SPerl_OP_resolve_op_converttype(parser, op_cur, resolved_type_src->id, resolved_type_dist->id);
+                SPerl_OP_resolve_converttype(parser, op_cur, resolved_type_src, resolved_type_dist);
               }
               break;
             }
@@ -541,7 +541,10 @@ void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_i
   }
 }
 
-void SPerl_OP_resolve_op_converttype(SPerl_PARSER* parser, SPerl_OP* op_converttype, SPerl_int src_type_id, SPerl_int dist_type_id) {
+void SPerl_OP_resolve_converttype(SPerl_PARSER* parser, SPerl_OP* op_converttype, SPerl_RESOLVED_TYPE* resolved_type_src, SPerl_RESOLVED_TYPE* resolved_type_dist) {
+  
+  SPerl_int src_type_id = resolved_type_src->id;
+  SPerl_int dist_type_id = resolved_type_dist->id;
   
   if (src_type_id == dist_type_id) {
     op_converttype->code = SPerl_OP_C_CODE_NULL;
