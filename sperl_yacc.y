@@ -164,18 +164,30 @@ package
   : PACKAGE packagename type ';'
     {
       $$ = SPerl_OP_build_package(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser), SPerl_OP_newOP_NULL(parser));
+      if (parser->fatal_error) {
+        YYABORT;
+      }
     }
   | PACKAGE packagename classblock
     {
       $$ = SPerl_OP_build_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), SPerl_OP_newOP_LIST(parser), $3);
+      if (parser->fatal_error) {
+        YYABORT;
+      }
     }
   | PACKAGE packagename ':' listdescripters classblock
     {
       $$ = SPerl_OP_build_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
+      if (parser->fatal_error) {
+        YYABORT;
+      }
     }
   | PACKAGE packagename ':' ENUM enumblock
     {
       $$ = SPerl_OP_build_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
+      if (parser->fatal_error) {
+        YYABORT;
+      }
     }
 
 enumblock 
@@ -672,9 +684,6 @@ arraytype
   | '(' subtype ')' '[' ']'
     {
       $$ = SPerl_OP_build_arraytype(parser, $2);
-      if (parser->fatal_error) {
-        YYABORT;
-      }
     }
 
 enumname : WORD

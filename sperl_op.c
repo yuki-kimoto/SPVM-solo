@@ -317,6 +317,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_NAME* name = op_cur->info;
                 if (!name->anon) {
                   SPerl_OP_check_sub_name(parser, name);
+                  if (parser->fatal_error) {
+                    return;
+                  }
                 }
                 break;
               }
@@ -324,12 +327,18 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 // Check field name
                 SPerl_NAME* name = op_cur->info;
                 SPerl_OP_check_field_name(parser, name);
+                if (parser->fatal_error) {
+                  return;
+                }
                 break;
               }
               case SPerl_OP_C_CODE_GETENUMVALUE: {
                 // Check enum name
                 SPerl_NAME* name = op_cur->info;
                 SPerl_OP_check_enum_name(parser, name);
+                if (parser->fatal_error) {
+                  return;
+                }
 
                 SPerl_char* enum_complete_name = name->complete_name;
                 SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
@@ -619,12 +628,21 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
   
   // Check descripters(Not used)
   SPerl_OP_check_descripters(parser);
+  if (parser->fatal_error) {
+    return;
+  }
   
   // Resolve types
   SPerl_OP_resolve_types(parser);
+  if (parser->fatal_error) {
+    return;
+  }
   
   // Check types
   SPerl_OP_check_ops(parser);
+  if (parser->fatal_error) {
+    return;
+  }
 }
 
 void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
@@ -831,6 +849,9 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 
   // Resovle types, check types, descripters, and names.
   SPerl_OP_check(parser);
+  if (parser->fatal_error) {
+    return NULL;
+  }
 
   // Build constant pool
   SPerl_OP_build_const_pool(parser);
