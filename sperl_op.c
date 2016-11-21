@@ -187,8 +187,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
           SPerl_OP* op_add = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ADD, op_var_copy, op_const);
           
           // Convert preinc to assign
-          op_cur->code = SPerl_OP_C_CODE_ASSIGN;
-          op_cur->group = SPerl_OP_C_GROUP_ASSIGNOP;
+          SPerl_OP_convert_op(parser, op_cur, SPerl_OP_C_CODE_ASSIGN);
           SPerl_OP_sibling_splice(parser, op_cur, op_cur->first, 0, op_add);
         }
       }
@@ -344,8 +343,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_ARRAY_push(sub->const_values, new_const_value);
                 
                 // Replace getenumvalue to const
-                op_cur->code = SPerl_OP_C_CODE_CONSTINT;
-                op_cur->group = SPerl_OP_get_group(parser, op_cur->code);
+                SPerl_OP_convert_op(parser, op_cur, SPerl_OP_C_CODE_CONSTINT);
                 op_cur->info = new_const_value;
                 op_cur->first = NULL;
                 
@@ -1615,6 +1613,11 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_typ
 
 SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
   return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
+}
+
+void SPerl_OP_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int code) {
+  op->code = code;
+  op->group = SPerl_OP_get_group(parser, code);
 }
 
 SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
