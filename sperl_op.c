@@ -543,55 +543,55 @@ void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_i
 
 void SPerl_OP_resolve_converttype(SPerl_PARSER* parser, SPerl_OP* op_converttype, SPerl_RESOLVED_TYPE* resolved_type_src, SPerl_RESOLVED_TYPE* resolved_type_dist) {
   
-  SPerl_int src_type_id = resolved_type_src->id;
-  SPerl_int dist_type_id = resolved_type_dist->id;
+  SPerl_int src_id = resolved_type_src->id;
+  SPerl_int dist_id = resolved_type_dist->id;
   
-  if (src_type_id == dist_type_id) {
+  if (src_id == dist_id) {
     op_converttype->code = SPerl_OP_C_CODE_NULL;
     op_converttype->group = SPerl_OP_get_group(parser, op_converttype->code);
   }
-  else if (src_type_id != dist_type_id) {
-    if (src_type_id == SPerl_BODY_CORE_C_CODE_INT) {
-      if (dist_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+  else if (src_id != dist_id) {
+    if (src_id == SPerl_BODY_CORE_C_CODE_INT) {
+      if (dist_id == SPerl_BODY_CORE_C_CODE_LONG) {
         op_converttype->code = SPerl_OP_C_CODE_I2L;
       }
-      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+      else if (dist_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
         op_converttype->code = SPerl_OP_C_CODE_I2F;
       }
-      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+      else if (dist_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
        op_converttype->code = SPerl_OP_C_CODE_I2D;
       }
     }
-    else if (src_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
-      if (dist_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+    else if (src_id == SPerl_BODY_CORE_C_CODE_LONG) {
+      if (dist_id == SPerl_BODY_CORE_C_CODE_INT) {
         op_converttype->code = SPerl_OP_C_CODE_I2L;
       }
-      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+      else if (dist_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
         op_converttype->code = SPerl_OP_C_CODE_L2F;
       }
-      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+      else if (dist_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
         op_converttype->code = SPerl_OP_C_CODE_L2D;
       }
     }
-    else if (src_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-      if (dist_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+    else if (src_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+      if (dist_id == SPerl_BODY_CORE_C_CODE_INT) {
         op_converttype->code = SPerl_OP_C_CODE_I2F;
       }
-      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+      else if (dist_id == SPerl_BODY_CORE_C_CODE_LONG) {
         op_converttype->code = SPerl_OP_C_CODE_L2F;
       }
-      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+      else if (dist_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
         op_converttype->code = SPerl_OP_C_CODE_F2D;
       }
     }
-    else if (src_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-      if (dist_type_id == SPerl_BODY_CORE_C_CODE_INT) {
+    else if (src_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+      if (dist_id == SPerl_BODY_CORE_C_CODE_INT) {
         op_converttype->code = SPerl_OP_C_CODE_I2D;
       }
-      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
+      else if (dist_id == SPerl_BODY_CORE_C_CODE_LONG) {
         op_converttype->code = SPerl_OP_C_CODE_L2D;
       }
-      else if (dist_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+      else if (dist_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
         op_converttype->code = SPerl_OP_C_CODE_F2D;
       }
     }
