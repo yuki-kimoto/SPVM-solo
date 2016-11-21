@@ -17,8 +17,12 @@
   #include "sperl_my_var.h"
   #include "sperl_const_value.h"
   #include "sperl_word.h"
+
+  void SPerl_yyerror_format(SPerl_PARSER* parser, SPerl_char* file, SPerl_int line, SPerl_char* message, ...) {
   
-  /* Function for error */
+  }
+
+  // Print error
   void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* message)
   {
     parser->error_count++;

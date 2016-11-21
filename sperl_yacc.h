@@ -13,5 +13,6 @@ extern int SPerl_yydebug;
 
 int SPerl_yyparse(SPerl_PARSER* parser);
 void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* s);
+void SPerl_yyerror_format(SPerl_PARSER* parser, SPerl_char* file, SPerl_int line, SPerl_char* message, ...);
 
 #endif
