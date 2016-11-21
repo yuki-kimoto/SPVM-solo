@@ -89,6 +89,8 @@ struct SPerl_yy_parser_{
 
   // Resolved type string symbol table
   SPerl_HASH* resolved_type_symtable;
+  
+  SPerl_boolean fatal_error;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();

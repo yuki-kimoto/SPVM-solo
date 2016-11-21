@@ -672,6 +672,9 @@ arraytype
   | '(' subtype ')' '[' ']'
     {
       $$ = SPerl_OP_build_arraytype(parser, $2);
+      if (parser->fatal_error) {
+        YYABORT;
+      }
     }
 
 enumname : WORD
