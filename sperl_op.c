@@ -166,6 +166,31 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
           }
           break;
         }
+        case SPerl_OP_C_CODE_PREINC: {
+          if (op_cur->first->code != SPerl_OP_C_CODE_VAR) {
+            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
+            sprintf(message, "Error: invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
+            SPerl_yyerror(parser, message);
+          }
+          SPerl_OP* op_var = op_cur->first;
+          
+          // $var
+          SPerl_OP* op_var_copy = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_VAR, NULL, NULL);
+          op_var_copy->info = op_var->info;
+          
+          // 1
+          SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_create_int_1(parser);
+          SPerl_OP* op_const = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTINT, NULL, NULL);
+          op_const->info = const_value;
+          
+          // Add
+          SPerl_OP* op_add = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ADD, op_var_copy, op_const);
+          
+          // Convert preinc to assign
+          op_cur->code = SPerl_OP_C_CODE_ASSIGN;
+          op_cur->group = SPerl_OP_C_GROUP_ASSIGNOP;
+          SPerl_OP_sibling_splice(parser, op_cur, op_cur->first, 0, op_add);
+        }
       }
       
       // [END]Preorder traversal position

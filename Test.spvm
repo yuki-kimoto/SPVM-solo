@@ -13,6 +13,9 @@ package Test {
   use Test::ValueClass;
 
   sub main() : int {
+    my $num : int = 0;
+    ++$num;
+    
     1 + 1.2;
     1.2 + 3;
     my $foo : double = (double)1;

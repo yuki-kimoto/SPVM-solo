@@ -27,5 +27,6 @@ struct SPerl_const_value {
 };
 
 SPerl_CONST_VALUE* SPerl_CONST_VALUE_new(SPerl_PARSER* parser);
+SPerl_CONST_VALUE* SPerl_CONST_VALUE_create_int_1(SPerl_PARSER* parser);
 
 #endif
