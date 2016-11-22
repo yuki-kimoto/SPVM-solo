@@ -189,6 +189,29 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
           SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_ASSIGN);
           SPerl_OP_sibling_splice(parser, op_cur, op_cur->first, 0, op_add);
         }
+        case SPerl_OP_C_CODE_PREDEC: {
+          if (op_cur->first->code != SPerl_OP_C_CODE_VAR) {
+            SPerl_yyerror_format(parser, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
+            break;
+          }
+          SPerl_OP* op_var = op_cur->first;
+          
+          // $var
+          SPerl_OP* op_var_copy = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_VAR, NULL, NULL);
+          op_var_copy->info = op_var->info;
+          
+          // 1
+          SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_create_int_1(parser);
+          SPerl_OP* op_const = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTINT, NULL, NULL);
+          op_const->info = const_value;
+          
+          // Subtract
+          SPerl_OP* op_subtract = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_SUBTRACT, op_var_copy, op_const);
+          
+          // Convert preinc to assign
+          SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_ASSIGN);
+          SPerl_OP_sibling_splice(parser, op_cur, op_cur->first, 0, op_subtract);
+        }
       }
       
       // [END]Preorder traversal position
