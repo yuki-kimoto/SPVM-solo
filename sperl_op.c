@@ -126,6 +126,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "getfield",
   "converttype",
   "pop",
+  "iinc",
 };
 
 void SPerl_OP_check_ops(SPerl_PARSER* parser) {
@@ -166,52 +167,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
           }
           break;
         }
-        case SPerl_OP_C_CODE_PREINC: {
-          if (op_cur->first->code != SPerl_OP_C_CODE_VAR) {
-            SPerl_yyerror_format(parser, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
-            break;
-          }
-          SPerl_OP* op_var = op_cur->first;
-          
-          // $var
-          SPerl_OP* op_var_copy = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_VAR, NULL, NULL);
-          op_var_copy->info = op_var->info;
-          
-          // 1
-          SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_create_int_1(parser);
-          SPerl_OP* op_const = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTINT, NULL, NULL);
-          op_const->info = const_value;
-          
-          // Add
-          SPerl_OP* op_add = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ADD, op_var_copy, op_const);
-          
-          // Convert preinc to assign
-          SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_ASSIGN);
-          SPerl_OP_sibling_splice(parser, op_cur, op_cur->first, 0, op_add);
-        }
-        case SPerl_OP_C_CODE_PREDEC: {
-          if (op_cur->first->code != SPerl_OP_C_CODE_VAR) {
-            SPerl_yyerror_format(parser, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
-            break;
-          }
-          SPerl_OP* op_var = op_cur->first;
-          
-          // $var
-          SPerl_OP* op_var_copy = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_VAR, NULL, NULL);
-          op_var_copy->info = op_var->info;
-          
-          // 1
-          SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_create_int_1(parser);
-          SPerl_OP* op_const = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTINT, NULL, NULL);
-          op_const->info = const_value;
-          
-          // Subtract
-          SPerl_OP* op_subtract = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_SUBTRACT, op_var_copy, op_const);
-          
-          // Convert preinc to assign
-          SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_ASSIGN);
-          SPerl_OP_sibling_splice(parser, op_cur, op_cur->first, 0, op_subtract);
-        }
       }
       
       // [END]Preorder traversal position
@@ -224,6 +179,19 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
           // [START]Postorder traversal position
 
           switch (op_cur->group) {
+            case SPerl_OP_C_GROUP_INCDEC: {
+              SPerl_OP* first = op_cur->first;
+              if (first->code != SPerl_OP_C_CODE_VAR) {
+                SPerl_yyerror_format(parser, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
+              
+              // Only int or long
+              if (first_resolved_type->id != SPerl_BODY_CORE_C_CODE_INT &&  first_resolved_type->id != SPerl_BODY_CORE_C_CODE_LONG) {
+                SPerl_yyerror_format(parser, "must be int or long in increment at %s line %d\n", op_cur->file, op_cur->line);
+              }
+            }
             case SPerl_OP_C_GROUP_CONST: {
               SPerl_SUB* sub = op_sub->info;
               SPerl_CONST_VALUE* const_value = op_cur->info;
