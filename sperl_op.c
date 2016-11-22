@@ -169,8 +169,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         case SPerl_OP_C_CODE_PREINC: {
           if (op_cur->first->code != SPerl_OP_C_CODE_VAR) {
             SPerl_yyerror_format(parser, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
-            parser->fatal_error = 1;
-            return;
+            break;
           }
           SPerl_OP* op_var = op_cur->first;
           
