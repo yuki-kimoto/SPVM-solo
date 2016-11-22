@@ -11,8 +11,7 @@
 #include "sperl_op.h"
 
 void SPerl_yyerror_format(SPerl_PARSER* parser, SPerl_char* message_template, ...) {
-  va_list args;
-
+  
   SPerl_int message_length = 0;
   
   // Prefix
@@ -23,30 +22,38 @@ void SPerl_yyerror_format(SPerl_PARSER* parser, SPerl_char* message_template, ..
   SPerl_int message_template_length = strlen(message_template);
   
   // Messsage template with prefix
-  SPerl_int message_template_with_prefix_length =  prefix_length + message_template_length;
+  SPerl_int message_template_with_prefix_length = prefix_length + message_template_length;
   SPerl_char* message_template_with_prefix = SPerl_PARSER_new_string(parser, message_template_with_prefix_length);
-  memcpy(message_template_with_prefix, prefix, prefix_length);
-  memcpy(message_template_with_prefix + prefix_length, message_template, message_template_length);
+  strncpy(message_template_with_prefix, prefix, prefix_length);
+  strncpy(message_template_with_prefix + prefix_length, message_template, message_template_length);
+  message_template_with_prefix[message_template_with_prefix_length] = '\0';
   message_length += message_template_with_prefix_length;
   
+  va_list args;
   va_start(args, message_template);
   
-  // File
-  SPerl_char* file = va_arg(args, SPerl_char*);
-  message_length += strlen(file);
-  
-  // Line number
-  SPerl_int line = va_arg(args, SPerl_int);
-  SPerl_int line_length;
-  for(SPerl_int line_length = 0; line_length != 0; line_length++) {
-    line_length /= 10;
-  }
-  message_length += line_length;
-  
-  // Arguments
-  for (SPerl_int i = 0; i < message_length; i++) {
-    SPerl_char* arg = va_arg(args , SPerl_char*);
-    message_length += strlen(arg);
+  // Argument count
+  SPerl_char* found_ptr = message_template_with_prefix;
+  while (1) {
+    found_ptr = strchr(found_ptr, '%');
+    if (found_ptr) {
+      if (*(found_ptr + 1) == 's') {
+        SPerl_char* arg = va_arg(args, SPerl_char*);
+        message_length += strlen(arg);
+      }
+      else if (*(found_ptr + 1) == 'd') {
+        SPerl_int arg = va_arg(args, SPerl_int);
+        message_length += 30;
+      }
+      else {
+        fprintf(stderr, "Invalid arguments(SPerl_yyerror_format)\n");
+        exit(1);
+      }
+      found_ptr++;
+    }
+    else {
+      break;
+    }
   }
   va_end(args);
   
