@@ -224,10 +224,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               // Can receive only core type
               if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
-                SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
-                sprintf(message, "Error: %s operator can receive only core type at %s line %d\n",
-                  opdef->symbol, op_cur->file, op_cur->line);
-                SPerl_yyerror(parser, message);
+                SPerl_yyerror_format(parser, "%s operator can receive only core type at %s line %d\n", opdef->symbol, op_cur->file, op_cur->line);
+                break;
               }
               // Insert type converting op
               SPerl_OP_insert_type_convert_op(parser, op_cur, first_resolved_type->id, last_resolved_type->id);
@@ -275,9 +273,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 else {
                   // Error
-                  SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(var->name_word->value));
-                  sprintf(message, "Error: \"my %s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
-                  SPerl_yyerror(parser, message);
+                  SPerl_yyerror_format(parser, "\"my %s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
+                  parser->fatal_error = 1;
+                  return;
                 }
                 break;
               }
@@ -296,9 +294,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 
                 if (found) {
-                  SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(my_var->name_word->value));
-                  sprintf(message, "Error: redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
-                  SPerl_yyerror(parser, message);
+                  SPerl_yyerror_format(parser, "redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
                 }
                 else {
                   // Add my var information
@@ -367,10 +363,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 
                 // Can receive only core type
                 if (!SPerl_TYPE_is_core_type(parser, resolved_type_src->id) || !SPerl_TYPE_is_core_type(parser, resolved_type_dist->id)) {
-                  SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(op_cur->file));
-                  sprintf(message, "Error: can't convert type %s to %s at %s line %d\n",
+                  SPerl_yyerror_format(parser, "can't convert type %s to %s at %s line %d\n",
                     resolved_type_src->name, resolved_type_dist->name, op_cur->file, op_cur->line);
-                  SPerl_yyerror(parser, message);
                 }
                 
                 // Resolve converttype op
@@ -662,10 +656,8 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
         if (descripter->code != SPerl_DESCRIPTER_C_CODE_VALUE && descripter->code != SPerl_DESCRIPTER_C_CODE_ENUM)
         {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-          sprintf(message, "Error: unknown descripter of package \"%s\" at %s line %d\n",
+          SPerl_yyerror_format(parser, "unknown descripter of package \"%s\" at %s line %d\n",
             SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
-          SPerl_yyerror(parser, message);
         }
       }
       
@@ -680,10 +672,8 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
           SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
           if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
           {
-            SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-            sprintf(message, "Error: unknown descripter of has \"%s\" at %s line %d\n",
+            SPerl_yyerror_format(parser, "unknown descripter of has \"%s\" at %s line %d\n",
               SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
-            SPerl_yyerror(parser, message);
           }
         }
       }
@@ -702,10 +692,8 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
       SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
       if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
       {
-        SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-        sprintf(message, "Error: unknown descripter of sub \"%s\" at %s line %d\n",
+        SPerl_yyerror_format(parser, "unknown descripter of sub \"%s\" at %s line %d\n",
           SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
-        SPerl_yyerror(parser, message);
       }
     }
     
@@ -720,10 +708,8 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
         SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
         if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
         {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(SPerl_DESCRIPTER_CODE_NAMES[descripter->code]));
-          sprintf(message, "Error: unknown descripter of my \"%s\" at %s line %d\n",
+          SPerl_yyerror_format(parser, "unknown descripter of my \"%s\" at %s line %d\n",
             SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
-          SPerl_yyerror(parser, message);
         }
       }
     }
@@ -755,10 +741,8 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name) {
     strlen(sub_complete_name)
   );
   if (!found_sub) {
-    SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(sub_complete_name));
-    sprintf(message, "Error: unknown sub \"%s\" at %s line %d\n",
+    SPerl_yyerror_format(parser, "unknown sub \"%s\" at %s line %d\n",
       sub_complete_name, op->file, op->line);
-    SPerl_yyerror(parser, message);
   }
 }
 
@@ -779,10 +763,8 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   );
   
   if (!found_field) {
-    SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(complete_name));
-    sprintf(message, "Error: unknown field \"%s\" at %s line %d\n",
+    SPerl_yyerror_format(parser, "unknown field \"%s\" at %s line %d\n",
       complete_name, base_name_word->op->file, base_name_word->op->line);
-    SPerl_yyerror(parser, message);
   }
 }
 
@@ -799,10 +781,8 @@ void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   );
   
   if (!found_enum) {
-    SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(complete_name));
-    sprintf(message, "Error: unknown enum \"%s\" at %s line %d\n",
+    SPerl_yyerror_format(parser, "unknown enum \"%s\" at %s line %d\n",
       complete_name, abs_name_word->op->file, abs_name_word->op->line);
-    SPerl_yyerror(parser, message);
   }
 }
 
@@ -905,9 +885,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
           }
         }
         else {
-          SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(part_name));
-          sprintf(message, "Error: unknown package \"%s\" at %s line %d\n", part_name, part_name_word->op->file, part_name_word->op->line);
-          SPerl_yyerror(parser, message);
+          SPerl_yyerror_format(parser, "unknown package \"%s\" at %s line %d\n", part_name, part_name_word->op->file, part_name_word->op->line);
         }
       }
     }
@@ -1073,9 +1051,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   // Redeclaration package error
   SPerl_TYPE* found_package = SPerl_HASH_search(package_symtable, package_name, strlen(package_name));
   if (found_package) {
-    SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(package_name));
-    sprintf(message, "Error: redeclaration of package \"%s\" at %s line %d\n", package_name, op_package->file, op_package->line);
-    SPerl_yyerror(parser, message);
+    SPerl_yyerror_format(parser, "redeclaration of package \"%s\" at %s line %d\n", package_name, op_package->file, op_package->line);
   }
   else {
     // Package
@@ -1184,9 +1160,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               = SPerl_HASH_search(use_symtable, use_type_name, strlen(use_type_name));
             
             if (found_use) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(use_type_name));
-              sprintf(message, "Error: redeclaration of use \"%s\" at %s line %d\n", use_type_name, use->op->file, use->op->line);
-              SPerl_yyerror(parser, message);
+              SPerl_yyerror_format(parser, "redeclaration of use \"%s\" at %s line %d\n", use_type_name, use->op->file, use->op->line);
             }
             else {
               SPerl_ARRAY_push(parser->use_stack, use);
@@ -1202,18 +1176,14 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             SPerl_FIELD* found_field
               = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
             if (found_field) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(field_name));
-              sprintf(message, "Error: redeclaration of has \"%s\" at %s line %d\n", field_name, field->op->file, field->op->line);
-              SPerl_yyerror(parser, message);
+              SPerl_yyerror_format(parser, "redeclaration of has \"%s\" at %s line %d\n", field_name, field->op->file, field->op->line);
             }
             else {
               // Value class only have core type field
               if (body_class->is_value_class) {
                 SPerl_boolean is_core_type = SPerl_TYPE_is_core_type_name(parser, field->type);
                 if (!is_core_type) {
-                  SPerl_char* message = SPerl_PARSER_new_string(parser, 200);
-                  sprintf(message, "Error: value class has only core type field at %s line %d\n", field->op->file, field->op->line);
-                  SPerl_yyerror(parser, message);
+                  SPerl_yyerror_format(parser, "value class has only core type field at %s line %d\n", field->op->file, field->op->line);
                 }
               }
               
@@ -1255,9 +1225,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             found_sub = SPerl_HASH_search(sub_complete_name_symtable, sub_complete_name, strlen(sub_complete_name));
             
             if (found_sub) {
-              SPerl_char* message = SPerl_PARSER_new_string(parser, 200 + strlen(sub_complete_name));
-              sprintf(message, "Error: redeclaration of sub \"%s\" at %s line %d\n", sub_complete_name, sub->op->file, sub->op->line);
-              SPerl_yyerror(parser, message);
+              SPerl_yyerror_format(parser, "redeclaration of sub \"%s\" at %s line %d\n", sub_complete_name, sub->op->file, sub->op->line);
             }
             // Unknown sub
             else {
