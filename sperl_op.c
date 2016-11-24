@@ -30,9 +30,9 @@
 #include "sperl_body_class.h"
 #include "sperl_package.h"
 #include "sperl_name.h"
-#include "sperl_opdef.h"
+#include "sperl_op_info.h"
 #include "sperl_name.h"
-#include "sperl_opdef.h"
+#include "sperl_op_info.h"
 #include "sperl_resolved_type.h"
 
 
@@ -202,7 +202,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             case SPerl_OP_C_GROUP_UNOP: {
               SPerl_OP* first = op_cur->first;
               SPerl_RESOLVED_TYPE* first_type = SPerl_OP_get_resolved_type(parser, first);
-              SPerl_OPDEF* opdef = op_cur->info;
+              SPerl_OP_INFO* op_info = op_cur->info;
               
               break;
             }
@@ -211,15 +211,17 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               SPerl_OP* last = op_cur->last;
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, last);
-              SPerl_OPDEF* opdef = op_cur->info;
+              SPerl_OP_INFO* op_info = op_cur->info;
               
               // Can receive only core type
               if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
-                SPerl_yyerror_format(parser, "%s operator can receive only core type at %s line %d\n", opdef->symbol, op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "%s operator can receive only core type at %s line %d\n", op_info->symbol, op_cur->file, op_cur->line);
                 break;
               }
               // Insert type converting op
               SPerl_OP_insert_type_convert_op(parser, op_cur, first_resolved_type->id, last_resolved_type->id);
+              
+              
               break;
             }
             
@@ -436,8 +438,8 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
       case SPerl_OP_C_CODE_MULTIPLY:
       case SPerl_OP_C_CODE_DIVIDE:
       {
-        SPerl_OPDEF* opdef = op->info;
-        resolved_type = opdef->return_type->resolved_type;
+        SPerl_OP_INFO* op_info = op->info;
+        resolved_type = op_info->return_type->resolved_type;
         break;
       }
       defaut:
@@ -1442,7 +1444,7 @@ SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl
     SPerl_OP_sibling_splice(parser, op_callop, op_first, 0, op_last);
   }
   
-  SPerl_OPDEF* opdef = SPerl_OPDEF_new(parser);
+  SPerl_OP_INFO* op_info = SPerl_OP_INFO_new(parser);
   SPerl_char* symbol;
   switch (op_callop->code) {
     case SPerl_OP_C_CODE_PLUS:
@@ -1507,9 +1509,9 @@ SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl
       symbol = "!=";
       break;
   }
-  opdef->symbol = symbol;
+  op_info->symbol = symbol;
   
-  op_callop->info = opdef;
+  op_callop->info = op_info;
   
   return op_callop;
 }

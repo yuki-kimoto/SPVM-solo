@@ -17,8 +17,8 @@ struct SPerl_resolved_type;
 typedef struct SPerl_resolved_type SPerl_RESOLVED_TYPE;
 
 /* sperl_assign.h */
-struct SPerl_opdef;
-typedef struct SPerl_opdef SPerl_OPDEF;
+struct SPerl_op_info;
+typedef struct SPerl_op_info SPerl_OP_INFO;
 
 /* sperl_assign.h */
 struct SPerl_assign;

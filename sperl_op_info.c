@@ -1,7 +1,7 @@
-#include "sperl_opdef.h"
+#include "sperl_op_info.h"
 #include "sperl_parser.h"
 
-SPerl_char* const SPerl_OPDEF_C_CODE_NAMES[] = {
+SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "iadd",
   "ladd",
   "fadd",
@@ -18,7 +18,7 @@ SPerl_char* const SPerl_OPDEF_C_CODE_NAMES[] = {
   "ddivide"
 };
 
-SPerl_char* const SPerl_OPDEF_C_RETURN_TYPE_NAMES[] = {
+SPerl_char* const SPerl_OP_INFO_C_RETURN_TYPE_NAMES[] = {
   "int",    // iadd
   "long",   // ladd
   "float",  // fadd
@@ -35,7 +35,7 @@ SPerl_char* const SPerl_OPDEF_C_RETURN_TYPE_NAMES[] = {
   "double"  // ddivide
 };
 
-SPerl_char* const SPerl_OPDEF_C_ARGUMENT_TYPE_NAMES[14][2] = {
+SPerl_char* const SPerl_OP_INFO_C_ARGUMENT_TYPE_NAMES[14][2] = {
   {"int", "int"},       // iadd
   {"long", "long"},     // ladd
   {"float", "float"},   // fadd
@@ -52,7 +52,7 @@ SPerl_char* const SPerl_OPDEF_C_ARGUMENT_TYPE_NAMES[14][2] = {
   {"double", "double"}  // ddivide
 };
 
-SPerl_int const SPerl_OPDEF_C_ARGUMENT_COUNTS[] = {
+SPerl_int const SPerl_OP_INFO_C_ARGUMENT_COUNTS[] = {
   2, // iadd
   2, // ladd
   2, // fadd
@@ -69,6 +69,6 @@ SPerl_int const SPerl_OPDEF_C_ARGUMENT_COUNTS[] = {
   2  // ddivide
 };
 
-SPerl_OPDEF* SPerl_OPDEF_new(SPerl_PARSER* parser) {
-  return SPerl_PARSER_alloc_memory_pool(parser, sizeof(SPerl_OPDEF));
+SPerl_OP_INFO* SPerl_OP_INFO_new(SPerl_PARSER* parser) {
+  return SPerl_PARSER_alloc_memory_pool(parser, sizeof(SPerl_OP_INFO));
 }
