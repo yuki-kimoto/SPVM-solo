@@ -79,7 +79,7 @@ struct SPerl_yy_parser_{
   SPerl_HASH* enum_complete_name_symtable;
   
   // Types
-  SPerl_ARRAY* types;
+  SPerl_ARRAY* op_types;
   
   // Resovled types
   SPerl_ARRAY* resolved_types;

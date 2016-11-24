@@ -42,7 +42,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->sub_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->op_packages = SPerl_PARSER_new_array(parser, 0);
   parser->package_symtable = SPerl_PARSER_new_hash(parser, 0);
-  parser->types = SPerl_PARSER_new_array(parser, 0);
+  parser->op_types = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
   parser->bodys = SPerl_PARSER_new_array(parser, 0);
   parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
@@ -97,8 +97,12 @@ SPerl_PARSER* SPerl_PARSER_new() {
     type->resolved_type = resolved_type;
     type->resolved = 1;
     
+    // Type OP
+    SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);
+    op_type->uv.type = type;
+    
     // Add type
-    SPerl_ARRAY_push(parser->types, type);
+    SPerl_ARRAY_push(parser->op_types, op_type);
     
     // Package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
