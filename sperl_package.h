@@ -4,7 +4,7 @@
 #include "sperl_base.h"
 
 struct SPerl_package {
-  SPerl_WORD* name_word;
+  SPerl_OP* op_name;
   SPerl_TYPE* type;
 };
 

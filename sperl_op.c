@@ -727,7 +727,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name) {
     op = name->abs_name_word->op;
   }
   else if (name->var) {
-    SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->op_package->uv.package->name_word->value;
+    SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
     SPerl_char* base_name = name->base_name_word->value;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
     op = name->var->op;
@@ -750,7 +750,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name) {
 }
 
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
-  SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->op_package->uv.package->name_word->value;
+  SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
   SPerl_WORD* base_name_word = name->base_name_word;
   SPerl_char* base_name = base_name_word->value;
   
@@ -1042,15 +1042,15 @@ SPerl_char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_char* package_n
   return abs_name;
 }
 
-SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_packagename, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
   SPerl_int i;
   
-  SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_packagename);
-  SPerl_OP_sibling_splice(parser, op_package, op_packagename, 0, op_type);
+  SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_package_name);
+  SPerl_OP_sibling_splice(parser, op_package, op_package_name, 0, op_type);
   SPerl_OP_sibling_splice(parser, op_package, op_type, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_package, op_descripters, 0, op_block);
   
-  SPerl_WORD* package_name_word = op_packagename->uv.word;
+  SPerl_WORD* package_name_word = op_package_name->uv.word;
   SPerl_char* package_name = package_name_word->value;
   SPerl_HASH* package_symtable = parser->package_symtable;
   
@@ -1062,7 +1062,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   else {
     // Package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
-    package->name_word = package_name_word;
+    package->op_name = op_package_name;
     
     // Type
     SPerl_TYPE* type;
@@ -1269,12 +1269,12 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   return op_package;
 }
 
-SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_packagename, SPerl_OP* op_packagealias) {
-  SPerl_OP_sibling_splice(parser, op_use, NULL, 0, op_packagename);
-  SPerl_OP_sibling_splice(parser, op_use, op_packagename, 0, op_packagealias);
+SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_package_name, SPerl_OP* op_packagealias) {
+  SPerl_OP_sibling_splice(parser, op_use, NULL, 0, op_package_name);
+  SPerl_OP_sibling_splice(parser, op_use, op_package_name, 0, op_packagealias);
   
   SPerl_USE* use = SPerl_USE_new(parser);
-  use->package_name_word = op_packagename->uv.word;
+  use->package_name_word = op_package_name->uv.word;
   use->op = op_use;
   op_use->uv.use = use;
   
