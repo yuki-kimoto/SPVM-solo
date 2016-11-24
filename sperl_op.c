@@ -726,7 +726,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name) {
     op = name->abs_name_word->op;
   }
   else if (name->var) {
-    SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->package_name;
+    SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->op_package->uv.package->name_word->value;
     SPerl_char* base_name = name->base_name_word->value;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
     op = name->var->op;
@@ -749,7 +749,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name) {
 }
 
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
-  SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->package_name;
+  SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->op_package->uv.package->name_word->value;
   SPerl_WORD* base_name_word = name->base_name_word;
   SPerl_char* base_name = base_name_word->value;
   
@@ -1221,7 +1221,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           }
           SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
           SPerl_SUB* sub = op_sub->uv.sub;
-          if (sub->package_name) {
+          if (sub->op_package) {
             break;
           }
           
@@ -1242,7 +1242,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             }
             i--;
           }
-          sub->package_name = package_name;
+          sub->op_package = op_package;
         }
         
         // Set body

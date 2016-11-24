@@ -421,7 +421,7 @@ void SPerl_PARSER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant) 
 
 void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
   if (sub) {
-    printf("      package_name => \"%s\"\n", sub->package_name);
+    printf("      package_name => \"%s\"\n", sub->op_package->uv.package->name_word->value);
     if (sub->anon) {
       printf("      name => (NONE)\n");
     }

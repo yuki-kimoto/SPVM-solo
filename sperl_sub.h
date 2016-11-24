@@ -13,7 +13,7 @@ struct SPerl_sub {
   SPerl_OP* op_block;
   SPerl_boolean anon;
   SPerl_int id;
-  SPerl_char* package_name;
+  SPerl_OP* op_package;
   SPerl_ARRAY* op_constants;
   SPerl_int* const_pool;
   SPerl_int const_pool_length;
