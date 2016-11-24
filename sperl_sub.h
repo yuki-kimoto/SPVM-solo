@@ -7,7 +7,7 @@
 struct SPerl_sub {
   SPerl_OP* op_package;
   SPerl_OP* op_name;
-  SPerl_TYPE* return_type;
+  SPerl_OP* op_return_type;
   SPerl_ARRAY* op_descripters;
   SPerl_int argument_count;
   SPerl_ARRAY* my_vars;

@@ -431,9 +431,9 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("      id => %d\n", sub->id);
     printf("      anon => %d\n", sub->anon);
 
-    printf("      return_type => \"%s\"\n", sub->return_type->name);
-    printf("      resolved_type => \"%s\"\n", sub->return_type->resolved_type->name);
-    printf("      resolved_type_id => %d\n", sub->return_type->resolved_type->id);
+    printf("      return_type => \"%s\"\n", sub->op_return_type->uv.type->name);
+    printf("      resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
+    printf("      resolved_type_id => %d\n", sub->op_return_type->uv.type->resolved_type->id);
 
     SPerl_int i;
     printf("      descripters => ");

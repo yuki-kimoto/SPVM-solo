@@ -419,7 +419,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
         SPerl_NAME* name = op->uv.name;
         SPerl_char* complete_name = name->complete_name;
         SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
-        resolved_type = sub->return_type->resolved_type;
+        resolved_type = sub->op_return_type->uv.type->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_GETENUMVALUE: {
@@ -1372,7 +1372,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   sub->op_descripters = SPerl_OP_create_op_descripters_array(parser, op_descripters);
   
   // return type
-  sub->return_type = op_type->uv.type;
+  sub->op_return_type = op_type;
   
   // Save block
   sub->op_block = op_block;
