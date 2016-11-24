@@ -120,7 +120,19 @@ struct SPerl_op {
   SPerl_char* file;
   SPerl_int line;
   SPerl_int iv;
-  void* info;
+  union {
+    SPerl_MY_VAR* my_var;
+    SPerl_VAR* var;
+    SPerl_OP_INFO* op_info;
+    SPerl_SUB* sub;
+    SPerl_CONST_VALUE* const_value;
+    SPerl_NAME* name;
+    SPerl_TYPE* type;
+    SPerl_WORD* word;
+    SPerl_USE* use;
+    SPerl_FIELD* field;
+    SPerl_DESCRIPTER* descripter;
+  } uv;
 };
 
 void SPerl_OP_create_vmcode(SPerl_PARSER* parser);

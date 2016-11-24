@@ -101,16 +101,18 @@ void SPerl_yyerror(SPerl_PARSER* parser, const SPerl_char* message)
 void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
   
   switch(type) {
-    case WORD:
-      fprintf(file, "\"%s\"", ((SPerl_WORD*)yylval.opval->info)->value);
+    case WORD: {
+      SPerl_WORD* word = yylval.opval->uv.word;
+      fprintf(file, "\"%s\"", word->value);
       break;
+    }
     case VAR: {
-      SPerl_VAR* var = yylval.opval->info;
+      SPerl_VAR* var = yylval.opval->uv.var;
       fprintf(file, "\"%s\"", var->name_word->value);
       break;
     }
     case CONSTVALUE: {
-      SPerl_CONST_VALUE* const_value = yylval.opval->info;
+      SPerl_CONST_VALUE* const_value = yylval.opval->uv.const_value;
       
       switch(const_value->code) {
         case SPerl_CONST_VALUE_C_CODE_BOOLEAN:

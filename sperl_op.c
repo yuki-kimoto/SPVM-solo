@@ -193,8 +193,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
             }
             case SPerl_OP_C_GROUP_CONST: {
-              SPerl_SUB* sub = op_sub->info;
-              SPerl_CONST_VALUE* const_value = op_cur->info;
+              SPerl_SUB* sub = op_sub->uv.sub;
+              SPerl_CONST_VALUE* const_value = op_cur->uv.const_value;
               SPerl_ARRAY_push(sub->const_values, const_value);
               break;
             }
@@ -202,7 +202,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             case SPerl_OP_C_GROUP_UNOP: {
               SPerl_OP* first = op_cur->first;
               SPerl_RESOLVED_TYPE* first_type = SPerl_OP_get_resolved_type(parser, first);
-              SPerl_OP_INFO* op_info = op_cur->info;
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
               
               break;
             }
@@ -211,7 +211,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               SPerl_OP* last = op_cur->last;
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, last);
-              SPerl_OP_INFO* op_info = op_cur->info;
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
               
               // Can receive only core type
               if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
@@ -248,7 +248,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               // Add my var
               case SPerl_OP_C_CODE_VAR: {
-                SPerl_VAR* var = op_cur->info;
+                SPerl_VAR* var = op_cur->uv.var;
                 
                 // Serach same name variable
                 SPerl_MY_VAR* my_var = NULL;
@@ -273,7 +273,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 break;
               }
               case SPerl_OP_C_CODE_MY: {
-                SPerl_MY_VAR* my_var = op_cur->info;
+                SPerl_MY_VAR* my_var = op_cur->uv.my_var;
                 
                 // Serach same name variable
                 SPerl_int found = 0;
@@ -302,7 +302,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
 
               case SPerl_OP_C_CODE_CALLSUB: {
                 // Check sub name
-                SPerl_NAME* name = op_cur->info;
+                SPerl_NAME* name = op_cur->uv.name;
                 if (!name->anon) {
                   SPerl_OP_check_sub_name(parser, name);
                   if (parser->fatal_error) {
@@ -313,7 +313,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_GETFIELD: {
                 // Check field name
-                SPerl_NAME* name = op_cur->info;
+                SPerl_NAME* name = op_cur->uv.name;
                 SPerl_OP_check_field_name(parser, name);
                 if (parser->fatal_error) {
                   return;
@@ -322,7 +322,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_GETENUMVALUE: {
                 // Check enum name
-                SPerl_NAME* name = op_cur->info;
+                SPerl_NAME* name = op_cur->uv.name;
                 SPerl_OP_check_enum_name(parser, name);
                 if (parser->fatal_error) {
                   return;
@@ -341,14 +341,14 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 
                 // Replace getenumvalue to const
                 SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_CONSTINT);
-                op_cur->info = new_const_value;
+                op_cur->uv.const_value = new_const_value;
                 op_cur->first = NULL;
                 
                 break;
               }
               case SPerl_OP_C_CODE_CONVERTTYPE: {
                 SPerl_OP* op_type_dist = op_cur->first;
-                SPerl_TYPE* type_dist = op_type_dist->info;
+                SPerl_TYPE* type_dist = op_type_dist->uv.type;
                 SPerl_RESOLVED_TYPE* resolved_type_dist = type_dist->resolved_type;
                 
                 SPerl_OP* op_term = op_cur->last;
@@ -400,7 +400,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   op->group;
   switch (op->group) {
     case SPerl_OP_C_GROUP_CONST: {
-      SPerl_CONST_VALUE* const_value = op->info;
+      SPerl_CONST_VALUE* const_value = op->uv.const_value;
       resolved_type = const_value->resolved_type;
       break;
     }
@@ -408,26 +408,26 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
     default:
     switch (op->code) {
       case SPerl_OP_C_CODE_VAR: {
-        SPerl_VAR* var = op->info;
+        SPerl_VAR* var = op->uv.var;
         resolved_type = var->my_var->type->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_CALLSUB: {
-        SPerl_NAME* name = op->info;
+        SPerl_NAME* name = op->uv.name;
         SPerl_char* complete_name = name->complete_name;
         SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
         resolved_type = sub->return_type->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_GETENUMVALUE: {
-        SPerl_NAME* name = op->info;
+        SPerl_NAME* name = op->uv.name;
         SPerl_char* complete_name = name->complete_name;
         SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
         resolved_type = enum_value->const_value->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_GETFIELD: {
-        SPerl_NAME* name = op->info;
+        SPerl_NAME* name = op->uv.name;
         SPerl_char* complete_name = name->complete_name;
         SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
         resolved_type = field->type->resolved_type;
@@ -438,7 +438,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
       case SPerl_OP_C_CODE_MULTIPLY:
       case SPerl_OP_C_CODE_DIVIDE:
       {
-        SPerl_OP_INFO* op_info = op->info;
+        SPerl_OP_INFO* op_info = op->uv.op_info;
         resolved_type = op_info->return_type->resolved_type;
         break;
       }
@@ -784,9 +784,9 @@ SPerl_OP* SPerl_OP_build_getenumvalue(SPerl_PARSER* parser, SPerl_OP* op_enumnam
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_ENUM;
-  name->abs_name_word = op_enumname->info;
+  name->abs_name_word = op_enumname->uv.word;
   
-  op_getenumvalue->info = name;
+  op_getenumvalue->uv.name = name;
   
   return op_getenumvalue;
 }
@@ -798,10 +798,10 @@ SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_FIELD;
-  name->var = op_var->info;
-  name->base_name_word = op_fieldname->info;
+  name->var = op_var->uv.var;
+  name->base_name_word = op_fieldname->uv.word;
   
-  op_getfield->info = name;
+  op_getfield->uv.name = name;
   
   return op_getfield;
 }
@@ -1037,7 +1037,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   SPerl_OP_sibling_splice(parser, op_package, op_type, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_package, op_descripters, 0, op_block);
   
-  SPerl_WORD* package_name_word = op_packagename->info;
+  SPerl_WORD* package_name_word = op_packagename->uv.word;
   SPerl_char* package_name = package_name_word->value;
   SPerl_HASH* package_symtable = parser->package_symtable;
   
@@ -1082,9 +1082,9 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_OP* op_enumvalue = op_enumvalues->first;
         while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
           SPerl_ENUM_VALUE* enum_value = SPerl_ENUM_VALUE_new(parser);
-          enum_value->name_word = op_enumvalue->first->info;
+          enum_value->name_word = op_enumvalue->first->uv.word;
           if (op_enumvalue->last) {
-            enum_value->const_value = op_enumvalue->last->info;
+            enum_value->const_value = op_enumvalue->last->uv.const_value;
           }
           
           SPerl_CONST_VALUE* const_value;
@@ -1147,7 +1147,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         while (op_usehassub = SPerl_OP_sibling(parser, op_usehassub)) {
           // Use
           if (op_usehassub->code == SPerl_OP_C_CODE_USE) {
-            SPerl_USE* use = op_usehassub->info;
+            SPerl_USE* use = op_usehassub->uv.use;
             SPerl_char* use_type_name = use->package_name_word->value;
             SPerl_USE* found_use
               = SPerl_HASH_search(use_symtable, use_type_name, strlen(use_type_name));
@@ -1164,7 +1164,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           }
           // Field
           else if (op_usehassub->code == SPerl_OP_C_CODE_HAS) {
-            SPerl_FIELD* field = op_usehassub->info;
+            SPerl_FIELD* field = op_usehassub->uv.field;
             SPerl_char* field_name = field->name_word->value;
             SPerl_FIELD* found_field
               = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
@@ -1237,7 +1237,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     }
     // Typedef
     else {
-      type = op_type->info;
+      type = op_type->uv.type;
       package->type = type;
     }
     
@@ -1255,9 +1255,9 @@ SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_O
   SPerl_OP_sibling_splice(parser, op_use, op_packagename, 0, op_packagealias);
   
   SPerl_USE* use = SPerl_USE_new(parser);
-  use->package_name_word = op_packagename->info;
+  use->package_name_word = op_packagename->uv.word;
   use->op = op_use;
-  op_use->info = use;
+  op_use->uv.use = use;
   
   return op_use;
 }
@@ -1271,17 +1271,17 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   
   // Create my var information
   SPerl_MY_VAR* my_var = SPerl_MY_VAR_new(parser);
-  SPerl_VAR* var = op_var->info;
+  SPerl_VAR* var = op_var->uv.var;
   my_var->name_word = var->name_word;
   
   // descripters
   my_var->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // type
-  my_var->type = op_type->info;
+  my_var->type = op_type->uv.type;
   
   // Add my_var information to op
-  op_my->info = my_var;
+  op_my->uv.my_var = my_var;
   
   return op_var;
 }
@@ -1297,19 +1297,19 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   SPerl_FIELD* field = SPerl_FIELD_new(parser);
   
   // Name
-  field->name_word = op_field_name->info;
+  field->name_word = op_field_name->uv.word;
 
   // Descripters
   field->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // Type
-  field->type = op_type->info;
+  field->type = op_type->uv.type;
   
   // OP
   field->op = op_has;
   
   // Set field informaiton
-  op_has->info = field;
+  op_has->uv.field = field;
   
   return op_has;
 }
@@ -1327,7 +1327,7 @@ SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_desc
   else {
     SPerl_OP* op_descripter = op_descripters->first;
     while (op_descripter = SPerl_OP_sibling(parser, op_descripter)) {
-      SPerl_ARRAY_push(descripters, op_descripter->info);
+      SPerl_ARRAY_push(descripters, op_descripter->uv.descripter);
     }
   }
   
@@ -1349,7 +1349,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
     sub->anon = 1;
   }
   else {
-    sub->name_word = op_subname->info;
+    sub->name_word = op_subname->uv.word;
   }
   
   // subargs
@@ -1365,7 +1365,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   sub->descripters = SPerl_OP_create_descripters(parser, op_descripters);
   
   // return type
-  sub->return_type = op_type->info;
+  sub->return_type = op_type->uv.type;
   
   // Save block
   sub->op_block = op_block;
@@ -1379,7 +1379,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   // Add sub information
   SPerl_ARRAY_push(parser->subs, sub);
   
-  op_sub->info = sub;
+  op_sub->uv.sub = sub;
   
   return op_sub;
 }
@@ -1395,7 +1395,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   name->code = SPerl_NAME_C_CODE_SUB;
   
   if (!anon) {
-    SPerl_WORD* sub_name_word = op_subname->info;
+    SPerl_WORD* sub_name_word = op_subname->uv.word;
     SPerl_char* sub_name = sub_name_word->value;
     
     if (strstr(sub_name, ":")) {
@@ -1403,7 +1403,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
     }
     else {
       if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
-        name->var = op_invocant->info;
+        name->var = op_invocant->uv.var;
         name->base_name_word = sub_name_word;
       }
       else {
@@ -1431,7 +1431,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
   }
   name->argument_count = argument_count;
   
-  op_callsub->info = name;
+  op_callsub->uv.name = name;
   
   return op_callsub;
 }
@@ -1511,7 +1511,7 @@ SPerl_OP* SPerl_OP_build_callop(SPerl_PARSER* parser, SPerl_OP* op_callop, SPerl
   }
   op_info->symbol = symbol;
   
-  op_callop->info = op_info;
+  op_callop->uv.op_info = op_info;
   
   return op_callop;
 }
@@ -1523,12 +1523,12 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
   type->code = SPerl_TYPE_C_CODE_WORD;
   
   SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
-  type_word->name_word = op_wordtype->info;
+  type_word->name_word = op_wordtype->uv.word;
   type->uv.type_word = type_word;
 
   SPerl_ARRAY_push(parser->types, type);
   
-  op_type->info = type;
+  op_type->uv.type = type;
   op_type->file = op_wordtype->file;
   op_type->line = op_wordtype->line;
   
@@ -1540,7 +1540,7 @@ SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_type) {
   
   // Type array
   SPerl_TYPE_ARRAY* type_array = SPerl_TYPE_ARRAY_new(parser);
-  type_array->type = op_type->info;
+  type_array->type = op_type->uv.type;
   
   // Type
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
@@ -1549,7 +1549,7 @@ SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_type) {
 
   SPerl_ARRAY_push(parser->types, type);
   
-  op_type_array->info = type;
+  op_type_array->uv.type = type;
   op_type_array->file = op_type->file;
   op_type_array->line = op_type->line;
   
@@ -1575,10 +1575,10 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_typ
         file = op_argument_type->file;
         line = op_argument_type->line;
       }
-      SPerl_ARRAY_push(argument_types, op_argument_type->info);
+      SPerl_ARRAY_push(argument_types, op_argument_type->uv.type);
     }
   }
-  type_sub->return_type = op_return_type->info;
+  type_sub->return_type = op_return_type->uv.type;
   if (file == NULL) {
     file = op_return_type->file;
     line = op_return_type->line;
@@ -1589,7 +1589,7 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_typ
 
   SPerl_ARRAY_push(parser->types, type);
   
-  op_type->info = type;
+  op_type->uv.type = type;
   op_type->file = file;
   op_type->line = line;
   
