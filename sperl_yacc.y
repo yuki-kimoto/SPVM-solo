@@ -15,7 +15,7 @@
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE
 
-%type <opval> grammar optstatements statements statement declmy declhas ifstatement elsestatement
+%type <opval> grammar optstatements statements statement declmy declfield ifstatement elsestatement
 %type <opval> block enumblock classblock declsub optdeclclassattrs callsub callop
 %type <opval> optterms terms term subargs subarg optsubargs decluse declclassattr declclassattrs 
 %type <opval> optdescripters listdescripters descripters enumvalues enumvalue declanonsub
@@ -247,10 +247,10 @@ decluse
     }
 
 
-declhas
+declfield
   : HAS fieldname ':' optdescripters type ';'
     {
-      $$ = SPerl_OP_build_declhas(parser, $1, $2, $4, $5);
+      $$ = SPerl_OP_build_declfield(parser, $1, $2, $4, $5);
     }
 
 declsub
@@ -297,7 +297,7 @@ declclassattrs
 
 declclassattr
   : decluse
-  | declhas
+  | declfield
   | declsub
 
 classblock

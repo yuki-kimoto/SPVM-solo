@@ -1303,7 +1303,7 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   return op_var;
 }
 
-SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* op_descripters, SPerl_OP* op_type) {
+SPerl_OP* SPerl_OP_build_declfield(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* op_descripters, SPerl_OP* op_type) {
   
   // Build OP
   SPerl_OP_sibling_splice(parser, op_has, NULL, 0, op_field_name);
