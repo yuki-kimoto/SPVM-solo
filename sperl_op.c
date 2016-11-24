@@ -329,7 +329,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
 
                 SPerl_char* enum_complete_name = name->complete_name;
                 SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
-                SPerl_CONSTANT* constant = enum_value->constant;
+                SPerl_OP* op_constant = enum_value->op_constant;
+                SPerl_CONSTANT* constant = op_constant->uv.constant;
                 
                 // new const value
                 SPerl_CONSTANT* new_constant = SPerl_CONSTANT_new(parser);
@@ -425,7 +426,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
         SPerl_NAME* name = op->uv.name;
         SPerl_char* complete_name = name->complete_name;
         SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
-        resolved_type = enum_value->constant->resolved_type;
+        resolved_type = enum_value->op_constant->uv.constant->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_GETFIELD: {
@@ -1094,21 +1095,23 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           SPerl_ENUM_VALUE* enum_value = SPerl_ENUM_VALUE_new(parser);
           enum_value->name_word = op_enumvalue->first->uv.word;
           if (op_enumvalue->last) {
-            enum_value->constant = op_enumvalue->last->uv.constant;
+            enum_value->op_constant = op_enumvalue->last;
           }
           
           SPerl_CONSTANT* constant;
-          if (enum_value->constant) {
-            constant = enum_value->constant;
-            start_value = constant->uv.int_value + 1;
+          if (enum_value->op_constant) {
+            SPerl_OP* op_constant = enum_value->op_constant;
+            start_value = op_constant->uv.constant->uv.int_value + 1;
           }
           else {
             constant = SPerl_CONSTANT_new(parser);
             constant->code = SPerl_CONSTANT_C_CODE_INT;
             constant->uv.int_value = start_value;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+            SPerl_OP* op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTINT, NULL, NULL);
+            op_constant->uv.constant = constant;
             
-            enum_value->constant = constant;
+            enum_value->op_constant = op_constant;
             start_value++;
           }
           
