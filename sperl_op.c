@@ -1226,7 +1226,8 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           }
           
           if (!sub->anon) {
-            SPerl_char* sub_name = sub->name_word->value;
+            SPerl_OP* op_subname = sub->op_name;
+            SPerl_char* sub_name = op_subname->uv.word->value;
             SPerl_char* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
             SPerl_char* sub_complete_name = SPerl_OP_create_sub_complete_name(parser, sub_abs_name, sub->argument_count);
             
@@ -1355,7 +1356,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
     sub->anon = 1;
   }
   else {
-    sub->name_word = op_subname->uv.word;
+    sub->op_name = op_subname;
   }
   
   // subargs
