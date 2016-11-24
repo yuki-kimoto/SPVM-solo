@@ -130,9 +130,9 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
 };
 
 void SPerl_OP_check_ops(SPerl_PARSER* parser) {
-  for (SPerl_int i = 0; i < parser->subs->length; i++) {
-    SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
-    SPerl_OP* op_sub = sub->op;
+  for (SPerl_int i = 0; i < parser->op_subs->length; i++) {
+    SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
+    SPerl_SUB* sub = op_sub->uv.sub;
     
     // my var informations
     SPerl_ARRAY* my_vars = SPerl_PARSER_new_array(parser, 0);
@@ -674,9 +674,10 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
   }
 
   // Check subs
-  SPerl_ARRAY* subs = parser->subs;
-  for (SPerl_int i = 0; i < subs->length; i++) {
-    SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, i);
+  SPerl_ARRAY* op_subs = parser->op_subs;
+  for (SPerl_int i = 0; i < op_subs->length; i++) {
+    SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
+    SPerl_SUB* sub = op_sub->uv.sub;
     
     // Check sub descripters(Not used)
     SPerl_ARRAY* descripters = sub->descripters;
@@ -912,11 +913,12 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   
   // Subroutines
-  SPerl_ARRAY* subs = parser->subs;
+  SPerl_ARRAY* op_subs = parser->op_subs;
   
-  for (SPerl_int i = 0; i < subs->length; i++) {
+  for (SPerl_int i = 0; i < op_subs->length; i++) {
     // Subroutine
-    SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, i);
+    SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
+    SPerl_SUB* sub = op_sub->uv.sub;
     
     // Set constant informations
     SPerl_ARRAY* constants = sub->constants;
@@ -1199,12 +1201,13 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
 
         // Method information
         SPerl_HASH* sub_complete_name_symtable = parser->sub_complete_name_symtable;
-        SPerl_int i = parser->subs->length - 1;
+        SPerl_int i = parser->op_subs->length - 1;
         while (1) {
           if (i < 0) {
             break;
           }
-          SPerl_SUB* sub = SPerl_ARRAY_fetch(parser->subs, i);
+          SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
+          SPerl_SUB* sub = op_sub->uv.sub;
           if (sub->package_name) {
             break;
           }
@@ -1218,7 +1221,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             found_sub = SPerl_HASH_search(sub_complete_name_symtable, sub_complete_name, strlen(sub_complete_name));
             
             if (found_sub) {
-              SPerl_yyerror_format(parser, "redeclaration of sub \"%s\" at %s line %d\n", sub_complete_name, sub->op->file, sub->op->line);
+              SPerl_yyerror_format(parser, "redeclaration of sub \"%s\" at %s line %d\n", sub_complete_name, op_sub->file, op_sub->line);
             }
             // Unknown sub
             else {
@@ -1370,14 +1373,11 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   // Save block
   sub->op_block = op_block;
   
-  // Save op
-  sub->op = op_sub;
-
   // ID
-  sub->id = parser->subs->length;
+  sub->id = parser->op_subs->length;
   
   // Add sub information
-  SPerl_ARRAY_push(parser->subs, sub);
+  SPerl_ARRAY_push(parser->op_subs, op_sub);
   
   op_sub->uv.sub = sub;
   

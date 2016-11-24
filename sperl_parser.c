@@ -31,37 +31,31 @@
 SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_PARSER* parser = calloc(1, sizeof(SPerl_PARSER));
   
-  // Manipulate memory
+  // Manipulate memory. This is freed last.
   parser->array_ptrs = SPerl_ARRAY_new(0);
   parser->hash_ptrs = SPerl_ARRAY_new(0);
   parser->long_str_ptrs = SPerl_ARRAY_new(0);
   parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
+  // Parser information
+  parser->op_subs = SPerl_PARSER_new_array(parser, 0);
   parser->packages = SPerl_PARSER_new_array(parser, 0);
   parser->package_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->constants = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
-  
   parser->bodys = SPerl_PARSER_new_array(parser, 0);
   parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
-  
   parser->sub_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->field_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->enum_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
-  
-  parser->next_var_id = 1;
-  
-  parser->subs = SPerl_PARSER_new_array(parser, 0);
   parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
-  
   parser->bufptr = "";
-  
   parser->types = SPerl_PARSER_new_array(parser, 0);
-  
   parser->resolved_types = SPerl_PARSER_new_array(parser, 0);
   parser->resolved_type_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->next_var_id = 1;
 
-  // Add core type
+  // Core types
   for (SPerl_int i = 0; i < 8; i++) {
     // Name
     SPerl_char* name = SPerl_BODY_CORE_C_CODE_NAMES[i];
@@ -284,9 +278,10 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   
   printf("\n[Subroutine information]\n");
   printf("  subs\n");
-  SPerl_ARRAY* subs = parser->subs;
-  for (SPerl_int i = 0; i < subs->length; i++) {
-    SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, i);
+  SPerl_ARRAY* op_subs = parser->op_subs;
+  for (SPerl_int i = 0; i < op_subs->length; i++) {
+    SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
+    SPerl_SUB* sub = op_sub->uv.sub;
     printf("    sub[%" PRId32 "]\n", i);
     SPerl_PARSER_dump_sub(parser, sub);
   }

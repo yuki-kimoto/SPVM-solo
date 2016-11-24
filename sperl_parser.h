@@ -61,7 +61,7 @@ struct SPerl_yy_parser_{
   SPerl_int next_var_id;
 
   // Current subs(named sub + anon sub) in class 
-  SPerl_ARRAY* subs;
+  SPerl_ARRAY* op_subs;
   
   // Include pathes
   SPerl_ARRAY* include_pathes;
