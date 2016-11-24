@@ -22,7 +22,6 @@ struct SPerl_body_class {
   SPerl_HASH* use_symtable;
   SPerl_OP* op_block;
   SPerl_HASH* alias;
-  SPerl_OP* op;
   SPerl_boolean is_value_class;
 };
 
