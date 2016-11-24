@@ -8,7 +8,7 @@
 SPerl_SUB* SPerl_SUB_new(SPerl_PARSER* parser) {
   SPerl_SUB* sub = (SPerl_SUB*)calloc(1, sizeof(SPerl_SUB));
   
-  sub->my_vars = SPerl_PARSER_new_array(parser, 0);
+  sub->op_my_vars = SPerl_PARSER_new_array(parser, 0);
   sub->op_constants = SPerl_PARSER_new_array(parser, 0);
   
   return sub;

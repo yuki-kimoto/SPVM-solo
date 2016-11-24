@@ -451,10 +451,10 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("\n");
     printf("      argument_count => %" PRId32 "\n", sub->argument_count);
     printf("      my_vars\n");
-    SPerl_ARRAY* my_vars = sub->my_vars;
-    for (SPerl_int i = 0; i < my_vars->length; i++) {
-      SPerl_MY_VAR* my_var
-        = (SPerl_MY_VAR*)SPerl_ARRAY_fetch(sub->my_vars, i);
+    SPerl_ARRAY* op_my_vars = sub->op_my_vars;
+    for (SPerl_int i = 0; i < op_my_vars->length; i++) {
+      SPerl_OP* op_my_var = SPerl_ARRAY_fetch(sub->op_my_vars, i);
+      SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
       printf("        my_var[%d]\n", i);
       SPerl_PARSER_dump_my_var(parser, my_var);
     }

@@ -135,7 +135,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
     SPerl_SUB* sub = op_sub->uv.sub;
     
     // my var informations
-    SPerl_ARRAY* my_vars = SPerl_PARSER_new_array(parser, 0);
+    SPerl_ARRAY* op_my_vars = SPerl_PARSER_new_array(parser, 0);
     SPerl_HASH* my_var_symtable = SPerl_PARSER_new_hash(parser, 0);
     
     // my variable stack
@@ -291,7 +291,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 else {
                   // Add my var information
                   my_var->id = parser->next_var_id++;
-                  SPerl_ARRAY_push(my_vars, my_var);
+                  SPerl_ARRAY_push(op_my_vars, op_cur);
                   my_var->op_sub = op_sub;
                   
                   SPerl_ARRAY_push(my_var_stack, my_var);
@@ -393,7 +393,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
       }
     }
     // Set my var information
-    sub->my_vars = my_vars;
+    sub->op_my_vars = op_my_vars;
   }
 }
 
@@ -699,9 +699,10 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
     }
     
     // Check my var information
-    SPerl_ARRAY* my_vars = sub->my_vars;
-    for (SPerl_int j = 0; j < my_vars->length; j++) {
-      SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
+    SPerl_ARRAY* op_my_vars = sub->op_my_vars;
+    for (SPerl_int j = 0; j < op_my_vars->length; j++) {
+      SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, k);
+      SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
       
       // Check my_var descripters(Not used)
       SPerl_ARRAY* op_descripters = my_var->op_descripters;
