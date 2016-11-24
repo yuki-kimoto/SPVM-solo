@@ -292,7 +292,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                   // Add my var information
                   my_var->id = parser->next_var_id++;
                   SPerl_ARRAY_push(my_vars, my_var);
-                  my_var->sub = sub;
+                  my_var->op_sub = op_sub;
                   
                   SPerl_ARRAY_push(my_var_stack, my_var);
                 }
@@ -726,7 +726,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name) {
     op = name->abs_name_word->op;
   }
   else if (name->var) {
-    SPerl_char* package_name = name->var->my_var->sub->package_name;
+    SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->package_name;
     SPerl_char* base_name = name->base_name_word->value;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
     op = name->var->op;
@@ -749,7 +749,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name) {
 }
 
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
-  SPerl_char* package_name = name->var->my_var->sub->package_name;
+  SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->package_name;
   SPerl_WORD* base_name_word = name->base_name_word;
   SPerl_char* base_name = base_name_word->value;
   
