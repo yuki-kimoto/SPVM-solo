@@ -290,9 +290,10 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   }
 }
 
-void SPerl_PARSER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* constants) {
-  for (SPerl_int i = 0; i < constants->length; i++) {
-    SPerl_CONSTANT* constant = (SPerl_CONSTANT*)SPerl_ARRAY_fetch(constants, i);
+void SPerl_PARSER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* op_constants) {
+  for (SPerl_int i = 0; i < op_constants->length; i++) {
+    SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, i);
+    SPerl_CONSTANT* constant = op_constant->uv.constant;
     printf("        constant[%" PRId32 "]\n", i);
     SPerl_PARSER_dump_constant(parser, constant);
   }
@@ -459,7 +460,7 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("      op_block => %x\n", sub->op_block);
   
     printf("      constant_values\n");
-    SPerl_PARSER_dump_constants(parser, sub->constants);
+    SPerl_PARSER_dump_constants(parser, sub->op_constants);
   
     printf("      const_pool\n");
     SPerl_PARSER_dump_const_pool(parser, sub->const_pool, sub->const_pool_length);

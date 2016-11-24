@@ -194,8 +194,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_GROUP_CONST: {
               SPerl_SUB* sub = op_sub->uv.sub;
-              SPerl_CONSTANT* constant = op_cur->uv.constant;
-              SPerl_ARRAY_push(sub->constants, constant);
+              SPerl_ARRAY_push(sub->op_constants, op_cur);
               break;
             }
             
@@ -337,7 +336,10 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 new_constant->code = SPerl_CONSTANT_C_CODE_INT;
                 new_constant->uv.int_value = constant->uv.int_value;
                 new_constant->resolved_type = constant->resolved_type;
-                SPerl_ARRAY_push(sub->constants, new_constant);
+                SPerl_OP* new_op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTINT, NULL, NULL);
+                new_op_constant->uv.constant = new_constant;
+                
+                SPerl_ARRAY_push(sub->op_constants, new_op_constant);
                 
                 // Replace getenumvalue to const
                 SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_CONSTINT);
@@ -925,12 +927,13 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     SPerl_SUB* sub = op_sub->uv.sub;
     
     // Set constant informations
-    SPerl_ARRAY* constants = sub->constants;
+    SPerl_ARRAY* op_constants = sub->op_constants;
     
     // Constant pool length
     SPerl_int const_pool_length = 0;
-    for (SPerl_int j = 0; j < constants->length; j++) {
-      SPerl_CONSTANT* constant = SPerl_ARRAY_fetch(constants, j);
+    for (SPerl_int j = 0; j < op_constants->length; j++) {
+      SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, j);
+      SPerl_CONSTANT* constant = op_constant->uv.constant;
       switch(constant->code) {
         case SPerl_CONSTANT_C_CODE_BOOLEAN:
         case SPerl_CONSTANT_C_CODE_CHAR:
@@ -953,8 +956,9 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     // Create constant pool
     SPerl_int* const_pool = calloc(const_pool_length, sizeof(SPerl_int));
     SPerl_int const_pool_pos = 0;
-    for (SPerl_int j = 0; j < constants->length; j++) {
-      SPerl_CONSTANT* constant = SPerl_ARRAY_fetch(constants, j);
+    for (SPerl_int j = 0; j < op_constants->length; j++) {
+      SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, j);
+      SPerl_CONSTANT* constant = op_constant->uv.constant;
       
       constant->pool_pos = const_pool_pos;
       
