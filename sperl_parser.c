@@ -42,7 +42,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->sub_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->op_packages = SPerl_PARSER_new_array(parser, 0);
   parser->package_symtable = SPerl_PARSER_new_hash(parser, 0);
-  parser->constants = SPerl_PARSER_new_array(parser, 0);
+  parser->types = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
   parser->bodys = SPerl_PARSER_new_array(parser, 0);
   parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
@@ -50,7 +50,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->enum_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
   parser->bufptr = "";
-  parser->types = SPerl_PARSER_new_array(parser, 0);
   parser->resolved_types = SPerl_PARSER_new_array(parser, 0);
   parser->resolved_type_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->next_var_id = 1;

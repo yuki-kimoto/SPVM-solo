@@ -39,9 +39,6 @@ struct SPerl_yy_parser_{
   SPerl_ARRAY* bodys;
   SPerl_HASH* body_symtable;
   
-  // Constant informations
-  SPerl_ARRAY* constants;
-  
   // Memory_pool
   SPerl_MEMORY_POOL* memory_pool;
   
