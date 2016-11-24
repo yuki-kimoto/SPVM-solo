@@ -6,10 +6,9 @@
 struct SPerl_my_var {
   SPerl_TYPE* type;
   SPerl_WORD* name_word;
-  SPerl_int id;
   SPerl_OP* op_sub;
   SPerl_ARRAY* op_descripters;
-  SPerl_OP* op;
+  SPerl_int id;
 };
 
 SPerl_MY_VAR* SPerl_MY_VAR_new();
