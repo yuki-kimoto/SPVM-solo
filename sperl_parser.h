@@ -32,7 +32,7 @@ struct SPerl_yy_parser_{
   SPerl_OP* op_grammer;
   
   // Packages
-  SPerl_ARRAY* packages;
+  SPerl_ARRAY* op_packages;
   SPerl_HASH* package_symtable;
   
   // Bodys

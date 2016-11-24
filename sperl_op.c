@@ -1246,7 +1246,8 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     
     
     // Add package
-    SPerl_ARRAY_push(parser->packages, package);
+    op_package->uv.package = package;
+    SPerl_ARRAY_push(parser->op_packages, op_package);
     SPerl_HASH_insert(parser->package_symtable, package_name, strlen(package_name), type);
   }
   

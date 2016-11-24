@@ -39,13 +39,13 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   // Parser information
   parser->op_subs = SPerl_PARSER_new_array(parser, 0);
-  parser->packages = SPerl_PARSER_new_array(parser, 0);
+  parser->sub_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->op_packages = SPerl_PARSER_new_array(parser, 0);
   parser->package_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->constants = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
   parser->bodys = SPerl_PARSER_new_array(parser, 0);
   parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
-  parser->sub_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->field_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->enum_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
   parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
@@ -106,7 +106,11 @@ SPerl_PARSER* SPerl_PARSER_new() {
     package->name_word = name_word;
     package->type = type;
     
-    SPerl_ARRAY_push(parser->packages, package);
+    // Package OP
+    SPerl_OP* op_package = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PACKAGE, NULL, NULL);
+    op_package->uv.package = package;
+    
+    SPerl_ARRAY_push(parser->op_packages, op_package);
     SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
   
@@ -268,7 +272,7 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   SPerl_PARSER_dump_ast(parser, parser->op_grammer);
 
   printf("\n[Packages information]\n");
-  SPerl_PARSER_dump_packages(parser, parser->packages);
+  SPerl_PARSER_dump_packages(parser, parser->op_packages);
   
   printf("\n[Body information]\n");
   SPerl_PARSER_dump_bodys(parser, parser->bodys);
@@ -295,10 +299,11 @@ void SPerl_PARSER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* constants) {
   }
 }
 
-void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages) {
-  for (SPerl_int i = 0; i < packages->length; i++) {
+void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) {
+  for (SPerl_int i = 0; i < op_packages->length; i++) {
     printf("package[%d]\n", i);
-    SPerl_PACKAGE* package = SPerl_ARRAY_fetch(packages, i);
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(op_packages, i);
+    SPerl_PACKAGE* package = op_package->uv.package;
     printf("    name => \"%s\"\n", package->name_word->value);
     
     if (package->type) {

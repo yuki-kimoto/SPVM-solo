@@ -132,6 +132,7 @@ struct SPerl_op {
     SPerl_USE* use;
     SPerl_FIELD* field;
     SPerl_DESCRIPTER* descripter;
+    SPerl_PACKAGE* package;
   } uv;
 };
 
