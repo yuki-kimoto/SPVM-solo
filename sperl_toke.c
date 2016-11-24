@@ -8,7 +8,7 @@
 #include "sperl_yacc.tab.h"
 #include "sperl_op.h"
 #include "sperl_parser.h"
-#include "sperl_const_value.h"
+#include "sperl_constant.h"
 #include "sperl_var.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
@@ -364,12 +364,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         
         // Constant 
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTCHAR);
-        SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
-        const_value->code = SPerl_CONST_VALUE_C_CODE_CHAR;
-        const_value->uv.int_value = ch;
-        const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "char", strlen("char"));
+        SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
+        constant->code = SPerl_CONSTANT_C_CODE_CHAR;
+        constant->uv.int_value = ch;
+        constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "char", strlen("char"));
         
-        op->uv.const_value = const_value;
+        op->uv.constant = constant;
         yylvalp->opval = op;
         
         return CONSTVALUE;
@@ -405,11 +405,11 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTSTRING);
-        SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
-        const_value->code = SPerl_CONST_VALUE_C_CODE_STRING;
-        const_value->uv.string_value = str;
-        const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "char", strlen("char"));
-        op->uv.const_value = const_value;
+        SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
+        constant->code = SPerl_CONSTANT_C_CODE_STRING;
+        constant->uv.string_value = str;
+        constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "char", strlen("char"));
+        op->uv.constant = constant;
         yylvalp->opval = (SPerl_OP*)op;
 
         return CONSTVALUE;
@@ -478,11 +478,11 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             free(num_str);
 
             SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTDOUBLE);
-            SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
-            const_value->code = SPerl_CONST_VALUE_C_CODE_DOUBLE;
-            const_value->uv.double_value = num;
-            const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
-            op->uv.const_value = const_value;
+            SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
+            constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
+            constant->uv.double_value = num;
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+            op->uv.constant = constant;
             yylvalp->opval = (SPerl_OP*)op;
             
             return CONSTVALUE;
@@ -493,11 +493,11 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             free(num_str);
             
             SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTINT);
-            SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
-            const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
-            const_value->uv.int_value = num;
-            const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-            op->uv.const_value = const_value;
+            SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
+            constant->code = SPerl_CONSTANT_C_CODE_INT;
+            constant->uv.int_value = num;
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+            op->uv.constant = constant;
             yylvalp->opval = (SPerl_OP*)op;
             
             return CONSTVALUE;
@@ -609,22 +609,22 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTBOOLEAN);
-              SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
-              const_value->code = SPerl_CONST_VALUE_C_CODE_BOOLEAN;
-              const_value->uv.int_value = 1;
-              const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
-              op->uv.const_value = const_value;
+              SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
+              constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
+              constant->uv.int_value = 1;
+              constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
+              op->uv.constant = constant;
               yylvalp->opval = op;
 
               return CONSTVALUE;
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTBOOLEAN);
-              SPerl_CONST_VALUE* const_value = SPerl_CONST_VALUE_new(parser);
-              const_value->code = SPerl_CONST_VALUE_C_CODE_BOOLEAN;
-              const_value->uv.int_value = 0;
-              const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
-              op->uv.const_value = const_value;
+              SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
+              constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
+              constant->uv.int_value = 0;
+              constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
+              op->uv.constant = constant;
               yylvalp->opval = op;
 
               return CONSTVALUE;

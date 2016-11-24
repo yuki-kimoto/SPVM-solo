@@ -5,7 +5,7 @@
 #include "sperl_yacc.h"
 #include "sperl_parser.h"
 #include "sperl_yacc.tab.h"
-#include "sperl_const_value.h"
+#include "sperl_constant.h"
 #include "sperl_word.h"
 #include "sperl_var.h"
 #include "sperl_op.h"
@@ -112,29 +112,29 @@ void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
       break;
     }
     case CONSTVALUE: {
-      SPerl_CONST_VALUE* const_value = yylval.opval->uv.const_value;
+      SPerl_CONSTANT* constant = yylval.opval->uv.constant;
       
-      switch(const_value->code) {
-        case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
-          fprintf(file, "boolean %d", const_value->uv.int_value);
+      switch(constant->code) {
+        case SPerl_CONSTANT_C_CODE_BOOLEAN:
+          fprintf(file, "boolean %d", constant->uv.int_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_CHAR:
-          fprintf(file, "char '%c'", (SPerl_char)const_value->uv.int_value);
+        case SPerl_CONSTANT_C_CODE_CHAR:
+          fprintf(file, "char '%c'", (SPerl_char)constant->uv.int_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_INT:
-          fprintf(file, "int %d", const_value->uv.int_value);
+        case SPerl_CONSTANT_C_CODE_INT:
+          fprintf(file, "int %d", constant->uv.int_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_LONG:
-          fprintf(file, "long %ld", const_value->uv.long_value);
+        case SPerl_CONSTANT_C_CODE_LONG:
+          fprintf(file, "long %ld", constant->uv.long_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_FLOAT:
-          fprintf(file, "float %f", const_value->uv.float_value);
+        case SPerl_CONSTANT_C_CODE_FLOAT:
+          fprintf(file, "float %f", constant->uv.float_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_DOUBLE:
-          fprintf(file, "double %f", const_value->uv.double_value);
+        case SPerl_CONSTANT_C_CODE_DOUBLE:
+          fprintf(file, "double %f", constant->uv.double_value);
           break;
-        case SPerl_CONST_VALUE_C_CODE_STRING:
-          fprintf(file, "string %s", const_value->uv.string_value);
+        case SPerl_CONSTANT_C_CODE_STRING:
+          fprintf(file, "string %s", constant->uv.string_value);
           break;
       }
     }

@@ -125,7 +125,7 @@ struct SPerl_op {
     SPerl_VAR* var;
     SPerl_OP_INFO* op_info;
     SPerl_SUB* sub;
-    SPerl_CONST_VALUE* const_value;
+    SPerl_CONSTANT* constant;
     SPerl_NAME* name;
     SPerl_TYPE* type;
     SPerl_WORD* word;

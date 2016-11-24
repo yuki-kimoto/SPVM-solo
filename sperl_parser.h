@@ -40,7 +40,7 @@ struct SPerl_yy_parser_{
   SPerl_HASH* body_symtable;
   
   // Constant informations
-  SPerl_ARRAY* const_values;
+  SPerl_ARRAY* constants;
   
   // Memory_pool
   SPerl_MEMORY_POOL* memory_pool;
@@ -96,9 +96,9 @@ struct SPerl_yy_parser_{
 SPerl_PARSER* SPerl_PARSER_new();
 void SPerl_PARSER_dump_parser(SPerl_PARSER* parser);
 void SPerl_PARSER_dump_classs(SPerl_PARSER* parser, SPerl_ARRAY* classs);
-void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_values);
+void SPerl_PARSER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* constants);
 void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, SPerl_int size);
-void SPerl_PARSER_dump_const_value(SPerl_PARSER* parser, SPerl_CONST_VALUE* const_value);
+void SPerl_PARSER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant);
 void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field);
 void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub);
 void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var);

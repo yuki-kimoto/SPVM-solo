@@ -6,7 +6,7 @@
 #include "sperl_parser.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
-#include "sperl_const_value.h"
+#include "sperl_constant.h"
 #include "sperl_field.h"
 #include "sperl_sub.h"
 #include "sperl_my_var.h"
@@ -39,7 +39,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   
   parser->packages = SPerl_PARSER_new_array(parser, 0);
   parser->package_symtable = SPerl_PARSER_new_hash(parser, 0);
-  parser->const_values = SPerl_PARSER_new_array(parser, 0);
+  parser->constants = SPerl_PARSER_new_array(parser, 0);
   parser->use_stack = SPerl_PARSER_new_array(parser, 0);
   
   parser->bodys = SPerl_PARSER_new_array(parser, 0);
@@ -219,28 +219,28 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
     SPerl_int code = op_cur->code;
     printf("%s", SPerl_OP_C_CODE_NAMES[code]);
     if (op_cur->group == SPerl_OP_C_GROUP_CONST) {
-      SPerl_CONST_VALUE* const_value = op_cur->uv.const_value;
+      SPerl_CONSTANT* constant = op_cur->uv.constant;
       switch(op_cur->code) {
         case SPerl_OP_C_CODE_CONSTBOOLEAN:
-          printf(" %d", const_value->uv.int_value);
+          printf(" %d", constant->uv.int_value);
           break;
         case SPerl_OP_C_CODE_CONSTCHAR:
-          printf(" '%c'", const_value->uv.int_value);
+          printf(" '%c'", constant->uv.int_value);
           break;
         case SPerl_OP_C_CODE_CONSTINT:
-          printf(" %d", const_value->uv.int_value);
+          printf(" %d", constant->uv.int_value);
           break;
         case SPerl_OP_C_CODE_CONSTLONG:
-          printf(" %ld", const_value->uv.long_value);
+          printf(" %ld", constant->uv.long_value);
           break;
         case SPerl_OP_C_CODE_CONSTFLOAT:
-          printf(" %f", const_value->uv.float_value);
+          printf(" %f", constant->uv.float_value);
           break;
         case SPerl_OP_C_CODE_CONSTDOUBLE:
-          printf(" %f", const_value->uv.double_value);
+          printf(" %f", constant->uv.double_value);
           break;
         case SPerl_OP_C_CODE_CONSTSTRING:
-          printf(" \"%s\"", const_value->uv.string_value);
+          printf(" \"%s\"", constant->uv.string_value);
           break;
       }
     }
@@ -312,11 +312,11 @@ void SPerl_PARSER_dump_parser(SPerl_PARSER* parser) {
   }
 }
 
-void SPerl_PARSER_dump_const_values(SPerl_PARSER* parser, SPerl_ARRAY* const_values) {
-  for (SPerl_int i = 0; i < const_values->length; i++) {
-    SPerl_CONST_VALUE* const_value = (SPerl_CONST_VALUE*)SPerl_ARRAY_fetch(const_values, i);
-    printf("        const_value[%" PRId32 "]\n", i);
-    SPerl_PARSER_dump_const_value(parser, const_value);
+void SPerl_PARSER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* constants) {
+  for (SPerl_int i = 0; i < constants->length; i++) {
+    SPerl_CONSTANT* constant = (SPerl_CONSTANT*)SPerl_ARRAY_fetch(constants, i);
+    printf("        constant[%" PRId32 "]\n", i);
+    SPerl_PARSER_dump_constant(parser, constant);
   }
 }
 
@@ -410,31 +410,31 @@ void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, S
   }
 }
 
-void SPerl_PARSER_dump_const_value(SPerl_PARSER* parser, SPerl_CONST_VALUE* const_value) {
-  switch(const_value->code) {
-    case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
-      printf("          boolean %" PRId32 "\n", const_value->uv.int_value);
+void SPerl_PARSER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant) {
+  switch(constant->code) {
+    case SPerl_CONSTANT_C_CODE_BOOLEAN:
+      printf("          boolean %" PRId32 "\n", constant->uv.int_value);
       break;
-    case SPerl_CONST_VALUE_C_CODE_CHAR:
-      printf("          char '%c'\n", const_value->uv.int_value);
+    case SPerl_CONSTANT_C_CODE_CHAR:
+      printf("          char '%c'\n", constant->uv.int_value);
       break;
-    case SPerl_CONST_VALUE_C_CODE_INT:
-      printf("          int %" PRId32 "\n", const_value->uv.int_value);
+    case SPerl_CONSTANT_C_CODE_INT:
+      printf("          int %" PRId32 "\n", constant->uv.int_value);
       break;
-    case SPerl_CONST_VALUE_C_CODE_LONG:
-      printf("          long %" PRId64 "\n", const_value->uv.long_value);
+    case SPerl_CONSTANT_C_CODE_LONG:
+      printf("          long %" PRId64 "\n", constant->uv.long_value);
       break;
-    case SPerl_CONST_VALUE_C_CODE_FLOAT:
-      printf("          float %f\n", const_value->uv.float_value);
+    case SPerl_CONSTANT_C_CODE_FLOAT:
+      printf("          float %f\n", constant->uv.float_value);
       break;
-    case SPerl_CONST_VALUE_C_CODE_DOUBLE:
-      printf("          double %f\n", const_value->uv.double_value);
+    case SPerl_CONSTANT_C_CODE_DOUBLE:
+      printf("          double %f\n", constant->uv.double_value);
       break;
-    case SPerl_CONST_VALUE_C_CODE_STRING:
-      printf("          string \"%s\"\n", const_value->uv.string_value);
+    case SPerl_CONSTANT_C_CODE_STRING:
+      printf("          string \"%s\"\n", constant->uv.string_value);
       break;
   }
-  printf("          pool_pos => %d\n", const_value->pool_pos);
+  printf("          pool_pos => %d\n", constant->pool_pos);
 }
 
 void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
@@ -478,7 +478,7 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("      op_block => %x\n", sub->op_block);
   
     printf("      constant_values\n");
-    SPerl_PARSER_dump_const_values(parser, sub->const_values);
+    SPerl_PARSER_dump_constants(parser, sub->constants);
   
     printf("      const_pool\n");
     SPerl_PARSER_dump_const_pool(parser, sub->const_pool, sub->const_pool_length);
@@ -519,7 +519,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
 void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_value) {
   if (enum_value) {
     printf("      name => \"%s\"\n", enum_value->name_word->value);
-    printf("      value => %d\n", enum_value->const_value->uv.int_value);
+    printf("      value => %d\n", enum_value->constant->uv.int_value);
   }
   else {
     printf("      None\n");

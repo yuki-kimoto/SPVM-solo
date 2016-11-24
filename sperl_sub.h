@@ -15,7 +15,7 @@ struct SPerl_sub {
   SPerl_boolean anon;
   SPerl_int id;
   SPerl_char* package_name;
-  SPerl_ARRAY* const_values;
+  SPerl_ARRAY* constants;
   SPerl_int* const_pool;
   SPerl_int const_pool_length;
 };

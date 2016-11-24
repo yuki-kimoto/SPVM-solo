@@ -10,7 +10,7 @@
 #include "sperl_op.h"
 #include "sperl_sub.h"
 #include "sperl_parser.h"
-#include "sperl_const_value.h"
+#include "sperl_constant.h"
 #include "sperl_field.h"
 #include "sperl_my_var.h"
 #include "sperl_var.h"
@@ -194,8 +194,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_GROUP_CONST: {
               SPerl_SUB* sub = op_sub->uv.sub;
-              SPerl_CONST_VALUE* const_value = op_cur->uv.const_value;
-              SPerl_ARRAY_push(sub->const_values, const_value);
+              SPerl_CONSTANT* constant = op_cur->uv.constant;
+              SPerl_ARRAY_push(sub->constants, constant);
               break;
             }
             
@@ -330,18 +330,18 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
 
                 SPerl_char* enum_complete_name = name->complete_name;
                 SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
-                SPerl_CONST_VALUE* const_value = enum_value->const_value;
+                SPerl_CONSTANT* constant = enum_value->constant;
                 
                 // new const value
-                SPerl_CONST_VALUE* new_const_value = SPerl_CONST_VALUE_new(parser);
-                new_const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
-                new_const_value->uv.int_value = const_value->uv.int_value;
-                new_const_value->resolved_type = const_value->resolved_type;
-                SPerl_ARRAY_push(sub->const_values, new_const_value);
+                SPerl_CONSTANT* new_constant = SPerl_CONSTANT_new(parser);
+                new_constant->code = SPerl_CONSTANT_C_CODE_INT;
+                new_constant->uv.int_value = constant->uv.int_value;
+                new_constant->resolved_type = constant->resolved_type;
+                SPerl_ARRAY_push(sub->constants, new_constant);
                 
                 // Replace getenumvalue to const
                 SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_CONSTINT);
-                op_cur->uv.const_value = new_const_value;
+                op_cur->uv.constant = new_constant;
                 op_cur->first = NULL;
                 
                 break;
@@ -400,8 +400,8 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   op->group;
   switch (op->group) {
     case SPerl_OP_C_GROUP_CONST: {
-      SPerl_CONST_VALUE* const_value = op->uv.const_value;
-      resolved_type = const_value->resolved_type;
+      SPerl_CONSTANT* constant = op->uv.constant;
+      resolved_type = constant->resolved_type;
       break;
     }
     
@@ -423,7 +423,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
         SPerl_NAME* name = op->uv.name;
         SPerl_char* complete_name = name->complete_name;
         SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
-        resolved_type = enum_value->const_value->resolved_type;
+        resolved_type = enum_value->constant->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_GETFIELD: {
@@ -919,25 +919,25 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     SPerl_SUB* sub = SPerl_ARRAY_fetch(subs, i);
     
     // Set constant informations
-    SPerl_ARRAY* const_values = sub->const_values;
+    SPerl_ARRAY* constants = sub->constants;
     
     // Constant pool length
     SPerl_int const_pool_length = 0;
-    for (SPerl_int j = 0; j < const_values->length; j++) {
-      SPerl_CONST_VALUE* const_value = SPerl_ARRAY_fetch(const_values, j);
-      switch(const_value->code) {
-        case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
-        case SPerl_CONST_VALUE_C_CODE_CHAR:
-        case SPerl_CONST_VALUE_C_CODE_INT:
+    for (SPerl_int j = 0; j < constants->length; j++) {
+      SPerl_CONSTANT* constant = SPerl_ARRAY_fetch(constants, j);
+      switch(constant->code) {
+        case SPerl_CONSTANT_C_CODE_BOOLEAN:
+        case SPerl_CONSTANT_C_CODE_CHAR:
+        case SPerl_CONSTANT_C_CODE_INT:
           const_pool_length += 1;
           break;
-        case SPerl_CONST_VALUE_C_CODE_LONG:
+        case SPerl_CONSTANT_C_CODE_LONG:
           const_pool_length += 2;
           break;
-        case SPerl_CONST_VALUE_C_CODE_FLOAT:
+        case SPerl_CONSTANT_C_CODE_FLOAT:
           const_pool_length += 1;
           break;
-        case SPerl_CONST_VALUE_C_CODE_DOUBLE:
+        case SPerl_CONSTANT_C_CODE_DOUBLE:
           const_pool_length += 2;
           break;
       }
@@ -947,32 +947,32 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     // Create constant pool
     SPerl_int* const_pool = calloc(const_pool_length, sizeof(SPerl_int));
     SPerl_int const_pool_pos = 0;
-    for (SPerl_int j = 0; j < const_values->length; j++) {
-      SPerl_CONST_VALUE* const_value = SPerl_ARRAY_fetch(const_values, j);
+    for (SPerl_int j = 0; j < constants->length; j++) {
+      SPerl_CONSTANT* constant = SPerl_ARRAY_fetch(constants, j);
       
-      const_value->pool_pos = const_pool_pos;
+      constant->pool_pos = const_pool_pos;
       
-      switch(const_value->code) {
-        case SPerl_CONST_VALUE_C_CODE_BOOLEAN:
-        case SPerl_CONST_VALUE_C_CODE_CHAR:
-        case SPerl_CONST_VALUE_C_CODE_INT:
-          const_value->pool_pos = const_pool_pos;
-          *(const_pool + const_pool_pos) = const_value->uv.int_value;
+      switch(constant->code) {
+        case SPerl_CONSTANT_C_CODE_BOOLEAN:
+        case SPerl_CONSTANT_C_CODE_CHAR:
+        case SPerl_CONSTANT_C_CODE_INT:
+          constant->pool_pos = const_pool_pos;
+          *(const_pool + const_pool_pos) = constant->uv.int_value;
           const_pool_pos += 1;
           break;
-        case SPerl_CONST_VALUE_C_CODE_LONG:
-          const_value->pool_pos = const_pool_pos;
-          *(SPerl_long*)(const_pool + const_pool_pos) = const_value->uv.long_value;
+        case SPerl_CONSTANT_C_CODE_LONG:
+          constant->pool_pos = const_pool_pos;
+          *(SPerl_long*)(const_pool + const_pool_pos) = constant->uv.long_value;
           const_pool_pos += 2;
           break;
-        case SPerl_CONST_VALUE_C_CODE_FLOAT:
-          const_value->pool_pos = const_pool_pos;
-          *(SPerl_float*)(const_pool + const_pool_pos) = const_value->uv.float_value;
+        case SPerl_CONSTANT_C_CODE_FLOAT:
+          constant->pool_pos = const_pool_pos;
+          *(SPerl_float*)(const_pool + const_pool_pos) = constant->uv.float_value;
           const_pool_pos += 1;
           break;
-        case SPerl_CONST_VALUE_C_CODE_DOUBLE:
-          const_value->pool_pos = const_pool_pos;
-          *(SPerl_double*)(const_pool + const_pool_pos) = const_value->uv.double_value;
+        case SPerl_CONSTANT_C_CODE_DOUBLE:
+          constant->pool_pos = const_pool_pos;
+          *(SPerl_double*)(const_pool + const_pool_pos) = constant->uv.double_value;
           const_pool_pos += 2;
           break;
       }
@@ -1084,21 +1084,21 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           SPerl_ENUM_VALUE* enum_value = SPerl_ENUM_VALUE_new(parser);
           enum_value->name_word = op_enumvalue->first->uv.word;
           if (op_enumvalue->last) {
-            enum_value->const_value = op_enumvalue->last->uv.const_value;
+            enum_value->constant = op_enumvalue->last->uv.constant;
           }
           
-          SPerl_CONST_VALUE* const_value;
-          if (enum_value->const_value) {
-            const_value = enum_value->const_value;
-            start_value = const_value->uv.int_value + 1;
+          SPerl_CONSTANT* constant;
+          if (enum_value->constant) {
+            constant = enum_value->constant;
+            start_value = constant->uv.int_value + 1;
           }
           else {
-            const_value = SPerl_CONST_VALUE_new(parser);
-            const_value->code = SPerl_CONST_VALUE_C_CODE_INT;
-            const_value->uv.int_value = start_value;
-            const_value->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+            constant = SPerl_CONSTANT_new(parser);
+            constant->code = SPerl_CONSTANT_C_CODE_INT;
+            constant->uv.int_value = start_value;
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
             
-            enum_value->const_value = const_value;
+            enum_value->constant = constant;
             start_value++;
           }
           

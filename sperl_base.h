@@ -84,9 +84,9 @@ typedef struct SPerl_var SPerl_VAR;
 struct SPerl_my_var;
 typedef struct SPerl_my_var SPerl_MY_VAR;
 
-/* sperl_const_value.h */
-struct SPerl_const_value;
-typedef struct SPerl_const_value SPerl_CONST_VALUE;
+/* sperl_constant.h */
+struct SPerl_constant;
+typedef struct SPerl_constant SPerl_CONSTANT;
 
 /* sperl_op.h */
 struct SPerl_op;
