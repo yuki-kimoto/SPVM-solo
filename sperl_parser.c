@@ -116,26 +116,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
   
-  // Add core op_info
-  for (SPerl_int i = 0; i < 14; i++) {
-    SPerl_OP_INFO* op_info = SPerl_OP_INFO_new(parser);
-    
-    // Return type
-    SPerl_TYPE* return_type = SPerl_TYPE_create_word_type(parser, SPerl_OP_INFO_C_RETURN_TYPE_NAMES[i]);
-    SPerl_TYPE_build_parts(parser, return_type);
-    op_info->return_type = return_type;
-    
-    // Argument types
-    SPerl_int argument_count = SPerl_OP_INFO_C_ARGUMENT_COUNTS[i];
-    op_info->argument_count = argument_count;
-    op_info->argument_types = SPerl_PARSER_new_array(parser, 0);
-    for (SPerl_int j = 0; j < argument_count; j++) {
-      SPerl_TYPE* argument_type = SPerl_TYPE_create_word_type(parser, SPerl_OP_INFO_C_RETURN_TYPE_NAMES[i]);
-      SPerl_TYPE_build_parts(parser, argument_type);
-      SPerl_ARRAY_push(op_info->argument_types, argument_type);
-    }
-  }
-  
   return parser;
 }
 
