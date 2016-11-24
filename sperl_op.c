@@ -439,7 +439,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
       case SPerl_OP_C_CODE_DIVIDE:
       {
         SPerl_OP_INFO* op_info = op->uv.op_info;
-        resolved_type = op_info->return_type->resolved_type;
+        resolved_type = op_info->return_resolved_type;
         break;
       }
       defaut:

@@ -4,8 +4,8 @@
 #include "sperl_base.h"
 
 struct SPerl_op_info {
-  SPerl_TYPE* return_type;
-  SPerl_ARRAY* argument_types;
+  SPerl_RESOLVED_TYPE* return_resolved_type;
+  SPerl_ARRAY* argument_resolved_types;
   SPerl_int argument_count;
   SPerl_char* symbol;
 };
