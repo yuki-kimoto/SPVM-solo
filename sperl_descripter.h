@@ -15,7 +15,6 @@ extern SPerl_char* const SPerl_DESCRIPTER_CODE_NAMES[];
 // Field information
 struct SPerl_descripter {
   SPerl_int code;
-  SPerl_OP* op;
 };
 
 SPerl_DESCRIPTER* SPerl_DESCRIPTER_new(SPerl_PARSER* parser);

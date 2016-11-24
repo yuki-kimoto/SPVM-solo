@@ -601,7 +601,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DESCRIPTER);
               SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
               descripter->code = SPerl_DESCRIPTER_C_CODE_VALUE;
-              descripter->op = op;
               op->uv.descripter = descripter;
               yylvalp->opval = op;
               

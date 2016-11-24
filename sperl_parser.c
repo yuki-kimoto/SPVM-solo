@@ -344,10 +344,11 @@ void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
       SPerl_BODY_CLASS* body_class = body->uv.body_class;
       
       printf("  descripters => ");
-      SPerl_ARRAY* descripters = body_class->descripters;
-      if (descripters && descripters->length) {
-        for (SPerl_int i = 0; i < descripters->length; i++) {
-          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
+      SPerl_ARRAY* op_descripters = body_class->op_descripters;
+      if (op_descripters && op_descripters->length) {
+        for (SPerl_int i = 0; i < op_descripters->length; i++) {
+          SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
+          SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
           printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
         }
       }
@@ -435,10 +436,11 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
 
     SPerl_int i;
     printf("      descripters => ");
-    SPerl_ARRAY* descripters = sub->descripters;
-    if (descripters->length) {
-      for (SPerl_int i = 0; i < descripters->length; i++) {
-        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
+    SPerl_ARRAY* op_descripters = sub->op_descripters;
+    if (op_descripters->length) {
+      for (SPerl_int i = 0; i < op_descripters->length; i++) {
+        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
+        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
         printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
       }
     }
@@ -478,10 +480,11 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     printf("      resolved_type_id => %d\n", type->resolved_type->id);
 
     printf("      descripters => ");
-    SPerl_ARRAY* descripters = field->descripters;
-    if (descripters->length) {
-      for (SPerl_int i = 0; i < descripters->length; i++) {
-        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
+    SPerl_ARRAY* op_descripters = field->op_descripters;
+    if (op_descripters->length) {
+      for (SPerl_int i = 0; i < op_descripters->length; i++) {
+        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
+        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
         printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
       }
     }
@@ -520,10 +523,11 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     printf("          resolved_type_id => %d\n", my_var->type->resolved_type->id);
     
     printf("          descripters => ");
-    SPerl_ARRAY* descripters = my_var->descripters;
-    if (descripters->length) {
-      for (SPerl_int i = 0; i < descripters->length; i++) {
-        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, i);
+    SPerl_ARRAY* op_descripters = my_var->op_descripters;
+    if (op_descripters->length) {
+      for (SPerl_int i = 0; i < op_descripters->length; i++) {
+        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
+        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
         printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
       }
     }

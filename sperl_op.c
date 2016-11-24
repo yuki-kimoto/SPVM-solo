@@ -644,13 +644,14 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
       SPerl_BODY_CLASS* body_class = body->uv.body_class;
       
       // Check descripter
-      SPerl_ARRAY* descripters = body_class->descripters;
-      for (SPerl_int j = 0; j < descripters->length; j++) {
-        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
-        if (descripter->code != SPerl_DESCRIPTER_C_CODE_VALUE && descripter->code != SPerl_DESCRIPTER_C_CODE_ENUM)
+      SPerl_ARRAY* op_descripters = body_class->op_descripters;
+      for (SPerl_int j = 0; j < op_descripters->length; j++) {
+        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, j);
+        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
+        if (descripter->code != SPerl_DESCRIPTER_C_CODE_VALUE)
         {
           SPerl_yyerror_format(parser, "unknown descripter of package \"%s\" at %s line %d\n",
-            SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+            SPerl_DESCRIPTER_CODE_NAMES[descripter->code], op_descripter->file, op_descripter->line);
         }
       }
       
@@ -660,13 +661,14 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
         SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
 
         // Check field descripters(Not used)
-        SPerl_ARRAY* descripters = field->descripters;
-        for (SPerl_int k = 0; k < descripters->length; k++) {
-          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, k);
+        SPerl_ARRAY* op_descripters = field->op_descripters;
+        for (SPerl_int k = 0; k < op_descripters->length; k++) {
+          SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, k);
+          SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
           if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
           {
             SPerl_yyerror_format(parser, "unknown descripter of has \"%s\" at %s line %d\n",
-              SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+              SPerl_DESCRIPTER_CODE_NAMES[descripter->code], op_descripter->file, op_descripter->line);
           }
         }
       }
@@ -680,14 +682,15 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
     SPerl_SUB* sub = op_sub->uv.sub;
     
     // Check sub descripters(Not used)
-    SPerl_ARRAY* descripters = sub->descripters;
+    SPerl_ARRAY* op_descripters = sub->op_descripters;
     SPerl_int k;
-    for (SPerl_int j = 0; j < descripters->length; j++) {
-      SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, j);
+    for (SPerl_int j = 0; j < op_descripters->length; j++) {
+      SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, j);
+      SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
       if (descripter->code != SPerl_DESCRIPTER_C_CODE_STATIC)
       {
         SPerl_yyerror_format(parser, "unknown descripter of sub \"%s\" at %s line %d\n",
-          SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+          SPerl_DESCRIPTER_CODE_NAMES[descripter->code], op_descripter->file, op_descripter->line);
       }
     }
     
@@ -697,13 +700,14 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
       SPerl_MY_VAR* my_var = SPerl_ARRAY_fetch(my_vars, k);
       
       // Check my_var descripters(Not used)
-      SPerl_ARRAY* descripters = my_var->descripters;
-      for (SPerl_int l = 0; l < descripters->length; l++) {
-        SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(descripters, l);
+      SPerl_ARRAY* op_descripters = my_var->op_descripters;
+      for (SPerl_int l = 0; l < op_descripters->length; l++) {
+        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, l);
+        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
         if (descripter->code != SPerl_DESCRIPTER_C_CODE_CONST)
         {
           SPerl_yyerror_format(parser, "unknown descripter of my \"%s\" at %s line %d\n",
-            SPerl_DESCRIPTER_CODE_NAMES[descripter->code], descripter->op->file, descripter->op->line);
+            SPerl_DESCRIPTER_CODE_NAMES[descripter->code], op_descripter->file, op_descripter->line);
         }
       }
     }
@@ -1125,12 +1129,12 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_BODY_CLASS* body_class = SPerl_BODY_CLASS_new(parser);
         body_class->op_block = op_block;
         body_class->alias = SPerl_PARSER_new_hash(parser, 0);
-        body_class->descripters = SPerl_OP_create_descripters(parser, op_descripters);
+        body_class->op_descripters = SPerl_OP_create_op_descripters_array(parser, op_descripters);
         body_class->code = SPerl_BODY_CLASS_C_CODE_NORMAL;
         
         // Class is value class
-        for (SPerl_int i = 0; i < body_class->descripters->length; i++) {
-          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(body_class->descripters, i);
+        for (SPerl_int i = 0; i < body_class->op_descripters->length; i++) {
+          SPerl_DESCRIPTER* descripter = SPerl_ARRAY_fetch(body_class->op_descripters, i);
           if (descripter->code == SPerl_DESCRIPTER_C_CODE_VALUE) {
             body_class->is_value_class = 1;
             break;
@@ -1280,7 +1284,7 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   my_var->name_word = var->name_word;
   
   // descripters
-  my_var->descripters = SPerl_OP_create_descripters(parser, op_descripters);
+  my_var->op_descripters = SPerl_OP_create_op_descripters_array(parser, op_descripters);
   
   // type
   my_var->type = op_type->uv.type;
@@ -1305,7 +1309,7 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   field->name_word = op_field_name->uv.word;
 
   // Descripters
-  field->descripters = SPerl_OP_create_descripters(parser, op_descripters);
+  field->op_descripters = SPerl_OP_create_op_descripters_array(parser, op_descripters);
   
   // Type
   field->type = op_type->uv.type;
@@ -1316,24 +1320,16 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   return op_has;
 }
 
-SPerl_ARRAY* SPerl_OP_create_descripters(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
+SPerl_ARRAY* SPerl_OP_create_op_descripters_array(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
   
-  SPerl_ARRAY* descripters = SPerl_PARSER_new_array(parser, 0);
-
-  // descripters is enum or list of descripter
-  if (op_descripters->code == SPerl_OP_C_CODE_ENUM) {
-    SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
-    descripter->code = SPerl_DESCRIPTER_C_CODE_ENUM;
-    SPerl_ARRAY_push(descripters, descripter);
-  }
-  else {
-    SPerl_OP* op_descripter = op_descripters->first;
-    while (op_descripter = SPerl_OP_sibling(parser, op_descripter)) {
-      SPerl_ARRAY_push(descripters, op_descripter->uv.descripter);
-    }
+  SPerl_ARRAY* op_descripters_array = SPerl_PARSER_new_array(parser, 0);
+  
+  SPerl_OP* op_descripter = op_descripters->first;
+  while (op_descripter = SPerl_OP_sibling(parser, op_descripter)) {
+    SPerl_ARRAY_push(op_descripters_array, op_descripter);
   }
   
-  return descripters;
+  return op_descripters_array;
 }
 
 SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* op_descripters, SPerl_OP* op_type, SPerl_OP* op_block) {
@@ -1364,7 +1360,7 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   sub->argument_count = argument_count;
 
   // descripters
-  sub->descripters = SPerl_OP_create_descripters(parser, op_descripters);
+  sub->op_descripters = SPerl_OP_create_op_descripters_array(parser, op_descripters);
   
   // return type
   sub->return_type = op_type->uv.type;

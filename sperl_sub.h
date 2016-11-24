@@ -7,7 +7,7 @@
 struct SPerl_sub {
   SPerl_WORD* name_word;
   SPerl_TYPE* return_type;
-  SPerl_ARRAY* descripters;
+  SPerl_ARRAY* op_descripters;
   SPerl_int argument_count;
   SPerl_ARRAY* my_vars;
   SPerl_OP* op_block;
