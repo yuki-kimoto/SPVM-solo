@@ -412,7 +412,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
     switch (op->code) {
       case SPerl_OP_C_CODE_VAR: {
         SPerl_VAR* var = op->uv.var;
-        resolved_type = var->my_var->type->resolved_type;
+        resolved_type = var->my_var->op_type->uv.type->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_CALLSUB: {
@@ -1295,7 +1295,7 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   my_var->op_descripters = SPerl_OP_create_op_descripters_array(parser, op_descripters);
   
   // type
-  my_var->type = op_type->uv.type;
+  my_var->op_type = op_type;
   
   // Add my_var information to op
   op_my->uv.my_var = my_var;

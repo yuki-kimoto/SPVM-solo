@@ -518,10 +518,10 @@ void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
   if (my_var) {
     printf("          name => \"%s\"\n", my_var->name_word->value);
     
-    SPerl_TYPE* type = my_var->type;
-    printf("          type => \"%s\"\n", my_var->type->name);
-    printf("          resolved_type => \"%s\"\n", my_var->type->resolved_type->name);
-    printf("          resolved_type_id => %d\n", my_var->type->resolved_type->id);
+    SPerl_TYPE* type = my_var->op_type->uv.type;
+    printf("          type => \"%s\"\n", type->name);
+    printf("          resolved_type => \"%s\"\n", type->resolved_type->name);
+    printf("          resolved_type_id => %d\n", type->resolved_type->id);
     
     printf("          descripters => ");
     SPerl_ARRAY* op_descripters = my_var->op_descripters;
