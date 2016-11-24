@@ -1144,12 +1144,13 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_HASH* use_symtable = SPerl_PARSER_new_hash(parser, 0);
         
         // Collect field and use information
-        SPerl_OP* op_usehassubs = op_block->first;
-        SPerl_OP* op_usehassub = op_usehassubs->first;
-        while (op_usehassub = SPerl_OP_sibling(parser, op_usehassub)) {
+        SPerl_OP* op_decls = op_block->first;
+        SPerl_OP* op_decl = op_decls->first;
+        while (op_decl = SPerl_OP_sibling(parser, op_decl)) {
           // Use
-          if (op_usehassub->code == SPerl_OP_C_CODE_USE) {
-            SPerl_USE* use = op_usehassub->uv.use;
+          if (op_decl->code == SPerl_OP_C_CODE_USE) {
+            SPerl_OP* op_use = op_decl;
+            SPerl_USE* use = op_use->uv.use;
             SPerl_char* use_type_name = use->package_name_word->value;
             SPerl_USE* found_use
               = SPerl_HASH_search(use_symtable, use_type_name, strlen(use_type_name));
@@ -1165,20 +1166,21 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             }
           }
           // Field
-          else if (op_usehassub->code == SPerl_OP_C_CODE_HAS) {
-            SPerl_FIELD* field = op_usehassub->uv.field;
+          else if (op_decl->code == SPerl_OP_C_CODE_HAS) {
+            SPerl_OP* op_has = op_decl;
+            SPerl_FIELD* field = op_has->uv.field;
             SPerl_char* field_name = field->name_word->value;
             SPerl_FIELD* found_field
               = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
             if (found_field) {
-              SPerl_yyerror_format(parser, "redeclaration of has \"%s\" at %s line %d\n", field_name,op_usehassub->file, op_usehassub->line);
+              SPerl_yyerror_format(parser, "redeclaration of has \"%s\" at %s line %d\n", field_name, op_has->file, op_has->line);
             }
             else {
               // Value class only have core type field
               if (body_class->is_value_class) {
                 SPerl_boolean is_core_type = SPerl_TYPE_is_core_type_name(parser, field->type);
                 if (!is_core_type) {
-                  SPerl_yyerror_format(parser, "value class has only core type field at %s line %d\n", op_usehassub->file, op_usehassub->line);
+                  SPerl_yyerror_format(parser, "value class has only core type field at %s line %d\n", op_has->file, op_has->line);
                 }
               }
               
