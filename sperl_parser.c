@@ -360,9 +360,10 @@ void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
       
       // Field information
       printf("  fields\n");
-      SPerl_ARRAY* fields = body_class->fields;
-      for (SPerl_int j = 0; j < fields->length; j++) {
-        SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
+      SPerl_ARRAY* op_fields = body_class->op_fields;
+      for (SPerl_int j = 0; j < op_fields->length; j++) {
+        SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, j);
+        SPerl_FIELD* field = op_field->uv.field;
         printf("    field[%" PRId32 "]\n", j);
         SPerl_PARSER_dump_field(parser, field);
       }

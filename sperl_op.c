@@ -659,9 +659,10 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
       }
       
       // Check field
-      SPerl_ARRAY* fields = body_class->fields;
-      for (SPerl_int j = 0; j < fields->length; j++) {
-        SPerl_FIELD* field = SPerl_ARRAY_fetch(fields, j);
+      SPerl_ARRAY* op_fields = body_class->op_fields;
+      for (SPerl_int j = 0; j < op_fields->length; j++) {
+        SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, j);
+        SPerl_FIELD* field = op_field->uv.field;
 
         // Check field descripters(Not used)
         SPerl_ARRAY* op_descripters = field->op_descripters;
@@ -1149,7 +1150,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         }
         
         // Search use and field
-        SPerl_ARRAY* fields = SPerl_PARSER_new_array(parser, 0);
+        SPerl_ARRAY* op_fields = SPerl_PARSER_new_array(parser, 0);
         SPerl_HASH* field_symtable = SPerl_PARSER_new_hash(parser, 0);
         SPerl_ARRAY* uses = SPerl_PARSER_new_array(parser, 0);
         SPerl_HASH* use_symtable = SPerl_PARSER_new_hash(parser, 0);
@@ -1196,7 +1197,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               }
               
               field->body_class = body_class;
-              SPerl_ARRAY_push(fields, field);
+              SPerl_ARRAY_push(op_fields, op_has);
               SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
               
               // Field complete name
@@ -1206,7 +1207,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           }
         }
         // Set filed and sub information
-        body_class->fields = fields;
+        body_class->op_fields = op_fields;
         body_class->field_symtable = field_symtable;
         body_class->uses = uses;
         body_class->use_symtable = use_symtable;

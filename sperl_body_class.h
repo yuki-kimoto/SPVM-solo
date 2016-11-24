@@ -16,7 +16,7 @@ struct SPerl_body_class {
   SPerl_int code;
   SPerl_char* name;
   SPerl_ARRAY* op_descripters;
-  SPerl_ARRAY* fields;
+  SPerl_ARRAY* op_fields;
   SPerl_HASH* field_symtable;
   SPerl_ARRAY* uses;
   SPerl_HASH* use_symtable;
