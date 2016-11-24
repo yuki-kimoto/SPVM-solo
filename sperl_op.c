@@ -1171,19 +1171,18 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             SPerl_FIELD* found_field
               = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
             if (found_field) {
-              SPerl_yyerror_format(parser, "redeclaration of has \"%s\" at %s line %d\n", field_name, field->op->file, field->op->line);
+              SPerl_yyerror_format(parser, "redeclaration of has \"%s\" at %s line %d\n", field_name,op_usehassub->file, op_usehassub->line);
             }
             else {
               // Value class only have core type field
               if (body_class->is_value_class) {
                 SPerl_boolean is_core_type = SPerl_TYPE_is_core_type_name(parser, field->type);
                 if (!is_core_type) {
-                  SPerl_yyerror_format(parser, "value class has only core type field at %s line %d\n", field->op->file, field->op->line);
+                  SPerl_yyerror_format(parser, "value class has only core type field at %s line %d\n", op_usehassub->file, op_usehassub->line);
                 }
               }
               
               field->body_class = body_class;
-              field->op = op_usehassub;
               SPerl_ARRAY_push(fields, field);
               SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
               
@@ -1308,9 +1307,6 @@ SPerl_OP* SPerl_OP_build_declhas(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_O
   
   // Type
   field->type = op_type->uv.type;
-  
-  // OP
-  field->op = op_has;
   
   // Set field informaiton
   op_has->uv.field = field;
