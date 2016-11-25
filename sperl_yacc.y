@@ -586,7 +586,6 @@ notsubtype
     {
       $$ = SPerl_OP_build_wordtype(parser, $1);
     }
-  | CORETYPE
   | arraytype
   
 subtype

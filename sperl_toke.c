@@ -640,7 +640,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_WORD* word = SPerl_WORD_new(parser);
           word->value = keyword;
           op->uv.word = word;
-          yylvalp->opval = (SPerl_OP*)op;
+          yylvalp->opval = op;
 
           if (expect == SPerl_TOKE_C_EXPECT_PACKAGENAME) {
             // Template class

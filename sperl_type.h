@@ -27,8 +27,6 @@ struct SPerl_type {
 };
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser);
-SPerl_TYPE* SPerl_TYPE_create_word_type(SPerl_PARSER* parser, SPerl_char* type_name);
-SPerl_TYPE* SPerl_TYPE_create_array_type(SPerl_PARSER* parser, SPerl_char* type_name);
 void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* parts);
 void SPerl_TYPE_build_parts(SPerl_PARSER* parser, SPerl_TYPE* type);
 void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh);

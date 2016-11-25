@@ -92,7 +92,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     
     // Type word
     SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
-    type_component_word->name_word = name_word;
+    type_component_word->op_name = op_name;
     
     // Type
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
