@@ -486,7 +486,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
   if (field) {
     printf("      name => \"%s\"\n", field->name_word->value);
     
-    SPerl_TYPE* type = field->type;
+    SPerl_TYPE* type = field->op_type->uv.type;
     printf("      type => \"%s\"\n", type->name);
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
     printf("      resolved_type_id => %d\n", type->resolved_type->id);

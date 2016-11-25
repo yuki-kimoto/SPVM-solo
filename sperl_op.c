@@ -435,7 +435,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
         SPerl_NAME* name = op->uv.name;
         SPerl_char* complete_name = name->complete_name;
         SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
-        resolved_type = field->type->resolved_type;
+        resolved_type = field->op_type->uv.type->resolved_type;
         break;
       }
       case SPerl_OP_C_CODE_ADD:
@@ -1196,7 +1196,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             else {
               // Value class only have core type field
               if (body_class->is_value_class) {
-                SPerl_boolean is_core_type = SPerl_TYPE_is_core_type_name(parser, field->type);
+                SPerl_boolean is_core_type = SPerl_TYPE_is_core_type_name(parser, field->op_type->uv.type);
                 if (!is_core_type) {
                   SPerl_yyerror_format(parser, "value class has only core type field at %s line %d\n", op_has->file, op_has->line);
                 }
@@ -1332,7 +1332,7 @@ SPerl_OP* SPerl_OP_build_declfield(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl
   field->op_descripters = SPerl_OP_create_op_descripters_array(parser, op_descripters);
   
   // Type
-  field->type = op_type->uv.type;
+  field->op_type = op_type;
   
   // Set field informaiton
   op_has->uv.field = field;

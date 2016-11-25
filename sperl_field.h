@@ -5,7 +5,7 @@
 
 // Field information
 struct SPerl_field {
-  SPerl_TYPE* type;
+  SPerl_OP* op_type;
   SPerl_WORD* name_word;
   SPerl_ARRAY* op_descripters;
 };
