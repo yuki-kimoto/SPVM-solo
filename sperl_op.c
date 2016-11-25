@@ -139,7 +139,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
     SPerl_HASH* my_var_symtable = SPerl_PARSER_new_hash(parser, 0);
     
     // my variable stack
-    SPerl_ARRAY* my_var_stack = SPerl_PARSER_new_array(parser, 0);
+    SPerl_ARRAY* op_my_var_stack = SPerl_PARSER_new_array(parser, 0);
     
     // block base position stack
     SPerl_ARRAY* block_base_stack = SPerl_PARSER_new_array(parser, 0);
@@ -158,7 +158,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         case SPerl_OP_C_CODE_BLOCK: {
           if (block_start) {
             SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
-            *block_base_ptr = my_var_stack->length;
+            *block_base_ptr = op_my_var_stack->length;
             SPerl_ARRAY_push(block_base_stack, block_base_ptr);
             block_base = *block_base_ptr;
           }
@@ -231,8 +231,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
                 if (block_base_ptr) {
                   SPerl_int block_base = *block_base_ptr;
-                  for (SPerl_int j = 0; j < my_var_stack->length - block_base; j++) {
-                    SPerl_ARRAY_pop(my_var_stack);
+                  for (SPerl_int j = 0; j < op_my_var_stack->length - block_base; j++) {
+                    SPerl_ARRAY_pop(op_my_var_stack);
                   }
                 }
                 SPerl_int* before_block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
@@ -251,8 +251,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 
                 // Serach same name variable
                 SPerl_MY_VAR* my_var = NULL;
-                for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
-                  SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
+                for (SPerl_int i = op_my_var_stack->length - 1 ; i >= 0; i--) {
+                  SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(op_my_var_stack, i);
+                  SPerl_MY_VAR* my_var_tmp = op_my_var_tmp->uv.my_var;
                   if (strcmp(var->op_name->uv.word->value, my_var_tmp->op_name->uv.word->value) == 0) {
                     my_var = my_var_tmp;
                     break;
@@ -277,8 +278,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 // Serach same name variable
                 SPerl_int found = 0;
                 
-                for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
-                  SPerl_MY_VAR* bef_my_var = SPerl_ARRAY_fetch(my_var_stack, i);
+                for (SPerl_int i = op_my_var_stack->length - 1 ; i >= block_base; i--) {
+                  SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(op_my_var_stack, i);
+                  SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
                   if (strcmp(my_var->op_name->uv.word->value, bef_my_var->op_name->uv.word->value) == 0) {
                     found = 1;
                     break;
@@ -294,7 +296,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                   SPerl_ARRAY_push(op_my_vars, op_cur);
                   my_var->op_sub = op_sub;
                   
-                  SPerl_ARRAY_push(my_var_stack, my_var);
+                  SPerl_ARRAY_push(op_my_var_stack, op_cur);
                 }
                 break;
               }
