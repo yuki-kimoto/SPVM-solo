@@ -584,7 +584,7 @@ type
 not_type_sub
   : WORD
     {
-      $$ = SPerl_OP_build_wordtype(parser, $1);
+      $$ = SPerl_OP_build_type_word(parser, $1);
     }
   | type_array
   
