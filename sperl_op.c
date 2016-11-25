@@ -1231,8 +1231,8 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           }
           
           if (!sub->anon) {
-            SPerl_OP* op_subname = sub->op_name;
-            SPerl_char* sub_name = op_subname->uv.word->value;
+            SPerl_OP* op_sub_name = sub->op_name;
+            SPerl_char* sub_name = op_sub_name->uv.word->value;
             SPerl_char* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
             SPerl_char* sub_complete_name = SPerl_OP_create_sub_complete_name(parser, sub_abs_name, sub->argument_count);
             
@@ -1351,22 +1351,22 @@ SPerl_ARRAY* SPerl_OP_create_op_descripters_array(SPerl_PARSER* parser, SPerl_OP
   return op_descripters_array;
 }
 
-SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* op_descripters, SPerl_OP* op_type, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_subargs, SPerl_OP* op_descripters, SPerl_OP* op_type, SPerl_OP* op_block) {
   
   // Build OP_SUB
-  SPerl_OP_sibling_splice(parser, op_sub, NULL, 0, op_subname);
-  SPerl_OP_sibling_splice(parser, op_sub, op_subname, 0, op_subargs);
+  SPerl_OP_sibling_splice(parser, op_sub, NULL, 0, op_sub_name);
+  SPerl_OP_sibling_splice(parser, op_sub, op_sub_name, 0, op_subargs);
   SPerl_OP_sibling_splice(parser, op_sub, op_subargs, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_sub, op_descripters, 0, op_type);
   SPerl_OP_sibling_splice(parser, op_sub, op_type, 0, op_block);
   
   // Create sub infomation
   SPerl_SUB* sub = SPerl_SUB_new(parser);
-  if (op_subname->code == SPerl_OP_C_CODE_NULL) {
+  if (op_sub_name->code == SPerl_OP_C_CODE_NULL) {
     sub->anon = 1;
   }
   else {
-    sub->op_name = op_subname;
+    sub->op_name = op_sub_name;
   }
   
   // subargs
@@ -1398,18 +1398,18 @@ SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_O
   return op_sub;
 }
 
-SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_subname, SPerl_OP* op_terms, SPerl_boolean anon) {
+SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_sub_name, SPerl_OP* op_terms, SPerl_boolean anon) {
   
   // Build OP_SUB
   SPerl_OP* op_callsub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALLSUB, NULL, NULL);
-  SPerl_OP_sibling_splice(parser, op_callsub, NULL, 0, op_subname);
-  SPerl_OP_sibling_splice(parser, op_callsub, op_subname, 0, op_terms);
+  SPerl_OP_sibling_splice(parser, op_callsub, NULL, 0, op_sub_name);
+  SPerl_OP_sibling_splice(parser, op_callsub, op_sub_name, 0, op_terms);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_SUB;
   
   if (!anon) {
-    SPerl_WORD* sub_name_word = op_subname->uv.word;
+    SPerl_WORD* sub_name_word = op_sub_name->uv.word;
     SPerl_char* sub_name = sub_name_word->value;
     
     if (strstr(sub_name, ":")) {
@@ -1418,13 +1418,13 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
     else {
       if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
         name->var = op_invocant->uv.var;
-        name->op_base_name = op_subname;
+        name->op_base_name = op_sub_name;
       }
       else {
         SPerl_WORD* sub_abs_name_word = SPerl_WORD_new(parser);
         SPerl_char* sub_abs_name = SPerl_OP_create_abs_name(parser, "CORE", sub_name);
         sub_abs_name_word->value = sub_abs_name;
-        sub_abs_name_word->op = op_subname;
+        sub_abs_name_word->op = op_sub_name;
         name->abs_name_word = sub_abs_name_word;
       }
     }
