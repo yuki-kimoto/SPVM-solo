@@ -639,7 +639,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_WORD);
           SPerl_WORD* word = SPerl_WORD_new(parser);
           word->value = keyword;
-          word->op = op;
           op->uv.word = word;
           yylvalp->opval = (SPerl_OP*)op;
 

@@ -753,7 +753,8 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
 
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   SPerl_char* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
-  SPerl_WORD* base_name_word = name->op_base_name->uv.word;
+  SPerl_OP* op_base_name = name->op_base_name;
+  SPerl_WORD* base_name_word = op_base_name->uv.word;
   SPerl_char* base_name = base_name_word->value;
   
   SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(base_name);
@@ -769,12 +770,13 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   
   if (!found_field) {
     SPerl_yyerror_format(parser, "unknown field \"%s\" at %s line %d\n",
-      complete_name, base_name_word->op->file, base_name_word->op->line);
+      complete_name, op_base_name->file, op_base_name->line);
   }
 }
 
 void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name) {
-  SPerl_WORD* abs_name_word = name->op_abs_name->uv.word;
+  SPerl_OP* op_abs_name = name->op_abs_name;
+  SPerl_WORD* abs_name_word = op_abs_name->uv.word;
   SPerl_char* abs_name = abs_name_word->value;
   SPerl_char* complete_name = abs_name;
   name->complete_name = complete_name;
@@ -787,7 +789,7 @@ void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   
   if (!found_enum) {
     SPerl_yyerror_format(parser, "unknown enum \"%s\" at %s line %d\n",
-      complete_name, abs_name_word->op->file, abs_name_word->op->line);
+      complete_name, op_abs_name->file, op_abs_name->line);
   }
 }
 
@@ -1426,7 +1428,6 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
         SPerl_WORD* sub_abs_name_word = SPerl_WORD_new(parser);
         SPerl_char* sub_abs_name = SPerl_OP_create_abs_name(parser, "CORE", sub_name);
         sub_abs_name_word->value = sub_abs_name;
-        sub_abs_name_word->op = op_sub_name;
         op_abs_name->uv.word = sub_abs_name_word;
         name->op_abs_name = op_abs_name;
       }
