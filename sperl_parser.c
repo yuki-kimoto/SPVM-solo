@@ -109,7 +109,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
     op_package_name->uv.word = name_word;
     package->op_name = op_package_name;
-    package->type = type;
+    package->op_type = op_type;
     
     // Package OP
     SPerl_OP* op_package = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PACKAGE, NULL, NULL);
@@ -312,10 +312,11 @@ void SPerl_PARSER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
     SPerl_PACKAGE* package = op_package->uv.package;
     printf("    name => \"%s\"\n", package->op_name->uv.word->value);
     
-    if (package->type) {
-      printf("    type => \"%s\"\n", package->type->name);
-      printf("    resolved_type => \"%s\"\n", package->type->resolved_type->name);
-      printf("    resolved_type_id => %d\n", package->type->resolved_type->id);
+    if (package->op_type) {
+      SPerl_TYPE* type = package->op_type->uv.type;
+      printf("    type => \"%s\"\n", type->name);
+      printf("    resolved_type => \"%s\"\n", type->resolved_type->name);
+      printf("    resolved_type_id => %d\n", type->resolved_type->id);
     }
   }
 }

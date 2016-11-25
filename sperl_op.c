@@ -1132,13 +1132,13 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         // Type OP
         op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);
         op_type->uv.type = type;
-
+        
         // Add type
-        package->type = type;
+        package->op_type = op_type;
         SPerl_ARRAY_push(parser->op_types, op_type);
-      
+        
         body->code = SPerl_BODY_C_CODE_CLASS;
-
+        
         SPerl_BODY_CLASS* body_class = SPerl_BODY_CLASS_new(parser);
         body_class->op_block = op_block;
         body_class->alias = SPerl_PARSER_new_hash(parser, 0);
@@ -1259,8 +1259,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
     }
     // Typedef
     else {
-      type = op_type->uv.type;
-      package->type = type;
+      package->op_type = op_type;
       SPerl_ARRAY_push(parser->op_types, op_type);
     }
     
