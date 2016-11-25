@@ -20,7 +20,6 @@ struct SPerl_body_class {
   SPerl_ARRAY* uses;
   SPerl_HASH* use_symtable;
   SPerl_OP* op_block;
-  SPerl_HASH* alias;
   SPerl_boolean is_value_class;
 };
 
