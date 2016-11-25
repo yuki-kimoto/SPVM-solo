@@ -1074,7 +1074,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
       
       // Body
       SPerl_BODY* body = SPerl_BODY_new(parser);
-      body->name = package_name;
+      body->op_name = op_package_name;
       
       // Enum type
       if (op_descripters->code == SPerl_OP_C_CODE_ENUM) {
@@ -1256,7 +1256,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         body->uv.body_class = body_class;
       }
       SPerl_ARRAY_push(parser->bodys, body);
-      SPerl_HASH_insert(parser->body_symtable, body->name, strlen(body->name), body);
+      SPerl_HASH_insert(parser->body_symtable, body->op_name->uv.word->value, strlen(body->op_name->uv.word->value), body);
     }
     // Typedef
     else {

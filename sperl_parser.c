@@ -64,14 +64,20 @@ SPerl_PARSER* SPerl_PARSER_new() {
     body_core->code = i;
     body_core->size = SPerl_BODY_CORE_C_SIZES[i];
     
+    // Name
+    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = name;
+    op_name->uv.word = name_word;
+    
     // Body
     SPerl_BODY* body = SPerl_BODY_new(parser);
     body->code = SPerl_BODY_C_CODE_CORE;
-    body->name = name;
+    body->op_name = op_name;
     body->uv.body_core = body_core;
     
     SPerl_ARRAY_push(parser->bodys, body);
-    SPerl_HASH_insert(parser->body_symtable, body->name, strlen(body->name), body);
+    SPerl_HASH_insert(parser->body_symtable, name, strlen(name), body);
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
@@ -85,8 +91,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
     
     // Type word
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = name;
     SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
     type_word->name_word = name_word;
     
@@ -338,7 +342,7 @@ void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
 
     printf("body[%d]\n", i);
     printf("  code => \"%s\"\n", SPerl_BODY_C_CODE_NAMES[body->code]);
-    printf("  name => \"%s\"\n", body->name);
+    printf("  name => \"%s\"\n", body->op_name->uv.word->value);
     
     // Core body
     if (body->code == SPerl_BODY_C_CODE_CORE) {
