@@ -728,11 +728,11 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   SPerl_OP* op;
   if (name->op_var) {
     SPerl_char* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
-    SPerl_char* base_name = name->op_base_name->uv.word->value;
+    SPerl_char* base_name = name->op_name->uv.word->value;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   }
-  else if (name->op_abs_name) {
-    sub_abs_name = name->op_abs_name->uv.word->value;
+  else if (name->op_name) {
+    sub_abs_name = name->op_name->uv.word->value;
   }
   
   SPerl_int argument_count = name->argument_count;
@@ -753,8 +753,8 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
 
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   SPerl_char* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
-  SPerl_OP* op_base_name = name->op_base_name;
-  SPerl_WORD* base_name_word = op_base_name->uv.word;
+  SPerl_OP* op_name = name->op_name;
+  SPerl_WORD* base_name_word = op_name->uv.word;
   SPerl_char* base_name = base_name_word->value;
   
   SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(base_name);
@@ -770,13 +770,13 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   
   if (!found_field) {
     SPerl_yyerror_format(parser, "unknown field \"%s\" at %s line %d\n",
-      complete_name, op_base_name->file, op_base_name->line);
+      complete_name, op_name->file, op_name->line);
   }
 }
 
 void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name) {
-  SPerl_OP* op_abs_name = name->op_abs_name;
-  SPerl_WORD* abs_name_word = op_abs_name->uv.word;
+  SPerl_OP* op_name = name->op_name;
+  SPerl_WORD* abs_name_word = op_name->uv.word;
   SPerl_char* abs_name = abs_name_word->value;
   SPerl_char* complete_name = abs_name;
   name->complete_name = complete_name;
@@ -789,7 +789,7 @@ void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   
   if (!found_enum) {
     SPerl_yyerror_format(parser, "unknown enum \"%s\" at %s line %d\n",
-      complete_name, op_abs_name->file, op_abs_name->line);
+      complete_name, op_name->file, op_name->line);
   }
 }
 
@@ -798,7 +798,7 @@ SPerl_OP* SPerl_OP_build_get_enum_value(SPerl_PARSER* parser, SPerl_OP* op_enumn
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_ENUM;
-  name->op_abs_name = op_enumname;
+  name->op_name = op_enumname;
   
   op_get_enum_value->uv.name = name;
   
@@ -813,7 +813,7 @@ SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP*
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_FIELD;
   name->op_var = op_var;
-  name->op_base_name = op_fieldname;
+  name->op_name = op_fieldname;
   
   op_field->uv.name = name;
   
@@ -1414,23 +1414,23 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
   if (!anon) {
     SPerl_WORD* sub_name_word = op_sub_name->uv.word;
     SPerl_char* sub_name = sub_name_word->value;
-    SPerl_OP* op_abs_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
+    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
     
     if (strstr(sub_name, ":")) {
-      op_abs_name->uv.word = sub_name_word;
-      name->op_abs_name = op_abs_name;
+      op_name->uv.word = sub_name_word;
+      name->op_name = op_name;
     }
     else {
       if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
         name->op_var = op_invocant;
-        name->op_base_name = op_sub_name;
+        name->op_name = op_sub_name;
       }
       else {
         SPerl_WORD* sub_abs_name_word = SPerl_WORD_new(parser);
         SPerl_char* sub_abs_name = SPerl_OP_create_abs_name(parser, "CORE", sub_name);
         sub_abs_name_word->value = sub_abs_name;
-        op_abs_name->uv.word = sub_abs_name_word;
-        name->op_abs_name = op_abs_name;
+        op_name->uv.word = sub_abs_name_word;
+        name->op_name = op_name;
       }
     }
   }
