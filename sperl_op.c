@@ -303,7 +303,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 // Check sub name
                 SPerl_NAME* name = op_cur->uv.name;
                 if (!name->anon) {
-                  SPerl_OP_check_sub_name(parser, name);
+                  SPerl_OP_check_sub_name(parser, op_cur);
                   if (parser->fatal_error) {
                     return;
                   }
@@ -719,18 +719,18 @@ void SPerl_OP_check_descripters(SPerl_PARSER* parser) {
   }
 }
 
-void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name) {
+void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
+  SPerl_NAME* name = op_name->uv.name;
+  
   SPerl_char* sub_abs_name;
   SPerl_OP* op;
   if (name->abs_name_word) {
     sub_abs_name = name->abs_name_word->value;
-    op = name->abs_name_word->op;
   }
   else if (name->var) {
     SPerl_char* package_name = name->var->my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
     SPerl_char* base_name = name->base_name_word->value;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
-    op = name->var->op;
   }
   
   SPerl_int argument_count = name->argument_count;
@@ -745,7 +745,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   );
   if (!found_sub) {
     SPerl_yyerror_format(parser, "unknown sub \"%s\" at %s line %d\n",
-      sub_complete_name, op->file, op->line);
+      sub_complete_name, op_name->file, op_name->line);
   }
 }
 
