@@ -16,7 +16,7 @@ struct SPerl_name {
   SPerl_int code;
   SPerl_VAR* var;
   SPerl_WORD* package_name_word;
-  SPerl_WORD* base_name_word;
+  SPerl_OP* op_base_name;
   SPerl_WORD* abs_name_word;
   SPerl_int argument_count;
   SPerl_boolean anon;

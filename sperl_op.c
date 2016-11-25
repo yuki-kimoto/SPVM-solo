@@ -731,7 +731,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   }
   else if (name->var) {
     SPerl_char* package_name = name->var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
-    SPerl_char* base_name = name->base_name_word->value;
+    SPerl_char* base_name = name->op_base_name->uv.word->value;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   }
   
@@ -753,7 +753,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
 
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   SPerl_char* package_name = name->var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
-  SPerl_WORD* base_name_word = name->base_name_word;
+  SPerl_WORD* base_name_word = name->op_base_name->uv.word;
   SPerl_char* base_name = base_name_word->value;
   
   SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(base_name);
@@ -811,7 +811,7 @@ SPerl_OP* SPerl_OP_build_getfield(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_FIELD;
   name->var = op_var->uv.var;
-  name->base_name_word = op_fieldname->uv.word;
+  name->op_base_name = op_fieldname;
   
   op_getfield->uv.name = name;
   
@@ -1418,7 +1418,7 @@ SPerl_OP* SPerl_OP_build_callsub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SP
     else {
       if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
         name->var = op_invocant->uv.var;
-        name->base_name_word = sub_name_word;
+        name->op_base_name = op_subname;
       }
       else {
         SPerl_WORD* sub_abs_name_word = SPerl_WORD_new(parser);
