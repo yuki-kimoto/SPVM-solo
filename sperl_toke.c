@@ -47,12 +47,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->cur_src = NULL;
         
         // If there are more module, load it
-        SPerl_ARRAY* use_stack = parser->use_stack;
-        
+        SPerl_ARRAY* op_use_stack = parser->op_use_stack;
         
         while (1) {
-          SPerl_USE* use = SPerl_ARRAY_pop(use_stack);
-          if (use) {
+          SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
+          if (op_use) {
+            SPerl_USE* use = op_use->uv.use;
             SPerl_char* package_name = use->package_name_word->value;
 
             SPerl_BODY_CLASS* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
@@ -96,8 +96,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                 }
               }
               if (!fh) {
-                if (use->op) {
-                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->package_name_word->value, use->op->file, use->op->line);
+                if (op_use) {
+                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->package_name_word->value, op_use->file, op_use->line);
                 }
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_file);
@@ -114,8 +114,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               fseek(fh, 0, SEEK_SET);
               SPerl_char* src = SPerl_PARSER_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
-                if (use->op) {
-                  fprintf(stderr, "Can't read file %s at %s line %d\n", cur_file, use->op->file, use->op->line);
+                if (op_use) {
+                  fprintf(stderr, "Can't read file %s at %s line %d\n", cur_file, op_use->file, op_use->line);
                 }
                 else {
                   fprintf(stderr, "Can't read file %s\n", cur_file);

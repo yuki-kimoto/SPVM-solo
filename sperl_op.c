@@ -1158,7 +1158,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         // Search use and field
         SPerl_ARRAY* op_fields = SPerl_PARSER_new_array(parser, 0);
         SPerl_HASH* field_symtable = SPerl_PARSER_new_hash(parser, 0);
-        SPerl_ARRAY* uses = SPerl_PARSER_new_array(parser, 0);
+        SPerl_ARRAY* op_uses = SPerl_PARSER_new_array(parser, 0);
         SPerl_HASH* use_symtable = SPerl_PARSER_new_hash(parser, 0);
         
         // Collect field and use information
@@ -1174,11 +1174,11 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
               = SPerl_HASH_search(use_symtable, use_type_name, strlen(use_type_name));
             
             if (found_use) {
-              SPerl_yyerror_format(parser, "redeclaration of use \"%s\" at %s line %d\n", use_type_name, use->op->file, use->op->line);
+              SPerl_yyerror_format(parser, "redeclaration of use \"%s\" at %s line %d\n", use_type_name, op_use->file, op_use->line);
             }
             else {
-              SPerl_ARRAY_push(parser->use_stack, use);
-              SPerl_ARRAY_push(uses, use);
+              SPerl_ARRAY_push(parser->op_use_stack, op_use);
+              SPerl_ARRAY_push(op_uses, op_use);
               
               SPerl_HASH_insert(use_symtable, use_type_name, strlen(use_type_name), use);
             }
@@ -1214,7 +1214,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         // Set filed and sub information
         body_class->op_fields = op_fields;
         body_class->field_symtable = field_symtable;
-        body_class->uses = uses;
+        body_class->op_uses = op_uses;
         body_class->use_symtable = use_symtable;
 
         // Method information
@@ -1279,7 +1279,6 @@ SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_O
   
   SPerl_USE* use = SPerl_USE_new(parser);
   use->package_name_word = op_package_name->uv.word;
-  use->op = op_use;
   op_use->uv.use = use;
   
   return op_use;

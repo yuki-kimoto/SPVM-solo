@@ -7,6 +7,7 @@
 #include "../sperl_array.h"
 #include "../sperl_use.h"
 #include "../sperl_word.h"
+#include "../sperl_op.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,13 +24,17 @@ int main(int argc, char *argv[])
   SPerl_ARRAY_push(parser->include_pathes, ".");
   
   /* Build use information */
-  SPerl_USE* package_use = SPerl_USE_new(parser);
+  SPerl_USE* use = SPerl_USE_new(parser);
   SPerl_WORD* package_name_word = SPerl_WORD_new(parser);
   package_name_word->value = package_name;
-  package_use->package_name_word = package_name_word;
+  use->package_name_word = package_name_word;
+  
+  // Use OP
+  SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_USE, NULL, NULL);
+  op_use->uv.use = use;
   
   /* Push package use infomation stack */
-  SPerl_ARRAY_push(parser->use_stack, package_use);
+  SPerl_ARRAY_push(parser->op_use_stack, op_use);
   
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;

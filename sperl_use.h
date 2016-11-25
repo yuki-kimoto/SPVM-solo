@@ -6,7 +6,6 @@
 // Use information
 struct SPerl_use {
   SPerl_WORD* package_name_word;
-  SPerl_OP* op;
 };
 
 SPerl_USE* SPerl_USE_new(SPerl_PARSER* parser);
