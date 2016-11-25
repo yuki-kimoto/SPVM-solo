@@ -484,7 +484,7 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
 
 void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
   if (field) {
-    printf("      name => \"%s\"\n", field->name_word->value);
+    printf("      name => \"%s\"\n", field->op_name->uv.word->value);
     
     SPerl_TYPE* type = field->op_type->uv.type;
     printf("      type => \"%s\"\n", type->name);

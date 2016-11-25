@@ -1187,7 +1187,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           else if (op_decl->code == SPerl_OP_C_CODE_HAS) {
             SPerl_OP* op_has = op_decl;
             SPerl_FIELD* field = op_has->uv.field;
-            SPerl_char* field_name = field->name_word->value;
+            SPerl_char* field_name = field->op_name->uv.word->value;
             SPerl_FIELD* found_field
               = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
             if (found_field) {
@@ -1326,7 +1326,7 @@ SPerl_OP* SPerl_OP_build_declfield(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl
   SPerl_FIELD* field = SPerl_FIELD_new(parser);
   
   // Name
-  field->name_word = op_field_name->uv.word;
+  field->op_name = op_field_name;
 
   // Descripters
   field->op_descripters = SPerl_OP_create_op_descripters_array(parser, op_descripters);
