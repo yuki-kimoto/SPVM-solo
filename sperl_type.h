@@ -20,7 +20,7 @@ struct SPerl_type {
   SPerl_RESOLVED_TYPE* resolved_type;
   SPerl_boolean resolved;
   union {
-    SPerl_TYPE_WORD* type_word;
+    SPerl_TYPE_COMPONENT_WORD* type_component_word;
     SPerl_TYPE_ARRAY* type_array;
     SPerl_TYPE_SUB* type_sub;
   } uv;

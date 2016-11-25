@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "sperl_type.h"
-#include "sperl_type_word.h"
+#include "sperl_type_component_word.h"
 #include "sperl_type_array.h"
 #include "sperl_type_sub.h"
 #include "sperl_parser.h"
@@ -26,8 +26,8 @@ SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
 
 SPerl_boolean SPerl_TYPE_is_core_type_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
   if (type->code == SPerl_TYPE_C_CODE_WORD) {
-    SPerl_TYPE_WORD* type_word = type->uv.type_word;
-    SPerl_WORD* name_word = type_word->name_word;
+    SPerl_TYPE_COMPONENT_WORD* type_component_word = type->uv.type_component_word;
+    SPerl_WORD* name_word = type_component_word->name_word;
     SPerl_char* name = name_word->value;
     
     if (strcmp(name, "boolean") == 0 || strcmp(name, "char") == 0 || strcmp(name, "byte") == 0 || strcmp(name, "short") == 0
@@ -57,12 +57,12 @@ SPerl_TYPE* SPerl_TYPE_create_word_type(SPerl_PARSER* parser, SPerl_char* type_n
   SPerl_WORD* type_name_word = SPerl_WORD_new(parser);
   type_name_word->value = type_name;
   
-  SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
-  type_word->name_word = type_name_word;
+  SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
+  type_component_word->name_word = type_name_word;
   
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_WORD;
-  type->uv.type_word = type_word;
+  type->uv.type_component_word = type_component_word;
   
   return type;
 }
@@ -72,12 +72,12 @@ SPerl_TYPE* SPerl_TYPE_create_array_type(SPerl_PARSER* parser, SPerl_char* type_
   SPerl_WORD* type_name_word = SPerl_WORD_new(parser);
   type_name_word->value = type_name;
   
-  SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
-  type_word->name_word = type_name_word;
+  SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
+  type_component_word->name_word = type_name_word;
   
   SPerl_TYPE* type_w = SPerl_TYPE_new(parser);
   type_w->code = SPerl_TYPE_C_CODE_WORD;
-  type_w->uv.type_word = type_word;
+  type_w->uv.type_component_word = type_component_word;
   
   SPerl_TYPE_ARRAY* type_array = SPerl_TYPE_ARRAY_new(parser);
   type_array->type = type_w;
@@ -94,7 +94,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
   if (type->code == SPerl_TYPE_C_CODE_WORD) {
     SPerl_TYPE_PART* part = SPerl_TYPE_PART_new(parser);
     part->code = SPerl_TYPE_PART_C_CODE_WORD;
-    part->uv.name_word = type->uv.type_word->name_word;
+    part->uv.name_word = type->uv.type_component_word->name_word;
     SPerl_ARRAY_push(parts, part);
   }
   else if (type->code == SPerl_TYPE_C_CODE_ARRAY) {

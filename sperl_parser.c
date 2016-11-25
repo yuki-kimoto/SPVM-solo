@@ -17,7 +17,7 @@
 #include "sperl_enum_value.h"
 #include "sperl_descripter.h"
 #include "sperl_type.h"
-#include "sperl_type_word.h"
+#include "sperl_type_component_word.h"
 #include "sperl_type_array.h"
 #include "sperl_type_sub.h"
 #include "sperl_body.h"
@@ -91,13 +91,13 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
     
     // Type word
-    SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
-    type_word->name_word = name_word;
+    SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
+    type_component_word->name_word = name_word;
     
     // Type
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->code = SPerl_TYPE_C_CODE_WORD;
-    type->uv.type_word = type_word;
+    type->uv.type_component_word = type_component_word;
     type->resolved_type = resolved_type;
     type->resolved = 1;
     

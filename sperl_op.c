@@ -20,7 +20,7 @@
 #include "sperl_enum_value.h"
 #include "sperl_descripter.h"
 #include "sperl_type.h"
-#include "sperl_type_word.h"
+#include "sperl_type_component_word.h"
 #include "sperl_type_array.h"
 #include "sperl_type_sub.h"
 #include "sperl_type_part.h"
@@ -875,11 +875,11 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
         if (found_type) {
           SPerl_boolean is_self
             = type->code == SPerl_TYPE_C_CODE_WORD && found_type->code == SPerl_TYPE_C_CODE_WORD
-            && strcmp(type->uv.type_word->name_word->value, found_type->uv.type_word->name_word->value) == 0;
+            && strcmp(type->uv.type_component_word->name_word->value, found_type->uv.type_component_word->name_word->value) == 0;
           
           if (is_self) {
-            resolved_type_name_length += strlen(found_type->uv.type_word->name_word->value);
-            SPerl_char* found_part_name = found_type->uv.type_word->name_word->value;
+            resolved_type_name_length += strlen(found_type->uv.type_component_word->name_word->value);
+            SPerl_char* found_part_name = found_type->uv.type_component_word->name_word->value;
             SPerl_ARRAY_push(resolved_type_part_names, found_part_name);
           }
           else {
@@ -1129,9 +1129,9 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         // Type(type is same as package name)
         type = SPerl_TYPE_new(parser);
         type->code = SPerl_TYPE_C_CODE_WORD;
-        SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
+        SPerl_TYPE_COMPONENT_WORD* type_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
         type_word->name_word = package_name_word;
-        type->uv.type_word = type_word;
+        type->uv.type_component_word = type_word;
         
         // Type OP
         op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);
@@ -1539,9 +1539,9 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_WORD;
   
-  SPerl_TYPE_WORD* type_word = SPerl_TYPE_WORD_new(parser);
-  type_word->name_word = op_wordtype->uv.word;
-  type->uv.type_word = type_word;
+  SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
+  type_component_word->name_word = op_wordtype->uv.word;
+  type->uv.type_component_word = type_component_word;
 
   SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_wordtype, NULL);
   op_type->uv.type = type;
