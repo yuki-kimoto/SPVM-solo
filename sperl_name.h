@@ -14,7 +14,7 @@ extern SPerl_char* const SPerl_NAME_C_CODE_NAMES[];
 // Field information
 struct SPerl_name {
   SPerl_int code;
-  SPerl_VAR* var;
+  SPerl_OP* op_var;
   SPerl_OP* op_base_name;
   SPerl_OP* op_abs_name;
   SPerl_int argument_count;
