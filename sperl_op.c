@@ -1543,14 +1543,14 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
   type_component_word->name_word = op_wordtype->uv.word;
   type->uv.type_component_word = type_component_word;
 
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_wordtype, NULL);
-  op_type->uv.type = type;
-  op_type->file = op_wordtype->file;
-  op_type->line = op_wordtype->line;
+  SPerl_OP* op_type_word = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_wordtype, NULL);
+  op_type_word->uv.type = type;
+  op_type_word->file = op_wordtype->file;
+  op_type_word->line = op_wordtype->line;
 
-  SPerl_ARRAY_push(parser->op_types, op_type);
+  SPerl_ARRAY_push(parser->op_types, op_type_word);
   
-  return op_type;
+  return op_type_word;
 }
 
 SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_type) {
@@ -1605,14 +1605,14 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_typ
   
   type->uv.type_component_sub = type_component_sub;
 
-  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_argument_types, op_return_type);
-  op_type->uv.type = type;
-  op_type->file = file;
-  op_type->line = line;
+  SPerl_OP* op_type_sub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_argument_types, op_return_type);
+  op_type_sub->uv.type = type;
+  op_type_sub->file = file;
+  op_type_sub->line = line;
 
-  SPerl_ARRAY_push(parser->op_types, op_type);
+  SPerl_ARRAY_push(parser->op_types, op_type_sub);
   
-  return op_type;
+  return op_type_sub;
 }
 
 SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
