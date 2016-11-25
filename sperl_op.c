@@ -1535,21 +1535,21 @@ SPerl_OP* SPerl_OP_build_call_op(SPerl_PARSER* parser, SPerl_OP* op_call_op, SPe
   return op_call_op;
 }
 
-SPerl_OP* SPerl_OP_build_type_word(SPerl_PARSER* parser, SPerl_OP* op_name) {
+SPerl_OP* SPerl_OP_build_type_word(SPerl_PARSER* parser, SPerl_OP* op_word) {
   
   // Type component word
   SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
-  type_component_word->op_name = op_name;
+  type_component_word->op_name = op_word;
   
   // 
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_WORD;
   type->uv.type_component_word = type_component_word;
 
-  SPerl_OP* op_type_word = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_type_word, NULL);
+  SPerl_OP* op_type_word = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_word, NULL);
   op_type_word->uv.type = type;
-  op_type_word->file = op_type_word->file;
-  op_type_word->line = op_type_word->line;
+  op_type_word->file = op_word->file;
+  op_type_word->line = op_word->line;
 
   SPerl_ARRAY_push(parser->op_types, op_type_word);
   
