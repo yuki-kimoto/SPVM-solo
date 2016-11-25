@@ -19,7 +19,7 @@
 #include "sperl_type.h"
 #include "sperl_type_component_word.h"
 #include "sperl_type_component_array.h"
-#include "sperl_type_sub.h"
+#include "sperl_type_component_sub.h"
 #include "sperl_body.h"
 #include "sperl_body_core.h"
 #include "sperl_body_class.h"

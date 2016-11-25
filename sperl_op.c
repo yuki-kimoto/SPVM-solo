@@ -22,7 +22,7 @@
 #include "sperl_type.h"
 #include "sperl_type_component_word.h"
 #include "sperl_type_component_array.h"
-#include "sperl_type_sub.h"
+#include "sperl_type_component_sub.h"
 #include "sperl_type_part.h"
 #include "sperl_body.h"
 #include "sperl_body_core.h"
@@ -1584,7 +1584,7 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_typ
   SPerl_int line = -1;
   
   // sub type
-  SPerl_TYPE_SUB* type_sub = SPerl_TYPE_SUB_new(parser);
+  SPerl_TYPE_COMPONENT_SUB* type_component_sub = SPerl_TYPE_COMPONENT_SUB_new(parser);
   SPerl_ARRAY* argument_types = SPerl_PARSER_new_array(parser, 0);
   {
     SPerl_OP* op_argument_type = op_argument_types->first;
@@ -1596,14 +1596,14 @@ SPerl_OP* SPerl_OP_build_subtype(SPerl_PARSER* parser, SPerl_OP* op_argument_typ
       SPerl_ARRAY_push(argument_types, op_argument_type->uv.type);
     }
   }
-  type_sub->return_type = op_return_type->uv.type;
+  type_component_sub->return_type = op_return_type->uv.type;
   if (file == NULL) {
     file = op_return_type->file;
     line = op_return_type->line;
   }
-  type_sub->argument_types = argument_types;
+  type_component_sub->argument_types = argument_types;
   
-  type->uv.type_sub = type_sub;
+  type->uv.type_component_sub = type_component_sub;
 
   SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_argument_types, op_return_type);
   op_type->uv.type = type;

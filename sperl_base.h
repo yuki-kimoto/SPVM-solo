@@ -48,9 +48,9 @@ typedef struct SPerl_type_component_word SPerl_TYPE_COMPONENT_WORD;
 struct SPerl_type_component_array;
 typedef struct SPerl_type_component_array SPerl_TYPE_COMPONENT_ARRAY;
 
-/* sperl_type_sub.h */
-struct SPerl_type_sub;
-typedef struct SPerl_type_sub SPerl_TYPE_SUB;
+/* sperl_type_component_sub.h */
+struct SPerl_type_component_sub;
+typedef struct SPerl_type_component_sub SPerl_TYPE_COMPONENT_SUB;
 
 /* sperl_body_core.h */
 struct SPerl_body_core;

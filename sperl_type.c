@@ -4,7 +4,7 @@
 #include "sperl_type.h"
 #include "sperl_type_component_word.h"
 #include "sperl_type_component_array.h"
-#include "sperl_type_sub.h"
+#include "sperl_type_component_sub.h"
 #include "sperl_parser.h"
 #include "sperl_word.h"
 #include "sperl_array.h"
@@ -131,8 +131,8 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     SPerl_ARRAY_push(parts, type_part_openparen2);
     
     // Argument types
-    SPerl_TYPE_SUB* type_sub = type->uv.type_sub;
-    SPerl_ARRAY* argument_types = type_sub->argument_types;
+    SPerl_TYPE_COMPONENT_SUB* type_component_sub = type->uv.type_component_sub;
+    SPerl_ARRAY* argument_types = type_component_sub->argument_types;
     for (SPerl_int i = 0; i < argument_types->length; i++) {
       SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(argument_types, i);
       SPerl_TYPE_to_parts(parser, argument_type, parts);
@@ -151,7 +151,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     SPerl_ARRAY_push(parts, type_part_closeparen1);
     
     // Return type
-    SPerl_TYPE* return_type = type_sub->return_type;
+    SPerl_TYPE* return_type = type_component_sub->return_type;
     SPerl_TYPE_to_parts(parser, return_type, parts);
     
     // )

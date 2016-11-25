@@ -22,7 +22,7 @@ struct SPerl_type {
   union {
     SPerl_TYPE_COMPONENT_WORD* type_component_word;
     SPerl_TYPE_COMPONENT_ARRAY* type_component_array;
-    SPerl_TYPE_SUB* type_sub;
+    SPerl_TYPE_COMPONENT_SUB* type_component_sub;
   } uv;
 };
 
