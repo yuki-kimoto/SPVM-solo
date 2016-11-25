@@ -5,7 +5,7 @@
 
 struct SPerl_var {
   SPerl_OP* op_name;
-  SPerl_MY_VAR* my_var;
+  SPerl_OP* op_my_var;
   SPerl_int version;
 };
 
