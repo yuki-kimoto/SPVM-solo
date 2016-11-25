@@ -868,7 +868,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
         SPerl_ARRAY_push(resolved_type_part_names, part->uv.char_name);
       }
       else {
-        SPerl_WORD* part_name_word = part->uv.name_word;
+        SPerl_WORD* part_name_word = part->uv.op_name->uv.word;
         SPerl_char* part_name = part_name_word->value;
         
         SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));

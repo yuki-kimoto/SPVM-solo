@@ -58,7 +58,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
   if (type->code == SPerl_TYPE_C_CODE_WORD) {
     SPerl_TYPE_PART* part = SPerl_TYPE_PART_new(parser);
     part->code = SPerl_TYPE_PART_C_CODE_WORD;
-    part->uv.name_word = type->uv.type_component_word->op_name->uv.word;
+    part->uv.op_name = type->uv.type_component_word->op_name;
     SPerl_ARRAY_push(parts, part);
   }
   else if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
@@ -142,7 +142,7 @@ void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh) {
       fprintf(fh, "%s", part->uv.char_name);
     }
     else if (code == SPerl_TYPE_PART_C_CODE_WORD) {
-      fprintf(fh, "%s", part->uv.name_word->value);
+      fprintf(fh, "%s", part->uv.op_name->uv.word->value);
     }
     else if (code == SPerl_TYPE_PART_C_CODE_SUB) {
       fprintf(fh, "sub");
@@ -167,7 +167,7 @@ void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
         total_length += 1;
       }
       else if (code == SPerl_TYPE_PART_C_CODE_WORD) {
-        total_length += strlen(part->uv.name_word->value);
+        total_length += strlen(part->uv.op_name->uv.word->value);
       }
       else if (code == SPerl_TYPE_PART_C_CODE_SUB) {
         total_length += 3;
@@ -187,8 +187,8 @@ void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
         memcpy(type_name + pos, part->uv.char_name, length);
       }
       else if (code == SPerl_TYPE_PART_C_CODE_WORD) {
-        length = strlen(part->uv.name_word->value);
-        memcpy(type_name + pos, part->uv.name_word->value, length);
+        length = strlen(part->uv.op_name->uv.word->value);
+        memcpy(type_name + pos, part->uv.op_name->uv.word->value, length);
       }
       else if (code == SPerl_TYPE_PART_C_CODE_SUB) {
         length = 3;
