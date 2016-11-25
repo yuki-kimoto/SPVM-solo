@@ -1276,7 +1276,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
   return op_package;
 }
 
-SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_package_name, SPerl_OP* op_packagealias) {
+SPerl_OP* SPerl_OP_build_decl_use(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_package_name, SPerl_OP* op_packagealias) {
   SPerl_OP_sibling_splice(parser, op_use, NULL, 0, op_package_name);
   SPerl_OP_sibling_splice(parser, op_use, op_package_name, 0, op_packagealias);
   
@@ -1287,7 +1287,7 @@ SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_O
   return op_use;
 }
 
-SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_descripters, SPerl_OP* op_type) {
+SPerl_OP* SPerl_OP_build_decl_my(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_descripters, SPerl_OP* op_type) {
   
   SPerl_OP_sibling_splice(parser, op_my, NULL, 0, op_descripters);
   SPerl_OP_sibling_splice(parser, op_my, op_descripters, 0, op_type);
@@ -1317,7 +1317,7 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   return op_var;
 }
 
-SPerl_OP* SPerl_OP_build_declfield(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* op_descripters, SPerl_OP* op_type) {
+SPerl_OP* SPerl_OP_build_decl_field(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* op_descripters, SPerl_OP* op_type) {
   
   // Build OP
   SPerl_OP_sibling_splice(parser, op_has, NULL, 0, op_field_name);
@@ -1354,7 +1354,7 @@ SPerl_ARRAY* SPerl_OP_create_op_descripters_array(SPerl_PARSER* parser, SPerl_OP
   return op_descripters_array;
 }
 
-SPerl_OP* SPerl_OP_build_declsub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_subargs, SPerl_OP* op_descripters, SPerl_OP* op_type, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_decl_sub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_subargs, SPerl_OP* op_descripters, SPerl_OP* op_type, SPerl_OP* op_block) {
   
   // Build OP_SUB
   SPerl_OP_sibling_splice(parser, op_sub, NULL, 0, op_sub_name);
