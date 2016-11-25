@@ -53,8 +53,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
           if (op_use) {
             SPerl_USE* use = op_use->uv.use;
-            SPerl_char* package_name = use->package_name_word->value;
-
+            SPerl_char* package_name = use->op_package_name->uv.word->value;
+            
             SPerl_BODY_CLASS* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
             if (found_package) {
               continue;
@@ -97,7 +97,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               }
               if (!fh) {
                 if (op_use) {
-                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->package_name_word->value, op_use->file, op_use->line);
+                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->op_package_name->uv.word->value, op_use->file, op_use->line);
                 }
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_file);

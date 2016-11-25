@@ -27,7 +27,9 @@ int main(int argc, char *argv[])
   SPerl_USE* use = SPerl_USE_new(parser);
   SPerl_WORD* package_name_word = SPerl_WORD_new(parser);
   package_name_word->value = package_name;
-  use->package_name_word = package_name_word;
+  SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
+  op_package_name->uv.word = package_name_word;
+  use->op_package_name = op_package_name;
   
   // Use OP
   SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_USE, NULL, NULL);

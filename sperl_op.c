@@ -1169,7 +1169,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           if (op_decl->code == SPerl_OP_C_CODE_USE) {
             SPerl_OP* op_use = op_decl;
             SPerl_USE* use = op_use->uv.use;
-            SPerl_char* use_type_name = use->package_name_word->value;
+            SPerl_char* use_type_name = use->op_package_name->uv.word->value;
             SPerl_USE* found_use
               = SPerl_HASH_search(use_symtable, use_type_name, strlen(use_type_name));
             
@@ -1278,7 +1278,7 @@ SPerl_OP* SPerl_OP_build_decluse(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_O
   SPerl_OP_sibling_splice(parser, op_use, op_package_name, 0, op_packagealias);
   
   SPerl_USE* use = SPerl_USE_new(parser);
-  use->package_name_word = op_package_name->uv.word;
+  use->op_package_name = op_package_name;
   op_use->uv.use = use;
   
   return op_use;
