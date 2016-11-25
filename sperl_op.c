@@ -1202,7 +1202,6 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
                 }
               }
               
-              field->body_class = body_class;
               SPerl_ARRAY_push(op_fields, op_has);
               SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
               
