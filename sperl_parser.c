@@ -229,7 +229,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
     }
     else if (code == SPerl_OP_C_CODE_VAR) {
       SPerl_VAR* var = op_cur->uv.var;
-      printf(" \"%s\"", var->name_word->value);
+      printf(" \"%s\"", var->op_name->uv.word->value);
     }
     else if (code == SPerl_OP_C_CODE_WORD) {
       SPerl_WORD* word = op_cur->uv.word;

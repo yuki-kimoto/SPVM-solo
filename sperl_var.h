@@ -4,7 +4,7 @@
 #include "sperl_base.h"
 
 struct SPerl_var {
-  SPerl_WORD* name_word;
+  SPerl_OP* op_name;
   SPerl_MY_VAR* my_var;
   SPerl_int version;
 };

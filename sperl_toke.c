@@ -421,12 +421,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_char* cur_token_ptr = parser->bufptr;
           
           parser->bufptr++;
-
+          
           /* Next is graph */
           while(isalnum(*parser->bufptr) || (*parser->bufptr) == '_' || (*parser->bufptr) == ':') {
             parser->bufptr++;
           }
-
+          
           size_t str_len = parser->bufptr - cur_token_ptr;
           SPerl_char* var_name = SPerl_PARSER_new_string(parser, str_len);
           memcpy(var_name, cur_token_ptr, str_len);
@@ -435,9 +435,16 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_WORD* var_name_word = SPerl_WORD_new(parser);
           var_name_word->value = var_name;
           
+          // 
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_VAR);
           SPerl_VAR* var = SPerl_VAR_new(parser);
-          var->name_word = var_name_word;
+          
+          // Name OP
+          SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
+          op_name->uv.word = var_name_word;
+          
+          var->op_name = op_name;
+          
           op->uv.var = var;
           yylvalp->opval = op;
           

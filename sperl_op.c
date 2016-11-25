@@ -253,7 +253,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_MY_VAR* my_var = NULL;
                 for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
                   SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
-                  if (strcmp(var->name_word->value, my_var_tmp->op_name->uv.word->value) == 0) {
+                  if (strcmp(var->op_name->uv.word->value, my_var_tmp->op_name->uv.word->value) == 0) {
                     my_var = my_var_tmp;
                     break;
                   }
@@ -265,7 +265,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 else {
                   // Error
-                  SPerl_yyerror_format(parser, "\"my %s\" undeclared at %s line %d\n", var->name_word->value, op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(parser, "\"my %s\" undeclared at %s line %d\n", var->op_name->uv.word->value, op_cur->file, op_cur->line);
                   parser->fatal_error = 1;
                   return;
                 }
@@ -1300,7 +1300,7 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
   op_name->file = op_var->file;
   op_name->line = op_var->line;
-  op_name->uv.word = var->name_word;
+  op_name->uv.word = var->op_name->uv.word;
   my_var->op_name = op_name;
   
   // descripters

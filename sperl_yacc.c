@@ -108,7 +108,7 @@ void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
     }
     case VAR: {
       SPerl_VAR* var = yylval.opval->uv.var;
-      fprintf(file, "\"%s\"", var->name_word->value);
+      fprintf(file, "\"%s\"", var->op_name->uv.word->value);
       break;
     }
     case CONSTVALUE: {
