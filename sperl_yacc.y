@@ -21,7 +21,7 @@
 %type <opval> opt_descripters list_descripters descripters enum_values enum_value decl_anon_sub
 %type <opval> type package_name field_name sub_name package packages opt_enum_values type_array
 %type <opval> for_statement while_statement expression opt_packages type_sub types opt_types not_type_sub
-%type <opval> enum_name get_enum_value get_field get_array_elem convert_type
+%type <opval> enum_name get_enum_value field array_elem convert_type
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -351,8 +351,8 @@ term
   | call_sub
   | call_op
   | get_enum_value
-  | get_field
-  | get_array_elem
+  | field
+  | array_elem
   | convert_type
 
 
@@ -363,10 +363,10 @@ convert_type
       $$ = SPerl_OP_build_convert_type(parser, $2, $4);
     }
 
-get_field
+field
   : VAR ARROW field_name
     {
-      $$ = SPerl_OP_build_get_field(parser, $1, $3);
+      $$ = SPerl_OP_build_field(parser, $1, $3);
     }
 
 get_enum_value
@@ -473,7 +473,7 @@ call_op
       $$ = SPerl_OP_build_call_op(parser, $1, $2, NULL);
     }
 
-get_array_elem
+array_elem
   : VAR ARROW '[' term ']'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_AELEM, $1, $4);

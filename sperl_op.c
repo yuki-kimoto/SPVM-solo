@@ -123,7 +123,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "anonsub",
   "type",
   "get_enum_value",
-  "get_field",
+  "field",
   "convert_type",
   "pop",
   "iinc",
@@ -805,19 +805,19 @@ SPerl_OP* SPerl_OP_build_get_enum_value(SPerl_PARSER* parser, SPerl_OP* op_enumn
   return op_get_enum_value;
 }
 
-SPerl_OP* SPerl_OP_build_get_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_fieldname) {
-  SPerl_OP* op_get_field = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETFIELD, NULL, NULL);
-  SPerl_OP_sibling_splice(parser, op_get_field, NULL, 0, op_var);
-  SPerl_OP_sibling_splice(parser, op_get_field, op_var, 0, op_fieldname);
+SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_fieldname) {
+  SPerl_OP* op_field = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETFIELD, NULL, NULL);
+  SPerl_OP_sibling_splice(parser, op_field, NULL, 0, op_var);
+  SPerl_OP_sibling_splice(parser, op_field, op_var, 0, op_fieldname);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_FIELD;
   name->op_var = op_var;
   name->op_base_name = op_fieldname;
   
-  op_get_field->uv.name = name;
+  op_field->uv.name = name;
   
-  return op_get_field;
+  return op_field;
 }
 
 SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term) {
