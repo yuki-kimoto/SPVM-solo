@@ -1090,7 +1090,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
         SPerl_OP* op_enumvalue = op_enumvalues->first;
         while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
           SPerl_ENUM_VALUE* enum_value = SPerl_ENUM_VALUE_new(parser);
-          enum_value->name_word = op_enumvalue->first->uv.word;
+          enum_value->op_name = op_enumvalue->first;
           if (op_enumvalue->last) {
             enum_value->op_constant = op_enumvalue->last;
           }
@@ -1113,7 +1113,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
           }
           
           SPerl_ARRAY_push(enum_values, enum_value);
-          SPerl_char* enum_complete_name = SPerl_OP_create_complete_name(parser, package_name, enum_value->name_word->value);
+          SPerl_char* enum_complete_name = SPerl_OP_create_complete_name(parser, package_name, enum_value->op_name->uv.word->value);
           SPerl_HASH_insert(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name), enum_value);
         }
         

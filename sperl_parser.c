@@ -509,7 +509,7 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
 
 void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_value) {
   if (enum_value) {
-    printf("      name => \"%s\"\n", enum_value->name_word->value);
+    printf("      name => \"%s\"\n", enum_value->op_name->uv.word->value);
     printf("      value => %d\n", enum_value->op_constant->uv.constant->uv.int_value);
   }
   else {
