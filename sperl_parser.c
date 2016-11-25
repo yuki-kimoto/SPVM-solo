@@ -523,7 +523,7 @@ void* SPerl_PARSER_alloc_memory_pool(SPerl_PARSER* parser, SPerl_int size) {
 
 void SPerl_PARSER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
   if (my_var) {
-    printf("          name => \"%s\"\n", my_var->name_word->value);
+    printf("          name => \"%s\"\n", my_var->op_name->uv.word->value);
     
     SPerl_TYPE* type = my_var->op_type->uv.type;
     printf("          type => \"%s\"\n", type->name);

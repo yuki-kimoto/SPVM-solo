@@ -253,7 +253,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_MY_VAR* my_var = NULL;
                 for (SPerl_int i = my_var_stack->length - 1 ; i >= 0; i--) {
                   SPerl_MY_VAR* my_var_tmp = SPerl_ARRAY_fetch(my_var_stack, i);
-                  if (strcmp(var->name_word->value, my_var_tmp->name_word->value) == 0) {
+                  if (strcmp(var->name_word->value, my_var_tmp->op_name->uv.word->value) == 0) {
                     my_var = my_var_tmp;
                     break;
                   }
@@ -279,14 +279,14 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 
                 for (SPerl_int i = my_var_stack->length - 1 ; i >= block_base; i--) {
                   SPerl_MY_VAR* bef_my_var = SPerl_ARRAY_fetch(my_var_stack, i);
-                  if (strcmp(my_var->name_word->value, bef_my_var->name_word->value) == 0) {
+                  if (strcmp(my_var->op_name->uv.word->value, bef_my_var->op_name->uv.word->value) == 0) {
                     found = 1;
                     break;
                   }
                 }
                 
                 if (found) {
-                  SPerl_yyerror_format(parser, "redeclaration of my \"%s\" at %s line %d\n", my_var->name_word->value, op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(parser, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.word->value, op_cur->file, op_cur->line);
                 }
                 else {
                   // Add my var information
@@ -1295,7 +1295,13 @@ SPerl_OP* SPerl_OP_build_declmy(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP*
   // Create my var information
   SPerl_MY_VAR* my_var = SPerl_MY_VAR_new(parser);
   SPerl_VAR* var = op_var->uv.var;
-  my_var->name_word = var->name_word;
+  
+  // Name OP
+  SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
+  op_name->file = op_var->file;
+  op_name->line = op_var->line;
+  op_name->uv.word = var->name_word;
+  my_var->op_name = op_name;
   
   // descripters
   my_var->op_descripters = SPerl_OP_create_op_descripters_array(parser, op_descripters);
