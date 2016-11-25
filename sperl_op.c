@@ -726,13 +726,13 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   
   SPerl_char* sub_abs_name;
   SPerl_OP* op;
-  if (name->op_abs_name) {
-    sub_abs_name = name->op_abs_name->uv.word->value;
-  }
-  else if (name->op_var) {
+  if (name->op_var) {
     SPerl_char* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
     SPerl_char* base_name = name->op_base_name->uv.word->value;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
+  }
+  else if (name->op_abs_name) {
+    sub_abs_name = name->op_abs_name->uv.word->value;
   }
   
   SPerl_int argument_count = name->argument_count;
