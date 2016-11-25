@@ -3,7 +3,7 @@
 
 #include "sperl_type.h"
 #include "sperl_type_component_word.h"
-#include "sperl_type_array.h"
+#include "sperl_type_component_array.h"
 #include "sperl_type_sub.h"
 #include "sperl_parser.h"
 #include "sperl_word.h"
@@ -79,12 +79,12 @@ SPerl_TYPE* SPerl_TYPE_create_array_type(SPerl_PARSER* parser, SPerl_char* type_
   type_w->code = SPerl_TYPE_C_CODE_WORD;
   type_w->uv.type_component_word = type_component_word;
   
-  SPerl_TYPE_ARRAY* type_array = SPerl_TYPE_ARRAY_new(parser);
-  type_array->type = type_w;
+  SPerl_TYPE_COMPONENT_ARRAY* type_component_array = SPerl_TYPE_COMPONENT_ARRAY_new(parser);
+  type_component_array->type = type_w;
 
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_ARRAY;
-  type->uv.type_array = type_array;
+  type->uv.type_component_array = type_component_array;
   
   return type;
 }
@@ -98,9 +98,9 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     SPerl_ARRAY_push(parts, part);
   }
   else if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
-    SPerl_TYPE_ARRAY* type_array = type->uv.type_array;
+    SPerl_TYPE_COMPONENT_ARRAY* type_component_array = type->uv.type_component_array;
     
-    SPerl_TYPE_to_parts(parser, type_array->type, parts);
+    SPerl_TYPE_to_parts(parser, type_component_array->type, parts);
     
     SPerl_TYPE_PART* type_part_openbracket = SPerl_TYPE_PART_new(parser);
     type_part_openbracket->code = SPerl_TYPE_PART_C_CODE_CHAR;

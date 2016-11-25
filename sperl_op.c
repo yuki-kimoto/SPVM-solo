@@ -21,7 +21,7 @@
 #include "sperl_descripter.h"
 #include "sperl_type.h"
 #include "sperl_type_component_word.h"
-#include "sperl_type_array.h"
+#include "sperl_type_component_array.h"
 #include "sperl_type_sub.h"
 #include "sperl_type_part.h"
 #include "sperl_body.h"
@@ -1556,13 +1556,13 @@ SPerl_OP* SPerl_OP_build_wordtype(SPerl_PARSER* parser, SPerl_OP* op_wordtype) {
 SPerl_OP* SPerl_OP_build_arraytype(SPerl_PARSER* parser, SPerl_OP* op_type) {
   
   // Type array
-  SPerl_TYPE_ARRAY* type_array = SPerl_TYPE_ARRAY_new(parser);
-  type_array->type = op_type->uv.type;
+  SPerl_TYPE_COMPONENT_ARRAY* type_component_array = SPerl_TYPE_COMPONENT_ARRAY_new(parser);
+  type_component_array->type = op_type->uv.type;
   
   // Type
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_ARRAY;
-  type->uv.type_array = type_array;
+  type->uv.type_component_array = type_component_array;
   
   // Type OP
   SPerl_OP* op_type_array = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_type, NULL);

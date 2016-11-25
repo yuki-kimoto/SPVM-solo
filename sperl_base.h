@@ -36,17 +36,17 @@ typedef struct SPerl_name SPerl_NAME;
 struct SPerl_type;
 typedef struct SPerl_type SPerl_TYPE;
 
-/* sperl_type_array.h */
+/* sperl_type_component_array.h */
 struct SPerl_type_part;
 typedef struct SPerl_type_part SPerl_TYPE_PART;
 
-/* sperl_type_array.h */
+/* sperl_type_component_array.h */
 struct SPerl_type_component_word;
 typedef struct SPerl_type_component_word SPerl_TYPE_COMPONENT_WORD;
 
-/* sperl_type_array.h */
-struct SPerl_type_array;
-typedef struct SPerl_type_array SPerl_TYPE_ARRAY;
+/* sperl_type_component_array.h */
+struct SPerl_type_component_array;
+typedef struct SPerl_type_component_array SPerl_TYPE_COMPONENT_ARRAY;
 
 /* sperl_type_sub.h */
 struct SPerl_type_sub;
