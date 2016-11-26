@@ -23,11 +23,11 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_TYPE,         // UNKNOWN
   SPerl_OP_C_CODE_DESCRIPTER_ENUM,         // UNKNOWN
   SPerl_OP_C_CODE_CONSTANT,     // CONST
-  SPerl_OP_C_CODE_BIT_NOT,       // UNOP
   SPerl_OP_C_CODE_PRE_INC,       // INTDEC
   SPerl_OP_C_CODE_POST_INC,      // INTDEC
   SPerl_OP_C_CODE_PRE_DEC,       // INTDEC
   SPerl_OP_C_CODE_POST_DEC,      // INTDEC
+  SPerl_OP_C_CODE_BIT_NOT,       // UNOP
   SPerl_OP_C_CODE_COMPLEMENT,   // UNOP
   SPerl_OP_C_CODE_NEGATE,       // UNOP
   SPerl_OP_C_CODE_PLUS,         // UNOP
