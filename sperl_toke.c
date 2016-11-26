@@ -536,7 +536,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           // Keyword
           if (expect != SPerl_TOKE_C_EXPECT_WORD) {
             if (memcmp(keyword, "my", str_len) == 0) {
-              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_DECL_MY);
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_DECL_MY_VAR);
               return MY;
             }
             else if (memcmp(keyword, "has", str_len) == 0) {

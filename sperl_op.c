@@ -90,7 +90,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "CALL_SUB",
   "SUB_ARG",
   "BLOCK",
-  "DECL_MY",
+  "DECL_MY_VAR",
   "DECL_FIELD",
   "COND",
   "USE",
@@ -256,7 +256,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               break;
             }
-            case SPerl_OP_C_CODE_DECL_MY: {
+            case SPerl_OP_C_CODE_DECL_MY_VAR: {
               SPerl_MY_VAR* my_var = op_cur->uv.my_var;
               
               // Serach same name variable
