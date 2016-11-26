@@ -192,11 +192,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_yyerror_format(parser, "must be int or long in increment at %s line %d\n", op_cur->file, op_cur->line);
               }
             }
-            case SPerl_OP_C_GROUP_CONST: {
-              SPerl_SUB* sub = op_sub->uv.sub;
-              SPerl_ARRAY_push(sub->op_constants, op_cur);
-              break;
-            }
             
             case SPerl_OP_C_GROUP_UNOP: {
               SPerl_OP* first = op_cur->first;
@@ -226,6 +221,10 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             
             default:
             switch (op_cur->code) {
+              case SPerl_OP_C_CODE_CONSTANT: {
+                SPerl_ARRAY_push(sub->op_constants, op_cur);
+                break;
+              }
               // End of scope
               case SPerl_OP_C_CODE_BLOCK: {
                 SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
