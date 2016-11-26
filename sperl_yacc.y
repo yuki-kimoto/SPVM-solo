@@ -525,7 +525,7 @@ sub_args
 sub_arg
   : VAR ':' opt_descripters type
     {
-      $$ = SPerl_OP_build_decl_my(parser, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_MY, NULL, NULL), $1, $3, $4);
+      $$ = SPerl_OP_build_decl_my(parser, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_MY, NULL, NULL), $1, $3, $4);
     }
     
 opt_descripters

@@ -60,7 +60,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_CALLSUB,      // UNKNOWN
   SPerl_OP_C_CODE_SUBARG,       // UNKNOWN
   SPerl_OP_C_CODE_BLOCK,        // UNKNOWN
-  SPerl_OP_C_CODE_MY,           // UNKNOWN
+  SPerl_OP_C_CODE_DECL_MY,           // UNKNOWN
   SPerl_OP_C_CODE_DECL_FIELD,   // UNKNOWN
   SPerl_OP_C_CODE_COND,         // UNKNOWN
   SPerl_OP_C_CODE_USE,          // UNKNOWN
