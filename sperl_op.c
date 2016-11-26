@@ -113,7 +113,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "ENUM_BLOCK",
   "ENUM_VALUE",
   "CLASS_BLOCK",
-  "DESCRIPTER",
+  "DECL_DESCRIPTER",
   "DECL_ANON_SUB",
   "TYPE",
   "GET_ENUM_VALUE",

@@ -604,7 +604,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               return ENUM;
             }
             else if (memcmp(keyword, "value", str_len) == 0) {
-              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DESCRIPTER);
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DECL_DESCRIPTER);
               SPerl_DESCRIPTER* descripter = SPerl_DESCRIPTER_new(parser);
               descripter->code = SPerl_DESCRIPTER_C_CODE_VALUE;
               op->uv.descripter = descripter;
