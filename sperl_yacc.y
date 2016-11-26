@@ -19,8 +19,8 @@
 %type <opval> block enum_block class_block decl_sub opt_decl_class_attrs call_sub call_op
 %type <opval> opt_terms terms term sub_args sub_arg opt_sub_args decl_use decl_class_attr decl_class_attrs 
 %type <opval> opt_descripters list_descripters descripters enum_values enum_value decl_anon_sub
-%type <opval> type package_name field_name sub_name package packages opt_enum_values type_array
-%type <opval> for_statement while_statement expression opt_packages type_sub types opt_types not_type_sub
+%type <opval> type package_name field_name sub_name decl_package decl_packages opt_enum_values type_array
+%type <opval> for_statement while_statement expression opt_decl_packages type_sub types opt_types not_type_sub
 %type <opval> enum_name get_enum_value field array_elem convert_type
 
 %right <opval> ASSIGNOP
@@ -42,7 +42,7 @@
 %%
 
 grammar
-  : opt_packages
+  : opt_decl_packages
     {
       $$ = SPerl_OP_build_grammer(parser, $1);
 
@@ -56,12 +56,12 @@ grammar
       }
     }
 
-opt_packages
+opt_decl_packages
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	packages
+  |	decl_packages
     {
       if ($1->code == SPerl_OP_C_CODE_LIST) {
         $$ = $1;
@@ -72,38 +72,38 @@ opt_packages
       }
     }
     
-packages
-  : packages package
+decl_packages
+  : decl_packages decl_package
     {
       $$ = SPerl_OP_append_elem(parser, $1, $2);
     }
-  | package
+  | decl_package
 
-package
+decl_package
   : PACKAGE package_name type ';'
     {
-      $$ = SPerl_OP_build_package(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser), SPerl_OP_newOP_NULL(parser));
+      $$ = SPerl_OP_build_decl_package(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser), SPerl_OP_newOP_NULL(parser));
       if (parser->fatal_error) {
         YYABORT;
       }
     }
   | PACKAGE package_name class_block
     {
-      $$ = SPerl_OP_build_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), SPerl_OP_newOP_LIST(parser), $3);
+      $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), SPerl_OP_newOP_LIST(parser), $3);
       if (parser->fatal_error) {
         YYABORT;
       }
     }
   | PACKAGE package_name ':' list_descripters class_block
     {
-      $$ = SPerl_OP_build_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
+      $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
       if (parser->fatal_error) {
         YYABORT;
       }
     }
   | PACKAGE package_name ':' ENUM enum_block
     {
-      $$ = SPerl_OP_build_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
+      $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
       if (parser->fatal_error) {
         YYABORT;
       }

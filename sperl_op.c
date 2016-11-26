@@ -1024,7 +1024,7 @@ SPerl_char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_char* package_n
   return abs_name;
 }
 
-SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_type, SPerl_OP* op_descripters, SPerl_OP* op_block) {
   SPerl_int i;
   
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_package_name);
