@@ -8,6 +8,7 @@
 
 /* Operation code */
 enum {                          // [GROUP]
+  SPerl_OP_C_CODE_NULL,         // UNKNOWN
   SPerl_OP_C_CODE_GRAMMER,      // UNKNOWN
   SPerl_OP_C_CODE_WORD,         // UNKNOWN
   SPerl_OP_C_CODE_DECL_PACKAGE,      // UNKNOWN
@@ -45,7 +46,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_L2D,          // UNOP
   SPerl_OP_C_CODE_L2F,          // UNOP
   SPerl_OP_C_CODE_L2I,          // UNOP
-  SPerl_OP_C_CODE_NULL,         // UNKNOWN
   SPerl_OP_C_CODE_LT,           // BINOP
   SPerl_OP_C_CODE_LE,           // BINOP
   SPerl_OP_C_CODE_GT,           // BINOP

@@ -38,6 +38,7 @@
 
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
+  "NULL",
   "GRAMMER",
   "WORD",
   "DECL_PACKAGE",
@@ -75,7 +76,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "L2D",
   "L2F",
   "L2I",
-  "NULL",
   "LT",
   "LE",
   "GT",
