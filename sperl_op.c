@@ -179,20 +179,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
           // [START]Postorder traversal position
 
           switch (op_cur->group) {
-            case SPerl_OP_C_GROUP_INCDEC: {
-              SPerl_OP* first = op_cur->first;
-              if (first->code != SPerl_OP_C_CODE_VAR) {
-                SPerl_yyerror_format(parser, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
-              
-              // Only int or long
-              if (first_resolved_type->id != SPerl_BODY_CORE_C_CODE_INT &&  first_resolved_type->id != SPerl_BODY_CORE_C_CODE_LONG) {
-                SPerl_yyerror_format(parser, "must be int or long in increment at %s line %d\n", op_cur->file, op_cur->line);
-              }
-            }
-            
             case SPerl_OP_C_GROUP_UNOP: {
               SPerl_OP* first = op_cur->first;
               SPerl_RESOLVED_TYPE* first_type = SPerl_OP_get_resolved_type(parser, first);
@@ -221,6 +207,23 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             
             default:
             switch (op_cur->code) {
+              case SPerl_OP_C_CODE_PRE_INC:
+              case SPerl_OP_C_CODE_POST_INC:
+              case SPerl_OP_C_CODE_PRE_DEC:
+              case SPerl_OP_C_CODE_POST_DEC: {
+                SPerl_OP* first = op_cur->first;
+                if (first->code != SPerl_OP_C_CODE_VAR) {
+                  SPerl_yyerror_format(parser, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
+                
+                // Only int or long
+                if (first_resolved_type->id != SPerl_BODY_CORE_C_CODE_INT &&  first_resolved_type->id != SPerl_BODY_CORE_C_CODE_LONG) {
+                  SPerl_yyerror_format(parser, "must be int or long in increment at %s line %d\n", op_cur->file, op_cur->line);
+                }
+                break;
+              }
               case SPerl_OP_C_CODE_CONSTANT: {
                 SPerl_ARRAY_push(sub->op_constants, op_cur);
                 break;
