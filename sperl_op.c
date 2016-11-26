@@ -91,7 +91,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "SUB_ARG",
   "BLOCK",
   "MY",
-  "HAS",
+  "DECL_FIELD",
   "COND",
   "USE",
   "RETURN",
