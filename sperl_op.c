@@ -1165,7 +1165,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             }
           }
           // Field
-          else if (op_decl->code == SPerl_OP_C_CODE_HAS) {
+          else if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
             SPerl_OP* op_has = op_decl;
             SPerl_FIELD* field = op_has->uv.field;
             SPerl_char* field_name = field->op_name->uv.word->value;
