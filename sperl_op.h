@@ -60,7 +60,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NOT,          // LOGICALOP
   SPerl_OP_C_CODE_LIST,         // UNKNOWN
   SPerl_OP_C_CODE_PUSHMARK,     // UNKNOWN
-  SPerl_OP_C_CODE_AELEM,        // UNKNOWN
+  SPerl_OP_C_CODE_ARRAY_ELEM,        // UNKNOWN
   SPerl_OP_C_CODE_FIELD,        // UNKNOWN
   SPerl_OP_C_CODE_ASSIGN,       // ASSIGN
   SPerl_OP_C_CODE_CALLSUB,      // UNKNOWN

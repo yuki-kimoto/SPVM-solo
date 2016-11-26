@@ -476,7 +476,7 @@ call_op
 array_elem
   : VAR ARROW '[' term ']'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_AELEM, $1, $4);
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ARRAY_ELEM, $1, $4);
     }
 
 call_sub

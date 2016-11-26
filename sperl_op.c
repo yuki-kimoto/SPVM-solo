@@ -90,7 +90,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NOT",
   "LIST",
   "PUSHMARK",
-  "AELEM",
+  "ARRAY_ELEM",
   "FIELD",
   "ASSIGN",
   "CALL_SUB",
