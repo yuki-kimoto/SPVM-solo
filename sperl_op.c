@@ -177,16 +177,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
       else {
         while (1) {
           // [START]Postorder traversal position
-
-          switch (op_cur->group) {
-            case SPerl_OP_C_GROUP_UNOP: {
-              SPerl_OP* first = op_cur->first;
-              SPerl_RESOLVED_TYPE* first_type = SPerl_OP_get_resolved_type(parser, first);
-              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              
-              break;
-            }
-            case SPerl_OP_C_GROUP_BINOP: {
+          switch (op_cur->code) {
+            case SPerl_OP_C_CODE_ADD: {
               SPerl_OP* first = op_cur->first;
               SPerl_OP* last = op_cur->last;
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
@@ -204,174 +196,171 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               break;
             }
-            
-            default:
-            switch (op_cur->code) {
-              case SPerl_OP_C_CODE_PRE_INC:
-              case SPerl_OP_C_CODE_POST_INC:
-              case SPerl_OP_C_CODE_PRE_DEC:
-              case SPerl_OP_C_CODE_POST_DEC: {
-                SPerl_OP* first = op_cur->first;
-                if (first->code != SPerl_OP_C_CODE_VAR) {
-                  SPerl_yyerror_format(parser, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
-                  break;
-                }
-                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
-                
-                // Only int or long
-                if (first_resolved_type->id != SPerl_BODY_CORE_C_CODE_INT &&  first_resolved_type->id != SPerl_BODY_CORE_C_CODE_LONG) {
-                  SPerl_yyerror_format(parser, "must be int or long in increment at %s line %d\n", op_cur->file, op_cur->line);
-                }
-                break;
-              }
-              case SPerl_OP_C_CODE_CONSTANT: {
-                SPerl_ARRAY_push(sub->op_constants, op_cur);
-                break;
-              }
-              // End of scope
-              case SPerl_OP_C_CODE_BLOCK: {
-                SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
-                if (block_base_ptr) {
-                  SPerl_int block_base = *block_base_ptr;
-                  for (SPerl_int j = 0; j < op_my_var_stack->length - block_base; j++) {
-                    SPerl_ARRAY_pop(op_my_var_stack);
-                  }
-                }
-                SPerl_int* before_block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
-                if (before_block_base_ptr) {
-                  block_base = *before_block_base_ptr;
-                }
-                else {
-                  block_base = 0;
-                }
-                
-                break;
-              }
-              // Add my var
-              case SPerl_OP_C_CODE_VAR: {
-                SPerl_VAR* var = op_cur->uv.var;
-                
-                // Serach same name variable
-                SPerl_OP* op_my_var = NULL;
-                for (SPerl_int i = op_my_var_stack->length - 1 ; i >= 0; i--) {
-                  SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(op_my_var_stack, i);
-                  SPerl_MY_VAR* my_var_tmp = op_my_var_tmp->uv.my_var;
-                  if (strcmp(var->op_name->uv.word->value, my_var_tmp->op_name->uv.word->value) == 0) {
-                    op_my_var = op_my_var_tmp;
-                    break;
-                  }
-                }
-                
-                if (op_my_var) {
-                  // Add my var information to var
-                  var->op_my_var = op_my_var;
-                }
-                else {
-                  // Error
-                  SPerl_yyerror_format(parser, "\"my %s\" undeclared at %s line %d\n", var->op_name->uv.word->value, op_cur->file, op_cur->line);
-                  parser->fatal_error = 1;
-                  return;
-                }
-                break;
-              }
-              case SPerl_OP_C_CODE_MY: {
-                SPerl_MY_VAR* my_var = op_cur->uv.my_var;
-                
-                // Serach same name variable
-                SPerl_int found = 0;
-                
-                for (SPerl_int i = op_my_var_stack->length - 1 ; i >= block_base; i--) {
-                  SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(op_my_var_stack, i);
-                  SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
-                  if (strcmp(my_var->op_name->uv.word->value, bef_my_var->op_name->uv.word->value) == 0) {
-                    found = 1;
-                    break;
-                  }
-                }
-                
-                if (found) {
-                  SPerl_yyerror_format(parser, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.word->value, op_cur->file, op_cur->line);
-                }
-                else {
-                  // Add my var information
-                  my_var->id = parser->next_var_id++;
-                  SPerl_ARRAY_push(op_my_vars, op_cur);
-                  my_var->op_sub = op_sub;
-                  
-                  SPerl_ARRAY_push(op_my_var_stack, op_cur);
-                }
-                break;
-              }
 
-              case SPerl_OP_C_CODE_CALLSUB: {
-                // Check sub name
-                SPerl_NAME* name = op_cur->uv.name;
-                if (!name->anon) {
-                  SPerl_OP_check_sub_name(parser, op_cur);
-                  if (parser->fatal_error) {
-                    return;
-                  }
-                }
+            case SPerl_OP_C_CODE_PRE_INC:
+            case SPerl_OP_C_CODE_POST_INC:
+            case SPerl_OP_C_CODE_PRE_DEC:
+            case SPerl_OP_C_CODE_POST_DEC: {
+              SPerl_OP* first = op_cur->first;
+              if (first->code != SPerl_OP_C_CODE_VAR) {
+                SPerl_yyerror_format(parser, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
-              case SPerl_OP_C_CODE_GET_FIELD: {
-                // Check field name
-                SPerl_NAME* name = op_cur->uv.name;
-                SPerl_OP_check_field_name(parser, name);
-                if (parser->fatal_error) {
-                  return;
-                }
-                break;
-              }
-              case SPerl_OP_C_CODE_GET_ENUM_VALUE: {
-                // Check enum name
-                SPerl_NAME* name = op_cur->uv.name;
-                SPerl_OP_check_enum_name(parser, name);
-                if (parser->fatal_error) {
-                  return;
-                }
-
-                SPerl_char* enum_complete_name = name->complete_name;
-                SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
-                SPerl_OP* op_constant = enum_value->op_constant;
-                SPerl_CONSTANT* constant = op_constant->uv.constant;
-                
-                // new const value
-                SPerl_CONSTANT* new_constant = SPerl_CONSTANT_new(parser);
-                new_constant->code = SPerl_CONSTANT_C_CODE_INT;
-                new_constant->uv.int_value = constant->uv.int_value;
-                new_constant->resolved_type = constant->resolved_type;
-                SPerl_OP* new_op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTANT, NULL, NULL);
-                new_op_constant->uv.constant = new_constant;
-                
-                SPerl_ARRAY_push(sub->op_constants, new_op_constant);
-                
-                // Replace get_enum_value to const
-                SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_CONSTANT);
-                op_cur->uv.constant = new_constant;
-                op_cur->first = NULL;
-                
-                break;
-              }
-              case SPerl_OP_C_CODE_CONVERT_TYPE: {
-                SPerl_OP* op_type_dist = op_cur->first;
-                SPerl_TYPE* type_dist = op_type_dist->uv.type;
-                SPerl_RESOLVED_TYPE* resolved_type_dist = type_dist->resolved_type;
-                
-                SPerl_OP* op_term = op_cur->last;
-                SPerl_RESOLVED_TYPE* resolved_type_src = SPerl_OP_get_resolved_type(parser, op_term);
-                
-                // Can receive only core type
-                if (!SPerl_TYPE_is_core_type(parser, resolved_type_src->id) || !SPerl_TYPE_is_core_type(parser, resolved_type_dist->id)) {
-                  SPerl_yyerror_format(parser, "can't convert type %s to %s at %s line %d\n",
-                    resolved_type_src->name, resolved_type_dist->name, op_cur->file, op_cur->line);
-                }
-                
-                // Resolve convert_type op
-                SPerl_OP_resolve_convert_type(parser, op_cur, resolved_type_src, resolved_type_dist);
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
+              
+              // Only int or long
+              if (first_resolved_type->id != SPerl_BODY_CORE_C_CODE_INT &&  first_resolved_type->id != SPerl_BODY_CORE_C_CODE_LONG) {
+                SPerl_yyerror_format(parser, "must be int or long in increment at %s line %d\n", op_cur->file, op_cur->line);
               }
               break;
             }
+            case SPerl_OP_C_CODE_CONSTANT: {
+              SPerl_ARRAY_push(sub->op_constants, op_cur);
+              break;
+            }
+            // End of scope
+            case SPerl_OP_C_CODE_BLOCK: {
+              SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
+              if (block_base_ptr) {
+                SPerl_int block_base = *block_base_ptr;
+                for (SPerl_int j = 0; j < op_my_var_stack->length - block_base; j++) {
+                  SPerl_ARRAY_pop(op_my_var_stack);
+                }
+              }
+              SPerl_int* before_block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
+              if (before_block_base_ptr) {
+                block_base = *before_block_base_ptr;
+              }
+              else {
+                block_base = 0;
+              }
+              
+              break;
+            }
+            // Add my var
+            case SPerl_OP_C_CODE_VAR: {
+              SPerl_VAR* var = op_cur->uv.var;
+              
+              // Serach same name variable
+              SPerl_OP* op_my_var = NULL;
+              for (SPerl_int i = op_my_var_stack->length - 1 ; i >= 0; i--) {
+                SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(op_my_var_stack, i);
+                SPerl_MY_VAR* my_var_tmp = op_my_var_tmp->uv.my_var;
+                if (strcmp(var->op_name->uv.word->value, my_var_tmp->op_name->uv.word->value) == 0) {
+                  op_my_var = op_my_var_tmp;
+                  break;
+                }
+              }
+              
+              if (op_my_var) {
+                // Add my var information to var
+                var->op_my_var = op_my_var;
+              }
+              else {
+                // Error
+                SPerl_yyerror_format(parser, "\"my %s\" undeclared at %s line %d\n", var->op_name->uv.word->value, op_cur->file, op_cur->line);
+                parser->fatal_error = 1;
+                return;
+              }
+              break;
+            }
+            case SPerl_OP_C_CODE_MY: {
+              SPerl_MY_VAR* my_var = op_cur->uv.my_var;
+              
+              // Serach same name variable
+              SPerl_int found = 0;
+              
+              for (SPerl_int i = op_my_var_stack->length - 1 ; i >= block_base; i--) {
+                SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(op_my_var_stack, i);
+                SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
+                if (strcmp(my_var->op_name->uv.word->value, bef_my_var->op_name->uv.word->value) == 0) {
+                  found = 1;
+                  break;
+                }
+              }
+              
+              if (found) {
+                SPerl_yyerror_format(parser, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.word->value, op_cur->file, op_cur->line);
+              }
+              else {
+                // Add my var information
+                my_var->id = parser->next_var_id++;
+                SPerl_ARRAY_push(op_my_vars, op_cur);
+                my_var->op_sub = op_sub;
+                
+                SPerl_ARRAY_push(op_my_var_stack, op_cur);
+              }
+              break;
+            }
+
+            case SPerl_OP_C_CODE_CALLSUB: {
+              // Check sub name
+              SPerl_NAME* name = op_cur->uv.name;
+              if (!name->anon) {
+                SPerl_OP_check_sub_name(parser, op_cur);
+                if (parser->fatal_error) {
+                  return;
+                }
+              }
+              break;
+            }
+            case SPerl_OP_C_CODE_GET_FIELD: {
+              // Check field name
+              SPerl_NAME* name = op_cur->uv.name;
+              SPerl_OP_check_field_name(parser, name);
+              if (parser->fatal_error) {
+                return;
+              }
+              break;
+            }
+            case SPerl_OP_C_CODE_GET_ENUM_VALUE: {
+              // Check enum name
+              SPerl_NAME* name = op_cur->uv.name;
+              SPerl_OP_check_enum_name(parser, name);
+              if (parser->fatal_error) {
+                return;
+              }
+
+              SPerl_char* enum_complete_name = name->complete_name;
+              SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
+              SPerl_OP* op_constant = enum_value->op_constant;
+              SPerl_CONSTANT* constant = op_constant->uv.constant;
+              
+              // new const value
+              SPerl_CONSTANT* new_constant = SPerl_CONSTANT_new(parser);
+              new_constant->code = SPerl_CONSTANT_C_CODE_INT;
+              new_constant->uv.int_value = constant->uv.int_value;
+              new_constant->resolved_type = constant->resolved_type;
+              SPerl_OP* new_op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTANT, NULL, NULL);
+              new_op_constant->uv.constant = new_constant;
+              
+              SPerl_ARRAY_push(sub->op_constants, new_op_constant);
+              
+              // Replace get_enum_value to const
+              SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_CONSTANT);
+              op_cur->uv.constant = new_constant;
+              op_cur->first = NULL;
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_CONVERT_TYPE: {
+              SPerl_OP* op_type_dist = op_cur->first;
+              SPerl_TYPE* type_dist = op_type_dist->uv.type;
+              SPerl_RESOLVED_TYPE* resolved_type_dist = type_dist->resolved_type;
+              
+              SPerl_OP* op_term = op_cur->last;
+              SPerl_RESOLVED_TYPE* resolved_type_src = SPerl_OP_get_resolved_type(parser, op_term);
+              
+              // Can receive only core type
+              if (!SPerl_TYPE_is_core_type(parser, resolved_type_src->id) || !SPerl_TYPE_is_core_type(parser, resolved_type_dist->id)) {
+                SPerl_yyerror_format(parser, "can't convert type %s to %s at %s line %d\n",
+                  resolved_type_src->name, resolved_type_dist->name, op_cur->file, op_cur->line);
+              }
+              
+              // Resolve convert_type op
+              SPerl_OP_resolve_convert_type(parser, op_cur, resolved_type_src, resolved_type_dist);
+            }
+            break;
           }
           
           // [END]Postorder traversal position
