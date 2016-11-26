@@ -545,7 +545,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               return HAS;
             }
             else if (memcmp(keyword, "sub", str_len) == 0) {
-              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_SUB);
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_DECL_SUB);
               parser->expect = SPerl_TOKE_C_EXPECT_WORD;
               return SUB;
             }

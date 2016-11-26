@@ -268,7 +268,7 @@ decl_my
 decl_anon_sub
  : SUB '(' opt_sub_args ')' ':' opt_descripters type block
      {
-       $1->code = SPerl_OP_C_CODE_ANON_SUB;
+       $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
        $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
      }
 
