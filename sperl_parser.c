@@ -205,28 +205,28 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
     }
     SPerl_int code = op_cur->code;
     printf("%s", SPerl_OP_C_CODE_NAMES[code]);
-    if (op_cur->group == SPerl_OP_C_GROUP_CONST) {
+    if (op_cur->code == SPerl_OP_C_CODE_CONSTANT) {
       SPerl_CONSTANT* constant = op_cur->uv.constant;
-      switch(op_cur->code) {
-        case SPerl_OP_C_CODE_CONST_BOOLEAN:
+      switch (constant->code) {
+        case SPerl_CONSTANT_C_CODE_BOOLEAN:
           printf(" %d", constant->uv.int_value);
           break;
-        case SPerl_OP_C_CODE_CONST_CHAR:
+        case SPerl_CONSTANT_C_CODE_CHAR:
           printf(" '%c'", constant->uv.int_value);
           break;
-        case SPerl_OP_C_CODE_CONST_INT:
+        case SPerl_CONSTANT_C_CODE_INT:
           printf(" %d", constant->uv.int_value);
           break;
-        case SPerl_OP_C_CODE_CONST_LONG:
+        case SPerl_CONSTANT_C_CODE_LONG:
           printf(" %ld", constant->uv.long_value);
           break;
-        case SPerl_OP_C_CODE_CONST_FLOAT:
+        case SPerl_CONSTANT_C_CODE_FLOAT:
           printf(" %f", constant->uv.float_value);
           break;
-        case SPerl_OP_C_CODE_CONST_DOUBLE:
+        case SPerl_CONSTANT_C_CODE_DOUBLE:
           printf(" %f", constant->uv.double_value);
           break;
-        case SPerl_OP_C_CODE_CONST_STRING:
+        case SPerl_CONSTANT_C_CODE_STRING:
           printf(" \"%s\"", constant->uv.string_value);
           break;
       }

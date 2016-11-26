@@ -8,13 +8,7 @@
 
 /* Operation code */
 enum {                          // [GROUP]
-  SPerl_OP_C_CODE_CONST_BOOLEAN, // CONST
-  SPerl_OP_C_CODE_CONST_CHAR,    // CONST
-  SPerl_OP_C_CODE_CONST_INT,     // CONST
-  SPerl_OP_C_CODE_CONST_LONG,    // CONST
-  SPerl_OP_C_CODE_CONST_FLOAT,   // CONST
-  SPerl_OP_C_CODE_CONST_DOUBLE,  // CONST
-  SPerl_OP_C_CODE_CONST_STRING,  // CONST
+  SPerl_OP_C_CODE_CONSTANT,     // CONST
   SPerl_OP_C_CODE_BIT_NOT,       // UNOP
   SPerl_OP_C_CODE_PRE_INC,       // INTDEC
   SPerl_OP_C_CODE_POST_INC,      // INTDEC

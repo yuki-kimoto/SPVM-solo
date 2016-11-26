@@ -339,13 +339,13 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 new_constant->code = SPerl_CONSTANT_C_CODE_INT;
                 new_constant->uv.int_value = constant->uv.int_value;
                 new_constant->resolved_type = constant->resolved_type;
-                SPerl_OP* new_op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONST_INT, NULL, NULL);
+                SPerl_OP* new_op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTANT, NULL, NULL);
                 new_op_constant->uv.constant = new_constant;
                 
                 SPerl_ARRAY_push(sub->op_constants, new_op_constant);
                 
                 // Replace get_enum_value to const
-                SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_CONST_INT);
+                SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_CONSTANT);
                 op_cur->uv.constant = new_constant;
                 op_cur->first = NULL;
                 
@@ -1107,7 +1107,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             constant->code = SPerl_CONSTANT_C_CODE_INT;
             constant->uv.int_value = start_value;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-            SPerl_OP* op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONST_INT, NULL, NULL);
+            SPerl_OP* op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTANT, NULL, NULL);
             op_constant->uv.constant = constant;
             
             enum_value->op_constant = op_constant;
@@ -1633,13 +1633,7 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
   SPerl_int group = 0;
   switch (op_code) {
     // Constant value
-    case SPerl_OP_C_CODE_CONST_BOOLEAN:
-    case SPerl_OP_C_CODE_CONST_CHAR:
-    case SPerl_OP_C_CODE_CONST_INT:
-    case SPerl_OP_C_CODE_CONST_LONG:
-    case SPerl_OP_C_CODE_CONST_FLOAT:
-    case SPerl_OP_C_CODE_CONST_DOUBLE:
-    case SPerl_OP_C_CODE_CONST_STRING:
+    case SPerl_OP_C_CODE_CONSTANT:
       group = SPerl_OP_C_GROUP_CONST;
       break;
     

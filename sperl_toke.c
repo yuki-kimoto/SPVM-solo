@@ -363,7 +363,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         
         // Constant 
-        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONST_CHAR);
+        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTANT);
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
         constant->code = SPerl_CONSTANT_C_CODE_CHAR;
         constant->uv.int_value = ch;
@@ -404,7 +404,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           parser->bufptr++;
         }
         
-        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONST_STRING);
+        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTANT);
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
         constant->code = SPerl_CONSTANT_C_CODE_STRING;
         constant->uv.string_value = str;
@@ -483,7 +483,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             double num = strtod(num_str, &ends);
             free(num_str);
 
-            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONST_DOUBLE);
+            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTANT);
             SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
             constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
             constant->uv.double_value = num;
@@ -498,7 +498,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             SPerl_int num = atoi(num_str);
             free(num_str);
             
-            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONST_INT);
+            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTANT);
             SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
             constant->code = SPerl_CONSTANT_C_CODE_INT;
             constant->uv.int_value = num;
@@ -613,7 +613,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               return DESCRIPTER;
             }
             else if (memcmp(keyword, "true", str_len) == 0) {
-              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONST_BOOLEAN);
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTANT);
               SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
               constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
               constant->uv.int_value = 1;
@@ -624,7 +624,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               return CONSTVALUE;
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
-              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONST_BOOLEAN);
+              SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTANT);
               SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
               constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
               constant->uv.int_value = 0;
