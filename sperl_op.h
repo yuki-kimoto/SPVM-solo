@@ -8,6 +8,7 @@
 
 /* Operation code */
 enum {                          // [GROUP]
+  SPerl_OP_C_CODE_DECL_PACKAGE,      // UNKNOWN
   SPerl_OP_C_CODE_DECL_MY_VAR,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_FIELD,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_SUB,          // UNKNOWN
@@ -70,7 +71,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_RETURN,       // UNKNOWN
   SPerl_OP_C_CODE_LAST,         // UNKNOWN
   SPerl_OP_C_CODE_NEXT,         // UNKNOWN
-  SPerl_OP_C_CODE_PACKAGE,      // UNKNOWN
   SPerl_OP_C_CODE_LOOP,         // UNKNOWN
   SPerl_OP_C_CODE_VAR,          // UNKNOWN
   SPerl_OP_C_CODE_STATEMENT,    // UNKNOWN

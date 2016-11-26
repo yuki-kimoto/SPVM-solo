@@ -116,7 +116,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     package->op_type = op_type;
     
     // Package OP
-    SPerl_OP* op_package = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PACKAGE, NULL, NULL);
+    SPerl_OP* op_package = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_PACKAGE, NULL, NULL);
     op_package->uv.package = package;
     
     SPerl_ARRAY_push(parser->op_packages, op_package);

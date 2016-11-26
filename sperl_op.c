@@ -38,6 +38,7 @@
 
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
+  "DECL_PACKAGE",
   "DECL_MY_VAR",
   "DECL_FIELD",
   "DECL_SUB",
@@ -100,7 +101,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "RETURN",
   "LAST",
   "NEXT",
-  "PACKAGE",
   "LOOP",
   "VAR",
   "STATEMENT",

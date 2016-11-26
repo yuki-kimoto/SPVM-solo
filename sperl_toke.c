@@ -560,7 +560,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               // Next is package name
               parser->expect = SPerl_TOKE_C_EXPECT_PACKAGENAME;
               
-              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_PACKAGE);
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_DECL_PACKAGE);
               return PACKAGE;
             }
             else if (memcmp(keyword, "if", str_len) == 0) {
