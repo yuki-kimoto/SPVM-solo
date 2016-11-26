@@ -111,7 +111,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "ELSE",
   "FOR",
   "WHILE",
-  "ENUM",
+  "DESCRIPTER_ENUM",
   "ENUM_BLOCK",
   "ENUM_VALUE",
   "CLASS_BLOCK",
@@ -1057,7 +1057,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       body->op_name = op_package_name;
       
       // Enum type
-      if (op_descripters->code == SPerl_OP_C_CODE_ENUM) {
+      if (op_descripters->code == SPerl_OP_C_CODE_DESCRIPTER_ENUM) {
         body->code = SPerl_BODY_C_CODE_ENUM;
         
         // Enum values

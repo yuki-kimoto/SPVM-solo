@@ -81,7 +81,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_ELSE,         // UNKNOWN
   SPerl_OP_C_CODE_FOR,          // UNKNOWN
   SPerl_OP_C_CODE_WHILE,        // UNKNOWN
-  SPerl_OP_C_CODE_ENUM,         // UNKNOWN
+  SPerl_OP_C_CODE_DESCRIPTER_ENUM,         // UNKNOWN
   SPerl_OP_C_CODE_ENUM_BLOCK,    // UNKNOWN
   SPerl_OP_C_CODE_ENUM_VALUE,    // UNKNOWN
   SPerl_OP_C_CODE_CLASS_BLOCK,   // UNKNOWN

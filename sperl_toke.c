@@ -600,7 +600,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               return WHILE;
             }
             else if (memcmp(keyword, "enum", str_len) == 0) {
-              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_ENUM);
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_DESCRIPTER_ENUM);
               return ENUM;
             }
             else if (memcmp(keyword, "value", str_len) == 0) {
