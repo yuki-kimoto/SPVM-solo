@@ -39,6 +39,7 @@
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NULL",
+  "LIST",
   "GRAMMER",
   "WORD",
   "DECL_PACKAGE",
@@ -95,7 +96,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "AND",
   "OR",
   "NOT",
-  "LIST",
   "PUSHMARK",
   "ARRAY_ELEM",
   "FIELD",

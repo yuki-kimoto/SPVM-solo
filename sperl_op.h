@@ -9,6 +9,7 @@
 /* Operation code */
 enum {                          // [GROUP]
   SPerl_OP_C_CODE_NULL,         // UNKNOWN
+  SPerl_OP_C_CODE_LIST,         // UNKNOWN
   SPerl_OP_C_CODE_GRAMMER,      // UNKNOWN
   SPerl_OP_C_CODE_WORD,         // UNKNOWN
   SPerl_OP_C_CODE_DECL_PACKAGE,      // UNKNOWN
@@ -65,7 +66,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_AND,          // LOGICALOP
   SPerl_OP_C_CODE_OR,           // LOGICALOP
   SPerl_OP_C_CODE_NOT,          // LOGICALOP
-  SPerl_OP_C_CODE_LIST,         // UNKNOWN
   SPerl_OP_C_CODE_PUSHMARK,     // UNKNOWN
   SPerl_OP_C_CODE_ARRAY_ELEM,        // UNKNOWN
   SPerl_OP_C_CODE_FIELD,        // UNKNOWN
