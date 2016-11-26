@@ -193,10 +193,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               // Insert type converting op
               SPerl_OP_insert_type_convert_op(parser, op_cur, first_resolved_type->id, last_resolved_type->id);
               
-              
               break;
             }
-
+            
             case SPerl_OP_C_CODE_PRE_INC:
             case SPerl_OP_C_CODE_POST_INC:
             case SPerl_OP_C_CODE_PRE_DEC:
@@ -1610,82 +1609,6 @@ SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first,
 
 void SPerl_OP_replace_code(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int code) {
   op->code = code;
-  op->group = SPerl_OP_get_group(parser, code);
-}
-
-SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
-  
-  // Group
-  SPerl_int group = 0;
-  switch (op_code) {
-    // Constant value
-    case SPerl_OP_C_CODE_CONSTANT:
-      group = SPerl_OP_C_GROUP_CONST;
-      break;
-    
-    // Logical OP
-    case SPerl_OP_C_CODE_AND:
-    case SPerl_OP_C_CODE_OR:
-    case SPerl_OP_C_CODE_NOT:
-      group = SPerl_OP_C_GROUP_LOGICALOP;
-      break;
-    
-    // Assign OP
-    case SPerl_OP_C_CODE_ASSIGN:
-      group = SPerl_OP_C_GROUP_ASSIGNOP;
-      break;
-    
-    // Binary OP
-    case SPerl_OP_C_CODE_LT:
-    case SPerl_OP_C_CODE_LE:
-    case SPerl_OP_C_CODE_GT:
-    case SPerl_OP_C_CODE_GE:
-    case SPerl_OP_C_CODE_ADD:
-    case SPerl_OP_C_CODE_SUBTRACT:
-    case SPerl_OP_C_CODE_MULTIPLY:
-    case SPerl_OP_C_CODE_DIVIDE:
-    case SPerl_OP_C_CODE_BIT_AND:
-    case SPerl_OP_C_CODE_BIT_OR:
-    case SPerl_OP_C_CODE_MODULO:
-    case SPerl_OP_C_CODE_BIT_XOR:
-    case SPerl_OP_C_CODE_EQ:
-    case SPerl_OP_C_CODE_NE:
-    case SPerl_OP_C_CODE_LEFT_SHIFT:
-    case SPerl_OP_C_CODE_RIGHT_SHIFT:
-      group = SPerl_OP_C_GROUP_BINOP;
-      break;
-    
-    // Unary op
-    case SPerl_OP_C_CODE_BIT_NOT:
-    case SPerl_OP_C_CODE_COMPLEMENT:
-    case SPerl_OP_C_CODE_NEGATE:
-    case SPerl_OP_C_CODE_PLUS:
-    case SPerl_OP_C_CODE_D2F:
-    case SPerl_OP_C_CODE_D2I:
-    case SPerl_OP_C_CODE_D2L:
-    case SPerl_OP_C_CODE_F2D:
-    case SPerl_OP_C_CODE_F2I:
-    case SPerl_OP_C_CODE_F2L:
-    case SPerl_OP_C_CODE_I2B:
-    case SPerl_OP_C_CODE_I2C:
-    case SPerl_OP_C_CODE_I2D:
-    case SPerl_OP_C_CODE_I2F:
-    case SPerl_OP_C_CODE_I2L:
-    case SPerl_OP_C_CODE_I2S:
-    case SPerl_OP_C_CODE_L2D:
-    case SPerl_OP_C_CODE_L2F:
-    case SPerl_OP_C_CODE_L2I:
-      group = SPerl_OP_C_GROUP_UNOP;
-      break;
-    case SPerl_OP_C_CODE_PRE_INC:
-    case SPerl_OP_C_CODE_POST_INC:
-    case SPerl_OP_C_CODE_PRE_DEC:
-    case SPerl_OP_C_CODE_POST_DEC:
-      group = SPerl_OP_C_GROUP_INCDEC;
-      break;
-  }
-  
-  return group;
 }
 
 SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int code, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
@@ -1711,9 +1634,6 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int code, SPerl_OP* fi
   else if (first) {
     SPerl_OP_lastsib_set(parser, op->first, op);
   }
-  
-  // Set group
-  op->group = SPerl_OP_get_group(parser, code);
   
   return op;
 }
