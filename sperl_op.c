@@ -117,7 +117,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "DECL_ANON_SUB",
   "TYPE",
   "GET_ENUM_VALUE",
-  "FIELD",
   "CONVERT_TYPE",
   "POP",
   "IINC",
@@ -297,7 +296,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               break;
             }
-            case SPerl_OP_C_CODE_GET_FIELD: {
+            case SPerl_OP_C_CODE_FIELD: {
               // Check field name
               SPerl_NAME* name = op_cur->uv.name;
               SPerl_OP_check_field_name(parser, name);
@@ -411,7 +410,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
       resolved_type = enum_value->op_constant->uv.constant->resolved_type;
       break;
     }
-    case SPerl_OP_C_CODE_GET_FIELD: {
+    case SPerl_OP_C_CODE_FIELD: {
       SPerl_NAME* name = op->uv.name;
       SPerl_char* complete_name = name->complete_name;
       SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
@@ -785,7 +784,7 @@ SPerl_OP* SPerl_OP_build_get_enum_value(SPerl_PARSER* parser, SPerl_OP* op_enumn
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_fieldname) {
-  SPerl_OP* op_field = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GET_FIELD, NULL, NULL);
+  SPerl_OP* op_field = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_FIELD, NULL, NULL);
   SPerl_OP_sibling_splice(parser, op_field, NULL, 0, op_var);
   SPerl_OP_sibling_splice(parser, op_field, op_var, 0, op_fieldname);
   

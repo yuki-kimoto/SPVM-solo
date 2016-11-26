@@ -87,7 +87,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_DECL_ANON_SUB,      // UNKNOWN
   SPerl_OP_C_CODE_TYPE,         // UNKNOWN
   SPerl_OP_C_CODE_GET_ENUM_VALUE, // UNKNOWN
-  SPerl_OP_C_CODE_GET_FIELD,     // UNKNOWN
   SPerl_OP_C_CODE_CONVERT_TYPE,  // UNKNOWN
   SPerl_OP_C_CODE_POP,          // UNKNOWN
 };
