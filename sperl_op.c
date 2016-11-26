@@ -38,6 +38,11 @@
 
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
+  "DECL_MY_VAR",
+  "DECL_FIELD",
+  "DECL_SUB",
+  "DECL_DESCRIPTER",
+  "DECL_ANON_SUB",
   "CONSTANT",
   "BIT_NOT",
   "PRE_INC",
@@ -90,8 +95,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "CALL_SUB",
   "SUB_ARG",
   "BLOCK",
-  "DECL_MY_VAR",
-  "DECL_FIELD",
   "COND",
   "USE",
   "RETURN",
@@ -99,7 +102,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NEXT",
   "PACKAGE",
   "LOOP",
-  "DECL_SUB",
   "VAR",
   "STATEMENT",
   "GRAMMER",
@@ -113,8 +115,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "ENUM_BLOCK",
   "ENUM_VALUE",
   "CLASS_BLOCK",
-  "DECL_DESCRIPTER",
-  "DECL_ANON_SUB",
   "TYPE",
   "GET_ENUM_VALUE",
   "CONVERT_TYPE",
