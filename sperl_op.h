@@ -14,6 +14,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_DECL_SUB,          // UNKNOWN
   SPerl_OP_C_CODE_DECL_DESCRIPTER,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_ANON_SUB,      // UNKNOWN
+  SPerl_OP_C_CODE_DECL_ENUM_VALUE,    // UNKNOWN
   SPerl_OP_C_CODE_CONSTANT,     // CONST
   SPerl_OP_C_CODE_BIT_NOT,       // UNOP
   SPerl_OP_C_CODE_PRE_INC,       // INTDEC
@@ -83,7 +84,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_WHILE,        // UNKNOWN
   SPerl_OP_C_CODE_DESCRIPTER_ENUM,         // UNKNOWN
   SPerl_OP_C_CODE_ENUM_BLOCK,    // UNKNOWN
-  SPerl_OP_C_CODE_ENUM_VALUE,    // UNKNOWN
   SPerl_OP_C_CODE_CLASS_BLOCK,   // UNKNOWN
   SPerl_OP_C_CODE_TYPE,         // UNKNOWN
   SPerl_OP_C_CODE_GET_ENUM_VALUE, // UNKNOWN
