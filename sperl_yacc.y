@@ -112,7 +112,7 @@ package
 enum_block 
   : '{' opt_enum_values '}'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ENUMBLOCK, $2, NULL);
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ENUM_BLOCK, $2, NULL);
     }
 
 opt_enum_values
@@ -141,11 +141,11 @@ enum_values
 enum_value
   : WORD
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ENUMVALUE, $1, NULL);
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ENUM_VALUE, $1, NULL);
     }
   | WORD ASSIGNOP CONSTVALUE
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ENUMVALUE, $1, $3);
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ENUM_VALUE, $1, $3);
     }
 
 opt_statements
@@ -268,7 +268,7 @@ decl_my
 decl_anon_sub
  : SUB '(' opt_sub_args ')' ':' opt_descripters type block
      {
-       $1->code = SPerl_OP_C_CODE_ANONSUB;
+       $1->code = SPerl_OP_C_CODE_ANON_SUB;
        $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
      }
 
@@ -303,7 +303,7 @@ decl_class_attr
 class_block
   : '{' opt_decl_class_attrs '}'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CLASSBLOCK, $2, NULL);
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CLASS_BLOCK, $2, NULL);
     }
 
 expression
@@ -392,28 +392,28 @@ call_op
     }
   | INCOP term
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PREINC, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PRE_INC, NULL, NULL);
       op->file = $1->file;
       op->line = $1->line;
       $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
     }
   | term INCOP
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POSTINC, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POST_INC, NULL, NULL);
       op->file = $2->file;
       op->line = $2->line;
       $$ = SPerl_OP_build_call_op(parser, op, $1, NULL);
     }
   | DECOP term
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PREDEC, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PRE_DEC, NULL, NULL);
       op->file = $1->file;
       op->line = $1->line;
       $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
     }
   | term DECOP
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POSTDEC, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POST_DEC, NULL, NULL);
       op->file = $2->file;
       op->line = $2->line;
       $$ = SPerl_OP_build_call_op(parser, op, $1, NULL);

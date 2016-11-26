@@ -312,7 +312,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 break;
               }
-              case SPerl_OP_C_CODE_GETFIELD: {
+              case SPerl_OP_C_CODE_GET_FIELD: {
                 // Check field name
                 SPerl_NAME* name = op_cur->uv.name;
                 SPerl_OP_check_field_name(parser, name);
@@ -321,7 +321,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 break;
               }
-              case SPerl_OP_C_CODE_GETENUMVALUE: {
+              case SPerl_OP_C_CODE_GET_ENUM_VALUE: {
                 // Check enum name
                 SPerl_NAME* name = op_cur->uv.name;
                 SPerl_OP_check_enum_name(parser, name);
@@ -339,19 +339,19 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 new_constant->code = SPerl_CONSTANT_C_CODE_INT;
                 new_constant->uv.int_value = constant->uv.int_value;
                 new_constant->resolved_type = constant->resolved_type;
-                SPerl_OP* new_op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTINT, NULL, NULL);
+                SPerl_OP* new_op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONST_INT, NULL, NULL);
                 new_op_constant->uv.constant = new_constant;
                 
                 SPerl_ARRAY_push(sub->op_constants, new_op_constant);
                 
                 // Replace get_enum_value to const
-                SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_CONSTINT);
+                SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_CONST_INT);
                 op_cur->uv.constant = new_constant;
                 op_cur->first = NULL;
                 
                 break;
               }
-              case SPerl_OP_C_CODE_CONVERTTYPE: {
+              case SPerl_OP_C_CODE_CONVERT_TYPE: {
                 SPerl_OP* op_type_dist = op_cur->first;
                 SPerl_TYPE* type_dist = op_type_dist->uv.type;
                 SPerl_RESOLVED_TYPE* resolved_type_dist = type_dist->resolved_type;
@@ -424,14 +424,14 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
         resolved_type = sub->op_return_type->uv.type->resolved_type;
         break;
       }
-      case SPerl_OP_C_CODE_GETENUMVALUE: {
+      case SPerl_OP_C_CODE_GET_ENUM_VALUE: {
         SPerl_NAME* name = op->uv.name;
         SPerl_char* complete_name = name->complete_name;
         SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
         resolved_type = enum_value->op_constant->uv.constant->resolved_type;
         break;
       }
-      case SPerl_OP_C_CODE_GETFIELD: {
+      case SPerl_OP_C_CODE_GET_FIELD: {
         SPerl_NAME* name = op->uv.name;
         SPerl_char* complete_name = name->complete_name;
         SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
@@ -794,7 +794,7 @@ void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name) {
 }
 
 SPerl_OP* SPerl_OP_build_get_enum_value(SPerl_PARSER* parser, SPerl_OP* op_enumname) {
-  SPerl_OP* op_get_enum_value = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETENUMVALUE, op_enumname, NULL);
+  SPerl_OP* op_get_enum_value = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GET_ENUM_VALUE, op_enumname, NULL);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
   name->code = SPerl_NAME_C_CODE_ENUM;
@@ -806,7 +806,7 @@ SPerl_OP* SPerl_OP_build_get_enum_value(SPerl_PARSER* parser, SPerl_OP* op_enumn
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_fieldname) {
-  SPerl_OP* op_field = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GETFIELD, NULL, NULL);
+  SPerl_OP* op_field = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GET_FIELD, NULL, NULL);
   SPerl_OP_sibling_splice(parser, op_field, NULL, 0, op_var);
   SPerl_OP_sibling_splice(parser, op_field, op_var, 0, op_fieldname);
   
@@ -822,7 +822,7 @@ SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP*
 
 SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term) {
   
-  SPerl_OP* op_convert_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERTTYPE, op_type, op_term);
+  SPerl_OP* op_convert_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT_TYPE, op_type, op_term);
   op_convert_type->file = op_type->file;
   op_convert_type->line = op_type->line;
   
@@ -1107,7 +1107,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPe
             constant->code = SPerl_CONSTANT_C_CODE_INT;
             constant->uv.int_value = start_value;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-            SPerl_OP* op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTINT, NULL, NULL);
+            SPerl_OP* op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONST_INT, NULL, NULL);
             op_constant->uv.constant = constant;
             
             enum_value->op_constant = op_constant;
@@ -1470,15 +1470,15 @@ SPerl_OP* SPerl_OP_build_call_op(SPerl_PARSER* parser, SPerl_OP* op_call_op, SPe
     case SPerl_OP_C_CODE_ADD:
       symbol = "+";
       break;
-    case SPerl_OP_C_CODE_PREINC:
-    case SPerl_OP_C_CODE_POSTINC:
+    case SPerl_OP_C_CODE_PRE_INC:
+    case SPerl_OP_C_CODE_POST_INC:
       symbol = "++";
       break;
-    case SPerl_OP_C_CODE_PREDEC:
-    case SPerl_OP_C_CODE_POSTDEC:
+    case SPerl_OP_C_CODE_PRE_DEC:
+    case SPerl_OP_C_CODE_POST_DEC:
       symbol = "--";
       break;
-    case SPerl_OP_C_CODE_BITNOT:
+    case SPerl_OP_C_CODE_BIT_NOT:
       symbol = "~";
       break;
     case SPerl_OP_C_CODE_NOT:
@@ -1491,16 +1491,16 @@ SPerl_OP* SPerl_OP_build_call_op(SPerl_PARSER* parser, SPerl_OP* op_call_op, SPe
     case SPerl_OP_C_CODE_MULTIPLY:
       symbol = "*";
       break;
-    case SPerl_OP_C_CODE_BITAND:
+    case SPerl_OP_C_CODE_BIT_AND:
       symbol = "&";
       break;
-    case SPerl_OP_C_CODE_BITOR:
+    case SPerl_OP_C_CODE_BIT_OR:
       symbol = "|";
       break;
-    case SPerl_OP_C_CODE_LEFTSHIFT:
+    case SPerl_OP_C_CODE_LEFT_SHIFT:
       symbol = "<<";
       break;
-    case SPerl_OP_C_CODE_RIGHTSHIFT:
+    case SPerl_OP_C_CODE_RIGHT_SHIFT:
       symbol = ">>";
       break;
     case SPerl_OP_C_CODE_AND:
@@ -1633,13 +1633,13 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
   SPerl_int group = 0;
   switch (op_code) {
     // Constant value
-    case SPerl_OP_C_CODE_CONSTBOOLEAN:
-    case SPerl_OP_C_CODE_CONSTCHAR:
-    case SPerl_OP_C_CODE_CONSTINT:
-    case SPerl_OP_C_CODE_CONSTLONG:
-    case SPerl_OP_C_CODE_CONSTFLOAT:
-    case SPerl_OP_C_CODE_CONSTDOUBLE:
-    case SPerl_OP_C_CODE_CONSTSTRING:
+    case SPerl_OP_C_CODE_CONST_BOOLEAN:
+    case SPerl_OP_C_CODE_CONST_CHAR:
+    case SPerl_OP_C_CODE_CONST_INT:
+    case SPerl_OP_C_CODE_CONST_LONG:
+    case SPerl_OP_C_CODE_CONST_FLOAT:
+    case SPerl_OP_C_CODE_CONST_DOUBLE:
+    case SPerl_OP_C_CODE_CONST_STRING:
       group = SPerl_OP_C_GROUP_CONST;
       break;
     
@@ -1664,19 +1664,19 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
     case SPerl_OP_C_CODE_SUBTRACT:
     case SPerl_OP_C_CODE_MULTIPLY:
     case SPerl_OP_C_CODE_DIVIDE:
-    case SPerl_OP_C_CODE_BITAND:
-    case SPerl_OP_C_CODE_BITOR:
+    case SPerl_OP_C_CODE_BIT_AND:
+    case SPerl_OP_C_CODE_BIT_OR:
     case SPerl_OP_C_CODE_MODULO:
-    case SPerl_OP_C_CODE_BITXOR:
+    case SPerl_OP_C_CODE_BIT_XOR:
     case SPerl_OP_C_CODE_EQ:
     case SPerl_OP_C_CODE_NE:
-    case SPerl_OP_C_CODE_LEFTSHIFT:
-    case SPerl_OP_C_CODE_RIGHTSHIFT:
+    case SPerl_OP_C_CODE_LEFT_SHIFT:
+    case SPerl_OP_C_CODE_RIGHT_SHIFT:
       group = SPerl_OP_C_GROUP_BINOP;
       break;
     
     // Unary op
-    case SPerl_OP_C_CODE_BITNOT:
+    case SPerl_OP_C_CODE_BIT_NOT:
     case SPerl_OP_C_CODE_COMPLEMENT:
     case SPerl_OP_C_CODE_NEGATE:
     case SPerl_OP_C_CODE_PLUS:
@@ -1697,10 +1697,10 @@ SPerl_int SPerl_OP_get_group(SPerl_PARSER* parser, SPerl_int op_code) {
     case SPerl_OP_C_CODE_L2I:
       group = SPerl_OP_C_GROUP_UNOP;
       break;
-    case SPerl_OP_C_CODE_PREINC:
-    case SPerl_OP_C_CODE_POSTINC:
-    case SPerl_OP_C_CODE_PREDEC:
-    case SPerl_OP_C_CODE_POSTDEC:
+    case SPerl_OP_C_CODE_PRE_INC:
+    case SPerl_OP_C_CODE_POST_INC:
+    case SPerl_OP_C_CODE_PRE_DEC:
+    case SPerl_OP_C_CODE_POST_DEC:
       group = SPerl_OP_C_GROUP_INCDEC;
       break;
   }

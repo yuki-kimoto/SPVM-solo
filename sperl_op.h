@@ -8,18 +8,18 @@
 
 /* Operation code */
 enum {                          // [GROUP]
-  SPerl_OP_C_CODE_CONSTBOOLEAN, // CONST
-  SPerl_OP_C_CODE_CONSTCHAR,    // CONST
-  SPerl_OP_C_CODE_CONSTINT,     // CONST
-  SPerl_OP_C_CODE_CONSTLONG,    // CONST
-  SPerl_OP_C_CODE_CONSTFLOAT,   // CONST
-  SPerl_OP_C_CODE_CONSTDOUBLE,  // CONST
-  SPerl_OP_C_CODE_CONSTSTRING,  // CONST
-  SPerl_OP_C_CODE_BITNOT,       // UNOP
-  SPerl_OP_C_CODE_PREINC,       // INTDEC
-  SPerl_OP_C_CODE_POSTINC,      // INTDEC
-  SPerl_OP_C_CODE_PREDEC,       // INTDEC
-  SPerl_OP_C_CODE_POSTDEC,      // INTDEC
+  SPerl_OP_C_CODE_CONST_BOOLEAN, // CONST
+  SPerl_OP_C_CODE_CONST_CHAR,    // CONST
+  SPerl_OP_C_CODE_CONST_INT,     // CONST
+  SPerl_OP_C_CODE_CONST_LONG,    // CONST
+  SPerl_OP_C_CODE_CONST_FLOAT,   // CONST
+  SPerl_OP_C_CODE_CONST_DOUBLE,  // CONST
+  SPerl_OP_C_CODE_CONST_STRING,  // CONST
+  SPerl_OP_C_CODE_BIT_NOT,       // UNOP
+  SPerl_OP_C_CODE_PRE_INC,       // INTDEC
+  SPerl_OP_C_CODE_POST_INC,      // INTDEC
+  SPerl_OP_C_CODE_PRE_DEC,       // INTDEC
+  SPerl_OP_C_CODE_POST_DEC,      // INTDEC
   SPerl_OP_C_CODE_COMPLEMENT,   // UNOP
   SPerl_OP_C_CODE_NEGATE,       // UNOP
   SPerl_OP_C_CODE_PLUS,         // UNOP
@@ -47,14 +47,14 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_SUBTRACT,     // BINOP
   SPerl_OP_C_CODE_MULTIPLY,     // BINOP
   SPerl_OP_C_CODE_DIVIDE,       // BINOP
-  SPerl_OP_C_CODE_BITAND,       // BINOP
-  SPerl_OP_C_CODE_BITOR,        // BINOP
+  SPerl_OP_C_CODE_BIT_AND,       // BINOP
+  SPerl_OP_C_CODE_BIT_OR,        // BINOP
   SPerl_OP_C_CODE_MODULO,       // BINOP
-  SPerl_OP_C_CODE_BITXOR,       // BINOP
+  SPerl_OP_C_CODE_BIT_XOR,       // BINOP
   SPerl_OP_C_CODE_EQ,           // BINOP
   SPerl_OP_C_CODE_NE,           // BINOP
-  SPerl_OP_C_CODE_LEFTSHIFT,    // BINOP
-  SPerl_OP_C_CODE_RIGHTSHIFT,   // BINOP
+  SPerl_OP_C_CODE_LEFT_SHIFT,    // BINOP
+  SPerl_OP_C_CODE_RIGHT_SHIFT,   // BINOP
   SPerl_OP_C_CODE_AND,          // LOGICALOP
   SPerl_OP_C_CODE_OR,           // LOGICALOP
   SPerl_OP_C_CODE_NOT,          // LOGICALOP
@@ -86,15 +86,15 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_FOR,          // UNKNOWN
   SPerl_OP_C_CODE_WHILE,        // UNKNOWN
   SPerl_OP_C_CODE_ENUM,         // UNKNOWN
-  SPerl_OP_C_CODE_ENUMBLOCK,    // UNKNOWN
-  SPerl_OP_C_CODE_ENUMVALUE,    // UNKNOWN
-  SPerl_OP_C_CODE_CLASSBLOCK,   // UNKNOWN
+  SPerl_OP_C_CODE_ENUM_BLOCK,    // UNKNOWN
+  SPerl_OP_C_CODE_ENUM_VALUE,    // UNKNOWN
+  SPerl_OP_C_CODE_CLASS_BLOCK,   // UNKNOWN
   SPerl_OP_C_CODE_DESCRIPTER,   // UNKNOWN
-  SPerl_OP_C_CODE_ANONSUB,      // UNKNOWN
+  SPerl_OP_C_CODE_ANON_SUB,      // UNKNOWN
   SPerl_OP_C_CODE_TYPE,         // UNKNOWN
-  SPerl_OP_C_CODE_GETENUMVALUE, // UNKNOWN
-  SPerl_OP_C_CODE_GETFIELD,     // UNKNOWN
-  SPerl_OP_C_CODE_CONVERTTYPE,  // UNKNOWN
+  SPerl_OP_C_CODE_GET_ENUM_VALUE, // UNKNOWN
+  SPerl_OP_C_CODE_GET_FIELD,     // UNKNOWN
+  SPerl_OP_C_CODE_CONVERT_TYPE,  // UNKNOWN
   SPerl_OP_C_CODE_POP,          // UNKNOWN
 };
 
