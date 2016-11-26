@@ -38,6 +38,8 @@
 
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
+  "GRAMMER",
+  "WORD",
   "DECL_PACKAGE",
   "DECL_MY_VAR",
   "DECL_FIELD",
@@ -107,8 +109,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NEXT",
   "LOOP",
   "VAR",
-  "GRAMMER",
-  "WORD",
   "IF",
   "ELSIF",
   "ELSE",
