@@ -25,6 +25,8 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_DECL_DESCRIPTER,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_ANON_SUB,      // UNKNOWN
   SPerl_OP_C_CODE_DECL_ENUM_VALUE,    // UNKNOWN
+  SPerl_OP_C_CODE_SUB_ARG,       // UNKNOWN
+  SPerl_OP_C_CODE_BLOCK,        // UNKNOWN
   SPerl_OP_C_CODE_ENUM_BLOCK,    // UNKNOWN
   SPerl_OP_C_CODE_CLASS_BLOCK,   // UNKNOWN
   SPerl_OP_C_CODE_TYPE,         // UNKNOWN
@@ -76,8 +78,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_FIELD,        // UNKNOWN
   SPerl_OP_C_CODE_ASSIGN,       // ASSIGN
   SPerl_OP_C_CODE_CALL_SUB,      // UNKNOWN
-  SPerl_OP_C_CODE_SUB_ARG,       // UNKNOWN
-  SPerl_OP_C_CODE_BLOCK,        // UNKNOWN
   SPerl_OP_C_CODE_IF_STATEMENT,         // UNKNOWN
   SPerl_OP_C_CODE_USE,          // UNKNOWN
   SPerl_OP_C_CODE_RETURN,       // UNKNOWN
