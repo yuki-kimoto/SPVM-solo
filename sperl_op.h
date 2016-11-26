@@ -75,8 +75,8 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_ARRAY_ELEM,        // UNKNOWN
   SPerl_OP_C_CODE_FIELD,        // UNKNOWN
   SPerl_OP_C_CODE_ASSIGN,       // ASSIGN
-  SPerl_OP_C_CODE_CALLSUB,      // UNKNOWN
-  SPerl_OP_C_CODE_SUBARG,       // UNKNOWN
+  SPerl_OP_C_CODE_CALL_SUB,      // UNKNOWN
+  SPerl_OP_C_CODE_SUB_ARG,       // UNKNOWN
   SPerl_OP_C_CODE_BLOCK,        // UNKNOWN
   SPerl_OP_C_CODE_IF_STATEMENT,         // UNKNOWN
   SPerl_OP_C_CODE_USE,          // UNKNOWN

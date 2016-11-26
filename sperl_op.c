@@ -284,7 +284,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               break;
             }
 
-            case SPerl_OP_C_CODE_CALLSUB: {
+            case SPerl_OP_C_CODE_CALL_SUB: {
               // Check sub name
               SPerl_NAME* name = op_cur->uv.name;
               if (!name->anon) {
@@ -395,7 +395,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
       resolved_type = var->op_my_var->uv.my_var->op_type->uv.type->resolved_type;
       break;
     }
-    case SPerl_OP_C_CODE_CALLSUB: {
+    case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME* name = op->uv.name;
       SPerl_char* complete_name = name->complete_name;
       SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
@@ -1381,7 +1381,7 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_
 SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_sub_name, SPerl_OP* op_terms, SPerl_boolean anon) {
   
   // Build OP_SUB
-  SPerl_OP* op_call_sub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALLSUB, NULL, NULL);
+  SPerl_OP* op_call_sub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALL_SUB, NULL, NULL);
   SPerl_OP_sibling_splice(parser, op_call_sub, NULL, 0, op_sub_name);
   SPerl_OP_sibling_splice(parser, op_call_sub, op_sub_name, 0, op_terms);
   
