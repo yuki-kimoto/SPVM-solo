@@ -105,9 +105,9 @@ struct SPerl_op {
   SPerl_int line;
   SPerl_int iv;
   union {
+    SPerl_OP_INFO* op_info;
     SPerl_MY_VAR* my_var;
     SPerl_VAR* var;
-    SPerl_OP_INFO* op_info;
     SPerl_SUB* sub;
     SPerl_CONSTANT* constant;
     SPerl_NAME* name;
