@@ -92,15 +92,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_POP,          // UNKNOWN
 };
 
-enum {
-  SPerl_OP_C_GROUP_UNKNOWN,
-  SPerl_OP_C_GROUP_CONST,
-  SPerl_OP_C_GROUP_UNOP,
-  SPerl_OP_C_GROUP_BINOP,
-  SPerl_OP_C_GROUP_LOGICALOP,
-  SPerl_OP_C_GROUP_ASSIGNOP,
-  SPerl_OP_C_GROUP_INCDEC,
-};
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 
 /* Binary operation */
