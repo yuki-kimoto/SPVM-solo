@@ -401,54 +401,49 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_RESOLVED_TYPE*  resolved_type;
   
-  op->group;
-  switch (op->group) {
-    case SPerl_OP_C_GROUP_CONST: {
+  switch (op->code) {
+    case SPerl_OP_C_CODE_CONSTANT: {
       SPerl_CONSTANT* constant = op->uv.constant;
       resolved_type = constant->resolved_type;
       break;
     }
-    
-    default:
-    switch (op->code) {
-      case SPerl_OP_C_CODE_VAR: {
-        SPerl_VAR* var = op->uv.var;
-        resolved_type = var->op_my_var->uv.my_var->op_type->uv.type->resolved_type;
-        break;
-      }
-      case SPerl_OP_C_CODE_CALLSUB: {
-        SPerl_NAME* name = op->uv.name;
-        SPerl_char* complete_name = name->complete_name;
-        SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
-        resolved_type = sub->op_return_type->uv.type->resolved_type;
-        break;
-      }
-      case SPerl_OP_C_CODE_GET_ENUM_VALUE: {
-        SPerl_NAME* name = op->uv.name;
-        SPerl_char* complete_name = name->complete_name;
-        SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
-        resolved_type = enum_value->op_constant->uv.constant->resolved_type;
-        break;
-      }
-      case SPerl_OP_C_CODE_GET_FIELD: {
-        SPerl_NAME* name = op->uv.name;
-        SPerl_char* complete_name = name->complete_name;
-        SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
-        resolved_type = field->op_type->uv.type->resolved_type;
-        break;
-      }
-      case SPerl_OP_C_CODE_ADD:
-      case SPerl_OP_C_CODE_SUBTRACT:
-      case SPerl_OP_C_CODE_MULTIPLY:
-      case SPerl_OP_C_CODE_DIVIDE:
-      {
-        SPerl_OP_INFO* op_info = op->uv.op_info;
-        resolved_type = op_info->return_resolved_type;
-        break;
-      }
-      defaut:
-        resolved_type = NULL;
+    case SPerl_OP_C_CODE_VAR: {
+      SPerl_VAR* var = op->uv.var;
+      resolved_type = var->op_my_var->uv.my_var->op_type->uv.type->resolved_type;
+      break;
     }
+    case SPerl_OP_C_CODE_CALLSUB: {
+      SPerl_NAME* name = op->uv.name;
+      SPerl_char* complete_name = name->complete_name;
+      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
+      resolved_type = sub->op_return_type->uv.type->resolved_type;
+      break;
+    }
+    case SPerl_OP_C_CODE_GET_ENUM_VALUE: {
+      SPerl_NAME* name = op->uv.name;
+      SPerl_char* complete_name = name->complete_name;
+      SPerl_ENUM_VALUE* enum_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
+      resolved_type = enum_value->op_constant->uv.constant->resolved_type;
+      break;
+    }
+    case SPerl_OP_C_CODE_GET_FIELD: {
+      SPerl_NAME* name = op->uv.name;
+      SPerl_char* complete_name = name->complete_name;
+      SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
+      resolved_type = field->op_type->uv.type->resolved_type;
+      break;
+    }
+    case SPerl_OP_C_CODE_ADD:
+    case SPerl_OP_C_CODE_SUBTRACT:
+    case SPerl_OP_C_CODE_MULTIPLY:
+    case SPerl_OP_C_CODE_DIVIDE:
+    {
+      SPerl_OP_INFO* op_info = op->uv.op_info;
+      resolved_type = op_info->return_resolved_type;
+      break;
+    }
+    defaut:
+      resolved_type = NULL;
   }
   
   return resolved_type;
