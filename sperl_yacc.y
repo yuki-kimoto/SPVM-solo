@@ -219,7 +219,7 @@ while_statement
 if_statement
   : IF '(' term ')' block else_statement
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_COND, $3, $5);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_IF_STATEMENT, $3, $5);
       SPerl_OP_sibling_splice(parser, op, $5, 0, $6);
       $$ = op;
     }
@@ -235,7 +235,7 @@ else_statement
     }
   | ELSIF '(' term ')' block else_statement
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_COND, $3, $5);
+      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_IF_STATEMENT, $3, $5);
       SPerl_OP_sibling_splice(parser, op, $5, 0, $6);
       $$ = op;
     }

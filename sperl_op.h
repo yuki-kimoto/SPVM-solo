@@ -73,7 +73,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_CALLSUB,      // UNKNOWN
   SPerl_OP_C_CODE_SUBARG,       // UNKNOWN
   SPerl_OP_C_CODE_BLOCK,        // UNKNOWN
-  SPerl_OP_C_CODE_COND,         // UNKNOWN
+  SPerl_OP_C_CODE_IF_STATEMENT,         // UNKNOWN
   SPerl_OP_C_CODE_USE,          // UNKNOWN
   SPerl_OP_C_CODE_RETURN,       // UNKNOWN
   SPerl_OP_C_CODE_LAST,         // UNKNOWN

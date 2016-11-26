@@ -103,7 +103,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "CALL_SUB",
   "SUB_ARG",
   "BLOCK",
-  "COND",
+  "IF_STATEMENT",
   "USE",
   "RETURN",
   "LAST",
