@@ -77,7 +77,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NEXT,         // UNKNOWN
   SPerl_OP_C_CODE_LOOP,         // UNKNOWN
   SPerl_OP_C_CODE_VAR,          // UNKNOWN
-  SPerl_OP_C_CODE_STATEMENT,    // UNKNOWN
   SPerl_OP_C_CODE_GRAMMER,      // UNKNOWN
   SPerl_OP_C_CODE_WORD,         // UNKNOWN
   SPerl_OP_C_CODE_IF,           // UNKNOWN
