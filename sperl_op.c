@@ -38,6 +38,11 @@
 
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
+  "IF",
+  "ELSIF",
+  "ELSE",
+  "FOR",
+  "WHILE",
   "NULL",
   "LIST",
   "PUSHMARK",
@@ -110,11 +115,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NEXT",
   "LOOP",
   "VAR",
-  "IF",
-  "ELSIF",
-  "ELSE",
-  "FOR",
-  "WHILE",
   "GET_ENUM_VALUE",
   "CONVERT_TYPE",
   "POP",

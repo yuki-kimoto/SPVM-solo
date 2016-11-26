@@ -8,6 +8,11 @@
 
 /* Operation code */
 enum {                          // [GROUP]
+  SPerl_OP_C_CODE_IF,           // UNKNOWN
+  SPerl_OP_C_CODE_ELSIF,        // UNKNOWN
+  SPerl_OP_C_CODE_ELSE,         // UNKNOWN
+  SPerl_OP_C_CODE_FOR,          // UNKNOWN
+  SPerl_OP_C_CODE_WHILE,        // UNKNOWN
   SPerl_OP_C_CODE_NULL,         // UNKNOWN
   SPerl_OP_C_CODE_LIST,         // UNKNOWN
   SPerl_OP_C_CODE_PUSHMARK,     // UNKNOWN
@@ -80,11 +85,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NEXT,         // UNKNOWN
   SPerl_OP_C_CODE_LOOP,         // UNKNOWN
   SPerl_OP_C_CODE_VAR,          // UNKNOWN
-  SPerl_OP_C_CODE_IF,           // UNKNOWN
-  SPerl_OP_C_CODE_ELSIF,        // UNKNOWN
-  SPerl_OP_C_CODE_ELSE,         // UNKNOWN
-  SPerl_OP_C_CODE_FOR,          // UNKNOWN
-  SPerl_OP_C_CODE_WHILE,        // UNKNOWN
   SPerl_OP_C_CODE_GET_ENUM_VALUE, // UNKNOWN
   SPerl_OP_C_CODE_CONVERT_TYPE,  // UNKNOWN
   SPerl_OP_C_CODE_POP,          // UNKNOWN
