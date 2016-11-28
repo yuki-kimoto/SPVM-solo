@@ -39,21 +39,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_COMPLEMENT,   // UNOP
   SPerl_OP_C_CODE_NEGATE,       // UNOP
   SPerl_OP_C_CODE_PLUS,         // UNOP
-  SPerl_OP_C_CODE_D2F,          // UNOP
-  SPerl_OP_C_CODE_D2I,          // UNOP
-  SPerl_OP_C_CODE_D2L,          // UNOP
-  SPerl_OP_C_CODE_F2D,          // UNOP
-  SPerl_OP_C_CODE_F2I,          // UNOP
-  SPerl_OP_C_CODE_F2L,          // UNOP
-  SPerl_OP_C_CODE_I2B,          // UNOP
-  SPerl_OP_C_CODE_I2C,          // UNOP
-  SPerl_OP_C_CODE_I2D,          // UNOP
-  SPerl_OP_C_CODE_I2F,          // UNOP
-  SPerl_OP_C_CODE_I2L,          // UNOP
-  SPerl_OP_C_CODE_I2S,          // UNOP
-  SPerl_OP_C_CODE_L2D,          // UNOP
-  SPerl_OP_C_CODE_L2F,          // UNOP
-  SPerl_OP_C_CODE_L2I,          // UNOP
   SPerl_OP_C_CODE_LT,           // BINOP
   SPerl_OP_C_CODE_LE,           // BINOP
   SPerl_OP_C_CODE_GT,           // BINOP
