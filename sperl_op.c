@@ -181,7 +181,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
                 op_info->code = SPerl_OP_INFO_C_CODE_DADD;
-              }
+             }
               
               break;
             }
