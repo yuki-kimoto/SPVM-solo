@@ -3,6 +3,9 @@
 
 #include "sperl_base.h"
 
+
+
+
 enum {
   SPerl_VMCODE_C_CODE_AALOAD,
   SPerl_VMCODE_C_CODE_AASTORE,

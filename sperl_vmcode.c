@@ -1,5 +1,11 @@
 #include "sperl_vmcode.h"
 
+
+
+
+
+
+
 SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[] = {
   "aaload",
   "aastore",

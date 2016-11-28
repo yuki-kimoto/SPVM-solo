@@ -105,6 +105,52 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "IINC",
 };
 
+void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
+  for (SPerl_int i = 0; i < parser->op_subs->length; i++) {
+    SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
+    SPerl_SUB* sub = op_sub->uv.sub;
+    
+    // Run OPs
+    SPerl_OP* op_base = op_sub;
+    SPerl_OP* op_cur = op_base;
+    SPerl_boolean finish = 0;
+    while (op_cur) {
+      // [START]Preorder traversal position
+      
+      // [END]Preorder traversal position
+      
+      if (op_cur->first) {
+        op_cur = op_cur->first;
+      }
+      else {
+        while (1) {
+          // [START]Postorder traversal position
+          
+          // [END]Postorder traversal position
+          
+          if (op_cur == op_base) {
+            finish = 1;
+            break;
+          }
+          
+          // Next sibling
+          if (op_cur->moresib) {
+            op_cur = SPerl_OP_sibling(parser, op_cur);
+            break;
+          }
+          // Next is parent
+          else {
+            op_cur = op_cur->sibparent;
+          }
+        }
+        if (finish) {
+          break;
+        }
+      }
+    }
+  }
+}
+
 void SPerl_OP_check_ops(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->op_subs->length; i++) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
@@ -848,9 +894,12 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   if (parser->fatal_error) {
     return NULL;
   }
-
+  
   // Build constant pool
   SPerl_OP_build_const_pool(parser);
+  
+  // Create vmcode
+  SPerl_OP_create_vmcode(parser);
   
   return op_grammer;
 }
