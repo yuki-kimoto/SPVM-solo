@@ -29,6 +29,7 @@
 #include "sperl_resolved_type.h"
 #include "sperl_constant_pool.h"
 #include "sperl_vmcode.h"
+#include "sperl_vmcodes.h"
 
 SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_PARSER* parser = calloc(1, sizeof(SPerl_PARSER));
@@ -420,6 +421,12 @@ void SPerl_PARSER_dump_constant_pool(SPerl_PARSER* parser, SPerl_CONSTANT_POOL* 
   }
 }
 
+void SPerl_PARSER_dump_vmcodes(SPerl_PARSER* parser, SPerl_VMCODES* vmcodes) {
+  for (SPerl_int i = 0; i < vmcodes->length; i++) {
+    printf("        [%d] %s\n", i, SPerl_VMCODE_C_CODE_NAMES[vmcodes->values[i].code]);
+  }
+}
+
 void SPerl_PARSER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant) {
   switch(constant->code) {
     case SPerl_CONSTANT_C_CODE_BOOLEAN:
@@ -493,6 +500,9 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
   
     printf("      constant_pool\n");
     SPerl_PARSER_dump_constant_pool(parser, sub->constant_pool);
+
+    printf("      vmcodes\n");
+    SPerl_PARSER_dump_vmcodes(parser, sub->vmcodes);
   }
   else {
     printf("      None\n");

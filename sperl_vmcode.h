@@ -211,6 +211,8 @@ enum {
   SPerl_VMCODE_C_CODE_WIDE
 };
 
+extern SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[];
+
 /* Binary operation */
 struct SPerl_vmcode {
   SPerl_char code;
