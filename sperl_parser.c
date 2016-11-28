@@ -423,7 +423,14 @@ void SPerl_PARSER_dump_constant_pool(SPerl_PARSER* parser, SPerl_CONSTANT_POOL* 
 
 void SPerl_PARSER_dump_vmcodes(SPerl_PARSER* parser, SPerl_VMCODES* vmcodes) {
   for (SPerl_int i = 0; i < vmcodes->length; i++) {
-    printf("        [%d] %s\n", i, SPerl_VMCODE_C_CODE_NAMES[vmcodes->values[i].code]);
+    SPerl_VMCODE vmcode = vmcodes->values[i];
+    printf("        [%d] %s", i, SPerl_VMCODE_C_CODE_NAMES[vmcode.code]);
+    switch (vmcode.code) {
+      case SPerl_VMCODE_C_CODE_LDC: {
+        printf(" %d", vmcode.operand1);
+      }
+    }
+    printf("\n");
   }
 }
 

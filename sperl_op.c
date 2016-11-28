@@ -131,6 +131,8 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
             case SPerl_OP_C_CODE_ADD: {
+              
+              // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
               if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_IADD) {
                 vmcode->code = SPerl_VMCODE_C_CODE_IADD;
@@ -145,7 +147,17 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 vmcode->code = SPerl_VMCODE_C_CODE_DADD;
               }
               SPerl_VMCODES_push(vmcodes, vmcode);
+              
               break;
+            }
+            case SPerl_OP_C_CODE_CONSTANT: {
+              SPerl_CONSTANT* constant = op_cur->uv.constant;
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              vmcode->code = SPerl_VMCODE_C_CODE_LDC;
+              vmcode->operand1 = (SPerl_char)constant->pool_pos;
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
             }
           }
           
