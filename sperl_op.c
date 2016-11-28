@@ -169,7 +169,19 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               // Insert type converting op
               SPerl_OP_insert_op_convert_type(parser, op_cur, first_resolved_type, last_resolved_type);
               
-              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_IADD;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                op_info->code = SPerl_OP_INFO_C_CODE_LADD;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_FADD;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                op_info->code = SPerl_OP_INFO_C_CODE_DADD;
+              }
               
               break;
             }

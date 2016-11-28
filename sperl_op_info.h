@@ -20,6 +20,10 @@ enum {
   SPerl_OP_INFO_C_CODE_L2D,          // UNOP
   SPerl_OP_INFO_C_CODE_L2F,          // UNOP
   SPerl_OP_INFO_C_CODE_L2I,          // UNOP
+  SPerl_OP_INFO_C_CODE_IADD,          // UNOP
+  SPerl_OP_INFO_C_CODE_LADD,          // UNOP
+  SPerl_OP_INFO_C_CODE_FADD,          // UNOP
+  SPerl_OP_INFO_C_CODE_DADD,          // UNOP
 };
 
 extern SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[];

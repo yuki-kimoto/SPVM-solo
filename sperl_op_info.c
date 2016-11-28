@@ -2,6 +2,7 @@
 #include "sperl_parser.h"
 
 SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[] = {
+  "NULL",
   "D2F",
   "D2I",
   "D2L",
@@ -17,6 +18,10 @@ SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "L2D",
   "L2F",
   "L2I",
+  "IADD",
+  "LADD",
+  "FADD",
+  "DADD",
 };
 
 
