@@ -5,7 +5,7 @@
 
 SPerl_ARRAY* SPerl_ARRAY_new(SPerl_int capacity) {
   
-  SPerl_ARRAY* array = (SPerl_ARRAY*)malloc(sizeof(SPerl_ARRAY));
+  SPerl_ARRAY* array = malloc(sizeof(SPerl_ARRAY));
   array->length = 0;
   
   if (capacity == 0) {
@@ -15,7 +15,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl_int capacity) {
     array->capacity = capacity;
   }
   
-  void** values = (void**)calloc(array->capacity, sizeof(void*));
+  void** values = calloc(array->capacity, sizeof(void*));
   array->values = values;
   
   return array;
