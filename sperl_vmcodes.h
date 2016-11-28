@@ -12,6 +12,6 @@ struct SPerl_vmcodes {
 
 // Array function
 SPerl_VMCODES* SPerl_VMCODES_new();
-void SPerl_VMCODES_push(SPerl_VMCODES* vmcodes, SPerl_VMCODE value);
+void SPerl_VMCODES_push(SPerl_VMCODES* vmcodes, SPerl_VMCODE* value);
 
 #endif

@@ -16,7 +16,7 @@ SPerl_VMCODES* SPerl_VMCODES_new() {
   return vmcodes;
 }
 
-void SPerl_VMCODES_push(SPerl_VMCODES* vmcodes, SPerl_VMCODE value) {
+void SPerl_VMCODES_push(SPerl_VMCODES* vmcodes, SPerl_VMCODE* value) {
   SPerl_int length = vmcodes->length;
   SPerl_int capacity = vmcodes->capacity;
   
@@ -27,7 +27,7 @@ void SPerl_VMCODES_push(SPerl_VMCODES* vmcodes, SPerl_VMCODE value) {
     vmcodes->capacity = new_capacity;
   }
   
-  vmcodes->values[length] = value;
+  vmcodes->values[length] = *value;
   vmcodes->length++;
 }
 

@@ -35,8 +35,8 @@
 #include "sperl_op_info.h"
 #include "sperl_resolved_type.h"
 #include "sperl_constant_pool.h"
-
-
+#include "sperl_vmcode.h"
+#include "sperl_vmcodes.h"
 
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
@@ -111,6 +111,9 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
     SPerl_SUB* sub = op_sub->uv.sub;
     
+    // VM codes
+    SPerl_VMCODES* vmcodes = sub->vmcodes;
+    
     // Run OPs
     SPerl_OP* op_base = op_sub;
     SPerl_OP* op_cur = op_base;
@@ -126,6 +129,25 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
       else {
         while (1) {
           // [START]Postorder traversal position
+          switch (op_cur->code) {
+            case SPerl_OP_C_CODE_ADD: {
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_IADD) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IADD;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_LADD) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LADD;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_FADD) {
+                vmcode->code = SPerl_VMCODE_C_CODE_FADD;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_DADD) {
+                vmcode->code = SPerl_VMCODE_C_CODE_DADD;
+              }
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              break;
+            }
+          }
           
           // [END]Postorder traversal position
           

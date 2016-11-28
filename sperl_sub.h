@@ -16,6 +16,7 @@ struct SPerl_sub {
   SPerl_int id;
   SPerl_ARRAY* op_constants;
   SPerl_CONSTANT_POOL* constant_pool;
+  SPerl_VMCODES* vmcodes;
 };
 
 SPerl_SUB* SPerl_SUB_new(SPerl_PARSER* parser);

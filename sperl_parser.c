@@ -28,6 +28,7 @@
 #include "sperl_op_info.h"
 #include "sperl_resolved_type.h"
 #include "sperl_constant_pool.h"
+#include "sperl_vmcode.h"
 
 SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_PARSER* parser = calloc(1, sizeof(SPerl_PARSER));
@@ -147,6 +148,12 @@ SPerl_int* SPerl_PARSER_new_int(SPerl_PARSER* parser) {
   SPerl_int* value = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
   
   return value;
+}
+
+SPerl_VMCODE* SPerl_PARSER_new_vmcode(SPerl_PARSER* parser) {
+  SPerl_VMCODE* vmcode = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_VMCODE));
+  
+  return vmcode;
 }
 
 SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
