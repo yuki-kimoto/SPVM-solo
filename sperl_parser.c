@@ -207,6 +207,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
     printf("%s", SPerl_OP_C_CODE_NAMES[code]);
     if (op_cur->code == SPerl_OP_C_CODE_CONSTANT) {
       SPerl_CONSTANT* constant = op_cur->uv.constant;
+      printf(" %s", SPerl_CONSTANT_C_CODE_NAMES[constant->code]);
       switch (constant->code) {
         case SPerl_CONSTANT_C_CODE_BOOLEAN:
           printf(" %d", constant->uv.int_value);
@@ -244,9 +245,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
       printf(" %s", SPerl_OP_INFO_C_CODE_NAMES[op_info->code]);
     }
     else if (code == SPerl_OP_C_CODE_ADD) {
-      warn("AAAAAAAAAAAA");
       SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-      warn("BBBBBBBBBBBBB %d", op_info->code);
       printf(" %s", SPerl_OP_INFO_C_CODE_NAMES[18]);
     }
     printf("\n");

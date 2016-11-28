@@ -4,6 +4,16 @@
 #include "sperl_parser.h"
 #include "sperl_hash.h"
 
+SPerl_char* const SPerl_CONSTANT_C_CODE_NAMES[] = {
+  "BOOLEAN",
+  "CHAR",
+  "INT",
+  "LONG",
+  "FLOAT",
+  "DOUBLE",
+  "STRING",
+};
+
 SPerl_CONSTANT* SPerl_CONSTANT_new(SPerl_PARSER* parser) {
   return SPerl_PARSER_alloc_memory_pool(parser, sizeof(SPerl_CONSTANT));
 }
