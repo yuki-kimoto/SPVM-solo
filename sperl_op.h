@@ -113,7 +113,7 @@ void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name);
 void SPerl_OP_check_ops(SPerl_PARSER* parser);
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op);
 SPerl_OP* SPerl_OP_build_call_op(SPerl_PARSER* parser, SPerl_OP* op_call_op, SPerl_OP* op_first, SPerl_OP* op_last);
-void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int first_type_id, SPerl_int last_type_id);
+void SPerl_OP_insert_op_type_convert(SPerl_PARSER* parser, SPerl_OP* op, SPerl_RESOLVED_TYPE* first_resolved_type, SPerl_RESOLVED_TYPE* last_resolved_type);
 
 SPerl_OP* SPerl_OP_build_type_word(SPerl_PARSER* parser, SPerl_OP* op_type_word);
 SPerl_OP* SPerl_OP_build_type_array(SPerl_PARSER* parser, SPerl_OP* op_simpletype);

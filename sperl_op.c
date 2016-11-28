@@ -167,7 +167,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 break;
               }
               // Insert type converting op
-              SPerl_OP_insert_type_convert_op(parser, op_cur, first_resolved_type->id, last_resolved_type->id);
+              SPerl_OP_insert_op_type_convert(parser, op_cur, first_resolved_type, last_resolved_type);
               
               break;
             }
@@ -416,7 +416,11 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   return resolved_type;
 }
 
-void SPerl_OP_insert_type_convert_op(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int first_type_id, SPerl_int last_type_id) {
+void SPerl_OP_insert_op_type_convert(SPerl_PARSER* parser, SPerl_OP* op, SPerl_RESOLVED_TYPE* first_resolved_type, SPerl_RESOLVED_TYPE* last_resolved_type) {
+  
+  SPerl_int first_type_id = first_resolved_type->id;
+  SPerl_int last_type_id = last_resolved_type->id;
+  
   // last int
   if (first_type_id < 4) {
     first_type_id = 4;
