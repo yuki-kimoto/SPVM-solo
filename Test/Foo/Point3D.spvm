@@ -73,9 +73,9 @@ package Test::Foo::Point3D {
     my $title6 : int;
     my $title7 : int = 4;
 
-    $title->();
-    $title->(1);
-    $title->(1, 2);
+    # $title->();
+    # $title->(1);
+    # $title->(1, 2);
     
     my $test : int = 0;
     ++$test;

@@ -27,6 +27,8 @@ enum {
   SPerl_OP_INFO_C_CODE_LADD,          // UNOP
   SPerl_OP_INFO_C_CODE_FADD,          // UNOP
   SPerl_OP_INFO_C_CODE_DADD,          // UNOP
+  SPerl_OP_INFO_C_CODE_POP,
+  SPerl_OP_INFO_C_CODE_POP2
 };
 
 extern SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[];

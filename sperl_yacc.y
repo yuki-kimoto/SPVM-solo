@@ -9,6 +9,7 @@
   #include "sperl_toke.h"
   #include "sperl_parser.h"
   #include "sperl_op.h"
+  #include "sperl_op_info.h"
 %}
 
 %token <opval> '+' '-'
@@ -179,6 +180,7 @@ statement
   | term ';'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POP, $1, NULL);
+      $$->uv.op_info = SPerl_OP_INFO_new(parser);
     }
   | expression ';'
     {

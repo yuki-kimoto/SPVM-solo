@@ -11,7 +11,7 @@ package Test {
   use Test::TypedefArray2;
   use Test::TypedefSub;
   use Test::ValueClass;
-
+  
   sub main() : int {
     my $num : int = 0;
     ++$num;
