@@ -13,6 +13,10 @@ typedef float SPerl_float;
 typedef double SPerl_double;
 
 /* sperl_assign.h */
+struct SPerl_vmcodes;
+typedef struct SPerl_vmcodes SPerl_VMCODES;
+
+/* sperl_assign.h */
 struct SPerl_constant_pool;
 typedef struct SPerl_constant_pool SPerl_CONSTANT_POOL;
 
