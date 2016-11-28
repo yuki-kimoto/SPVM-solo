@@ -34,6 +34,7 @@
 #include "sperl_name.h"
 #include "sperl_op_info.h"
 #include "sperl_resolved_type.h"
+#include "sperl_constant_pool.h"
 
 
 
@@ -995,65 +996,42 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     // Set constant informations
     SPerl_ARRAY* op_constants = sub->op_constants;
     
-    // Constant pool length
-    SPerl_int const_pool_length = 0;
-    for (SPerl_int j = 0; j < op_constants->length; j++) {
-      SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, j);
-      SPerl_CONSTANT* constant = op_constant->uv.constant;
-      switch(constant->code) {
-        case SPerl_CONSTANT_C_CODE_BOOLEAN:
-        case SPerl_CONSTANT_C_CODE_CHAR:
-        case SPerl_CONSTANT_C_CODE_INT:
-          const_pool_length += 1;
-          break;
-        case SPerl_CONSTANT_C_CODE_LONG:
-          const_pool_length += 2;
-          break;
-        case SPerl_CONSTANT_C_CODE_FLOAT:
-          const_pool_length += 1;
-          break;
-        case SPerl_CONSTANT_C_CODE_DOUBLE:
-          const_pool_length += 2;
-          break;
-      }
-    }
-    sub->const_pool_length = const_pool_length;
-    
     // Create constant pool
-    SPerl_int* const_pool = calloc(const_pool_length, sizeof(SPerl_int));
     SPerl_int const_pool_pos = 0;
     for (SPerl_int j = 0; j < op_constants->length; j++) {
       SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, j);
       SPerl_CONSTANT* constant = op_constant->uv.constant;
       
-      constant->pool_pos = const_pool_pos;
-      
-      switch(constant->code) {
+      SPerl_int value1;
+      SPerl_int value2;
+
+      constant->pool_pos = sub->constant_pool->length;
+      switch (constant->code) {
         case SPerl_CONSTANT_C_CODE_BOOLEAN:
         case SPerl_CONSTANT_C_CODE_CHAR:
         case SPerl_CONSTANT_C_CODE_INT:
-          constant->pool_pos = const_pool_pos;
-          *(const_pool + const_pool_pos) = constant->uv.int_value;
-          const_pool_pos += 1;
+          SPerl_CONSTANT_POOL_push(sub->constant_pool, constant->uv.int_value);
           break;
         case SPerl_CONSTANT_C_CODE_LONG:
-          constant->pool_pos = const_pool_pos;
-          *(SPerl_long*)(const_pool + const_pool_pos) = constant->uv.long_value;
-          const_pool_pos += 2;
+          memcpy(&value1, &constant->uv.long_value, 4);
+          memcpy(&value2, ((SPerl_int*)&constant->uv.long_value) + 1, 4);
+          
+          SPerl_CONSTANT_POOL_push(sub->constant_pool, value1);
+          SPerl_CONSTANT_POOL_push(sub->constant_pool, value2);
           break;
         case SPerl_CONSTANT_C_CODE_FLOAT:
-          constant->pool_pos = const_pool_pos;
-          *(SPerl_float*)(const_pool + const_pool_pos) = constant->uv.float_value;
-          const_pool_pos += 1;
+          memcpy(&value1, &constant->uv.float_value, 4);
+          SPerl_CONSTANT_POOL_push(sub->constant_pool, value1);
           break;
         case SPerl_CONSTANT_C_CODE_DOUBLE:
-          constant->pool_pos = const_pool_pos;
-          *(SPerl_double*)(const_pool + const_pool_pos) = constant->uv.double_value;
-          const_pool_pos += 2;
+          memcpy(&value1, &constant->uv.double_value, 4);
+          memcpy(&value2, ((SPerl_int*)&constant->uv.double_value) + 1, 4);
+          
+          SPerl_CONSTANT_POOL_push(sub->constant_pool, value1);
+          SPerl_CONSTANT_POOL_push(sub->constant_pool, value2);
           break;
       }
     }
-    sub->const_pool = const_pool;
   }
 }
 

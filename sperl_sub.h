@@ -15,8 +15,7 @@ struct SPerl_sub {
   SPerl_boolean anon;
   SPerl_int id;
   SPerl_ARRAY* op_constants;
-  SPerl_int* const_pool;
-  SPerl_int const_pool_length;
+  SPerl_CONSTANT_POOL* constant_pool;
 };
 
 SPerl_SUB* SPerl_SUB_new(SPerl_PARSER* parser);

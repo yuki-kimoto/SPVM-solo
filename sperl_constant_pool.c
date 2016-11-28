@@ -7,6 +7,7 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new() {
   
   SPerl_CONSTANT_POOL* constant_pool = malloc(sizeof(SPerl_CONSTANT_POOL));
   constant_pool->capacity = 64;
+  constant_pool->length = 0;
   
   SPerl_int* values = calloc(constant_pool->capacity, sizeof(SPerl_int));
   constant_pool->values = values;

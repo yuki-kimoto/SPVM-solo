@@ -27,6 +27,7 @@
 #include "sperl_package.h"
 #include "sperl_op_info.h"
 #include "sperl_resolved_type.h"
+#include "sperl_constant_pool.h"
 
 SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_PARSER* parser = calloc(1, sizeof(SPerl_PARSER));
@@ -406,9 +407,9 @@ void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
   }
 }
 
-void SPerl_PARSER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, SPerl_int const_pool_pos) {
-  for (SPerl_int i = 0; i < const_pool_pos; i++) {
-    printf("        const_pool[%d] %d\n", i, const_pool[i]);
+void SPerl_PARSER_dump_constant_pool(SPerl_PARSER* parser, SPerl_CONSTANT_POOL* constant_pool) {
+  for (SPerl_int i = 0; i < constant_pool->length; i++) {
+    printf("        constant_pool[%d] %d\n", i, constant_pool->values[i]);
   }
 }
 
@@ -483,8 +484,8 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("      constant_values\n");
     SPerl_PARSER_dump_constants(parser, sub->op_constants);
   
-    printf("      const_pool\n");
-    SPerl_PARSER_dump_const_pool(parser, sub->const_pool, sub->const_pool_length);
+    printf("      constant_pool\n");
+    SPerl_PARSER_dump_constant_pool(parser, sub->constant_pool);
   }
   else {
     printf("      None\n");
