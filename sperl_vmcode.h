@@ -211,4 +211,12 @@ enum {
   SPerl_VMCODE_C_CODE_WIDE
 };
 
+/* Binary operation */
+struct SPerl_vmcode {
+  SPerl_char code;
+  SPerl_char operand1;
+  SPerl_char operand2;
+  SPerl_char operand3;
+};
+
 #endif
