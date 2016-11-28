@@ -312,7 +312,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               SPerl_ARRAY_push(sub->op_constants, new_op_constant);
               
               // Replace get_enum_value to const
-              SPerl_OP_replace_code(parser, op_cur, SPerl_OP_C_CODE_CONSTANT);
+              op_cur->code = SPerl_OP_C_CODE_CONSTANT;
               op_cur->uv.constant = new_constant;
               op_cur->first = NULL;
               
@@ -1583,10 +1583,6 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
 
 SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
   return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
-}
-
-void SPerl_OP_replace_code(SPerl_PARSER* parser, SPerl_OP* op, SPerl_int code) {
-  op->code = code;
 }
 
 SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int code, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
