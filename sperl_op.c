@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "sperl_array.h"
 #include "sperl_hash.h"
@@ -359,8 +360,21 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               }
               
               if (!vmcode_set) {
-                vmcode->code = SPerl_VMCODE_C_CODE_LDC;
-                vmcode->operand1 = (SPerl_uchar)constant->pool_pos;
+                if (constant->code == SPerl_CONSTANT_C_CODE_LONG || constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LDC2_W;
+                  vmcode->operand1 = (SPerl_uchar)((uint32_t)constant->pool_pos >> 8);
+                  vmcode->operand2 = (SPerl_uchar)constant->pool_pos;
+                  
+                }
+                else if (constant->pool_pos < 256) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LDC;
+                  vmcode->operand1 = (SPerl_uchar)constant->pool_pos;
+                }
+                else {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LDC_W;
+                  vmcode->operand1 = (SPerl_uchar)((uint32_t)constant->pool_pos >> 8);
+                  vmcode->operand2 = (SPerl_uchar)constant->pool_pos;
+                }
               }
               
               SPerl_VMCODES_push(vmcodes, vmcode);
