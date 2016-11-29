@@ -31,6 +31,10 @@ SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "LSUBTRACT",
   "FSUBTRACT",
   "DSUBTRACT",
+  "IMULTIPLY",
+  "LMULTIPLY",
+  "FMULTIPLY",
+  "DMULTIPLY",
   "POP",
   "POP2",
 };

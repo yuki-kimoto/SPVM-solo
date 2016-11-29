@@ -31,6 +31,10 @@ enum {
   SPerl_OP_INFO_C_CODE_LSUBTRACT,          // UNOP
   SPerl_OP_INFO_C_CODE_FSUBTRACT,          // UNOP
   SPerl_OP_INFO_C_CODE_DSUBTRACT,          // UNOP
+  SPerl_OP_INFO_C_CODE_IMULTIPLY,          // UNOP
+  SPerl_OP_INFO_C_CODE_LMULTIPLY,          // UNOP
+  SPerl_OP_INFO_C_CODE_FMULTIPLY,          // UNOP
+  SPerl_OP_INFO_C_CODE_DMULTIPLY,          // UNOP
   SPerl_OP_INFO_C_CODE_POP,
   SPerl_OP_INFO_C_CODE_POP2,
 };
