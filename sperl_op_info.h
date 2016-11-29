@@ -35,6 +35,10 @@ enum {
   SPerl_OP_INFO_C_CODE_LMULTIPLY,          // UNOP
   SPerl_OP_INFO_C_CODE_FMULTIPLY,          // UNOP
   SPerl_OP_INFO_C_CODE_DMULTIPLY,          // UNOP
+  SPerl_OP_INFO_C_CODE_IDIVIDE,          // UNOP
+  SPerl_OP_INFO_C_CODE_LDIVIDE,          // UNOP
+  SPerl_OP_INFO_C_CODE_FDIVIDE,          // UNOP
+  SPerl_OP_INFO_C_CODE_DDIVIDE,          // UNOP
   SPerl_OP_INFO_C_CODE_POP,
   SPerl_OP_INFO_C_CODE_POP2,
 };

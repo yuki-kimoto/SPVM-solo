@@ -35,6 +35,10 @@ SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "LMULTIPLY",
   "FMULTIPLY",
   "DMULTIPLY",
+  "IDIVIDE",
+  "LDIVIDE",
+  "FDIVIDE",
+  "DDIVIDE",
   "POP",
   "POP2",
 };

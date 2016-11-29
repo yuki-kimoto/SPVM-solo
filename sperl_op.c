@@ -204,6 +204,26 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               break;
             }
+            case SPerl_OP_C_CODE_DIVIDE: {
+              
+              // Code
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_IDIVIDE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IDIVIDE;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_LDIVIDE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LDIVIDE;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_FDIVIDE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_FDIVIDE;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_DDIVIDE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_DDIVIDE;
+              }
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_CONSTANT: {
               SPerl_CONSTANT* constant = op_cur->uv.constant;
               
@@ -391,6 +411,36 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
                 op_info->code = SPerl_OP_INFO_C_CODE_DMULTIPLY;
+              }
+              op_info->return_resolved_type = resolved_type;
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_DIVIDE: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              // Can receive only core type
+              if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
+                SPerl_yyerror_format(parser, "/ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              // Insert type converting op
+              SPerl_OP_insert_op_convert_type(parser, op_cur, first_resolved_type, last_resolved_type);
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
+              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_IDIVIDE;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                op_info->code = SPerl_OP_INFO_C_CODE_LDIVIDE;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_FDIVIDE;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                op_info->code = SPerl_OP_INFO_C_CODE_DDIVIDE;
               }
               op_info->return_resolved_type = resolved_type;
               
