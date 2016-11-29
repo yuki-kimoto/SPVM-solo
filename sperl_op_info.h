@@ -43,6 +43,10 @@ enum {
   SPerl_OP_INFO_C_CODE_LNEGATE,          // UNOP
   SPerl_OP_INFO_C_CODE_FNEGATE,          // UNOP
   SPerl_OP_INFO_C_CODE_DNEGATE,          // UNOP
+  SPerl_OP_INFO_C_CODE_IPLUS,          // UNOP
+  SPerl_OP_INFO_C_CODE_LPLUS,          // UNOP
+  SPerl_OP_INFO_C_CODE_FPLUS,          // UNOP
+  SPerl_OP_INFO_C_CODE_DPLUS,          // UNOP
   SPerl_OP_INFO_C_CODE_POP,
   SPerl_OP_INFO_C_CODE_POP2,
 };
