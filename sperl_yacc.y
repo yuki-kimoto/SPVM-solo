@@ -474,6 +474,10 @@ call_op
     {
       $$ = SPerl_OP_build_call_op(parser, $1, $2, NULL);
     }
+  | '(' term ')'
+    {
+      $$ = $2;
+    }
 
 array_elem
   : VAR ARROW '[' term ']'
