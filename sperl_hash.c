@@ -25,12 +25,12 @@ SPerl_HASH* SPerl_HASH_new(SPerl_int capacity) {
   return hash;
 }
 
-SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl_char* key, SPerl_int length, void* value) {
+SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl_uchar* key, SPerl_int length, void* value) {
   
   SPerl_HASH_ENTRY* new_entry = malloc(sizeof(SPerl_HASH_ENTRY));
   memset(new_entry, 0, sizeof(SPerl_HASH_ENTRY));
   
-  new_entry->key = (SPerl_char*)malloc(sizeof(SPerl_char) * (length + 1));
+  new_entry->key = (SPerl_uchar*)malloc(sizeof(SPerl_uchar) * (length + 1));
   strncpy(new_entry->key, key, length);
   new_entry->key[length] = '\0';
   new_entry->value = value;
@@ -38,7 +38,7 @@ SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl_char* key, SPerl_int length, void* 
   return new_entry;
 }
 
-void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, SPerl_char* key, SPerl_int length, void* value) {
+void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, SPerl_uchar* key, SPerl_int length, void* value) {
 
   SPerl_long hash_value = SPerl_HASH_FUNC_calc_hash(key, length);
   SPerl_int index = hash_value % hash->capacity;
@@ -86,7 +86,7 @@ void SPerl_HASH_rehash(SPerl_HASH* hash, SPerl_int new_capacity) {
   for (i = 0; i < hash->count; i++) {
     SPerl_HASH_ENTRY* entry = entries[i];
     
-    SPerl_char* key = entry->key;
+    SPerl_uchar* key = entry->key;
     if (key) {
       SPerl_int length = strlen(key);
       void* value = SPerl_HASH_search(hash, key, length);
@@ -95,7 +95,7 @@ void SPerl_HASH_rehash(SPerl_HASH* hash, SPerl_int new_capacity) {
     
     SPerl_HASH_ENTRY* next_entry = entry->next;
     while (next_entry) {
-      SPerl_char* key = next_entry->key;
+      SPerl_uchar* key = next_entry->key;
       if (key) {
         SPerl_int length = strlen(key);
         void* value = SPerl_HASH_search(hash, key, length);
@@ -112,7 +112,7 @@ void SPerl_HASH_rehash(SPerl_HASH* hash, SPerl_int new_capacity) {
   hash->entries = new_hash->entries;
 }
 
-void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_int length, void* value) {
+void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_uchar* key, SPerl_int length, void* value) {
   if (hash == NULL) {
     return 0;
   }
@@ -127,7 +127,7 @@ void* SPerl_HASH_insert(SPerl_HASH* hash, SPerl_char* key, SPerl_int length, voi
   SPerl_HASH_insert_norehash(hash, key, length, value);
 }
 
-void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_char* key, SPerl_int length) {
+void* SPerl_HASH_search(SPerl_HASH* hash, SPerl_uchar* key, SPerl_int length) {
   if (!hash) {
     return 0;
   }

@@ -6,7 +6,7 @@
 
 
 
-SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[] = {
+SPerl_uchar* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "NULL",
   "D2F",
   "D2I",

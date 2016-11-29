@@ -8,19 +8,19 @@
 // Parser information
 struct SPerl_yy_parser_{
   // Before buffer position
-  SPerl_char* befbufptr;
+  SPerl_uchar* befbufptr;
   
   // Current buffer position
-  SPerl_char* bufptr;
+  SPerl_uchar* bufptr;
   
   // Expect next token type
   SPerl_int expect;
 
   // Current file name
-  SPerl_char* cur_file;
+  SPerl_uchar* cur_file;
   
   // Source data
-  SPerl_char* cur_src;
+  SPerl_uchar* cur_src;
   
   // Current line number
   SPerl_int cur_line;
@@ -67,7 +67,7 @@ struct SPerl_yy_parser_{
   SPerl_int current_package_count;
   
   // Current use class name
-  SPerl_char* current_use_package_name;
+  SPerl_uchar* current_use_package_name;
   
   // Method global name symbol table(package name, sub name, argument count)
   SPerl_HASH* sub_complete_name_symtable;
@@ -108,7 +108,7 @@ void SPerl_PARSER_dump_resolved_types(SPerl_PARSER* parser, SPerl_ARRAY* resolve
 void SPerl_PARSER_free(SPerl_PARSER* parser);
 SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity);
 SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity);
-SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length);
+SPerl_uchar* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length);
 SPerl_int* SPerl_PARSER_new_int(SPerl_PARSER* parser);
 SPerl_VMCODE* SPerl_PARSER_new_vmcode(SPerl_PARSER* parser);
 

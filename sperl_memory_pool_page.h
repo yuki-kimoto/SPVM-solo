@@ -4,7 +4,7 @@
 #include "sperl_base.h"
 
 struct SPerl_memory_pool_page {
-  SPerl_char* data;
+  SPerl_uchar* data;
   SPerl_MEMORY_POOL_PAGE* next;
 };
 

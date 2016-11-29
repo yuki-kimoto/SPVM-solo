@@ -14,7 +14,7 @@ enum {
   SPerl_BODY_CORE_C_CODE_DOUBLE
 };
 
-extern SPerl_char* const SPerl_BODY_CORE_C_CODE_NAMES[];
+extern SPerl_uchar* const SPerl_BODY_CORE_C_CODE_NAMES[];
 extern SPerl_int const SPerl_BODY_CORE_C_SIZES[];
 
 struct SPerl_body_core {

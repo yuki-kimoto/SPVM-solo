@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
   }
   
   /* Source file */
-  SPerl_char* package_name = argv[1];
+  SPerl_uchar* package_name = argv[1];
   
   /* initialize parser */
   SPerl_PARSER* parser = SPerl_PARSER_new();

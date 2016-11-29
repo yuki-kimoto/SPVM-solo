@@ -211,14 +211,14 @@ enum {
   SPerl_VMCODE_C_CODE_WIDE
 };
 
-extern SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[];
+extern SPerl_uchar* const SPerl_VMCODE_C_CODE_NAMES[];
 
 /* Binary operation */
 struct SPerl_vmcode {
-  SPerl_char code;
-  SPerl_char operand1;
-  SPerl_char operand2;
-  SPerl_char operand3;
+  SPerl_uchar code;
+  SPerl_uchar operand1;
+  SPerl_uchar operand2;
+  SPerl_uchar operand3;
 };
 
 #endif

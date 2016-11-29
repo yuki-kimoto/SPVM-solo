@@ -1,7 +1,7 @@
 #include "sperl_resolved_type.h"
 #include "sperl_parser.h"
 
-SPerl_char* const SPerl_RESOLVED_TYPE_C_CODE_NAMES[] = {
+SPerl_uchar* const SPerl_RESOLVED_TYPE_C_CODE_NAMES[] = {
   "core",
   "class",
   "array",

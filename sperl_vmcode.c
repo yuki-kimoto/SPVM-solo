@@ -6,7 +6,7 @@
 
 
 
-SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[] = {
+SPerl_uchar* const SPerl_VMCODE_C_CODE_NAMES[] = {
   "POP",
   "POP2",
   "IADD",

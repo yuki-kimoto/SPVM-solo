@@ -74,7 +74,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_POP,          // UNKNOWN
 };
 
-extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
+extern SPerl_uchar* const SPerl_OP_C_CODE_NAMES[];
 
 /* Binary operation */
 struct SPerl_op {
@@ -83,7 +83,7 @@ struct SPerl_op {
   SPerl_OP* first;
   SPerl_OP* last;
   SPerl_OP* sibparent;
-  SPerl_char* file;
+  SPerl_uchar* file;
   SPerl_int line;
   SPerl_int iv;
   union {
@@ -136,14 +136,14 @@ SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, S
 void SPerl_OP_resolve_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert_type, SPerl_RESOLVED_TYPE* resolved_type_src, SPerl_RESOLVED_TYPE* resolved_type_dist);
 void SPerl_OP_create_vmcode(SPerl_PARSER* parser);
 
-SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* sub_abs_name, SPerl_int argument_count);
-SPerl_char* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* call_name);
-SPerl_char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* base_name);
+SPerl_uchar* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_uchar* sub_abs_name, SPerl_int argument_count);
+SPerl_uchar* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_uchar* package_name, SPerl_uchar* call_name);
+SPerl_uchar* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_uchar* package_name, SPerl_uchar* base_name);
 
 SPerl_ARRAY* SPerl_OP_create_op_descripters_array(SPerl_PARSER* parser, SPerl_OP* op_descripters);
 
-SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP *first, SPerl_OP *last);
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_uchar type, SPerl_OP *first, SPerl_OP *last);
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int type, SPerl_OP *first, SPerl_OP *last, SPerl_uchar flags, SPerl_uchar private);
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP* first, SPerl_OP* last);
 

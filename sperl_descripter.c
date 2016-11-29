@@ -1,7 +1,7 @@
 #include "sperl_descripter.h"
 #include "sperl_parser.h"
 
-SPerl_char* const SPerl_DESCRIPTER_CODE_NAMES[] = {
+SPerl_uchar* const SPerl_DESCRIPTER_CODE_NAMES[] = {
   "const",
   "static",
   "value",

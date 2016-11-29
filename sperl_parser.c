@@ -60,7 +60,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   // Core types
   for (SPerl_int i = 0; i < 8; i++) {
     // Name
-    SPerl_char* name = SPerl_BODY_CORE_C_CODE_NAMES[i];
+    SPerl_uchar* name = SPerl_BODY_CORE_C_CODE_NAMES[i];
     
     // Body core
     SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
@@ -157,8 +157,8 @@ SPerl_VMCODE* SPerl_PARSER_new_vmcode(SPerl_PARSER* parser) {
   return vmcode;
 }
 
-SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
-  SPerl_char* str = malloc(length + 1);
+SPerl_uchar* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
+  SPerl_uchar* str = malloc(length + 1);
   
   if (length < 40) {
     str = SPerl_MEMORY_POOL_alloc(parser->memory_pool, 40);
@@ -189,7 +189,7 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
   
   // Free all string pointers;
   for (SPerl_int i = 0; i < parser->long_str_ptrs->length; i++) {
-    SPerl_char* str = SPerl_ARRAY_fetch(parser->long_str_ptrs, i);
+    SPerl_uchar* str = SPerl_ARRAY_fetch(parser->long_str_ptrs, i);
     free(str);
   }
   SPerl_ARRAY_free(parser->long_str_ptrs);

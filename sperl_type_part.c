@@ -1,7 +1,7 @@
 #include "sperl_type_part.h"
 #include "sperl_parser.h"
 
-SPerl_char* const SPerl_TYPE_PART_C_CODE_NAMES[] = {
+SPerl_uchar* const SPerl_TYPE_PART_C_CODE_NAMES[] = {
   "sub",
   "word",
   "char"

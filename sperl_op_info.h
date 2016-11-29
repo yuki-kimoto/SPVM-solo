@@ -43,7 +43,7 @@ enum {
   SPerl_OP_INFO_C_CODE_POP2,
 };
 
-extern SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[];
+extern SPerl_uchar* const SPerl_OP_INFO_C_CODE_NAMES[];
 
 struct SPerl_op_info {
   SPerl_int code;

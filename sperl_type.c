@@ -11,7 +11,7 @@
 #include "sperl_type_part.h"
 #include "sperl_op.h"
 
-SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
+SPerl_uchar* const SPerl_TYPE_C_CODE_NAMES[] = {
   "word",
   "array",
   "sub",
@@ -29,7 +29,7 @@ SPerl_boolean SPerl_TYPE_is_core_type_name(SPerl_PARSER* parser, SPerl_TYPE* typ
   if (type->code == SPerl_TYPE_C_CODE_WORD) {
     SPerl_TYPE_COMPONENT_WORD* type_component_word = type->uv.type_component_word;
     SPerl_WORD* name_word = type_component_word->op_name->uv.word;
-    SPerl_char* name = name_word->value;
+    SPerl_uchar* name = name_word->value;
     
     if (strcmp(name, "boolean") == 0 || strcmp(name, "char") == 0 || strcmp(name, "byte") == 0 || strcmp(name, "short") == 0
       || strcmp(name, "int") == 0 || strcmp(name, "long") == 0 || strcmp(name, "float") == 0
@@ -136,7 +136,7 @@ void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh) {
   SPerl_ARRAY* parts = type->parts;
   for (SPerl_int i = 0; i < parts->length; i++) {
     SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
-    SPerl_char code = part->code;
+    SPerl_uchar code = part->code;
     
     if (code == SPerl_TYPE_PART_C_CODE_CHAR) {
       fprintf(fh, "%s", part->uv.char_name);
@@ -161,7 +161,7 @@ void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
 
     for (SPerl_int i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
-      SPerl_char code = part->code;
+      SPerl_uchar code = part->code;
       
       if (code == SPerl_TYPE_PART_C_CODE_CHAR) {
         total_length += 1;
@@ -174,12 +174,12 @@ void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
       }
     }
     
-    SPerl_char* type_name = SPerl_PARSER_new_string(parser, total_length);
+    SPerl_uchar* type_name = SPerl_PARSER_new_string(parser, total_length);
     
     SPerl_int pos = 0;
     for (SPerl_int i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
-      SPerl_char code = part->code;
+      SPerl_uchar code = part->code;
       
       SPerl_int length = 0;
       if (code == SPerl_TYPE_PART_C_CODE_CHAR) {

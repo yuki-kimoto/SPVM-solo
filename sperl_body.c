@@ -1,7 +1,7 @@
 #include "sperl_body.h"
 #include "sperl_parser.h"
 
-SPerl_char* const SPerl_BODY_C_CODE_NAMES[] = {
+SPerl_uchar* const SPerl_BODY_C_CODE_NAMES[] = {
   "class",
   "enum",
   "core"
