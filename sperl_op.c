@@ -278,11 +278,90 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               break;
             }
             case SPerl_OP_C_CODE_CONSTANT: {
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              
               SPerl_CONSTANT* constant = op_cur->uv.constant;
               
-              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
-              vmcode->code = SPerl_VMCODE_C_CODE_LDC;
-              vmcode->operand1 = (SPerl_char)constant->pool_pos;
+              SPerl_boolean vmcode_set = 0;
+              if (constant->code == SPerl_CONSTANT_C_CODE_BOOLEAN) {
+                if (constant->uv.int_value == 0) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ICONST_0;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.int_value == 1) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ICONST_1;
+                  vmcode_set = 1;
+                }
+              }
+              else if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
+                if (constant->uv.int_value == -1) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ICONST_M1;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.int_value == 0) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ICONST_0;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.int_value == 1) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ICONST_1;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.int_value == 2) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ICONST_2;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.int_value == 3) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ICONST_3;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.int_value == 4) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ICONST_4;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.int_value == 5) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ICONST_5;
+                  vmcode_set = 1;
+                }
+              }
+              else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
+                if (constant->uv.long_value == 0) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LCONST_0;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.long_value == 1) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LCONST_1;
+                  vmcode_set = 1;
+                }
+              }
+              else if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
+                if (constant->uv.float_value == 0) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_FCONST_0;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.float_value == 1) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_FCONST_1;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.float_value == 2) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_FCONST_1;
+                  vmcode_set = 1;
+                }
+              }
+              else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
+                if (constant->uv.double_value == 0) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_DCONST_0;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.double_value == 2) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_DCONST_1;
+                  vmcode_set = 1;
+                }
+              }
+              
+              if (!vmcode_set) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LDC;
+                vmcode->operand1 = (SPerl_char)constant->pool_pos;
+              }
               
               SPerl_VMCODES_push(vmcodes, vmcode);
               break;
