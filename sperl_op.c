@@ -81,7 +81,7 @@ SPerl_uchar* const SPerl_OP_C_CODE_NAMES[] = {
   "DIVIDE",
   "BIT_AND",
   "BIT_OR",
-  "MODULO",
+  "REMAINDER",
   "BIT_XOR",
   "EQ",
   "NE",

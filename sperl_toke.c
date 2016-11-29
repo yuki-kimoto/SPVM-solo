@@ -204,7 +204,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
       }
       case '%': {
         parser->bufptr++;
-        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_MODULO);
+        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_REMAINDER);
         yylvalp->opval = op;
         return MULOP;
       }

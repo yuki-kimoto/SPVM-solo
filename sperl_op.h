@@ -49,7 +49,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_DIVIDE,       // BINOP
   SPerl_OP_C_CODE_BIT_AND,       // BINOP
   SPerl_OP_C_CODE_BIT_OR,        // BINOP
-  SPerl_OP_C_CODE_MODULO,       // BINOP
+  SPerl_OP_C_CODE_REMAINDER,       // BINOP
   SPerl_OP_C_CODE_BIT_XOR,       // BINOP
   SPerl_OP_C_CODE_EQ,           // BINOP
   SPerl_OP_C_CODE_NE,           // BINOP
