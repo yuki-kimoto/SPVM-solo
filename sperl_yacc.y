@@ -12,7 +12,6 @@
   #include "sperl_op_info.h"
 %}
 
-%token <opval> '+' '-'
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
 %token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE
 
@@ -31,7 +30,7 @@
 %left <opval> BITANDOP
 %nonassoc <opval> RELOP
 %left <opval> SHIFTOP
-%left <opval> ADDOP
+%left <opval> '+' '-'
 %left <opval> MULOP
 %right <opval> NOTOP '~' UMINUS
 %nonassoc <opval> INCOP DECOP
@@ -53,7 +52,7 @@ grammar
       }
       else {
         // Dump parser infomation
-         SPerl_PARSER_dump_parser(parser);
+        SPerl_PARSER_dump_parser(parser);
       }
     }
 
@@ -424,14 +423,14 @@ call_op
     {
       $$ = SPerl_OP_build_call_op(parser, $1, $2, NULL);
     }
-  | term '+' term %prec ADDOP
+  | term '+' term
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ADD, NULL, NULL);
       op->file = $2->file;
       op->line = $2->line;
       $$ = SPerl_OP_build_call_op(parser, op, $1, $3);
     }
-  | term '-' term %prec ADDOP
+  | term '-' term
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_SUBTRACT, NULL, NULL);
       op->file = $2->file;
