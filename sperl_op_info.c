@@ -27,6 +27,12 @@ SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "LADD",
   "FADD",
   "DADD",
+  "ISUBTRACT",
+  "LSUBTRACT",
+  "FSUBTRACT",
+  "DSUBTRACT",
+  "POP",
+  "POP2",
 };
 
 
