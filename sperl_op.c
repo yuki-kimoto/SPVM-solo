@@ -130,6 +130,59 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_CONVERT_TYPE: {
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_D2F) {
+                vmcode->code = SPerl_VMCODE_C_CODE_D2F;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_D2I) {
+                vmcode->code = SPerl_VMCODE_C_CODE_D2I;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_D2L) {
+                vmcode->code = SPerl_VMCODE_C_CODE_D2L;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_F2D) {
+                vmcode->code = SPerl_VMCODE_C_CODE_F2D;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_F2I) {
+                vmcode->code = SPerl_VMCODE_C_CODE_F2I;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_F2L) {
+                vmcode->code = SPerl_VMCODE_C_CODE_F2L;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_I2B) {
+                vmcode->code = SPerl_VMCODE_C_CODE_I2B;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_I2C) {
+                vmcode->code = SPerl_VMCODE_C_CODE_I2C;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_I2D) {
+                vmcode->code = SPerl_VMCODE_C_CODE_I2D;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_I2F) {
+                vmcode->code = SPerl_VMCODE_C_CODE_I2F;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_I2L) {
+                vmcode->code = SPerl_VMCODE_C_CODE_I2L;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_I2S) {
+                vmcode->code = SPerl_VMCODE_C_CODE_I2S;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_L2D) {
+                vmcode->code = SPerl_VMCODE_C_CODE_L2D;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_L2F) {
+                vmcode->code = SPerl_VMCODE_C_CODE_L2F;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_L2I) {
+                vmcode->code = SPerl_VMCODE_C_CODE_L2I;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_POP: {
               
               // Code
