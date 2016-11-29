@@ -39,6 +39,10 @@ enum {
   SPerl_OP_INFO_C_CODE_LDIVIDE,          // UNOP
   SPerl_OP_INFO_C_CODE_FDIVIDE,          // UNOP
   SPerl_OP_INFO_C_CODE_DDIVIDE,          // UNOP
+  SPerl_OP_INFO_C_CODE_INEGATE,          // UNOP
+  SPerl_OP_INFO_C_CODE_LNEGATE,          // UNOP
+  SPerl_OP_INFO_C_CODE_FNEGATE,          // UNOP
+  SPerl_OP_INFO_C_CODE_DNEGATE,          // UNOP
   SPerl_OP_INFO_C_CODE_POP,
   SPerl_OP_INFO_C_CODE_POP2,
 };

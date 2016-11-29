@@ -131,6 +131,26 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_NEGATE: {
+              
+              // Code
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_INEGATE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_INEGATE;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_LNEGATE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LNEGATE;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_FNEGATE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_FNEGATE;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_DNEGATE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_DNEGATE;
+              }
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_CONVERT_TYPE: {
               
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
@@ -456,6 +476,33 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_NEGATE: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              
+              // Can receive only core type
+              if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id)) {
+                SPerl_yyerror_format(parser, "- operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
+              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_INEGATE;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                op_info->code = SPerl_OP_INFO_C_CODE_LNEGATE;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_FNEGATE;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                op_info->code = SPerl_OP_INFO_C_CODE_DNEGATE;
+              }
+              op_info->return_resolved_type = resolved_type;
+              
+              break;              
+            }
             case SPerl_OP_C_CODE_POP: {
               SPerl_OP* first = op_cur->first;
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
@@ -829,6 +876,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
     case SPerl_OP_C_CODE_SUBTRACT:
     case SPerl_OP_C_CODE_MULTIPLY:
     case SPerl_OP_C_CODE_DIVIDE:
+    case SPerl_OP_C_CODE_NEGATE:
     {
       SPerl_OP_INFO* op_info = op->uv.op_info;
       resolved_type = op_info->return_resolved_type;

@@ -39,6 +39,10 @@ SPerl_uchar* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "LDIVIDE",
   "FDIVIDE",
   "DDIVIDE",
+  "INEGATE",
+  "LNEGATE",
+  "FNEGATE",
+  "DNEGATE",
   "POP",
   "POP2",
 };
