@@ -7,6 +7,8 @@
 
 
 SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[] = {
+  "POP",
+  "POP2",
   "IADD",
   "LADD",
   "FADD",
@@ -197,8 +199,6 @@ SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[] = {
   "NEW",
   "NEWARRAY",
   "NOP",
-  "POP",
-  "POP2",
   "PUTFIELD",
   "PUTSTATIC",
   "RET",
