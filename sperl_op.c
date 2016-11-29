@@ -267,21 +267,19 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               break;
             }
             case SPerl_OP_C_CODE_ADD: {
-              SPerl_OP* first = op_cur->first;
-              SPerl_OP* last = op_cur->last;
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, last);
-              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
               
               // Can receive only core type
               if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
-                SPerl_yyerror_format(parser, "%s operator can receive only core type at %s line %d\n", op_info->symbol, op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "+ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
               // Insert type converting op
               SPerl_OP_insert_op_convert_type(parser, op_cur, first_resolved_type, last_resolved_type);
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
               if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
                 op_info->code = SPerl_OP_INFO_C_CODE_IADD;
               }
@@ -1567,72 +1565,6 @@ SPerl_OP* SPerl_OP_build_call_op(SPerl_PARSER* parser, SPerl_OP* op_call_op, SPe
   }
   
   SPerl_OP_INFO* op_info = SPerl_OP_INFO_new(parser);
-  SPerl_char* symbol;
-  switch (op_call_op->code) {
-    case SPerl_OP_C_CODE_PLUS:
-    case SPerl_OP_C_CODE_ADD:
-      symbol = "+";
-      break;
-    case SPerl_OP_C_CODE_PRE_INC:
-    case SPerl_OP_C_CODE_POST_INC:
-      symbol = "++";
-      break;
-    case SPerl_OP_C_CODE_PRE_DEC:
-    case SPerl_OP_C_CODE_POST_DEC:
-      symbol = "--";
-      break;
-    case SPerl_OP_C_CODE_BIT_NOT:
-      symbol = "~";
-      break;
-    case SPerl_OP_C_CODE_NOT:
-      symbol = "!";
-      break;
-    case SPerl_OP_C_CODE_SUBTRACT:
-    case SPerl_OP_C_CODE_NEGATE:
-      symbol = "-";
-      break;
-    case SPerl_OP_C_CODE_MULTIPLY:
-      symbol = "*";
-      break;
-    case SPerl_OP_C_CODE_BIT_AND:
-      symbol = "&";
-      break;
-    case SPerl_OP_C_CODE_BIT_OR:
-      symbol = "|";
-      break;
-    case SPerl_OP_C_CODE_LEFT_SHIFT:
-      symbol = "<<";
-      break;
-    case SPerl_OP_C_CODE_RIGHT_SHIFT:
-      symbol = ">>";
-      break;
-    case SPerl_OP_C_CODE_AND:
-      symbol = "&&";
-      break;
-    case SPerl_OP_C_CODE_OR:
-      symbol = "||";
-      break;
-    case SPerl_OP_C_CODE_LT:
-      symbol = "<";
-      break;
-    case SPerl_OP_C_CODE_LE:
-      symbol = "=<";
-      break;
-    case SPerl_OP_C_CODE_GT:
-      symbol = ">";
-      break;
-    case SPerl_OP_C_CODE_GE:
-      symbol = "=>";
-      break;
-    case SPerl_OP_C_CODE_EQ:
-      symbol = "==";
-      break;
-    case SPerl_OP_C_CODE_NE:
-      symbol = "!=";
-      break;
-  }
-  op_info->symbol = symbol;
-  
   op_call_op->uv.op_info = op_info;
   
   return op_call_op;
