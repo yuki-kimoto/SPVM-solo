@@ -43,6 +43,10 @@ SPerl_uchar* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "LNEGATE",
   "FNEGATE",
   "DNEGATE",
+  "IREMAINDER",
+  "LREMAINDER",
+  "FREMAINDER",
+  "DREMAINDER",
   "POP",
   "POP2",
 };

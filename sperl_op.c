@@ -298,6 +298,26 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               break;
             }
+            case SPerl_OP_C_CODE_REMAINDER: {
+              
+              // Code
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_IREMAINDER) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IREMAINDER;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_LREMAINDER) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LREMAINDER;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_FREMAINDER) {
+                vmcode->code = SPerl_VMCODE_C_CODE_FREMAINDER;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_DREMAINDER) {
+                vmcode->code = SPerl_VMCODE_C_CODE_DREMAINDER;
+              }
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_CONSTANT: {
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
               
@@ -661,6 +681,36 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
                 op_info->code = SPerl_OP_INFO_C_CODE_DDIVIDE;
+              }
+              op_info->return_resolved_type = resolved_type;
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_REMAINDER: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              // Can receive only core type
+              if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) || !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
+                SPerl_yyerror_format(parser, "% operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              // Insert type converting op
+              SPerl_OP_insert_op_convert_type(parser, op_cur, first_resolved_type, last_resolved_type);
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
+              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_IREMAINDER;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                op_info->code = SPerl_OP_INFO_C_CODE_LREMAINDER;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_FREMAINDER;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                op_info->code = SPerl_OP_INFO_C_CODE_DREMAINDER;
               }
               op_info->return_resolved_type = resolved_type;
               
