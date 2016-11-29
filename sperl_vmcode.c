@@ -7,6 +7,10 @@
 
 
 SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[] = {
+  "IADD",
+  "LADD",
+  "FADD",
+  "DADD",
   "AALOAD",
   "AASTORE",
   "ACONST_NULL",
@@ -33,7 +37,6 @@ SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[] = {
   "D2F",
   "D2I",
   "D2L",
-  "DADD",
   "DALOAD",
   "DASTORE",
   "DCMPG",
@@ -65,7 +68,6 @@ SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[] = {
   "F2D",
   "F2I",
   "F2L",
-  "FADD",
   "FALOAD",
   "FASTORE",
   "FCMPG",
@@ -99,7 +101,6 @@ SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[] = {
   "I2F",
   "I2L",
   "I2S",
-  "IADD",
   "IALOAD",
   "IAND",
   "IASTORE",
@@ -159,7 +160,6 @@ SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[] = {
   "L2D",
   "L2F",
   "L2I",
-  "LADD",
   "LALOAD",
   "LAND",
   "LASTORE",
