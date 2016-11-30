@@ -459,6 +459,10 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               SPerl_VAR* var = op_cur->uv.var;
               
+              if (var->lvalue) {
+                break;
+              }
+              
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
               
               SPerl_int my_var_pos = var->op_my_var->uv.my_var->pos;
