@@ -53,9 +53,6 @@ struct SPerl_yy_parser_{
   
   // Class loading stack
   SPerl_ARRAY* op_use_stack;
-  
-  // Variable id
-  SPerl_int next_var_id;
 
   // Current subs(named sub + anon sub) in class 
   SPerl_ARRAY* op_subs;

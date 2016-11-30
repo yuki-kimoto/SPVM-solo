@@ -349,18 +349,18 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
               
-              SPerl_int my_var_id = var->op_my_var->uv.my_var->id;
+              SPerl_int my_var_pos = var->op_my_var->uv.my_var->pos;
               if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
-                if (my_var_id == 0) {
+                if (my_var_pos == 0) {
                   vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_0;
                 }
-                else if (my_var_id == 1) {
+                else if (my_var_pos == 1) {
                   vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_1;
                 }
-                else if (my_var_id == 2) {
+                else if (my_var_pos == 2) {
                   vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_2;
                 }
-                else if (my_var_id == 3) {
+                else if (my_var_pos == 3) {
                   vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_3;
                 }
                 else {
@@ -368,16 +368,16 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 }
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
-                if (my_var_id == 0) {
+                if (my_var_pos == 0) {
                   vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_0;
                 }
-                else if (my_var_id == 1) {
+                else if (my_var_pos == 1) {
                   vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_1;
                 }
-                else if (my_var_id == 2) {
+                else if (my_var_pos == 2) {
                   vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_2;
                 }
-                else if (my_var_id == 3) {
+                else if (my_var_pos == 3) {
                   vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_3;
                 }
                 else {
@@ -385,16 +385,16 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 }
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-                if (my_var_id == 0) {
+                if (my_var_pos == 0) {
                   vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_0;
                 }
-                else if (my_var_id == 1) {
+                else if (my_var_pos == 1) {
                   vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_1;
                 }
-                else if (my_var_id == 2) {
+                else if (my_var_pos == 2) {
                   vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_2;
                 }
-                else if (my_var_id == 3) {
+                else if (my_var_pos == 3) {
                   vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_3;
                 }
                 else {
@@ -402,16 +402,16 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 }
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-                if (my_var_id == 0) {
+                if (my_var_pos == 0) {
                   vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_0;
                 }
-                else if (my_var_id == 1) {
+                else if (my_var_pos == 1) {
                   vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_1;
                 }
-                else if (my_var_id == 2) {
+                else if (my_var_pos == 2) {
                   vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_2;
                 }
-                else if (my_var_id == 3) {
+                else if (my_var_pos == 3) {
                   vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_3;
                 }
                 else {
@@ -419,16 +419,16 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 }
               }
               else {
-                if (my_var_id == 0) {
+                if (my_var_pos == 0) {
                   vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_0;
                 }
-                else if (my_var_id == 1) {
+                else if (my_var_pos == 1) {
                   vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_1;
                 }
-                else if (my_var_id == 2) {
+                else if (my_var_pos == 2) {
                   vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_2;
                 }
-                else if (my_var_id == 3) {
+                else if (my_var_pos == 3) {
                   vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_3;
                 }
                 else {
@@ -436,16 +436,16 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 }
               }
               
-              if (my_var_id < 256) {
-                vmcode->operand1 = (SPerl_uchar)my_var_id;
+              if (my_var_pos < 256) {
+                vmcode->operand1 = (SPerl_uchar)my_var_pos;
               }
               else {
                 SPerl_VMCODE* vmcode_wide = SPerl_PARSER_new_vmcode(parser);
                 vmcode_wide->code = SPerl_VMCODE_C_CODE_WIDE;
                 SPerl_VMCODES_push(vmcodes, vmcode_wide);
                 
-                vmcode->operand1 = (SPerl_uchar)((uint32_t)my_var_id >> 8);
-                vmcode->operand2 = (SPerl_uchar)my_var_id;
+                vmcode->operand1 = (SPerl_uchar)((uint32_t)my_var_pos >> 8);
+                vmcode->operand2 = (SPerl_uchar)my_var_pos;
               }
               
               SPerl_VMCODES_push(vmcodes, vmcode);
@@ -587,6 +587,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
     SPerl_SUB* sub = op_sub->uv.sub;
     
     // my var informations
+    SPerl_int next_my_var_pos = 0;
     SPerl_ARRAY* op_my_vars = SPerl_PARSER_new_array(parser, 0);
     SPerl_HASH* my_var_symtable = SPerl_PARSER_new_hash(parser, 0);
     
@@ -973,7 +974,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               else {
                 // Add my var information
-                my_var->id = parser->next_var_id++;
+                my_var->pos = next_my_var_pos++;
                 SPerl_ARRAY_push(op_my_vars, op_cur);
                 my_var->op_sub = op_sub;
                 

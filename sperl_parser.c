@@ -55,7 +55,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->bufptr = "";
   parser->resolved_types = SPerl_PARSER_new_array(parser, 0);
   parser->resolved_type_symtable = SPerl_PARSER_new_hash(parser, 0);
-  parser->next_var_id = 1;
 
   // Core types
   for (SPerl_int i = 0; i < 8; i++) {
