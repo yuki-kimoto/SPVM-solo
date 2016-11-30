@@ -484,6 +484,9 @@ array_elem
   : VAR ARROW '[' term ']'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ARRAY_ELEM, $1, $4);
+      $$->file = $1->file;
+      $$->line = $1->line;
+      $$->uv.op_info = SPerl_OP_INFO_new(parser);
     }
 
 call_sub

@@ -346,9 +346,6 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
               
               SPerl_VAR* var = op_cur->uv.var;
-              if (var->lvalue) {
-                break;
-              }
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
               
@@ -642,6 +639,41 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
                 op_cur->first->uv.field->lvalue = 1;
               }
+              
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              // Convert type
+              if (SPerl_TYPE_is_core_type(parser, first_resolved_type->id) && SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
+                SPerl_OP_insert_op_convert_type(parser, op_cur, first_resolved_type, last_resolved_type);
+              }
+              
+              first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              if (first_resolved_type->id != last_resolved_type->id) {
+                SPerl_yyerror_format(parser, "Invalid type at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              SPerl_RESOLVED_TYPE* resolved_type = first_resolved_type;
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
+              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_ISTORE;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                op_info->code = SPerl_OP_INFO_C_CODE_LSTORE;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_FSTORE;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                op_info->code = SPerl_OP_INFO_C_CODE_DSTORE;
+              }
+              else {
+                op_info->code = SPerl_OP_INFO_C_CODE_ASTORE;
+              }
+              op_info->return_resolved_type = resolved_type;
               
               break;
             }
@@ -1098,6 +1130,11 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   SPerl_RESOLVED_TYPE*  resolved_type = NULL;
   
   switch (op->code) {
+    case SPerl_OP_C_CODE_DECL_ANON_SUB: {
+      SPerl_SUB* sub = op->uv.sub;
+      resolved_type = sub->op_return_type->uv.type->resolved_type;
+      break;
+    }
     case SPerl_OP_C_CODE_CONSTANT: {
       SPerl_CONSTANT* constant = op->uv.constant;
       resolved_type = constant->resolved_type;
@@ -1164,7 +1201,7 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op, SPerl_R
   
   // last int
   if (last_type_id < 4) {
-    first_type_id = 4;
+    last_type_id = 4;
   }
   
   if (first_type_id != last_type_id) {
@@ -1188,7 +1225,7 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op, SPerl_R
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
         op_info->code = SPerl_OP_INFO_C_CODE_I2D;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
-       replace_first = 1;
+        replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_BODY_CORE_C_CODE_LONG) {

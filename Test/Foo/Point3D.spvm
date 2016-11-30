@@ -148,11 +148,11 @@ package Test::Foo::Point3D {
     # _sum();
     # sum_foo();
     
-    $title->[3];
-    $title->[3] = 4;
+    # $title->[3];
+    # $title->[3] = 4;
 
-    my $title8 : int = true;
-    my $title9 : int = false;
+    my $title8 : boolean = true;
+    my $title9 : boolean = false;
 
     # sum();
     # sum(1, 3, 5);

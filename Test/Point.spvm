@@ -23,9 +23,9 @@ package Test::Point {
     
     $var4 = 6;
     
-    my $var5 : sub (int, int) int = sub ($foo : int, $bar : int) : int {
-      
-    };
+    # my $var5 : sub (int, int) int = sub ($foo : int, $bar : int) : int {
+    #  
+    # };
     
     Test::EnumA::ONE;
   }
