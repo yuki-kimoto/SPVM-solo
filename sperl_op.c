@@ -131,6 +131,118 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_ASSIGN: {
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+              
+              if (op_cur->first->code == SPerl_OP_C_CODE_VAR) {
+                SPerl_OP* op_var = op_cur->first;
+                SPerl_int my_var_pos = op_var->uv.var->op_my_var->uv.my_var->pos;
+                if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                  if (my_var_pos == 0) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_ISTORE_0;
+                  }
+                  else if (my_var_pos == 1) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_ISTORE_1;
+                  }
+                  else if (my_var_pos == 2) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_ISTORE_2;
+                  }
+                  else if (my_var_pos == 3) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_ISTORE_3;
+                  }
+                  else {
+                    vmcode->code = SPerl_VMCODE_C_CODE_ISTORE;
+                  }
+                }
+                else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                  if (my_var_pos == 0) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_LSTORE_0;
+                  }
+                  else if (my_var_pos == 1) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_LSTORE_1;
+                  }
+                  else if (my_var_pos == 2) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_LSTORE_2;
+                  }
+                  else if (my_var_pos == 3) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_LSTORE_3;
+                  }
+                  else {
+                    vmcode->code = SPerl_VMCODE_C_CODE_LSTORE;
+                  }
+                }
+                else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                  if (my_var_pos == 0) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_FSTORE_0;
+                  }
+                  else if (my_var_pos == 1) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_FSTORE_1;
+                  }
+                  else if (my_var_pos == 2) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_FSTORE_2;
+                  }
+                  else if (my_var_pos == 3) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_FSTORE_3;
+                  }
+                  else {
+                    vmcode->code = SPerl_VMCODE_C_CODE_FSTORE;
+                  }
+                }
+                else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                  if (my_var_pos == 0) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_DSTORE_0;
+                  }
+                  else if (my_var_pos == 1) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_DSTORE_1;
+                  }
+                  else if (my_var_pos == 2) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_DSTORE_2;
+                  }
+                  else if (my_var_pos == 3) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_DSTORE_3;
+                  }
+                  else {
+                    vmcode->code = SPerl_VMCODE_C_CODE_DSTORE;
+                  }
+                }
+                else {
+                  if (my_var_pos == 0) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_ASTORE_0;
+                  }
+                  else if (my_var_pos == 1) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_ASTORE_1;
+                  }
+                  else if (my_var_pos == 2) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_ASTORE_2;
+                  }
+                  else if (my_var_pos == 3) {
+                    vmcode->code = SPerl_VMCODE_C_CODE_ASTORE_3;
+                  }
+                  else {
+                    vmcode->code = SPerl_VMCODE_C_CODE_ASTORE;
+                  }
+                }
+                
+                if (my_var_pos < 256) {
+                  vmcode->operand1 = (SPerl_uchar)my_var_pos;
+                }
+                else {
+                  SPerl_VMCODE* vmcode_wide = SPerl_PARSER_new_vmcode(parser);
+                  vmcode_wide->code = SPerl_VMCODE_C_CODE_WIDE;
+                  SPerl_VMCODES_push(vmcodes, vmcode_wide);
+                  
+                  vmcode->operand1 = (SPerl_uchar)((uint32_t)my_var_pos >> 8);
+                  vmcode->operand2 = (SPerl_uchar)my_var_pos;
+                }
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
+
             case SPerl_OP_C_CODE_RETURN: {
               
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
@@ -1177,6 +1289,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
     case SPerl_OP_C_CODE_DIVIDE:
     case SPerl_OP_C_CODE_NEGATE:
     case SPerl_OP_C_CODE_PLUS:
+    case SPerl_OP_C_CODE_ASSIGN:
     {
       SPerl_OP_INFO* op_info = op->uv.op_info;
       resolved_type = op_info->return_resolved_type;
