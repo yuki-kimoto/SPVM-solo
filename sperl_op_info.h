@@ -55,6 +55,8 @@ enum {
   SPerl_OP_INFO_C_CODE_LRETURN,          // UNOP
   SPerl_OP_INFO_C_CODE_FRETURN,          // UNOP
   SPerl_OP_INFO_C_CODE_DRETURN,          // UNOP
+  SPerl_OP_INFO_C_CODE_ARETURN,          // UNOP
+  SPerl_OP_INFO_C_CODE_RETURN,          // UNOP
   SPerl_OP_INFO_C_CODE_POP,
   SPerl_OP_INFO_C_CODE_POP2,
 };

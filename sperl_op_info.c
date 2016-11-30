@@ -55,6 +55,8 @@ SPerl_uchar* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "LRETURN",
   "FRETURN",
   "DRETURN",
+  "ARETURN",
+  "RETURN",
   "POP",
   "POP2",
 };
