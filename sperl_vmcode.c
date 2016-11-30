@@ -71,6 +71,7 @@ SPerl_uchar* const SPerl_VMCODE_C_CODE_NAMES[] = {
   "DRETURN",
   "ARETURN",
   "RETURN",
+  "AALOAD",
   "AASTORE",
   "ACONST_NULL",
   "ALOAD",

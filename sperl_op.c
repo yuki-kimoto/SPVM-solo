@@ -342,6 +342,46 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               break;
             }
+            case SPerl_OP_C_CODE_VAR: {
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              
+              SPerl_VAR* var = op_cur->uv.var;
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+              
+              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_ILOAD;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LLOAD;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_FLOAD;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_DLOAD;
+              }
+              else {
+                vmcode->code = SPerl_VMCODE_C_CODE_ALOAD;
+              }
+              
+              SPerl_int my_var_id = var->op_my_var->uv.my_var->id;
+              if (my_var_id < 256) {
+                vmcode->operand1 = (SPerl_uchar)my_var_id;
+              }
+              else {
+                SPerl_VMCODE* vmcode_wide = SPerl_PARSER_new_vmcode(parser);
+                vmcode_wide->code = SPerl_VMCODE_C_CODE_WIDE;
+                SPerl_VMCODES_push(vmcodes, vmcode_wide);
+                
+                vmcode->operand1 = (SPerl_uchar)((uint32_t)my_var_id >> 8);
+                vmcode->operand2 = (SPerl_uchar)my_var_id;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_CONSTANT: {
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
               
