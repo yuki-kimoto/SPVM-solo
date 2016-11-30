@@ -349,23 +349,93 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
               
+              SPerl_int my_var_id = var->op_my_var->uv.my_var->id;
               if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_ILOAD;
+                if (my_var_id == 0) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_0;
+                }
+                else if (my_var_id == 1) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_1;
+                }
+                else if (my_var_id == 2) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_2;
+                }
+                else if (my_var_id == 3) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_3;
+                }
+                else {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ILOAD;
+                }
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
-                vmcode->code = SPerl_VMCODE_C_CODE_LLOAD;
+                if (my_var_id == 0) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_0;
+                }
+                else if (my_var_id == 1) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_1;
+                }
+                else if (my_var_id == 2) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_2;
+                }
+                else if (my_var_id == 3) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_3;
+                }
+                else {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LLOAD;
+                }
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_FLOAD;
+                if (my_var_id == 0) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_0;
+                }
+                else if (my_var_id == 1) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_1;
+                }
+                else if (my_var_id == 2) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_2;
+                }
+                else if (my_var_id == 3) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_3;
+                }
+                else {
+                  vmcode->code = SPerl_VMCODE_C_CODE_FLOAD;
+                }
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-                vmcode->code = SPerl_VMCODE_C_CODE_DLOAD;
+                if (my_var_id == 0) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_0;
+                }
+                else if (my_var_id == 1) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_1;
+                }
+                else if (my_var_id == 2) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_2;
+                }
+                else if (my_var_id == 3) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_3;
+                }
+                else {
+                  vmcode->code = SPerl_VMCODE_C_CODE_DLOAD;
+                }
               }
               else {
-                vmcode->code = SPerl_VMCODE_C_CODE_ALOAD;
+                if (my_var_id == 0) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_0;
+                }
+                else if (my_var_id == 1) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_1;
+                }
+                else if (my_var_id == 2) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_2;
+                }
+                else if (my_var_id == 3) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_3;
+                }
+                else {
+                  vmcode->code = SPerl_VMCODE_C_CODE_ALOAD;
+                }
               }
               
-              SPerl_int my_var_id = var->op_my_var->uv.my_var->id;
               if (my_var_id < 256) {
                 vmcode->operand1 = (SPerl_uchar)my_var_id;
               }
