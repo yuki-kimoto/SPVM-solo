@@ -27,4 +27,8 @@ package Test {
     1.2 - 3;
     my $foo : double = (double)1;
   }
+  
+  sub sum() : int {
+    return 1;
+  }
 }

@@ -318,7 +318,9 @@ expression
     }
   | RETURN term
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_RETURN, $2, NULL);
+      $$ = $1;
+      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $2);
+      $$->uv.op_info = SPerl_OP_INFO_new(parser);
     }
 
 opt_terms
