@@ -346,6 +346,9 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
               
               SPerl_VAR* var = op_cur->uv.var;
+              if (var->lvalue) {
+                break;
+              }
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
               
@@ -631,6 +634,17 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_ASSIGN: {
+              
+              if (op_cur->first->code == SPerl_OP_C_CODE_VAR) {
+                op_cur->first->uv.var->lvalue = 1;
+              }
+              else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
+                op_cur->first->uv.field->lvalue = 1;
+              }
+              
+              break;
+            }
             case SPerl_OP_C_CODE_RETURN: {
               if (op_cur->first) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);

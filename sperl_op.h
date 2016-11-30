@@ -89,13 +89,13 @@ struct SPerl_op {
   union {
     SPerl_OP_INFO* op_info;
     SPerl_MY_VAR* my_var;
-    SPerl_VAR* var;
     SPerl_SUB* sub;
     SPerl_CONSTANT* constant;
     SPerl_NAME* name;
     SPerl_TYPE* type;
     SPerl_WORD* word;
     SPerl_USE* use;
+    SPerl_VAR* var;
     SPerl_FIELD* field;
     SPerl_DESCRIPTER* descripter;
     SPerl_PACKAGE* package;
