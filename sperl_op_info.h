@@ -57,11 +57,6 @@ enum {
   SPerl_OP_INFO_C_CODE_DRETURN,          // UNOP
   SPerl_OP_INFO_C_CODE_ARETURN,          // UNOP
   SPerl_OP_INFO_C_CODE_RETURN,          // UNOP
-  SPerl_OP_INFO_C_CODE_ISTORE,          // UNOP
-  SPerl_OP_INFO_C_CODE_LSTORE,          // UNOP
-  SPerl_OP_INFO_C_CODE_FSTORE,          // UNOP
-  SPerl_OP_INFO_C_CODE_DSTORE,          // UNOP
-  SPerl_OP_INFO_C_CODE_ASTORE,          // UNOP
   SPerl_OP_INFO_C_CODE_POP,
   SPerl_OP_INFO_C_CODE_POP2,
 };

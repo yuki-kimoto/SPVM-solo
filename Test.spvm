@@ -14,6 +14,7 @@ package Test {
   
   sub main() : int {
     my $foo2 : int[];
+    $foo2->[1] = 5;
     $foo2->[2];
     my $foo : int;
     $foo = 1;
@@ -30,9 +31,5 @@ package Test {
     1 - 2;
     1.2 - 3;
     my $bar : double = (double)1;
-  }
-  
-  sub sum() : int {
-    return 1;
   }
 }

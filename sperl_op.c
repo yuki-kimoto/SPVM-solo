@@ -278,6 +278,25 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                   vmcode->operand2 = (SPerl_uchar)my_var_pos;
                 }
               }
+              else if (op_cur->first->code == SPerl_OP_C_CODE_ARRAY_ELEM) {
+                SPerl_OP* op_op_info = op_cur->first;
+                
+                if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_IASTORE;
+                }
+                else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LASTORE;
+                }
+                else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_FASTORE;
+                }
+                else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_DASTORE;
+                }
+                else {
+                  vmcode->code = SPerl_VMCODE_C_CODE_AASTORE;
+                }
+              }
               
               SPerl_VMCODES_push(vmcodes, vmcode);
               
@@ -842,21 +861,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = first_resolved_type;
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
-                op_info->code = SPerl_OP_INFO_C_CODE_ISTORE;
-              }
-              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
-                op_info->code = SPerl_OP_INFO_C_CODE_LSTORE;
-              }
-              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-                op_info->code = SPerl_OP_INFO_C_CODE_FSTORE;
-              }
-              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-                op_info->code = SPerl_OP_INFO_C_CODE_DSTORE;
-              }
-              else {
-                op_info->code = SPerl_OP_INFO_C_CODE_ASTORE;
-              }
+              
               op_info->return_resolved_type = resolved_type;
               
               break;
