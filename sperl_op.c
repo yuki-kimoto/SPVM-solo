@@ -131,6 +131,47 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_ARRAY_ELEM: {
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
+              
+              if (op_info->lvalue) {
+                break;
+              }
+              
+              SPerl_RESOLVED_TYPE* resolved_type = op_info->return_resolved_type;
+              
+              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_BOOLEAN
+                || resolved_type->id == SPerl_BODY_CORE_C_CODE_CHAR
+                || resolved_type->id == SPerl_BODY_CORE_C_CODE_BYTE)
+              {
+                vmcode->code = SPerl_VMCODE_C_CODE_BALOAD;
+              }
+              else if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_SHORT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_SALOAD;
+              }
+              else if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IALOAD;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LALOAD;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_FALOAD;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_DALOAD;
+              }
+              else {
+                vmcode->code = SPerl_VMCODE_C_CODE_AALOAD;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_ASSIGN: {
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
               
@@ -764,7 +805,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 break;
               }
               
-              SPerl_RESOLVED_TYPE* resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name - 2));
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
               
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
               op_info->return_resolved_type = resolved_type;

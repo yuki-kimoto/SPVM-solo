@@ -13,6 +13,8 @@ package Test {
   use Test::ValueClass;
   
   sub main() : int {
+    my $foo2 : int[];
+    $foo2->[2];
     my $foo : int;
     $foo = 1;
     4 % 6;
