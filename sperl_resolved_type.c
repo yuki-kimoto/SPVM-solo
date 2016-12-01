@@ -15,3 +15,16 @@ SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl_PARSER* parser) {
   
   return resolved_type;
 }
+
+SPerl_boolean SPerl_RESOLVED_TYPE_is_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  SPerl_int length = resolved_type->name_length;
+  SPerl_uchar char1 = resolved_type->name[length - 1];
+  SPerl_uchar char2 = resolved_type->name[length - 2];
+  
+  if (char1 == '[' && char2 == ']') {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}

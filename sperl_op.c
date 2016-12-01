@@ -747,6 +747,30 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_ARRAY_ELEM: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              // First value must be array
+              SPerl_boolean first_resolved_type_is_array = SPerl_RESOLVED_TYPE_is_array(parser, first_resolved_type);
+              if (!first_resolved_type_is_array) {
+                SPerl_yyerror_format(parser, "left value must be array at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              // Last value must be integer
+              if (last_resolved_type->id != SPerl_BODY_CORE_C_CODE_INT) {
+                SPerl_yyerror_format(parser, "array index must be integer at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name - 2));
+              
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
+              op_info->return_resolved_type = resolved_type;
+              
+              break;
+            }
             case SPerl_OP_C_CODE_ASSIGN: {
               
               if (op_cur->first->code == SPerl_OP_C_CODE_VAR) {
@@ -754,6 +778,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
                 op_cur->first->uv.field->lvalue = 1;
+              }
+              else if (op_cur->first->code == SPerl_OP_C_CODE_ARRAY_ELEM) {
+                op_cur->first->uv.op_info->lvalue = 1;
               }
               
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
@@ -1294,6 +1321,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
     case SPerl_OP_C_CODE_NEGATE:
     case SPerl_OP_C_CODE_PLUS:
     case SPerl_OP_C_CODE_ASSIGN:
+    case SPerl_OP_C_CODE_ARRAY_ELEM:
     {
       SPerl_OP_INFO* op_info = op->uv.op_info;
       resolved_type = op_info->return_resolved_type;

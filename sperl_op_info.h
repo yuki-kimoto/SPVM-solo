@@ -73,6 +73,7 @@ struct SPerl_op_info {
   SPerl_RESOLVED_TYPE* return_resolved_type;
   SPerl_ARRAY* argument_resolved_types;
   SPerl_int argument_count;
+  SPerl_boolean lvalue;
 };
 
 SPerl_OP_INFO* SPerl_OP_INFO_new(SPerl_PARSER* parser);

@@ -481,7 +481,7 @@ call_op
     }
 
 array_elem
-  : VAR ARROW '[' term ']'
+  : term ARROW '[' term ']'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ARRAY_ELEM, $1, $4);
       $$->file = $1->file;
