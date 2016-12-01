@@ -144,8 +144,8 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               SPerl_RESOLVED_TYPE* resolved_type = op_info->return_resolved_type;
               
               if (resolved_type->id == SPerl_BODY_CORE_C_CODE_BOOLEAN
-                || resolved_type->id == SPerl_BODY_CORE_C_CODE_CHAR
-                || resolved_type->id == SPerl_BODY_CORE_C_CODE_BYTE)
+                || resolved_type->id == SPerl_BODY_CORE_C_CODE_UCHAR
+                || resolved_type->id == SPerl_BODY_CORE_C_CODE_CHAR)
               {
                 vmcode->code = SPerl_VMCODE_C_CODE_BALOAD;
               }
