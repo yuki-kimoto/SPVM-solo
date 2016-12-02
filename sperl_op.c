@@ -192,7 +192,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 || resolved_type->id == SPerl_BODY_CORE_C_CODE_UCHAR
                 || resolved_type->id == SPerl_BODY_CORE_C_CODE_CHAR)
               {
-                vmcode->code = SPerl_VMCODE_C_CODE_LOAD_ARRAY_BYTE;
+                vmcode->code = SPerl_VMCODE_C_CODE_LOAD_ARRAY_UCHAR;
               }
               else if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_SHORT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_LOAD_ARRAY_SHORT;
