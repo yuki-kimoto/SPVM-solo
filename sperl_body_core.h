@@ -9,8 +9,8 @@ enum {
 
 enum {
   SPerl_BODY_CORE_C_CODE_BOOLEAN,
-  SPerl_BODY_CORE_C_CODE_UCHAR,
-  SPerl_BODY_CORE_C_CODE_CHAR,
+  SPerl_BODY_CORE_C_CODE_TMPXXX,
+  SPerl_BODY_CORE_C_CODE_BYTE,
   SPerl_BODY_CORE_C_CODE_SHORT,
   SPerl_BODY_CORE_C_CODE_INT,
   SPerl_BODY_CORE_C_CODE_LONG,
@@ -18,7 +18,7 @@ enum {
   SPerl_BODY_CORE_C_CODE_DOUBLE
 };
 
-extern SPerl_uchar* const SPerl_BODY_CORE_C_CODE_NAMES[];
+extern SPerl_char* const SPerl_BODY_CORE_C_CODE_NAMES[];
 extern SPerl_int const SPerl_BODY_CORE_C_SIZES[];
 
 struct SPerl_body_core {

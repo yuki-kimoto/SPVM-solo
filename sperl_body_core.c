@@ -1,7 +1,7 @@
 #include "sperl_body_core.h"
 #include "sperl_parser.h"
 
-SPerl_uchar* const SPerl_BODY_CORE_C_CODE_NAMES[] = {
+SPerl_char* const SPerl_BODY_CORE_C_CODE_NAMES[] = {
   "boolean",
   "char",
   "byte",

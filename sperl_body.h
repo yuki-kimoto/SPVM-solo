@@ -8,7 +8,7 @@ enum {
   SPerl_BODY_C_CODE_CORE
 };
 
-extern SPerl_uchar* const SPerl_BODY_C_CODE_NAMES[];
+extern SPerl_char* const SPerl_BODY_C_CODE_NAMES[];
 
 // Class information
 struct SPerl_body {

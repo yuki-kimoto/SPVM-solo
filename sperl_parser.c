@@ -59,7 +59,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   // Core types
   for (SPerl_int i = 0; i < SPerl_BODY_CORE_C_CODE_LENGTH; i++) {
     // Name
-    SPerl_uchar* name = SPerl_BODY_CORE_C_CODE_NAMES[i];
+    SPerl_char* name = SPerl_BODY_CORE_C_CODE_NAMES[i];
     
     // Body core
     SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
@@ -156,8 +156,8 @@ SPerl_VMCODE* SPerl_PARSER_new_vmcode(SPerl_PARSER* parser) {
   return vmcode;
 }
 
-SPerl_uchar* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
-  SPerl_uchar* str = malloc(length + 1);
+SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
+  SPerl_char* str = malloc(length + 1);
   
   if (length < 40) {
     str = SPerl_MEMORY_POOL_alloc(parser->memory_pool, 40);
@@ -188,7 +188,7 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
   
   // Free all string pointers;
   for (SPerl_int i = 0; i < parser->long_str_ptrs->length; i++) {
-    SPerl_uchar* str = SPerl_ARRAY_fetch(parser->long_str_ptrs, i);
+    SPerl_char* str = SPerl_ARRAY_fetch(parser->long_str_ptrs, i);
     free(str);
   }
   SPerl_ARRAY_free(parser->long_str_ptrs);
@@ -220,7 +220,7 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
         case SPerl_CONSTANT_C_CODE_BOOLEAN:
           printf(" %d", constant->uv.int_value);
           break;
-        case SPerl_CONSTANT_C_CODE_CHAR:
+        case SPerl_CONSTANT_C_CODE_BYTE:
           printf(" '%c'", constant->uv.int_value);
           break;
         case SPerl_CONSTANT_C_CODE_INT:
@@ -444,7 +444,7 @@ void SPerl_PARSER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant) 
     case SPerl_CONSTANT_C_CODE_BOOLEAN:
       printf("          boolean %" PRId32 "\n", constant->uv.int_value);
       break;
-    case SPerl_CONSTANT_C_CODE_CHAR:
+    case SPerl_CONSTANT_C_CODE_BYTE:
       printf("          char '%c'\n", constant->uv.int_value);
       break;
     case SPerl_CONSTANT_C_CODE_INT:

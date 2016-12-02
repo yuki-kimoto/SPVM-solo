@@ -18,7 +18,7 @@ SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl_int base_capacity) {
   }
   
   SPerl_MEMORY_POOL_PAGE* page = (SPerl_MEMORY_POOL_PAGE*)SPerl_MEMORY_POOL_PAGE_new();
-  page->data = calloc(memory_pool->base_capacity, sizeof(SPerl_uchar));
+  page->data = calloc(memory_pool->base_capacity, sizeof(SPerl_char));
   memory_pool->page = page;
   memory_pool->page_depth = 1;
   
@@ -40,15 +40,15 @@ void* SPerl_MEMORY_POOL_alloc(SPerl_MEMORY_POOL* memory_pool, SPerl_int block_si
   SPerl_int current_capacity = base_capacity * pow(2, page_depth - 1);
 
   // Create next memroy page
-  SPerl_uchar* data_ptr;
-  SPerl_uchar* page;
+  SPerl_char* data_ptr;
+  SPerl_char* page;
   if (current_pos + block_size > current_capacity) {
     page_depth++;
     current_pos = 0;
     
     SPerl_int new_capacity = current_capacity * 2;
     SPerl_MEMORY_POOL_PAGE* new_page = (SPerl_MEMORY_POOL_PAGE*)SPerl_MEMORY_POOL_PAGE_new();
-    new_page->data = (SPerl_uchar*)calloc(new_capacity, sizeof(SPerl_uchar));
+    new_page->data = (SPerl_char*)calloc(new_capacity, sizeof(SPerl_char));
     
     new_page->next = memory_pool->page;
     memory_pool->page = new_page;

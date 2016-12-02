@@ -11,12 +11,12 @@ enum {
   SPerl_TYPE_C_CODE_SUB,
 };
 
-extern SPerl_uchar* const SPerl_TYPE_C_CODE_NAMES[];
+extern SPerl_char* const SPerl_TYPE_C_CODE_NAMES[];
 
 struct SPerl_type {
   SPerl_int code;
   SPerl_ARRAY* parts;
-  SPerl_uchar* name;
+  SPerl_char* name;
   SPerl_RESOLVED_TYPE* resolved_type;
   SPerl_boolean resolved;
   union {

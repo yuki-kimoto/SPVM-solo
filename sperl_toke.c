@@ -18,7 +18,7 @@
 #include "sperl_body_core.h"
 #include "sperl_type.h"
 
-static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_uchar type) {
+static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
   SPerl_OP* op = SPerl_OP_newOP(parser, type, NULL, NULL);
   op->file = parser->cur_file;
   op->line = parser->cur_line;
@@ -30,7 +30,7 @@ static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_uchar type) {
 int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
 
   // Get expected and retrun back to normal
-  SPerl_uchar expect = parser->expect;
+  SPerl_char expect = parser->expect;
   parser->expect = SPerl_TOKE_C_EXPECT_NORMAL;
   
   // Save buf pointer
@@ -38,7 +38,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
   
   while(1) {
     // Get current character
-    SPerl_uchar c = *parser->bufptr;
+    SPerl_char c = *parser->bufptr;
     
     // line end
     switch(c) {
@@ -53,7 +53,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
           if (op_use) {
             SPerl_USE* use = op_use->uv.use;
-            SPerl_uchar* package_name = use->op_package_name->uv.word->value;
+            SPerl_char* package_name = use->op_package_name->uv.word->value;
             
             SPerl_BODY_CLASS* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
             if (found_package) {
@@ -61,15 +61,15 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             }
             else {
               // Search class file
-              SPerl_uchar* cur_file;
+              SPerl_char* cur_file;
               FILE* fh;
               for (SPerl_int i = 0; i < parser->include_pathes->length; i++) {
-                SPerl_uchar* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
+                SPerl_char* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
                 // Change :: to /
-                SPerl_uchar* package_name_for_path = SPerl_PARSER_new_string(parser, strlen(package_name));
-                SPerl_uchar* bufptr_orig = package_name;
-                SPerl_uchar* bufptr_to = package_name_for_path;
+                SPerl_char* package_name_for_path = SPerl_PARSER_new_string(parser, strlen(package_name));
+                SPerl_char* bufptr_orig = package_name;
+                SPerl_char* bufptr_to = package_name_for_path;
                 while (*bufptr_orig) {
                   if (*bufptr_orig == ':' && *(bufptr_orig + 1) == ':') {
                     *bufptr_to = '/';
@@ -112,7 +112,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               fseek(fh, 0, SEEK_END);
               SPerl_int file_size = ftell(fh);
               fseek(fh, 0, SEEK_SET);
-              SPerl_uchar* src = SPerl_PARSER_new_string(parser, file_size);
+              SPerl_char* src = SPerl_PARSER_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
                 if (op_use) {
                   fprintf(stderr, "Can't read file %s at %s line %d\n", cur_file, op_use->file, op_use->line);
@@ -345,9 +345,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         
         /* Save current position */
-        SPerl_uchar* cur_token_ptr = parser->bufptr;
+        SPerl_char* cur_token_ptr = parser->bufptr;
         
-        SPerl_uchar ch;
+        SPerl_char ch;
         if (*parser->bufptr == '\'') {
           ch = '\0';
           parser->bufptr++;
@@ -365,7 +365,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         // Constant 
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTANT);
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
-        constant->code = SPerl_CONSTANT_C_CODE_CHAR;
+        constant->code = SPerl_CONSTANT_C_CODE_BYTE;
         constant->uv.int_value = ch;
         constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "char", strlen("char"));
         
@@ -378,9 +378,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         
         /* Save current position */
-        SPerl_uchar* cur_token_ptr = parser->bufptr;
+        SPerl_char* cur_token_ptr = parser->bufptr;
         
-        SPerl_uchar* str;
+        SPerl_char* str;
         if (*(parser->bufptr + 1) == '"') {
           str = SPerl_PARSER_new_string(parser, 0);
           str[0] = '\0';
@@ -418,7 +418,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         /* Variable */
         if (c == '$') {
           /* Save current position */
-          SPerl_uchar* cur_token_ptr = parser->bufptr;
+          SPerl_char* cur_token_ptr = parser->bufptr;
           
           parser->bufptr++;
           
@@ -428,7 +428,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          SPerl_uchar* var_name = SPerl_PARSER_new_string(parser, str_len);
+          SPerl_char* var_name = SPerl_PARSER_new_string(parser, str_len);
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
           
@@ -452,7 +452,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         /* Number literal */
         else if (isdigit(c)) {
-          SPerl_uchar* cur_token_ptr = parser->bufptr;
+          SPerl_char* cur_token_ptr = parser->bufptr;
           
           SPerl_int point_count = 0;
           
@@ -473,7 +473,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           
           // Number literal
           size_t str_len = parser->bufptr - cur_token_ptr;
-          SPerl_uchar* num_str = malloc(str_len + 1);
+          SPerl_char* num_str = malloc(str_len + 1);
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
           
@@ -512,7 +512,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         // Keyword or word
         else if (isalpha(c) || c == '_') {
           // Save current position
-          SPerl_uchar* cur_token_ptr = parser->bufptr;
+          SPerl_char* cur_token_ptr = parser->bufptr;
           
           parser->bufptr++;
           
@@ -529,7 +529,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          SPerl_uchar* keyword = SPerl_PARSER_new_string(parser, str_len);
+          SPerl_char* keyword = SPerl_PARSER_new_string(parser, str_len);
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
           

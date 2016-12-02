@@ -4,9 +4,9 @@
 #include "sperl_parser.h"
 #include "sperl_hash.h"
 
-SPerl_uchar* const SPerl_CONSTANT_C_CODE_NAMES[] = {
+SPerl_char* const SPerl_CONSTANT_C_CODE_NAMES[] = {
   "BOOLEAN",
-  "CHAR",
+  "BYTE",
   "INT",
   "LONG",
   "FLOAT",

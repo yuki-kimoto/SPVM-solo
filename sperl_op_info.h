@@ -14,8 +14,8 @@ enum {
   SPerl_OP_INFO_C_CODE_CONVERT_FLOAT_TO_DOUBLE,          
   SPerl_OP_INFO_C_CODE_CONVERT_FLOAT_TO_INT,          
   SPerl_OP_INFO_C_CODE_CONVERT_FLOAT_TO_LONG,          
-  SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_CHAR,          
-  SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_UCHAR,          
+  SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_BYTE,          
+  SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_TMPXXX,          
   SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_DOUBLE,          
   SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_FLOAT,          
   SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_LONG,          
@@ -63,7 +63,7 @@ enum {
   SPerl_OP_INFO_C_CODE_POP2,
 };
 
-extern SPerl_uchar* const SPerl_OP_INFO_C_CODE_NAMES[];
+extern SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[];
 
 struct SPerl_op_info {
   SPerl_int code;

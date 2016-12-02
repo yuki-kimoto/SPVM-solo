@@ -5,7 +5,7 @@
 
 // Field information
 struct SPerl_word {
-  SPerl_uchar* value;
+  SPerl_char* value;
   SPerl_OP* op;
 };
 

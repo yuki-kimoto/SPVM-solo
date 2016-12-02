@@ -11,7 +11,7 @@
 #include "sperl_type_part.h"
 #include "sperl_op.h"
 
-SPerl_uchar* const SPerl_TYPE_C_CODE_NAMES[] = {
+SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
   "word",
   "array",
   "sub",
@@ -29,7 +29,7 @@ SPerl_boolean SPerl_TYPE_is_core_type_name(SPerl_PARSER* parser, SPerl_TYPE* typ
   if (type->code == SPerl_TYPE_C_CODE_WORD) {
     SPerl_TYPE_COMPONENT_WORD* type_component_word = type->uv.type_component_word;
     SPerl_WORD* name_word = type_component_word->op_name->uv.word;
-    SPerl_uchar* name = name_word->value;
+    SPerl_char* name = name_word->value;
     
     if (strcmp(name, "boolean") == 0 || strcmp(name, "char") == 0 || strcmp(name, "byte") == 0 || strcmp(name, "short") == 0
       || strcmp(name, "int") == 0 || strcmp(name, "long") == 0 || strcmp(name, "float") == 0
@@ -67,19 +67,19 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     SPerl_TYPE_to_parts(parser, type_component_array->type, parts);
     
     SPerl_TYPE_PART* type_part_openbracket = SPerl_TYPE_PART_new(parser);
-    type_part_openbracket->code = SPerl_TYPE_PART_C_CODE_CHAR;
+    type_part_openbracket->code = SPerl_TYPE_PART_C_CODE_BYTE;
     type_part_openbracket->uv.char_name = "[";
     SPerl_ARRAY_push(parts, type_part_openbracket);
     
     SPerl_TYPE_PART* type_part_closebracket = SPerl_TYPE_PART_new(parser);
-    type_part_closebracket->code = SPerl_TYPE_PART_C_CODE_CHAR;
+    type_part_closebracket->code = SPerl_TYPE_PART_C_CODE_BYTE;
     type_part_closebracket->uv.char_name = "]";
     SPerl_ARRAY_push(parts, type_part_closebracket);
   }
   else if (type->code == SPerl_TYPE_C_CODE_SUB) {
     // (
     SPerl_TYPE_PART* type_part_openparen1 = SPerl_TYPE_PART_new(parser);
-    type_part_openparen1->code = SPerl_TYPE_PART_C_CODE_CHAR;
+    type_part_openparen1->code = SPerl_TYPE_PART_C_CODE_BYTE;
     type_part_openparen1->uv.char_name = "(";
     SPerl_ARRAY_push(parts, type_part_openparen1);
     
@@ -90,7 +90,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     
     // (
     SPerl_TYPE_PART* type_part_openparen2 = SPerl_TYPE_PART_new(parser);
-    type_part_openparen2->code = SPerl_TYPE_PART_C_CODE_CHAR;
+    type_part_openparen2->code = SPerl_TYPE_PART_C_CODE_BYTE;
     type_part_openparen2->uv.char_name = "(";
     SPerl_ARRAY_push(parts, type_part_openparen2);
     
@@ -102,7 +102,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
       SPerl_TYPE_to_parts(parser, argument_type, parts);
       if (i != argument_types->length - 1) {
         SPerl_TYPE_PART* type_part_comma = SPerl_TYPE_PART_new(parser);
-        type_part_comma->code = SPerl_TYPE_PART_C_CODE_CHAR;
+        type_part_comma->code = SPerl_TYPE_PART_C_CODE_BYTE;
         type_part_comma->uv.char_name = ",";
         SPerl_ARRAY_push(parts, type_part_comma);
       }
@@ -110,7 +110,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     
     // )
     SPerl_TYPE_PART* type_part_closeparen1 = SPerl_TYPE_PART_new(parser);
-    type_part_closeparen1->code = SPerl_TYPE_PART_C_CODE_CHAR;
+    type_part_closeparen1->code = SPerl_TYPE_PART_C_CODE_BYTE;
     type_part_closeparen1->uv.char_name = ")";
     SPerl_ARRAY_push(parts, type_part_closeparen1);
     
@@ -120,7 +120,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     
     // )
     SPerl_TYPE_PART* type_part_closeparen2 = SPerl_TYPE_PART_new(parser);
-    type_part_closeparen2->code = SPerl_TYPE_PART_C_CODE_CHAR;
+    type_part_closeparen2->code = SPerl_TYPE_PART_C_CODE_BYTE;
     type_part_closeparen2->uv.char_name = ")";
     SPerl_ARRAY_push(parts, type_part_closeparen2);
   }
@@ -136,9 +136,9 @@ void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh) {
   SPerl_ARRAY* parts = type->parts;
   for (SPerl_int i = 0; i < parts->length; i++) {
     SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
-    SPerl_uchar code = part->code;
+    SPerl_char code = part->code;
     
-    if (code == SPerl_TYPE_PART_C_CODE_CHAR) {
+    if (code == SPerl_TYPE_PART_C_CODE_BYTE) {
       fprintf(fh, "%s", part->uv.char_name);
     }
     else if (code == SPerl_TYPE_PART_C_CODE_WORD) {
@@ -161,9 +161,9 @@ void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
 
     for (SPerl_int i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
-      SPerl_uchar code = part->code;
+      SPerl_char code = part->code;
       
-      if (code == SPerl_TYPE_PART_C_CODE_CHAR) {
+      if (code == SPerl_TYPE_PART_C_CODE_BYTE) {
         total_length += 1;
       }
       else if (code == SPerl_TYPE_PART_C_CODE_WORD) {
@@ -174,15 +174,15 @@ void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
       }
     }
     
-    SPerl_uchar* type_name = SPerl_PARSER_new_string(parser, total_length);
+    SPerl_char* type_name = SPerl_PARSER_new_string(parser, total_length);
     
     SPerl_int pos = 0;
     for (SPerl_int i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
-      SPerl_uchar code = part->code;
+      SPerl_char code = part->code;
       
       SPerl_int length = 0;
-      if (code == SPerl_TYPE_PART_C_CODE_CHAR) {
+      if (code == SPerl_TYPE_PART_C_CODE_BYTE) {
         length = 1;
         memcpy(type_name + pos, part->uv.char_name, length);
       }

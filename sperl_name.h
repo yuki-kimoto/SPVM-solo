@@ -9,7 +9,7 @@ enum {
   SPerl_NAME_C_CODE_ENUM
 };
 
-extern SPerl_uchar* const SPerl_NAME_C_CODE_NAMES[];
+extern SPerl_char* const SPerl_NAME_C_CODE_NAMES[];
 
 // Field information
 struct SPerl_name {
@@ -18,7 +18,7 @@ struct SPerl_name {
   SPerl_OP* op_name;
   SPerl_int argument_count;
   SPerl_boolean anon;
-  SPerl_uchar* complete_name;
+  SPerl_char* complete_name;
 };
 
 SPerl_NAME* SPerl_NAME_new(SPerl_PARSER* parser);
