@@ -14,7 +14,7 @@ enum {
   SPerl_OP_INFO_C_CODE_F2D,          
   SPerl_OP_INFO_C_CODE_F2I,          
   SPerl_OP_INFO_C_CODE_F2L,          
-  SPerl_OP_INFO_C_CODE_I2B,          
+  SPerl_OP_INFO_C_CODE_I2C,          
   SPerl_OP_INFO_C_CODE_I2UC,          
   SPerl_OP_INFO_C_CODE_I2D,          
   SPerl_OP_INFO_C_CODE_I2F,          

@@ -14,7 +14,7 @@ SPerl_uchar* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "F2D",
   "F2I",
   "F2L",
-  "I2B",
+  "I2C",
   "I2UC",
   "I2D",
   "I2F",
