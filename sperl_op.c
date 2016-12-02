@@ -807,6 +807,61 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_BIT_OR: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              // Can receive only core type
+              if (first_resolved_type->id >= SPerl_BODY_CORE_C_CODE_FLOAT || last_resolved_type->id >= SPerl_BODY_CORE_C_CODE_FLOAT) {
+                SPerl_yyerror_format(parser,
+                  "& operator can receive only boolean, uchar, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              // Insert type converting op
+              SPerl_OP_insert_op_convert_type(parser, op_cur, first_resolved_type, last_resolved_type);
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
+              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_IOR;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                op_info->code = SPerl_OP_INFO_C_CODE_LOR;
+              }
+              
+              op_info->return_resolved_type = resolved_type;
+              
+              break;
+            }
+
+            case SPerl_OP_C_CODE_BIT_AND: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              // Can receive only core type
+              if (first_resolved_type->id >= SPerl_BODY_CORE_C_CODE_FLOAT || last_resolved_type->id >= SPerl_BODY_CORE_C_CODE_FLOAT) {
+                SPerl_yyerror_format(parser,
+                  "& operator can receive only boolean, uchar, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              // Insert type converting op
+              SPerl_OP_insert_op_convert_type(parser, op_cur, first_resolved_type, last_resolved_type);
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
+              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_IAND;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                op_info->code = SPerl_OP_INFO_C_CODE_LAND;
+              }
+              
+              op_info->return_resolved_type = resolved_type;
+              
+              break;
+            }
             case SPerl_OP_C_CODE_ARRAY_ELEM: {
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
@@ -986,7 +1041,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 op_info->code = SPerl_OP_INFO_C_CODE_IADD;
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
@@ -1016,7 +1071,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 op_info->code = SPerl_OP_INFO_C_CODE_ISUBTRACT;
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
@@ -1046,7 +1101,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 op_info->code = SPerl_OP_INFO_C_CODE_IMULTIPLY;
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
@@ -1076,7 +1131,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 op_info->code = SPerl_OP_INFO_C_CODE_IDIVIDE;
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
@@ -1106,7 +1161,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 op_info->code = SPerl_OP_INFO_C_CODE_IREMAINDER;
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {

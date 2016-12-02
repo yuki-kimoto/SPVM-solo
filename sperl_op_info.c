@@ -57,6 +57,10 @@ SPerl_uchar* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "DRETURN",
   "ARETURN",
   "RETURN",
+  "IAND",
+  "LAND",
+  "IOR",
+  "LOR",
   "POP",
   "POP2",
 };
