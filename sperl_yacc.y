@@ -18,10 +18,10 @@
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
 %type <opval> block enum_block class_block decl_sub opt_decl_class_attrs call_sub call_op
 %type <opval> opt_terms terms term sub_args sub_arg opt_sub_args decl_use decl_class_attr decl_class_attrs 
-%type <opval> opt_descripters list_descripters descripters decl_enum_values decl_enum_value decl_anon_sub
-%type <opval> type package_name field_name sub_name decl_package decl_packages opt_decl_enum_values type_array
+%type <opval> opt_descripters list_descripters descripters decl_enumeration_values decl_enumeration_value decl_anon_sub
+%type <opval> type package_name field_name sub_name decl_package decl_packages opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_packages type_sub types opt_types not_type_sub
-%type <opval> enum_name get_enum_value field array_elem convert_type decl_enum
+%type <opval> enum_name get_enumeration_value field array_elem convert_type decl_enum
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -103,17 +103,17 @@ decl_package
     }
 
 enum_block 
-  : '{' opt_decl_enum_values '}'
+  : '{' opt_decl_enumeration_values '}'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ENUM_BLOCK, $2, NULL);
     }
 
-opt_decl_enum_values
+opt_decl_enumeration_values
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	decl_enum_values
+  |	decl_enumeration_values
     {
       if ($1->code == SPerl_OP_C_CODE_LIST) {
         $$ = $1;
@@ -124,21 +124,21 @@ opt_decl_enum_values
       }
     }
     
-decl_enum_values
-  : decl_enum_values ',' decl_enum_value 
+decl_enumeration_values
+  : decl_enumeration_values ',' decl_enumeration_value 
     {
       $$ = SPerl_OP_append_elem(parser, $1, $3);
     }
-  | decl_enum_value
+  | decl_enumeration_value
   
-decl_enum_value
+decl_enumeration_value
   : WORD
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUM_VALUE, $1, NULL);
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1, NULL);
     }
   | WORD ASSIGNOP CONSTVALUE
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUM_VALUE, $1, $3);
+      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1, $3);
     }
 
 opt_statements
@@ -353,7 +353,7 @@ term
   | decl_anon_sub
   | call_sub
   | call_op
-  | get_enum_value
+  | get_enumeration_value
   | field
   | array_elem
   | convert_type
@@ -372,10 +372,10 @@ field
       $$ = SPerl_OP_build_field(parser, $1, $3);
     }
 
-get_enum_value
+get_enumeration_value
   : enum_name
     {
-      $$ = SPerl_OP_build_get_enum_value(parser, $1);
+      $$ = SPerl_OP_build_get_enumeration_value(parser, $1);
     }
 
 call_op

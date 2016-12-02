@@ -14,7 +14,7 @@
 #include "sperl_memory_pool.h"
 #include "sperl_op.h"
 #include "sperl_word.h"
-#include "sperl_enum_value.h"
+#include "sperl_enumeration_value.h"
 #include "sperl_descripter.h"
 #include "sperl_type.h"
 #include "sperl_type_component_word.h"
@@ -403,12 +403,12 @@ void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
       SPerl_ENUMERATION* enumeration = body->uv.enumeration;
       
       // Enum value information
-      printf("  enum_values\n");
-      SPerl_ARRAY* enum_values = enumeration->enum_values;
-      for (SPerl_int j = 0; j < enum_values->length; j++) {
-        SPerl_ENUM_VALUE* enum_value = SPerl_ARRAY_fetch(enum_values, j);
-        printf("    enum_value[%" PRId32 "]\n", j);
-        SPerl_PARSER_dump_enum_value(parser, enum_value);
+      printf("  enumeration_values\n");
+      SPerl_ARRAY* enumeration_values = enumeration->enumeration_values;
+      for (SPerl_int j = 0; j < enumeration_values->length; j++) {
+        SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_ARRAY_fetch(enumeration_values, j);
+        printf("    enumeration_value[%" PRId32 "]\n", j);
+        SPerl_PARSER_dump_enumeration_value(parser, enumeration_value);
       }
     }
   }
@@ -550,10 +550,10 @@ void SPerl_PARSER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
 }
 
 
-void SPerl_PARSER_dump_enum_value(SPerl_PARSER* parser, SPerl_ENUM_VALUE* enum_value) {
-  if (enum_value) {
-    printf("      name => \"%s\"\n", enum_value->op_name->uv.word->value);
-    printf("      value => %d\n", enum_value->op_constant->uv.constant->uv.int_value);
+void SPerl_PARSER_dump_enumeration_value(SPerl_PARSER* parser, SPerl_ENUMERATION_VALUE* enumeration_value) {
+  if (enumeration_value) {
+    printf("      name => \"%s\"\n", enumeration_value->op_name->uv.word->value);
+    printf("      value => %d\n", enumeration_value->op_constant->uv.constant->uv.int_value);
   }
   else {
     printf("      None\n");
