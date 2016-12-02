@@ -1066,18 +1066,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              if (resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
-                op_info->code = SPerl_OP_INFO_C_CODE_IPLUS;
-              }
-              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
-                op_info->code = SPerl_OP_INFO_C_CODE_LPLUS;
-              }
-              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-                op_info->code = SPerl_OP_INFO_C_CODE_FPLUS;
-              }
-              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-                op_info->code = SPerl_OP_INFO_C_CODE_DPLUS;
-              }
               op_info->return_resolved_type = resolved_type;
               
               break;
