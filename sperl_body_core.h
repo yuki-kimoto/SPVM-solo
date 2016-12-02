@@ -4,6 +4,10 @@
 #include "sperl_base.h"
 
 enum {
+  SPerl_BODY_CORE_C_CODE_LENGTH = 8
+};
+
+enum {
   SPerl_BODY_CORE_C_CODE_BOOLEAN,
   SPerl_BODY_CORE_C_CODE_UCHAR,
   SPerl_BODY_CORE_C_CODE_CHAR,

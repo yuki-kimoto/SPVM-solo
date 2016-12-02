@@ -57,7 +57,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->resolved_type_symtable = SPerl_PARSER_new_hash(parser, 0);
 
   // Core types
-  for (SPerl_int i = 0; i < 8; i++) {
+  for (SPerl_int i = 0; i < SPerl_BODY_CORE_C_CODE_LENGTH; i++) {
     // Name
     SPerl_uchar* name = SPerl_BODY_CORE_C_CODE_NAMES[i];
     
