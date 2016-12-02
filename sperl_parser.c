@@ -425,7 +425,7 @@ void SPerl_PARSER_dump_vmcodes(SPerl_PARSER* parser, SPerl_VMCODES* vmcodes) {
     SPerl_VMCODE vmcode = vmcodes->values[i];
     printf("        [%d] %s", i, SPerl_VMCODE_C_CODE_NAMES[vmcode.code]);
     switch (vmcode.code) {
-      case SPerl_VMCODE_C_CODE_LDC:
+      case SPerl_VMCODE_C_CODE_LOAD_CONSTANT:
       case SPerl_VMCODE_C_CODE_ILOAD:
       case SPerl_VMCODE_C_CODE_LLOAD:
       case SPerl_VMCODE_C_CODE_FLOAD:
