@@ -190,10 +190,10 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               SPerl_RESOLVED_TYPE* resolved_type = op_info->return_resolved_type;
               
               if (resolved_type->id == SPerl_BODY_CORE_C_CODE_BOOLEAN
-                || resolved_type->id == SPerl_BODY_CORE_C_CODE_TMPXXX
+                || resolved_type->id == SPerl_BODY_CORE_C_CODE_CHAR
                 || resolved_type->id == SPerl_BODY_CORE_C_CODE_BYTE)
               {
-                vmcode->code = SPerl_VMCODE_C_CODE_LOAD_ARRAY_TMPXXX;
+                vmcode->code = SPerl_VMCODE_C_CODE_LOAD_ARRAY_CHAR;
               }
               else if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_SHORT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_LOAD_ARRAY_SHORT;
@@ -417,8 +417,8 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_BYTE) {
                 vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_INT_TO_BYTE;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_TMPXXX) {
-                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_INT_TO_TMPXXX;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_CHAR) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_INT_TO_CHAR;
               }
               else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_DOUBLE) {
                 vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_INT_TO_DOUBLE;
