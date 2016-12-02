@@ -70,7 +70,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_LOOP,         // UNKNOWN
   SPerl_OP_C_CODE_VAR,          // UNKNOWN
   SPerl_OP_C_CODE_GET_ENUM_VALUE, // UNKNOWN
-  SPerl_OP_C_CODE_CONVERT_TYPE,  // UNKNOWN
+  SPerl_OP_C_CODE_CONVERT,  // UNKNOWN
   SPerl_OP_C_CODE_POP,          // UNKNOWN
 };
 

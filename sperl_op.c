@@ -102,7 +102,7 @@ SPerl_uchar* const SPerl_OP_C_CODE_NAMES[] = {
   "LOOP",
   "VAR",
   "GET_ENUM_VALUE",
-  "CONVERT_TYPE",
+  "CONVERT",
   "POP",
   "IINC",
 };
@@ -392,53 +392,53 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               break;
             }
-            case SPerl_OP_C_CODE_CONVERT_TYPE: {
+            case SPerl_OP_C_CODE_CONVERT: {
               
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
-              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_DOUBLE2FLOAT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_DOUBLE2FLOAT;
+              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_DOUBLE_TO_FLOAT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_DOUBLE_TO_FLOAT;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_DOUBLE2IINT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_DOUBLE2IINT;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_DOUBLE_TO_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_DOUBLE_TO_INT;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_DDOUBLE2LONG) {
-                vmcode->code = SPerl_VMCODE_C_CODE_DDOUBLE2LONG;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_DDOUBLE_TO_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_DDOUBLE_TO_LONG;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_FLOAT2DDOUBLE) {
-                vmcode->code = SPerl_VMCODE_C_CODE_FLOAT2DDOUBLE;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_FLOAT_TO_DOUBLE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_FLOAT_TO_DOUBLE;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_FLOAT2INT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_FLOAT2INT;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_FLOAT_TO_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_FLOAT_TO_INT;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_FLOAT2LONG) {
-                vmcode->code = SPerl_VMCODE_C_CODE_FLOAT2LONG;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_FLOAT_TO_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_FLOAT_TO_LONG;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_INT2CHAR) {
-                vmcode->code = SPerl_VMCODE_C_CODE_INT2CHAR;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_CHAR) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_INT_TO_CHAR;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_INT2UCHAR) {
-                vmcode->code = SPerl_VMCODE_C_CODE_INT2UCHAR;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_UCHAR) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_INT_TO_UCHAR;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_INT2DOUBLE) {
-                vmcode->code = SPerl_VMCODE_C_CODE_INT2DOUBLE;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_DOUBLE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_INT_TO_DOUBLE;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_INT2FLOAT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_INT2FLOAT;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_FLOAT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_INT_TO_FLOAT;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_INT2LONG) {
-                vmcode->code = SPerl_VMCODE_C_CODE_INT2LONG;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_INT_TO_LONG;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_INT2SHORT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_INT2SHORT;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_SHORT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_INT_TO_SHORT;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_LONG2DOUBLE) {
-                vmcode->code = SPerl_VMCODE_C_CODE_LONG2DOUBLE;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_DOUBLE) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_LONG_TO_DOUBLE;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_LONG2FLOAT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_LONG2FLOAT;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_FLOAT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_LONG_TO_FLOAT;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_LONG2INT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_LONG2INT;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_CONVERT_LONG_TO_INT;
               }
               
               SPerl_VMCODES_push(vmcodes, vmcode);
@@ -1394,7 +1394,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               break;
             }
-            case SPerl_OP_C_CODE_CONVERT_TYPE: {
+            case SPerl_OP_C_CODE_CONVERT: {
               SPerl_OP* op_type_dist = op_cur->first;
               SPerl_TYPE* type_dist = op_type_dist->uv.type;
               SPerl_RESOLVED_TYPE* resolved_type_dist = type_dist->resolved_type;
@@ -1481,7 +1481,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
     }
-    case SPerl_OP_C_CODE_CONVERT_TYPE: {
+    case SPerl_OP_C_CODE_CONVERT: {
       SPerl_OP_INFO* op_info = op->uv.op_info;
       resolved_type = op_info->return_resolved_type;
       break;
@@ -1524,69 +1524,69 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op, SPerl_R
   if (first_type_id != last_type_id) {
     SPerl_boolean replace_first = 0;
     
-    SPerl_OP* type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT_TYPE, NULL, NULL);
+    SPerl_OP* type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT, NULL, NULL);
     SPerl_OP_INFO* op_info = SPerl_OP_INFO_new(parser);
     type_convert_op->uv.op_info = op_info;
     
     if (first_type_id == SPerl_BODY_CORE_C_CODE_INT) {
       if (last_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2LONG;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_LONG;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2FLOAT;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_FLOAT;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2DOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
       if (last_type_id == SPerl_BODY_CORE_C_CODE_INT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2LONG;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_LONG;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_LONG2FLOAT;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_FLOAT;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-        op_info->code = SPerl_OP_INFO_C_CODE_LONG2DOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
       if (last_type_id == SPerl_BODY_CORE_C_CODE_INT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2FLOAT;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_FLOAT;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
-        op_info->code = SPerl_OP_INFO_C_CODE_LONG2FLOAT;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_FLOAT;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-        op_info->code = SPerl_OP_INFO_C_CODE_FLOAT2DDOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_FLOAT_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
       if (last_type_id == SPerl_BODY_CORE_C_CODE_INT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2DOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_LONG) {
-        op_info->code = SPerl_OP_INFO_C_CODE_LONG2DOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_FLOAT2DDOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_FLOAT_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
     }
@@ -1621,57 +1621,57 @@ void SPerl_OP_resolve_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert_ty
   if (src_id != dist_id) {
     if (src_id == SPerl_BODY_CORE_C_CODE_INT) {
       if (dist_id == SPerl_BODY_CORE_C_CODE_LONG) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2LONG;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_LONG;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (dist_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2FLOAT;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_FLOAT;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
       else if (dist_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2DOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
     }
     else if (src_id == SPerl_BODY_CORE_C_CODE_LONG) {
       if (dist_id == SPerl_BODY_CORE_C_CODE_INT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2LONG;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_LONG;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (dist_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_LONG2FLOAT;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_FLOAT;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
       else if (dist_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-        op_info->code = SPerl_OP_INFO_C_CODE_LONG2DOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
     }
     else if (src_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
       if (dist_id == SPerl_BODY_CORE_C_CODE_INT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2FLOAT;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_FLOAT;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
       else if (dist_id == SPerl_BODY_CORE_C_CODE_LONG) {
-        op_info->code = SPerl_OP_INFO_C_CODE_LONG2FLOAT;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_FLOAT;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
       else if (dist_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-        op_info->code = SPerl_OP_INFO_C_CODE_FLOAT2DDOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_FLOAT_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
     }
     else if (src_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
       if (dist_id == SPerl_BODY_CORE_C_CODE_INT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_INT2DOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
       else if (dist_id == SPerl_BODY_CORE_C_CODE_LONG) {
-        op_info->code = SPerl_OP_INFO_C_CODE_LONG2DOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
       else if (dist_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-        op_info->code = SPerl_OP_INFO_C_CODE_FLOAT2DDOUBLE;
+        op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_FLOAT_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
     }
@@ -1900,7 +1900,7 @@ SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP*
 
 SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term) {
   
-  SPerl_OP* op_convert_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT_TYPE, op_type, op_term);
+  SPerl_OP* op_convert_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT, op_type, op_term);
   op_convert_type->file = op_type->file;
   op_convert_type->line = op_type->line;
   
