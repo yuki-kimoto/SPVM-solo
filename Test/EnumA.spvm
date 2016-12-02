@@ -1,6 +1,8 @@
-package Test::EnumA : enum {
-  ONE,
-  TWO,
-  THREE = 4,
-  FORE
+package Test::EnumA {
+  enum {
+    ONE,
+    TWO,
+    THREE = 4,
+    FORE
+  }
 }

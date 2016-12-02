@@ -1,3 +1,6 @@
-package Test::EnumB : enum {
-  ONE = 5
+package Test::EnumB {
+  enum {
+    ONE = 5
+  }
+  
 }

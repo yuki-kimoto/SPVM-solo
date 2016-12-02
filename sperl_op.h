@@ -22,6 +22,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_DECL_MY_VAR,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_FIELD,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_SUB,          // UNKNOWN
+  SPerl_OP_C_CODE_DECL_ENUM,
   SPerl_OP_C_CODE_DECL_DESCRIPTER,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_ANON_SUB,      // UNKNOWN
   SPerl_OP_C_CODE_DECL_ENUM_VALUE,    // UNKNOWN
@@ -99,6 +100,7 @@ struct SPerl_op {
     SPerl_FIELD* field;
     SPerl_DESCRIPTER* descripter;
     SPerl_PACKAGE* package;
+    SPerl_BODY_ENUM* body_enum;
   } uv;
 };
 
@@ -151,5 +153,7 @@ SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* o);
 void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib);
 void SPerl_OP_lastsib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* parent);
 void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
+
+SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPerl_OP* op_enum_block);
 
 #endif

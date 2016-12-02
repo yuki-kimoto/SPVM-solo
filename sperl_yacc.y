@@ -21,7 +21,7 @@
 %type <opval> opt_descripters list_descripters descripters decl_enum_values decl_enum_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_packages opt_decl_enum_values type_array
 %type <opval> for_statement while_statement expression opt_decl_packages type_sub types opt_types not_type_sub
-%type <opval> enum_name get_enum_value field array_elem convert_type
+%type <opval> enum_name get_enum_value field array_elem convert_type decl_enum
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -95,13 +95,6 @@ decl_package
       }
     }
   | PACKAGE package_name ':' list_descripters class_block
-    {
-      $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
-      if (parser->fatal_error) {
-        YYABORT;
-      }
-    }
-  | PACKAGE package_name ':' ENUM enum_block
     {
       $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
       if (parser->fatal_error) {
@@ -260,6 +253,12 @@ decl_sub
        $$ = SPerl_OP_build_decl_sub(parser, $1, $2, $4, $7, $8, $9);
      }
 
+decl_enum
+  : ENUM enum_block
+    {
+      $$ = SPerl_OP_build_decl_enum(parser, $1, $2);
+    }
+
 decl_my
   : MY VAR ':' opt_descripters type
     {
@@ -300,6 +299,7 @@ decl_class_attr
   : decl_use
   | decl_field
   | decl_sub
+  | decl_enum
 
 class_block
   : '{' opt_decl_class_attrs '}'

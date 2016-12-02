@@ -1,2 +1,5 @@
-package Test::EnumC : enum {
+package Test::EnumC {
+  enum {
+  
+  }
 }
