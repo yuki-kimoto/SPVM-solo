@@ -192,25 +192,25 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 || resolved_type->id == SPerl_BODY_CORE_C_CODE_UCHAR
                 || resolved_type->id == SPerl_BODY_CORE_C_CODE_CHAR)
               {
-                vmcode->code = SPerl_VMCODE_C_CODE_BALOAD;
+                vmcode->code = SPerl_VMCODE_C_CODE_BLOAD_REF;
               }
               else if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_SHORT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_SALOAD;
+                vmcode->code = SPerl_VMCODE_C_CODE_SLOAD_REF;
               }
               else if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_IALOAD;
+                vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_REF;
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
-                vmcode->code = SPerl_VMCODE_C_CODE_LALOAD;
+                vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_REF;
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-                vmcode->code = SPerl_VMCODE_C_CODE_FALOAD;
+                vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_REF;
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-                vmcode->code = SPerl_VMCODE_C_CODE_DALOAD;
+                vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_REF;
               }
               else {
-                vmcode->code = SPerl_VMCODE_C_CODE_AALOAD;
+                vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_REF;
               }
               
               SPerl_VMCODES_push(vmcodes, vmcode);
@@ -227,87 +227,87 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 SPerl_int my_var_pos = op_var->uv.var->op_my_var->uv.my_var->pos;
                 if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                   if (my_var_pos == 0) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_ISTORE_0;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_INT_0;
                   }
                   else if (my_var_pos == 1) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_ISTORE_1;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_INT_1;
                   }
                   else if (my_var_pos == 2) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_ISTORE_2;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_INT_2;
                   }
                   else if (my_var_pos == 3) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_ISTORE_3;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_INT_3;
                   }
                   else {
-                    vmcode->code = SPerl_VMCODE_C_CODE_ISTORE;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_INT;
                   }
                 }
                 else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
                   if (my_var_pos == 0) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_LSTORE_0;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_LONG_0;
                   }
                   else if (my_var_pos == 1) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_LSTORE_1;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_LONG_1;
                   }
                   else if (my_var_pos == 2) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_LSTORE_2;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_LONG_2;
                   }
                   else if (my_var_pos == 3) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_LSTORE_3;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_LONG_3;
                   }
                   else {
-                    vmcode->code = SPerl_VMCODE_C_CODE_LSTORE;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_LONG;
                   }
                 }
                 else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
                   if (my_var_pos == 0) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_FSTORE_0;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_FLOAT_0;
                   }
                   else if (my_var_pos == 1) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_FSTORE_1;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_FLOAT_1;
                   }
                   else if (my_var_pos == 2) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_FSTORE_2;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_FLOAT_2;
                   }
                   else if (my_var_pos == 3) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_FSTORE_3;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_FLOAT_3;
                   }
                   else {
-                    vmcode->code = SPerl_VMCODE_C_CODE_FSTORE;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_FLOAT;
                   }
                 }
                 else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
                   if (my_var_pos == 0) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_DSTORE_0;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_DOUBLE_0;
                   }
                   else if (my_var_pos == 1) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_DSTORE_1;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_DOUBLE_1;
                   }
                   else if (my_var_pos == 2) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_DSTORE_2;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_DOUBLE_2;
                   }
                   else if (my_var_pos == 3) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_DSTORE_3;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_DOUBLE_3;
                   }
                   else {
-                    vmcode->code = SPerl_VMCODE_C_CODE_DSTORE;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_DOUBLE;
                   }
                 }
                 else {
                   if (my_var_pos == 0) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_ASTORE_0;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_REF_0;
                   }
                   else if (my_var_pos == 1) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_ASTORE_1;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_REF_1;
                   }
                   else if (my_var_pos == 2) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_ASTORE_2;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_REF_2;
                   }
                   else if (my_var_pos == 3) {
-                    vmcode->code = SPerl_VMCODE_C_CODE_ASTORE_3;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_REF_3;
                   }
                   else {
-                    vmcode->code = SPerl_VMCODE_C_CODE_ASTORE;
+                    vmcode->code = SPerl_VMCODE_C_CODE_STORE_REF;
                   }
                 }
                 
@@ -327,19 +327,19 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 SPerl_OP* op_op_info = op_cur->first;
                 
                 if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_IASTORE;
+                  vmcode->code = SPerl_VMCODE_C_CODE_ISTORE_REF;
                 }
                 else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_LASTORE;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LSTORE_REF;
                 }
                 else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_FASTORE;
+                  vmcode->code = SPerl_VMCODE_C_CODE_FSTORE_REF;
                 }
                 else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_DASTORE;
+                  vmcode->code = SPerl_VMCODE_C_CODE_DSTORE_REF;
                 }
                 else {
-                  vmcode->code = SPerl_VMCODE_C_CODE_AASTORE;
+                  vmcode->code = SPerl_VMCODE_C_CODE_ASTORE_REF;
                 }
               }
               
@@ -573,87 +573,87 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               SPerl_int my_var_pos = var->op_my_var->uv.my_var->pos;
               if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 if (my_var_pos == 0) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_0;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_INT_0;
                 }
                 else if (my_var_pos == 1) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_1;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_INT_1;
                 }
                 else if (my_var_pos == 2) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_2;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_INT_2;
                 }
                 else if (my_var_pos == 3) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_ILOAD_3;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_INT_3;
                 }
                 else {
-                  vmcode->code = SPerl_VMCODE_C_CODE_ILOAD;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_INT;
                 }
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
                 if (my_var_pos == 0) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_0;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_LONG_0;
                 }
                 else if (my_var_pos == 1) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_1;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_LONG_1;
                 }
                 else if (my_var_pos == 2) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_2;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_LONG_2;
                 }
                 else if (my_var_pos == 3) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_LLOAD_3;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_LONG_3;
                 }
                 else {
-                  vmcode->code = SPerl_VMCODE_C_CODE_LLOAD;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_LONG;
                 }
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
                 if (my_var_pos == 0) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_0;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_FLOAT_0;
                 }
                 else if (my_var_pos == 1) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_1;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_FLOAT_1;
                 }
                 else if (my_var_pos == 2) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_2;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_FLOAT_2;
                 }
                 else if (my_var_pos == 3) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_FLOAD_3;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_FLOAT_3;
                 }
                 else {
-                  vmcode->code = SPerl_VMCODE_C_CODE_FLOAD;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_FLOAT;
                 }
               }
               else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
                 if (my_var_pos == 0) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_0;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_DOUBLE_0;
                 }
                 else if (my_var_pos == 1) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_1;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_DOUBLE_1;
                 }
                 else if (my_var_pos == 2) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_2;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_DOUBLE_2;
                 }
                 else if (my_var_pos == 3) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_DLOAD_3;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_DOUBLE_3;
                 }
                 else {
-                  vmcode->code = SPerl_VMCODE_C_CODE_DLOAD;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_DOUBLE;
                 }
               }
               else {
                 if (my_var_pos == 0) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_0;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_REF_0;
                 }
                 else if (my_var_pos == 1) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_1;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_REF_1;
                 }
                 else if (my_var_pos == 2) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_2;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_REF_2;
                 }
                 else if (my_var_pos == 3) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_ALOAD_3;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_REF_3;
                 }
                 else {
-                  vmcode->code = SPerl_VMCODE_C_CODE_ALOAD;
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_REF;
                 }
               }
               
