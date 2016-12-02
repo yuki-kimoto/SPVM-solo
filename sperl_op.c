@@ -416,8 +416,8 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_I2B) {
                 vmcode->code = SPerl_VMCODE_C_CODE_I2B;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_I2C) {
-                vmcode->code = SPerl_VMCODE_C_CODE_I2C;
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_I2UC) {
+                vmcode->code = SPerl_VMCODE_C_CODE_I2UC;
               }
               else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_I2D) {
                 vmcode->code = SPerl_VMCODE_C_CODE_I2D;
