@@ -16,7 +16,7 @@ struct SPerl_body {
   SPerl_OP* op_name;
   union {
     SPerl_BODY_CLASS* body_class;
-    SPerl_BODY_ENUM* body_enum;
+    SPerl_ENUMERATION* enumeration;
     SPerl_BODY_CORE* body_core;
   } uv;
 };

@@ -100,7 +100,7 @@ struct SPerl_op {
     SPerl_FIELD* field;
     SPerl_DESCRIPTER* descripter;
     SPerl_PACKAGE* package;
-    SPerl_BODY_ENUM* body_enum;
+    SPerl_ENUMERATION* enumeration;
   } uv;
 };
 

@@ -27,7 +27,7 @@
 #include "sperl_type_part.h"
 #include "sperl_body.h"
 #include "sperl_body_core.h"
-#include "sperl_body_enum.h"
+#include "sperl_enumeration.h"
 #include "sperl_body_class.h"
 #include "sperl_package.h"
 #include "sperl_name.h"
@@ -2220,8 +2220,8 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
         // Enum
         else if (op_decl->code == SPerl_OP_C_CODE_DECL_ENUM) {
           SPerl_OP* op_enum = op_decl;
-          SPerl_BODY_ENUM* body_enum = op_enum->uv.body_enum;
-          SPerl_ARRAY* enum_values = body_enum->enum_values;
+          SPerl_ENUMERATION* enumeration = op_enum->uv.enumeration;
+          SPerl_ARRAY* enum_values = enumeration->enum_values;
           
           for (SPerl_int i = 0; i < enum_values->length; i++) {
             SPerl_ENUM_VALUE* enum_value = SPerl_ARRAY_fetch(enum_values, i);
@@ -2455,10 +2455,10 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
   }
 
   // Set enum body
-  SPerl_BODY_ENUM* body_enum = SPerl_BODY_ENUM_new(parser);
-  body_enum->enum_values = enum_values;
+  SPerl_ENUMERATION* enumeration = SPerl_ENUMERATION_new(parser);
+  enumeration->enum_values = enum_values;
   
-  op_enum->uv.body_enum = body_enum;
+  op_enum->uv.enumeration = enumeration;
   
   return op_enum;
 }

@@ -23,7 +23,7 @@
 #include "sperl_body.h"
 #include "sperl_body_core.h"
 #include "sperl_body_class.h"
-#include "sperl_body_enum.h"
+#include "sperl_enumeration.h"
 #include "sperl_package.h"
 #include "sperl_op_info.h"
 #include "sperl_resolved_type.h"
@@ -400,11 +400,11 @@ void SPerl_PARSER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
     }
     // Enum body
     else if (body->code == SPerl_BODY_C_CODE_ENUM) {
-      SPerl_BODY_ENUM* body_enum = body->uv.body_enum;
+      SPerl_ENUMERATION* enumeration = body->uv.enumeration;
       
       // Enum value information
       printf("  enum_values\n");
-      SPerl_ARRAY* enum_values = body_enum->enum_values;
+      SPerl_ARRAY* enum_values = enumeration->enum_values;
       for (SPerl_int j = 0; j < enum_values->length; j++) {
         SPerl_ENUM_VALUE* enum_value = SPerl_ARRAY_fetch(enum_values, j);
         printf("    enum_value[%" PRId32 "]\n", j);

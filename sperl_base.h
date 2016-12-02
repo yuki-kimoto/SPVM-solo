@@ -69,8 +69,8 @@ struct SPerl_body_core;
 typedef struct SPerl_body_core SPerl_BODY_CORE;
 
 /* sperl_enum.h */
-struct SPerl_body_enum;
-typedef struct SPerl_body_enum SPerl_BODY_ENUM;
+struct SPerl_enumeration;
+typedef struct SPerl_enumeration SPerl_ENUMERATION;
 
 /* sperl_enum_value.h */
 struct SPerl_enum_value;
