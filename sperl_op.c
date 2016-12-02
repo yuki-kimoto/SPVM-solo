@@ -131,6 +131,21 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_BIT_XOR: {
+              
+              // Code
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_IXOR) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IXOR;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_LXOR) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LXOR;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_BIT_OR: {
               
               // Code
@@ -837,6 +852,33 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_BIT_XOR: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              // Can receive only core type
+              if (first_resolved_type->id >= SPerl_BODY_CORE_C_CODE_FLOAT || last_resolved_type->id >= SPerl_BODY_CORE_C_CODE_FLOAT) {
+                SPerl_yyerror_format(parser,
+                  "& operator can receive only boolean, uchar, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              // Insert type converting op
+              SPerl_OP_insert_op_convert_type(parser, op_cur, first_resolved_type, last_resolved_type);
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_OP_INFO* op_info = op_cur->uv.op_info;
+              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                op_info->code = SPerl_OP_INFO_C_CODE_IXOR;
+              }
+              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                op_info->code = SPerl_OP_INFO_C_CODE_LXOR;
+              }
+              
+              op_info->return_resolved_type = resolved_type;
+              
+              break;
+            }
             case SPerl_OP_C_CODE_BIT_OR: {
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
