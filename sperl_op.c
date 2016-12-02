@@ -131,6 +131,36 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_BIT_OR: {
+              
+              // Code
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_IOR) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IOR;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_LOR) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LOR;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_BIT_AND: {
+              
+              // Code
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_IAND) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IAND;
+              }
+              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_LAND) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LAND;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_ARRAY_ELEM: {
               
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
@@ -834,7 +864,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               break;
             }
-
             case SPerl_OP_C_CODE_BIT_AND: {
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
