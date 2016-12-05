@@ -1278,12 +1278,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               break;
             }
             case SPerl_OP_C_CODE_CONVERT: {
-              SPerl_OP* op_type_dist = op_cur->first;
+              SPerl_OP* op_term = op_cur->first;
+              SPerl_RESOLVED_TYPE* resolved_type_src = SPerl_OP_get_resolved_type(parser, op_term);
+              
+              SPerl_OP* op_type_dist = op_cur->last;
               SPerl_TYPE* type_dist = op_type_dist->uv.type;
               SPerl_RESOLVED_TYPE* resolved_type_dist = type_dist->resolved_type;
-              
-              SPerl_OP* op_term = op_cur->last;
-              SPerl_RESOLVED_TYPE* resolved_type_src = SPerl_OP_get_resolved_type(parser, op_term);
               
               // Can receive only core type
               if (!SPerl_TYPE_is_core_type(parser, resolved_type_src->id) || !SPerl_TYPE_is_core_type(parser, resolved_type_dist->id)) {
@@ -1781,7 +1781,7 @@ SPerl_OP* SPerl_OP_build_new_array(SPerl_PARSER* parser, SPerl_OP* op_opt_terms)
 
 SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term) {
   
-  SPerl_OP* op_convert_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT, op_type, op_term);
+  SPerl_OP* op_convert_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT, op_term, op_type);
   op_convert_type->file = op_type->file;
   op_convert_type->line = op_type->line;
   
