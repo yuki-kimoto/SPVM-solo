@@ -33,8 +33,6 @@ SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "RETURN_DOUBLE",
   "RETURN_REF",
   "RETURN",
-  "BIT_OR_INT",
-  "BIT_OR_LONG",
   "BIT_XOR_INT",
   "BIT_XOR_LONG",
   "POP",
