@@ -483,7 +483,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
-              if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+              if (op_cur->uv.op_info->return_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_ADD_INT;
               }
               else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
@@ -503,7 +503,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
-              if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+              if (op_cur->uv.op_info->return_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_SUBTRACT_INT;
               }
               else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
@@ -523,7 +523,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
-              if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+              if (op_cur->uv.op_info->return_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_MULTIPLY_INT;
               }
               else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
@@ -543,7 +543,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
-              if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+              if (op_cur->uv.op_info->return_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_DIVIDE_INT;
               }
               else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
