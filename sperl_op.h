@@ -6,6 +6,45 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Operation code */
 enum {                          // [GROUP]
   SPerl_OP_C_CODE_IF,           // UNKNOWN
@@ -73,6 +112,8 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_GET_ENUMERATION_VALUE, // UNKNOWN
   SPerl_OP_C_CODE_CONVERT,  // UNKNOWN
   SPerl_OP_C_CODE_POP,          // UNKNOWN
+  SPerl_OP_C_CODE_IINC,
+  SPerl_OP_C_CODE_NEW_ARRAY,
 };
 
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
@@ -104,6 +145,7 @@ struct SPerl_op {
   } uv;
 };
 
+SPerl_OP* SPerl_OP_build_new_array(SPerl_PARSER* parser, SPerl_OP* op_opt_terms);
 void SPerl_OP_create_vmcode(SPerl_PARSER* parser);
 void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type);
 void SPerl_OP_check(SPerl_PARSER* parser);

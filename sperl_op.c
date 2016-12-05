@@ -39,6 +39,13 @@
 #include "sperl_vmcode.h"
 #include "sperl_vmcodes.h"
 
+
+
+
+
+
+
+
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
   "ELSIF",
@@ -106,6 +113,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "CONVERT",
   "POP",
   "IINC",
+  "NEW_ARRAY",
 };
 
 void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
@@ -1886,6 +1894,15 @@ SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP*
   op_field->uv.name = name;
   
   return op_field;
+}
+
+SPerl_OP* SPerl_OP_build_new_array(SPerl_PARSER* parser, SPerl_OP* op_opt_terms) {
+  SPerl_OP* op_new_array = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_ARRAY, NULL, NULL);
+  SPerl_OP_sibling_splice(parser, op_new_array, NULL, 0, op_opt_terms);
+  
+  op_new_array->uv.op_info = SPerl_OP_INFO_new(parser);
+  
+  return op_new_array;
 }
 
 SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term) {
