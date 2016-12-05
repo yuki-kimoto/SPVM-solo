@@ -170,10 +170,10 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
-              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_BIT_OR_INT) {
+              if (op_cur->uv.op_info->return_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_BIT_OR_INT;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_BIT_OR_LONG) {
+              else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
                 vmcode->code = SPerl_VMCODE_C_CODE_BIT_OR_LONG;
               }
               
@@ -185,10 +185,10 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
-              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_BIT_AND_INT) {
+              if (op_cur->uv.op_info->return_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_BIT_AND_INT;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_BIT_AND_LONG) {
+              else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
                 vmcode->code = SPerl_VMCODE_C_CODE_BIT_AND_LONG;
               }
               
@@ -915,13 +915,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
-                op_info->code = SPerl_OP_INFO_C_CODE_BIT_OR_INT;
-              }
-              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
-                op_info->code = SPerl_OP_INFO_C_CODE_BIT_OR_LONG;
-              }
-              
               op_info->return_resolved_type = resolved_type;
               
               break;
@@ -942,13 +935,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
-                op_info->code = SPerl_OP_INFO_C_CODE_BIT_AND_INT;
-              }
-              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
-                op_info->code = SPerl_OP_INFO_C_CODE_BIT_AND_LONG;
-              }
-              
               op_info->return_resolved_type = resolved_type;
               
               break;
