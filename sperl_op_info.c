@@ -23,8 +23,6 @@ SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[] = {
   "CONVERT_LONG_TO_DOUBLE",
   "CONVERT_LONG_TO_FLOAT",
   "CONVERT_LONG_TO_INT",
-  "POP",
-  "POP2",
 };
 
 

@@ -23,8 +23,6 @@ enum {
   SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_DOUBLE,          
   SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_FLOAT,          
   SPerl_OP_INFO_C_CODE_CONVERT_LONG_TO_INT,          
-  SPerl_OP_INFO_C_CODE_POP,
-  SPerl_OP_INFO_C_CODE_POP2,
 };
 
 extern SPerl_char* const SPerl_OP_INFO_C_CODE_NAMES[];
