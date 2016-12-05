@@ -141,7 +141,29 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
             case SPerl_OP_C_CODE_PRE_INC: {
-              warn("AAAAAAAAAAA");
+              SPerl_VAR* var = op_cur->first->uv.var;
+              SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IINC;
+                vmcode->operand1 = (SPerl_char)my_var->pos;
+                vmcode->operand2 = (SPerl_char)1;
+              }
+              else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LINC;
+                vmcode->operand1 = (SPerl_char)my_var->pos;
+                vmcode->operand2 = (SPerl_char)1;
+              }
+              
+              // At first, increment
+              SPerl_VMCODES_push(vmcodes, vmcodes->values + (vmcodes->length - 1));
+              // load var
+              vmcodes->values[vmcodes->length - 2] = *vmcode;
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_POST_INC: {
               SPerl_VAR* var = op_cur->first->uv.var;
               SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
               
@@ -158,16 +180,48 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               }
               
               SPerl_VMCODES_push(vmcodes, vmcode);
-              warn("CCCCCCCCCCCC");
-              break;
-            }
-            case SPerl_OP_C_CODE_POST_INC: {
               break;
             }
             case SPerl_OP_C_CODE_PRE_DEC: {
+              SPerl_VAR* var = op_cur->first->uv.var;
+              SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IINC;
+                vmcode->operand1 = (SPerl_char)my_var->pos;
+                vmcode->operand2 = (SPerl_char)-1;
+              }
+              else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LINC;
+                vmcode->operand1 = (SPerl_char)my_var->pos;
+                vmcode->operand2 = (SPerl_char)-1;
+              }
+              
+              // At first, increment
+              SPerl_VMCODES_push(vmcodes, vmcodes->values + (vmcodes->length - 1));
+              // load var
+              vmcodes->values[vmcodes->length - 2] = *vmcode;
+              
               break;
             }
             case SPerl_OP_C_CODE_POST_DEC: {
+              SPerl_VAR* var = op_cur->first->uv.var;
+              SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IINC;
+                vmcode->operand1 = (SPerl_char)my_var->pos;
+                vmcode->operand2 = (SPerl_char)-1;
+              }
+              else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LINC;
+                vmcode->operand1 = (SPerl_char)my_var->pos;
+                vmcode->operand2 = (SPerl_char)-1;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
               break;
             }
             case SPerl_OP_C_CODE_BIT_XOR: {
