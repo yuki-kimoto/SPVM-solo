@@ -140,25 +140,25 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
             case SPerl_OP_C_CODE_PRE_INC: {
-              
+              break;
             }
             case SPerl_OP_C_CODE_POST_INC: {
-              
+              break;
             }
             case SPerl_OP_C_CODE_PRE_DEC: {
-            
+              break;
             }
             case SPerl_OP_C_CODE_POST_DEC: {
-            
+              break;
             }
             case SPerl_OP_C_CODE_BIT_XOR: {
               
               // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
-              if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_BIT_XOR_INT) {
+              if (op_cur->uv.op_info->return_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_BIT_XOR_INT;
               }
-              else if (op_cur->uv.op_info->code == SPerl_OP_INFO_C_CODE_BIT_XOR_LONG) {
+              else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
                 vmcode->code = SPerl_VMCODE_C_CODE_BIT_XOR_LONG;
               }
               
@@ -888,13 +888,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
-                op_info->code = SPerl_OP_INFO_C_CODE_BIT_XOR_INT;
-              }
-              else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
-                op_info->code = SPerl_OP_INFO_C_CODE_BIT_XOR_LONG;
-              }
-              
               op_info->return_resolved_type = resolved_type;
               
               break;

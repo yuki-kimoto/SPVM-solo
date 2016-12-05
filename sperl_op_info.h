@@ -33,8 +33,6 @@ enum {
   SPerl_OP_INFO_C_CODE_RETURN_DOUBLE,      
   SPerl_OP_INFO_C_CODE_RETURN_REF,      
   SPerl_OP_INFO_C_CODE_RETURN,       
-  SPerl_OP_INFO_C_CODE_BIT_XOR_INT,         
-  SPerl_OP_INFO_C_CODE_BIT_XOR_LONG,         
   SPerl_OP_INFO_C_CODE_POP,
   SPerl_OP_INFO_C_CODE_POP2,
 };
