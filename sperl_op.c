@@ -1496,8 +1496,11 @@ void SPerl_OP_resolve_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert
   SPerl_int dist_id = resolved_type_dist->id;
   
   SPerl_OP_INFO* op_info = op_convert_type->uv.op_info;
-  if (src_id != dist_id) {
-    if (src_id == SPerl_BODY_CORE_C_CODE_INT) {
+  if (src_id == dist_id) {
+    op_info->return_resolved_type = resolved_type_src;
+  }
+  else {
+    if (src_id <= SPerl_BODY_CORE_C_CODE_INT) {
       if (dist_id == SPerl_BODY_CORE_C_CODE_LONG) {
         op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_LONG;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
@@ -1512,7 +1515,7 @@ void SPerl_OP_resolve_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert
       }
     }
     else if (src_id == SPerl_BODY_CORE_C_CODE_LONG) {
-      if (dist_id == SPerl_BODY_CORE_C_CODE_INT) {
+      if (dist_id <= SPerl_BODY_CORE_C_CODE_INT) {
         op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_LONG;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
@@ -1526,7 +1529,7 @@ void SPerl_OP_resolve_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert
       }
     }
     else if (src_id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-      if (dist_id == SPerl_BODY_CORE_C_CODE_INT) {
+      if (dist_id <= SPerl_BODY_CORE_C_CODE_INT) {
         op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_FLOAT;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
@@ -1540,7 +1543,7 @@ void SPerl_OP_resolve_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert
       }
     }
     else if (src_id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-      if (dist_id == SPerl_BODY_CORE_C_CODE_INT) {
+      if (dist_id <= SPerl_BODY_CORE_C_CODE_INT) {
         op_info->code = SPerl_OP_INFO_C_CODE_CONVERT_INT_TO_DOUBLE;
         op_info->return_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
