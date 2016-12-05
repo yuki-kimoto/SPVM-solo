@@ -1292,7 +1292,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               
               // Resolve convert_type op
-              SPerl_OP_resolve_convert_type(parser, op_cur, resolved_type_src, resolved_type_dist);
+              SPerl_OP_resolve_op_convert_type(parser, op_cur);
             }
             break;
           }
@@ -1483,8 +1483,15 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
   }
 }
 
-void SPerl_OP_resolve_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert_type, SPerl_RESOLVED_TYPE* resolved_type_src, SPerl_RESOLVED_TYPE* resolved_type_dist) {
+void SPerl_OP_resolve_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert_type) {
+
+  SPerl_OP* op_term = op_convert_type->first;
+  SPerl_RESOLVED_TYPE* resolved_type_src = SPerl_OP_get_resolved_type(parser, op_term);
   
+  SPerl_OP* op_type_dist = op_convert_type->last;
+  SPerl_TYPE* type_dist = op_type_dist->uv.type;
+  SPerl_RESOLVED_TYPE* resolved_type_dist = type_dist->resolved_type;
+
   SPerl_int src_id = resolved_type_src->id;
   SPerl_int dist_id = resolved_type_dist->id;
   
