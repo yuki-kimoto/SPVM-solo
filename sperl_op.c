@@ -141,6 +141,24 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
             case SPerl_OP_C_CODE_PRE_INC: {
+              warn("AAAAAAAAAAA");
+              SPerl_VAR* var = op_cur->first->uv.var;
+              SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IINC;
+                vmcode->operand1 = (SPerl_char)my_var->pos;
+                vmcode->operand2 = (SPerl_char)1;
+              }
+              else if (op_cur->uv.op_info->return_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LINC;
+                vmcode->operand1 = (SPerl_char)my_var->pos;
+                vmcode->operand2 = (SPerl_char)1;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              warn("CCCCCCCCCCCC");
               break;
             }
             case SPerl_OP_C_CODE_POST_INC: {
@@ -154,7 +172,6 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_BIT_XOR: {
               
-              // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
               if (op_cur->uv.op_info->return_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_BIT_XOR_INT;
@@ -169,7 +186,6 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_BIT_OR: {
               
-              // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
               if (op_cur->uv.op_info->return_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_BIT_OR_INT;
@@ -184,7 +200,6 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_BIT_AND: {
               
-              // Code
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
               if (op_cur->uv.op_info->return_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 vmcode->code = SPerl_VMCODE_C_CODE_BIT_AND_INT;
@@ -1144,6 +1159,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               if (first_resolved_type->id != SPerl_BODY_CORE_C_CODE_INT &&  first_resolved_type->id != SPerl_BODY_CORE_C_CODE_LONG) {
                 SPerl_yyerror_format(parser, "must be int or long in increment at %s line %d\n", op_cur->file, op_cur->line);
               }
+              op_cur->uv.op_info->return_resolved_type = first_resolved_type;
               break;
             }
             case SPerl_OP_C_CODE_CONSTANT: {
