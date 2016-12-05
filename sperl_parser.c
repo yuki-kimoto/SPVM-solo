@@ -252,10 +252,6 @@ void SPerl_PARSER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
       SPerl_OP_INFO* op_info = op_cur->uv.op_info;
       printf(" %s", SPerl_OP_INFO_C_CODE_NAMES[op_info->code]);
     }
-    else if (code == SPerl_OP_C_CODE_ADD) {
-      SPerl_OP_INFO* op_info = op_cur->uv.op_info;
-      printf(" %s", SPerl_OP_INFO_C_CODE_NAMES[op_info->code]);
-    }
     printf("\n");
     
     // [END]Preorder traversal position
