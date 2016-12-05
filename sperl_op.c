@@ -1403,26 +1403,11 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
     }
-    case SPerl_OP_C_CODE_CONVERT: {
-      SPerl_OP_INFO* op_info = op->uv.op_info;
-      resolved_type = op_info->return_resolved_type;
-      break;
-    }
-    case SPerl_OP_C_CODE_ADD:
-    case SPerl_OP_C_CODE_SUBTRACT:
-    case SPerl_OP_C_CODE_MULTIPLY:
-    case SPerl_OP_C_CODE_DIVIDE:
-    case SPerl_OP_C_CODE_NEGATE:
-    case SPerl_OP_C_CODE_PLUS:
-    case SPerl_OP_C_CODE_ASSIGN:
-    case SPerl_OP_C_CODE_ARRAY_ELEM:
+    default:
     {
       SPerl_OP_INFO* op_info = op->uv.op_info;
       resolved_type = op_info->return_resolved_type;
-      break;
     }
-    defaut:
-      resolved_type = NULL;
   }
   
   return resolved_type;
