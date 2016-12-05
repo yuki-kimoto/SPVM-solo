@@ -595,6 +595,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_USE);
               return USE;
             }
+            else if (memcmp(keyword, "undef", str_len) == 0) {
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_UNDEF);
+              return UNDEF;
+            }
             else if (memcmp(keyword, "while", str_len) == 0) {
               yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_WHILE);
               return WHILE;

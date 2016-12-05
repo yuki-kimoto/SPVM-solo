@@ -13,7 +13,7 @@
 %}
 
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
-%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE
+%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE UNDEF
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
 %type <opval> block enum_block class_block decl_sub opt_decl_class_attrs call_sub call_op
@@ -358,6 +358,7 @@ term
   | array_elem
   | convert_type
   | new_array
+  | UNDEF
 
 new_array
   : '[' opt_terms ']'

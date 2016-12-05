@@ -35,5 +35,6 @@ package Test {
     1 - 2;
     1.2 - 3;
     my $bar : double = (double)1;
+    undef;
   }
 }

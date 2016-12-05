@@ -113,6 +113,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_CONVERT,  // UNKNOWN
   SPerl_OP_C_CODE_POP,          // UNKNOWN
   SPerl_OP_C_CODE_NEW_ARRAY,
+  SPerl_OP_C_CODE_UNDEF,
 };
 
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
