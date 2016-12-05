@@ -202,7 +202,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
               
-              if (op_info->lvalue) {
+              if (op_cur->lvalue) {
                 break;
               }
               
@@ -597,7 +597,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               
               SPerl_VAR* var = op_cur->uv.var;
               
-              if (var->lvalue) {
+              if (op_cur->lvalue) {
                 break;
               }
               
@@ -971,15 +971,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_ASSIGN: {
               
-              if (op_cur->first->code == SPerl_OP_C_CODE_VAR) {
-                op_cur->first->uv.var->lvalue = 1;
-              }
-              else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
-                op_cur->first->uv.field->lvalue = 1;
-              }
-              else if (op_cur->first->code == SPerl_OP_C_CODE_ARRAY_ELEM) {
-                op_cur->first->uv.op_info->lvalue = 1;
-              }
+              op_cur->lvalue = 1;
               
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);

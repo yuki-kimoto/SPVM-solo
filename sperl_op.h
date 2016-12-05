@@ -126,6 +126,7 @@ struct SPerl_op {
   SPerl_char* file;
   SPerl_int line;
   SPerl_boolean moresib;
+  SPerl_boolean lvalue;
   union {
     SPerl_OP_INFO* op_info;
     SPerl_MY_VAR* my_var;
