@@ -177,6 +177,7 @@ SPerl_char* const SPerl_VMCODE_C_CODE_NAMES[] = {
   "IFNONNULL",
   "IFNULL",
   "IINC",
+  "LINC",
   "INSTANCEOF",
   "INVOKESTATIC",
   "ISHL",

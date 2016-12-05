@@ -112,7 +112,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_GET_ENUMERATION_VALUE, // UNKNOWN
   SPerl_OP_C_CODE_CONVERT,  // UNKNOWN
   SPerl_OP_C_CODE_POP,          // UNKNOWN
-  SPerl_OP_C_CODE_IINC,
   SPerl_OP_C_CODE_NEW_ARRAY,
 };
 

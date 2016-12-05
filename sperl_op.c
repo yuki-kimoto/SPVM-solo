@@ -112,7 +112,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "GET_ENUMERATION_VALUE",
   "CONVERT",
   "POP",
-  "IINC",
   "NEW_ARRAY",
 };
 
@@ -140,6 +139,18 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_PRE_INC: {
+              
+            }
+            case SPerl_OP_C_CODE_POST_INC: {
+              
+            }
+            case SPerl_OP_C_CODE_PRE_DEC: {
+            
+            }
+            case SPerl_OP_C_CODE_POST_DEC: {
+            
+            }
             case SPerl_OP_C_CODE_BIT_XOR: {
               
               // Code
