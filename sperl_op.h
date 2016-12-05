@@ -120,13 +120,12 @@ extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 /* Binary operation */
 struct SPerl_op {
   SPerl_int code;
-  SPerl_boolean moresib;
   SPerl_OP* first;
   SPerl_OP* last;
   SPerl_OP* sibparent;
   SPerl_char* file;
   SPerl_int line;
-  SPerl_int iv;
+  SPerl_boolean moresib;
   union {
     SPerl_OP_INFO* op_info;
     SPerl_MY_VAR* my_var;
