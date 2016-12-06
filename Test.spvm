@@ -13,6 +13,8 @@ package Test {
   use Test::ValueClass;
   
   sub main() : int {
+    my $point : Test::Point = new Test::Point;
+    
     my $var : int = 4;
     $var++;
     $var--;

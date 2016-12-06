@@ -12,7 +12,7 @@
   #include "sperl_op_info.h"
 %}
 
-%token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE
+%token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE NEW
 %token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE UNDEF
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
@@ -21,7 +21,7 @@
 %type <opval> opt_descripters list_descripters descripters decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_packages opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_packages type_sub types opt_types not_type_sub
-%type <opval> enum_name get_enumeration_value field array_elem convert_type decl_enum new_array
+%type <opval> enum_name get_enumeration_value field array_elem convert_type decl_enum new_array new_object new_array_object
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -359,11 +359,25 @@ term
   | convert_type
   | new_array
   | UNDEF
+  | new_object
+  | new_array_object
 
 new_array
   : '[' opt_terms ']'
     {
       $$ = SPerl_OP_build_new_array(parser, $2);
+    }
+
+new_object
+  : NEW type
+    {
+      $$ = SPerl_OP_build_new_object(parser, $1, $2);
+    }
+
+new_array_object
+  : NEW type '[' term ']'
+    {
+      $$ = SPerl_OP_build_new_array_object(parser, $1, $2, $4);
     }
 
 convert_type

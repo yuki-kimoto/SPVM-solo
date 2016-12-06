@@ -114,7 +114,37 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "POP",
   "NEW_ARRAY",
   "UNDEF",
+  "NEW",
+  "NEW_OBJECT",
+  "NEW_ARRAY_OBJECT",
 };
+
+SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type) {
+  SPerl_OP* op_new_object = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_OBJECT, NULL, NULL);
+  SPerl_OP_sibling_splice(parser, op_new_object, NULL, 0, op_type);
+  op_new_object->file = op_new->file;
+  op_new_object->line = op_new->line;
+  
+  op_new_object->uv.op_info = SPerl_OP_INFO_new(parser);
+
+  SPerl_ARRAY_push(parser->op_types, op_type);
+  
+  return op_new_object;
+}
+
+SPerl_OP* SPerl_OP_build_new_array_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type, SPerl_OP* op_term) {
+  SPerl_OP* op_new_array_object = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_ARRAY_OBJECT, NULL, NULL);
+  SPerl_OP_sibling_splice(parser, op_new_array_object, NULL, 0, op_type);
+  SPerl_OP_sibling_splice(parser, op_new_array_object, op_type, 0, op_term);
+  op_new_array_object->file = op_new->file;
+  op_new_array_object->line = op_new->line;
+  
+  op_new_array_object->uv.op_info = SPerl_OP_INFO_new(parser);
+  
+  SPerl_ARRAY_push(parser->op_types, op_type);
+  
+  return op_new_array_object;
+}
 
 void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->op_subs->length; i++) {
@@ -915,6 +945,64 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
   }
 }
 
+SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op) {
+  SPerl_RESOLVED_TYPE*  resolved_type;
+  
+  switch (op->code) {
+    case SPerl_OP_C_CODE_NEW_OBJECT: {
+      resolved_type = op->first->uv.type->resolved_type;
+      break;
+    }
+    case SPerl_OP_C_CODE_UNDEF : {
+      resolved_type = NULL;
+      break;
+    }
+    case SPerl_OP_C_CODE_DECL_ANON_SUB: {
+      SPerl_SUB* sub = op->uv.sub;
+      resolved_type = sub->op_return_type->uv.type->resolved_type;
+      break;
+    }
+    case SPerl_OP_C_CODE_CONSTANT: {
+      SPerl_CONSTANT* constant = op->uv.constant;
+      resolved_type = constant->resolved_type;
+      break;
+    }
+    case SPerl_OP_C_CODE_VAR: {
+      SPerl_VAR* var = op->uv.var;
+      resolved_type = var->op_my_var->uv.my_var->op_type->uv.type->resolved_type;
+      break;
+    }
+    case SPerl_OP_C_CODE_CALL_SUB: {
+      SPerl_NAME* name = op->uv.name;
+      SPerl_char* complete_name = name->complete_name;
+      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
+      resolved_type = sub->op_return_type->uv.type->resolved_type;
+      break;
+    }
+    case SPerl_OP_C_CODE_GET_ENUMERATION_VALUE: {
+      SPerl_NAME* name = op->uv.name;
+      SPerl_char* complete_name = name->complete_name;
+      SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
+      resolved_type = enumeration_value->op_constant->uv.constant->resolved_type;
+      break;
+    }
+    case SPerl_OP_C_CODE_FIELD: {
+      SPerl_NAME* name = op->uv.name;
+      SPerl_char* complete_name = name->complete_name;
+      SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
+      resolved_type = field->op_type->uv.type->resolved_type;
+      break;
+    }
+    default:
+    {
+      SPerl_OP_INFO* op_info = op->uv.op_info;
+      resolved_type = op_info->return_resolved_type;
+    }
+  }
+  
+  return resolved_type;
+}
+
 void SPerl_OP_check_ops(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->op_subs->length; i++) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
@@ -965,6 +1053,24 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_NEW_OBJECT: {
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+              
+              op_cur->uv.op_info->return_resolved_type = resolved_type;
+              
+              if (SPerl_RESOLVED_TYPE_contain_sub(parser, resolved_type)) {
+                SPerl_yyerror_format(parser,
+                  "new operator can receive sub type %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              else if (SPerl_RESOLVED_TYPE_is_array(parser, resolved_type)) {
+                SPerl_yyerror_format(parser,
+                  "new operator can receive array type %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              break;
+            }
             case SPerl_OP_C_CODE_BIT_XOR: {
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
@@ -1400,60 +1506,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
     // Set my var information
     sub->op_my_vars = op_my_vars;
   }
-}
-
-SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op) {
-  SPerl_RESOLVED_TYPE*  resolved_type;
-  
-  switch (op->code) {
-    case SPerl_OP_C_CODE_UNDEF : {
-      resolved_type = NULL;
-      break;
-    }
-    case SPerl_OP_C_CODE_DECL_ANON_SUB: {
-      SPerl_SUB* sub = op->uv.sub;
-      resolved_type = sub->op_return_type->uv.type->resolved_type;
-      break;
-    }
-    case SPerl_OP_C_CODE_CONSTANT: {
-      SPerl_CONSTANT* constant = op->uv.constant;
-      resolved_type = constant->resolved_type;
-      break;
-    }
-    case SPerl_OP_C_CODE_VAR: {
-      SPerl_VAR* var = op->uv.var;
-      resolved_type = var->op_my_var->uv.my_var->op_type->uv.type->resolved_type;
-      break;
-    }
-    case SPerl_OP_C_CODE_CALL_SUB: {
-      SPerl_NAME* name = op->uv.name;
-      SPerl_char* complete_name = name->complete_name;
-      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_complete_name_symtable, complete_name, strlen(complete_name));
-      resolved_type = sub->op_return_type->uv.type->resolved_type;
-      break;
-    }
-    case SPerl_OP_C_CODE_GET_ENUMERATION_VALUE: {
-      SPerl_NAME* name = op->uv.name;
-      SPerl_char* complete_name = name->complete_name;
-      SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_HASH_search(parser->enum_complete_name_symtable, complete_name, strlen(complete_name));
-      resolved_type = enumeration_value->op_constant->uv.constant->resolved_type;
-      break;
-    }
-    case SPerl_OP_C_CODE_FIELD: {
-      SPerl_NAME* name = op->uv.name;
-      SPerl_char* complete_name = name->complete_name;
-      SPerl_FIELD* field = SPerl_HASH_search(parser->field_complete_name_symtable, complete_name, strlen(complete_name));
-      resolved_type = field->op_type->uv.type->resolved_type;
-      break;
-    }
-    default:
-    {
-      SPerl_OP_INFO* op_info = op->uv.op_info;
-      resolved_type = op_info->return_resolved_type;
-    }
-  }
-  
-  return resolved_type;
 }
 
 void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {

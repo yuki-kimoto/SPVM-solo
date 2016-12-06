@@ -29,3 +29,15 @@ SPerl_boolean SPerl_RESOLVED_TYPE_is_array(SPerl_PARSER* parser, SPerl_RESOLVED_
     return 0;
   }
 }
+
+SPerl_boolean SPerl_RESOLVED_TYPE_contain_sub(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  SPerl_char* name = resolved_type->name;
+  
+  SPerl_char* found = strchr(name, '(');
+  if (found) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}

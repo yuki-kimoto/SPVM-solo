@@ -114,6 +114,9 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_POP,          // UNKNOWN
   SPerl_OP_C_CODE_NEW_ARRAY,
   SPerl_OP_C_CODE_UNDEF,
+  SPerl_OP_C_CODE_NEW,
+  SPerl_OP_C_CODE_NEW_OBJECT,
+  SPerl_OP_C_CODE_NEW_ARRAY_OBJECT,
 };
 
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
@@ -144,6 +147,10 @@ struct SPerl_op {
     SPerl_ENUMERATION* enumeration;
   } uv;
 };
+
+SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type);
+SPerl_OP* SPerl_OP_build_new_array_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type, SPerl_OP* op_term);
+
 
 SPerl_OP* SPerl_OP_build_new_array(SPerl_PARSER* parser, SPerl_OP* op_opt_terms);
 void SPerl_OP_create_vmcode(SPerl_PARSER* parser);
