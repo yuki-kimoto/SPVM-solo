@@ -170,6 +170,16 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_NEW_OBJECT: {
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              
+              vmcode->code = SPerl_VMCODE_C_CODE_NEW;
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_UNDEF: {
               
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
@@ -1042,6 +1052,10 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
           }
           break;
         }
+        case SPerl_OP_C_CODE_ASSIGN: {
+          op_cur->first->lvalue = 1;
+          break;
+        }
       }
       
       // [END]Preorder traversal position
@@ -1063,7 +1077,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                   "new operator can receive sub type %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
-              else if (SPerl_RESOLVED_TYPE_is_array(parser, resolved_type)) {
+              
+              if (SPerl_RESOLVED_TYPE_is_array(parser, resolved_type)) {
                 SPerl_yyerror_format(parser,
                   "new operator can receive array type %s line %d\n", op_cur->file, op_cur->line);
                 break;

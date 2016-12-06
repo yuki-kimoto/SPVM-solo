@@ -11,9 +11,10 @@ package Test {
   use Test::TypedefArray2;
   use Test::TypedefSub;
   use Test::ValueClass;
+  use Test::Simple;
   
   sub main() : int {
-    my $point : Test::Point = new Test::Point;
+    my $simple : Test::Simple = new Test::Simple;
     
     my $var : int = 4;
     $var++;
