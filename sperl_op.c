@@ -1015,6 +1015,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
 
 void SPerl_OP_check_ops(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->op_subs->length; i++) {
+    
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
     SPerl_SUB* sub = op_sub->uv.sub;
     
@@ -1059,13 +1060,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
       }
       
       // [END]Preorder traversal position
-      
       if (op_cur->first) {
         op_cur = op_cur->first;
       }
       else {
         while (1) {
-          // [START]Postorder traversal position
+         // [START]Postorder traversal position
           switch (op_cur->code) {
             case SPerl_OP_C_CODE_NEW_OBJECT: {
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
@@ -1444,36 +1444,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               if (parser->fatal_error) {
                 return;
               }
-              break;
-            }
-            case SPerl_OP_C_CODE_GET_ENUMERATION_VALUE: {
-              // Check enum name
-              SPerl_NAME* name = op_cur->uv.name;
-              SPerl_OP_check_enum_name(parser, name);
-              if (parser->fatal_error) {
-                return;
-              }
-
-              SPerl_char* enum_complete_name = name->complete_name;
-              SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_HASH_search(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name));
-              SPerl_OP* op_constant = enumeration_value->op_constant;
-              SPerl_CONSTANT* constant = op_constant->uv.constant;
-              
-              // new const value
-              SPerl_CONSTANT* new_constant = SPerl_CONSTANT_new(parser);
-              new_constant->code = SPerl_CONSTANT_C_CODE_INT;
-              new_constant->uv.int_value = constant->uv.int_value;
-              new_constant->resolved_type = constant->resolved_type;
-              SPerl_OP* new_op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTANT, NULL, NULL);
-              new_op_constant->uv.constant = new_constant;
-              
-              SPerl_ARRAY_push(sub->op_constants, new_op_constant);
-              
-              // Replace get_enumeration_value to const
-              op_cur->code = SPerl_OP_C_CODE_CONSTANT;
-              op_cur->uv.constant = new_constant;
-              op_cur->first = NULL;
-              
               break;
             }
             case SPerl_OP_C_CODE_CONVERT: {
@@ -2243,18 +2213,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
             SPerl_HASH_insert(parser->field_complete_name_symtable, field_complete_name, strlen(field_complete_name), field);
           }
         }
-        // Enum
-        else if (op_decl->code == SPerl_OP_C_CODE_DECL_ENUM) {
-          SPerl_OP* op_enum = op_decl;
-          SPerl_ENUMERATION* enumeration = op_enum->uv.enumeration;
-          SPerl_ARRAY* enumeration_values = enumeration->enumeration_values;
-          
-          for (SPerl_int i = 0; i < enumeration_values->length; i++) {
-            SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_ARRAY_fetch(enumeration_values, i);
-            SPerl_char* enum_complete_name = SPerl_OP_create_complete_name(parser, package_name, enumeration_value->op_name->uv.word->value);
-            SPerl_HASH_insert(parser->enum_complete_name_symtable, enum_complete_name, strlen(enum_complete_name), enumeration_value);
-          }
-        }
       }
       
       // Method information
@@ -2445,7 +2403,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
   
   // Build OP_SUB
   SPerl_OP_sibling_splice(parser, op_enum, NULL, 0, op_enum_block);
-
+  
   // Enum values
   SPerl_ARRAY* enumeration_values = SPerl_PARSER_new_array(parser, 0);
   
@@ -2464,6 +2422,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
     if (enumeration_value->op_constant) {
       SPerl_OP* op_constant = enumeration_value->op_constant;
       start_value = op_constant->uv.constant->uv.int_value + 1;
+      constant = op_constant->uv.constant;
     }
     else {
       constant = SPerl_CONSTANT_new(parser);
@@ -2476,15 +2435,48 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
       enumeration_value->op_constant = op_constant;
       start_value++;
     }
-    
-    SPerl_ARRAY_push(enumeration_values, enumeration_value);
-  }
 
-  // Set enum body
-  SPerl_ENUMERATION* enumeration = SPerl_ENUMERATION_new(parser);
-  enumeration->enumeration_values = enumeration_values;
-  
-  op_enum->uv.enumeration = enumeration;
+    // sub
+    SPerl_OP* op_sub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_SUB, NULL, NULL);
+    op_sub->file = op_enumvalue->file;
+    op_sub->line = op_enumvalue->line;
+    
+    // sub name
+    SPerl_WORD* sub_name_word = SPerl_WORD_new(parser);
+    sub_name_word->value = enumeration_value->op_name->uv.word->value;
+    SPerl_OP* op_sub_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
+    op_sub_name->uv.word = sub_name_word;
+    
+    // sub args
+    SPerl_OP* op_subargs = SPerl_OP_newOP_LIST(parser);
+    
+    // Descripters
+    SPerl_OP* op_descripters = SPerl_OP_newOP_LIST(parser);
+    
+    // Type
+    SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);
+    SPerl_TYPE* type = SPerl_TYPE_new(parser);
+    type->resolved_type = constant->resolved_type;
+    op_type->uv.type = type;
+
+    // Constant
+    SPerl_OP* op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTANT, NULL, NULL);
+    op_constant->uv.constant = constant;
+    
+    // Return
+    SPerl_OP* op_return = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_RETURN, op_constant, NULL);
+    SPerl_OP_INFO* op_return_op_info = SPerl_OP_INFO_new(parser);
+    op_return->uv.op_info = op_return_op_info;
+    
+    // Statement
+    SPerl_OP* op_statements = SPerl_OP_newOP_LIST(parser);
+    SPerl_OP_sibling_splice(parser, op_statements, op_statements->first, 0, op_return);
+    
+    // Block
+    SPerl_OP* op_block = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_BLOCK, op_statements, NULL);
+    
+    SPerl_OP_build_decl_sub(parser, op_sub, op_sub_name, op_subargs, op_descripters, op_type, op_block);
+  }
   
   return op_enum;
 }

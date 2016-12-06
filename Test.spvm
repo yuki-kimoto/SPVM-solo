@@ -14,6 +14,7 @@ package Test {
   use Test::Simple;
   
   sub main() : int {
+    Test::EnumA::ONE();
     my $simple : Test::Simple = new Test::Simple;
     
     my $var : int = 4;
