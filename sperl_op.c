@@ -140,6 +140,16 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_UNDEF: {
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              
+              vmcode->code = SPerl_VMCODE_C_CODE_ACONST_NULL;
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_PRE_INC: {
               SPerl_VAR* var = op_cur->first->uv.var;
               SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
