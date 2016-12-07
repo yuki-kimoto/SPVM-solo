@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 #include "sperl_bytecodes.h"
-#include "sperl_bytecode.h"
 
 SPerl_BYTECODES* SPerl_BYTECODES_new() {
   
@@ -16,7 +15,7 @@ SPerl_BYTECODES* SPerl_BYTECODES_new() {
   return bytecodes;
 }
 
-void SPerl_BYTECODES_push(SPerl_BYTECODES* bytecodes, SPerl_char* value) {
+void SPerl_BYTECODES_push(SPerl_BYTECODES* bytecodes, SPerl_char value) {
   SPerl_int length = bytecodes->length;
   SPerl_int capacity = bytecodes->capacity;
   
@@ -26,8 +25,7 @@ void SPerl_BYTECODES_push(SPerl_BYTECODES* bytecodes, SPerl_char* value) {
     memset(bytecodes->values + capacity, 0, (new_capacity - capacity) * sizeof(SPerl_char));
     bytecodes->capacity = new_capacity;
   }
-  
-  bytecodes->values[length] = *value;
+  bytecodes->values[length] = value;
   bytecodes->length++;
 }
 

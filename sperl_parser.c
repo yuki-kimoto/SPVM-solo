@@ -30,6 +30,8 @@
 #include "sperl_constant_pool.h"
 #include "sperl_vmcode.h"
 #include "sperl_vmcodes.h"
+#include "sperl_bytecode.h"
+#include "sperl_bytecodes.h"
 
 SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_PARSER* parser = calloc(1, sizeof(SPerl_PARSER));

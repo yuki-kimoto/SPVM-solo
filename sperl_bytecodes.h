@@ -12,6 +12,6 @@ struct SPerl_bytecodes {
 
 // Array function
 SPerl_BYTECODES* SPerl_BYTECODES_new();
-void SPerl_BYTECODES_push(SPerl_BYTECODES* bytecodes, SPerl_char* value);
+void SPerl_BYTECODES_push(SPerl_BYTECODES* bytecodes, SPerl_char value);
 
 #endif

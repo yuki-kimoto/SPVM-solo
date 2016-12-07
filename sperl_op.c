@@ -38,6 +38,8 @@
 #include "sperl_constant_pool.h"
 #include "sperl_vmcode.h"
 #include "sperl_vmcodes.h"
+#include "sperl_bytecode.h"
+#include "sperl_bytecodes.h"
 
 
 
@@ -154,6 +156,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
     
     // VM codes
     SPerl_VMCODES* vmcodes = sub->vmcodes;
+    SPerl_BYTECODES* bytecodes = sub->bytecodes;
     
     // Run OPs
     SPerl_OP* op_base = op_sub;
@@ -182,6 +185,13 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               }
               
               SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              if (op_cur->uv.op_info->resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ISHL);
+              }
+              else if (op_cur->uv.op_info->resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LSHL);
+              }
               
               break;
             }
