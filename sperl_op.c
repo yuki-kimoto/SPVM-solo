@@ -532,6 +532,13 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               if (op_cur->first->code == SPerl_OP_C_CODE_VAR) {
                 SPerl_OP* op_var = op_cur->first;
                 SPerl_int my_var_pos = op_var->uv.var->op_my_var->uv.my_var->pos;
+
+                if (my_var_pos > 0xFF) {
+                  SPerl_VMCODE* vmcode_wide = SPerl_PARSER_new_vmcode(parser);
+                  vmcode_wide->code = SPerl_VMCODE_C_CODE_WIDE;
+                  SPerl_VMCODES_push(vmcodes, vmcode_wide);
+                }
+                
                 if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                   if (my_var_pos == 0) {
                     vmcode->code = SPerl_VMCODE_C_CODE_STORE_INT_0;
@@ -617,17 +624,12 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                     vmcode->code = SPerl_VMCODE_C_CODE_STORE_REF;
                   }
                 }
-                
-                if (my_var_pos < 256) {
-                  vmcode->operand1 = my_var_pos & 0xFF;
-                }
-                else {
-                  SPerl_VMCODE* vmcode_wide = SPerl_PARSER_new_vmcode(parser);
-                  vmcode_wide->code = SPerl_VMCODE_C_CODE_WIDE;
-                  SPerl_VMCODES_push(vmcodes, vmcode_wide);
-                  
+                if (my_var_pos > 0xFF) {
                   vmcode->operand1 = (my_var_pos >> 8) & 0xFF;
                   vmcode->operand2 = my_var_pos & 0xFF;
+                }
+                else {
+                  vmcode->operand1 = my_var_pos;
                 }
               }
               else if (op_cur->first->code == SPerl_OP_C_CODE_ARRAY_ELEM) {
@@ -656,7 +658,7 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 SPerl_OP* op_var = op_cur->first;
                 SPerl_int my_var_pos = op_var->uv.var->op_my_var->uv.my_var->pos;
                 
-                if (my_var_pos >= 256) {
+                if (my_var_pos > 0xFF) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_VMCODE_C_CODE_WIDE);
                 }
                 
@@ -745,9 +747,12 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_VMCODE_C_CODE_STORE_REF);
                   }
                 }
-                SPerl_BYTECODES_push(bytecodes, my_var_pos & 0xFF);
                 if (my_var_pos > 0xFF) {
                   SPerl_BYTECODES_push(bytecodes, (my_var_pos >> 8) & 0xFF);
+                  SPerl_BYTECODES_push(bytecodes, my_var_pos);
+                }
+                else {
+                  SPerl_BYTECODES_push(bytecodes, my_var_pos);
                 }
               }
               else if (op_cur->first->code == SPerl_OP_C_CODE_ARRAY_ELEM) {
@@ -1158,6 +1163,13 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
               
               SPerl_int my_var_pos = var->op_my_var->uv.my_var->pos;
+
+              if (my_var_pos > 0xFF) {
+                SPerl_VMCODE* vmcode_wide = SPerl_PARSER_new_vmcode(parser);
+                vmcode_wide->code = SPerl_VMCODE_C_CODE_WIDE;
+                SPerl_VMCODES_push(vmcodes, vmcode_wide);
+              }
+              
               if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                 if (my_var_pos == 0) {
                   vmcode->code = SPerl_VMCODE_C_CODE_LOAD_INT_0;
@@ -1244,16 +1256,12 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 }
               }
               
-              if (my_var_pos < 256) {
-                vmcode->operand1 = my_var_pos & 0xFF;
+              if (my_var_pos > 0xFF) {
+                vmcode->operand1 = (my_var_pos >> 8) & 0xFF;
+                vmcode->operand2 = my_var_pos;
               }
               else {
-                SPerl_VMCODE* vmcode_wide = SPerl_PARSER_new_vmcode(parser);
-                vmcode_wide->code = SPerl_VMCODE_C_CODE_WIDE;
-                SPerl_VMCODES_push(vmcodes, vmcode_wide);
-                
-                vmcode->operand1 = (my_var_pos >> 8) & 0xFF;
-                vmcode->operand2 = my_var_pos & 0xFF;
+                vmcode->operand1 = my_var_pos;
               }
               
               SPerl_VMCODES_push(vmcodes, vmcode);
@@ -1348,12 +1356,12 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 }
               }
               
-              if (my_var_pos < 256) {
-                SPerl_BYTECODES_push(bytecodes, my_var_pos & 0xFF);
+              if (my_var_pos > 0xFF) {
+                SPerl_BYTECODES_push(bytecodes, (my_var_pos >> 8) & 0xFF);
+                SPerl_BYTECODES_push(bytecodes, my_var_pos);
               }
               else {
-                SPerl_BYTECODES_push(bytecodes, (my_var_pos >> 8) & 0xFF);
-                SPerl_BYTECODES_push(bytecodes, my_var_pos & 0xFF);
+                SPerl_BYTECODES_push(bytecodes, my_var_pos);
               }
               
               break;
@@ -1410,8 +1418,8 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 }
                 else if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
                   vmcode->code = SPerl_VMCODE_C_CODE_SIPUSH;
-                  vmcode->operand1 = constant->uv.int_value & 0xFF;
-                  vmcode->operand2 = (constant->uv.int_value >> 8) && 0xFF;
+                  vmcode->operand1 = (constant->uv.int_value >> 8) && 0xFF;
+                  vmcode->operand2 = constant->uv.int_value & 0xFF;
                   vmcode_set = 1;
                 }
               }
@@ -1455,16 +1463,15 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                   vmcode->code = SPerl_VMCODE_C_CODE_LOAD_CONSTANT2_W;
                   vmcode->operand1 = (constant->pool_pos >> 8) && 0xFF;
                   vmcode->operand2 = constant->pool_pos & 0xFF;
-                  
                 }
-                else if (constant->pool_pos < 256) {
-                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_CONSTANT;
-                  vmcode->operand1 = constant->pool_pos &0xFF;
-                }
-                else {
+                else if (constant->pool_pos > 0xFF) {
                   vmcode->code = SPerl_VMCODE_C_CODE_LOAD_CONSTANT_W;
                   vmcode->operand1 = (constant->pool_pos >> 8) & 0xFF;
-                  vmcode->operand2 = constant->pool_pos & 0xFF;
+                  vmcode->operand2 = constant->pool_pos;
+                }
+                else {
+                  vmcode->code = SPerl_VMCODE_C_CODE_LOAD_CONSTANT;
+                  vmcode->operand1 = constant->pool_pos;
                 }
               }
               
@@ -1517,8 +1524,8 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                 }
                 else if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_VMCODE_C_CODE_SIPUSH);
-                  SPerl_BYTECODES_push(bytecodes, constant->uv.int_value & 0xFF);
                   SPerl_BYTECODES_push(bytecodes, (constant->uv.int_value >> 8) && 0xFF);
+                  SPerl_BYTECODES_push(bytecodes, constant->uv.int_value & 0xFF);
                   bytecode_set = 1;
                 }
               }
@@ -1563,14 +1570,14 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                   SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 8) && 0xFF);
                   SPerl_BYTECODES_push(bytecodes, constant->pool_pos & 0xFF);
                 }
-                else if (constant->pool_pos < 256) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_VMCODE_C_CODE_LOAD_CONSTANT);
-                  SPerl_BYTECODES_push(bytecodes, constant->pool_pos &0xFF);
-                }
-                else {
+                else if (constant->pool_pos > 0xFF) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_VMCODE_C_CODE_LOAD_CONSTANT_W);
                   SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 8) & 0xFF);
                   SPerl_BYTECODES_push(bytecodes, constant->pool_pos & 0xFF);
+                }
+                else {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_VMCODE_C_CODE_LOAD_CONSTANT);
+                  SPerl_BYTECODES_push(bytecodes, constant->pool_pos &0xFF);
                 }
               }
               
