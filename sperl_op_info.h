@@ -4,7 +4,7 @@
 #include "sperl_base.h"
 
 struct SPerl_op_info {
-  SPerl_RESOLVED_TYPE* return_resolved_type;
+  SPerl_RESOLVED_TYPE* resolved_type;
 };
 
 SPerl_OP_INFO* SPerl_OP_INFO_new(SPerl_PARSER* parser);
