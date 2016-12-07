@@ -915,6 +915,17 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
                   vmcode->code = SPerl_VMCODE_C_CODE_CONSTANT_INT_5;
                   vmcode_set = 1;
                 }
+                else if (constant->uv.int_value >= -128 && constant->uv.int_value <= 127) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_BIPUSH;
+                  vmcode->operand1 = (SPerl_char)constant->uv.int_value;
+                  vmcode_set = 1;
+                }
+                else if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
+                  vmcode->code = SPerl_VMCODE_C_CODE_SIPUSH;
+                  vmcode->operand1 = (SPerl_char)constant->uv.int_value;
+                  vmcode->operand2 = (SPerl_char)((uint16_t)constant->uv.int_value >> 8);
+                  vmcode_set = 1;
+                }
               }
               else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
                 if (constant->uv.long_value == 0) {
