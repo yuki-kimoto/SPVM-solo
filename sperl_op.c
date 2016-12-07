@@ -171,6 +171,49 @@ void SPerl_OP_create_vmcode(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_LEFT_SHIFT: {
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_ISHL;
+              }
+              else if (op_cur->uv.op_info->resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LSHL;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_RIGHT_SHIFT: {
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_ISHR;
+              }
+              else if (op_cur->uv.op_info->resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LSHR;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED: {
+              
+              SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
+              if (op_cur->uv.op_info->resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                vmcode->code = SPerl_VMCODE_C_CODE_IUSHR;
+              }
+              else if (op_cur->uv.op_info->resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                vmcode->code = SPerl_VMCODE_C_CODE_LUSHR;
+              }
+              
+              SPerl_VMCODES_push(vmcodes, vmcode);
+              
+              break;
+            }
+                                    
             case SPerl_OP_C_CODE_NEW_OBJECT: {
               
               SPerl_VMCODE* vmcode = SPerl_PARSER_new_vmcode(parser);
@@ -1068,6 +1111,63 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         while (1) {
          // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_LEFT_SHIFT: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              // Can receive only core type
+              if (!SPerl_RESOLVED_TYPE_is_integral(parser, first_resolved_type)) {
+                SPerl_yyerror_format(parser, "<< operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              if (last_resolved_type->id > SPerl_BODY_CORE_C_CODE_INT) {
+                SPerl_yyerror_format(parser, "<< operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              op_cur->uv.op_info->resolved_type = resolved_type;
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_RIGHT_SHIFT: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              // Can receive only core type
+              if (!SPerl_RESOLVED_TYPE_is_integral(parser, first_resolved_type)) {
+                SPerl_yyerror_format(parser, ">> operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              if (last_resolved_type->id > SPerl_BODY_CORE_C_CODE_INT) {
+                SPerl_yyerror_format(parser, ">> operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              op_cur->uv.op_info->resolved_type = resolved_type;
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              // Can receive only core type
+              if (!SPerl_RESOLVED_TYPE_is_integral(parser, first_resolved_type)) {
+                SPerl_yyerror_format(parser, ">>> operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              if (last_resolved_type->id > SPerl_BODY_CORE_C_CODE_INT) {
+                SPerl_yyerror_format(parser, ">>> operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              op_cur->uv.op_info->resolved_type = resolved_type;
+              
+              break;
+            }
             case SPerl_OP_C_CODE_NEW_OBJECT: {
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
               

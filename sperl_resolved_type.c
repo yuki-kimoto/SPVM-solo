@@ -1,6 +1,7 @@
 #include <string.h>
 #include "sperl_resolved_type.h"
 #include "sperl_parser.h"
+#include "sperl_body_core.h"
 
 SPerl_char* const SPerl_RESOLVED_TYPE_C_CODE_NAMES[] = {
   "core",
@@ -35,6 +36,15 @@ SPerl_boolean SPerl_RESOLVED_TYPE_contain_sub(SPerl_PARSER* parser, SPerl_RESOLV
   
   SPerl_char* found = strchr(name, '(');
   if (found) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+SPerl_boolean SPerl_RESOLVED_TYPE_is_integral(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_LONG) {
     return 1;
   }
   else {
