@@ -12,15 +12,23 @@ typedef int64_t SPerl_long;
 typedef float SPerl_float;
 typedef double SPerl_double;
 
+/* sperl_bytecode.h */
+struct SPerl_bytecodes;
+typedef struct SPerl_bytecodes SPerl_BYTECODES;
+
 /* sperl_assign.h */
+struct SPerl_bytecode;
+typedef struct SPerl_bytecode SPerl_BYTECODE;
+
+/* sperl_vmcode.h */
 struct SPerl_vmcodes;
 typedef struct SPerl_vmcodes SPerl_VMCODES;
 
-/* sperl_assign.h */
+/* sperl_constant_pool.h */
 struct SPerl_constant_pool;
 typedef struct SPerl_constant_pool SPerl_CONSTANT_POOL;
 
-/* sperl_assign.h */
+/* sperl_vmcode.h */
 struct SPerl_vmcode;
 typedef struct SPerl_vmcode SPerl_VMCODE;
 
@@ -28,7 +36,7 @@ typedef struct SPerl_vmcode SPerl_VMCODE;
 struct SPerl_resolved_type;
 typedef struct SPerl_resolved_type SPerl_RESOLVED_TYPE;
 
-/* sperl_assign.h */
+/* sperl_op_info.h */
 struct SPerl_op_info;
 typedef struct SPerl_op_info SPerl_OP_INFO;
 
