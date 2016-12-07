@@ -428,6 +428,87 @@ void SPerl_PARSER_dump_vmcodes(SPerl_PARSER* parser, SPerl_VMCODES* vmcodes) {
   }
 }
 
+void SPerl_PARSER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecodes) {
+  for (SPerl_int i = 0; i < bytecodes->length; i++) {
+    SPerl_char bytecode = bytecodes->values[i];
+    printf("        [%d] %s\n", i, SPerl_VMCODE_C_CODE_NAMES[bytecode]);
+    
+    // Operand
+    switch (bytecode) {
+      case SPerl_BYTECODE_C_CODE_WIDE: {
+        i++;
+        bytecode = bytecodes->values[i];
+        
+        switch (bytecode) {
+          // Have tow operand
+          case SPerl_VMCODE_C_CODE_STORE_INT:
+          case SPerl_VMCODE_C_CODE_STORE_LONG:
+          case SPerl_VMCODE_C_CODE_STORE_FLOAT:
+          case SPerl_VMCODE_C_CODE_STORE_DOUBLE:
+          case SPerl_VMCODE_C_CODE_STORE_REF:
+          case SPerl_VMCODE_C_CODE_LOAD_INT:
+          case SPerl_VMCODE_C_CODE_LOAD_LONG:
+          case SPerl_VMCODE_C_CODE_LOAD_FLOAT:
+          case SPerl_VMCODE_C_CODE_LOAD_DOUBLE:
+          case SPerl_VMCODE_C_CODE_LOAD_REF:
+          {
+            i++;
+            bytecode = bytecodes->values[i];
+            printf("        [%d] %d\n", i, SPerl_VMCODE_C_CODE_NAMES[bytecode]);
+            
+            i++;
+            bytecode = bytecodes->values[i];
+            printf("        [%d] %d\n", i, SPerl_VMCODE_C_CODE_NAMES[bytecode]);
+            
+            break;
+          }
+        }
+        
+        break;
+      }
+      
+      // Have one operand
+      case SPerl_VMCODE_C_CODE_BIPUSH:
+      case SPerl_VMCODE_C_CODE_STORE_INT:
+      case SPerl_VMCODE_C_CODE_STORE_LONG:
+      case SPerl_VMCODE_C_CODE_STORE_FLOAT:
+      case SPerl_VMCODE_C_CODE_STORE_DOUBLE:
+      case SPerl_VMCODE_C_CODE_STORE_REF:
+      case SPerl_VMCODE_C_CODE_LOAD_INT:
+      case SPerl_VMCODE_C_CODE_LOAD_LONG:
+      case SPerl_VMCODE_C_CODE_LOAD_FLOAT:
+      case SPerl_VMCODE_C_CODE_LOAD_DOUBLE:
+      case SPerl_VMCODE_C_CODE_LOAD_REF:
+      case SPerl_VMCODE_C_CODE_LOAD_CONSTANT:
+      {
+        i++;
+        bytecode = bytecodes->values[i];
+        printf("        [%d] %d\n", i, bytecode);
+        
+        break;
+      }
+      
+      // Have tow operand
+      case SPerl_BYTECODE_C_CODE_IINC:
+      case SPerl_BYTECODE_C_CODE_LINC:
+      case SPerl_VMCODE_C_CODE_SIPUSH:
+      case SPerl_VMCODE_C_CODE_LOAD_CONSTANT2_W:
+      case SPerl_VMCODE_C_CODE_LOAD_CONSTANT_W:
+      {
+        i++;
+        bytecode = bytecodes->values[i];
+        printf("        [%d] %d\n", bytecode);
+        
+        i++;
+        bytecode = bytecodes->values[i];
+        printf("        [%d] %d\n", bytecode);
+        
+        break;
+      }
+    }
+  }
+}
+
 void SPerl_PARSER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant) {
   switch(constant->code) {
     case SPerl_CONSTANT_C_CODE_BOOLEAN:
@@ -504,6 +585,9 @@ void SPerl_PARSER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
 
     printf("      vmcodes\n");
     SPerl_PARSER_dump_vmcodes(parser, sub->vmcodes);
+
+    printf("      bytecodes\n");
+    SPerl_PARSER_dump_bytecodes(parser, sub->bytecodes);
   }
   else {
     printf("      None\n");
