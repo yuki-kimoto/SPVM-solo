@@ -454,11 +454,11 @@ void SPerl_PARSER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
           {
             i++;
             bytecode = bytecodes->values[i];
-            printf("        [%d] %d\n", i, SPerl_VMCODE_C_CODE_NAMES[bytecode]);
+            printf("        [%d] %d\n", i, bytecode);
             
             i++;
             bytecode = bytecodes->values[i];
-            printf("        [%d] %d\n", i, SPerl_VMCODE_C_CODE_NAMES[bytecode]);
+            printf("        [%d] %d\n", i, bytecode);
             
             break;
           }
@@ -497,11 +497,11 @@ void SPerl_PARSER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
       {
         i++;
         bytecode = bytecodes->values[i];
-        printf("        [%d] %d\n", bytecode);
+        printf("        [%d] %d\n", i, bytecode);
         
         i++;
         bytecode = bytecodes->values[i];
-        printf("        [%d] %d\n", bytecode);
+        printf("        [%d] %d\n", i, bytecode);
         
         break;
       }
