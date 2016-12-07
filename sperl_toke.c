@@ -303,6 +303,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '>') {
           parser->bufptr++;
+          if (*parser->bufptr == '>') {
+            parser->bufptr++;
+            SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED);
+            yylvalp->opval = op;
+            return SHIFTOP;
+          }
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_RIGHT_SHIFT);
           yylvalp->opval = op;
           return SHIFTOP;

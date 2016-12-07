@@ -1,5 +1,0 @@
-package Test2 {
-  sub func1 () : int {
-    1 + 1;
-  }
-}

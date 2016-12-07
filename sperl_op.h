@@ -95,6 +95,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NE,           // BINOP
   SPerl_OP_C_CODE_LEFT_SHIFT,    // BINOP
   SPerl_OP_C_CODE_RIGHT_SHIFT,   // BINOP
+  SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED,   // BINOP
   SPerl_OP_C_CODE_AND,          // LOGICALOP
   SPerl_OP_C_CODE_OR,           // LOGICALOP
   SPerl_OP_C_CODE_NOT,          // LOGICALOP

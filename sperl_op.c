@@ -95,6 +95,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NE",
   "LEFT_SHIFT",
   "RIGHT_SHIFT",
+  "RIGHT_SHIFT_UNSIGNED",
   "AND",
   "OR",
   "NOT",
