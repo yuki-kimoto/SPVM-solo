@@ -21,7 +21,7 @@
 %type <opval> opt_descripters list_descripters descripters decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_packages opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_packages type_sub types opt_types not_type_sub
-%type <opval> enum_name get_enumeration_value field array_elem convert_type decl_enum new_array new_object new_array_object
+%type <opval> field array_elem convert_type decl_enum new_array new_object new_array_object
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -353,7 +353,6 @@ term
   | decl_anon_sub
   | call_sub
   | call_op
-  | get_enumeration_value
   | field
   | array_elem
   | convert_type
@@ -390,12 +389,6 @@ field
   : VAR ARROW field_name
     {
       $$ = SPerl_OP_build_field(parser, $1, $3);
-    }
-
-get_enumeration_value
-  : enum_name
-    {
-      $$ = SPerl_OP_build_get_enumeration_value(parser, $1);
     }
 
 call_op
@@ -634,7 +627,6 @@ type_array
       $$ = SPerl_OP_build_type_array(parser, $2);
     }
 
-enum_name : WORD
 field_name : WORD
 sub_name : WORD
 package_name : WORD
