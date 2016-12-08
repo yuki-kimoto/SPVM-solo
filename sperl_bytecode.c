@@ -188,7 +188,6 @@ SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "IFLE",
   "IFNONNULL",
   "IFNULL",
-  "INSTANCEOF",
   "INVOKESTATIC",
   "JSR",
   "JSR_W",
@@ -210,4 +209,5 @@ SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "INVOKEINTERFACE",
   "INVOKESPECIAL",
   "INVOKEVIRTUAL",
+  "INSTANCEOF",
 };
