@@ -1243,6 +1243,23 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               op_info->resolved_type = resolved_type;
               
+              // Insert var op
+              if (op_cur->last->code == SPerl_OP_C_CODE_ASSIGN) {
+                SPerl_OP* op_var = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_VAR, NULL, NULL);
+                op_var->uv.var = op_cur->last->first->uv.var;
+                
+                SPerl_OP* op_last_old = op_cur->last;
+                
+                op_last_old->sibparent = op_var;
+                
+                op_var->first = op_last_old;
+                op_var->sibparent = op_cur;
+                
+                op_cur->last = op_var;
+                
+                op_cur->first->sibparent = op_var;
+              }
+              
               break;
             }
             case SPerl_OP_C_CODE_RETURN: {
