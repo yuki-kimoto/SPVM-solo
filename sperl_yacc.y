@@ -20,7 +20,7 @@
 %type <opval> opt_terms terms term sub_args sub_arg opt_sub_args decl_use decl_class_attr decl_class_attrs 
 %type <opval> opt_descripters list_descripters descripters decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_packages opt_decl_enumeration_values type_array
-%type <opval> for_statement while_statement expression opt_decl_packages type_sub types opt_types not_type_sub
+%type <opval> for_statement while_statement expression opt_decl_packages type_sub types not_type_sub
 %type <opval> field array_elem convert_type decl_enum new_array new_object new_array_object
 
 %right <opval> ASSIGNOP
@@ -266,7 +266,13 @@ decl_my
     }
 
 decl_anon_sub
- : SUB '(' opt_sub_args ')' ':' opt_descripters type block
+ : SUB '(' ')' ':' opt_descripters type block
+     {
+       $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
+       SPerl_OP* op_sub_args = SPerl_OP_newOP_LIST(parser);
+       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), op_sub_args, $5, $6, $7);
+     }
+ | SUB '(' sub_args ')' ':' opt_descripters type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
        $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
@@ -577,22 +583,6 @@ descripters
     }
   | DESCRIPTER
 
-opt_types
-  :	/* Empty */
-    {
-      $$ = SPerl_OP_newOP_LIST(parser);
-    }
-  |	types
-    {
-      if ($1->code == SPerl_OP_C_CODE_LIST) {
-        $$ = $1;
-      }
-      else {
-        $$ = SPerl_OP_newOP_LIST(parser);
-        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
-      }
-    }
-
 types
   : types ',' type
     {
@@ -612,7 +602,12 @@ not_type_sub
   | type_array
   
 type_sub
-  : SUB '(' opt_types ')' type
+  : SUB '(' ')' type
+    {
+      SPerl_OP* op_types = SPerl_OP_newOP_LIST(parser);
+      $$ = SPerl_OP_build_type_sub(parser, op_types, $4);
+    }
+  | SUB '(' types ')' type
     {
       $$ = SPerl_OP_build_type_sub(parser, $3, $5);
     }
