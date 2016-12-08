@@ -134,20 +134,6 @@ SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPer
   return op_new_object;
 }
 
-SPerl_OP* SPerl_OP_build_new_array_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type, SPerl_OP* op_term) {
-  SPerl_OP* op_new_array_object = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_ARRAY_OBJECT, NULL, NULL);
-  SPerl_OP_sibling_splice(parser, op_new_array_object, NULL, 0, op_type);
-  SPerl_OP_sibling_splice(parser, op_new_array_object, op_type, 0, op_term);
-  op_new_array_object->file = op_new->file;
-  op_new_array_object->line = op_new->line;
-  
-  op_new_array_object->uv.op_info = SPerl_OP_INFO_new(parser);
-  
-  SPerl_ARRAY_push(parser->op_types, op_type);
-  
-  return op_new_array_object;
-}
-
 void SPerl_OP_create_bytecodes(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->op_subs->length; i++) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
@@ -1909,7 +1895,7 @@ SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP*
   return op_field;
 }
 
-SPerl_OP* SPerl_OP_build_new_array(SPerl_PARSER* parser, SPerl_OP* op_opt_terms) {
+SPerl_OP* SPerl_OP_build_new_array_constant(SPerl_PARSER* parser, SPerl_OP* op_opt_terms) {
   SPerl_OP* op_new_array = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_ARRAY, NULL, NULL);
   SPerl_OP_sibling_splice(parser, op_new_array, NULL, 0, op_opt_terms);
   

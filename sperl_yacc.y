@@ -369,7 +369,7 @@ term
 new_array_constant
   : '[' opt_terms ']'
     {
-      $$ = SPerl_OP_build_new_array(parser, $2);
+      $$ = SPerl_OP_build_new_array_constant(parser, $2);
     }
 
 new_object

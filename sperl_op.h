@@ -151,10 +151,8 @@ struct SPerl_op {
 };
 
 SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type);
-SPerl_OP* SPerl_OP_build_new_array_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type, SPerl_OP* op_term);
 
-
-SPerl_OP* SPerl_OP_build_new_array(SPerl_PARSER* parser, SPerl_OP* op_opt_terms);
+SPerl_OP* SPerl_OP_build_new_array_constant(SPerl_PARSER* parser, SPerl_OP* op_opt_terms);
 void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type);
 void SPerl_OP_check(SPerl_PARSER* parser);
 void SPerl_OP_check_descripters(SPerl_PARSER* parser);
