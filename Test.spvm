@@ -14,7 +14,7 @@ package Test {
   use Test::Simple;
   
   sub main() : int {
-    my $v1 : int;
+    my $v1 : int = 10;
     $v1 = 10;
     100;
     1000;

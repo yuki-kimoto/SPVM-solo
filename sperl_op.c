@@ -595,7 +595,7 @@ void SPerl_OP_create_bytecodes(SPerl_PARSER* parser) {
                 break;
               }
               
-              if (op_first->code != SPerl_OP_C_CODE_ASSIGN) {
+              if (op_first->code != SPerl_OP_C_CODE_ASSIGN && !op_first->lvalue) {
                 if (first_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG || first_resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_POP2);
                 }
@@ -1421,6 +1421,10 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             // Add my var
             case SPerl_OP_C_CODE_VAR: {
               SPerl_VAR* var = op_cur->uv.var;
+              
+              if (op_cur->first && op_cur->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
+                op_cur->lvalue = 1;
+              }
               
               // Serach same name variable
               SPerl_OP* op_my_var = NULL;
