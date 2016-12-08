@@ -51,3 +51,17 @@ SPerl_boolean SPerl_RESOLVED_TYPE_is_integral(SPerl_PARSER* parser, SPerl_RESOLV
     return 0;
   }
 }
+
+SPerl_boolean SPerl_RESOLVED_TYPE_is_core_type_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  SPerl_char* name = resolved_type->name;
+  
+  SPerl_char* found = strchr(name, '(');
+  if (strcmp(name, "boolean[]") == 0 || strcmp(name, "char[]") == 0 || strcmp(name, "byte[]") == 0 || strcmp(name, "short[]") == 0
+    || strcmp(name, "int[]") == 0 || strcmp(name, "long[]") == 0 || strcmp(name, "float[]") == 0 || strcmp(name, "double[]") == 0)
+  {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}

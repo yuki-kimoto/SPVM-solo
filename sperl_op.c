@@ -193,8 +193,17 @@ void SPerl_OP_create_bytecodes(SPerl_PARSER* parser) {
             }
                                     
             case SPerl_OP_C_CODE_NEW_TYPE: {
+              SPerl_RESOLVED_TYPE* resolved_type = op_cur->uv.op_info->resolved_type;
               
-              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NEW);
+              if (SPerl_RESOLVED_TYPE_is_core_type_array(parser, resolved_type)) {
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NEWARRAY);
+              }
+              else if (SPerl_RESOLVED_TYPE_is_array(parser, resolved_type)) {
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ANEWARRAY);
+              }
+              else {
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NEW);
+              }
               
               break;
             }
@@ -1104,6 +1113,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               if (SPerl_RESOLVED_TYPE_contain_sub(parser, resolved_type) && !SPerl_RESOLVED_TYPE_is_array(parser, resolved_type)) {
                 SPerl_yyerror_format(parser,
                   "new operator can't receive sub type %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                SPerl_yyerror_format(parser,
+                  "new operator can't receive core type %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
               

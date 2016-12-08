@@ -15,6 +15,8 @@ package Test {
   
   sub main() : int {
     my $nums : int[] = new int[3];
+    my $simple : Test::Simple = new Test::Simple;
+    my $simples : Test::Simple[] = new Test::Simple[3];
     
     my $v1 : int;
     my $v2 : int;
@@ -29,7 +31,6 @@ package Test {
     1 >>> 2;
     
     Test::EnumA::ONE();
-    my $simple : Test::Simple = new Test::Simple;
     
     my $var : int = 4;
     $var++;
