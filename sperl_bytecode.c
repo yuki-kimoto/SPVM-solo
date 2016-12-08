@@ -7,6 +7,7 @@
 
 
 SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
+  "NOP",
   "POP",
   "POP2",
   "ADD_INT",
@@ -195,7 +196,6 @@ SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "MULTIANEWARRAY",
   "NEW",
   "NEWARRAY",
-  "NOP",
   "PUTFIELD",
   "RET",
   "SWAP",
