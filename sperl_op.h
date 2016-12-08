@@ -116,7 +116,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NEW_ARRAY,
   SPerl_OP_C_CODE_UNDEF,
   SPerl_OP_C_CODE_NEW,
-  SPerl_OP_C_CODE_NEW_OBJECT,
+  SPerl_OP_C_CODE_NEW_TYPE,
   SPerl_OP_C_CODE_NEW_ARRAY_OBJECT,
   SPerl_OP_C_CODE_TERM_STATEMENT,
 };

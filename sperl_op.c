@@ -116,13 +116,13 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NEW_ARRAY",
   "UNDEF",
   "NEW",
-  "NEW_OBJECT",
+  "NEW_TYPE",
   "NEW_ARRAY_OBJECT",
   "TERM_STATEMENT",
 };
 
 SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type) {
-  SPerl_OP* op_new_object = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_OBJECT, NULL, NULL);
+  SPerl_OP* op_new_object = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_TYPE, NULL, NULL);
   SPerl_OP_sibling_splice(parser, op_new_object, NULL, 0, op_type);
   op_new_object->file = op_new->file;
   op_new_object->line = op_new->line;
@@ -192,7 +192,7 @@ void SPerl_OP_create_bytecodes(SPerl_PARSER* parser) {
               break;
             }
                                     
-            case SPerl_OP_C_CODE_NEW_OBJECT: {
+            case SPerl_OP_C_CODE_NEW_TYPE: {
               
               SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NEW);
               
@@ -1097,28 +1097,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               break;
             }
-            /*
-            case SPerl_OP_C_CODE_NEW_ARRAY_OBJECT: {
-              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
-              
-              op_cur->uv.op_info->resolved_type = resolved_type;
-              
-              if (SPerl_RESOLVED_TYPE_contain_sub(parser, resolved_type)) {
-                SPerl_yyerror_format(parser,
-                  "new operator can receive sub type %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              if (SPerl_RESOLVED_TYPE_is_array(parser, resolved_type)) {
-                SPerl_yyerror_format(parser,
-                  "new operator can receive array type %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              break;
-            }
-            */
-            case SPerl_OP_C_CODE_NEW_OBJECT: {
+            case SPerl_OP_C_CODE_NEW_TYPE: {
               SPerl_OP* op_type = op_cur->first;
               SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
               
