@@ -2604,11 +2604,12 @@ SPerl_OP* SPerl_OP_build_type_word(SPerl_PARSER* parser, SPerl_OP* op_word) {
   return op_type_word;
 }
 
-SPerl_OP* SPerl_OP_build_type_array(SPerl_PARSER* parser, SPerl_OP* op_type) {
+SPerl_OP* SPerl_OP_build_type_array(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term) {
   
   // Type array
   SPerl_TYPE_COMPONENT_ARRAY* type_component_array = SPerl_TYPE_COMPONENT_ARRAY_new(parser);
   type_component_array->type = op_type->uv.type;
+  type_component_array->op_term = op_term;
   
   // Type
   SPerl_TYPE* type = SPerl_TYPE_new(parser);

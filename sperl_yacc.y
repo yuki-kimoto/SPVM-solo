@@ -618,11 +618,21 @@ type_sub
 type_array
   : not_type_sub '[' ']'
     {
-      $$ = SPerl_OP_build_type_array(parser, $1);
+      SPerl_OP* op_null = SPerl_OP_newOP_NULL(parser);
+      $$ = SPerl_OP_build_type_array(parser, $1, op_null);
+    }
+  | not_type_sub '[' term ']'
+    {
+      $$ = SPerl_OP_build_type_array(parser, $1, $3);
     }
   | '(' type_sub ')' '[' ']'
     {
-      $$ = SPerl_OP_build_type_array(parser, $2);
+      SPerl_OP* op_null = SPerl_OP_newOP_NULL(parser);
+      $$ = SPerl_OP_build_type_array(parser, $2, op_null);
+    }
+  | '(' type_sub ')' '[' term ']'
+    {
+      $$ = SPerl_OP_build_type_array(parser, $2, $5);
     }
 
 field_name : WORD
