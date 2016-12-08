@@ -950,10 +950,6 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   SPerl_RESOLVED_TYPE*  resolved_type;
   
   switch (op->code) {
-    case SPerl_OP_C_CODE_NEW_OBJECT: {
-      resolved_type = op->first->uv.type->resolved_type;
-      break;
-    }
     case SPerl_OP_C_CODE_UNDEF : {
       resolved_type = NULL;
       break;
@@ -1115,7 +1111,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               break;
             }
-            case SPerl_OP_C_CODE_NEW_OBJECT: {
+            /*
+            case SPerl_OP_C_CODE_NEW_ARRAY_OBJECT: {
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
               
               op_cur->uv.op_info->resolved_type = resolved_type;
@@ -1131,6 +1128,27 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                   "new operator can receive array type %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
+              
+              break;
+            }
+            */
+            case SPerl_OP_C_CODE_NEW_OBJECT: {
+              SPerl_OP* op_type = op_cur->first;
+              SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
+              
+              if (SPerl_RESOLVED_TYPE_contain_sub(parser, resolved_type)) {
+                SPerl_yyerror_format(parser,
+                  "new operator can receive sub type %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              if (SPerl_RESOLVED_TYPE_is_array(parser, resolved_type)) {
+                SPerl_yyerror_format(parser,
+                  "new operator can receive array type %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              op_cur->uv.op_info->resolved_type = resolved_type;
               
               break;
             }

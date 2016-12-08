@@ -374,13 +374,13 @@ new_array
     }
 
 new_object
-  : NEW type
+  : NEW type_word
     {
       $$ = SPerl_OP_build_new_object(parser, $1, $2);
     }
 
 new_array_object
-  : NEW type '[' term ']'
+  : NEW type_word '[' term ']'
     {
       $$ = SPerl_OP_build_new_array_object(parser, $1, $2, $4);
     }
