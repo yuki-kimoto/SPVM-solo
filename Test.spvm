@@ -14,7 +14,7 @@ package Test {
   use Test::Simple;
   
   sub main() : int {
-    # my $nums : int[] = new int[3];
+    my $nums : int[] = new int[3];
     
     my $v1 : int;
     my $v2 : int;

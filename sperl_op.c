@@ -1101,15 +1101,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               SPerl_OP* op_type = op_cur->first;
               SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
               
-              if (SPerl_RESOLVED_TYPE_contain_sub(parser, resolved_type)) {
+              if (SPerl_RESOLVED_TYPE_contain_sub(parser, resolved_type) && !SPerl_RESOLVED_TYPE_is_array(parser, resolved_type)) {
                 SPerl_yyerror_format(parser,
-                  "new operator can receive sub type %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              if (SPerl_RESOLVED_TYPE_is_array(parser, resolved_type)) {
-                SPerl_yyerror_format(parser,
-                  "new operator can receive array type %s line %d\n", op_cur->file, op_cur->line);
+                  "new operator can't receive sub type %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
               
