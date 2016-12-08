@@ -117,7 +117,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "UNDEF",
   "NEW",
   "NEW_TYPE",
-  "NEW_ARRAY_OBJECT",
+  "NEW_ARRAY_CONSTANT",
   "TERM_STATEMENT",
 };
 
@@ -1869,7 +1869,7 @@ SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP*
 }
 
 SPerl_OP* SPerl_OP_build_new_array_constant(SPerl_PARSER* parser, SPerl_OP* op_opt_terms) {
-  SPerl_OP* op_new_array = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_ARRAY, NULL, NULL);
+  SPerl_OP* op_new_array = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_ARRAY_CONSTANT, NULL, NULL);
   SPerl_OP_sibling_splice(parser, op_new_array, NULL, 0, op_opt_terms);
   
   op_new_array->uv.op_info = SPerl_OP_INFO_new(parser);
