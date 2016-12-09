@@ -50,9 +50,6 @@ package Test::Foo::Point3D {
     # +$test - -$test;
         
     1 + 2;
-    
-    $title != 2;
-
 
     $title % $title;
 
