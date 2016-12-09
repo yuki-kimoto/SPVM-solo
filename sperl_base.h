@@ -13,6 +13,10 @@ typedef float SPerl_float;
 typedef double SPerl_double;
 
 /* sperl_bytecode.h */
+struct SPerl_dumper;
+typedef struct SPerl_dumper SPerl_DUMPER;
+
+/* sperl_bytecode.h */
 struct SPerl_bytecodes;
 typedef struct SPerl_bytecodes SPerl_BYTECODES;
 

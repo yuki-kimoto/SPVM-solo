@@ -10,6 +10,7 @@
   #include "sperl_parser.h"
   #include "sperl_op.h"
   #include "sperl_op_info.h"
+  #include "sperl_dumper.h"
 %}
 
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE NEW
@@ -52,7 +53,7 @@ grammar
       }
       else {
         // Dump parser infomation
-        SPerl_PARSER_dump_parser(parser);
+        SPerl_DUMPER_dump_parser(parser);
       }
     }
 

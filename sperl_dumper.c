@@ -1,0 +1,476 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <inttypes.h>
+
+#include "sperl_dumper.h"
+#include "sperl_parser.h"
+#include "sperl_array.h"
+#include "sperl_hash.h"
+#include "sperl_constant.h"
+#include "sperl_field.h"
+#include "sperl_sub.h"
+#include "sperl_my_var.h"
+#include "sperl_var.h"
+#include "sperl_memory_pool.h"
+#include "sperl_op.h"
+#include "sperl_word.h"
+#include "sperl_enumeration_value.h"
+#include "sperl_descripter.h"
+#include "sperl_type.h"
+#include "sperl_type_component_word.h"
+#include "sperl_type_component_array.h"
+#include "sperl_type_component_sub.h"
+#include "sperl_body.h"
+#include "sperl_body_core.h"
+#include "sperl_body_class.h"
+#include "sperl_enumeration.h"
+#include "sperl_package.h"
+#include "sperl_op_info.h"
+#include "sperl_resolved_type.h"
+#include "sperl_constant_pool.h"
+#include "sperl_bytecode.h"
+#include "sperl_bytecodes.h"
+
+void SPerl_DUMPER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
+  SPerl_int depth = 0;
+  
+  // Run OPs
+  SPerl_OP* op_cur = op_base;
+  SPerl_boolean finish = 0;
+  while (op_cur) {
+    // [START]Preorder traversal position
+    
+    for (SPerl_int i = 0; i < depth; i++) {
+      printf(" ");
+    }
+    SPerl_int code = op_cur->code;
+    printf("%s", SPerl_OP_C_CODE_NAMES[code]);
+    if (op_cur->code == SPerl_OP_C_CODE_CONSTANT) {
+      SPerl_CONSTANT* constant = op_cur->uv.constant;
+      printf(" %s", SPerl_CONSTANT_C_CODE_NAMES[constant->code]);
+      switch (constant->code) {
+        case SPerl_CONSTANT_C_CODE_BOOLEAN:
+          printf(" %d", constant->uv.int_value);
+          break;
+        case SPerl_CONSTANT_C_CODE_BYTE:
+          printf(" '%c'", constant->uv.int_value);
+          break;
+        case SPerl_CONSTANT_C_CODE_INT:
+          printf(" %d", constant->uv.int_value);
+          break;
+        case SPerl_CONSTANT_C_CODE_LONG:
+          printf(" %ld", constant->uv.long_value);
+          break;
+        case SPerl_CONSTANT_C_CODE_FLOAT:
+          printf(" %f", constant->uv.float_value);
+          break;
+        case SPerl_CONSTANT_C_CODE_DOUBLE:
+          printf(" %f", constant->uv.double_value);
+          break;
+        case SPerl_CONSTANT_C_CODE_STRING:
+          printf(" \"%s\"", constant->uv.string_value);
+          break;
+      }
+    }
+    else if (code == SPerl_OP_C_CODE_VAR) {
+      SPerl_VAR* var = op_cur->uv.var;
+      printf(" \"%s\"", var->op_name->uv.word->value);
+    }
+    else if (code == SPerl_OP_C_CODE_WORD) {
+      SPerl_WORD* word = op_cur->uv.word;
+      printf(" \"%s\"", word->value);
+    }
+    printf("\n");
+    
+    // [END]Preorder traversal position
+    
+    if (op_cur->first) {
+      op_cur = op_cur->first;
+      depth++;
+    }
+    else {
+      while (1) {
+        // [START]Postorder traversal position
+        
+        // [END]Postorder traversal position
+        
+        if (op_cur == op_base) {
+          finish = 1;
+          break;
+        }
+        
+        // Next sibling
+        if (op_cur->moresib) {
+          op_cur = SPerl_OP_sibling(parser, op_cur);
+          break;
+        }
+        // Next is parent
+        else {
+          op_cur = op_cur->sibparent;
+          depth--;
+        }
+      }
+      if (finish) {
+        break;
+      }
+    }
+  }
+}
+
+void SPerl_DUMPER_dump_parser(SPerl_PARSER* parser) {
+  printf("\n[Abstract Syntax Tree]\n");
+  SPerl_DUMPER_dump_ast(parser, parser->op_grammer);
+
+  printf("\n[Packages information]\n");
+  SPerl_DUMPER_dump_packages(parser, parser->op_packages);
+  
+  printf("\n[Body information]\n");
+  SPerl_DUMPER_dump_bodys(parser, parser->bodys);
+  
+  printf("\n[Resolved types]\n");
+  SPerl_DUMPER_dump_resolved_types(parser, parser->resolved_types);
+  
+  printf("\n[Subroutine information]\n");
+  printf("  subs\n");
+  SPerl_ARRAY* op_subs = parser->op_subs;
+  for (SPerl_int i = 0; i < op_subs->length; i++) {
+    SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
+    SPerl_SUB* sub = op_sub->uv.sub;
+    printf("    sub[%" PRId32 "]\n", i);
+    SPerl_DUMPER_dump_sub(parser, sub);
+  }
+}
+
+void SPerl_DUMPER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* op_constants) {
+  for (SPerl_int i = 0; i < op_constants->length; i++) {
+    SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, i);
+    SPerl_CONSTANT* constant = op_constant->uv.constant;
+    printf("        constant[%" PRId32 "]\n", i);
+    SPerl_DUMPER_dump_constant(parser, constant);
+  }
+}
+
+void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) {
+  for (SPerl_int i = 0; i < op_packages->length; i++) {
+    printf("package[%d]\n", i);
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(op_packages, i);
+    SPerl_PACKAGE* package = op_package->uv.package;
+    printf("    name => \"%s\"\n", package->op_name->uv.word->value);
+    
+    if (package->op_type) {
+      SPerl_TYPE* type = package->op_type->uv.type;
+      printf("    type => \"%s\"\n", type->name);
+      printf("    resolved_type => \"%s\"\n", type->resolved_type->name);
+      printf("    resolved_type_id => %d\n", type->resolved_type->id);
+    }
+  }
+}
+
+void SPerl_DUMPER_dump_resolved_types(SPerl_PARSER* parser, SPerl_ARRAY* resolved_types) {
+  for (SPerl_int i = 0; i < resolved_types->length; i++) {
+    printf("resolved_type[%d]\n", i);
+    SPerl_RESOLVED_TYPE* resolved_type = SPerl_ARRAY_fetch(resolved_types, i);
+    printf("    name => \"%s\"\n", resolved_type->name);
+    printf("    id => \"%d\"\n", resolved_type->id);
+  }
+}
+
+void SPerl_DUMPER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
+  
+  for (SPerl_int i = 0; i < bodys->length; i++) {
+    // Body
+    SPerl_BODY* body = SPerl_ARRAY_fetch(bodys, i);
+
+    printf("body[%d]\n", i);
+    printf("  code => \"%s\"\n", SPerl_BODY_C_CODE_NAMES[body->code]);
+    printf("  name => \"%s\"\n", body->op_name->uv.word->value);
+    
+    // Core body
+    if (body->code == SPerl_BODY_C_CODE_CORE) {
+      SPerl_BODY_CORE* body_core = body->uv.body_core;
+      printf("  code => \"%s\"\n", SPerl_BODY_CORE_C_CODE_NAMES[body_core->code]);
+      printf("  size => %d\n", body_core->size);
+    }
+    // Class body
+    else if (body->code == SPerl_BODY_C_CODE_CLASS) {
+      SPerl_BODY_CLASS* body_class = body->uv.body_class;
+      
+      printf("  descripters => ");
+      SPerl_ARRAY* op_descripters = body_class->op_descripters;
+      if (op_descripters && op_descripters->length) {
+        for (SPerl_int i = 0; i < op_descripters->length; i++) {
+          SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
+          SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
+          printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
+        }
+      }
+      else {
+        printf("(None)");
+      }
+      printf("\n");
+      printf("  op_block => %x\n", body_class->op_block);
+      
+      // Field information
+      printf("  fields\n");
+      SPerl_ARRAY* op_fields = body_class->op_fields;
+      for (SPerl_int j = 0; j < op_fields->length; j++) {
+        SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, j);
+        SPerl_FIELD* field = op_field->uv.field;
+        printf("    field[%" PRId32 "]\n", j);
+        SPerl_DUMPER_dump_field(parser, field);
+      }
+      
+      printf("  is_value_class => %d\n", body_class->is_value_class);
+    }
+    // Enum body
+    else if (body->code == SPerl_BODY_C_CODE_ENUM) {
+      SPerl_ENUMERATION* enumeration = body->uv.enumeration;
+      
+      // Enum value information
+      printf("  enumeration_values\n");
+      SPerl_ARRAY* enumeration_values = enumeration->enumeration_values;
+      for (SPerl_int j = 0; j < enumeration_values->length; j++) {
+        SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_ARRAY_fetch(enumeration_values, j);
+        printf("    enumeration_value[%" PRId32 "]\n", j);
+        SPerl_DUMPER_dump_enumeration_value(parser, enumeration_value);
+      }
+    }
+  }
+}
+
+void SPerl_DUMPER_dump_constant_pool(SPerl_PARSER* parser, SPerl_CONSTANT_POOL* constant_pool) {
+  for (SPerl_int i = 0; i < constant_pool->length; i++) {
+    printf("        constant_pool[%d] %d\n", i, constant_pool->values[i]);
+  }
+}
+
+void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecodes) {
+  for (SPerl_int i = 0; i < bytecodes->length; i++) {
+    SPerl_char bytecode = bytecodes->values[i];
+    printf("        [%d] %s\n", i, SPerl_BYTECODE_C_CODE_NAMES[bytecode]);
+    
+    // Operand
+    switch (bytecode) {
+      case SPerl_BYTECODE_C_CODE_WIDE: {
+        i++;
+        bytecode = bytecodes->values[i];
+        
+        switch (bytecode) {
+          // Have tow operand
+          case SPerl_BYTECODE_C_CODE_STORE_INT:
+          case SPerl_BYTECODE_C_CODE_STORE_LONG:
+          case SPerl_BYTECODE_C_CODE_STORE_FLOAT:
+          case SPerl_BYTECODE_C_CODE_STORE_DOUBLE:
+          case SPerl_BYTECODE_C_CODE_STORE_REF:
+          case SPerl_BYTECODE_C_CODE_LOAD_INT:
+          case SPerl_BYTECODE_C_CODE_LOAD_LONG:
+          case SPerl_BYTECODE_C_CODE_LOAD_FLOAT:
+          case SPerl_BYTECODE_C_CODE_LOAD_DOUBLE:
+          case SPerl_BYTECODE_C_CODE_LOAD_REF:
+          {
+            i++;
+            bytecode = bytecodes->values[i];
+            printf("        [%d] %d\n", i, bytecode);
+            
+            i++;
+            bytecode = bytecodes->values[i];
+            printf("        [%d] %d\n", i, bytecode);
+            
+            break;
+          }
+        }
+        
+        break;
+      }
+      
+      // Have one operand
+      case SPerl_BYTECODE_C_CODE_BIPUSH:
+      case SPerl_BYTECODE_C_CODE_STORE_INT:
+      case SPerl_BYTECODE_C_CODE_STORE_LONG:
+      case SPerl_BYTECODE_C_CODE_STORE_FLOAT:
+      case SPerl_BYTECODE_C_CODE_STORE_DOUBLE:
+      case SPerl_BYTECODE_C_CODE_STORE_REF:
+      case SPerl_BYTECODE_C_CODE_LOAD_INT:
+      case SPerl_BYTECODE_C_CODE_LOAD_LONG:
+      case SPerl_BYTECODE_C_CODE_LOAD_FLOAT:
+      case SPerl_BYTECODE_C_CODE_LOAD_DOUBLE:
+      case SPerl_BYTECODE_C_CODE_LOAD_REF:
+      case SPerl_BYTECODE_C_CODE_LOAD_CONSTANT:
+      {
+        i++;
+        bytecode = bytecodes->values[i];
+        printf("        [%d] %d\n", i, bytecode);
+        
+        break;
+      }
+      
+      // Have tow operand
+      case SPerl_BYTECODE_C_CODE_IINC:
+      case SPerl_BYTECODE_C_CODE_LINC:
+      case SPerl_BYTECODE_C_CODE_SIPUSH:
+      case SPerl_BYTECODE_C_CODE_LOAD_CONSTANT2_W:
+      case SPerl_BYTECODE_C_CODE_LOAD_CONSTANT_W:
+      {
+        i++;
+        bytecode = bytecodes->values[i];
+        printf("        [%d] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecodes->values[i];
+        printf("        [%d] %d\n", i, bytecode);
+        
+        break;
+      }
+    }
+  }
+}
+
+void SPerl_DUMPER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant) {
+  switch(constant->code) {
+    case SPerl_CONSTANT_C_CODE_BOOLEAN:
+      printf("          boolean %" PRId32 "\n", constant->uv.int_value);
+      break;
+    case SPerl_CONSTANT_C_CODE_BYTE:
+      printf("          char '%c'\n", constant->uv.int_value);
+      break;
+    case SPerl_CONSTANT_C_CODE_INT:
+      printf("          int %" PRId32 "\n", constant->uv.int_value);
+      break;
+    case SPerl_CONSTANT_C_CODE_LONG:
+      printf("          long %" PRId64 "\n", constant->uv.long_value);
+      break;
+    case SPerl_CONSTANT_C_CODE_FLOAT:
+      printf("          float %f\n", constant->uv.float_value);
+      break;
+    case SPerl_CONSTANT_C_CODE_DOUBLE:
+      printf("          double %f\n", constant->uv.double_value);
+      break;
+    case SPerl_CONSTANT_C_CODE_STRING:
+      printf("          string \"%s\"\n", constant->uv.string_value);
+      break;
+  }
+  printf("          pool_pos => %d\n", constant->pool_pos);
+}
+
+void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
+  if (sub) {
+    printf("      package_name => \"%s\"\n", sub->op_package->uv.package->op_name->uv.word->value);
+    if (sub->anon) {
+      printf("      name => (NONE)\n");
+    }
+    else {
+      printf("      name => \"%s\"\n", sub->op_name->uv.word->value);
+    }
+    printf("      id => %d\n", sub->id);
+    printf("      anon => %d\n", sub->anon);
+
+    printf("      return_type => \"%s\"\n", sub->op_return_type->uv.type->name);
+    printf("      resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
+    printf("      resolved_type_id => %d\n", sub->op_return_type->uv.type->resolved_type->id);
+
+    SPerl_int i;
+    printf("      descripters => ");
+    SPerl_ARRAY* op_descripters = sub->op_descripters;
+    if (op_descripters->length) {
+      for (SPerl_int i = 0; i < op_descripters->length; i++) {
+        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
+        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
+        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
+      }
+    }
+    else {
+      printf("(None)");
+    }
+    printf("\n");
+    printf("      argument_count => %" PRId32 "\n", sub->argument_count);
+    printf("      my_vars\n");
+    SPerl_ARRAY* op_my_vars = sub->op_my_vars;
+    for (SPerl_int i = 0; i < op_my_vars->length; i++) {
+      SPerl_OP* op_my_var = SPerl_ARRAY_fetch(sub->op_my_vars, i);
+      SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
+      printf("        my_var[%d]\n", i);
+      SPerl_DUMPER_dump_my_var(parser, my_var);
+    }
+    printf("      op_block => %x\n", sub->op_block);
+    
+    printf("      constant_values\n");
+    SPerl_DUMPER_dump_constants(parser, sub->op_constants);
+    
+    printf("      constant_pool\n");
+    SPerl_DUMPER_dump_constant_pool(parser, sub->constant_pool);
+    
+    printf("      bytecodes\n");
+    SPerl_DUMPER_dump_bytecodes(parser, sub->bytecodes);
+  }
+  else {
+    printf("      None\n");
+  }
+}
+
+void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
+  if (field) {
+    printf("      name => \"%s\"\n", field->op_name->uv.word->value);
+    
+    SPerl_TYPE* type = field->op_type->uv.type;
+    printf("      type => \"%s\"\n", type->name);
+    printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
+    printf("      resolved_type_id => %d\n", type->resolved_type->id);
+
+    printf("      descripters => ");
+    SPerl_ARRAY* op_descripters = field->op_descripters;
+    if (op_descripters->length) {
+      for (SPerl_int i = 0; i < op_descripters->length; i++) {
+        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
+        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
+        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
+      }
+    }
+    else {
+      printf("(None)");
+    }
+    printf("\n");
+  }
+  else {
+    printf("        None\n");
+  }
+}
+
+
+void SPerl_DUMPER_dump_enumeration_value(SPerl_PARSER* parser, SPerl_ENUMERATION_VALUE* enumeration_value) {
+  if (enumeration_value) {
+    printf("      name => \"%s\"\n", enumeration_value->op_name->uv.word->value);
+    printf("      value => %d\n", enumeration_value->op_constant->uv.constant->uv.int_value);
+  }
+  else {
+    printf("      None\n");
+  }
+}
+
+void SPerl_DUMPER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
+  if (my_var) {
+    printf("          name => \"%s\"\n", my_var->op_name->uv.word->value);
+    
+    SPerl_TYPE* type = my_var->op_type->uv.type;
+    printf("          type => \"%s\"\n", type->name);
+    printf("          resolved_type => \"%s\"\n", type->resolved_type->name);
+    printf("          resolved_type_id => %d\n", type->resolved_type->id);
+    
+    printf("          descripters => ");
+    SPerl_ARRAY* op_descripters = my_var->op_descripters;
+    if (op_descripters->length) {
+      for (SPerl_int i = 0; i < op_descripters->length; i++) {
+        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
+        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
+        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
+      }
+    }
+    else {
+      printf("(None)");
+    }
+    printf("\n");
+  }
+  else {
+    printf("          None\n");
+  }
+}
