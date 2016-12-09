@@ -38,6 +38,74 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_IF: {
+              
+              SPerl_OP* op_first = op_cur->first;
+              
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              
+              if (first_resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                if (op_first->code == SPerl_OP_C_CODE_EQ) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPEQ);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_NE) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPNE);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_GT) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPGT);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_GE) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPGE);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_LT) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPLT);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_LE) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPLE);
+                }
+              }
+              else if (first_resolved_type->id >= SPerl_BODY_CORE_C_CODE_LONG && first_resolved_type->id <= SPerl_BODY_CORE_C_CODE_DOUBLE)  {
+                
+                if (first_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LCMP);
+                }
+                else if (first_resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_FCMPG);
+                }
+                else if (first_resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_DCMPG);
+                }
+                
+                if (op_first->code == SPerl_OP_C_CODE_EQ) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFEQ);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_NE) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFNE);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_GT) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFGT);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_GE) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFGE);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_LT) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFLT);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_LE) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFLE);
+                }
+              }
+              else {
+                if (op_first->code == SPerl_OP_C_CODE_EQ) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ACMPEQ);
+                }
+                else if (op_first->code == SPerl_OP_C_CODE_NE) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ACMPNE);
+                }
+              }
+              
+              break;
+            }
             case SPerl_OP_C_CODE_ARRAY_LENGTH : {
               SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ARRAYLENGTH);
               

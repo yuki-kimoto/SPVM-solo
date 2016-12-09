@@ -103,7 +103,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_FIELD,        // UNKNOWN
   SPerl_OP_C_CODE_ASSIGN,       // ASSIGN
   SPerl_OP_C_CODE_CALL_SUB,      // UNKNOWN
-  SPerl_OP_C_CODE_IF_STATEMENT,         // UNKNOWN
   SPerl_OP_C_CODE_USE,          // UNKNOWN
   SPerl_OP_C_CODE_RETURN,       // UNKNOWN
   SPerl_OP_C_CODE_LAST,         // UNKNOWN
