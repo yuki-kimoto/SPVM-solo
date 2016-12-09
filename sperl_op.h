@@ -119,6 +119,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NEW_TYPE,
   SPerl_OP_C_CODE_NEW_ARRAY_CONSTANT,
   SPerl_OP_C_CODE_TERM_STATEMENT,
+  SPerl_OP_C_CODE_ATMARK,
 };
 
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];

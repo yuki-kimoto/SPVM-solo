@@ -119,6 +119,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NEW_TYPE",
   "NEW_ARRAY_CONSTANT",
   "TERM_STATEMENT",
+  "ATMARK",
 };
 
 SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type) {
