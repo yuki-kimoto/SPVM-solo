@@ -79,6 +79,8 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_COMPLEMENT,   // UNOP
   SPerl_OP_C_CODE_NEGATE,       // UNOP
   SPerl_OP_C_CODE_PLUS,         // UNOP
+  SPerl_OP_C_CODE_EQ,           // BINOP
+  SPerl_OP_C_CODE_NE,           // BINOP
   SPerl_OP_C_CODE_LT,           // BINOP
   SPerl_OP_C_CODE_LE,           // BINOP
   SPerl_OP_C_CODE_GT,           // BINOP
@@ -91,8 +93,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_BIT_OR,        // BINOP
   SPerl_OP_C_CODE_REMAINDER,       // BINOP
   SPerl_OP_C_CODE_BIT_XOR,       // BINOP
-  SPerl_OP_C_CODE_EQ,           // BINOP
-  SPerl_OP_C_CODE_NE,           // BINOP
   SPerl_OP_C_CODE_LEFT_SHIFT,    // BINOP
   SPerl_OP_C_CODE_RIGHT_SHIFT,   // BINOP
   SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED,   // BINOP

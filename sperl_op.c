@@ -39,6 +39,13 @@
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_builder.h"
 
+
+
+
+
+
+
+
 SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
   "ELSIF",
@@ -72,6 +79,8 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "COMPLEMENT",
   "NEGATE",
   "PLUS",
+  "EQ",
+  "NE",
   "LT",
   "LE",
   "GT",
@@ -84,8 +93,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "BIT_OR",
   "REMAINDER",
   "BIT_XOR",
-  "EQ",
-  "NE",
   "LEFT_SHIFT",
   "RIGHT_SHIFT",
   "RIGHT_SHIFT_UNSIGNED",
