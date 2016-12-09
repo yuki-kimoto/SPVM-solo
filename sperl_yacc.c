@@ -112,7 +112,7 @@ void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
       fprintf(file, "\"%s\"", var->op_name->uv.word->value);
       break;
     }
-    case CONSTVALUE: {
+    case CONSTANT: {
       SPerl_CONSTANT* constant = yylval.opval->uv.constant;
       
       switch(constant->code) {

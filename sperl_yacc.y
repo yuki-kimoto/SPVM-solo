@@ -14,7 +14,7 @@
 %}
 
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE NEW
-%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE UNDEF
+%token <opval> LAST NEXT WORD VAR CONSTANT ENUM DESCRIPTER CORETYPE UNDEF
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
 %type <opval> block enum_block class_block decl_sub opt_decl_class_attrs call_sub call_op
@@ -137,7 +137,7 @@ decl_enumeration_value
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1, NULL);
     }
-  | WORD ASSIGNOP CONSTVALUE
+  | WORD ASSIGNOP CONSTANT
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1, $3);
     }
@@ -360,7 +360,7 @@ array_length
     }
 term
   : VAR
-  | CONSTVALUE
+  | CONSTANT
   | decl_my
   | decl_anon_sub
   | call_sub

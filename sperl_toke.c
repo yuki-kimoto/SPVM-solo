@@ -385,7 +385,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         op->uv.constant = constant;
         yylvalp->opval = op;
         
-        return CONSTVALUE;
+        return CONSTANT;
       }
       case '"': {
         parser->bufptr++;
@@ -425,7 +425,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         op->uv.constant = constant;
         yylvalp->opval = (SPerl_OP*)op;
 
-        return CONSTVALUE;
+        return CONSTANT;
       }
       default:
         /* Variable */
@@ -504,7 +504,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             op->uv.constant = constant;
             yylvalp->opval = (SPerl_OP*)op;
             
-            return CONSTVALUE;
+            return CONSTANT;
           }
           // Convert to integer
           else {
@@ -519,7 +519,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             op->uv.constant = constant;
             yylvalp->opval = (SPerl_OP*)op;
             
-            return CONSTVALUE;
+            return CONSTANT;
           }
         }
         // Keyword or word
@@ -642,7 +642,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               op->uv.constant = constant;
               yylvalp->opval = op;
 
-              return CONSTVALUE;
+              return CONSTANT;
             }
             else if (memcmp(keyword, "false", str_len) == 0) {
               SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTANT);
@@ -653,7 +653,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               op->uv.constant = constant;
               yylvalp->opval = op;
 
-              return CONSTVALUE;
+              return CONSTANT;
             }
           }
           
