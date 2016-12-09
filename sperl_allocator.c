@@ -1,18 +1,10 @@
 #include <stdlib.h>
 
-#include "sperl_allocator.h"
 #include "sperl_parser.h"
-#include "sperl_resolved_type.h"
-#include "sperl_package.h"
-#include "sperl_body_core.h"
-#include "sperl_body.h"
-#include "sperl_type_component_word.h"
-#include "sperl_type.h"
-#include "sperl_word.h"
-#include "sperl_op.h"
-#include "sperl_memory_pool.h"
-#include "sperl_hash.h"
 #include "sperl_array.h"
+#include "sperl_hash.h"
+#include "sperl_memory_pool.h"
+#include "sperl_allocator.h"
 
 SPerl_ARRAY* SPerl_ALLOCATOR_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
