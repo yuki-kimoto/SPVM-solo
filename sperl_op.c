@@ -1094,7 +1094,7 @@ SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP*
   return op_field;
 }
 
-SPerl_OP* SPerl_OP_build_new_array_constant(SPerl_PARSER* parser, SPerl_OP* op_opt_terms) {
+SPerl_OP* SPerl_OP_build_array_init(SPerl_PARSER* parser, SPerl_OP* op_opt_terms) {
   SPerl_OP* op_new_array = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_ARRAY_CONSTANT, NULL, NULL);
   SPerl_OP_sibling_splice(parser, op_new_array, NULL, 0, op_opt_terms);
   
