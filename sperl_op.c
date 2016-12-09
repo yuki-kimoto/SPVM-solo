@@ -122,6 +122,18 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "ARRAY_LENGTH",
 };
 
+SPerl_OP* SPerl_OP_build_if_statement(SPerl_PARSER* parser, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement) {
+
+  SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_term);
+  SPerl_OP_sibling_splice(parser, op_if, op_term, 0, op_block);
+  SPerl_OP_sibling_splice(parser, op_if, op_block, 0, op_else_statement);
+  
+  op_term->condition = 1;
+  
+  return op_if;
+}
+
+
 SPerl_OP* SPerl_OP_build_array_length(SPerl_PARSER* parser, SPerl_OP* op_array_length, SPerl_OP* op_term) {
   SPerl_OP_sibling_splice(parser, op_array_length, NULL, 0, op_term);
   
@@ -251,6 +263,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         while (1) {
          // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_IF_STATEMENT: {
+              
+              
+              
+              break;
+            }
             case SPerl_OP_C_CODE_LEFT_SHIFT: {
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);

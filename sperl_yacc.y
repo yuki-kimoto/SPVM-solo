@@ -214,9 +214,7 @@ while_statement
 if_statement
   : IF '(' term ')' block else_statement
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_IF_STATEMENT, $3, $5);
-      SPerl_OP_sibling_splice(parser, op, $5, 0, $6);
-      $$ = op;
+      $$ = SPerl_OP_build_if_statement(parser, $1, $3, $5, $6);
     }
 
 else_statement

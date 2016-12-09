@@ -134,6 +134,7 @@ struct SPerl_op {
   SPerl_int line;
   SPerl_boolean moresib;
   SPerl_boolean lvalue;
+  SPerl_boolean condition;
   union {
     SPerl_OP_INFO* op_info;
     SPerl_MY_VAR* my_var;
@@ -150,6 +151,8 @@ struct SPerl_op {
     SPerl_ENUMERATION* enumeration;
   } uv;
 };
+
+SPerl_OP* SPerl_OP_build_if_statement(SPerl_PARSER* parser, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement);
 
 SPerl_OP* SPerl_OP_build_array_length(SPerl_PARSER* parser, SPerl_OP* op_array_length, SPerl_OP* op_term);
 
