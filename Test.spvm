@@ -17,6 +17,7 @@ package Test {
     my $nums : int[] = new int[3];
     my $simple : Test::Simple = new Test::Simple;
     my $simples : Test::Simple[] = new Test::Simple[3];
+    my $simples2 : Test::Simple[][] = new Test::Simple[][4];
     
     my $nums_length : int = @$nums;
     

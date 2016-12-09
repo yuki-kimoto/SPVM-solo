@@ -21,11 +21,38 @@ SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl_PARSER* parser) {
 
 SPerl_boolean SPerl_RESOLVED_TYPE_is_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
   SPerl_int length = strlen(resolved_type->name);
-  SPerl_char char1 = resolved_type->name[length - 2];
-  SPerl_char char2 = resolved_type->name[length - 1];
   
-  if (char1 == '[' && char2 == ']') {
-    return 1;
+  if (strlen(resolved_type->name) >= 2) {
+    SPerl_char char1 = resolved_type->name[length - 2];
+    SPerl_char char2 = resolved_type->name[length - 1];
+    
+    if (char1 == '[' && char2 == ']') {
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+  else {
+    return 0;
+  }
+}
+
+SPerl_boolean SPerl_RESOLVED_TYPE_is_multi_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  SPerl_int length = strlen(resolved_type->name);
+  
+  if (strlen(resolved_type->name) >= 4) {
+    SPerl_char char1 = resolved_type->name[length - 4];
+    SPerl_char char2 = resolved_type->name[length - 3];
+    SPerl_char char3 = resolved_type->name[length - 2];
+    SPerl_char char4 = resolved_type->name[length - 1];
+    
+    if (char1 == '[' && char2 == ']' && char3 == '[' && char4 == ']' ) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
   }
   else {
     return 0;

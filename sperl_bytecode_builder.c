@@ -82,6 +82,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               if (SPerl_RESOLVED_TYPE_is_core_type_array(parser, resolved_type)) {
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NEWARRAY);
               }
+              else if (SPerl_RESOLVED_TYPE_is_multi_array(parser, resolved_type)) {
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_MULTIANEWARRAY);
+              }
               else if (SPerl_RESOLVED_TYPE_is_array(parser, resolved_type)) {
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ANEWARRAY);
               }
