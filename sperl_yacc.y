@@ -187,15 +187,7 @@ statement
 for_statement
   : FOR '(' term ';' term ';' term ')' block
     {
-      SPerl_OP* op = SPerl_OP_newOP(
-        parser,
-        SPerl_OP_C_CODE_LOOP,
-        $3,
-        $5
-      );
-      SPerl_OP_sibling_splice(parser, op, $5, 0, $9);
-      SPerl_OP_sibling_splice(parser, op, $9, 0, $7);
-      $$ = op;
+      $$ = SPerl_OP_build_for_statement(parser, $1, $3, $5, $7, $9);
     }
 
 while_statement

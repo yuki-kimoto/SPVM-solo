@@ -122,6 +122,22 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "ARRAY_LENGTH",
 };
 
+SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, SPerl_OP* op_term_loop_var, SPerl_OP* op_term_condition, SPerl_OP* op_term_next_value, SPerl_OP* op_block) {
+  
+  SPerl_OP* op_loop = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LOOP, NULL, NULL);
+  op_loop->file = op_for->file;
+  op_loop->line = op_for->line;
+  
+  SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_term_loop_var);
+  SPerl_OP_sibling_splice(parser, op_loop, op_term_loop_var, 0, op_term_condition);
+  SPerl_OP_sibling_splice(parser, op_loop, op_term_condition, 0, op_term_next_value);
+  SPerl_OP_sibling_splice(parser, op_loop, op_term_next_value, 0, op_block);
+  
+  op_term_condition->condition = 1;
+  
+  return op_loop;
+}
+
 SPerl_OP* SPerl_OP_build_if_statement(SPerl_PARSER* parser, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement) {
   
   SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_term);
