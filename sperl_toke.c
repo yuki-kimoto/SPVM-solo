@@ -216,9 +216,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
       }
       case '@': {
         parser->bufptr++;
-        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ATMARK);
+        SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_ARRAY_LENGTH);
         yylvalp->opval = op;
-        return ATMARK;
+        return '@';
       }
       case '|':
         parser->bufptr++;

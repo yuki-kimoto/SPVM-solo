@@ -13,7 +13,7 @@
 %}
 
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE NEW
-%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE UNDEF ATMARK
+%token <opval> LAST NEXT WORD VAR CONSTVALUE ENUM DESCRIPTER CORETYPE UNDEF
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
 %type <opval> block enum_block class_block decl_sub opt_decl_class_attrs call_sub call_op
@@ -21,7 +21,7 @@
 %type <opval> opt_descripters list_descripters descripters decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_packages opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_packages type_sub types not_type_sub
-%type <opval> field array_elem convert_type decl_enum new_object new_array_constant type_word
+%type <opval> field array_elem convert_type decl_enum new_object new_array_constant type_word array_length
 
 %right <opval> ASSIGNOP
 %left <opval> OROP
@@ -32,7 +32,7 @@
 %left <opval> SHIFTOP
 %left <opval> '+' '-'
 %left <opval> MULOP
-%right <opval> NOTOP '~' UMINUS
+%right <opval> NOTOP '~' '@' UMINUS
 %nonassoc <opval> INCOP DECOP
 %left <opval> ARROW
 %nonassoc <opval> ')'
@@ -352,6 +352,11 @@ terms
     }
   | term
 
+array_length
+  : '@' term
+    {
+      $$ = SPerl_OP_build_array_length(parser, $1, $2);
+    }
 term
   : VAR
   | CONSTVALUE
@@ -365,6 +370,7 @@ term
   | UNDEF
   | new_object
   | new_array_constant
+  | array_length
 
 new_array_constant
   : '[' opt_terms ']'

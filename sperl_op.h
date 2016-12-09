@@ -119,7 +119,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NEW_TYPE,
   SPerl_OP_C_CODE_NEW_ARRAY_CONSTANT,
   SPerl_OP_C_CODE_TERM_STATEMENT,
-  SPerl_OP_C_CODE_ATMARK,
+  SPerl_OP_C_CODE_ARRAY_LENGTH,
 };
 
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
@@ -150,6 +150,8 @@ struct SPerl_op {
     SPerl_ENUMERATION* enumeration;
   } uv;
 };
+
+SPerl_OP* SPerl_OP_build_array_length(SPerl_PARSER* parser, SPerl_OP* op_array_length, SPerl_OP* op_term);
 
 SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type);
 

@@ -18,6 +18,8 @@ package Test {
     my $simple : Test::Simple = new Test::Simple;
     my $simples : Test::Simple[] = new Test::Simple[3];
     
+    my $nums_length : int = @$nums;
+    
     my $v1 : int;
     my $v2 : int;
     my $v3 : int;

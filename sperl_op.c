@@ -119,8 +119,16 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NEW_TYPE",
   "NEW_ARRAY_CONSTANT",
   "TERM_STATEMENT",
-  "ATMARK",
+  "ARRAY_LENGTH",
 };
+
+SPerl_OP* SPerl_OP_build_array_length(SPerl_PARSER* parser, SPerl_OP* op_array_length, SPerl_OP* op_term) {
+  SPerl_OP_sibling_splice(parser, op_array_length, NULL, 0, op_term);
+  
+  op_array_length->uv.op_info = SPerl_OP_INFO_new(parser);
+  
+  return op_array_length;
+}
 
 SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type) {
   SPerl_OP* op_new_object = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_TYPE, NULL, NULL);
@@ -129,7 +137,7 @@ SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPer
   op_new_object->line = op_new->line;
   
   op_new_object->uv.op_info = SPerl_OP_INFO_new(parser);
-
+  
   SPerl_ARRAY_push(parser->op_types, op_type);
   
   return op_new_object;
@@ -159,6 +167,11 @@ void SPerl_OP_create_bytecodes(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_ARRAY_LENGTH : {
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ARRAYLENGTH);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_LEFT_SHIFT: {
               
               if (op_cur->uv.op_info->resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
@@ -192,7 +205,6 @@ void SPerl_OP_create_bytecodes(SPerl_PARSER* parser) {
               
               break;
             }
-                                    
             case SPerl_OP_C_CODE_NEW_TYPE: {
               SPerl_RESOLVED_TYPE* resolved_type = op_cur->uv.op_info->resolved_type;
               
@@ -1184,6 +1196,22 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_OP_INFO* op_info = op_cur->uv.op_info;
               op_info->resolved_type = resolved_type;
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_ARRAY_LENGTH: {
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+              
+              // First value must be array
+              SPerl_boolean first_resolved_type_is_array = SPerl_RESOLVED_TYPE_is_array(parser, first_resolved_type);
+              if (!first_resolved_type_is_array) {
+                SPerl_yyerror_format(parser, "right of @ must be array at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              // Resolved type
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+              op_cur->uv.op_info->resolved_type = resolved_type;
               
               break;
             }
