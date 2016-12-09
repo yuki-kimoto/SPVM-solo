@@ -64,6 +64,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               else {
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ACMPEQ);
               }
+              
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+              
               break;
             }
             case SPerl_OP_C_CODE_NE: {
@@ -88,6 +92,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               else {
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ACMPNE);
               }
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
               break;
             }
             case SPerl_OP_C_CODE_GT: {
@@ -109,6 +115,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFGT);
               }
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
               break;
             }
             case SPerl_OP_C_CODE_GE: {
@@ -130,6 +138,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFGE);
               }
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
               break;
             }
             case SPerl_OP_C_CODE_LT: {
@@ -151,6 +161,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFLT);
               }
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
               break;
             }
             case SPerl_OP_C_CODE_LE: {
@@ -172,7 +184,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFLE);
               }
-
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
               break;
             }
             case SPerl_OP_C_CODE_ARRAY_LENGTH : {
