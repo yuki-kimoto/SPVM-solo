@@ -193,14 +193,7 @@ for_statement
 while_statement
   : WHILE '(' term ')' block
     {
-      SPerl_OP* op = SPerl_OP_newOP(
-        parser,
-        SPerl_OP_C_CODE_LOOP,
-        SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, NULL, NULL),
-        $3
-      );
-      SPerl_OP_sibling_splice(parser, op, $3, 0, $5);
-      $$ = op;
+      $$ = SPerl_OP_build_while_statement(parser, $1, $3, $5);
     }
 
 if_statement

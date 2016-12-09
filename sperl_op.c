@@ -138,6 +138,20 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
   return op_loop;
 }
 
+SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_while, SPerl_OP* op_term_condition, SPerl_OP* op_block) {
+  
+  SPerl_OP* op_loop = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LOOP, NULL, NULL);
+  op_loop->file = op_while->file;
+  op_loop->line = op_while->line;
+  
+  SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_term_condition);
+  SPerl_OP_sibling_splice(parser, op_loop, op_term_condition, 0, op_block);
+  
+  op_term_condition->condition = 1;
+  
+  return op_loop;
+}
+
 SPerl_OP* SPerl_OP_build_if_statement(SPerl_PARSER* parser, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement) {
   
   SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_term);
