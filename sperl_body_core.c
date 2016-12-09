@@ -1,5 +1,6 @@
 #include "sperl_body_core.h"
 #include "sperl_parser.h"
+#include "sperl_allocator.h"
 
 SPerl_char* const SPerl_BODY_CORE_C_CODE_NAMES[] = {
   "boolean",
@@ -24,5 +25,5 @@ SPerl_int const SPerl_BODY_CORE_C_SIZES[] = {
 };
 
 SPerl_BODY_CORE* SPerl_BODY_CORE_new(SPerl_PARSER* parser) {
-  return SPerl_PARSER_alloc_memory_pool(parser, sizeof(SPerl_BODY_CORE));
+  return SPerl_ALLOCATOR_alloc_memory_pool(parser, sizeof(SPerl_BODY_CORE));
 }

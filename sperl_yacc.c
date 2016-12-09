@@ -4,6 +4,7 @@
 
 #include "sperl_yacc.h"
 #include "sperl_parser.h"
+#include "sperl_allocator.h"
 #include "sperl_yacc.tab.h"
 #include "sperl_constant.h"
 #include "sperl_word.h"
@@ -23,7 +24,7 @@ void SPerl_yyerror_format(SPerl_PARSER* parser, SPerl_char* message_template, ..
   
   // Messsage template with prefix
   SPerl_int message_template_with_prefix_length = prefix_length + message_template_length;
-  SPerl_char* message_template_with_prefix = SPerl_PARSER_new_string(parser, message_template_with_prefix_length);
+  SPerl_char* message_template_with_prefix = SPerl_ALLOCATOR_new_string(parser, message_template_with_prefix_length);
   strncpy(message_template_with_prefix, prefix, prefix_length);
   strncpy(message_template_with_prefix + prefix_length, message_template, message_template_length);
   message_template_with_prefix[message_template_with_prefix_length] = '\0';
@@ -57,7 +58,7 @@ void SPerl_yyerror_format(SPerl_PARSER* parser, SPerl_char* message_template, ..
   }
   va_end(args);
   
-  SPerl_char* message = SPerl_PARSER_new_string(parser, message_length);
+  SPerl_char* message = SPerl_ALLOCATOR_new_string(parser, message_length);
   
   va_start(args, message_template);
   vsprintf(message, message_template_with_prefix, args);

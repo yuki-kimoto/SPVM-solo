@@ -7,6 +7,7 @@
 #include "sperl_array.h"
 #include "sperl_hash.h"
 #include "sperl_parser.h"
+#include "sperl_allocator.h"
 #include "sperl_yacc.h"
 #include "sperl_op.h"
 #include "sperl_sub.h"
@@ -1016,14 +1017,14 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
     
     // my var informations
     SPerl_int next_my_var_pos = 0;
-    SPerl_ARRAY* op_my_vars = SPerl_PARSER_new_array(parser, 0);
-    SPerl_HASH* my_var_symtable = SPerl_PARSER_new_hash(parser, 0);
+    SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_new_array(parser, 0);
+    SPerl_HASH* my_var_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
     
     // my variable stack
-    SPerl_ARRAY* op_my_var_stack = SPerl_PARSER_new_array(parser, 0);
+    SPerl_ARRAY* op_my_var_stack = SPerl_ALLOCATOR_new_array(parser, 0);
     
     // block base position stack
-    SPerl_ARRAY* block_base_stack = SPerl_PARSER_new_array(parser, 0);
+    SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_new_array(parser, 0);
     SPerl_int block_base = 0;
     SPerl_boolean block_start = 0;
     
@@ -1961,7 +1962,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
   }
   else {
     SPerl_int resolved_type_name_length = 0;
-    SPerl_ARRAY* resolved_type_part_names = SPerl_PARSER_new_array(parser, 0);
+    SPerl_ARRAY* resolved_type_part_names = SPerl_ALLOCATOR_new_array(parser, 0);
     
     SPerl_ARRAY* parts = type->parts;
     for (SPerl_int i = 0; i < parts->length; i++) {
@@ -2003,7 +2004,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
         }
       }
     }
-    SPerl_char* resolved_type_name = SPerl_PARSER_new_string(parser, resolved_type_name_length);
+    SPerl_char* resolved_type_name = SPerl_ALLOCATOR_new_string(parser, resolved_type_name_length);
     SPerl_int cur_pos = 0;
     for (SPerl_int i = 0; i < resolved_type_part_names->length; i++) {
       SPerl_char* resolved_type_part_name = SPerl_ARRAY_fetch(resolved_type_part_names, i);
@@ -2095,7 +2096,7 @@ SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* 
     length += 4 + 3 + 3 + strlen(argument_count_str);
   }
   
-  SPerl_char* sub_complete_name = SPerl_PARSER_new_string(parser, length);
+  SPerl_char* sub_complete_name = SPerl_ALLOCATOR_new_string(parser, length);
   
   if (argument_count == 0) {
     sprintf(sub_complete_name, "%s()", sub_abs_name);
@@ -2113,7 +2114,7 @@ SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* 
 SPerl_char* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* base_name) {
   SPerl_int length = strlen(package_name) + 2 + strlen(base_name);
   
-  SPerl_char* complete_name = SPerl_PARSER_new_string(parser, length);
+  SPerl_char* complete_name = SPerl_ALLOCATOR_new_string(parser, length);
   
   sprintf(complete_name, "%s::%s", package_name, base_name);
   
@@ -2123,7 +2124,7 @@ SPerl_char* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_char* pack
 SPerl_char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* base_name) {
   SPerl_int length = strlen(package_name) + 2 + strlen(base_name);
   
-  SPerl_char* abs_name = SPerl_PARSER_new_string(parser, length);
+  SPerl_char* abs_name = SPerl_ALLOCATOR_new_string(parser, length);
   
   sprintf(abs_name, "%s::%s", package_name, base_name);
   
@@ -2196,10 +2197,10 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       }
       
       // Search use and field
-      SPerl_ARRAY* op_fields = SPerl_PARSER_new_array(parser, 0);
-      SPerl_HASH* field_symtable = SPerl_PARSER_new_hash(parser, 0);
-      SPerl_ARRAY* op_uses = SPerl_PARSER_new_array(parser, 0);
-      SPerl_HASH* use_symtable = SPerl_PARSER_new_hash(parser, 0);
+      SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_new_array(parser, 0);
+      SPerl_HASH* field_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
+      SPerl_ARRAY* op_uses = SPerl_ALLOCATOR_new_array(parser, 0);
+      SPerl_HASH* use_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
       
       // Collect field and use information
       SPerl_OP* op_decls = op_block->first;
@@ -2379,7 +2380,7 @@ SPerl_OP* SPerl_OP_build_decl_field(SPerl_PARSER* parser, SPerl_OP* op_has, SPer
 
 SPerl_ARRAY* SPerl_OP_create_op_descripters_array(SPerl_PARSER* parser, SPerl_OP* op_descripters) {
   
-  SPerl_ARRAY* op_descripters_array = SPerl_PARSER_new_array(parser, 0);
+  SPerl_ARRAY* op_descripters_array = SPerl_ALLOCATOR_new_array(parser, 0);
   
   SPerl_OP* op_descripter = op_descripters->first;
   while (op_descripter = SPerl_OP_sibling(parser, op_descripter)) {
@@ -2442,7 +2443,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
   SPerl_OP_sibling_splice(parser, op_enum, NULL, 0, op_enum_block);
   
   // Enum values
-  SPerl_ARRAY* enumeration_values = SPerl_PARSER_new_array(parser, 0);
+  SPerl_ARRAY* enumeration_values = SPerl_ALLOCATOR_new_array(parser, 0);
   
   // Starting value
   SPerl_long start_value = 0;
@@ -2640,7 +2641,7 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   
   // sub type
   SPerl_TYPE_COMPONENT_SUB* type_component_sub = SPerl_TYPE_COMPONENT_SUB_new(parser);
-  SPerl_ARRAY* argument_types = SPerl_PARSER_new_array(parser, 0);
+  SPerl_ARRAY* argument_types = SPerl_ALLOCATOR_new_array(parser, 0);
   {
     SPerl_OP* op_argument_type = op_argument_types->first;
     while (op_argument_type = SPerl_OP_sibling(parser, op_argument_type)) {

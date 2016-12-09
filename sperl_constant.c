@@ -2,6 +2,7 @@
 
 #include "sperl_constant.h"
 #include "sperl_parser.h"
+#include "sperl_allocator.h"
 #include "sperl_hash.h"
 
 SPerl_char* const SPerl_CONSTANT_C_CODE_NAMES[] = {
@@ -15,7 +16,7 @@ SPerl_char* const SPerl_CONSTANT_C_CODE_NAMES[] = {
 };
 
 SPerl_CONSTANT* SPerl_CONSTANT_new(SPerl_PARSER* parser) {
-  return SPerl_PARSER_alloc_memory_pool(parser, sizeof(SPerl_CONSTANT));
+  return SPerl_ALLOCATOR_alloc_memory_pool(parser, sizeof(SPerl_CONSTANT));
 }
 
 SPerl_CONSTANT* SPerl_CONSTANT_create_int_1(SPerl_PARSER* parser) {

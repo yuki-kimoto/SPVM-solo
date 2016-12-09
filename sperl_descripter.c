@@ -1,5 +1,6 @@
 #include "sperl_descripter.h"
 #include "sperl_parser.h"
+#include "sperl_allocator.h"
 
 SPerl_char* const SPerl_DESCRIPTER_CODE_NAMES[] = {
   "const",
@@ -9,5 +10,5 @@ SPerl_char* const SPerl_DESCRIPTER_CODE_NAMES[] = {
 };
 
 SPerl_DESCRIPTER* SPerl_DESCRIPTER_new(SPerl_PARSER* parser) {
-  return SPerl_PARSER_alloc_memory_pool(parser, sizeof(SPerl_DESCRIPTER));
+  return SPerl_ALLOCATOR_alloc_memory_pool(parser, sizeof(SPerl_DESCRIPTER));
 }

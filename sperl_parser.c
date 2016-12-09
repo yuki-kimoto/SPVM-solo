@@ -12,6 +12,7 @@
 #include "sperl_memory_pool.h"
 #include "sperl_hash.h"
 #include "sperl_array.h"
+#include "sperl_allocator.h"
 
 SPerl_PARSER* SPerl_PARSER_new() {
   SPerl_PARSER* parser = calloc(1, sizeof(SPerl_PARSER));
@@ -23,20 +24,20 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->memory_pool = SPerl_MEMORY_POOL_new(0);
   
   // Parser information
-  parser->op_subs = SPerl_PARSER_new_array(parser, 0);
-  parser->sub_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
-  parser->op_packages = SPerl_PARSER_new_array(parser, 0);
-  parser->package_symtable = SPerl_PARSER_new_hash(parser, 0);
-  parser->op_types = SPerl_PARSER_new_array(parser, 0);
-  parser->op_use_stack = SPerl_PARSER_new_array(parser, 0);
-  parser->bodys = SPerl_PARSER_new_array(parser, 0);
-  parser->body_symtable = SPerl_PARSER_new_hash(parser, 0);
-  parser->field_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
-  parser->enum_complete_name_symtable = SPerl_PARSER_new_hash(parser, 0);
-  parser->include_pathes = SPerl_PARSER_new_array(parser, 0);
+  parser->op_subs = SPerl_ALLOCATOR_new_array(parser, 0);
+  parser->sub_complete_name_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
+  parser->op_packages = SPerl_ALLOCATOR_new_array(parser, 0);
+  parser->package_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
+  parser->op_types = SPerl_ALLOCATOR_new_array(parser, 0);
+  parser->op_use_stack = SPerl_ALLOCATOR_new_array(parser, 0);
+  parser->bodys = SPerl_ALLOCATOR_new_array(parser, 0);
+  parser->body_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
+  parser->field_complete_name_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
+  parser->enum_complete_name_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
+  parser->include_pathes = SPerl_ALLOCATOR_new_array(parser, 0);
   parser->bufptr = "";
-  parser->resolved_types = SPerl_PARSER_new_array(parser, 0);
-  parser->resolved_type_symtable = SPerl_PARSER_new_hash(parser, 0);
+  parser->resolved_types = SPerl_ALLOCATOR_new_array(parser, 0);
+  parser->resolved_type_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
 
   // Core types
   for (SPerl_int i = 0; i < SPerl_BODY_CORE_C_CODE_LENGTH; i++) {
@@ -110,44 +111,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   return parser;
 }
 
-void* SPerl_PARSER_alloc_memory_pool(SPerl_PARSER* parser, SPerl_int size) {
+void* SPerl_ALLOCATOR_alloc_memory_pool(SPerl_PARSER* parser, SPerl_int size) {
   return SPerl_MEMORY_POOL_alloc(parser->memory_pool, size);
-}
-
-SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
-  SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
-  
-  SPerl_ARRAY_push(parser->array_ptrs, array);
-  
-  return array;
-}
-
-SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity) {
-  SPerl_HASH* hash = SPerl_HASH_new(capacity);
-  
-  SPerl_ARRAY_push(parser->hash_ptrs, hash);
-  
-  return hash;
-}
-
-SPerl_int* SPerl_PARSER_new_int(SPerl_PARSER* parser) {
-  SPerl_int* value = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
-  
-  return value;
-}
-
-SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length) {
-  SPerl_char* str = malloc(length + 1);
-  
-  if (length < 40) {
-    str = SPerl_MEMORY_POOL_alloc(parser->memory_pool, 40);
-  }
-  else {
-    str = malloc(length + 1);
-    SPerl_ARRAY_push(parser->long_str_ptrs, str);
-  }
-  
-  return str;
 }
 
 void SPerl_PARSER_free(SPerl_PARSER* parser) {

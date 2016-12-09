@@ -8,6 +8,7 @@
 #include "sperl_yacc.tab.h"
 #include "sperl_op.h"
 #include "sperl_parser.h"
+#include "sperl_allocator.h"
 #include "sperl_constant.h"
 #include "sperl_var.h"
 #include "sperl_array.h"
@@ -67,7 +68,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                 SPerl_char* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
                 // Change :: to /
-                SPerl_char* package_name_for_path = SPerl_PARSER_new_string(parser, strlen(package_name));
+                SPerl_char* package_name_for_path = SPerl_ALLOCATOR_new_string(parser, strlen(package_name));
                 SPerl_char* bufptr_orig = package_name;
                 SPerl_char* bufptr_to = package_name_for_path;
                 while (*bufptr_orig) {
@@ -85,7 +86,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                 *bufptr_orig = '\0';
                 
                 // File name
-                cur_file = SPerl_PARSER_new_string(parser, strlen(include_path) + strlen(package_name_for_path) + 6);
+                cur_file = SPerl_ALLOCATOR_new_string(parser, strlen(include_path) + strlen(package_name_for_path) + 6);
                 sprintf(cur_file, "%s/%s.spvm", include_path, package_name_for_path);
                 
                 // Open source file
@@ -112,7 +113,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               fseek(fh, 0, SEEK_END);
               SPerl_int file_size = ftell(fh);
               fseek(fh, 0, SEEK_SET);
-              SPerl_char* src = SPerl_PARSER_new_string(parser, file_size);
+              SPerl_char* src = SPerl_ALLOCATOR_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
                 if (op_use) {
                   fprintf(stderr, "Can't read file %s at %s line %d\n", cur_file, op_use->file, op_use->line);
@@ -394,7 +395,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         
         SPerl_char* str;
         if (*(parser->bufptr + 1) == '"') {
-          str = SPerl_PARSER_new_string(parser, 0);
+          str = SPerl_ALLOCATOR_new_string(parser, 0);
           str[0] = '\0';
           parser->bufptr++;
           parser->bufptr++;
@@ -409,7 +410,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          str = SPerl_PARSER_new_string(parser, str_len);
+          str = SPerl_ALLOCATOR_new_string(parser, str_len);
           memcpy(str, cur_token_ptr, str_len);
           str[str_len] = '\0';
 
@@ -440,7 +441,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          SPerl_char* var_name = SPerl_PARSER_new_string(parser, str_len);
+          SPerl_char* var_name = SPerl_ALLOCATOR_new_string(parser, str_len);
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
           
@@ -541,7 +542,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          SPerl_char* keyword = SPerl_PARSER_new_string(parser, str_len);
+          SPerl_char* keyword = SPerl_ALLOCATOR_new_string(parser, str_len);
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
           

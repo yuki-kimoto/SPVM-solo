@@ -90,13 +90,5 @@ struct SPerl_yy_parser_{
 SPerl_PARSER* SPerl_PARSER_new();
 
 void SPerl_PARSER_free(SPerl_PARSER* parser);
-SPerl_ARRAY* SPerl_PARSER_new_array(SPerl_PARSER* parser, SPerl_int capacity);
-SPerl_HASH* SPerl_PARSER_new_hash(SPerl_PARSER* parser, SPerl_int capacity);
-SPerl_char* SPerl_PARSER_new_string(SPerl_PARSER* parser, SPerl_int length);
-SPerl_int* SPerl_PARSER_new_int(SPerl_PARSER* parser);
-SPerl_VMCODE* SPerl_PARSER_new_vmcode(SPerl_PARSER* parser);
-
-void* SPerl_PARSER_alloc_memory_pool(SPerl_PARSER* parser, SPerl_int size);
-
 
 #endif

@@ -10,6 +10,7 @@
 #include "sperl_array.h"
 #include "sperl_type_part.h"
 #include "sperl_op.h"
+#include "sperl_allocator.h"
 
 SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
   "word",
@@ -18,9 +19,9 @@ SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
 };
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
-  SPerl_TYPE* type = SPerl_PARSER_alloc_memory_pool(parser, sizeof(SPerl_TYPE));
+  SPerl_TYPE* type = SPerl_ALLOCATOR_alloc_memory_pool(parser, sizeof(SPerl_TYPE));
   
-  type->parts = SPerl_PARSER_new_array(parser, 0);
+  type->parts = SPerl_ALLOCATOR_new_array(parser, 0);
   
   return type;
 }
@@ -127,7 +128,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
 }
 
 void SPerl_TYPE_build_parts(SPerl_PARSER* parser, SPerl_TYPE* type) {
-  SPerl_ARRAY* parts = SPerl_PARSER_new_array(parser, 0);
+  SPerl_ARRAY* parts = SPerl_ALLOCATOR_new_array(parser, 0);
   SPerl_TYPE_to_parts(parser, type, parts);
   type->parts = parts;
 }
@@ -174,7 +175,7 @@ void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
       }
     }
     
-    SPerl_char* type_name = SPerl_PARSER_new_string(parser, total_length);
+    SPerl_char* type_name = SPerl_ALLOCATOR_new_string(parser, total_length);
     
     SPerl_int pos = 0;
     for (SPerl_int i = 0; i < parts->length; i++) {

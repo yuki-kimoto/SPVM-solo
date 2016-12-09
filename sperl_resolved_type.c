@@ -1,6 +1,7 @@
 #include <string.h>
 #include "sperl_resolved_type.h"
 #include "sperl_parser.h"
+#include "sperl_allocator.h"
 #include "sperl_body_core.h"
 
 SPerl_char* const SPerl_RESOLVED_TYPE_C_CODE_NAMES[] = {
@@ -11,9 +12,9 @@ SPerl_char* const SPerl_RESOLVED_TYPE_C_CODE_NAMES[] = {
 };
 
 SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl_PARSER* parser) {
-  SPerl_RESOLVED_TYPE* resolved_type = SPerl_PARSER_alloc_memory_pool(parser, sizeof(SPerl_RESOLVED_TYPE));
+  SPerl_RESOLVED_TYPE* resolved_type = SPerl_ALLOCATOR_alloc_memory_pool(parser, sizeof(SPerl_RESOLVED_TYPE));
   
-  resolved_type->part_names = SPerl_PARSER_new_array(parser, 0);
+  resolved_type->part_names = SPerl_ALLOCATOR_new_array(parser, 0);
   
   return resolved_type;
 }
