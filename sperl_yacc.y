@@ -32,7 +32,7 @@
 %nonassoc <opval> REL
 %left <opval> SHIFT
 %left <opval> '+' '-'
-%left <opval> MUL
+%left <opval> MULTIPLY
 %right <opval> NOT '~' '@' UMINUS
 %nonassoc <opval> INC DEC
 %left <opval> ARROW
@@ -440,7 +440,7 @@ call_op
       op->line = $2->line;
       $$ = SPerl_OP_build_call_op(parser, op, $1, $3);
     }
-  | term MUL term
+  | term MULTIPLY term
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }

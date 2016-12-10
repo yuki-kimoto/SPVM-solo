@@ -194,26 +194,26 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_MULTIPLY);
         yylvalp->opval = op;
-        return MUL;
+        return MULTIPLY;
       
       /* Divide */
       case '/': {
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DIVIDE);
         yylvalp->opval = op;
-        return MUL;
+        return MULTIPLY;
       }
       case '%': {
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_REMAINDER);
         yylvalp->opval = op;
-        return MUL;
+        return MULTIPLY;
       }
       case '^': {
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_XOR);
         yylvalp->opval = op;
-        return MUL;
+        return MULTIPLY;
       }
       case '@': {
         parser->bufptr++;
