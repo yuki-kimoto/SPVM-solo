@@ -300,6 +300,7 @@ void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   
   // and to if
   op->code = SPerl_OP_C_CODE_IF;
+  op->first = NULL;
   
   op_if = SPerl_OP_build_if_statement(parser, op_if, op_last, op_constant_true, op_constant_false2);
   
@@ -343,6 +344,7 @@ void SPerl_OP_convert_or_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   
   // or to if
   op->code = SPerl_OP_C_CODE_IF;
+  op->first = NULL;
   
   op_if = SPerl_OP_build_if_statement(parser, op_if, op_last, op_constant_true2, op_constant_false);
   
