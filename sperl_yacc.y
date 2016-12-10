@@ -472,15 +472,15 @@ call_op
 logical_op
   : term ANDOP term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_logical_op(parser, $2, $1, $3);
     }
   | term OROP term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_logical_op(parser, $2, $1, $3);
     }
   | NOTOP term
     {
-      $$ = SPerl_OP_build_call_op(parser, $1, $2, NULL);
+      $$ = SPerl_OP_build_logical_op(parser, $1, $2, NULL);
     }
 
 array_elem

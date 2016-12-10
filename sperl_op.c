@@ -1978,6 +1978,22 @@ SPerl_OP* SPerl_OP_build_call_op(SPerl_PARSER* parser, SPerl_OP* op_call_op, SPe
   return op_call_op;
 }
 
+SPerl_OP* SPerl_OP_build_logical_op(SPerl_PARSER* parser, SPerl_OP* op_logical_op, SPerl_OP* op_first, SPerl_OP* op_last) {
+  
+  // Build OP_SUB
+  SPerl_OP_sibling_splice(parser, op_logical_op, NULL, 0, op_first);
+  if (op_last) {
+    SPerl_OP_sibling_splice(parser, op_logical_op, op_first, 0, op_last);
+  }
+  
+  SPerl_OP_INFO* op_info = SPerl_OP_INFO_new(parser);
+  op_logical_op->uv.op_info = op_info;
+  
+  op_logical_op->condition = 1;
+  
+  return op_logical_op;
+}
+
 SPerl_OP* SPerl_OP_build_type_word(SPerl_PARSER* parser, SPerl_OP* op_word) {
   
   // Type component word
