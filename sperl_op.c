@@ -348,6 +348,33 @@ void SPerl_OP_convert_or_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_OP_sibling_splice(parser, op, op_constant_true1, 0, op_if);
 }
 
+void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
+  
+  // before
+  //  NOT
+  //    x
+  
+  // after 
+  //  IF
+  //    x
+  //    0
+  //    1
+  
+  SPerl_OP* op_first = op->first;
+  
+  // Constant true 1
+  SPerl_OP* op_constant_true = SPerl_OP_newOP_CONSTANT_true(parser);
+  
+  // Constant false
+  SPerl_OP* op_constant_false = SPerl_OP_newOP_CONSTANT_false(parser);
+  
+  // or to if
+  op->code = SPerl_OP_C_CODE_IF;
+  
+  SPerl_OP_sibling_splice(parser, op, op_first, 0, op_constant_false);
+  SPerl_OP_sibling_splice(parser, op, op_constant_false, 0, op_constant_true);
+}
+
 void SPerl_OP_check_ops(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->op_subs->length; i++) {
     
@@ -429,6 +456,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_yyerror_format(parser, "! operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
+              
+              // Convert ! to if statement
+              SPerl_OP_convert_not_to_if(parser, op_cur);
               
               break;
             }

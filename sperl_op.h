@@ -154,6 +154,7 @@ struct SPerl_op {
 SPerl_OP* SPerl_OP_newOP_CONSTANT_true(SPerl_PARSER* parser);
 SPerl_OP* SPerl_OP_newOP_CONSTANT_false(SPerl_PARSER* parser);
 
+void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op);
 void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op);
 void SPerl_OP_convert_or_to_if(SPerl_PARSER* parser, SPerl_OP* op);
 
