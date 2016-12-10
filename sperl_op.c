@@ -119,17 +119,20 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NEW_ARRAY_CONSTANT",
   "TERM_STATEMENT",
   "ARRAY_LENGTH",
+  "CONDITION",
 };
 
 SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, SPerl_OP* op_term_loop_var, SPerl_OP* op_term_condition, SPerl_OP* op_term_next_value, SPerl_OP* op_block) {
-  
+
+  SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term_condition, NULL);
+
   SPerl_OP* op_loop = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LOOP, NULL, NULL);
   op_loop->file = op_for->file;
   op_loop->line = op_for->line;
   
   SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_term_loop_var);
-  SPerl_OP_sibling_splice(parser, op_loop, op_term_loop_var, 0, op_term_condition);
-  SPerl_OP_sibling_splice(parser, op_loop, op_term_condition, 0, op_term_next_value);
+  SPerl_OP_sibling_splice(parser, op_loop, op_term_loop_var, 0, op_condition);
+  SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_term_next_value);
   SPerl_OP_sibling_splice(parser, op_loop, op_term_next_value, 0, op_block);
   
   op_term_condition->condition = 1;
@@ -137,24 +140,28 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
   return op_loop;
 }
 
-SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_while, SPerl_OP* op_term_condition, SPerl_OP* op_block) {
-  
+SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_while, SPerl_OP* op_term, SPerl_OP* op_block) {
+
+  SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term, NULL);
+
   SPerl_OP* op_loop = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LOOP, NULL, NULL);
   op_loop->file = op_while->file;
   op_loop->line = op_while->line;
   
-  SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_term_condition);
-  SPerl_OP_sibling_splice(parser, op_loop, op_term_condition, 0, op_block);
+  SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_condition);
+  SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_block);
   
-  op_term_condition->condition = 1;
+  op_term->condition = 1;
   
   return op_loop;
 }
 
 SPerl_OP* SPerl_OP_build_if_statement(SPerl_PARSER* parser, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement) {
   
-  SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_term);
-  SPerl_OP_sibling_splice(parser, op_if, op_term, 0, op_block);
+  SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term, NULL);
+  
+  SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_condition);
+  SPerl_OP_sibling_splice(parser, op_if, op_condition, 0, op_block);
   SPerl_OP_sibling_splice(parser, op_if, op_block, 0, op_else_statement);
   
   op_term->condition = 1;
@@ -294,9 +301,7 @@ void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   // and to if
   op->code = SPerl_OP_C_CODE_IF;
   
-  SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_last);
-  SPerl_OP_sibling_splice(parser, op_if, op_last, 0, op_constant_true);
-  SPerl_OP_sibling_splice(parser, op_if, op_constant_true, 0, op_constant_false2);
+  op_if = SPerl_OP_build_if_statement(parser, op_if, op_last, op_constant_true, op_constant_false2);
   
   op_first->sibparent = op_if;
   
@@ -339,9 +344,7 @@ void SPerl_OP_convert_or_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   // or to if
   op->code = SPerl_OP_C_CODE_IF;
   
-  SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_last);
-  SPerl_OP_sibling_splice(parser, op_if, op_last, 0, op_constant_true2);
-  SPerl_OP_sibling_splice(parser, op_if, op_constant_true2, 0, op_constant_false);
+  op_if = SPerl_OP_build_if_statement(parser, op_if, op_last, op_constant_true2, op_constant_false);
   
   op_first->sibparent = op_constant_true1;
   
@@ -368,11 +371,10 @@ void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   // Constant false
   SPerl_OP* op_constant_false = SPerl_OP_newOP_CONSTANT_false(parser);
   
-  // or to if
+  // If
   op->code = SPerl_OP_C_CODE_IF;
-  
-  SPerl_OP_sibling_splice(parser, op, op_first, 0, op_constant_false);
-  SPerl_OP_sibling_splice(parser, op, op_constant_false, 0, op_constant_true);
+  op->first = NULL;
+  op = SPerl_OP_build_if_statement(parser, op, op_first, op_constant_false, op_constant_true);
 }
 
 void SPerl_OP_check_ops(SPerl_PARSER* parser) {
