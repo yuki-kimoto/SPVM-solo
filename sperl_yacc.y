@@ -27,8 +27,8 @@
 %right <opval> ASSIGN
 %left <opval> OR
 %left <opval> AND
-%left <opval> BITOR BIT_XOR
-%left <opval> BITAND
+%left <opval> BIT_OR BIT_XOR
+%left <opval> BIT_AND
 %nonassoc <opval> REL
 %left <opval> SHIFT
 %left <opval> '+' '-'
@@ -456,11 +456,11 @@ call_op
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }
-  | term BITAND term
+  | term BIT_AND term
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }
-  | term BITOR term
+  | term BIT_OR term
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }

@@ -234,7 +234,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         else {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_OR);
           yylvalp->opval = op;
-          return BITOR;
+          return BIT_OR;
         }
 
       case '&':
@@ -250,7 +250,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         else {
           SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_AND);
           yylvalp->opval = op;
-          return BITAND;
+          return BIT_AND;
         }
       
       /* Comment */
