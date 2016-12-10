@@ -296,13 +296,56 @@ void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   
   SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_last);
   SPerl_OP_sibling_splice(parser, op_if, op_last, 0, op_constant_true);
-  SPerl_OP_sibling_splice(parser, op_if, op_constant_true, 0, op_constant_false1);
+  SPerl_OP_sibling_splice(parser, op_if, op_constant_true, 0, op_constant_false2);
   
   op_first->sibparent = op_if;
   
-  op_if->sibparent = op;
+  op_if->sibparent = op_if;
   
-  SPerl_OP_sibling_splice(parser, op, op_if, 0, op_constant_false2);
+  SPerl_OP_sibling_splice(parser, op, op_if, 0, op_constant_false1);
+}
+
+void SPerl_OP_convert_or_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
+  
+  // before
+  //  OR
+  //    x
+  //    y
+  
+  // after 
+  //  IF
+  //    x
+  //    1
+  //    IF
+  //      y
+  //      1
+  //      0
+  
+  SPerl_OP* op_first = op->first;
+  SPerl_OP* op_last = op->last;
+  
+  // Constant true 1
+  SPerl_OP* op_constant_true1 = SPerl_OP_newOP_CONSTANT_true(parser);
+  
+  // Constant true 2
+  SPerl_OP* op_constant_true2 = SPerl_OP_newOP_CONSTANT_true(parser);
+  
+  // Constant false
+  SPerl_OP* op_constant_false = SPerl_OP_newOP_CONSTANT_false(parser);
+  
+  // if
+  SPerl_OP* op_if = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_IF, NULL, NULL);
+  
+  // or to if
+  op->code = SPerl_OP_C_CODE_IF;
+  
+  SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_last);
+  SPerl_OP_sibling_splice(parser, op_if, op_last, 0, op_constant_true2);
+  SPerl_OP_sibling_splice(parser, op_if, op_constant_true2, 0, op_constant_false);
+  
+  op_first->sibparent = op_constant_true1;
+  
+  SPerl_OP_sibling_splice(parser, op, op_constant_true1, 0, op_if);
 }
 
 void SPerl_OP_check_ops(SPerl_PARSER* parser) {
@@ -375,6 +418,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_yyerror_format(parser, "|| operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
+
+              // Convert || to if statement
+              SPerl_OP_convert_or_to_if(parser, op_cur);
               
               break;
             }
