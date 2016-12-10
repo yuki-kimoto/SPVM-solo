@@ -24,17 +24,17 @@
 %type <opval> for_statement while_statement expression opt_decl_packages type_sub types not_type_sub
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_word array_length logical_op
 
-%right <opval> ASSIGNOP
-%left <opval> OROP
-%left <opval> ANDOP
-%left <opval> BITOROP
-%left <opval> BITANDOP
-%nonassoc <opval> RELOP
-%left <opval> SHIFTOP
+%right <opval> ASSIGN
+%left <opval> OR
+%left <opval> AND
+%left <opval> BITOR
+%left <opval> BITAND
+%nonassoc <opval> REL
+%left <opval> SHIFT
 %left <opval> '+' '-'
-%left <opval> MULOP
-%right <opval> NOTOP '~' '@' UMINUS
-%nonassoc <opval> INCOP DECOP
+%left <opval> MUL
+%right <opval> NOT '~' '@' UMINUS
+%nonassoc <opval> INC DEC
 %left <opval> ARROW
 %nonassoc <opval> ')'
 %left <opval> '('
@@ -137,7 +137,7 @@ decl_enumeration_value
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1, NULL);
     }
-  | WORD ASSIGNOP CONSTANT
+  | WORD ASSIGN CONSTANT
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1, $3);
     }
@@ -394,28 +394,28 @@ call_op
       op->line = $1->line;
       $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
     }
-  | INCOP term
+  | INC term
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PRE_INC, NULL, NULL);
       op->file = $1->file;
       op->line = $1->line;
       $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
     }
-  | term INCOP
+  | term INC
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POST_INC, NULL, NULL);
       op->file = $2->file;
       op->line = $2->line;
       $$ = SPerl_OP_build_call_op(parser, op, $1, NULL);
     }
-  | DECOP term
+  | DEC term
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PRE_DEC, NULL, NULL);
       op->file = $1->file;
       op->line = $1->line;
       $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
     }
-  | term DECOP
+  | term DEC
     {
       SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POST_DEC, NULL, NULL);
       op->file = $2->file;
@@ -440,27 +440,27 @@ call_op
       op->line = $2->line;
       $$ = SPerl_OP_build_call_op(parser, op, $1, $3);
     }
-  | term MULOP term
+  | term MUL term
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }
-  | term BITANDOP term
+  | term BITAND term
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }
-  | term BITOROP term
+  | term BITOR term
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }
-  | term SHIFTOP term
+  | term SHIFT term
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }
-  | term RELOP term
+  | term REL term
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }
-  | term ASSIGNOP term
+  | term ASSIGN term
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }
@@ -470,15 +470,15 @@ call_op
     }
 
 logical_op
-  : term ANDOP term
+  : term AND term
     {
       $$ = SPerl_OP_build_logical_op(parser, $2, $1, $3);
     }
-  | term OROP term
+  | term OR term
     {
       $$ = SPerl_OP_build_logical_op(parser, $2, $1, $3);
     }
-  | NOTOP term
+  | NOT term
     {
       $$ = SPerl_OP_build_logical_op(parser, $1, $2, NULL);
     }
