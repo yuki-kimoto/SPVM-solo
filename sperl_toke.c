@@ -201,19 +201,19 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_DIVIDE);
         yylvalp->opval = op;
-        return MULTIPLY;
+        return DIVIDE;
       }
       case '%': {
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_REMAINDER);
         yylvalp->opval = op;
-        return MULTIPLY;
+        return REMAINDER;
       }
       case '^': {
         parser->bufptr++;
         SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_BIT_XOR);
         yylvalp->opval = op;
-        return MULTIPLY;
+        return BIT_XOR;
       }
       case '@': {
         parser->bufptr++;

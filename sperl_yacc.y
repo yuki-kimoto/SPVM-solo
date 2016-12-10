@@ -27,12 +27,12 @@
 %right <opval> ASSIGN
 %left <opval> OR
 %left <opval> AND
-%left <opval> BITOR
+%left <opval> BITOR BIT_XOR
 %left <opval> BITAND
 %nonassoc <opval> REL
 %left <opval> SHIFT
 %left <opval> '+' '-'
-%left <opval> MULTIPLY
+%left <opval> MULTIPLY DIVIDE REMAINDER
 %right <opval> NOT '~' '@' UMINUS
 %nonassoc <opval> INC DEC
 %left <opval> ARROW
@@ -441,6 +441,18 @@ call_op
       $$ = SPerl_OP_build_call_op(parser, op, $1, $3);
     }
   | term MULTIPLY term
+    {
+      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+    }
+  | term DIVIDE term
+    {
+      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+    }
+  | term REMAINDER term
+    {
+      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+    }
+  | term BIT_XOR term
     {
       $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
     }
