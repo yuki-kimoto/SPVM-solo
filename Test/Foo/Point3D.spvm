@@ -55,7 +55,6 @@ package Test::Foo::Point3D {
 
     $title ^ $title;
 
-    !$title;
     ~$title;
 
     $title << 2;

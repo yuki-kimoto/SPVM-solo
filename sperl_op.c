@@ -292,9 +292,33 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         while (1) {
          // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_AND: {
+              if (!op_cur->condition) {
+                SPerl_yyerror_format(parser, "&& operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_OR: {
+              if (!op_cur->condition) {
+                SPerl_yyerror_format(parser, "|| operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_NOT: {
+              if (!op_cur->condition) {
+                SPerl_yyerror_format(parser, "! operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              
+              break;
+            }
             case SPerl_OP_C_CODE_EQ: {
               if (!op_cur->condition) {
-                SPerl_yyerror_format(parser, "== operator can use condition context at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
 
@@ -321,7 +345,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_NE: {
               if (!op_cur->condition) {
-                SPerl_yyerror_format(parser, "== operator can use condition context at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
 
@@ -348,7 +372,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_LT: {
               if (!op_cur->condition) {
-                SPerl_yyerror_format(parser, "== operator can use condition context at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
 
@@ -375,7 +399,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_LE: {
               if (!op_cur->condition) {
-                SPerl_yyerror_format(parser, "== operator can use condition context at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
 
@@ -402,7 +426,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_GT: {
               if (!op_cur->condition) {
-                SPerl_yyerror_format(parser, "== operator can use condition context at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
 
@@ -429,7 +453,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_GE: {
               if (!op_cur->condition) {
-                SPerl_yyerror_format(parser, "== operator can use condition context at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
 
@@ -1989,7 +2013,10 @@ SPerl_OP* SPerl_OP_build_logical_op(SPerl_PARSER* parser, SPerl_OP* op_logical_o
   SPerl_OP_INFO* op_info = SPerl_OP_INFO_new(parser);
   op_logical_op->uv.op_info = op_info;
   
-  op_logical_op->condition = 1;
+  op_first->condition = 1;
+  if (op_last) {
+    op_last->condition = 1;
+  }
   
   return op_logical_op;
 }
