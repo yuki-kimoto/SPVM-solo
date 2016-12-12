@@ -15,6 +15,11 @@ package Test {
   
   sub main() : int {
     my $simple2 : Test::Simple = new Test::Simple;
+    
+    if (undef) {
+    
+    }
+    
     if ($simple2 == undef) {
       
     }

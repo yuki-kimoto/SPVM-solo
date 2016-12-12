@@ -439,6 +439,17 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         while (1) {
          // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_CONDITION: {
+              
+              if (op_cur->first && !op_cur->last) {
+                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+                if (!resolved_type) {
+                  SPerl_OP_convert_to_op_constant_false(parser, op_cur);
+                }
+              }
+              
+              break;
+            }
             case SPerl_OP_C_CODE_AND: {
               if (!op_cur->condition) {
                 SPerl_yyerror_format(parser, "&& operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
