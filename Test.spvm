@@ -14,6 +14,14 @@ package Test {
   use Test::Simple;
   
   sub main() : int {
+    my $simple2 : Test::Simple = new Test::Simple;
+    if ($simple2 == undef) {
+      
+    }
+
+    if (undef == $simple2) {
+      
+    }
     
     if (5 || 6) {
     
