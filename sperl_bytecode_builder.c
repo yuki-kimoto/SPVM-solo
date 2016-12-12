@@ -75,6 +75,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   parser->bytecode_current_if_pos = bytecodes->length - 1;
                 }
                 
+                // Branch
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
               }

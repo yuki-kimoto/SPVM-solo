@@ -23,6 +23,10 @@ package Test {
       
     }
     
+    if (undef == undef) {
+    
+    }
+    
     if (5 || 6) {
     
     }

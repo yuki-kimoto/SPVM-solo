@@ -247,24 +247,20 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   return resolved_type;
 }
 
-SPerl_OP* SPerl_OP_newOP_CONSTANT_true(SPerl_PARSER* parser) {
-  SPerl_OP* op_constant_true = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTANT, NULL, NULL);
+void SPerl_OP_convert_to_op_constant_true(SPerl_PARSER* parser, SPerl_OP* op) {
+  op->code = SPerl_OP_C_CODE_CONSTANT;
   SPerl_CONSTANT* constant_true = SPerl_CONSTANT_new(parser);
   constant_true->code = SPerl_CONSTANT_C_CODE_INT;
   constant_true->uv.int_value = 1;
-  op_constant_true->uv.constant = constant_true;
-  
-  return op_constant_true;
+  op->uv.constant = constant_true;
 }
 
-SPerl_OP* SPerl_OP_newOP_CONSTANT_false(SPerl_PARSER* parser) {
-  SPerl_OP* op_constant_false = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTANT, NULL, NULL);
+void SPerl_OP_convert_to_op_constant_false(SPerl_PARSER* parser, SPerl_OP* op) {
+  op->code = SPerl_OP_C_CODE_CONSTANT;
   SPerl_CONSTANT* constant_false = SPerl_CONSTANT_new(parser);
   constant_false->code = SPerl_CONSTANT_C_CODE_INT;
   constant_false->uv.int_value = 0;
-  op_constant_false->uv.constant = constant_false;
-  
-  return op_constant_false;
+  op->uv.constant = constant_false;
 }
 
 void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
@@ -289,13 +285,16 @@ void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_OP* op_last = op->last;
   
   // Constant false 1
-  SPerl_OP* op_constant_false1 = SPerl_OP_newOP_CONSTANT_false(parser);
+  SPerl_OP* op_constant_false1 = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP_convert_to_op_constant_false(parser, op_constant_false1);
   
   // Constant false 2
-  SPerl_OP* op_constant_false2 = SPerl_OP_newOP_CONSTANT_false(parser);
+  SPerl_OP* op_constant_false2 = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP_convert_to_op_constant_false(parser, op_constant_false2);
   
   // Constant true
-  SPerl_OP* op_constant_true = SPerl_OP_newOP_CONSTANT_true(parser);
+  SPerl_OP* op_constant_true = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP_convert_to_op_constant_true(parser, op_constant_true);
   
   // if
   SPerl_OP* op_if = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_IF, NULL, NULL);
@@ -333,13 +332,16 @@ void SPerl_OP_convert_or_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_OP* op_last = op->last;
   
   // Constant true 1
-  SPerl_OP* op_constant_true1 = SPerl_OP_newOP_CONSTANT_true(parser);
+  SPerl_OP* op_constant_true1 = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP_convert_to_op_constant_true(parser, op_constant_true1);
   
   // Constant true 2
-  SPerl_OP* op_constant_true2 = SPerl_OP_newOP_CONSTANT_true(parser);
+  SPerl_OP* op_constant_true2 = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP_convert_to_op_constant_true(parser, op_constant_true2);
   
   // Constant false
-  SPerl_OP* op_constant_false = SPerl_OP_newOP_CONSTANT_false(parser);
+  SPerl_OP* op_constant_false = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP_convert_to_op_constant_false(parser, op_constant_false);
   
   // if
   SPerl_OP* op_if = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_IF, NULL, NULL);
@@ -370,10 +372,12 @@ void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_OP* op_first = op->first;
   
   // Constant true 1
-  SPerl_OP* op_constant_true = SPerl_OP_newOP_CONSTANT_true(parser);
+  SPerl_OP* op_constant_true = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP_convert_to_op_constant_true(parser, op_constant_true);
   
   // Constant false
-  SPerl_OP* op_constant_false = SPerl_OP_newOP_CONSTANT_false(parser);
+  SPerl_OP* op_constant_false = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP_convert_to_op_constant_false(parser, op_constant_false);
   
   // If
   op->code = SPerl_OP_C_CODE_IF;
@@ -477,35 +481,43 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
               
-              // undef
-              if (!first_resolved_type && last_resolved_type) {
-                if (SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
-                  SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                  break;
-                }                
-              }
-              else if (first_resolved_type && !last_resolved_type) {
-                if (SPerl_TYPE_is_core_type(parser, first_resolved_type->id)) {
-                  SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                  break;
-                }
+              if (!first_resolved_type && !last_resolved_type) {
+                // Convert to constant true
+                SPerl_OP_convert_to_op_constant_true(parser, op_cur);
+                op_cur->first = NULL;
+                op_cur->last = NULL;
               }
               else {
-                // Can receive only core type
-                if (SPerl_TYPE_is_core_type(parser, first_resolved_type->id) && !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
-                  SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                  break;
+                // undef
+                if (!first_resolved_type && last_resolved_type) {
+                  if (SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
+                    SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }                
                 }
-                if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) && SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
-                  SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                  break;
+                else if (first_resolved_type && !last_resolved_type) {
+                  if (SPerl_TYPE_is_core_type(parser, first_resolved_type->id)) {
+                    SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
+                }
+                else {
+                  // Can receive only core type
+                  if (SPerl_TYPE_is_core_type(parser, first_resolved_type->id) && !SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
+                    SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
+                  if (!SPerl_TYPE_is_core_type(parser, first_resolved_type->id) && SPerl_TYPE_is_core_type(parser, last_resolved_type->id)) {
+                    SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
+                  
+                  // Insert type converting op
+                  SPerl_OP_insert_op_convert_type(parser, op_cur);
                 }
                 
-                // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                op_cur->uv.op_info->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
               }
-              
-              op_cur->uv.op_info->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
               
               break;
             }

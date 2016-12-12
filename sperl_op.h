@@ -153,8 +153,8 @@ struct SPerl_op {
   } uv;
 };
 
-SPerl_OP* SPerl_OP_newOP_CONSTANT_true(SPerl_PARSER* parser);
-SPerl_OP* SPerl_OP_newOP_CONSTANT_false(SPerl_PARSER* parser);
+void SPerl_OP_convert_to_op_constant_true(SPerl_PARSER* parser, SPerl_OP* op);
+void SPerl_OP_convert_to_op_constant_false(SPerl_PARSER* parser, SPerl_OP* op);
 
 void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op);
 void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op);
