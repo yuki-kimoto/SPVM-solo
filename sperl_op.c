@@ -145,7 +145,8 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
   
   SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_term_loop_var);
   SPerl_OP_sibling_splice(parser, op_loop, op_term_loop_var, 0, op_condition);
-  SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_block);
+  SPerl_OP* op_condition_true_block_end = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION_TRUE_BLOCK_END, op_block, NULL);
+  SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_condition_true_block_end);
   
   op_term_condition->condition = 1;
   
@@ -164,7 +165,8 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_whil
   
   SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_null);
   SPerl_OP_sibling_splice(parser, op_loop, op_null, 0, op_condition);
-  SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_block);
+  SPerl_OP* op_condition_true_block_end = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION_TRUE_BLOCK_END, op_block, NULL);
+  SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_condition_true_block_end);
   
   op_term->condition = 1;
   
