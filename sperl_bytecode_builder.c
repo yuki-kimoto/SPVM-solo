@@ -208,6 +208,33 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   parser->bytecode_current_if_pos = bytecodes->length - 1;
                 }
               }
+              else if (op_condition_target->first && !op_condition_target->last) {
+                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->first);
+                
+                if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFNE);
+                  parser->bytecode_current_if_pos = bytecodes->length - 1;
+                }
+                else if (resolved_type->id >= SPerl_BODY_CORE_C_CODE_LONG && resolved_type->id <= SPerl_BODY_CORE_C_CODE_DOUBLE)  {
+                  
+                  if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_CONVERT_LONG_TO_INT);
+                  }
+                  else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_CONVERT_FLOAT_TO_INT);
+                  }
+                  else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_INT);
+                  }
+                  
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFNE);
+                  parser->bytecode_current_if_pos = bytecodes->length - 1;
+                }
+                else {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFNONNULL);
+                  parser->bytecode_current_if_pos = bytecodes->length - 1;
+                }
+              }
               
               // Prepare for bytecode position of branch
               SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
