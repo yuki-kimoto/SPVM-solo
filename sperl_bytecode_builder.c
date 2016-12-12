@@ -50,30 +50,38 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               SPerl_OP* op_condition_target = op_cur->first;
               
               if (op_condition_target->code == SPerl_OP_C_CODE_EQ) {
-                SPerl_RESOLVED_TYPE* resolved_type = op_condition_target->uv.op_info->resolved_type;
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->last);
                 
-                if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPEQ);
-                  parser->bytecode_current_if_pos = bytecodes->length - 1;
-                }
-                else if (resolved_type->id >= SPerl_BODY_CORE_C_CODE_LONG && resolved_type->id <= SPerl_BODY_CORE_C_CODE_DOUBLE)  {
-                  
-                  if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
-                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LCMP);
-                  }
-                  else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
-                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_FCMPG);
-                  }
-                  else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
-                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_DCMPG);
-                  }
-                  
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFEQ);
+                if (!first_resolved_type || !last_resolved_type) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFNULL);
                   parser->bytecode_current_if_pos = bytecodes->length - 1;
                 }
                 else {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ACMPEQ);
-                  parser->bytecode_current_if_pos = bytecodes->length - 1;
+                  SPerl_RESOLVED_TYPE* resolved_type = first_resolved_type;
+                  if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPEQ);
+                    parser->bytecode_current_if_pos = bytecodes->length - 1;
+                  }
+                  else if (resolved_type->id >= SPerl_BODY_CORE_C_CODE_LONG && resolved_type->id <= SPerl_BODY_CORE_C_CODE_DOUBLE)  {
+                    
+                    if (resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG) {
+                      SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LCMP);
+                    }
+                    else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_FLOAT) {
+                      SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_FCMPG);
+                    }
+                    else if (resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
+                      SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_DCMPG);
+                    }
+                    
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFEQ);
+                    parser->bytecode_current_if_pos = bytecodes->length - 1;
+                  }
+                  else {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ACMPEQ);
+                    parser->bytecode_current_if_pos = bytecodes->length - 1;
+                  }
                 }
                 
                 // Branch
