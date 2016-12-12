@@ -120,6 +120,7 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "TERM_STATEMENT",
   "ARRAY_LENGTH",
   "CONDITION",
+  "IF_BLOCK_END",
 };
 
 SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, SPerl_OP* op_term_loop_var, SPerl_OP* op_term_condition, SPerl_OP* op_term_next_value, SPerl_OP* op_block) {
@@ -159,10 +160,11 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_whil
 SPerl_OP* SPerl_OP_build_if_statement(SPerl_PARSER* parser, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement) {
   
   SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term, NULL);
+  SPerl_OP* op_if_block_end = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_IF_BLOCK_END, op_block, NULL);
   
   SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_condition);
-  SPerl_OP_sibling_splice(parser, op_if, op_condition, 0, op_block);
-  SPerl_OP_sibling_splice(parser, op_if, op_block, 0, op_else_statement);
+  SPerl_OP_sibling_splice(parser, op_if, op_condition, 0, op_if_block_end);
+  SPerl_OP_sibling_splice(parser, op_if, op_if_block_end, 0, op_else_statement);
   
   op_term->condition = 1;
   
