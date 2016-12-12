@@ -223,19 +223,6 @@ void SPerl_DUMPER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
       
       printf("  is_value_class => %d\n", body_class->is_value_class);
     }
-    // Enum body
-    else if (body->code == SPerl_BODY_C_CODE_ENUM) {
-      SPerl_ENUMERATION* enumeration = body->uv.enumeration;
-      
-      // Enum value information
-      printf("  enumeration_values\n");
-      SPerl_ARRAY* enumeration_values = enumeration->enumeration_values;
-      for (SPerl_int j = 0; j < enumeration_values->length; j++) {
-        SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_ARRAY_fetch(enumeration_values, j);
-        printf("    enumeration_value[%" PRId32 "]\n", j);
-        SPerl_DUMPER_dump_enumeration_value(parser, enumeration_value);
-      }
-    }
   }
 }
 

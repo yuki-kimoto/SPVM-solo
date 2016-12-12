@@ -4,8 +4,8 @@
 
 SPerl_char* const SPerl_BODY_C_CODE_NAMES[] = {
   "class",
-  "enum",
-  "core"
+  "core",
+  "undef",
 };
 
 SPerl_BODY* SPerl_BODY_new(SPerl_PARSER* parser) {

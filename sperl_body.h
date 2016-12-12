@@ -4,8 +4,8 @@
 
 enum {
   SPerl_BODY_C_CODE_CLASS,
-  SPerl_BODY_C_CODE_ENUM,
-  SPerl_BODY_C_CODE_CORE
+  SPerl_BODY_C_CODE_CORE,
+  SPerl_BODY_C_CODE_UNDEF,
 };
 
 extern SPerl_char* const SPerl_BODY_C_CODE_NAMES[];
@@ -16,7 +16,6 @@ struct SPerl_body {
   SPerl_OP* op_name;
   union {
     SPerl_BODY_CLASS* body_class;
-    SPerl_ENUMERATION* enumeration;
     SPerl_BODY_CORE* body_core;
   } uv;
 };
