@@ -41,7 +41,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
-            case SPerl_OP_C_CODE_IF_BLOCK_END: {
+            case SPerl_OP_C_CODE_CONDITION_TRUE_BLOCK_END: {
               bytecodes->values[parser->bytecode_current_if_pos + 1] = (bytecodes->length >> 8) & 0xFF;
               bytecodes->values[parser->bytecode_current_if_pos + 2] = bytecodes->length & 0xFF;
               break;
