@@ -311,6 +311,22 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
       case SPerl_BYTECODE_C_CODE_SIPUSH:
       case SPerl_BYTECODE_C_CODE_LOAD_CONSTANT2_W:
       case SPerl_BYTECODE_C_CODE_LOAD_CONSTANT_W:
+      case SPerl_BYTECODE_C_CODE_IF_ACMPEQ:
+      case SPerl_BYTECODE_C_CODE_IF_ACMPNE:
+      case SPerl_BYTECODE_C_CODE_IF_ICMPEQ:
+      case SPerl_BYTECODE_C_CODE_IF_ICMPNE:
+      case SPerl_BYTECODE_C_CODE_IF_ICMPLT:
+      case SPerl_BYTECODE_C_CODE_IF_ICMPGE:
+      case SPerl_BYTECODE_C_CODE_IF_ICMPGT:
+      case SPerl_BYTECODE_C_CODE_IF_ICMPLE:
+      case SPerl_BYTECODE_C_CODE_IFEQ:
+      case SPerl_BYTECODE_C_CODE_IFNE:
+      case SPerl_BYTECODE_C_CODE_IFLT:
+      case SPerl_BYTECODE_C_CODE_IFGE:
+      case SPerl_BYTECODE_C_CODE_IFGT:
+      case SPerl_BYTECODE_C_CODE_IFLE:
+      case SPerl_BYTECODE_C_CODE_IFNONNULL:
+      case SPerl_BYTECODE_C_CODE_IFNULL:
       {
         i++;
         bytecode = bytecodes->values[i];
