@@ -93,3 +93,13 @@ SPerl_boolean SPerl_RESOLVED_TYPE_is_core_type_array(SPerl_PARSER* parser, SPerl
     return 0;
   }
 }
+
+SPerl_boolean SPerl_RESOLVED_TYPE_is_core_type(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  
+  if (resolved_type && resolved_type->id <= SPerl_BODY_CORE_C_CODE_DOUBLE) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
