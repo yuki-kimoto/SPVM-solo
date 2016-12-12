@@ -21,7 +21,7 @@
 %type <opval> opt_terms terms term sub_args sub_arg opt_sub_args decl_use decl_class_attr decl_class_attrs 
 %type <opval> opt_descripters list_descripters descripters decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_packages opt_decl_enumeration_values type_array
-%type <opval> for_statement while_statement expression opt_decl_packages type_sub types not_type_sub
+%type <opval> for_statement while_statement expression opt_decl_packages type_sub types not_type_sub opt_term
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_word array_length logical_op
 
 %right <opval> ASSIGN
@@ -185,7 +185,7 @@ statement
     }
 
 for_statement
-  : FOR '(' term ';' term ';' term ')' block
+  : FOR '(' opt_term ';' term ';' opt_term ')' block
     {
       $$ = SPerl_OP_build_for_statement(parser, $1, $3, $5, $7, $9);
     }
@@ -339,6 +339,13 @@ array_length
     {
       $$ = SPerl_OP_build_array_length(parser, $1, $2);
     }
+
+opt_term
+  : /* NULL */
+    {
+      $$ = SPerl_OP_newOP_NULL(parser);
+    }
+  | term
 term
   : VAR
   | CONSTANT

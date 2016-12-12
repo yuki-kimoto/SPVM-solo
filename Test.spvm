@@ -1,19 +1,11 @@
 package Test {
-  use Test::EnumA;
-  use Test::EnumB;
-  use Test::EnumC;
-  use Test::Point;
-  use Test::Foo;
-  use Test::Foo::Point3D;
-  use Test::TypedefCore;
-  use Test::TypedefClass;
-  use Test::TypedefArray;
-  use Test::TypedefArray2;
-  use Test::TypedefSub;
-  use Test::ValueClass;
-  use Test::Simple;
-  
   sub main() : int {
+    for (my $i : int = 0; $i < 5; $i = $i + 1) {
+      1;
+      last;
+      next;
+    }
+
     my $simple2 : Test::Simple = new Test::Simple;
     
     if (1) { }
@@ -151,12 +143,6 @@ package Test {
     my $bar : double = (double)1;
     undef;
 
-    my $i : int;
-    for ($i = 0; $i < 5; $i = $i + 1) {
-      1;
-      last;
-      next;
-    }
   }
 
   sub sum3 ($foo : int, $bar : float) : int {
