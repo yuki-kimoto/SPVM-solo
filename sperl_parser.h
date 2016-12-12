@@ -85,6 +85,8 @@ struct SPerl_yy_parser_{
   SPerl_HASH* resolved_type_symtable;
   
   SPerl_boolean fatal_error;
+  
+  SPerl_int bytecode_current_if_pos;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
