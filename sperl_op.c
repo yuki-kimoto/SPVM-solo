@@ -160,7 +160,10 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_whil
   op_loop->file = op_while->file;
   op_loop->line = op_while->line;
   
-  SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_condition);
+  SPerl_OP* op_null = SPerl_OP_newOP_NULL(parser);
+  
+  SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_null);
+  SPerl_OP_sibling_splice(parser, op_loop, op_null, 0, op_condition);
   SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_block);
   
   op_term->condition = 1;
