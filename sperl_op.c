@@ -134,7 +134,7 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
   SPerl_OP* op_statements = op_block->first;
   
   // Convert to while loop
-  if (op_term_next_value != SPerl_OP_C_CODE_NULL) {
+  if (op_term_next_value->code != SPerl_OP_C_CODE_NULL) {
     if (op_statements->last) {
       SPerl_OP_sibling_splice(parser, op_statements, op_statements->last, 0, op_term_next_value);
     }
