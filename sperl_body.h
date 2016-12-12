@@ -5,7 +5,6 @@
 enum {
   SPerl_BODY_C_CODE_CLASS,
   SPerl_BODY_C_CODE_CORE,
-  SPerl_BODY_C_CODE_UNDEF,
 };
 
 extern SPerl_char* const SPerl_BODY_C_CODE_NAMES[];

@@ -5,7 +5,6 @@
 SPerl_char* const SPerl_BODY_C_CODE_NAMES[] = {
   "class",
   "core",
-  "undef",
 };
 
 SPerl_BODY* SPerl_BODY_new(SPerl_PARSER* parser) {
