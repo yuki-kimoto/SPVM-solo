@@ -489,31 +489,31 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               else {
                 // undef
-                if (!first_resolved_type && last_resolved_type) {
+                if (!first_resolved_type) {
                   if (SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
                     SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
                     break;
-                  }                
+                  }
                 }
-                else if (first_resolved_type && !last_resolved_type) {
+                else if (!last_resolved_type) {
                   if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type)) {
                     SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
                 }
                 else {
-                  // Can receive only core type
-                  if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                    SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
+                  if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
+                    // Insert type converting op
+                    SPerl_OP_insert_op_convert_type(parser, op_cur);
                   }
-                  if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
+                  else if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type)) {
                     SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
-                  
-                  // Insert type converting op
-                  SPerl_OP_insert_op_convert_type(parser, op_cur);
+                  else if (!SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
+                    SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
                 }
                 
                 op_cur->uv.op_info->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
@@ -551,18 +551,18 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                   }
                 }
                 else {
-                  // Can receive only core type
-                  if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                    SPerl_yyerror_format(parser, "!= left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
+                  if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
+                    // Insert type converting op
+                    SPerl_OP_insert_op_convert_type(parser, op_cur);
                   }
-                  if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
+                  else if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type)) {
                     SPerl_yyerror_format(parser, "!= right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
-                  
-                  // Insert type converting op
-                  SPerl_OP_insert_op_convert_type(parser, op_cur);
+                  else if (!SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
+                    SPerl_yyerror_format(parser, "!= left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
                 }
                 
                 op_cur->uv.op_info->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
