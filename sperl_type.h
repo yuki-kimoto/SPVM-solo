@@ -30,7 +30,6 @@ SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser);
 void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* parts);
 void SPerl_TYPE_build_parts(SPerl_PARSER* parser, SPerl_TYPE* type);
 void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh);
-SPerl_boolean SPerl_TYPE_is_core_type(SPerl_PARSER* parser, SPerl_int type_id);
 void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type);
 SPerl_boolean SPerl_TYPE_is_core_type_name(SPerl_PARSER* parser, SPerl_TYPE* type);
 

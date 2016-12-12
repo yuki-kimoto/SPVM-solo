@@ -44,16 +44,6 @@ SPerl_boolean SPerl_TYPE_is_core_type_name(SPerl_PARSER* parser, SPerl_TYPE* typ
   }
 }
 
-SPerl_boolean SPerl_TYPE_is_core_type(SPerl_PARSER* parser, SPerl_int type_id) {
-  // type_id is set after calling resolve_types
-  if (type_id >= 0 && type_id < 8) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
-
 void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* parts) {
   
   if (type->code == SPerl_TYPE_C_CODE_WORD) {
