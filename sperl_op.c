@@ -572,7 +572,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_LT: {
               if (!op_cur->condition) {
-                SPerl_yyerror_format(parser, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "< operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
 
@@ -580,12 +580,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
               
               // Can receive only core type
-              if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+              if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type)) {
+                SPerl_yyerror_format(parser, "< left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
-              if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+              if (!SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
+                SPerl_yyerror_format(parser, "< right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
               
@@ -598,7 +598,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_LE: {
               if (!op_cur->condition) {
-                SPerl_yyerror_format(parser, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "<= operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
 
@@ -606,12 +606,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
               
               // Can receive only core type
-              if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+              if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type)) {
+                SPerl_yyerror_format(parser, "<= left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
-              if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+              if (!SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
+                SPerl_yyerror_format(parser, "<= right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
               
@@ -624,7 +624,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_GT: {
               if (!op_cur->condition) {
-                SPerl_yyerror_format(parser, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, "> operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
 
@@ -632,12 +632,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
               
               // Can receive only core type
-              if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+              if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type)) {
+                SPerl_yyerror_format(parser, "> left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
-              if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+              if (!SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
+                SPerl_yyerror_format(parser, "> right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
               
@@ -650,7 +650,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_GE: {
               if (!op_cur->condition) {
-                SPerl_yyerror_format(parser, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, ">= operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
 
@@ -659,11 +659,11 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               // Can receive only core type
               if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                SPerl_yyerror_format(parser, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, ">= left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
               if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                SPerl_yyerror_format(parser, ">= right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
               
