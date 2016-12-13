@@ -267,6 +267,7 @@ void SPerl_OP_convert_to_op_constant_true(SPerl_PARSER* parser, SPerl_OP* op) {
   op->code = SPerl_OP_C_CODE_CONSTANT;
   SPerl_CONSTANT* constant_true = SPerl_CONSTANT_new(parser);
   constant_true->code = SPerl_CONSTANT_C_CODE_INT;
+  constant_true->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
   constant_true->uv.int_value = 1;
   op->uv.constant = constant_true;
 }
@@ -276,6 +277,7 @@ void SPerl_OP_convert_to_op_constant_false(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_CONSTANT* constant_false = SPerl_CONSTANT_new(parser);
   constant_false->code = SPerl_CONSTANT_C_CODE_INT;
   constant_false->uv.int_value = 0;
+  constant_false->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
   op->uv.constant = constant_false;
 }
 
@@ -456,11 +458,10 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
          // [START]Postorder traversal position
           switch (op_cur->code) {
             case SPerl_OP_C_CODE_CONDITION: {
-              
               if (op_cur->first && !op_cur->last) {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 if (!resolved_type) {
-                  SPerl_OP_convert_to_op_constant_false(parser, op_cur);
+                  SPerl_OP_convert_to_op_constant_false(parser, op_cur->first);
                 }
               }
               
