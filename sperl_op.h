@@ -135,6 +135,7 @@ struct SPerl_op {
   SPerl_boolean moresib;
   SPerl_boolean lvalue;
   SPerl_boolean condition;
+  SPerl_RESOLVED_TYPE* resolved_type;
   union {
     SPerl_OP_INFO* op_info;
     SPerl_MY_VAR* my_var;
