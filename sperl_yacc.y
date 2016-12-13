@@ -528,7 +528,7 @@ call_sub
 block 
   : '{' opt_statements '}'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_BLOCK, $2, NULL);
+      $$ = SPerl_OP_build_block(parser, $2);
     }
 
 opt_sub_args
