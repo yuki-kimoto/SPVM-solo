@@ -124,6 +124,11 @@ enum {                          // [GROUP]
 
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 
+enum {
+  // The block is true condtion block
+  SPerl_OP_C_FLAG_BLOCK_TRUE_CONDITION_BLOCK = 1
+};
+
 /* Binary operation */
 struct SPerl_op {
   SPerl_int code;
@@ -135,6 +140,7 @@ struct SPerl_op {
   SPerl_boolean moresib;
   SPerl_boolean lvalue;
   SPerl_boolean condition;
+  SPerl_int flag;
   union {
     SPerl_RESOLVED_TYPE* resolved_type;
     SPerl_MY_VAR* my_var;

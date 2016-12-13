@@ -44,11 +44,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
-            case SPerl_OP_C_CODE_CONDITION_TRUE_BLOCK_END: {
-              SPerl_int* pos_ptr = SPerl_ARRAY_pop(condition_bytecode_pos_stack);
-              
-              bytecodes->values[*pos_ptr + 1] = (bytecodes->length >> 8) & 0xFF;
-              bytecodes->values[*pos_ptr + 2] = bytecodes->length & 0xFF;
+            case SPerl_OP_C_CODE_BLOCK: {
+              if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_TRUE_CONDITION_BLOCK) {
+                SPerl_int* pos_ptr = SPerl_ARRAY_pop(condition_bytecode_pos_stack);
+                
+                bytecodes->values[*pos_ptr + 1] = (bytecodes->length >> 8) & 0xFF;
+                bytecodes->values[*pos_ptr + 2] = bytecodes->length & 0xFF;
+              }
               break;
             }
             case SPerl_OP_C_CODE_CONDITION: {

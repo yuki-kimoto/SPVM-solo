@@ -130,6 +130,8 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
   
   SPerl_OP* op_statements = op_block->first;
   
+  op_block->flag |= SPerl_OP_C_FLAG_BLOCK_TRUE_CONDITION_BLOCK;
+  
   // Convert to while loop
   if (op_term_next_value->code != SPerl_OP_C_CODE_NULL) {
     if (op_statements->last) {
@@ -142,8 +144,7 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
   
   SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_term_loop_var);
   SPerl_OP_sibling_splice(parser, op_loop, op_term_loop_var, 0, op_condition);
-  SPerl_OP* op_condition_true_block_end = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION_TRUE_BLOCK_END, op_block, NULL);
-  SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_condition_true_block_end);
+  SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_block);
   
   op_term_condition->condition = 1;
   
@@ -153,6 +154,8 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
 SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_while, SPerl_OP* op_term, SPerl_OP* op_block) {
 
   SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term, NULL);
+  
+  op_block->flag |= SPerl_OP_C_FLAG_BLOCK_TRUE_CONDITION_BLOCK;
 
   SPerl_OP* op_loop = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LOOP, NULL, NULL);
   op_loop->file = op_while->file;
@@ -162,8 +165,7 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_whil
   
   SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_null);
   SPerl_OP_sibling_splice(parser, op_loop, op_null, 0, op_condition);
-  SPerl_OP* op_condition_true_block_end = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION_TRUE_BLOCK_END, op_block, NULL);
-  SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_condition_true_block_end);
+  SPerl_OP_sibling_splice(parser, op_loop, op_condition, 0, op_block);
   
   op_term->condition = 1;
   
@@ -173,11 +175,12 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_whil
 SPerl_OP* SPerl_OP_build_if_statement(SPerl_PARSER* parser, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement) {
   
   SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term, NULL);
-  SPerl_OP* op_condition_true_block_end = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION_TRUE_BLOCK_END, op_block, NULL);
+  
+  op_block->flag |= SPerl_OP_C_FLAG_BLOCK_TRUE_CONDITION_BLOCK;
   
   SPerl_OP_sibling_splice(parser, op_if, NULL, 0, op_condition);
-  SPerl_OP_sibling_splice(parser, op_if, op_condition, 0, op_condition_true_block_end);
-  SPerl_OP_sibling_splice(parser, op_if, op_condition_true_block_end, 0, op_else_statement);
+  SPerl_OP_sibling_splice(parser, op_if, op_condition, 0, op_block);
+  SPerl_OP_sibling_splice(parser, op_if, op_block, 0, op_else_statement);
   
   op_term->condition = 1;
   
