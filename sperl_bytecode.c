@@ -190,7 +190,6 @@ SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "DUP2_X2",
   "GETFIELD",
   "GOTO",
-  "GOTO_W",
   "INVOKESTATIC",
   "JSR",
   "JSR_W",
@@ -210,4 +209,5 @@ SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "INSTANCEOF",
   "MONITORENTER",
   "MONITOREXIT",
+  "GOTO_W",
 };

@@ -208,8 +208,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   parser->bytecode_current_if_pos = bytecodes->length - 1;
                 }
               }
-              else if (op_condition_target->first && !op_condition_target->last) {
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->first);
+              else if (op_condition_target) {
+                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target);
                 
                 if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFNE);
