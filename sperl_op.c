@@ -142,6 +142,7 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
   }
   
   op_block->uv.op_info->flag |= SPerl_OP_INFO_C_CODE_FLAG_BLOCK_CONDITION_TRUE_BLOCK;
+  op_term_condition->uv.op_info->flag |= SPerl_OP_INFO_C_CODE_FLAG_CONDITION_LOOP;
   
   SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_term_loop_var);
   SPerl_OP_sibling_splice(parser, op_loop, op_term_loop_var, 0, op_condition);
@@ -157,6 +158,7 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_whil
   SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term, NULL);
   
   op_block->uv.op_info->flag |= SPerl_OP_INFO_C_CODE_FLAG_BLOCK_CONDITION_TRUE_BLOCK;
+  op_term->uv.op_info->flag |= SPerl_OP_INFO_C_CODE_FLAG_CONDITION_LOOP;
 
   SPerl_OP* op_loop = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LOOP, NULL, NULL);
   op_loop->file = op_while->file;
