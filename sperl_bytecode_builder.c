@@ -666,7 +666,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               
               break;
             }
-            case SPerl_OP_C_CODE_TERM_STATEMENT: {
+            case SPerl_OP_C_CODE_POP: {
               
               SPerl_OP* op_first = op_cur->first;
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_first);
