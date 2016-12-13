@@ -26,7 +26,6 @@
 #include "sperl_body_class.h"
 #include "sperl_enumeration.h"
 #include "sperl_package.h"
-#include "sperl_op_info.h"
 #include "sperl_resolved_type.h"
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode.h"

@@ -9,7 +9,6 @@
   #include "sperl_toke.h"
   #include "sperl_parser.h"
   #include "sperl_op.h"
-  #include "sperl_op_info.h"
   #include "sperl_dumper.h"
 %}
 
@@ -173,7 +172,6 @@ statement
   | term ';'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POP, $1, NULL);
-      $$->uv.op_info = SPerl_OP_INFO_new(parser);
     }
   | expression ';'
     {
@@ -308,7 +306,6 @@ expression
     {
       $$ = $1;
       SPerl_OP_sibling_splice(parser, $$, NULL, 0, $2);
-      $$->uv.op_info = SPerl_OP_INFO_new(parser);
     }
 
 opt_terms
@@ -508,7 +505,6 @@ array_elem
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ARRAY_ELEM, $1, $4);
       $$->file = $1->file;
       $$->line = $1->line;
-      $$->uv.op_info = SPerl_OP_INFO_new(parser);
     }
 
 call_sub

@@ -44,10 +44,6 @@ typedef struct SPerl_vmcode SPerl_VMCODE;
 struct SPerl_resolved_type;
 typedef struct SPerl_resolved_type SPerl_RESOLVED_TYPE;
 
-/* sperl_op_info.h */
-struct SPerl_op_info;
-typedef struct SPerl_op_info SPerl_OP_INFO;
-
 /* sperl_assign.h */
 struct SPerl_assign;
 typedef struct SPerl_assign SPerl_ASSIGN;
