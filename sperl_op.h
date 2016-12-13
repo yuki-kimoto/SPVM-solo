@@ -129,6 +129,11 @@ enum {
   SPerl_OP_C_FLAG_BLOCK_TRUE_CONDITION_BLOCK = 1
 };
 
+enum {
+  // The condition is loop condition
+  SPerl_OP_C_FLAG_CONDITION_LOOP = 1
+};
+
 /* Binary operation */
 struct SPerl_op {
   SPerl_int code;

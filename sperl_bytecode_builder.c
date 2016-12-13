@@ -28,6 +28,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
     SPerl_boolean finish = 0;
     
     SPerl_ARRAY* condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
+    SPerl_ARRAY* loop_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
     
     while (op_cur) {
       // [START]Preorder traversal position
@@ -228,6 +229,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               *pos_ptr = bytecodes->length - 1;
               
               SPerl_ARRAY_push(condition_bytecode_pos_stack, pos_ptr);
+              if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_LOOP) {
+                SPerl_ARRAY_push(loop_condition_bytecode_pos_stack, pos_ptr);
+              }
               
               // Prepare for bytecode position of branch
               SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
