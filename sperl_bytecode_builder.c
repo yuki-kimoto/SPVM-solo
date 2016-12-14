@@ -45,6 +45,16 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_NEXT: {
+                SPerl_int* pos_ptr = SPerl_ARRAY_fetch(loop_condition_bytecode_pos_stack, loop_condition_bytecode_pos_stack->length - 1);
+                
+                // Add goto
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
+                SPerl_BYTECODES_push(bytecodes, (*pos_ptr >> 8) & 0xFF);
+                SPerl_BYTECODES_push(bytecodes, *pos_ptr & 0xFF);
+              
+              break;
+            }
             case SPerl_OP_C_CODE_BLOCK: {
               if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_IF) {
                 SPerl_int* pos_ptr = SPerl_ARRAY_pop(if_condition_bytecode_pos_stack);
