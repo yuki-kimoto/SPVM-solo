@@ -16,8 +16,8 @@
 %token <opval> LAST NEXT WORD VAR CONSTANT ENUM DESCRIPTER CORETYPE UNDEF
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
-%type <opval> block enum_block class_block decl_sub opt_decl_class_attrs call_sub call_op
-%type <opval> opt_terms terms term sub_args sub_arg opt_sub_args decl_use decl_class_attr decl_class_attrs 
+%type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub call_op
+%type <opval> opt_terms terms term sub_args sub_arg opt_sub_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> opt_descripters list_descripters descripters decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_packages opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_packages type_sub types not_type_sub opt_term
@@ -258,12 +258,12 @@ decl_anon_sub
        $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
      }
 
-opt_decl_class_attrs
+opt_decl_things_in_class
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	decl_class_attrs
+  |	decl_things_in_class
     {
       if ($1->code == SPerl_OP_C_CODE_LIST) {
         $$ = $1;
@@ -274,21 +274,21 @@ opt_decl_class_attrs
       }
     }
 
-decl_class_attrs
-  : decl_class_attrs decl_class_attr
+decl_things_in_class
+  : decl_things_in_class decl_thing_in_class
     {
       $$ = SPerl_OP_append_elem(parser, $1, $2);
     }
-  | decl_class_attr
+  | decl_thing_in_class
 
-decl_class_attr
+decl_thing_in_class
   : decl_use
   | decl_field
   | decl_sub
   | decl_enum
 
 class_block
-  : '{' opt_decl_class_attrs '}'
+  : '{' opt_decl_things_in_class '}'
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CLASS_BLOCK, $2, NULL);
     }
