@@ -6,7 +6,6 @@
 enum {
   SPerl_NAME_C_CODE_SUB,
   SPerl_NAME_C_CODE_FIELD,
-  SPerl_NAME_C_CODE_ENUM
 };
 
 extern SPerl_char* const SPerl_NAME_C_CODE_NAMES[];
