@@ -66,10 +66,10 @@ struct SPerl_yy_parser_{
   // Current use class name
   SPerl_char* current_use_package_name;
   
-  // Method global name symbol table(package name, sub name, argument count)
+  // Method absolute name symbol table
   SPerl_HASH* sub_abs_name_symtable;
   
-  // Field complete name symbol table(package name, field_name)
+  // Field absolute name symbol table
   SPerl_HASH* field_abs_name_symtable;
   
   // Types
