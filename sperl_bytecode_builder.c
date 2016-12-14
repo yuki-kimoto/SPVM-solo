@@ -55,6 +55,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
                 SPerl_int* pos_ptr = SPerl_ARRAY_pop(loop_condition_bytecode_pos_stack);
                 
+                // Add goto
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
+                SPerl_BYTECODES_push(bytecodes, (*pos_ptr >> 8) & 0xFF);
+                SPerl_BYTECODES_push(bytecodes, *pos_ptr & 0xFF);
+                
+                // Set condition jump position
                 bytecodes->values[*pos_ptr + 1] = (bytecodes->length >> 8) & 0xFF;
                 bytecodes->values[*pos_ptr + 2] = bytecodes->length & 0xFF;
               }
