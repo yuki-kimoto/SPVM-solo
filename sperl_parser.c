@@ -33,7 +33,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->bodys = SPerl_ALLOCATOR_new_array(parser, 0);
   parser->body_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
   parser->field_abs_name_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
-  parser->enum_abs_name_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
   parser->include_pathes = SPerl_ALLOCATOR_new_array(parser, 0);
   parser->bufptr = "";
   parser->resolved_types = SPerl_ALLOCATOR_new_array(parser, 0);

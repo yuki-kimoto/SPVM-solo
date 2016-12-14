@@ -72,9 +72,6 @@ struct SPerl_yy_parser_{
   // Field complete name symbol table(package name, field_name)
   SPerl_HASH* field_abs_name_symtable;
   
-  // Enum complete name symbol table(package name, enum_name)
-  SPerl_HASH* enum_abs_name_symtable;
-  
   // Types
   SPerl_ARRAY* op_types;
   

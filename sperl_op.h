@@ -109,7 +109,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NEXT,         // UNKNOWN
   SPerl_OP_C_CODE_LOOP,         // UNKNOWN
   SPerl_OP_C_CODE_VAR,          // UNKNOWN
-  SPerl_OP_C_CODE_GET_ENUMERATION_VALUE, // UNKNOWN
   SPerl_OP_C_CODE_CONVERT,  // UNKNOWN
   SPerl_OP_C_CODE_POP,          // UNKNOWN
   SPerl_OP_C_CODE_NEW_ARRAY,
@@ -191,7 +190,6 @@ void SPerl_OP_check(SPerl_PARSER* parser);
 void SPerl_OP_check_descripters(SPerl_PARSER* parser);
 void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* name);
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name);
-void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name);
 
 void SPerl_OP_check_ops(SPerl_PARSER* parser);
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op);
@@ -203,7 +201,6 @@ SPerl_OP* SPerl_OP_build_type_array(SPerl_PARSER* parser, SPerl_OP* op_type, SPe
 SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_types, SPerl_OP* op_return_type);
 
 SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_packagename, SPerl_OP* op_fieldname);
-SPerl_OP* SPerl_OP_build_get_enumeration_value(SPerl_PARSER* parser, SPerl_OP* op_enumname);
 SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_packagename, SPerl_OP* op_typedef, SPerl_OP* op_descripters, SPerl_OP* op_block);
 SPerl_OP* SPerl_OP_build_decl_sub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* op_descripters, SPerl_OP* type, SPerl_OP* op_block);
 SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl_PARSER* parser, SPerl_OP* op_const);

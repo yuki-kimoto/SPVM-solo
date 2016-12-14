@@ -107,7 +107,6 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "NEXT",
   "LOOP",
   "VAR",
-  "GET_ENUMERATION_VALUE",
   "CONVERT",
   "POP",
   "NEW_ARRAY",
@@ -236,13 +235,6 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
       SPerl_char* abs_name = name->abs_name;
       SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = sub->op_return_type->uv.type->resolved_type;
-      break;
-    }
-    case SPerl_OP_C_CODE_GET_ENUMERATION_VALUE: {
-      SPerl_NAME* name = op->uv.name;
-      SPerl_char* abs_name = name->abs_name;
-      SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_HASH_search(parser->enum_abs_name_symtable, abs_name, strlen(abs_name));
-      resolved_type = enumeration_value->op_constant->uv.constant->resolved_type;
       break;
     }
     case SPerl_OP_C_CODE_FIELD: {
@@ -1486,36 +1478,6 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
     SPerl_yyerror_format(parser, "unknown field \"%s\" at %s line %d\n",
       abs_name, op_name->file, op_name->line);
   }
-}
-
-void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name) {
-  SPerl_OP* op_name = name->op_name;
-  SPerl_WORD* abs_name_word = op_name->uv.word;
-  SPerl_char* abs_name = abs_name_word->value;
-  name->abs_name = abs_name;
-  
-  SPerl_ENUMERATION_VALUE* found_enum= SPerl_HASH_search(
-    parser->enum_abs_name_symtable,
-    abs_name,
-    strlen(abs_name)
-  );
-  
-  if (!found_enum) {
-    SPerl_yyerror_format(parser, "unknown enum \"%s\" at %s line %d\n",
-      abs_name, op_name->file, op_name->line);
-  }
-}
-
-SPerl_OP* SPerl_OP_build_get_enumeration_value(SPerl_PARSER* parser, SPerl_OP* op_enumname) {
-  SPerl_OP* op_get_enumeration_value = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GET_ENUMERATION_VALUE, op_enumname, NULL);
-  
-  SPerl_NAME* name = SPerl_NAME_new(parser);
-  name->code = SPerl_NAME_C_CODE_ENUM;
-  name->op_name = op_enumname;
-  
-  op_get_enumeration_value->uv.name = name;
-  
-  return op_get_enumeration_value;
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_fieldname) {
