@@ -248,6 +248,13 @@ decl_my
     {
       $$ = SPerl_OP_build_decl_my(parser, $1, $2, $4, $5);
     }
+  | MY VAR
+    {
+      SPerl_OP* op_descripters = SPerl_OP_newOP_LIST(parser);
+      SPerl_OP* op_type = SPerl_OP_newOP_NULL(parser);
+      
+      $$ = SPerl_OP_build_decl_my(parser, $1, $2, op_descripters, op_type);
+    }
 
 decl_anon_sub
  : SUB '(' ')' ':' opt_descripters type block

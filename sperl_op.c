@@ -868,6 +868,20 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             }
             case SPerl_OP_C_CODE_ASSIGN: {
               
+              // Resolve type
+              if (op_cur->first->first && op_cur->first->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
+                SPerl_OP* op_decl_my_var = op_cur->first->first;
+                if (op_decl_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL) {
+                  SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);
+                  SPerl_TYPE* type = SPerl_TYPE_new(parser);
+                  type->resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+                  
+                  op_type->uv.type = type;
+                  
+                  op_decl_my_var->uv.my_var->op_type = op_type;
+                }
+              }
+              
               op_cur->lvalue = 1;
               
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
@@ -1137,7 +1151,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               break;
             }
-
             case SPerl_OP_C_CODE_CALL_SUB: {
               // Check sub name
               SPerl_NAME* name = op_cur->uv.name;
