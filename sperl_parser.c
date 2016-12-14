@@ -37,6 +37,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->bufptr = "";
   parser->resolved_types = SPerl_ALLOCATOR_new_array(parser, 0);
   parser->resolved_type_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
+  parser->use_package_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
 
   // Core types
   for (SPerl_int i = 0; i < SPerl_BODY_CORE_C_CODE_LENGTH; i++) {

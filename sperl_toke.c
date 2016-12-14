@@ -129,7 +129,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               parser->bufptr = src;
               parser->befbufptr = src;
               parser->current_package_count = 0;
-              parser->current_use_package_name = package_name;
               parser->cur_line = 1;
               break;
             }
@@ -666,15 +665,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           if (expect == SPerl_TOKE_C_EXPECT_PACKAGENAME) {
             // Template class
             if (strchr(keyword, '_')) {
-
-            }
-            // Class
-            else {
-              if (strcmp(keyword, parser->current_use_package_name) != 0) {
-                fprintf(stderr, "Package name \"%s\" must be \"%s\" at %s line %d\n",
-                  keyword, parser->current_use_package_name, parser->cur_file, parser->cur_line);
-                exit(1);
-              }
+              
             }
           }
           

@@ -1735,36 +1735,14 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
         }
       }
       
-      // Search use and field
       SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_new_array(parser, 0);
       SPerl_HASH* field_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
-      SPerl_ARRAY* op_uses = SPerl_ALLOCATOR_new_array(parser, 0);
-      SPerl_HASH* use_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
       
       // Collect field and use information
       SPerl_OP* op_decls = op_block->first;
       SPerl_OP* op_decl = op_decls->first;
       while (op_decl = SPerl_OP_sibling(parser, op_decl)) {
-        // Use
-        if (op_decl->code == SPerl_OP_C_CODE_USE) {
-          SPerl_OP* op_use = op_decl;
-          SPerl_USE* use = op_use->uv.use;
-          SPerl_char* use_type_name = use->op_package_name->uv.word->value;
-          SPerl_USE* found_use
-            = SPerl_HASH_search(use_symtable, use_type_name, strlen(use_type_name));
-          
-          if (found_use) {
-            SPerl_yyerror_format(parser, "redeclaration of use \"%s\" at %s line %d\n", use_type_name, op_use->file, op_use->line);
-          }
-          else {
-            SPerl_ARRAY_push(parser->op_use_stack, op_use);
-            SPerl_ARRAY_push(op_uses, op_use);
-            
-            SPerl_HASH_insert(use_symtable, use_type_name, strlen(use_type_name), use);
-          }
-        }
-        // Field
-        else if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
+        if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
           SPerl_OP* op_has = op_decl;
           SPerl_FIELD* field = op_has->uv.field;
           SPerl_char* field_name = field->op_name->uv.word->value;
@@ -1828,8 +1806,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       // Set body
       body_class->op_fields = op_fields;
       body_class->field_symtable = field_symtable;
-      body_class->op_uses = op_uses;
-      body_class->use_symtable = use_symtable;
       body->uv.body_class = body_class;
       SPerl_ARRAY_push(parser->bodys, body);
       SPerl_HASH_insert(parser->body_symtable, body->op_name->uv.word->value, strlen(body->op_name->uv.word->value), body);
@@ -1850,13 +1826,22 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
   return op_package;
 }
 
-SPerl_OP* SPerl_OP_build_decl_use(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_package_name, SPerl_OP* op_packagealias) {
+SPerl_OP* SPerl_OP_build_decl_use(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_package_name) {
+
   SPerl_OP_sibling_splice(parser, op_use, NULL, 0, op_package_name);
-  SPerl_OP_sibling_splice(parser, op_use, op_package_name, 0, op_packagealias);
   
   SPerl_USE* use = SPerl_USE_new(parser);
   use->op_package_name = op_package_name;
   op_use->uv.use = use;
+
+  SPerl_char* package_name = op_package_name->uv.word->value;
+  
+  SPerl_USE* found_use = SPerl_HASH_search(parser->use_package_symtable, package_name, strlen(package_name));
+  
+  if (!found_use) {
+    SPerl_ARRAY_push(parser->op_use_stack, op_use);
+    SPerl_HASH_insert(parser->use_package_symtable, package_name, strlen(package_name), op_use);
+  }
   
   return op_use;
 }

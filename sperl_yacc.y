@@ -19,9 +19,9 @@
 %type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub call_op
 %type <opval> opt_terms terms term sub_args sub_arg opt_sub_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> opt_descripters list_descripters descripters decl_enumeration_values decl_enumeration_value decl_anon_sub
-%type <opval> type package_name field_name sub_name decl_package decl_packages opt_decl_enumeration_values type_array
-%type <opval> for_statement while_statement expression opt_decl_packages type_sub types not_type_sub opt_term
-%type <opval> field array_elem convert_type decl_enum new_object array_init type_word array_length logical_op
+%type <opval> type package_name field_name sub_name decl_package decl_things_in_grammer opt_decl_enumeration_values type_array
+%type <opval> for_statement while_statement expression opt_decl_things_in_grammer type_sub types not_type_sub opt_term
+%type <opval> field array_elem convert_type decl_enum new_object array_init type_word array_length logical_op decl_thing_in_grammer
 
 %right <opval> ASSIGN
 %left <opval> OR
@@ -42,7 +42,7 @@
 %%
 
 grammar
-  : opt_decl_packages
+  : opt_decl_things_in_grammer
     {
       $$ = SPerl_OP_build_grammer(parser, $1);
 
@@ -56,12 +56,12 @@ grammar
       }
     }
 
-opt_decl_packages
+opt_decl_things_in_grammer
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(parser);
     }
-  |	decl_packages
+  |	decl_things_in_grammer
     {
       if ($1->code == SPerl_OP_C_CODE_LIST) {
         $$ = $1;
@@ -71,12 +71,16 @@ opt_decl_packages
         SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
       }
     }
-    
-decl_packages
-  : decl_packages decl_package
+  
+decl_things_in_grammer
+  : decl_things_in_grammer decl_thing_in_grammer
     {
       $$ = SPerl_OP_append_elem(parser, $1, $2);
     }
+  | decl_thing_in_grammer
+
+decl_thing_in_grammer
+  : decl_use
   | decl_package
 
 decl_package
@@ -217,7 +221,7 @@ else_statement
 decl_use
   : USE package_name ';'
     {
-      $$ = SPerl_OP_build_decl_use(parser, $1, $2, SPerl_OP_newOP_NULL(parser));
+      $$ = SPerl_OP_build_decl_use(parser, $1, $2);
     }
 
 
@@ -282,8 +286,7 @@ decl_things_in_class
   | decl_thing_in_class
 
 decl_thing_in_class
-  : decl_use
-  | decl_field
+  : decl_field
   | decl_sub
   | decl_enum
 

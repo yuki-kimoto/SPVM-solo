@@ -17,8 +17,6 @@ struct SPerl_body_class {
   SPerl_ARRAY* op_descripters;
   SPerl_ARRAY* op_fields;
   SPerl_HASH* field_symtable;
-  SPerl_ARRAY* op_uses;
-  SPerl_HASH* use_symtable;
   SPerl_OP* op_block;
   SPerl_boolean is_value_class;
 };

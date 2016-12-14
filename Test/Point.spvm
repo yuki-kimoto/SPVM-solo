@@ -1,6 +1,7 @@
+use Test::Class1;
+use Test::EnumA;
+
 package Test::Point {
-  use Test::Class1;
-  use Test::EnumA;
   
   has x : sub (int, int) int;
   

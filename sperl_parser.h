@@ -63,21 +63,21 @@ struct SPerl_yy_parser_{
   // Current package count
   SPerl_int current_package_count;
   
-  // Current use class name
-  SPerl_char* current_use_package_name;
-  
   // Method absolute name symbol table
   SPerl_HASH* sub_abs_name_symtable;
   
   // Field absolute name symbol table
   SPerl_HASH* field_abs_name_symtable;
   
+  // use symbol table
+  SPerl_HASH* use_package_symtable;
+  
   // Types
   SPerl_ARRAY* op_types;
   
   // Resovled types
   SPerl_ARRAY* resolved_types;
-
+  
   // Resolved type string symbol table
   SPerl_HASH* resolved_type_symtable;
   
