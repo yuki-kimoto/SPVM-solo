@@ -1454,8 +1454,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
     sub_abs_name = name->op_name->uv.word->value;
   }
   
-  SPerl_int argument_count = name->argument_count;
-  SPerl_char* sub_complete_name = SPerl_OP_create_sub_complete_name(parser, sub_abs_name, argument_count);
+  SPerl_char* sub_complete_name = SPerl_OP_create_sub_complete_name(parser, sub_abs_name);
   
   name->complete_name = sub_complete_name;
   
@@ -1704,32 +1703,9 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   }
 }
 
-SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* sub_abs_name, SPerl_int argument_count) {
-  // Method complete name - package_name->sub_name(arg1...arg2);
-  SPerl_int length = strlen(sub_abs_name) + 2;
-  if (argument_count == 1) {
-    length += 4;
-  }
-  else if (argument_count > 1) {
-    SPerl_char argument_count_str[6];
-    sprintf(argument_count_str, "%d", argument_count);
-    argument_count_str[5] = '\0';
-    length += 4 + 3 + 3 + strlen(argument_count_str);
-  }
+SPerl_char* SPerl_OP_create_sub_complete_name(SPerl_PARSER* parser, SPerl_char* sub_abs_name) {
   
-  SPerl_char* sub_complete_name = SPerl_ALLOCATOR_new_string(parser, length);
-  
-  if (argument_count == 0) {
-    sprintf(sub_complete_name, "%s()", sub_abs_name);
-  }
-  else if (argument_count == 1) {
-    sprintf(sub_complete_name, "%s(arg1)", sub_abs_name);
-  }
-  else if (argument_count > 1) {
-    sprintf(sub_complete_name, "%s(arg1...arg%d)", sub_abs_name, argument_count);
-  }
-  
-  return sub_complete_name;
+  return sub_abs_name;
 }
 
 SPerl_char* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* base_name) {
@@ -1891,7 +1867,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
           SPerl_OP* op_sub_name = sub->op_name;
           SPerl_char* sub_name = op_sub_name->uv.word->value;
           SPerl_char* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
-          SPerl_char* sub_complete_name = SPerl_OP_create_sub_complete_name(parser, sub_abs_name, sub->argument_count);
+          SPerl_char* sub_complete_name = SPerl_OP_create_sub_complete_name(parser, sub_abs_name);
           
           SPerl_SUB* found_sub = NULL;
           found_sub = SPerl_HASH_search(sub_complete_name_symtable, sub_complete_name, strlen(sub_complete_name));
@@ -2178,14 +2154,6 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
   }
   
   name->anon = anon;
-  
-  // Argument count
-  SPerl_int argument_count = 0;
-  SPerl_OP* op_term = op_terms->first;
-  while (op_term = SPerl_OP_sibling(parser, op_term)) {
-    argument_count++;
-  }
-  name->argument_count = argument_count;
   
   op_call_sub->uv.name = name;
   

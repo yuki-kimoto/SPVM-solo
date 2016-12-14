@@ -16,7 +16,6 @@ struct SPerl_name {
   SPerl_int code;
   SPerl_OP* op_var;
   SPerl_OP* op_name;
-  SPerl_int argument_count;
   SPerl_boolean anon;
   SPerl_char* complete_name;
 };

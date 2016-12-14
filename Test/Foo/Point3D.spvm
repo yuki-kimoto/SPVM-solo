@@ -10,9 +10,6 @@ package Test::Foo::Point3D {
   sub last ($foo : int) : int { }
 
   sub sum() : int { }
-  sub sum($foo : int) : int { }
-  sub sum($foo : int, $bar : int) : int { }
-  sub sum($self : Test::Foo::Point3D, $foo : int, $bar : int) : int { }
   
   # subroutine
   sub sum1 () : double {
