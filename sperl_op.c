@@ -1473,8 +1473,6 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   SPerl_WORD* base_name_word = op_name->uv.word;
   SPerl_char* base_name = base_name_word->value;
   
-  SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(base_name);
-  
   SPerl_char* abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   name->abs_name = abs_name;
   
@@ -1825,9 +1823,9 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
             SPerl_ARRAY_push(op_fields, op_has);
             SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
             
-            // Field complete name
-            SPerl_char* field_complete_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
-            SPerl_HASH_insert(parser->field_abs_name_symtable, field_complete_name, strlen(field_complete_name), field);
+            // Field absolute name
+            SPerl_char* field_abs_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
+            SPerl_HASH_insert(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name), field);
           }
         }
       }
@@ -1849,17 +1847,16 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
           SPerl_OP* op_sub_name = sub->op_name;
           SPerl_char* sub_name = op_sub_name->uv.word->value;
           SPerl_char* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
-          SPerl_char* sub_complete_name = sub_abs_name;
           
           SPerl_SUB* found_sub = NULL;
-          found_sub = SPerl_HASH_search(sub_abs_name_symtable, sub_complete_name, strlen(sub_complete_name));
+          found_sub = SPerl_HASH_search(sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
           
           if (found_sub) {
-            SPerl_yyerror_format(parser, "redeclaration of sub \"%s\" at %s line %d\n", sub_complete_name, op_sub->file, op_sub->line);
+            SPerl_yyerror_format(parser, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
           }
           // Unknown sub
           else {
-            SPerl_HASH_insert(sub_abs_name_symtable, sub_complete_name, strlen(sub_complete_name), sub);
+            SPerl_HASH_insert(sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name), sub);
           }
           i--;
         }
