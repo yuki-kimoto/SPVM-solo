@@ -125,13 +125,15 @@ enum {                          // [GROUP]
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
 
 enum {
-  // The block is true condtion block
-  SPerl_OP_C_FLAG_BLOCK_TRUE_CONDITION_BLOCK = 1
+  // Block type
+  SPerl_OP_C_FLAG_BLOCK_IF = 1,
+  SPerl_OP_C_FLAG_BLOCK_LOOP = 2,
 };
 
 enum {
-  // The condition is loop condition
-  SPerl_OP_C_FLAG_CONDITION_LOOP = 1
+  // Condition type
+  SPerl_OP_C_FLAG_CONDITION_IF = 1,
+  SPerl_OP_C_FLAG_CONDITION_LOOP = 2,
 };
 
 /* Binary operation */

@@ -27,7 +27,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
     SPerl_OP* op_cur = op_base;
     SPerl_boolean finish = 0;
     
-    SPerl_ARRAY* condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
+    SPerl_ARRAY* if_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
     SPerl_ARRAY* loop_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
     
     while (op_cur) {
@@ -46,8 +46,14 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
             case SPerl_OP_C_CODE_BLOCK: {
-              if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_TRUE_CONDITION_BLOCK) {
-                SPerl_int* pos_ptr = SPerl_ARRAY_pop(condition_bytecode_pos_stack);
+              if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_IF) {
+                SPerl_int* pos_ptr = SPerl_ARRAY_pop(if_condition_bytecode_pos_stack);
+                
+                bytecodes->values[*pos_ptr + 1] = (bytecodes->length >> 8) & 0xFF;
+                bytecodes->values[*pos_ptr + 2] = bytecodes->length & 0xFF;
+              }
+              else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
+                SPerl_int* pos_ptr = SPerl_ARRAY_pop(loop_condition_bytecode_pos_stack);
                 
                 bytecodes->values[*pos_ptr + 1] = (bytecodes->length >> 8) & 0xFF;
                 bytecodes->values[*pos_ptr + 2] = bytecodes->length & 0xFF;
@@ -228,8 +234,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               SPerl_int* pos_ptr = SPerl_ALLOCATOR_new_int(parser);
               *pos_ptr = bytecodes->length - 1;
               
-              SPerl_ARRAY_push(condition_bytecode_pos_stack, pos_ptr);
-              if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_LOOP) {
+              if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_IF) {
+                SPerl_ARRAY_push(if_condition_bytecode_pos_stack, pos_ptr);
+              }
+              else if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_LOOP) {
                 SPerl_ARRAY_push(loop_condition_bytecode_pos_stack, pos_ptr);
               }
               
