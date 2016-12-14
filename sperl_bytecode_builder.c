@@ -29,6 +29,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
     
     SPerl_ARRAY* if_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
     SPerl_ARRAY* loop_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
+    SPerl_ARRAY* last_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
     
     while (op_cur) {
       // [START]Preorder traversal position
@@ -45,13 +46,24 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
         while (1) {
           // [START]Postorder traversal position
           switch (op_cur->code) {
+            case SPerl_OP_C_CODE_LAST: {
+              // Add goto
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
+              
+              SPerl_int* pos_ptr = SPerl_ALLOCATOR_new_int(parser);
+              *pos_ptr = bytecodes->length - 1;
+              SPerl_ARRAY_push(last_bytecode_pos_stack, pos_ptr);
+              
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+            }
             case SPerl_OP_C_CODE_NEXT: {
-                SPerl_int* pos_ptr = SPerl_ARRAY_fetch(loop_condition_bytecode_pos_stack, loop_condition_bytecode_pos_stack->length - 1);
-                
-                // Add goto
-                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
-                SPerl_BYTECODES_push(bytecodes, (*pos_ptr >> 8) & 0xFF);
-                SPerl_BYTECODES_push(bytecodes, *pos_ptr & 0xFF);
+              SPerl_int* pos_ptr = SPerl_ARRAY_fetch(loop_condition_bytecode_pos_stack, loop_condition_bytecode_pos_stack->length - 1);
+              
+              // Add goto
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
+              SPerl_BYTECODES_push(bytecodes, (*pos_ptr >> 8) & 0xFF);
+              SPerl_BYTECODES_push(bytecodes, *pos_ptr & 0xFF);
               
               break;
             }
@@ -73,6 +85,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 // Set condition jump position
                 bytecodes->values[*pos_ptr + 1] = (bytecodes->length >> 8) & 0xFF;
                 bytecodes->values[*pos_ptr + 2] = bytecodes->length & 0xFF;
+                
+                // Set last position
+                SPerl_int* last_pos_ptr;
+                while (last_pos_ptr = SPerl_ARRAY_pop(last_bytecode_pos_stack)) {
+                  bytecodes->values[*last_pos_ptr + 1] = (bytecodes->length >> 8) & 0xFF;
+                  bytecodes->values[*last_pos_ptr + 2] = bytecodes->length & 0xFF;
+                }
               }
               break;
             }
