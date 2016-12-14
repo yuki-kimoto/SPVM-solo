@@ -67,13 +67,13 @@ struct SPerl_yy_parser_{
   SPerl_char* current_use_package_name;
   
   // Method global name symbol table(package name, sub name, argument count)
-  SPerl_HASH* sub_complete_name_symtable;
+  SPerl_HASH* sub_abs_name_symtable;
   
   // Field complete name symbol table(package name, field_name)
-  SPerl_HASH* field_complete_name_symtable;
+  SPerl_HASH* field_abs_name_symtable;
   
   // Enum complete name symbol table(package name, enum_name)
-  SPerl_HASH* enum_complete_name_symtable;
+  SPerl_HASH* enum_abs_name_symtable;
   
   // Types
   SPerl_ARRAY* op_types;
