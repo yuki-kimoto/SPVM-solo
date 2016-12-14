@@ -1487,7 +1487,6 @@ SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP*
   SPerl_OP_sibling_splice(parser, op_field, op_var, 0, op_fieldname);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
-  name->code = SPerl_NAME_C_CODE_FIELD;
   name->op_var = op_var;
   name->op_name = op_fieldname;
   
@@ -2064,7 +2063,6 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
   SPerl_OP_sibling_splice(parser, op_call_sub, op_sub_name, 0, op_terms);
   
   SPerl_NAME* name = SPerl_NAME_new(parser);
-  name->code = SPerl_NAME_C_CODE_SUB;
   
   if (!anon) {
     SPerl_WORD* sub_name_word = op_sub_name->uv.word;
