@@ -719,7 +719,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 break;
               }
               
-              if (op_first->code != SPerl_OP_C_CODE_ASSIGN && !op_first->lvalue) {
+              if (op_first->code != SPerl_OP_C_CODE_ASSIGN && op_first->code != SPerl_OP_C_CODE_RETURN && !op_first->lvalue) {
                 if (first_resolved_type->id == SPerl_BODY_CORE_C_CODE_LONG || first_resolved_type->id == SPerl_BODY_CORE_C_CODE_DOUBLE) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_POP2);
                 }
