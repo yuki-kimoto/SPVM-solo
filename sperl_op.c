@@ -233,22 +233,22 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
     }
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME* name = op->uv.name;
-      SPerl_char* complete_name = name->complete_name;
-      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, complete_name, strlen(complete_name));
+      SPerl_char* abs_name = name->abs_name;
+      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = sub->op_return_type->uv.type->resolved_type;
       break;
     }
     case SPerl_OP_C_CODE_GET_ENUMERATION_VALUE: {
       SPerl_NAME* name = op->uv.name;
-      SPerl_char* complete_name = name->complete_name;
-      SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_HASH_search(parser->enum_abs_name_symtable, complete_name, strlen(complete_name));
+      SPerl_char* abs_name = name->abs_name;
+      SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_HASH_search(parser->enum_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = enumeration_value->op_constant->uv.constant->resolved_type;
       break;
     }
     case SPerl_OP_C_CODE_FIELD: {
       SPerl_NAME* name = op->uv.name;
-      SPerl_char* complete_name = name->complete_name;
-      SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, complete_name, strlen(complete_name));
+      SPerl_char* abs_name = name->abs_name;
+      SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
     }
@@ -1454,7 +1454,7 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
     sub_abs_name = name->op_name->uv.word->value;
   }
   
-  name->complete_name = sub_abs_name;
+  name->abs_name = sub_abs_name;
   
   SPerl_SUB* found_sub= SPerl_HASH_search(
     parser->sub_abs_name_symtable,
@@ -1475,18 +1475,18 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   
   SPerl_int complete_name_length = strlen(package_name) + 2 + strlen(base_name);
   
-  SPerl_char* complete_name = SPerl_OP_create_complete_name(parser, package_name, base_name);
-  name->complete_name = complete_name;
+  SPerl_char* abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
+  name->abs_name = abs_name;
   
   SPerl_FIELD* found_field= SPerl_HASH_search(
     parser->field_abs_name_symtable,
-    complete_name,
-    strlen(complete_name)
+    abs_name,
+    strlen(abs_name)
   );
   
   if (!found_field) {
     SPerl_yyerror_format(parser, "unknown field \"%s\" at %s line %d\n",
-      complete_name, op_name->file, op_name->line);
+      abs_name, op_name->file, op_name->line);
   }
 }
 
@@ -1494,18 +1494,17 @@ void SPerl_OP_check_enum_name(SPerl_PARSER* parser, SPerl_NAME* name) {
   SPerl_OP* op_name = name->op_name;
   SPerl_WORD* abs_name_word = op_name->uv.word;
   SPerl_char* abs_name = abs_name_word->value;
-  SPerl_char* complete_name = abs_name;
-  name->complete_name = complete_name;
+  name->abs_name = abs_name;
   
   SPerl_ENUMERATION_VALUE* found_enum= SPerl_HASH_search(
     parser->enum_abs_name_symtable,
-    complete_name,
-    strlen(complete_name)
+    abs_name,
+    strlen(abs_name)
   );
   
   if (!found_enum) {
     SPerl_yyerror_format(parser, "unknown enum \"%s\" at %s line %d\n",
-      complete_name, op_name->file, op_name->line);
+      abs_name, op_name->file, op_name->line);
   }
 }
 
@@ -1701,16 +1700,6 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   }
 }
 
-SPerl_char* SPerl_OP_create_complete_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* base_name) {
-  SPerl_int length = strlen(package_name) + 2 + strlen(base_name);
-  
-  SPerl_char* complete_name = SPerl_ALLOCATOR_new_string(parser, length);
-  
-  sprintf(complete_name, "%s::%s", package_name, base_name);
-  
-  return complete_name;
-}
-
 SPerl_char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* base_name) {
   SPerl_int length = strlen(package_name) + 2 + strlen(base_name);
   
@@ -1837,7 +1826,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
             SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
             
             // Field complete name
-            SPerl_char* field_complete_name = SPerl_OP_create_complete_name(parser, package_name, field_name);
+            SPerl_char* field_complete_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
             SPerl_HASH_insert(parser->field_abs_name_symtable, field_complete_name, strlen(field_complete_name), field);
           }
         }
