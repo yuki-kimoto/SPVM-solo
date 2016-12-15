@@ -867,18 +867,17 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               break;
             }
             case SPerl_OP_C_CODE_ASSIGN: {
-              
-              // Resolve type
+              // Type assumption
               if (op_cur->first->first && op_cur->first->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
-                SPerl_OP* op_decl_my_var = op_cur->first->first;
-                if (op_decl_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL) {
+                SPerl_OP* op_my_var = op_cur->first->first;
+                if (op_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL) {
                   SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);
                   SPerl_TYPE* type = SPerl_TYPE_new(parser);
                   type->resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
                   
                   op_type->uv.type = type;
                   
-                  op_decl_my_var->uv.my_var->op_type = op_type;
+                  op_my_var->uv.my_var->op_type = op_type;
                 }
               }
               
@@ -886,6 +885,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
+              
+              if (!first_resolved_type) {
+                SPerl_yyerror_format(parser, "Type can't be detected at %s line %d\n", op_cur->first->file, op_cur->first->line);
+                parser->fatal_error = 1;
+                break;
+              }
               
               // Convert type
               if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
