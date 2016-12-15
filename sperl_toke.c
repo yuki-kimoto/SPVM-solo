@@ -82,6 +82,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               bufptr_to += 5;
               *bufptr_to = '\0';
               
+              // module is template
+              SPerl_char* underline_ptr;
+              if (underline_ptr = strchr(module_path_base, '_')) {
+                *(underline_ptr - 2) = '\0';
+              }
+              
               // Search module file
               SPerl_char* cur_module_path;
               FILE* fh;
