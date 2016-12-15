@@ -61,29 +61,29 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               continue;
             }
             else {
+              // Change :: to /
+              SPerl_char* package_name_for_path = SPerl_ALLOCATOR_new_string(parser, strlen(package_name));
+              SPerl_char* bufptr_orig = package_name;
+              SPerl_char* bufptr_to = package_name_for_path;
+              while (*bufptr_orig) {
+                if (*bufptr_orig == ':' && *(bufptr_orig + 1) == ':') {
+                  *bufptr_to = '/';
+                  bufptr_orig += 2;
+                  bufptr_to++;
+                }
+                else {
+                  *bufptr_to = *bufptr_orig;
+                  bufptr_orig++;
+                  bufptr_to++;
+                }
+              }
+              *bufptr_orig = '\0';
+
               // Search class file
               SPerl_char* cur_file;
               FILE* fh;
               for (SPerl_int i = 0; i < parser->include_pathes->length; i++) {
                 SPerl_char* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
-                
-                // Change :: to /
-                SPerl_char* package_name_for_path = SPerl_ALLOCATOR_new_string(parser, strlen(package_name));
-                SPerl_char* bufptr_orig = package_name;
-                SPerl_char* bufptr_to = package_name_for_path;
-                while (*bufptr_orig) {
-                  if (*bufptr_orig == ':' && *(bufptr_orig + 1) == ':') {
-                    *bufptr_to = '/';
-                    bufptr_orig += 2;
-                    bufptr_to++;
-                  }
-                  else {
-                    *bufptr_to = *bufptr_orig;
-                    bufptr_orig++;
-                    bufptr_to++;
-                  }
-                }
-                *bufptr_orig = '\0';
                 
                 // File name
                 cur_file = SPerl_ALLOCATOR_new_string(parser, strlen(include_path) + strlen(package_name_for_path) + 6);
