@@ -21,7 +21,7 @@
 
 static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
   SPerl_OP* op = SPerl_OP_newOP(parser, type, NULL, NULL);
-  op->file = parser->cur_file;
+  op->file = parser->cur_module_path;
   op->line = parser->cur_line;
   
   return op;
@@ -44,7 +44,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
     // line end
     switch(c) {
       case '\0':
-        parser->cur_file = NULL;
+        parser->cur_module_path = NULL;
         parser->cur_src = NULL;
         
         // If there are more module, load it
@@ -83,19 +83,19 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               *bufptr_to = '\0';
               
               // Search module file
-              SPerl_char* cur_file;
+              SPerl_char* cur_module_path;
               FILE* fh;
               for (SPerl_int i = 0; i < parser->include_pathes->length; i++) {
                 SPerl_char* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
                 // File name
-                cur_file = SPerl_ALLOCATOR_new_string(parser, strlen(include_path) + 1 + strlen(module_path_base));
-                sprintf(cur_file, "%s/%s", include_path, module_path_base);
+                cur_module_path = SPerl_ALLOCATOR_new_string(parser, strlen(include_path) + 1 + strlen(module_path_base));
+                sprintf(cur_module_path, "%s/%s", include_path, module_path_base);
                 
                 // Open source file
-                fh = fopen(cur_file, "r");
+                fh = fopen(cur_module_path, "r");
                 if (fh) {
-                  parser->cur_file = cur_file;
+                  parser->cur_module_path = cur_module_path;
                   break;
                 }
               }
@@ -104,12 +104,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                   fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->op_package_name->uv.word->value, op_use->file, op_use->line);
                 }
                 else {
-                  fprintf(stderr, "Can't find file %s\n", cur_file);
+                  fprintf(stderr, "Can't find file %s\n", cur_module_path);
                 }
                 exit(1);
               }
               
-              parser->cur_file = cur_file;
+              parser->cur_module_path = cur_module_path;
               
               
               // Read file content
@@ -119,10 +119,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               SPerl_char* src = SPerl_ALLOCATOR_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
                 if (op_use) {
-                  fprintf(stderr, "Can't read file %s at %s line %d\n", cur_file, op_use->file, op_use->line);
+                  fprintf(stderr, "Can't read file %s at %s line %d\n", cur_module_path, op_use->file, op_use->line);
                 }
                 else {
-                  fprintf(stderr, "Can't read file %s\n", cur_file);
+                  fprintf(stderr, "Can't read file %s\n", cur_module_path);
                 }
                 exit(1);
               }
@@ -567,7 +567,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             else if (memcmp(keyword, "package", str_len) == 0) {
               // File can contains only one package
               if (parser->current_package_count) {
-                fprintf(stderr, "Can't write second package declaration in file at %s line %d\n", parser->cur_file, parser->cur_line);
+                fprintf(stderr, "Can't write second package declaration in file at %s line %d\n", parser->cur_module_path, parser->cur_line);
                 exit(1);
               }
               parser->current_package_count++;

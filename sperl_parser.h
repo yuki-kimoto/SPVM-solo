@@ -17,7 +17,7 @@ struct SPerl_yy_parser_{
   SPerl_int expect;
 
   // Current file name
-  SPerl_char* cur_file;
+  SPerl_char* cur_module_path;
   
   // Source data
   SPerl_char* cur_src;
