@@ -61,8 +61,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               continue;
             }
             else {
-              // Change :: to /
-              SPerl_char* package_name_for_path = SPerl_ALLOCATOR_new_string(parser, strlen(package_name));
+              
+              // Change :: to / and add ".spvm"
+              SPerl_char* package_name_for_path = SPerl_ALLOCATOR_new_string(parser, strlen(package_name)  + 6);
               SPerl_char* bufptr_orig = package_name;
               SPerl_char* bufptr_to = package_name_for_path;
               while (*bufptr_orig) {
@@ -77,17 +78,19 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
                   bufptr_to++;
                 }
               }
-              *bufptr_orig = '\0';
-
-              // Search class file
+              strncpy(bufptr_to, ".spvm", 5);
+              bufptr_to += 5;
+              *bufptr_to = '\0';
+              
+              // Search module file
               SPerl_char* cur_file;
               FILE* fh;
               for (SPerl_int i = 0; i < parser->include_pathes->length; i++) {
                 SPerl_char* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
                 // File name
-                cur_file = SPerl_ALLOCATOR_new_string(parser, strlen(include_path) + strlen(package_name_for_path) + 6);
-                sprintf(cur_file, "%s/%s.spvm", include_path, package_name_for_path);
+                cur_file = SPerl_ALLOCATOR_new_string(parser, strlen(include_path) + 1 + strlen(package_name_for_path));
+                sprintf(cur_file, "%s/%s", include_path, package_name_for_path);
                 
                 // Open source file
                 fh = fopen(cur_file, "r");
