@@ -869,10 +869,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             case SPerl_OP_C_CODE_ASSIGN: {
               // Type assumption
               if (op_cur->first->first && op_cur->first->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
-                warn("AAAAAAAAAAA");
                 SPerl_OP* op_my_var = op_cur->first->first;
                 if (op_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL) {
-                  warn("BBBBBBBBBBB");
                   SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);
                   SPerl_TYPE* type = SPerl_TYPE_new(parser);
                   type->resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);

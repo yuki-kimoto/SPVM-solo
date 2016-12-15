@@ -41,6 +41,7 @@ package Test {
       1;
     }
 
+    my $simple3 = new Test::Simple;
     my $simple2 : Test::Simple = new Test::Simple;
     
     if (1) { }
