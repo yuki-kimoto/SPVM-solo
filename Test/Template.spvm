@@ -1,3 +1,4 @@
 package Test::Template::_T1::_T2 {
-
+  has x : _T1;
+  has y : _T2;
 }
