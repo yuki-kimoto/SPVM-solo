@@ -869,8 +869,10 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
             case SPerl_OP_C_CODE_ASSIGN: {
               // Type assumption
               if (op_cur->first->first && op_cur->first->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
+                warn("AAAAAAAAAAA");
                 SPerl_OP* op_my_var = op_cur->first->first;
                 if (op_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL) {
+                  warn("BBBBBBBBBBB");
                   SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);
                   SPerl_TYPE* type = SPerl_TYPE_new(parser);
                   type->resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
@@ -889,7 +891,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               if (!first_resolved_type) {
                 SPerl_yyerror_format(parser, "Type can't be detected at %s line %d\n", op_cur->first->file, op_cur->first->line);
                 parser->fatal_error = 1;
-                break;
+                return;
               }
               
               // Convert type
@@ -1103,6 +1105,17 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               
               if (op_cur->first && op_cur->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
                 op_cur->lvalue = 1;
+              }
+              
+              // First child is my_var, but my_var don't have type and don't sibling to detect type
+              if (op_cur->first && op_cur->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
+                SPerl_OP* op_my_var = op_cur->first;
+                if (op_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL && !op_cur->moresib) {
+                  // Error
+                  SPerl_yyerror_format(parser, "\"my %s\" can't detect type at %s line %d\n", var->op_name->uv.word->value, op_cur->file, op_cur->line);
+                  parser->fatal_error = 1;
+                  return;
+                }
               }
               
               // Serach same name variable

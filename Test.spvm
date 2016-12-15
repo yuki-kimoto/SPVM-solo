@@ -14,7 +14,12 @@ use Test::Simple;
 
 package Test {
   sub main() : int {
-    my $num1 = undef;
+    # my $num;
+    # my $num1 = undef;
+    
+    my $num1 : int;
+    $num1 = 5;
+    
     my $num = 5;
     
     if (1) {
