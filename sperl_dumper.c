@@ -198,7 +198,6 @@ void SPerl_DUMPER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
         printf("(None)");
       }
       printf("\n");
-      printf("  op_block => %x\n", body_class->op_block);
       
       // Field information
       printf("  fields\n");

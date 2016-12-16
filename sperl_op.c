@@ -1760,7 +1760,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       body->code = SPerl_BODY_C_CODE_CLASS;
       
       SPerl_BODY_CLASS* body_class = SPerl_BODY_CLASS_new(parser);
-      body_class->op_block = op_block;
       body_class->op_descripters = SPerl_OP_create_op_descripters_array(parser, op_descripters);
       body_class->code = SPerl_BODY_CLASS_C_CODE_NORMAL;
       
