@@ -197,7 +197,6 @@ SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "PUTFIELD",
   "RET",
   "SWAP",
-  "CHECKCAST",
   "LOOKUPSWITCH",
   "TABLESWITCH",
   "PUTSTATIC",
@@ -210,4 +209,5 @@ SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "MONITORENTER",
   "MONITOREXIT",
   "GOTO_W",
+  "CHECKCAST",
 };
