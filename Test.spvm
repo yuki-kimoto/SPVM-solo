@@ -124,6 +124,7 @@ package Test {
     1 >>> 2;
     
     Test::EnumA::ONE();
+    Test::EnumA::TWO();
     
     my $var : int = 4;
     $var++;

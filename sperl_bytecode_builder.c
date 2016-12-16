@@ -1,3 +1,4 @@
+#include <string.h>
 
 #include "sperl_bytecode_builder.h"
 #include "sperl_bytecode.h"
@@ -12,6 +13,8 @@
 #include "sperl_my_var.h"
 #include "sperl_allocator.h"
 #include "sperl_package.h"
+#include "sperl_name.h"
+#include "sperl_hash.h"
 
 void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
   for (SPerl_int i = 0; i < parser->op_packages->length; i++) {
@@ -50,6 +53,19 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
           while (1) {
             // [START]Postorder traversal position
             switch (op_cur->code) {
+              case SPerl_OP_C_CODE_CALL_SUB: {
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_INVOKESTATIC);
+                
+                SPerl_NAME* name = op_cur->uv.name;
+                SPerl_char* sub_abs_name = name->abs_name;
+                SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
+                SPerl_int id = sub->id;
+                
+                SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
+                SPerl_BYTECODES_push(bytecodes, id & 0xFF);
+                
+                break;
+              }
               case SPerl_OP_C_CODE_DIE: {
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ATHROW);
                 break;
