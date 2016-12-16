@@ -145,13 +145,13 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
     printf("package[%d]\n", i);
     SPerl_OP* op_package = SPerl_ARRAY_fetch(op_packages, i);
     SPerl_PACKAGE* package = op_package->uv.package;
-    printf("    name => \"%s\"\n", package->op_name->uv.word->value);
+    printf("  name => \"%s\"\n", package->op_name->uv.word->value);
     
     if (package->op_type) {
       SPerl_TYPE* type = package->op_type->uv.type;
-      printf("    type => \"%s\"\n", type->name);
-      printf("    resolved_type => \"%s\"\n", type->resolved_type->name);
-      printf("    resolved_type_id => %d\n", type->resolved_type->id);
+      printf("  type => \"%s\"\n", type->name);
+      printf("  resolved_type => \"%s\"\n", type->resolved_type->name);
+      printf("  resolved_type_id => %d\n", type->resolved_type->id);
     }
   }
 }
