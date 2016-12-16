@@ -145,11 +145,8 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
       SPerl_TYPE* type = package->op_type->uv.type;
       printf("  type => \"%s\"\n", type->name);
       printf("  resolved_type => \"%s\"\n", type->resolved_type->name);
-      printf("  resolved_type_id => %d\n", type->resolved_type->id);
     }
     
-
-    printf("  code => \"%s\"\n", SPerl_PACKAGE_C_CODE_NAMES[package->code]);
     printf("  size => %d\n", package->size);
     
     printf("  descripters => ");
@@ -349,7 +346,6 @@ void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
 
     printf("      return_type => \"%s\"\n", sub->op_return_type->uv.type->name);
     printf("      resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
-    printf("      resolved_type_id => %d\n", sub->op_return_type->uv.type->resolved_type->id);
 
     SPerl_int i;
     printf("      descripters => ");
@@ -391,7 +387,6 @@ void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     SPerl_TYPE* type = field->op_type->uv.type;
     printf("      type => \"%s\"\n", type->name);
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
-    printf("      resolved_type_id => %d\n", type->resolved_type->id);
 
     printf("      descripters => ");
     SPerl_ARRAY* op_descripters = field->op_descripters;
@@ -430,7 +425,6 @@ void SPerl_DUMPER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     SPerl_TYPE* type = my_var->op_type->uv.type;
     printf("          type => \"%s\"\n", type->name);
     printf("          resolved_type => \"%s\"\n", type->resolved_type->name);
-    printf("          resolved_type_id => %d\n", type->resolved_type->id);
     
     printf("          descripters => ");
     SPerl_ARRAY* op_descripters = my_var->op_descripters;

@@ -4,6 +4,28 @@
 #include "sperl_allocator.h"
 #include "sperl_package.h"
 
+SPerl_char* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
+  "boolean",
+  "char",
+  "byte",
+  "short",
+  "int",
+  "long",
+  "float",
+  "double"
+};
+
+SPerl_int const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
+  1,
+  1,
+  1,
+  1,
+  1,
+  2,
+  1,
+  2
+};
+
 SPerl_char* const SPerl_RESOLVED_TYPE_C_CODE_NAMES[] = {
   "core",
   "class",
@@ -72,7 +94,7 @@ SPerl_boolean SPerl_RESOLVED_TYPE_contain_sub(SPerl_PARSER* parser, SPerl_RESOLV
 }
 
 SPerl_boolean SPerl_RESOLVED_TYPE_is_integral(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
-  if (resolved_type->id <= SPerl_PACKAGE_C_CODE_LONG) {
+  if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_LONG) {
     return 1;
   }
   else {
@@ -96,7 +118,7 @@ SPerl_boolean SPerl_RESOLVED_TYPE_is_core_type_array(SPerl_PARSER* parser, SPerl
 
 SPerl_boolean SPerl_RESOLVED_TYPE_is_core_type(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
   
-  if (resolved_type && resolved_type->id <= SPerl_PACKAGE_C_CODE_DOUBLE) {
+  if (resolved_type && resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
     return 1;
   }
   else {
