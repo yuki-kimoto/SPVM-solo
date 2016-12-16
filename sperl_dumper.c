@@ -135,7 +135,7 @@ void SPerl_DUMPER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* op_constants
   for (SPerl_int i = 0; i < op_constants->length; i++) {
     SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, i);
     SPerl_CONSTANT* constant = op_constant->uv.constant;
-    printf("        constant[%" PRId32 "]\n", i);
+    printf("    constant[%" PRId32 "]\n", i);
     SPerl_DUMPER_dump_constant(parser, constant);
   }
 }
@@ -210,6 +210,12 @@ void SPerl_DUMPER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
       }
       
       printf("  is_value_class => %d\n", body_class->is_value_class);
+
+      printf("  constant_values\n");
+      SPerl_DUMPER_dump_constants(parser, body_class->op_constants);
+
+      printf("  constant_pool\n");
+      SPerl_DUMPER_dump_constant_pool(parser, body_class->constant_pool);
       
       printf("  subs\n");
       SPerl_ARRAY* op_subs = body_class->op_subs;
@@ -225,7 +231,7 @@ void SPerl_DUMPER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
 
 void SPerl_DUMPER_dump_constant_pool(SPerl_PARSER* parser, SPerl_CONSTANT_POOL* constant_pool) {
   for (SPerl_int i = 0; i < constant_pool->length; i++) {
-    printf("        constant_pool[%d] %d\n", i, constant_pool->values[i]);
+    printf("    constant_pool[%d] %d\n", i, constant_pool->values[i]);
   }
 }
 
@@ -330,28 +336,28 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
 void SPerl_DUMPER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant) {
   switch(constant->code) {
     case SPerl_CONSTANT_C_CODE_BOOLEAN:
-      printf("          boolean %" PRId32 "\n", constant->uv.int_value);
+      printf("      boolean %" PRId32 "\n", constant->uv.int_value);
       break;
     case SPerl_CONSTANT_C_CODE_BYTE:
-      printf("          char '%c'\n", constant->uv.int_value);
+      printf("      char '%c'\n", constant->uv.int_value);
       break;
     case SPerl_CONSTANT_C_CODE_INT:
-      printf("          int %" PRId32 "\n", constant->uv.int_value);
+      printf("      int %" PRId32 "\n", constant->uv.int_value);
       break;
     case SPerl_CONSTANT_C_CODE_LONG:
-      printf("          long %" PRId64 "\n", constant->uv.long_value);
+      printf("      long %" PRId64 "\n", constant->uv.long_value);
       break;
     case SPerl_CONSTANT_C_CODE_FLOAT:
-      printf("          float %f\n", constant->uv.float_value);
+      printf("      float %f\n", constant->uv.float_value);
       break;
     case SPerl_CONSTANT_C_CODE_DOUBLE:
-      printf("          double %f\n", constant->uv.double_value);
+      printf("      double %f\n", constant->uv.double_value);
       break;
     case SPerl_CONSTANT_C_CODE_STRING:
-      printf("          string \"%s\"\n", constant->uv.string_value);
+      printf("      string \"%s\"\n", constant->uv.string_value);
       break;
   }
-  printf("          pool_pos => %d\n", constant->pool_pos);
+  printf("      pool_pos => %d\n", constant->pool_pos);
 }
 
 void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
@@ -394,12 +400,6 @@ void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
       SPerl_DUMPER_dump_my_var(parser, my_var);
     }
     printf("      op_block => %x\n", sub->op_block);
-    
-    printf("      constant_values\n");
-    SPerl_DUMPER_dump_constants(parser, sub->op_constants);
-    
-    printf("      constant_pool\n");
-    SPerl_DUMPER_dump_constant_pool(parser, sub->constant_pool);
     
     printf("      bytecodes\n");
     SPerl_DUMPER_dump_bytecodes(parser, sub->bytecodes);

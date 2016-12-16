@@ -17,5 +17,6 @@ void SPerl_DUMPER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys);
 void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* packages);
 void SPerl_DUMPER_dump_resolved_types(SPerl_PARSER* parser, SPerl_ARRAY* resolved_types);
 void SPerl_DUMPER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op);
+void SPerl_DUMPER_dump_constant_pool(SPerl_PARSER* parser, SPerl_CONSTANT_POOL* constant_pool);
 
 #endif

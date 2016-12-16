@@ -14,8 +14,6 @@ struct SPerl_sub {
   SPerl_OP* op_block;
   SPerl_boolean anon;
   SPerl_int id;
-  SPerl_ARRAY* op_constants;
-  SPerl_CONSTANT_POOL* constant_pool;
   SPerl_BYTECODES* bytecodes;
 };
 
