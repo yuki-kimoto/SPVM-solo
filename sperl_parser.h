@@ -35,10 +35,6 @@ struct SPerl_yy_parser_{
   SPerl_ARRAY* op_packages;
   SPerl_HASH* package_symtable;
   
-  // Bodys
-  SPerl_ARRAY* bodys;
-  SPerl_HASH* body_symtable;
-  
   // Memory_pool
   SPerl_MEMORY_POOL* memory_pool;
   

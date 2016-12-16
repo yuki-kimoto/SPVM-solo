@@ -120,15 +120,12 @@ void SPerl_DUMPER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
 void SPerl_DUMPER_dump_parser(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
   SPerl_DUMPER_dump_ast(parser, parser->op_grammer);
-
-  printf("\n[Packages information]\n");
-  SPerl_DUMPER_dump_packages(parser, parser->op_packages);
-  
-  printf("\n[Body information]\n");
-  SPerl_DUMPER_dump_bodys(parser, parser->bodys);
   
   printf("\n[Resolved types]\n");
   SPerl_DUMPER_dump_resolved_types(parser, parser->resolved_types);
+
+  printf("\n[Packages information]\n");
+  SPerl_DUMPER_dump_packages(parser, parser->op_packages);
 }
 
 void SPerl_DUMPER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* op_constants) {
@@ -153,6 +150,51 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
       printf("  resolved_type => \"%s\"\n", type->resolved_type->name);
       printf("  resolved_type_id => %d\n", type->resolved_type->id);
     }
+    
+
+    printf("  code => \"%s\"\n", SPerl_PACKAGE_C_CODE_NAMES[package->code]);
+    printf("  size => %d\n", package->size);
+    
+    printf("  descripters => ");
+    SPerl_ARRAY* op_descripters = package->op_descripters;
+    if (op_descripters && op_descripters->length) {
+      for (SPerl_int i = 0; i < op_descripters->length; i++) {
+        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
+        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
+        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
+      }
+    }
+    else {
+      printf("(None)");
+    }
+    printf("\n");
+    
+    // Field information
+    printf("  fields\n");
+    SPerl_ARRAY* op_fields = package->op_fields;
+    for (SPerl_int j = 0; j < op_fields->length; j++) {
+      SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, j);
+      SPerl_FIELD* field = op_field->uv.field;
+      printf("    field[%" PRId32 "]\n", j);
+      SPerl_DUMPER_dump_field(parser, field);
+    }
+    
+    printf("  is_value_class => %d\n", package->is_value);
+
+    printf("  constant_values\n");
+    SPerl_DUMPER_dump_constants(parser, package->op_constants);
+
+    printf("  constant_pool\n");
+    SPerl_DUMPER_dump_constant_pool(parser, package->constant_pool);
+    
+    printf("  subs\n");
+    SPerl_ARRAY* op_subs = package->op_subs;
+    for (SPerl_int i = 0; i < op_subs->length; i++) {
+      SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
+      SPerl_SUB* sub = op_sub->uv.sub;
+      printf("    sub[%" PRId32 "]\n", i);
+      SPerl_DUMPER_dump_sub(parser, sub);
+    }
   }
 }
 
@@ -162,70 +204,6 @@ void SPerl_DUMPER_dump_resolved_types(SPerl_PARSER* parser, SPerl_ARRAY* resolve
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_ARRAY_fetch(resolved_types, i);
     printf("    name => \"%s\"\n", resolved_type->name);
     printf("    id => \"%d\"\n", resolved_type->id);
-  }
-}
-
-void SPerl_DUMPER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
-  
-  for (SPerl_int i = 0; i < bodys->length; i++) {
-    // Body
-    SPerl_BODY* body = SPerl_ARRAY_fetch(bodys, i);
-
-    printf("body[%d]\n", i);
-    printf("  code => \"%s\"\n", SPerl_BODY_C_CODE_NAMES[body->code]);
-    printf("  name => \"%s\"\n", body->op_name->uv.word->value);
-    
-    // Core body
-    if (body->code == SPerl_BODY_C_CODE_CORE) {
-      SPerl_BODY_CORE* body_core = body->uv.body_core;
-      printf("  code => \"%s\"\n", SPerl_BODY_CORE_C_CODE_NAMES[body_core->code]);
-      printf("  size => %d\n", body_core->size);
-    }
-    // Class body
-    else if (body->code == SPerl_BODY_C_CODE_CLASS) {
-      SPerl_BODY_CLASS* body_class = body->uv.body_class;
-      
-      printf("  descripters => ");
-      SPerl_ARRAY* op_descripters = body_class->op_descripters;
-      if (op_descripters && op_descripters->length) {
-        for (SPerl_int i = 0; i < op_descripters->length; i++) {
-          SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
-          SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
-          printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
-        }
-      }
-      else {
-        printf("(None)");
-      }
-      printf("\n");
-      
-      // Field information
-      printf("  fields\n");
-      SPerl_ARRAY* op_fields = body_class->op_fields;
-      for (SPerl_int j = 0; j < op_fields->length; j++) {
-        SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, j);
-        SPerl_FIELD* field = op_field->uv.field;
-        printf("    field[%" PRId32 "]\n", j);
-        SPerl_DUMPER_dump_field(parser, field);
-      }
-      
-      printf("  is_value_class => %d\n", body_class->is_value_class);
-
-      printf("  constant_values\n");
-      SPerl_DUMPER_dump_constants(parser, body_class->op_constants);
-
-      printf("  constant_pool\n");
-      SPerl_DUMPER_dump_constant_pool(parser, body_class->constant_pool);
-      
-      printf("  subs\n");
-      SPerl_ARRAY* op_subs = body_class->op_subs;
-      for (SPerl_int i = 0; i < op_subs->length; i++) {
-        SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
-        SPerl_SUB* sub = op_sub->uv.sub;
-        printf("    sub[%" PRId32 "]\n", i);
-        SPerl_DUMPER_dump_sub(parser, sub);
-      }
-    }
   }
 }
 

@@ -18,7 +18,7 @@ struct SPerl_resolved_type {
   SPerl_char* name;
   SPerl_int name_length;
   SPerl_int id;
-  SPerl_BODY* body;
+  SPerl_PACKAGE* package;
 };
 
 SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl_PARSER* parser);

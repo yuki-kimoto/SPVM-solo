@@ -1,10 +1,9 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "sperl_parser.h"
 #include "sperl_resolved_type.h"
 #include "sperl_package.h"
-#include "sperl_body_core.h"
-#include "sperl_body.h"
 #include "sperl_type_component_word.h"
 #include "sperl_type.h"
 #include "sperl_word.h"
@@ -30,8 +29,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->package_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
   parser->op_types = SPerl_ALLOCATOR_new_array(parser, 0);
   parser->op_use_stack = SPerl_ALLOCATOR_new_array(parser, 0);
-  parser->bodys = SPerl_ALLOCATOR_new_array(parser, 0);
-  parser->body_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
   parser->field_abs_name_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
   parser->include_pathes = SPerl_ALLOCATOR_new_array(parser, 0);
   parser->bufptr = "";
@@ -40,29 +37,20 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->use_package_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
   
   // Core types
-  for (SPerl_int i = 0; i < SPerl_BODY_CORE_C_CODE_LENGTH; i++) {
+  for (SPerl_int i = 0; i < SPerl_PACKAGE_C_CODE_LENGTH; i++) {
     // Name
-    SPerl_char* name = SPerl_BODY_CORE_C_CODE_NAMES[i];
+    SPerl_char* name = SPerl_PACKAGE_C_CODE_NAMES[i];
     
-    // Body core
-    SPerl_BODY_CORE* body_core = SPerl_BODY_CORE_new(parser);
-    body_core->code = i;
-    body_core->size = SPerl_BODY_CORE_C_SIZES[i];
+    // Core package
+    SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
+    package->code = i;
+    package->size = SPerl_PACKAGE_C_SIZES[i];
     
     // Name
     SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = name;
     op_name->uv.word = name_word;
-    
-    // Body
-    SPerl_BODY* body = SPerl_BODY_new(parser);
-    body->code = SPerl_BODY_C_CODE_CORE;
-    body->op_name = op_name;
-    body->uv.body_core = body_core;
-    
-    SPerl_ARRAY_push(parser->bodys, body);
-    SPerl_HASH_insert(parser->body_symtable, name, strlen(name), body);
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
@@ -71,7 +59,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
-    resolved_type->body = body;
+    resolved_type->package = package;
     SPerl_ARRAY_push(parser->resolved_types, resolved_type);
     SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
     
@@ -94,7 +82,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_ARRAY_push(parser->op_types, op_type);
     
     // Package
-    SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
     SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
     op_package_name->uv.word = name_word;
     package->op_name = op_package_name;
