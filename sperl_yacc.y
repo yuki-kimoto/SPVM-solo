@@ -13,14 +13,14 @@
 %}
 
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE NEW
-%token <opval> LAST NEXT WORD VAR CONSTANT ENUM DESCRIPTER CORETYPE UNDEF
+%token <opval> LAST NEXT WORD VAR CONSTANT ENUM DESCRIPTER CORETYPE UNDEF DIE
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
 %type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub call_op
 %type <opval> opt_terms terms term sub_args sub_arg opt_sub_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> opt_descripters list_descripters descripters decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_things_in_grammer opt_decl_enumeration_values type_array
-%type <opval> for_statement while_statement expression opt_decl_things_in_grammer type_sub types not_type_sub opt_term
+%type <opval> for_statement while_statement expression opt_decl_things_in_grammer type_sub types not_type_sub opt_term throw_exception
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_word array_length logical_op decl_thing_in_grammer
 
 %right <opval> ASSIGN
@@ -144,6 +144,9 @@ decl_enumeration_value
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1, $3);
     }
+
+throw_exception
+  : DIE term
 
 opt_statements
   :	/* Empty */
@@ -317,6 +320,7 @@ expression
       $$ = $1;
       SPerl_OP_sibling_splice(parser, $$, NULL, 0, $2);
     }
+  | throw_exception
 
 opt_terms
   :	/* Empty */
