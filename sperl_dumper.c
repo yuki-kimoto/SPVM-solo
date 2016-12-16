@@ -291,6 +291,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
       case SPerl_BYTECODE_C_CODE_IFNULL:
       case SPerl_BYTECODE_C_CODE_GOTO:
       case SPerl_BYTECODE_C_CODE_INVOKESTATIC:
+      case SPerl_BYTECODE_C_CODE_JSR:
       {
         i++;
         bytecode = bytecodes->values[i];

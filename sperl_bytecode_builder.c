@@ -54,8 +54,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
             // [START]Postorder traversal position
             switch (op_cur->code) {
               case SPerl_OP_C_CODE_CALL_SUB: {
-                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_INVOKESTATIC);
                 
+                // Call subroutine
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_INVOKESTATIC);
                 SPerl_NAME* name = op_cur->uv.name;
                 SPerl_char* sub_abs_name = name->abs_name;
                 SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
