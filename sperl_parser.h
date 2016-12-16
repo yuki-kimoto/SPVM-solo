@@ -55,7 +55,7 @@ struct SPerl_yy_parser_{
   SPerl_ARRAY* op_use_stack;
 
   // Current subs(named sub + anon sub) in class 
-  SPerl_ARRAY* op_subs;
+  SPerl_ARRAY* cur_op_subs;
   
   SPerl_ARRAY* body_classes;
   

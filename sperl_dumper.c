@@ -129,16 +129,6 @@ void SPerl_DUMPER_dump_parser(SPerl_PARSER* parser) {
   
   printf("\n[Resolved types]\n");
   SPerl_DUMPER_dump_resolved_types(parser, parser->resolved_types);
-  
-  printf("\n[Subroutine information]\n");
-  printf("  subs\n");
-  SPerl_ARRAY* op_subs = parser->op_subs;
-  for (SPerl_int i = 0; i < op_subs->length; i++) {
-    SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
-    SPerl_SUB* sub = op_sub->uv.sub;
-    printf("    sub[%" PRId32 "]\n", i);
-    SPerl_DUMPER_dump_sub(parser, sub);
-  }
 }
 
 void SPerl_DUMPER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* op_constants) {
@@ -221,6 +211,15 @@ void SPerl_DUMPER_dump_bodys(SPerl_PARSER* parser, SPerl_ARRAY* bodys) {
       }
       
       printf("  is_value_class => %d\n", body_class->is_value_class);
+      
+      printf("  subs\n");
+      SPerl_ARRAY* op_subs = body_class->op_subs;
+      for (SPerl_int i = 0; i < op_subs->length; i++) {
+        SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
+        SPerl_SUB* sub = op_sub->uv.sub;
+        printf("    sub[%" PRId32 "]\n", i);
+        SPerl_DUMPER_dump_sub(parser, sub);
+      }
     }
   }
 }
