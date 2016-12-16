@@ -19,6 +19,7 @@ struct SPerl_body_class {
   SPerl_HASH* field_symtable;
   SPerl_OP* op_block;
   SPerl_boolean is_value_class;
+  SPerl_ARRAY* op_subs;
 };
 
 SPerl_BODY_CLASS* SPerl_BODY_CLASS_new(SPerl_PARSER* parser);

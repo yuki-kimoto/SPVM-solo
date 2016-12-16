@@ -6,6 +6,7 @@
 struct SPerl_package {
   SPerl_OP* op_name;
   SPerl_OP* op_type;
+  SPerl_ARRAY* op_subs;
 };
 
 SPerl_PACKAGE* SPerl_PACKAGE_new(SPerl_PARSER* parser);

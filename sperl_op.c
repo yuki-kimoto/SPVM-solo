@@ -397,9 +397,9 @@ void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
 }
 
 void SPerl_OP_check_ops(SPerl_PARSER* parser) {
-  for (SPerl_int i = 0; i < parser->op_subs->length; i++) {
+  for (SPerl_int k = 0; k < parser->op_subs->length; k++) {
     
-    SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
+    SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, k);
     SPerl_SUB* sub = op_sub->uv.sub;
     
     // my var informations
