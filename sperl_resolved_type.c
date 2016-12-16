@@ -2,7 +2,7 @@
 #include "sperl_resolved_type.h"
 #include "sperl_parser.h"
 #include "sperl_allocator.h"
-#include "sperl_body_core.h"
+#include "sperl_package.h"
 
 SPerl_char* const SPerl_RESOLVED_TYPE_C_CODE_NAMES[] = {
   "core",
@@ -72,7 +72,7 @@ SPerl_boolean SPerl_RESOLVED_TYPE_contain_sub(SPerl_PARSER* parser, SPerl_RESOLV
 }
 
 SPerl_boolean SPerl_RESOLVED_TYPE_is_integral(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
-  if (resolved_type->id <= SPerl_BODY_CORE_C_CODE_LONG) {
+  if (resolved_type->id <= SPerl_PACKAGE_C_CODE_LONG) {
     return 1;
   }
   else {
@@ -96,7 +96,7 @@ SPerl_boolean SPerl_RESOLVED_TYPE_is_core_type_array(SPerl_PARSER* parser, SPerl
 
 SPerl_boolean SPerl_RESOLVED_TYPE_is_core_type(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
   
-  if (resolved_type && resolved_type->id <= SPerl_BODY_CORE_C_CODE_DOUBLE) {
+  if (resolved_type && resolved_type->id <= SPerl_PACKAGE_C_CODE_DOUBLE) {
     return 1;
   }
   else {

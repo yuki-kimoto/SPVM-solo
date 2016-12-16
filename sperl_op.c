@@ -1191,13 +1191,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 break;
               }
               case SPerl_OP_C_CODE_CONVERT: {
-                warn("GGGGGGGGGGGGG");
                 SPerl_RESOLVED_TYPE* resolved_type_src = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 
-                warn("III");
-                SPerl_RESOLVED_TYPE* resolved_type_dist = SPerl_OP_get_resolved_type(parser, op_cur);;
-                
-                warn("JJJJ %d", resolved_type_dist);
+                SPerl_RESOLVED_TYPE* resolved_type_dist = SPerl_OP_get_resolved_type(parser, op_cur->last);;
                 
                 // Can receive only core type
                 if (!SPerl_RESOLVED_TYPE_is_core_type(parser, resolved_type_src) || !SPerl_RESOLVED_TYPE_is_core_type(parser, resolved_type_dist)) {
@@ -1219,7 +1215,6 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                   op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
                 }
               }
-                warn("HHHH");
               break;
             }
             
@@ -1269,8 +1264,6 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
     last_type_id = SPerl_PACKAGE_C_CODE_INT;
   }
   
-  warn("AAAAAAAAAAA");
-  
   if (first_type_id != last_type_id) {
     SPerl_boolean replace_first = 0;
     
@@ -1316,11 +1309,8 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
       }
     }
     else if (first_type_id == SPerl_PACKAGE_C_CODE_DOUBLE) {
-  warn("BBBB");
       if (last_type_id == SPerl_PACKAGE_C_CODE_INT) {
-  warn("CCCC");
         type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
-  warn("DDDD");
       }
       else if (last_type_id == SPerl_PACKAGE_C_CODE_LONG) {
         type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
@@ -1339,7 +1329,6 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
       op->first = type_convert_op;
     }
     else {
-      warn("EEEEEEEEEE");
       type_convert_op->sibparent = op->last->sibparent;
       type_convert_op->moresib = op->last->moresib;
       type_convert_op->first = op->last;

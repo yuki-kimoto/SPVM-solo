@@ -16,7 +16,6 @@
 #include "sperl_word.h"
 #include "sperl_descripter.h"
 #include "sperl_use.h"
-#include "sperl_body_core.h"
 #include "sperl_type.h"
 
 static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
@@ -56,7 +55,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             SPerl_USE* use = op_use->uv.use;
             SPerl_char* package_name = use->op_package_name->uv.word->value;
             
-            SPerl_BODY_CLASS* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
+            SPerl_PACKAGE* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
             if (found_package) {
               continue;
             }

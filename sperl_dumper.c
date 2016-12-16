@@ -21,9 +21,6 @@
 #include "sperl_type_component_word.h"
 #include "sperl_type_component_array.h"
 #include "sperl_type_component_sub.h"
-#include "sperl_body.h"
-#include "sperl_body_core.h"
-#include "sperl_body_class.h"
 #include "sperl_enumeration.h"
 #include "sperl_package.h"
 #include "sperl_resolved_type.h"
@@ -179,7 +176,7 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
       SPerl_DUMPER_dump_field(parser, field);
     }
     
-    printf("  is_value_class => %d\n", package->is_value);
+    printf("  is_value => %d\n", package->is_value);
 
     printf("  constant_values\n");
     SPerl_DUMPER_dump_constants(parser, package->op_constants);

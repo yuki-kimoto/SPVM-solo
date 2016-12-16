@@ -76,10 +76,6 @@ typedef struct SPerl_type_component_array SPerl_TYPE_COMPONENT_ARRAY;
 struct SPerl_type_component_sub;
 typedef struct SPerl_type_component_sub SPerl_TYPE_COMPONENT_SUB;
 
-/* sperl_body_core.h */
-struct SPerl_body_core;
-typedef struct SPerl_body_core SPerl_BODY_CORE;
-
 /* sperl_enum.h */
 struct SPerl_enumeration;
 typedef struct SPerl_enumeration SPerl_ENUMERATION;
@@ -131,14 +127,6 @@ typedef struct SPerl_descripter SPerl_DESCRIPTER;
 /* sperl_sub.h */
 struct SPerl_sub;
 typedef struct SPerl_sub SPerl_SUB;
-
-/* sperl_body_class.h */
-struct SPerl_body;
-typedef struct SPerl_body SPerl_BODY;
-
-/* sperl_body_class.h */
-struct SPerl_body_class;
-typedef struct SPerl_body_class SPerl_BODY_CLASS;
 
 /* sperl_array.h */
 struct SPerl_array;
