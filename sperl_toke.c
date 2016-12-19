@@ -583,6 +583,18 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_DECL_PACKAGE);
               return PACKAGE;
             }
+            else if (memcmp(keyword, "switch", str_len) == 0) {
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_IF);
+              return SWITCH;
+            }
+            else if (memcmp(keyword, "case", str_len) == 0) {
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_IF);
+              return CASE;
+            }
+            else if (memcmp(keyword, "default", str_len) == 0) {
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_IF);
+              return DEFAULT;
+            }
             else if (memcmp(keyword, "if", str_len) == 0) {
               yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_IF);
               return IF;
