@@ -7,7 +7,6 @@ struct SPerl_my_var {
   SPerl_OP* op_type;
   SPerl_OP* op_name;
   SPerl_OP* op_sub;
-  SPerl_ARRAY* op_descripters;
   SPerl_int pos;
 };
 

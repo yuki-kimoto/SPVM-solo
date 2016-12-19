@@ -16,7 +16,6 @@
 #include "sperl_op.h"
 #include "sperl_word.h"
 #include "sperl_enumeration_value.h"
-#include "sperl_descripter.h"
 #include "sperl_type.h"
 #include "sperl_type_component_word.h"
 #include "sperl_type_component_array.h"
@@ -148,20 +147,6 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
     }
     
     printf("  size => %d\n", package->size);
-    
-    printf("  descripters => ");
-    SPerl_ARRAY* op_descripters = package->op_descripters;
-    if (op_descripters && op_descripters->length) {
-      for (SPerl_int i = 0; i < op_descripters->length; i++) {
-        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
-        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
-        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
-      }
-    }
-    else {
-      printf("(None)");
-    }
-    printf("\n");
     
     // Field information
     printf("  fields\n");
@@ -349,20 +334,6 @@ void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("      return_type => \"%s\"\n", sub->op_return_type->uv.type->name);
     printf("      resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
 
-    SPerl_int i;
-    printf("      descripters => ");
-    SPerl_ARRAY* op_descripters = sub->op_descripters;
-    if (op_descripters->length) {
-      for (SPerl_int i = 0; i < op_descripters->length; i++) {
-        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
-        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
-        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
-      }
-    }
-    else {
-      printf("(None)");
-    }
-    printf("\n");
     printf("      argument_count => %" PRId32 "\n", sub->argument_count);
     printf("      my_vars\n");
     SPerl_ARRAY* op_my_vars = sub->op_my_vars;
@@ -390,19 +361,6 @@ void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     printf("      type => \"%s\"\n", type->name);
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
 
-    printf("      descripters => ");
-    SPerl_ARRAY* op_descripters = field->op_descripters;
-    if (op_descripters->length) {
-      for (SPerl_int i = 0; i < op_descripters->length; i++) {
-        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
-        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
-        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
-      }
-    }
-    else {
-      printf("(None)");
-    }
-    printf("\n");
   }
   else {
     printf("        None\n");
@@ -428,19 +386,6 @@ void SPerl_DUMPER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     printf("          type => \"%s\"\n", type->name);
     printf("          resolved_type => \"%s\"\n", type->resolved_type->name);
     
-    printf("          descripters => ");
-    SPerl_ARRAY* op_descripters = my_var->op_descripters;
-    if (op_descripters->length) {
-      for (SPerl_int i = 0; i < op_descripters->length; i++) {
-        SPerl_OP* op_descripter = SPerl_ARRAY_fetch(op_descripters, i);
-        SPerl_DESCRIPTER* descripter = op_descripter->uv.descripter;
-        printf("%s ", SPerl_DESCRIPTER_CODE_NAMES[descripter->code]);
-      }
-    }
-    else {
-      printf("(None)");
-    }
-    printf("\n");
   }
   else {
     printf("          None\n");

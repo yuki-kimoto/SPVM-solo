@@ -9,7 +9,6 @@ use Test::TypedefClass;
 use Test::TypedefArray;
 use Test::TypedefArray2;
 use Test::TypedefSub;
-use Test::ValueClass;
 use Test::Simple;
 
 package Test {
@@ -183,7 +182,7 @@ package Test {
     undef;
   }
 
-  sub sum3 ($foo : int, $bar : float) : int {
+  sub sum3 ($simple : Test::Simple, $foo : int, $bar : float) : int {
     
     if (3) {
     

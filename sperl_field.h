@@ -7,7 +7,6 @@
 struct SPerl_field {
   SPerl_OP* op_type;
   SPerl_OP* op_name;
-  SPerl_ARRAY* op_descripters;
 };
 
 SPerl_FIELD* SPerl_FIELD_new(SPerl_PARSER* parser);

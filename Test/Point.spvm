@@ -1,34 +1,8 @@
-use Test::Class1;
 use Test::EnumA;
 
 package Test::Point {
   
   has x : sub (int, int) int;
-  
-  sub get1 ($var1 : Test::Class1, $var2 : int) : int {
-    my $var3 : int;
-    my $var4 : int;
-
-    {
-      my $var3 : int;
-      my $var4 : int;
-    }
-    
-    {
-      my $var3 : int;
-      my $var4 : int;
-    }
-    
-    $var3 = 3;
-    $var3 = 4;
-    
-    $var4 = 6;
-    
-    # my $var5 : sub (int, int) int = sub ($foo : int, $bar : int) : int {
-    #  
-    # };
-    
-  }
   
   sub get2 () : long {
     1;

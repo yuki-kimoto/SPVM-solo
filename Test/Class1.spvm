@@ -1,4 +1,0 @@
-package Test::Class1 : value {
-  has re : double;
-  has im : double;
-}

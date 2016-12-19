@@ -18,7 +18,7 @@
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
 %type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub call_op
 %type <opval> opt_terms terms term sub_args sub_arg opt_sub_args decl_use decl_thing_in_class decl_things_in_class
-%type <opval> opt_descripters list_descripters descripters decl_enumeration_values decl_enumeration_value decl_anon_sub
+%type <opval> decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_things_in_grammer opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammer type_sub types not_type_sub opt_term throw_exception
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_word array_length logical_op decl_thing_in_grammer
@@ -86,21 +86,14 @@ decl_thing_in_grammer
 decl_package
   : PACKAGE package_name type ';'
     {
-      $$ = SPerl_OP_build_decl_package(parser, $1, $2, $3, SPerl_OP_newOP_LIST(parser), SPerl_OP_newOP_NULL(parser));
+      $$ = SPerl_OP_build_decl_package(parser, $1, $2, $3, SPerl_OP_newOP_NULL(parser));
       if (parser->fatal_error) {
         YYABORT;
       }
     }
   | PACKAGE package_name class_block
     {
-      $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), SPerl_OP_newOP_LIST(parser), $3);
-      if (parser->fatal_error) {
-        YYABORT;
-      }
-    }
-  | PACKAGE package_name ':' list_descripters class_block
-    {
-      $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $4, $5);
+      $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $3);
       if (parser->fatal_error) {
         YYABORT;
       }
@@ -229,15 +222,15 @@ decl_use
 
 
 decl_field
-  : HAS field_name ':' opt_descripters type ';'
+  : HAS field_name ':' type ';'
     {
-      $$ = SPerl_OP_build_decl_field(parser, $1, $2, $4, $5);
+      $$ = SPerl_OP_build_decl_field(parser, $1, $2, $4);
     }
 
 decl_sub
- : SUB sub_name '(' opt_sub_args ')' ':' opt_descripters type block
+ : SUB sub_name '(' opt_sub_args ')' ':' type block
      {
-       $$ = SPerl_OP_build_decl_sub(parser, $1, $2, $4, $7, $8, $9);
+       $$ = SPerl_OP_build_decl_sub(parser, $1, $2, $4, $7, $8);
      }
 
 decl_enum
@@ -247,29 +240,28 @@ decl_enum
     }
 
 decl_my
-  : MY VAR ':' opt_descripters type
+  : MY VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(parser, $1, $2, $4, $5);
+      $$ = SPerl_OP_build_decl_my(parser, $1, $2, $4);
     }
   | MY VAR
     {
-      SPerl_OP* op_descripters = SPerl_OP_newOP_LIST(parser);
       SPerl_OP* op_type = SPerl_OP_newOP_NULL(parser);
       
-      $$ = SPerl_OP_build_decl_my(parser, $1, $2, op_descripters, op_type);
+      $$ = SPerl_OP_build_decl_my(parser, $1, $2, op_type);
     }
 
 decl_anon_sub
- : SUB '(' ')' ':' opt_descripters type block
+ : SUB '(' ')' ':' type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
        SPerl_OP* op_sub_args = SPerl_OP_newOP_LIST(parser);
-       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), op_sub_args, $5, $6, $7);
+       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), op_sub_args, $5, $6);
      }
- | SUB '(' sub_args ')' ':' opt_descripters type block
+ | SUB '(' sub_args ')' ':' type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
-       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7, $8);
+       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7);
      }
 
 opt_decl_things_in_class
@@ -565,37 +557,10 @@ sub_args
   | sub_arg
 
 sub_arg
-  : VAR ':' opt_descripters type
+  : VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(parser, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_MY_VAR, NULL, NULL), $1, $3, $4);
+      $$ = SPerl_OP_build_decl_my(parser, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_MY_VAR, NULL, NULL), $1, $3);
     }
-    
-opt_descripters
-  :	/* Empty */
-    {
-      $$ = SPerl_OP_newOP_LIST(parser);
-    }
-  |	list_descripters
-
-list_descripters
-  :	descripters
-    {
-      if ($1->code == SPerl_OP_C_CODE_LIST) {
-        $$ = $1;
-      }
-      else {
-        $$ = SPerl_OP_newOP_LIST(parser);
-        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
-      }
-    }
-
-descripters
-  : descripters DESCRIPTER
-    {
-      $$ = SPerl_OP_append_elem(parser, $1, $2);
-    }
-  | DESCRIPTER
-
 types
   : types ',' type
     {
