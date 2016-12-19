@@ -214,4 +214,9 @@ enum {
 
 extern SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[];
 
+/*
+tableswitch if the following
+4 + range <= (3 + 2 * entries) * SWITCHRTIO
+*/
+
 #endif
