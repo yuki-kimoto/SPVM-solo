@@ -86,10 +86,14 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               case SPerl_OP_C_CODE_NEXT: {
                 SPerl_int* pos_ptr = SPerl_ARRAY_fetch(loop_condition_bytecode_pos_stack, loop_condition_bytecode_pos_stack->length - 1);
                 
-                // Add goto
+                // Add "goto"
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
-                SPerl_BYTECODES_push(bytecodes, (*pos_ptr >> 8) & 0xFF);
-                SPerl_BYTECODES_push(bytecodes, *pos_ptr & 0xFF);
+
+                // Jump offset
+                SPerl_int jump_offset = *pos_ptr - (bytecodes->length - 1);
+
+                SPerl_BYTECODES_push(bytecodes, (jump_offset >> 8) & 0xFF);
+                SPerl_BYTECODES_push(bytecodes, jump_offset & 0xFF);
                 
                 break;
               }
@@ -97,28 +101,39 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_IF) {
                   SPerl_int* pos_ptr = SPerl_ARRAY_pop(if_condition_bytecode_pos_stack);
                   
-                  SPerl_int offset = bytecodes->length - *pos_ptr;
+                  // Jump offset
+                  SPerl_int jump_offset = bytecodes->length - *pos_ptr;
                   
-                  bytecodes->values[*pos_ptr + 1] = (offset >> 8) & 0xFF;
-                  bytecodes->values[*pos_ptr + 2] = offset & 0xFF;
+                  // Set jump offset
+                  bytecodes->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecodes->values[*pos_ptr + 2] = jump_offset & 0xFF;
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
                   SPerl_int* pos_ptr = SPerl_ARRAY_pop(loop_condition_bytecode_pos_stack);
                   
-                  // Add goto
+                  // Add "goto" to end of block
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
-                  SPerl_BYTECODES_push(bytecodes, (*pos_ptr >> 8) & 0xFF);
-                  SPerl_BYTECODES_push(bytecodes, *pos_ptr & 0xFF);
+                  
+                  // Goto offset
+                  SPerl_int block_end_goto_offset = *pos_ptr - (bytecodes->length - 1);
+                  SPerl_BYTECODES_push(bytecodes, (block_end_goto_offset >> 8) & 0xFF);
+                  SPerl_BYTECODES_push(bytecodes, block_end_goto_offset & 0xFF);
+                  
+                  // If offset
+                  SPerl_int if_offset = bytecodes->length - *pos_ptr;
                   
                   // Set condition jump position
-                  bytecodes->values[*pos_ptr + 1] = (bytecodes->length >> 8) & 0xFF;
-                  bytecodes->values[*pos_ptr + 2] = bytecodes->length & 0xFF;
+                  bytecodes->values[*pos_ptr + 1] = (if_offset >> 8) & 0xFF;
+                  bytecodes->values[*pos_ptr + 2] = if_offset & 0xFF;
                   
                   // Set last position
                   SPerl_int* last_pos_ptr;
                   while (last_pos_ptr = SPerl_ARRAY_pop(last_bytecode_pos_stack)) {
-                    bytecodes->values[*last_pos_ptr + 1] = (bytecodes->length >> 8) & 0xFF;
-                    bytecodes->values[*last_pos_ptr + 2] = bytecodes->length & 0xFF;
+                    // Last offset
+                    SPerl_int last_offset = bytecodes->length - *last_pos_ptr;
+                    
+                    bytecodes->values[*last_pos_ptr + 1] = (last_offset >> 8) & 0xFF;
+                    bytecodes->values[*last_pos_ptr + 2] = last_offset & 0xFF;
                   }
                 }
                 break;
