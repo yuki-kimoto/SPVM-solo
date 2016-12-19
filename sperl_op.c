@@ -115,6 +115,9 @@ SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
   "ARRAY_LENGTH",
   "CONDITION",
   "DIE",
+  "SWITCH",
+  "CASE",
+  "DEFAULT",
 };
 
 SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, SPerl_OP* op_term_loop_var, SPerl_OP* op_term_condition, SPerl_OP* op_term_next_value, SPerl_OP* op_block) {

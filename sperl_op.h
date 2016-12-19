@@ -119,6 +119,9 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_ARRAY_LENGTH,
   SPerl_OP_C_CODE_CONDITION,
   SPerl_OP_C_CODE_DIE,
+  SPerl_OP_C_CODE_SWITCH,
+  SPerl_OP_C_CODE_CASE,
+  SPerl_OP_C_CODE_DEFAULT,
 };
 
 extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];

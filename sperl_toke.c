@@ -584,15 +584,15 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               return PACKAGE;
             }
             else if (memcmp(keyword, "switch", str_len) == 0) {
-              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_IF);
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_SWITCH);
               return SWITCH;
             }
             else if (memcmp(keyword, "case", str_len) == 0) {
-              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_IF);
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_CASE);
               return CASE;
             }
             else if (memcmp(keyword, "default", str_len) == 0) {
-              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_IF);
+              yylvalp->opval = _newOP(parser, SPerl_OP_C_CODE_DEFAULT);
               return DEFAULT;
             }
             else if (memcmp(keyword, "if", str_len) == 0) {
