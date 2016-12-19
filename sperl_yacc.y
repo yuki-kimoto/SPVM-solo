@@ -200,7 +200,7 @@ while_statement
     }
 
 switch_statement
-  : SWITCH '(' term ')' '{' opt_statements '}'
+  : SWITCH '(' term ')' block
     {
       $$ = SPerl_OP_build_switch_statement(parser, $1, $2)
     }

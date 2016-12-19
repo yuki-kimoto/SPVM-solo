@@ -130,6 +130,7 @@ enum {
   // Block type
   SPerl_OP_C_FLAG_BLOCK_IF = 1,
   SPerl_OP_C_FLAG_BLOCK_LOOP = 2,
+  SPerl_OP_C_FLAG_BLOCK_SWITCH = 4,
 };
 
 enum {
@@ -173,7 +174,7 @@ void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op);
 void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op);
 void SPerl_OP_convert_or_to_if(SPerl_PARSER* parser, SPerl_OP* op);
 
-SPerl_OP* SPerl_OP_build_switch_statement(SPerl_PARSER* parser, SPerl_OP* op_switch, SPerl_OP* op_statements);
+SPerl_OP* SPerl_OP_build_switch_statement(SPerl_PARSER* parser, SPerl_OP* op_switch, SPerl_OP* op_block);
 SPerl_OP* SPerl_OP_build_case_statement(SPerl_PARSER* parser, SPerl_OP* op_case, SPerl_OP* op_term);
 
 SPerl_OP* SPerl_OP_build_logical_op(SPerl_PARSER* parser, SPerl_OP* op_logical_op, SPerl_OP* op_first, SPerl_OP* op_last);

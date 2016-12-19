@@ -152,9 +152,11 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
   return op_loop;
 }
 
-SPerl_OP* SPerl_OP_build_switch_statement(SPerl_PARSER* parser, SPerl_OP* op_switch, SPerl_OP* op_statements) {
+SPerl_OP* SPerl_OP_build_switch_statement(SPerl_PARSER* parser, SPerl_OP* op_switch, SPerl_OP* op_block) {
   
-  SPerl_OP_sibling_splice(parser, op_switch, NULL, 0, op_statements);
+  SPerl_OP_sibling_splice(parser, op_switch, NULL, 0, op_block);
+
+  op_block->flag |= SPerl_OP_C_FLAG_BLOCK_SWITCH;
   
   return op_switch;
 }
@@ -432,6 +434,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
       SPerl_int block_base = 0;
       SPerl_boolean block_start = 0;
       
+      // In switch statement
+      SPerl_boolean in_switch = 0;
+      
       // Run OPs
       SPerl_OP* op_base = op_sub;
       SPerl_OP* op_cur = op_base;
@@ -440,6 +445,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         // [START]Preorder traversal position
         
         switch (op_cur->code) {
+          case SPerl_OP_C_CODE_SWITCH: {
+            if (in_switch) {
+              
+            }
+            break;
+          }
           // Start scope
           case SPerl_OP_C_CODE_BLOCK: {
             if (block_start) {
