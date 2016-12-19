@@ -97,8 +97,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_IF) {
                   SPerl_int* pos_ptr = SPerl_ARRAY_pop(if_condition_bytecode_pos_stack);
                   
-                  bytecodes->values[*pos_ptr + 1] = (bytecodes->length >> 8) & 0xFF;
-                  bytecodes->values[*pos_ptr + 2] = bytecodes->length & 0xFF;
+                  SPerl_int offset = bytecodes->length - *pos_ptr;
+                  
+                  bytecodes->values[*pos_ptr + 1] = (offset >> 8) & 0xFF;
+                  bytecodes->values[*pos_ptr + 2] = offset & 0xFF;
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
                   SPerl_int* pos_ptr = SPerl_ARRAY_pop(loop_condition_bytecode_pos_stack);
