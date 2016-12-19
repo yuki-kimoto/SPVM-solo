@@ -152,10 +152,11 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
   return op_loop;
 }
 
-SPerl_OP* SPerl_OP_build_switch_statement(SPerl_PARSER* parser, SPerl_OP* op_switch, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_switch_statement(SPerl_PARSER* parser, SPerl_OP* op_switch, SPerl_OP* op_term, SPerl_OP* op_block) {
   
-  SPerl_OP_sibling_splice(parser, op_switch, NULL, 0, op_block);
-
+  SPerl_OP_sibling_splice(parser, op_switch, NULL, 0, op_term);
+  SPerl_OP_sibling_splice(parser, op_switch, op_term, 0, op_block);
+  
   op_block->flag |= SPerl_OP_C_FLAG_BLOCK_SWITCH;
   
   return op_switch;
@@ -437,6 +438,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
       // In switch statement
       SPerl_boolean in_switch = 0;
       
+      // Current case statements
+      SPerl_ARRAY* cur_case_ops = NULL;
+      
+      // Current default statement
+      SPerl_OP* cur_default_op = NULL;
+      
       // Run OPs
       SPerl_OP* op_base = op_sub;
       SPerl_OP* op_cur = op_base;
@@ -447,7 +454,12 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
         switch (op_cur->code) {
           case SPerl_OP_C_CODE_SWITCH: {
             if (in_switch) {
-              
+              SPerl_yyerror_format(parser, "duplicate switch is forbidden at %s line %d\n", op_cur->file, op_cur->line);
+              parser->fatal_error = 1;
+              return;
+            }
+            else {
+              in_switch = 1;
             }
             break;
           }
@@ -478,6 +490,45 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
           while (1) {
            // [START]Postorder traversal position
             switch (op_cur->code) {
+              case SPerl_OP_C_CODE_DEFAULT: {
+                if (cur_default_op) {
+                  SPerl_yyerror_format(parser, "multiple default is forbidden at %s line %d\n", op_cur->file, op_cur->line);
+                  parser->fatal_error = 1;
+                  return;
+                }
+                else {
+                  cur_default_op = op_cur;
+                }
+                break;
+              }
+              case SPerl_OP_C_CODE_CASE: {
+                
+                if (op_cur->first->code != SPerl_OP_C_CODE_CONSTANT) {
+                  SPerl_yyerror_format(parser, "case need constant at %s line %d\n", op_cur->file, op_cur->line);
+                }
+                
+                if (!cur_case_ops) {
+                  cur_case_ops = SPerl_ALLOCATOR_new_array(parser, 0);
+                }
+                SPerl_ARRAY_push(cur_case_ops, op_cur);
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_SWITCH: {
+                
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
+                
+                if (first_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  SPerl_yyerror_format(parser, "switch need int at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                in_switch = 0;
+                cur_default_op = NULL;
+                cur_case_ops = NULL;
+                break;
+              }
+              
               case SPerl_OP_C_CODE_CONDITION: {
                 if (op_cur->first && !op_cur->last) {
                   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);

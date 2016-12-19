@@ -202,7 +202,7 @@ while_statement
 switch_statement
   : SWITCH '(' term ')' block
     {
-      $$ = SPerl_OP_build_switch_statement(parser, $1, $2)
+      $$ = SPerl_OP_build_switch_statement(parser, $1, $3, $5)
     }
 
 case_statement
