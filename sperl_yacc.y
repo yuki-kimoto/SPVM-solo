@@ -201,9 +201,15 @@ while_statement
 
 switch_statement
   : SWITCH '(' term ')' '{' opt_statements '}'
+    {
+      $$ = SPerl_OP_build_switch_statement(parser, $1, $2)
+    }
 
 case_statement
   : CASE term ':'
+    {
+      $$ = SPerl_OP_build_case_statement(parser, $1, $2)
+    }
 
 default_statement
   : DEFAULT ':'

@@ -152,6 +152,20 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
   return op_loop;
 }
 
+SPerl_OP* SPerl_OP_build_switch_statement(SPerl_PARSER* parser, SPerl_OP* op_switch, SPerl_OP* op_statements) {
+  
+  SPerl_OP_sibling_splice(parser, op_switch, NULL, 0, op_statements);
+  
+  return op_switch;
+}
+
+SPerl_OP* SPerl_OP_build_case_statement(SPerl_PARSER* parser, SPerl_OP* op_case, SPerl_OP* op_term) {
+  
+  SPerl_OP_sibling_splice(parser, op_case, NULL, 0, op_term);
+  
+  return op_case;
+}
+
 SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_while, SPerl_OP* op_term, SPerl_OP* op_block) {
 
   SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term, NULL);
