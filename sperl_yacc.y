@@ -23,6 +23,7 @@
 %type <opval> type package_name field_name sub_name decl_package decl_things_in_grammer opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammer type_sub types not_type_sub opt_term throw_exception
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_word array_length logical_op decl_thing_in_grammer
+%type <opval> switch_statement case_statement default_statement
 
 %right <opval> ASSIGN
 %left <opval> OR
@@ -182,6 +183,9 @@ statement
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, NULL, NULL);
     }
+  | switch_statement
+  | case_statement
+  | default_statement
 
 for_statement
   : FOR '(' opt_term ';' term ';' opt_term ')' block
@@ -194,6 +198,15 @@ while_statement
     {
       $$ = SPerl_OP_build_while_statement(parser, $1, $3, $5);
     }
+
+switch_statement
+  : SWITCH '(' term ')' '{' opt_statements '}'
+
+case_statement
+  : CASE term ':'
+
+default_statement
+  : DEFAULT ':'
 
 if_statement
   : IF '(' term ')' block else_statement

@@ -13,6 +13,17 @@ use Test::Simple;
 
 package Test {
   sub main() : int {
+    my $num2 = 5;
+    
+    switch($num2) {
+      case 1:
+        1;
+      case 3:
+        2;
+      default:
+        5;
+    }
+    
     die "aaaaa";
     
     # my $num;
