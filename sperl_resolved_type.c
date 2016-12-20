@@ -14,6 +14,16 @@ uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
   "double"
 };
 
+uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[] = {
+  "boolean[]",
+  "byte[]",
+  "short[]",
+  "int[]",
+  "long[]",
+  "float[]",
+  "double[]"
+};
+
 int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
   1,
   1,

@@ -41,10 +41,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
     // Name
     uint8_t* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     
-    // Core package
-    SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
-    package->size = SPerl_RESOLVED_TYPE_C_CORE_SIZES[i];
-    
     // Name
     SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
@@ -79,6 +75,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_ARRAY_push(parser->op_types, op_type);
     
     // Package
+    SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
+    package->size = SPerl_RESOLVED_TYPE_C_CORE_SIZES[i];
     SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
     op_package_name->uv.word = name_word;
     package->op_name = op_package_name;
@@ -91,9 +89,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_ARRAY_push(parser->op_packages, op_package);
     SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
-  
-  // Undef
-  
   
   return parser;
 }
