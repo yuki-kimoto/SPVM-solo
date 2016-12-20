@@ -485,25 +485,25 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_CHAR
                   || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE)
                 {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOAD_ARRAY_CHAR);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_CALOAD);
                 }
                 else if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_SHORT) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOAD_ARRAY_SHORT);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_SALOAD);
                 }
                 else if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOAD_ARRAY_INT);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IALOAD);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOAD_ARRAY_LONG);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LALOAD);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOAD_ARRAY_FLOAT);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_FALOAD);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOAD_ARRAY_DOUBLE);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_DALOAD);
                 }
                 else {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOAD_ARRAY_REF);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_AALOAD);
                 }              
                 break;
               }
@@ -624,19 +624,19 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 else if (op_cur->first->code == SPerl_OP_C_CODE_ARRAY_ELEM) {
                   
                   if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
-                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_STORE_ARRAY_INT);
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IASTORE);
                   }
                   else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_STORE_ARRAY_LONG);
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LASTORE);
                   }
                   else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_STORE_ARRAY_FLOAT);
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_FASTORE);
                   }
                   else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_STORE_ARRAY_DOUBLE);
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_DASTORE);
                   }
                   else {
-                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_STORE_ARRAY_REF);
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_AASTORE);
                   }
                 }
                 
