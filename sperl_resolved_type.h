@@ -15,20 +15,11 @@ enum {
   SPerl_RESOLVED_TYPE_C_ID_INT,
   SPerl_RESOLVED_TYPE_C_ID_LONG,
   SPerl_RESOLVED_TYPE_C_ID_FLOAT,
-  SPerl_RESOLVED_TYPE_C_ID_DOUBLE
+  SPerl_RESOLVED_TYPE_C_ID_DOUBLE,
 };
 
 extern uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[];
 extern int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[];
-
-enum {
-  SPerl_RESOLVED_TYPE_C_CODE_CORE,
-  SPerl_RESOLVED_TYPE_C_CODE_CLASS,
-  SPerl_RESOLVED_TYPE_C_CODE_ARRAY,
-  SPerl_RESOLVED_TYPE_C_CODE_SUB,
-};
-
-extern uint8_t* const SPerl_RESOLVED_TYPE_C_CODE_NAMES[];
 
 struct SPerl_resolved_type {
   int32_t code;

@@ -53,7 +53,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
-    resolved_type->code = SPerl_RESOLVED_TYPE_C_CODE_CORE;
     SPerl_ARRAY_push(resolved_type->part_names, name);
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);

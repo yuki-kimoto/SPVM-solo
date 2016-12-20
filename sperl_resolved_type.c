@@ -26,13 +26,6 @@ int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
   2
 };
 
-uint8_t* const SPerl_RESOLVED_TYPE_C_CODE_NAMES[] = {
-  "core",
-  "class",
-  "array",
-  "sub"
-};
-
 SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl_PARSER* parser) {
   SPerl_RESOLVED_TYPE* resolved_type = SPerl_ALLOCATOR_alloc_memory_pool(parser, sizeof(SPerl_RESOLVED_TYPE));
   
