@@ -215,7 +215,7 @@ enum {
   SPerl_BYTECODE_C_CODE_IMPDEP2, // Not used
 };
 
-extern SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[];
+extern uint8_t* const SPerl_BYTECODE_C_CODE_NAMES[];
 
 /*
 tableswitch if the following. SWITCHRTIO is 1.5 by default

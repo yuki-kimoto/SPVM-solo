@@ -9,20 +9,20 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new() {
   constant_pool->capacity = 64;
   constant_pool->length = 0;
   
-  SPerl_int* values = calloc(constant_pool->capacity, sizeof(SPerl_int));
+  int32_t* values = calloc(constant_pool->capacity, sizeof(int32_t));
   constant_pool->values = values;
   
   return constant_pool;
 }
 
-void SPerl_CONSTANT_POOL_push(SPerl_CONSTANT_POOL* constant_pool, SPerl_int value) {
-  SPerl_int length = constant_pool->length;
-  SPerl_int capacity = constant_pool->capacity;
+void SPerl_CONSTANT_POOL_push(SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
+  int32_t length = constant_pool->length;
+  int32_t capacity = constant_pool->capacity;
   
   if (length >= capacity) {
-    SPerl_int new_capacity = capacity * 2;
-    constant_pool->values = realloc(constant_pool->values, new_capacity * sizeof(SPerl_int));
-    memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(SPerl_int));
+    int32_t new_capacity = capacity * 2;
+    constant_pool->values = realloc(constant_pool->values, new_capacity * sizeof(int32_t));
+    memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(int32_t));
     constant_pool->capacity = new_capacity;
   }
   

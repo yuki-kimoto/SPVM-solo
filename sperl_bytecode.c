@@ -6,7 +6,7 @@
 
 
 
-SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
+uint8_t* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "NOP",
   "ACONST_NULL",
   "ICONST_M1",

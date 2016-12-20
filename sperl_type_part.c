@@ -2,7 +2,7 @@
 #include "sperl_parser.h"
 #include "sperl_allocator.h"
 
-SPerl_char* const SPerl_TYPE_PART_C_CODE_NAMES[] = {
+uint8_t* const SPerl_TYPE_PART_C_CODE_NAMES[] = {
   "sub",
   "word",
   "char"

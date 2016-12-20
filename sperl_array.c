@@ -3,7 +3,7 @@
 
 #include "sperl_array.h"
 
-SPerl_ARRAY* SPerl_ARRAY_new(SPerl_int capacity) {
+SPerl_ARRAY* SPerl_ARRAY_new(int32_t capacity) {
   
   SPerl_ARRAY* array = malloc(sizeof(SPerl_ARRAY));
   array->length = 0;
@@ -22,11 +22,11 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl_int capacity) {
 }
 
 void SPerl_ARRAY_push(SPerl_ARRAY* array, void* value) {
-  SPerl_int length = array->length;
-  SPerl_int capacity = array->capacity;
+  int32_t length = array->length;
+  int32_t capacity = array->capacity;
   
   if (length >= capacity) {
-    SPerl_int new_capacity = capacity * 2;
+    int32_t new_capacity = capacity * 2;
     array->values = realloc(array->values, new_capacity * sizeof(void*));
     memset(array->values + capacity, 0, (new_capacity - capacity) * sizeof(void*));
     array->capacity = new_capacity;
@@ -36,7 +36,7 @@ void SPerl_ARRAY_push(SPerl_ARRAY* array, void* value) {
   array->length++;
 }
 
-void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_int index) {
+void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, int32_t index) {
   if (array == NULL || index < 0 || index >= array->length) {
     return NULL;
   }
@@ -46,7 +46,7 @@ void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, SPerl_int index) {
 }
 
 void* SPerl_ARRAY_pop(SPerl_ARRAY* array) {
-  SPerl_int length = array->length;
+  int32_t length = array->length;
   
   array->length--;
   

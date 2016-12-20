@@ -12,9 +12,9 @@
   }
 
 struct test {
-  SPerl_int a;
-  SPerl_double b;
-  SPerl_long c;
+  int32_t a;
+  double b;
+  int64_t c;
 };
 
 int main(int argc, char *argv[])
@@ -23,14 +23,14 @@ int main(int argc, char *argv[])
   {
     SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(0);
     
-    SPerl_int* int_ptr1 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
-    SPerl_int* int_ptr2 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
+    int32_t* int_ptr1 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
+    int32_t* int_ptr2 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
     
     *int_ptr1 = 1;
     *int_ptr2 = 2;
     
-    OK(*int_ptr1 == ((SPerl_int*)memory_pool->page->data)[0]);
-    OK(*int_ptr2 == ((SPerl_int*)memory_pool->page->data)[1]);
+    OK(*int_ptr1 == ((int32_t*)memory_pool->page->data)[0]);
+    OK(*int_ptr2 == ((int32_t*)memory_pool->page->data)[1]);
     
     SPerl_MEMORY_POOL_free(memory_pool);
   }
@@ -76,16 +76,16 @@ int main(int argc, char *argv[])
   
   // Crete next memroy node
   {
-    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sizeof(SPerl_int));
+    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sizeof(int32_t));
     
-    SPerl_int* int_ptr1 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
-    SPerl_int* int_ptr2 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
-    SPerl_int* int_ptr3 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
-    SPerl_int* int_ptr4 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
-    SPerl_int* int_ptr5 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
-    SPerl_int* int_ptr6 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
-    SPerl_int* int_ptr7 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
-    SPerl_int* int_ptr8 = (SPerl_int*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(SPerl_int));
+    int32_t* int_ptr1 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
+    int32_t* int_ptr2 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
+    int32_t* int_ptr3 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
+    int32_t* int_ptr4 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
+    int32_t* int_ptr5 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
+    int32_t* int_ptr6 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
+    int32_t* int_ptr7 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
+    int32_t* int_ptr8 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
 
     OK(*int_ptr1 == 0);
     OK(*int_ptr2 == 0);
@@ -105,14 +105,14 @@ int main(int argc, char *argv[])
     *int_ptr7 = 7;
     *int_ptr8 = 8;
     
-    OK(*int_ptr1 == ((SPerl_int*)memory_pool->page->next->next->next->data)[0]);
-    OK(*int_ptr2 == ((SPerl_int*)memory_pool->page->next->next->data)[0]);
-    OK(*int_ptr3 == ((SPerl_int*)memory_pool->page->next->next->data)[1]);
-    OK(*int_ptr4 == ((SPerl_int*)memory_pool->page->next->data)[0]);
-    OK(*int_ptr5 == ((SPerl_int*)memory_pool->page->next->data)[1]);
-    OK(*int_ptr6 == ((SPerl_int*)memory_pool->page->next->data)[2]);
-    OK(*int_ptr7 == ((SPerl_int*)memory_pool->page->next->data)[3]);
-    OK(*int_ptr8 == ((SPerl_int*)memory_pool->page->data)[0]);
+    OK(*int_ptr1 == ((int32_t*)memory_pool->page->next->next->next->data)[0]);
+    OK(*int_ptr2 == ((int32_t*)memory_pool->page->next->next->data)[0]);
+    OK(*int_ptr3 == ((int32_t*)memory_pool->page->next->next->data)[1]);
+    OK(*int_ptr4 == ((int32_t*)memory_pool->page->next->data)[0]);
+    OK(*int_ptr5 == ((int32_t*)memory_pool->page->next->data)[1]);
+    OK(*int_ptr6 == ((int32_t*)memory_pool->page->next->data)[2]);
+    OK(*int_ptr7 == ((int32_t*)memory_pool->page->next->data)[3]);
+    OK(*int_ptr8 == ((int32_t*)memory_pool->page->data)[0]);
     
     SPerl_MEMORY_POOL_free(memory_pool);
   }

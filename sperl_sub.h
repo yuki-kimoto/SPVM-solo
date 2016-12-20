@@ -9,10 +9,10 @@ struct SPerl_sub {
   SPerl_OP* op_name;
   SPerl_OP* op_return_type;
   SPerl_ARRAY* op_my_vars;
-  SPerl_int argument_count;
+  int32_t argument_count;
   SPerl_OP* op_block;
-  SPerl_boolean anon;
-  SPerl_int id;
+  _Bool anon;
+  int32_t id;
   SPerl_BYTECODES* bytecodes;
 };
 

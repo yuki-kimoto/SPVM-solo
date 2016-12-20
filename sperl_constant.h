@@ -13,19 +13,19 @@ enum {
   SPerl_CONSTANT_C_CODE_STRING,
 };
 
-extern SPerl_char* const SPerl_CONSTANT_C_CODE_NAMES[];
+extern uint8_t* const SPerl_CONSTANT_C_CODE_NAMES[];
 
 struct SPerl_constant {
-  SPerl_int code;
+  int32_t code;
   union {
-    SPerl_int int_value;
-    SPerl_int long_value;
+    int32_t int_value;
+    int32_t long_value;
     float float_value;
-    SPerl_double double_value;
-    SPerl_char* string_value;
+    double double_value;
+    uint8_t* string_value;
   } uv;
   SPerl_RESOLVED_TYPE* resolved_type;
-  SPerl_int pool_pos;
+  int32_t pool_pos;
 };
 
 SPerl_CONSTANT* SPerl_CONSTANT_new(SPerl_PARSER* parser);

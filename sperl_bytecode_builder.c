@@ -17,11 +17,11 @@
 #include "sperl_hash.h"
 
 void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
-  for (SPerl_int i = 0; i < parser->op_packages->length; i++) {
+  for (int32_t i = 0; i < parser->op_packages->length; i++) {
     SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, i);
     SPerl_PACKAGE* package = op_package->uv.package;
     
-    for (SPerl_int k = 0; k < package->op_subs->length; k++) {
+    for (int32_t k = 0; k < package->op_subs->length; k++) {
       
       SPerl_OP* op_sub = SPerl_ARRAY_fetch(package->op_subs, k);
       SPerl_SUB* sub = op_sub->uv.sub;
@@ -32,7 +32,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
       // Run OPs
       SPerl_OP* op_base = op_sub;
       SPerl_OP* op_cur = op_base;
-      SPerl_boolean finish = 0;
+      _Bool finish = 0;
       
       SPerl_ARRAY* if_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
       SPerl_ARRAY* loop_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
@@ -58,9 +58,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 // Call subroutine
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_INVOKESTATIC);
                 SPerl_NAME* name = op_cur->uv.name;
-                SPerl_char* sub_abs_name = name->abs_name;
+                uint8_t* sub_abs_name = name->abs_name;
                 SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
-                SPerl_int id = sub->id;
+                int32_t id = sub->id;
                 
                 SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
                 SPerl_BYTECODES_push(bytecodes, id & 0xFF);
@@ -75,7 +75,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 // Add goto
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
                 
-                SPerl_int* pos_ptr = SPerl_ALLOCATOR_new_int(parser);
+                int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(parser);
                 *pos_ptr = bytecodes->length - 1;
                 SPerl_ARRAY_push(last_bytecode_pos_stack, pos_ptr);
                 
@@ -84,13 +84,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 break;
               }
               case SPerl_OP_C_CODE_NEXT: {
-                SPerl_int* pos_ptr = SPerl_ARRAY_fetch(loop_condition_bytecode_pos_stack, loop_condition_bytecode_pos_stack->length - 1);
+                int32_t* pos_ptr = SPerl_ARRAY_fetch(loop_condition_bytecode_pos_stack, loop_condition_bytecode_pos_stack->length - 1);
                 
                 // Add "goto"
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
 
                 // Jump offset
-                SPerl_int jump_offset = *pos_ptr - (bytecodes->length - 1);
+                int32_t jump_offset = *pos_ptr - (bytecodes->length - 1);
 
                 SPerl_BYTECODES_push(bytecodes, (jump_offset >> 8) & 0xFF);
                 SPerl_BYTECODES_push(bytecodes, jump_offset & 0xFF);
@@ -99,38 +99,38 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_BLOCK: {
                 if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_IF) {
-                  SPerl_int* pos_ptr = SPerl_ARRAY_pop(if_condition_bytecode_pos_stack);
+                  int32_t* pos_ptr = SPerl_ARRAY_pop(if_condition_bytecode_pos_stack);
                   
                   // Jump offset
-                  SPerl_int jump_offset = bytecodes->length - *pos_ptr;
+                  int32_t jump_offset = bytecodes->length - *pos_ptr;
                   
                   // Set jump offset
                   bytecodes->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
                   bytecodes->values[*pos_ptr + 2] = jump_offset & 0xFF;
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
-                  SPerl_int* pos_ptr = SPerl_ARRAY_pop(loop_condition_bytecode_pos_stack);
+                  int32_t* pos_ptr = SPerl_ARRAY_pop(loop_condition_bytecode_pos_stack);
                   
                   // Add "goto" to end of block
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
                   
                   // Goto offset
-                  SPerl_int block_end_goto_offset = *pos_ptr - (bytecodes->length - 1);
+                  int32_t block_end_goto_offset = *pos_ptr - (bytecodes->length - 1);
                   SPerl_BYTECODES_push(bytecodes, (block_end_goto_offset >> 8) & 0xFF);
                   SPerl_BYTECODES_push(bytecodes, block_end_goto_offset & 0xFF);
                   
                   // If offset
-                  SPerl_int if_offset = bytecodes->length - *pos_ptr;
+                  int32_t if_offset = bytecodes->length - *pos_ptr;
                   
                   // Set condition jump position
                   bytecodes->values[*pos_ptr + 1] = (if_offset >> 8) & 0xFF;
                   bytecodes->values[*pos_ptr + 2] = if_offset & 0xFF;
                   
                   // Set last position
-                  SPerl_int* last_pos_ptr;
+                  int32_t* last_pos_ptr;
                   while (last_pos_ptr = SPerl_ARRAY_pop(last_bytecode_pos_stack)) {
                     // Last offset
-                    SPerl_int last_offset = bytecodes->length - *last_pos_ptr;
+                    int32_t last_offset = bytecodes->length - *last_pos_ptr;
                     
                     bytecodes->values[*last_pos_ptr + 1] = (last_offset >> 8) & 0xFF;
                     bytecodes->values[*last_pos_ptr + 2] = last_offset & 0xFF;
@@ -309,7 +309,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                 }
                 
-                SPerl_int* pos_ptr = SPerl_ALLOCATOR_new_int(parser);
+                int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(parser);
                 *pos_ptr = bytecodes->length - 1;
                 
                 if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_IF) {
@@ -513,13 +513,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 
                 if (op_cur->first->code == SPerl_OP_C_CODE_VAR) {
                   SPerl_OP* op_var = op_cur->first;
-                  SPerl_int my_var_pos = op_var->uv.var->op_my_var->uv.my_var->pos;
+                  int32_t my_var_pos = op_var->uv.var->op_my_var->uv.my_var->pos;
                   
                   if (my_var_pos > 0xFF) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_WIDE);
                   }
                   
-                  SPerl_boolean has_operand = 0;
+                  _Bool has_operand = 0;
                   if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                     if (my_var_pos == 0) {
                       SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ISTORE_0);
@@ -847,13 +847,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
                 
-                SPerl_int my_var_pos = var->op_my_var->uv.my_var->pos;
+                int32_t my_var_pos = var->op_my_var->uv.my_var->pos;
                 
                 if (my_var_pos > 0xFF) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_WIDE);
                 }
                 
-                SPerl_boolean has_operand = 0;
+                _Bool has_operand = 0;
                 if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   if (my_var_pos == 0) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ILOAD_0);
@@ -960,7 +960,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               case SPerl_OP_C_CODE_CONSTANT: {
                 SPerl_CONSTANT* constant = op_cur->uv.constant;
                 
-                SPerl_boolean bytecode_set = 0;
+                _Bool bytecode_set = 0;
                 if (constant->code == SPerl_CONSTANT_C_CODE_BOOLEAN) {
                   if (constant->uv.int_value == 0) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ICONST_0);

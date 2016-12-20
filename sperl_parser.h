@@ -8,25 +8,25 @@
 // Parser information
 struct SPerl_yy_parser_{
   // Before buffer position
-  SPerl_char* befbufptr;
+  uint8_t* befbufptr;
   
   // Current buffer position
-  SPerl_char* bufptr;
+  uint8_t* bufptr;
   
   // Expect next token type
-  SPerl_int expect;
+  int32_t expect;
 
   // Current file name
-  SPerl_char* cur_module_path;
+  uint8_t* cur_module_path;
   
   // Source data
-  SPerl_char* cur_src;
+  uint8_t* cur_src;
   
   // Current line number
-  SPerl_int cur_line;
+  int32_t cur_line;
   
   // Syntax error count
-  SPerl_int error_count;
+  int32_t error_count;
   
   // AST grammer
   SPerl_OP* op_grammer;
@@ -57,7 +57,7 @@ struct SPerl_yy_parser_{
   SPerl_ARRAY* include_pathes;
   
   // Current package count
-  SPerl_int current_package_count;
+  int32_t current_package_count;
   
   // Method absolute name symbol table
   SPerl_HASH* sub_abs_name_symtable;
@@ -77,7 +77,7 @@ struct SPerl_yy_parser_{
   // Resolved type string symbol table
   SPerl_HASH* resolved_type_symtable;
   
-  SPerl_boolean fatal_error;
+  _Bool fatal_error;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();

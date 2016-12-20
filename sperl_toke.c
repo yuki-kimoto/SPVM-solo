@@ -18,7 +18,7 @@
 #include "sperl_use.h"
 #include "sperl_type.h"
 
-static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
+static SPerl_OP* _newOP(SPerl_PARSER* parser, uint8_t type) {
   SPerl_OP* op = SPerl_OP_newOP(parser, type, NULL, NULL);
   op->file = parser->cur_module_path;
   op->line = parser->cur_line;
@@ -30,7 +30,7 @@ static SPerl_OP* _newOP(SPerl_PARSER* parser, SPerl_char type) {
 int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
 
   // Get expected and retrun back to normal
-  SPerl_char expect = parser->expect;
+  uint8_t expect = parser->expect;
   parser->expect = SPerl_TOKE_C_EXPECT_NORMAL;
   
   // Save buf pointer
@@ -38,7 +38,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
   
   while(1) {
     // Get current character
-    SPerl_char c = *parser->bufptr;
+    uint8_t c = *parser->bufptr;
     
     // line end
     switch(c) {
@@ -53,7 +53,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
           if (op_use) {
             SPerl_USE* use = op_use->uv.use;
-            SPerl_char* package_name = use->op_package_name->uv.word->value;
+            uint8_t* package_name = use->op_package_name->uv.word->value;
             
             SPerl_PACKAGE* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
             if (found_package) {
@@ -62,9 +62,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             else {
               
               // Change :: to / and add ".spvm"
-              SPerl_char* module_path_base = SPerl_ALLOCATOR_new_string(parser, strlen(package_name)  + 6);
-              SPerl_char* bufptr_orig = package_name;
-              SPerl_char* bufptr_to = module_path_base;
+              uint8_t* module_path_base = SPerl_ALLOCATOR_new_string(parser, strlen(package_name)  + 6);
+              uint8_t* bufptr_orig = package_name;
+              uint8_t* bufptr_to = module_path_base;
               while (*bufptr_orig) {
                 if (*bufptr_orig == ':' && *(bufptr_orig + 1) == ':') {
                   *bufptr_to = '/';
@@ -82,16 +82,16 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               *bufptr_to = '\0';
               
               // module is template
-              SPerl_char* underline_ptr;
+              uint8_t* underline_ptr;
               if (underline_ptr = strchr(module_path_base, '_')) {
                 *(underline_ptr - 2) = '\0';
               }
               
               // Search module file
-              SPerl_char* cur_module_path;
+              uint8_t* cur_module_path;
               FILE* fh;
-              for (SPerl_int i = 0; i < parser->include_pathes->length; i++) {
-                SPerl_char* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
+              for (int32_t i = 0; i < parser->include_pathes->length; i++) {
+                uint8_t* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
                 // File name
                 cur_module_path = SPerl_ALLOCATOR_new_string(parser, strlen(include_path) + 1 + strlen(module_path_base));
@@ -119,9 +119,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               
               // Read file content
               fseek(fh, 0, SEEK_END);
-              SPerl_int file_size = ftell(fh);
+              int32_t file_size = ftell(fh);
               fseek(fh, 0, SEEK_SET);
-              SPerl_char* src = SPerl_ALLOCATOR_new_string(parser, file_size);
+              uint8_t* src = SPerl_ALLOCATOR_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
                 if (op_use) {
                   fprintf(stderr, "Can't read file %s at %s line %d\n", cur_module_path, op_use->file, op_use->line);
@@ -365,9 +365,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         
         /* Save current position */
-        SPerl_char* cur_token_ptr = parser->bufptr;
+        uint8_t* cur_token_ptr = parser->bufptr;
         
-        SPerl_char ch;
+        uint8_t ch;
         if (*parser->bufptr == '\'') {
           ch = '\0';
           parser->bufptr++;
@@ -398,9 +398,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         
         /* Save current position */
-        SPerl_char* cur_token_ptr = parser->bufptr;
+        uint8_t* cur_token_ptr = parser->bufptr;
         
-        SPerl_char* str;
+        uint8_t* str;
         if (*(parser->bufptr + 1) == '"') {
           str = SPerl_ALLOCATOR_new_string(parser, 0);
           str[0] = '\0';
@@ -438,7 +438,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         /* Variable */
         if (c == '$') {
           /* Save current position */
-          SPerl_char* cur_token_ptr = parser->bufptr;
+          uint8_t* cur_token_ptr = parser->bufptr;
           
           parser->bufptr++;
           
@@ -448,7 +448,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          SPerl_char* var_name = SPerl_ALLOCATOR_new_string(parser, str_len);
+          uint8_t* var_name = SPerl_ALLOCATOR_new_string(parser, str_len);
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
           
@@ -472,9 +472,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         /* Number literal */
         else if (isdigit(c)) {
-          SPerl_char* cur_token_ptr = parser->bufptr;
+          uint8_t* cur_token_ptr = parser->bufptr;
           
-          SPerl_int point_count = 0;
+          int32_t point_count = 0;
           
           parser->bufptr++;
           
@@ -493,7 +493,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           
           // Number literal
           size_t str_len = parser->bufptr - cur_token_ptr;
-          SPerl_char* num_str = malloc(str_len + 1);
+          uint8_t* num_str = malloc(str_len + 1);
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
           
@@ -515,7 +515,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           // Convert to integer
           else {
-            SPerl_int num = atoi(num_str);
+            int32_t num = atoi(num_str);
             free(num_str);
             
             SPerl_OP* op = _newOP(parser, SPerl_OP_C_CODE_CONSTANT);
@@ -532,7 +532,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         // Keyword or word
         else if (isalpha(c) || c == '_') {
           // Save current position
-          SPerl_char* cur_token_ptr = parser->bufptr;
+          uint8_t* cur_token_ptr = parser->bufptr;
           
           parser->bufptr++;
           
@@ -549,7 +549,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          SPerl_char* keyword = SPerl_ALLOCATOR_new_string(parser, str_len);
+          uint8_t* keyword = SPerl_ALLOCATOR_new_string(parser, str_len);
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
           

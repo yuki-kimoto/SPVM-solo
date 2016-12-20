@@ -6,7 +6,7 @@
 void SPerl_DUMPER_dump_parser(SPerl_PARSER* parser);
 void SPerl_DUMPER_dump_classs(SPerl_PARSER* parser, SPerl_ARRAY* classs);
 void SPerl_DUMPER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* constants);
-void SPerl_DUMPER_dump_const_pool(SPerl_PARSER* parser, SPerl_int* const_pool, SPerl_int size);
+void SPerl_DUMPER_dump_const_pool(SPerl_PARSER* parser, int32_t* const_pool, int32_t size);
 void SPerl_DUMPER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant);
 void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field);
 void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub);

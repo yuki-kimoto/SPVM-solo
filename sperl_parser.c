@@ -37,9 +37,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->use_package_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
   
   // Core types
-  for (SPerl_int i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
+  for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name
-    SPerl_char* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
+    uint8_t* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     
     // Core package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
@@ -100,29 +100,29 @@ SPerl_PARSER* SPerl_PARSER_new() {
   return parser;
 }
 
-void* SPerl_ALLOCATOR_alloc_memory_pool(SPerl_PARSER* parser, SPerl_int size) {
+void* SPerl_ALLOCATOR_alloc_memory_pool(SPerl_PARSER* parser, int32_t size) {
   return SPerl_MEMORY_POOL_alloc(parser->memory_pool, size);
 }
 
 void SPerl_PARSER_free(SPerl_PARSER* parser) {
 
   // Free all array pointers
-  for (SPerl_int i = 0; i < parser->array_ptrs->length; i++) {
+  for (int32_t i = 0; i < parser->array_ptrs->length; i++) {
     SPerl_ARRAY* array = SPerl_ARRAY_fetch(parser->array_ptrs, i);
     SPerl_ARRAY_free(array);
   }
   SPerl_ARRAY_free(parser->array_ptrs);
   
   // Free all hash pointers
-  for (SPerl_int i = 0; i < parser->hash_ptrs->length; i++) {
+  for (int32_t i = 0; i < parser->hash_ptrs->length; i++) {
     SPerl_HASH* hash = SPerl_ARRAY_fetch(parser->hash_ptrs, i);
     SPerl_HASH_free(hash);
   }
   SPerl_ARRAY_free(parser->hash_ptrs);
   
   // Free all string pointers;
-  for (SPerl_int i = 0; i < parser->long_str_ptrs->length; i++) {
-    SPerl_char* str = SPerl_ARRAY_fetch(parser->long_str_ptrs, i);
+  for (int32_t i = 0; i < parser->long_str_ptrs->length; i++) {
+    uint8_t* str = SPerl_ARRAY_fetch(parser->long_str_ptrs, i);
     free(str);
   }
   SPerl_ARRAY_free(parser->long_str_ptrs);

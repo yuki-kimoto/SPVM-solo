@@ -42,7 +42,7 @@
 
 
 
-SPerl_char* const SPerl_OP_C_CODE_NAMES[] = {
+uint8_t* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
   "ELSIF",
   "ELSE",
@@ -250,14 +250,14 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
     }
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME* name = op->uv.name;
-      SPerl_char* abs_name = name->abs_name;
+      uint8_t* abs_name = name->abs_name;
       SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = sub->op_return_type->uv.type->resolved_type;
       break;
     }
     case SPerl_OP_C_CODE_FIELD: {
       SPerl_NAME* name = op->uv.name;
-      SPerl_char* abs_name = name->abs_name;
+      uint8_t* abs_name = name->abs_name;
       SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
@@ -413,17 +413,17 @@ void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
 }
 
 void SPerl_OP_check_ops(SPerl_PARSER* parser) {
-  for (SPerl_int i = 0; i < parser->op_packages->length; i++) {
+  for (int32_t i = 0; i < parser->op_packages->length; i++) {
     SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, i);
     SPerl_PACKAGE* package = op_package->uv.package;
     
-    for (SPerl_int k = 0; k < package->op_subs->length; k++) {
+    for (int32_t k = 0; k < package->op_subs->length; k++) {
       
       SPerl_OP* op_sub = SPerl_ARRAY_fetch(package->op_subs, k);
       SPerl_SUB* sub = op_sub->uv.sub;
       
       // my var informations
-      SPerl_int next_my_var_pos = 0;
+      int32_t next_my_var_pos = 0;
       SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_new_array(parser, 0);
       SPerl_HASH* my_var_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
       
@@ -432,11 +432,11 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
       
       // block base position stack
       SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_new_array(parser, 0);
-      SPerl_int block_base = 0;
-      SPerl_boolean block_start = 0;
+      int32_t block_base = 0;
+      _Bool block_start = 0;
       
       // In switch statement
-      SPerl_boolean in_switch = 0;
+      _Bool in_switch = 0;
       
       // Current case statements
       SPerl_ARRAY* cur_case_ops = NULL;
@@ -447,7 +447,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
       // Run OPs
       SPerl_OP* op_base = op_sub;
       SPerl_OP* op_cur = op_base;
-      SPerl_boolean finish = 0;
+      _Bool finish = 0;
       while (op_cur) {
         // [START]Preorder traversal position
         
@@ -466,7 +466,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
           // Start scope
           case SPerl_OP_C_CODE_BLOCK: {
             if (block_start) {
-              SPerl_int* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
+              int32_t* block_base_ptr = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(int32_t));
               *block_base_ptr = op_my_var_stack->length;
               SPerl_ARRAY_push(block_base_stack, block_base_ptr);
               block_base = *block_base_ptr;
@@ -912,7 +912,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 
                 // First value must be array
-                SPerl_boolean first_resolved_type_is_array = SPerl_RESOLVED_TYPE_is_array(parser, first_resolved_type);
+                _Bool first_resolved_type_is_array = SPerl_RESOLVED_TYPE_is_array(parser, first_resolved_type);
                 if (!first_resolved_type_is_array) {
                   SPerl_yyerror_format(parser, "right of @ must be array at %s line %d\n", op_cur->file, op_cur->line);
                   break;
@@ -929,7 +929,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
                 
                 // First value must be array
-                SPerl_boolean first_resolved_type_is_array = SPerl_RESOLVED_TYPE_is_array(parser, first_resolved_type);
+                _Bool first_resolved_type_is_array = SPerl_RESOLVED_TYPE_is_array(parser, first_resolved_type);
                 if (!first_resolved_type_is_array) {
                   SPerl_yyerror_format(parser, "left value must be array at %s line %d\n", op_cur->file, op_cur->line);
                   break;
@@ -1161,14 +1161,14 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
               }
               // End of scope
               case SPerl_OP_C_CODE_BLOCK: {
-                SPerl_int* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
+                int32_t* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
                 if (block_base_ptr) {
-                  SPerl_int block_base = *block_base_ptr;
-                  for (SPerl_int j = 0; j < op_my_var_stack->length - block_base; j++) {
+                  int32_t block_base = *block_base_ptr;
+                  for (int32_t j = 0; j < op_my_var_stack->length - block_base; j++) {
                     SPerl_ARRAY_pop(op_my_var_stack);
                   }
                 }
-                SPerl_int* before_block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
+                int32_t* before_block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
                 if (before_block_base_ptr) {
                   block_base = *before_block_base_ptr;
                 }
@@ -1199,7 +1199,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 
                 // Serach same name variable
                 SPerl_OP* op_my_var = NULL;
-                for (SPerl_int i = op_my_var_stack->length - 1 ; i >= 0; i--) {
+                for (int32_t i = op_my_var_stack->length - 1 ; i >= 0; i--) {
                   SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(op_my_var_stack, i);
                   SPerl_MY_VAR* my_var_tmp = op_my_var_tmp->uv.my_var;
                   if (strcmp(var->op_name->uv.word->value, my_var_tmp->op_name->uv.word->value) == 0) {
@@ -1224,9 +1224,9 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_MY_VAR* my_var = op_cur->uv.my_var;
                 
                 // Serach same name variable
-                SPerl_int found = 0;
+                int32_t found = 0;
                 
-                for (SPerl_int i = op_my_var_stack->length - 1 ; i >= block_base; i--) {
+                for (int32_t i = op_my_var_stack->length - 1 ; i >= block_base; i--) {
                   SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(op_my_var_stack, i);
                   SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
                   if (strcmp(my_var->op_name->uv.word->value, bef_my_var->op_name->uv.word->value) == 0) {
@@ -1329,8 +1329,8 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op->first);
   SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op->last);
   
-  SPerl_int first_type_id = first_resolved_type->id;
-  SPerl_int last_type_id = last_resolved_type->id;
+  int32_t first_type_id = first_resolved_type->id;
+  int32_t last_type_id = last_resolved_type->id;
   
   // last int
   if (first_type_id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
@@ -1343,7 +1343,7 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
   }
   
   if (first_type_id != last_type_id) {
-    SPerl_boolean replace_first = 0;
+    _Bool replace_first = 0;
     
     SPerl_OP* type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT, NULL, NULL);
     
@@ -1422,13 +1422,13 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
 void SPerl_OP_resolve_types(SPerl_PARSER* parser) {
   SPerl_ARRAY* op_types = parser->op_types;
 
-  for (SPerl_int i = 0; i < op_types->length; i++) {
+  for (int32_t i = 0; i < op_types->length; i++) {
     SPerl_OP* op_type = SPerl_ARRAY_fetch(op_types, i);
     SPerl_TYPE_build_parts(parser, op_type->uv.type);
     SPerl_TYPE_build_name(parser, op_type->uv.type);
   }
   
-  for (SPerl_int i = 0; i < op_types->length; i++) {
+  for (int32_t i = 0; i < op_types->length; i++) {
     SPerl_OP* op_type = SPerl_ARRAY_fetch(op_types, i);
     SPerl_OP_resolve_type(parser, op_type->uv.type);
   }
@@ -1452,11 +1452,11 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
 void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   SPerl_NAME* name = op_name->uv.name;
   
-  SPerl_char* sub_abs_name;
+  uint8_t* sub_abs_name;
   SPerl_OP* op;
   if (name->op_var) {
-    SPerl_char* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
-    SPerl_char* base_name = name->op_name->uv.word->value;
+    uint8_t* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
+    uint8_t* base_name = name->op_name->uv.word->value;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   }
   else if (name->op_name) {
@@ -1477,12 +1477,12 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
 }
 
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
-  SPerl_char* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
+  uint8_t* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
   SPerl_OP* op_name = name->op_name;
   SPerl_WORD* base_name_word = op_name->uv.word;
-  SPerl_char* base_name = base_name_word->value;
+  uint8_t* base_name = base_name_word->value;
   
-  SPerl_char* abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
+  uint8_t* abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   name->abs_name = abs_name;
   
   SPerl_FIELD* found_field= SPerl_HASH_search(
@@ -1554,11 +1554,11 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
     return;
   }
   else {
-    SPerl_int resolved_type_name_length = 0;
+    int32_t resolved_type_name_length = 0;
     SPerl_ARRAY* resolved_type_part_names = SPerl_ALLOCATOR_new_array(parser, 0);
     
     SPerl_ARRAY* parts = type->parts;
-    for (SPerl_int i = 0; i < parts->length; i++) {
+    for (int32_t i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
       if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
         resolved_type_name_length += 3;
@@ -1570,24 +1570,24 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
       }
       else {
         SPerl_WORD* part_name_word = part->uv.op_name->uv.word;
-        SPerl_char* part_name = part_name_word->value;
+        uint8_t* part_name = part_name_word->value;
         
         SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
         if (found_type) {
-          SPerl_boolean is_self
+          _Bool is_self
             = type->code == SPerl_TYPE_C_CODE_WORD && found_type->code == SPerl_TYPE_C_CODE_WORD
             && strcmp(type->uv.type_component_word->op_name->uv.word->value, found_type->uv.type_component_word->op_name->uv.word->value) == 0;
           
           if (is_self) {
             resolved_type_name_length += strlen(found_type->uv.type_component_word->op_name->uv.word->value);
-            SPerl_char* found_part_name = found_type->uv.type_component_word->op_name->uv.word->value;
+            uint8_t* found_part_name = found_type->uv.type_component_word->op_name->uv.word->value;
             SPerl_ARRAY_push(resolved_type_part_names, found_part_name);
           }
           else {
             SPerl_OP_resolve_type(parser, found_type);
             resolved_type_name_length += found_type->resolved_type->name_length;
-            for (SPerl_int j = 0; j < found_type->resolved_type->part_names->length; j++) {
-              SPerl_char* found_part_name = SPerl_ARRAY_fetch(found_type->resolved_type->part_names, j);
+            for (int32_t j = 0; j < found_type->resolved_type->part_names->length; j++) {
+              uint8_t* found_part_name = SPerl_ARRAY_fetch(found_type->resolved_type->part_names, j);
               SPerl_ARRAY_push(resolved_type_part_names, found_part_name);
             }
           }
@@ -1597,11 +1597,11 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
         }
       }
     }
-    SPerl_char* resolved_type_name = SPerl_ALLOCATOR_new_string(parser, resolved_type_name_length);
-    SPerl_int cur_pos = 0;
-    for (SPerl_int i = 0; i < resolved_type_part_names->length; i++) {
-      SPerl_char* resolved_type_part_name = SPerl_ARRAY_fetch(resolved_type_part_names, i);
-      SPerl_int resolved_type_part_name_length = strlen(resolved_type_part_name);
+    uint8_t* resolved_type_name = SPerl_ALLOCATOR_new_string(parser, resolved_type_name_length);
+    int32_t cur_pos = 0;
+    for (int32_t i = 0; i < resolved_type_part_names->length; i++) {
+      uint8_t* resolved_type_part_name = SPerl_ARRAY_fetch(resolved_type_part_names, i);
+      int32_t resolved_type_part_name_length = strlen(resolved_type_part_name);
       memcpy(resolved_type_name + cur_pos, resolved_type_part_name, resolved_type_part_name_length);
       cur_pos += resolved_type_part_name_length;
     }
@@ -1626,7 +1626,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
 
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   
-  for (SPerl_int i = 0; i < parser->op_packages->length; i++) {
+  for (int32_t i = 0; i < parser->op_packages->length; i++) {
     SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, i);
     SPerl_PACKAGE* package = op_package->uv.package;
     
@@ -1634,13 +1634,13 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     SPerl_ARRAY* op_constants = package->op_constants;
     
     // Create constant pool
-    SPerl_int const_pool_pos = 0;
-    for (SPerl_int j = 0; j < op_constants->length; j++) {
+    int32_t const_pool_pos = 0;
+    for (int32_t j = 0; j < op_constants->length; j++) {
       SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, j);
       SPerl_CONSTANT* constant = op_constant->uv.constant;
       
-      SPerl_int value1;
-      SPerl_int value2;
+      int32_t value1;
+      int32_t value2;
 
       constant->pool_pos = package->constant_pool->length;
       switch (constant->code) {
@@ -1651,7 +1651,7 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
           break;
         case SPerl_CONSTANT_C_CODE_LONG:
           memcpy(&value1, &constant->uv.long_value, 4);
-          memcpy(&value2, ((SPerl_int*)&constant->uv.long_value) + 1, 4);
+          memcpy(&value2, ((int32_t*)&constant->uv.long_value) + 1, 4);
           
           SPerl_CONSTANT_POOL_push(package->constant_pool, value1);
           SPerl_CONSTANT_POOL_push(package->constant_pool, value2);
@@ -1662,7 +1662,7 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
           break;
         case SPerl_CONSTANT_C_CODE_DOUBLE:
           memcpy(&value1, &constant->uv.double_value, 4);
-          memcpy(&value2, ((SPerl_int*)&constant->uv.double_value) + 1, 4);
+          memcpy(&value2, ((int32_t*)&constant->uv.double_value) + 1, 4);
           
           SPerl_CONSTANT_POOL_push(package->constant_pool, value1);
           SPerl_CONSTANT_POOL_push(package->constant_pool, value2);
@@ -1672,10 +1672,10 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   }
 }
 
-SPerl_char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* base_name) {
-  SPerl_int length = strlen(package_name) + 2 + strlen(base_name);
+uint8_t* SPerl_OP_create_abs_name(SPerl_PARSER* parser, uint8_t* package_name, uint8_t* base_name) {
+  int32_t length = strlen(package_name) + 2 + strlen(base_name);
   
-  SPerl_char* abs_name = SPerl_ALLOCATOR_new_string(parser, length);
+  uint8_t* abs_name = SPerl_ALLOCATOR_new_string(parser, length);
   
   sprintf(abs_name, "%s::%s", package_name, base_name);
   
@@ -1683,14 +1683,14 @@ SPerl_char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_char* package_n
 }
 
 SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_type, SPerl_OP* op_block) {
-  SPerl_int i;
+  int32_t i;
   
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_package_name);
   SPerl_OP_sibling_splice(parser, op_package, op_package_name, 0, op_type);
   SPerl_OP_sibling_splice(parser, op_package, op_type, 0, op_block);
   
   SPerl_WORD* package_name_word = op_package_name->uv.word;
-  SPerl_char* package_name = package_name_word->value;
+  uint8_t* package_name = package_name_word->value;
   SPerl_HASH* package_symtable = parser->package_symtable;
   
   // Redeclaration package error
@@ -1734,7 +1734,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
         if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
           SPerl_OP* op_has = op_decl;
           SPerl_FIELD* field = op_has->uv.field;
-          SPerl_char* field_name = field->op_name->uv.word->value;
+          uint8_t* field_name = field->op_name->uv.word->value;
           SPerl_FIELD* found_field
             = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
           if (found_field) {
@@ -1746,7 +1746,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
             SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
             
             // Field absolute name
-            SPerl_char* field_abs_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
+            uint8_t* field_abs_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
             SPerl_HASH_insert(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name), field);
           }
         }
@@ -1754,7 +1754,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       
       // Method information
       SPerl_HASH* sub_abs_name_symtable = parser->sub_abs_name_symtable;
-      SPerl_int i = parser->cur_op_subs->length - 1;
+      int32_t i = parser->cur_op_subs->length - 1;
       while (1) {
         if (i < 0) {
           break;
@@ -1767,8 +1767,8 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
         
         if (!sub->anon) {
           SPerl_OP* op_sub_name = sub->op_name;
-          SPerl_char* sub_name = op_sub_name->uv.word->value;
-          SPerl_char* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
+          uint8_t* sub_name = op_sub_name->uv.word->value;
+          uint8_t* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
           
           SPerl_SUB* found_sub = NULL;
           found_sub = SPerl_HASH_search(sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
@@ -1815,7 +1815,7 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_
   use->op_package_name = op_package_name;
   op_use->uv.use = use;
 
-  SPerl_char* package_name = op_package_name->uv.word->value;
+  uint8_t* package_name = op_package_name->uv.word->value;
   
   SPerl_USE* found_use = SPerl_HASH_search(parser->use_package_symtable, package_name, strlen(package_name));
   
@@ -1892,7 +1892,7 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_
   }
   
   // subargs
-  SPerl_int argument_count = 0;
+  int32_t argument_count = 0;
   SPerl_OP* op_subarg = op_subargs->first;
   while (op_subarg = SPerl_OP_sibling(parser, op_subarg)) {
     // Increment argument count
@@ -1926,7 +1926,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
   SPerl_ARRAY* enumeration_values = SPerl_ALLOCATOR_new_array(parser, 0);
   
   // Starting value
-  SPerl_long start_value = 0;
+  int64_t start_value = 0;
   SPerl_OP* op_enumvalues = op_enum_block->first;
   SPerl_OP* op_enumvalue = op_enumvalues->first;
   while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
@@ -1994,7 +1994,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
   return op_enum;
 }
 
-SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_sub_name, SPerl_OP* op_terms, SPerl_boolean anon) {
+SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_sub_name, SPerl_OP* op_terms, _Bool anon) {
   
   // Build OP_SUB
   SPerl_OP* op_call_sub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALL_SUB, NULL, NULL);
@@ -2005,7 +2005,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
   
   if (!anon) {
     SPerl_WORD* sub_name_word = op_sub_name->uv.word;
-    SPerl_char* sub_name = sub_name_word->value;
+    uint8_t* sub_name = sub_name_word->value;
     SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
     
     if (strstr(sub_name, ":")) {
@@ -2019,7 +2019,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
       }
       else {
         SPerl_WORD* sub_abs_name_word = SPerl_WORD_new(parser);
-        SPerl_char* sub_abs_name = SPerl_OP_create_abs_name(parser, "CORE", sub_name);
+        uint8_t* sub_abs_name = SPerl_OP_create_abs_name(parser, "CORE", sub_name);
         sub_abs_name_word->value = sub_abs_name;
         op_name->uv.word = sub_abs_name_word;
         name->op_name = op_name;
@@ -2115,8 +2115,8 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_SUB;
   
-  SPerl_char* file = NULL;
-  SPerl_int line = -1;
+  uint8_t* file = NULL;
+  int32_t line = -1;
   
   // sub type
   SPerl_TYPE_COMPONENT_SUB* type_component_sub = SPerl_TYPE_COMPONENT_SUB_new(parser);
@@ -2150,11 +2150,11 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   return op_type_sub;
 }
 
-SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP* first, SPerl_OP* last) {
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, uint8_t type, SPerl_OP* first, SPerl_OP* last) {
   return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
 }
 
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int code, SPerl_OP* first, SPerl_OP* last, SPerl_char flags, SPerl_char private) {
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, int32_t code, SPerl_OP* first, SPerl_OP* last, uint8_t flags, uint8_t private) {
         
   SPerl_OP *op = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
   
@@ -2213,7 +2213,7 @@ SPerl_OP* SPerl_OP_newOP_NULL(SPerl_PARSER* parser) {
   return SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, NULL, NULL);
 }
 
-SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP* insert) {
+SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP* insert) {
   SPerl_OP *first;
   SPerl_OP *rest;
   SPerl_OP *last_del = NULL;

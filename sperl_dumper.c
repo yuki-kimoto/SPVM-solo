@@ -28,18 +28,18 @@
 #include "sperl_bytecodes.h"
 
 void SPerl_DUMPER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
-  SPerl_int depth = 0;
+  int32_t depth = 0;
   
   // Run OPs
   SPerl_OP* op_cur = op_base;
-  SPerl_boolean finish = 0;
+  _Bool finish = 0;
   while (op_cur) {
     // [START]Preorder traversal position
     
-    for (SPerl_int i = 0; i < depth; i++) {
+    for (int32_t i = 0; i < depth; i++) {
       printf(" ");
     }
-    SPerl_int code = op_cur->code;
+    int32_t code = op_cur->code;
     printf("%s", SPerl_OP_C_CODE_NAMES[code]);
     if (op_cur->code == SPerl_OP_C_CODE_CONSTANT) {
       SPerl_CONSTANT* constant = op_cur->uv.constant;
@@ -125,7 +125,7 @@ void SPerl_DUMPER_dump_parser(SPerl_PARSER* parser) {
 }
 
 void SPerl_DUMPER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* op_constants) {
-  for (SPerl_int i = 0; i < op_constants->length; i++) {
+  for (int32_t i = 0; i < op_constants->length; i++) {
     SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, i);
     SPerl_CONSTANT* constant = op_constant->uv.constant;
     printf("    constant[%" PRId32 "]\n", i);
@@ -134,7 +134,7 @@ void SPerl_DUMPER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* op_constants
 }
 
 void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) {
-  for (SPerl_int i = 0; i < op_packages->length; i++) {
+  for (int32_t i = 0; i < op_packages->length; i++) {
     printf("package[%d]\n", i);
     SPerl_OP* op_package = SPerl_ARRAY_fetch(op_packages, i);
     SPerl_PACKAGE* package = op_package->uv.package;
@@ -151,7 +151,7 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
     // Field information
     printf("  fields\n");
     SPerl_ARRAY* op_fields = package->op_fields;
-    for (SPerl_int j = 0; j < op_fields->length; j++) {
+    for (int32_t j = 0; j < op_fields->length; j++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, j);
       SPerl_FIELD* field = op_field->uv.field;
       printf("    field[%" PRId32 "]\n", j);
@@ -166,7 +166,7 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
     
     printf("  subs\n");
     SPerl_ARRAY* op_subs = package->op_subs;
-    for (SPerl_int i = 0; i < op_subs->length; i++) {
+    for (int32_t i = 0; i < op_subs->length; i++) {
       SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
       SPerl_SUB* sub = op_sub->uv.sub;
       printf("    sub[%" PRId32 "]\n", i);
@@ -176,7 +176,7 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
 }
 
 void SPerl_DUMPER_dump_resolved_types(SPerl_PARSER* parser, SPerl_ARRAY* resolved_types) {
-  for (SPerl_int i = 0; i < resolved_types->length; i++) {
+  for (int32_t i = 0; i < resolved_types->length; i++) {
     printf("resolved_type[%d]\n", i);
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_ARRAY_fetch(resolved_types, i);
     printf("    name => \"%s\"\n", resolved_type->name);
@@ -185,14 +185,14 @@ void SPerl_DUMPER_dump_resolved_types(SPerl_PARSER* parser, SPerl_ARRAY* resolve
 }
 
 void SPerl_DUMPER_dump_constant_pool(SPerl_PARSER* parser, SPerl_CONSTANT_POOL* constant_pool) {
-  for (SPerl_int i = 0; i < constant_pool->length; i++) {
+  for (int32_t i = 0; i < constant_pool->length; i++) {
     printf("    constant_pool[%d] %d\n", i, constant_pool->values[i]);
   }
 }
 
 void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecodes) {
-  for (SPerl_int i = 0; i < bytecodes->length; i++) {
-    SPerl_char bytecode = bytecodes->values[i];
+  for (int32_t i = 0; i < bytecodes->length; i++) {
+    uint8_t bytecode = bytecodes->values[i];
     printf("        [%d] %s\n", i, SPerl_BYTECODE_C_CODE_NAMES[bytecode]);
     
     // Operand
@@ -334,7 +334,7 @@ void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("      argument_count => %" PRId32 "\n", sub->argument_count);
     printf("      my_vars\n");
     SPerl_ARRAY* op_my_vars = sub->op_my_vars;
-    for (SPerl_int i = 0; i < op_my_vars->length; i++) {
+    for (int32_t i = 0; i < op_my_vars->length; i++) {
       SPerl_OP* op_my_var = SPerl_ARRAY_fetch(sub->op_my_vars, i);
       SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
       printf("        my_var[%d]\n", i);

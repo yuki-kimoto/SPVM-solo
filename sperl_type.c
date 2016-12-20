@@ -12,7 +12,7 @@
 #include "sperl_op.h"
 #include "sperl_allocator.h"
 
-SPerl_char* const SPerl_TYPE_C_CODE_NAMES[] = {
+uint8_t* const SPerl_TYPE_C_CODE_NAMES[] = {
   "word",
   "array",
   "sub",
@@ -70,7 +70,7 @@ void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* pa
     // Argument types
     SPerl_TYPE_COMPONENT_SUB* type_component_sub = type->uv.type_component_sub;
     SPerl_ARRAY* argument_types = type_component_sub->argument_types;
-    for (SPerl_int i = 0; i < argument_types->length; i++) {
+    for (int32_t i = 0; i < argument_types->length; i++) {
       SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(argument_types, i);
       SPerl_TYPE_to_parts(parser, argument_type, parts);
       if (i != argument_types->length - 1) {
@@ -107,9 +107,9 @@ void SPerl_TYPE_build_parts(SPerl_PARSER* parser, SPerl_TYPE* type) {
 
 void SPerl_TYPE_print(SPerl_PARSER* parser, SPerl_TYPE* type, FILE* fh) {
   SPerl_ARRAY* parts = type->parts;
-  for (SPerl_int i = 0; i < parts->length; i++) {
+  for (int32_t i = 0; i < parts->length; i++) {
     SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
-    SPerl_char code = part->code;
+    uint8_t code = part->code;
     
     if (code == SPerl_TYPE_PART_C_CODE_BYTE) {
       fprintf(fh, "%s", part->uv.char_name);
@@ -130,11 +130,11 @@ void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
   }
   else {
     SPerl_ARRAY* parts = type->parts;
-    SPerl_int total_length = 0;
+    int32_t total_length = 0;
 
-    for (SPerl_int i = 0; i < parts->length; i++) {
+    for (int32_t i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
-      SPerl_char code = part->code;
+      uint8_t code = part->code;
       
       if (code == SPerl_TYPE_PART_C_CODE_BYTE) {
         total_length += 1;
@@ -147,14 +147,14 @@ void SPerl_TYPE_build_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
       }
     }
     
-    SPerl_char* type_name = SPerl_ALLOCATOR_new_string(parser, total_length);
+    uint8_t* type_name = SPerl_ALLOCATOR_new_string(parser, total_length);
     
-    SPerl_int pos = 0;
-    for (SPerl_int i = 0; i < parts->length; i++) {
+    int32_t pos = 0;
+    for (int32_t i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
-      SPerl_char code = part->code;
+      uint8_t code = part->code;
       
-      SPerl_int length = 0;
+      int32_t length = 0;
       if (code == SPerl_TYPE_PART_C_CODE_BYTE) {
         length = 1;
         memcpy(type_name + pos, part->uv.char_name, length);

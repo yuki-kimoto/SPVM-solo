@@ -124,7 +124,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_DEFAULT,
 };
 
-extern SPerl_char* const SPerl_OP_C_CODE_NAMES[];
+extern uint8_t* const SPerl_OP_C_CODE_NAMES[];
 
 enum {
   // Block type
@@ -141,16 +141,16 @@ enum {
 
 /* Binary operation */
 struct SPerl_op {
-  SPerl_int code;
+  int32_t code;
   SPerl_OP* first;
   SPerl_OP* last;
   SPerl_OP* sibparent;
-  SPerl_char* file;
-  SPerl_int line;
-  SPerl_boolean moresib;
-  SPerl_boolean lvalue;
-  SPerl_boolean condition;
-  SPerl_int flag;
+  uint8_t* file;
+  int32_t line;
+  _Bool moresib;
+  _Bool lvalue;
+  _Bool condition;
+  int32_t flag;
   union {
     SPerl_RESOLVED_TYPE* resolved_type;
     SPerl_MY_VAR* my_var;
@@ -213,18 +213,18 @@ SPerl_OP* SPerl_OP_build_decl_field(SPerl_PARSER* parser, SPerl_OP* op_has, SPer
 SPerl_OP* SPerl_OP_build_decl_my(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_type);
 SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages);
 SPerl_OP* SPerl_OP_build_decl_use(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_package_name);
-SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_subname, SPerl_OP* op_terms, SPerl_boolean anon);
+SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_subname, SPerl_OP* op_terms, _Bool anon);
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser);
 SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser);
 SPerl_OP* SPerl_OP_newOP_NULL(SPerl_PARSER* parser);
 SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term);
 void SPerl_OP_resolve_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert_type);
 
-SPerl_char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, SPerl_char* package_name, SPerl_char* base_name);
+uint8_t* SPerl_OP_create_abs_name(SPerl_PARSER* parser, uint8_t* package_name, uint8_t* base_name);
 
-SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, SPerl_char type, SPerl_OP *first, SPerl_OP *last);
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, SPerl_int type, SPerl_OP *first, SPerl_OP *last, SPerl_char flags, SPerl_char private);
-SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, SPerl_int del_count, SPerl_OP *insert);
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, uint8_t type, SPerl_OP *first, SPerl_OP *last);
+SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, int32_t type, SPerl_OP *first, SPerl_OP *last, uint8_t flags, uint8_t private);
+SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP* first, SPerl_OP* last);
 
 SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* o);

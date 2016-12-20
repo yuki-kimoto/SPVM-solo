@@ -3,9 +3,9 @@
 
 #include "sperl_hash_func.h"
 
-SPerl_long SPerl_HASH_FUNC_calc_hash(SPerl_char* str, SPerl_int len) {
-  SPerl_char* str_tmp = str;
-  SPerl_long hash = 5381;
+int64_t SPerl_HASH_FUNC_calc_hash(uint8_t* str, int32_t len) {
+  uint8_t* str_tmp = str;
+  int64_t hash = 5381;
   while (len--) {
     hash = ((hash << 5) + hash) + *str_tmp++;
   }

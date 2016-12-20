@@ -9,20 +9,20 @@ SPerl_BYTECODES* SPerl_BYTECODES_new() {
   bytecodes->capacity = 64;
   bytecodes->length = 0;
   
-  SPerl_char* values = calloc(bytecodes->capacity, sizeof(SPerl_char));
+  uint8_t* values = calloc(bytecodes->capacity, sizeof(uint8_t));
   bytecodes->values = values;
   
   return bytecodes;
 }
 
-void SPerl_BYTECODES_push(SPerl_BYTECODES* bytecodes, SPerl_char value) {
-  SPerl_int length = bytecodes->length;
-  SPerl_int capacity = bytecodes->capacity;
+void SPerl_BYTECODES_push(SPerl_BYTECODES* bytecodes, uint8_t value) {
+  int32_t length = bytecodes->length;
+  int32_t capacity = bytecodes->capacity;
   
   if (length >= capacity) {
-    SPerl_int new_capacity = capacity * 2;
-    bytecodes->values = realloc(bytecodes->values, new_capacity * sizeof(SPerl_char));
-    memset(bytecodes->values + capacity, 0, (new_capacity - capacity) * sizeof(SPerl_char));
+    int32_t new_capacity = capacity * 2;
+    bytecodes->values = realloc(bytecodes->values, new_capacity * sizeof(uint8_t));
+    memset(bytecodes->values + capacity, 0, (new_capacity - capacity) * sizeof(uint8_t));
     bytecodes->capacity = new_capacity;
   }
   bytecodes->values[length] = value;

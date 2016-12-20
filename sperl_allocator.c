@@ -6,7 +6,7 @@
 #include "sperl_memory_pool.h"
 #include "sperl_allocator.h"
 
-SPerl_ARRAY* SPerl_ALLOCATOR_new_array(SPerl_PARSER* parser, SPerl_int capacity) {
+SPerl_ARRAY* SPerl_ALLOCATOR_new_array(SPerl_PARSER* parser, int32_t capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
   
   SPerl_ARRAY_push(parser->array_ptrs, array);
@@ -14,7 +14,7 @@ SPerl_ARRAY* SPerl_ALLOCATOR_new_array(SPerl_PARSER* parser, SPerl_int capacity)
   return array;
 }
 
-SPerl_HASH* SPerl_ALLOCATOR_new_hash(SPerl_PARSER* parser, SPerl_int capacity) {
+SPerl_HASH* SPerl_ALLOCATOR_new_hash(SPerl_PARSER* parser, int32_t capacity) {
   SPerl_HASH* hash = SPerl_HASH_new(capacity);
   
   SPerl_ARRAY_push(parser->hash_ptrs, hash);
@@ -22,14 +22,14 @@ SPerl_HASH* SPerl_ALLOCATOR_new_hash(SPerl_PARSER* parser, SPerl_int capacity) {
   return hash;
 }
 
-SPerl_int* SPerl_ALLOCATOR_new_int(SPerl_PARSER* parser) {
-  SPerl_int* value = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_int));
+int32_t* SPerl_ALLOCATOR_new_int(SPerl_PARSER* parser) {
+  int32_t* value = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(int32_t));
   
   return value;
 }
 
-SPerl_char* SPerl_ALLOCATOR_new_string(SPerl_PARSER* parser, SPerl_int length) {
-  SPerl_char* str = malloc(length + 1);
+uint8_t* SPerl_ALLOCATOR_new_string(SPerl_PARSER* parser, int32_t length) {
+  uint8_t* str = malloc(length + 1);
   
   if (length < 40) {
     str = SPerl_MEMORY_POOL_alloc(parser->memory_pool, 40);

@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
   }
   
   /* Source file */
-  SPerl_char* package_name = argv[1];
+  uint8_t* package_name = argv[1];
   
   /* initialize parser */
   SPerl_PARSER* parser = SPerl_PARSER_new();
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
   
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;
-  SPerl_int parse_success = SPerl_yyparse(parser);
+  int32_t parse_success = SPerl_yyparse(parser);
   
   SPerl_PARSER_free(parser);
   

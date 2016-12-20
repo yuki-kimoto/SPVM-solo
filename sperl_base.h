@@ -3,14 +3,16 @@
 
 #include <stdint.h>
 
-typedef _Bool SPerl_boolean;
-typedef uint8_t SPerl_char;
-typedef int8_t SPerl_byte;
-typedef int16_t SPerl_short;
-typedef int32_t SPerl_int;
-typedef int64_t SPerl_long;
-typedef float SPerl_float;
-typedef double SPerl_double;
+/* Use the following type in source code
+_Bool
+uint8_t
+int8_t
+int16_t
+int32_t
+int64_t
+float
+double
+*/
 
 /* sperl_allocator.h */
 struct SPerl_allocator;

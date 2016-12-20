@@ -6,7 +6,7 @@
 struct SPerl_var {
   SPerl_OP* op_name;
   SPerl_OP* op_my_var;
-  SPerl_int version;
+  int32_t version;
 };
 
 SPerl_VAR* SPerl_VAR_new(SPerl_PARSER* parser);

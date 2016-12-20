@@ -32,53 +32,53 @@ int main(int argc, char *argv[])
   // Hash - first same key
   {
     SPerl_HASH* hash = SPerl_HASH_new(101);
-    SPerl_int value1 = 3;
+    int32_t value1 = 3;
     SPerl_HASH_insert_norehash(hash, "key1", 4, &value1);
 
-    SPerl_int value1_ret = *(SPerl_int*)SPerl_HASH_search(hash, "key1", 4);
+    int32_t value1_ret = *(int32_t*)SPerl_HASH_search(hash, "key1", 4);
     OK(value1_ret == 3);
 
-    SPerl_int value2 = 5;
+    int32_t value2 = 5;
     SPerl_HASH_insert_norehash(hash, "key", 3, &value2);
     
-    SPerl_int value2_ret = *(SPerl_int*)SPerl_HASH_search(hash, "key", 3);
+    int32_t value2_ret = *(int32_t*)SPerl_HASH_search(hash, "key", 3);
     OK(value2_ret == 5);
   }
   
   // Hash - insert and search
   {
     SPerl_HASH* hash = SPerl_HASH_new(101);
-    SPerl_int value1 = 3;
+    int32_t value1 = 3;
     SPerl_HASH_insert_norehash(hash, "key1", 4, &value1);
-    SPerl_int hash_value1 = SPerl_HASH_FUNC_calc_hash("key1", 4);
-    SPerl_int index1 = hash_value1 % 101;
+    int32_t hash_value1 = SPerl_HASH_FUNC_calc_hash("key1", 4);
+    int32_t index1 = hash_value1 % 101;
     
-    OK(*(SPerl_int*)hash->entries[index1]->value == 3);
+    OK(*(int32_t*)hash->entries[index1]->value == 3);
     OK(hash->count == 1);
-    SPerl_int i;
+    int32_t i;
 
-    SPerl_int value2 = 5;
+    int32_t value2 = 5;
     SPerl_HASH_insert_norehash(hash, "key2", 4, &value2);
-    SPerl_int hash_value2 = SPerl_HASH_FUNC_calc_hash("key2", 4);
-    SPerl_int index2 = hash_value2 % 101;
+    int32_t hash_value2 = SPerl_HASH_FUNC_calc_hash("key2", 4);
+    int32_t index2 = hash_value2 % 101;
     
-    OK(*(SPerl_int*)hash->entries[index2]->value == 5);
+    OK(*(int32_t*)hash->entries[index2]->value == 5);
     OK(hash->count == 2);
     
     // Replace
-    SPerl_int value3 = 7;
-    SPerl_int return_value3 = *(SPerl_int*)SPerl_HASH_insert_norehash(hash, "key1", 4, &value3);
-    SPerl_int hash_value3 = SPerl_HASH_FUNC_calc_hash("key1", 4);
-    SPerl_int index3 = hash_value3 % 101;
+    int32_t value3 = 7;
+    int32_t return_value3 = *(int32_t*)SPerl_HASH_insert_norehash(hash, "key1", 4, &value3);
+    int32_t hash_value3 = SPerl_HASH_FUNC_calc_hash("key1", 4);
+    int32_t index3 = hash_value3 % 101;
     
-    OK(*(SPerl_int*)hash->entries[index3]->value == 7);
+    OK(*(int32_t*)hash->entries[index3]->value == 7);
     OK(return_value3 == 3);
     OK(hash->count == 2);
     
     // Search
-    SPerl_int value1_1 = *(SPerl_int*)SPerl_HASH_search(hash, "key1", 4);
+    int32_t value1_1 = *(int32_t*)SPerl_HASH_search(hash, "key1", 4);
     OK(value1_1 == 7);
-    SPerl_int value2_1 = *(SPerl_int*)SPerl_HASH_search(hash, "key2", 4);
+    int32_t value2_1 = *(int32_t*)SPerl_HASH_search(hash, "key2", 4);
     OK(value2_1 == 5);
     void* value3_1 = SPerl_HASH_search(hash, "none", 4);
     OK(!value3_1);
@@ -87,47 +87,47 @@ int main(int argc, char *argv[])
   // Hash - insert link
   {
     SPerl_HASH* hash = SPerl_HASH_new(1);
-    SPerl_int value1 = 3;
+    int32_t value1 = 3;
     SPerl_HASH_insert_norehash(hash, "key1", 4, &value1);
     
-    OK(*(SPerl_int*)hash->entries[0]->value == 3);
+    OK(*(int32_t*)hash->entries[0]->value == 3);
     OK(hash->count == 1);
-    SPerl_int i;
+    int32_t i;
 
-    SPerl_int value2 = 5;
+    int32_t value2 = 5;
     SPerl_HASH_insert_norehash(hash, "key2", 4, &value2);
     
-    OK(*(SPerl_int*)hash->entries[0]->next->value == 5);
+    OK(*(int32_t*)hash->entries[0]->next->value == 5);
     OK(hash->count == 1);
     
-    SPerl_int value3 = 7;
+    int32_t value3 = 7;
     SPerl_HASH_insert_norehash(hash, "key3", 4, &value3);
     
-    OK(*(SPerl_int*)hash->entries[0]->next->next->value == 7);
+    OK(*(int32_t*)hash->entries[0]->next->next->value == 7);
     OK(hash->count == 1);
     
     // Replace key2
-    SPerl_int value4 = 11;
-    SPerl_int return_value4 = *(SPerl_int*)SPerl_HASH_insert_norehash(hash, "key2", 4, &value4);
+    int32_t value4 = 11;
+    int32_t return_value4 = *(int32_t*)SPerl_HASH_insert_norehash(hash, "key2", 4, &value4);
     
-    OK(*(SPerl_int*)hash->entries[0]->next->value == 11);
+    OK(*(int32_t*)hash->entries[0]->next->value == 11);
     OK(return_value4 == 5);
     OK(hash->count == 1);
     
     // Replace key3
-    SPerl_int value5 = 13;
-    SPerl_int return_value5 = *(SPerl_int*)SPerl_HASH_insert_norehash(hash, "key3", 4, &value5);
+    int32_t value5 = 13;
+    int32_t return_value5 = *(int32_t*)SPerl_HASH_insert_norehash(hash, "key3", 4, &value5);
     
-    OK(*(SPerl_int*)hash->entries[0]->next->next->value == 13);
+    OK(*(int32_t*)hash->entries[0]->next->next->value == 13);
     OK(return_value5 == 7);
     OK(hash->count == 1);
 
     // Search
-    SPerl_int value1_1 = *(SPerl_int*)SPerl_HASH_search(hash, "key1", 4);
+    int32_t value1_1 = *(int32_t*)SPerl_HASH_search(hash, "key1", 4);
     OK(value1_1 == 3);
-    SPerl_int value2_1 = *(SPerl_int*)SPerl_HASH_search(hash, "key2", 4);
+    int32_t value2_1 = *(int32_t*)SPerl_HASH_search(hash, "key2", 4);
     OK(value2_1 == 11);
-    SPerl_int value3_1 = *(SPerl_int*)SPerl_HASH_search(hash, "key3", 4);
+    int32_t value3_1 = *(int32_t*)SPerl_HASH_search(hash, "key3", 4);
     OK(value3_1 == 13);
     
     // free
