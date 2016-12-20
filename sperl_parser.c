@@ -89,6 +89,31 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_ARRAY_push(parser->op_packages, op_package);
     SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
+
+  // Core array types
+  for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
+    // Name
+    uint8_t* name = SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[i];
+    uint8_t* core_name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
+    
+    // Name
+    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
+    SPerl_WORD* name_word = SPerl_WORD_new(parser);
+    name_word->value = name;
+    op_name->uv.word = name_word;
+    
+    // Resolved type
+    SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
+    SPerl_ARRAY_push(resolved_type->part_names, core_name);
+    SPerl_ARRAY_push(resolved_type->part_names, "[");
+    SPerl_ARRAY_push(resolved_type->part_names, "]");
+    
+    resolved_type->name = name;
+    resolved_type->name_length = strlen(name);
+    resolved_type->id = SPerl_RESOLVED_TYPE_C_CORE_LENGTH + i;
+    SPerl_ARRAY_push(parser->resolved_types, resolved_type);
+    SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
+  }
   
   return parser;
 }

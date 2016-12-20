@@ -20,7 +20,7 @@ enum {
 extern uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[];
 extern int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[];
 
-extern uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_ARRAT_NAMES[];
+extern uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[];
 
 struct SPerl_resolved_type {
   int32_t code;
