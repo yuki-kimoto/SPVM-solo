@@ -209,5 +209,8 @@ SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "IFNONNULL",
   "GOTO_W",
   "JSR_W",
-  "BREAKPOINT"
+  "BREAKPOINT",
+  "UNDEFINED",
+  "IMPDEP1",
+  "IMPDEP2",
 };

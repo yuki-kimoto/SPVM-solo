@@ -210,6 +210,9 @@ enum {
   SPerl_BYTECODE_C_CODE_GOTO_W, // Not used
   SPerl_BYTECODE_C_CODE_JSR_W, // Not used
   SPerl_BYTECODE_C_CODE_BREAKPOINT, // Not used
+  SPerl_BYTECODE_C_CODE_UNDEFINED, // Not used
+  SPerl_BYTECODE_C_CODE_IMPDEP1 = 254, // Not used
+  SPerl_BYTECODE_C_CODE_IMPDEP2, // Not used
 };
 
 extern SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[];
