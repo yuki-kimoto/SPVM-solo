@@ -205,16 +205,16 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
         
         switch (bytecode) {
           // Have tow operand
-          case SPerl_BYTECODE_C_CODE_STORE_INT:
-          case SPerl_BYTECODE_C_CODE_STORE_LONG:
-          case SPerl_BYTECODE_C_CODE_STORE_FLOAT:
-          case SPerl_BYTECODE_C_CODE_STORE_DOUBLE:
-          case SPerl_BYTECODE_C_CODE_STORE_REF:
-          case SPerl_BYTECODE_C_CODE_LOAD_INT:
-          case SPerl_BYTECODE_C_CODE_LOAD_LONG:
-          case SPerl_BYTECODE_C_CODE_LOAD_FLOAT:
-          case SPerl_BYTECODE_C_CODE_LOAD_DOUBLE:
-          case SPerl_BYTECODE_C_CODE_LOAD_REF:
+          case SPerl_BYTECODE_C_CODE_ISTORE:
+          case SPerl_BYTECODE_C_CODE_LSTORE:
+          case SPerl_BYTECODE_C_CODE_FSTORE:
+          case SPerl_BYTECODE_C_CODE_DSTORE:
+          case SPerl_BYTECODE_C_CODE_ASTORE:
+          case SPerl_BYTECODE_C_CODE_ILOAD:
+          case SPerl_BYTECODE_C_CODE_LLOAD:
+          case SPerl_BYTECODE_C_CODE_FLOAD:
+          case SPerl_BYTECODE_C_CODE_DLOAD:
+          case SPerl_BYTECODE_C_CODE_ALOAD:
           {
             i++;
             bytecode = bytecodes->values[i];
@@ -233,16 +233,16 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
       
       // Have one operand
       case SPerl_BYTECODE_C_CODE_BIPUSH:
-      case SPerl_BYTECODE_C_CODE_STORE_INT:
-      case SPerl_BYTECODE_C_CODE_STORE_LONG:
-      case SPerl_BYTECODE_C_CODE_STORE_FLOAT:
-      case SPerl_BYTECODE_C_CODE_STORE_DOUBLE:
-      case SPerl_BYTECODE_C_CODE_STORE_REF:
-      case SPerl_BYTECODE_C_CODE_LOAD_INT:
-      case SPerl_BYTECODE_C_CODE_LOAD_LONG:
-      case SPerl_BYTECODE_C_CODE_LOAD_FLOAT:
-      case SPerl_BYTECODE_C_CODE_LOAD_DOUBLE:
-      case SPerl_BYTECODE_C_CODE_LOAD_REF:
+      case SPerl_BYTECODE_C_CODE_ISTORE:
+      case SPerl_BYTECODE_C_CODE_LSTORE:
+      case SPerl_BYTECODE_C_CODE_FSTORE:
+      case SPerl_BYTECODE_C_CODE_DSTORE:
+      case SPerl_BYTECODE_C_CODE_ASTORE:
+      case SPerl_BYTECODE_C_CODE_ILOAD:
+      case SPerl_BYTECODE_C_CODE_LLOAD:
+      case SPerl_BYTECODE_C_CODE_FLOAD:
+      case SPerl_BYTECODE_C_CODE_DLOAD:
+      case SPerl_BYTECODE_C_CODE_ALOAD:
       case SPerl_BYTECODE_C_CODE_LDC:
       {
         i++;
