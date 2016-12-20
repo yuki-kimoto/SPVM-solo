@@ -1431,7 +1431,7 @@ void SPerl_OP_resolve_types(SPerl_PARSER* parser) {
   
   for (int32_t i = 0; i < op_types->length; i++) {
     SPerl_OP* op_type = SPerl_ARRAY_fetch(op_types, i);
-    SPerl_OP_resolve_type(parser, op_type->uv.type);
+    SPerl_OP_resolve_type(parser, op_type->uv.type, 0);
   }
 }
 
@@ -1548,25 +1548,24 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
 }
 
 // Resolve type and index type
-void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
+void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type, int32_t name_length) {
   SPerl_HASH* package_symtable = parser->package_symtable;
   
   if (type->resolved) {
     return;
   }
   else {
-    int32_t resolved_type_name_length = 0;
     SPerl_ARRAY* resolved_type_part_names = SPerl_ALLOCATOR_new_array(parser, 0);
     
     SPerl_ARRAY* parts = type->parts;
     for (int32_t i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
       if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
-        resolved_type_name_length += 3;
+        name_length += 3;
         SPerl_ARRAY_push(resolved_type_part_names, "sub");
       }
       else if (part->code == SPerl_TYPE_PART_C_CODE_BYTE) {
-        resolved_type_name_length++;
+        name_length++;
         SPerl_ARRAY_push(resolved_type_part_names, part->uv.char_name);
       }
       else {
@@ -1580,13 +1579,13 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
             && strcmp(type->uv.type_component_word->op_name->uv.word->value, found_type->uv.type_component_word->op_name->uv.word->value) == 0;
           
           if (is_self) {
-            resolved_type_name_length += strlen(found_type->uv.type_component_word->op_name->uv.word->value);
+            name_length += strlen(found_type->uv.type_component_word->op_name->uv.word->value);
             uint8_t* found_part_name = found_type->uv.type_component_word->op_name->uv.word->value;
             SPerl_ARRAY_push(resolved_type_part_names, found_part_name);
           }
           else {
-            SPerl_OP_resolve_type(parser, found_type);
-            resolved_type_name_length += found_type->resolved_type->name_length;
+            SPerl_OP_resolve_type(parser, found_type, name_length);
+            name_length += found_type->resolved_type->name_length;
             for (int32_t j = 0; j < found_type->resolved_type->part_names->length; j++) {
               uint8_t* found_part_name = SPerl_ARRAY_fetch(found_type->resolved_type->part_names, j);
               SPerl_ARRAY_push(resolved_type_part_names, found_part_name);
@@ -1598,7 +1597,7 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
         }
       }
     }
-    uint8_t* resolved_type_name = SPerl_ALLOCATOR_new_string(parser, resolved_type_name_length);
+    uint8_t* resolved_type_name = SPerl_ALLOCATOR_new_string(parser, name_length);
     int32_t cur_pos = 0;
     for (int32_t i = 0; i < resolved_type_part_names->length; i++) {
       uint8_t* resolved_type_part_name = SPerl_ARRAY_fetch(resolved_type_part_names, i);

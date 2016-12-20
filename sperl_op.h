@@ -191,7 +191,7 @@ SPerl_OP* SPerl_OP_build_array_length(SPerl_PARSER* parser, SPerl_OP* op_array_l
 SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type);
 
 SPerl_OP* SPerl_OP_build_array_init(SPerl_PARSER* parser, SPerl_OP* op_opt_terms);
-void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type);
+void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type, int32_t name_length);
 void SPerl_OP_check(SPerl_PARSER* parser);
 void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* name);
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name);
