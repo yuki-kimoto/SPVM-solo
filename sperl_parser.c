@@ -57,7 +57,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
-    resolved_type->package = package;
     SPerl_ARRAY_push(parser->resolved_types, resolved_type);
     SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
     

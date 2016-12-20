@@ -27,7 +27,6 @@ struct SPerl_resolved_type {
   uint8_t* name;
   int32_t name_length;
   int32_t id;
-  SPerl_PACKAGE* package;
 };
 
 SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl_PARSER* parser);
