@@ -1616,7 +1616,6 @@ void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type) {
       SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
       resolved_type->id = parser->resolved_types->length;
       resolved_type->name = resolved_type_name;
-      resolved_type->part_names = resolved_type_part_names;
       SPerl_ARRAY_push(parser->resolved_types, resolved_type);
       SPerl_HASH_insert(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
       type->resolved_type = resolved_type;
