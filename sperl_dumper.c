@@ -254,7 +254,6 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
       
       // Have tow operand
       case SPerl_BYTECODE_C_CODE_IINC:
-      case SPerl_BYTECODE_C_CODE_LINC:
       case SPerl_BYTECODE_C_CODE_SIPUSH:
       case SPerl_BYTECODE_C_CODE_LOAD_CONSTANT2_W:
       case SPerl_BYTECODE_C_CODE_LOAD_CONSTANT_W:

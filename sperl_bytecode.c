@@ -145,7 +145,6 @@ SPerl_char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "BIT_XOR_INT",
   "BIT_XOR_LONG",
   "IINC",
-  "LINC",
   "ACONST_NULL",
   "ISHL",
   "ISHR",

@@ -1148,8 +1148,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, first);
                 
                 // Only int or long
-                if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT &&  first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                  SPerl_yyerror_format(parser, "must be int or long in increment at %s line %d\n", op_cur->file, op_cur->line);
+                if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  SPerl_yyerror_format(parser, "must be int in increment at %s line %d\n", op_cur->file, op_cur->line);
                 }
                 op_cur->uv.resolved_type = first_resolved_type;
                 break;
