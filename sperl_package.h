@@ -11,7 +11,6 @@ struct SPerl_package {
   SPerl_ARRAY* op_descripters;
   SPerl_ARRAY* op_fields;
   SPerl_HASH* field_symtable;
-  SPerl_boolean is_value;
   SPerl_ARRAY* op_subs;
   SPerl_ARRAY* op_constants;
   SPerl_CONSTANT_POOL* constant_pool;

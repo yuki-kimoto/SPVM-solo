@@ -1741,13 +1741,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
             SPerl_yyerror_format(parser, "redeclaration of has \"%s\" at %s line %d\n", field_name, op_has->file, op_has->line);
           }
           else {
-            // Value class only have core type field
-            if (package->is_value) {
-              SPerl_boolean is_core_type = SPerl_TYPE_is_core_type_name(parser, field->op_type->uv.type);
-              if (!is_core_type) {
-                SPerl_yyerror_format(parser, "value class has only core type field at %s line %d\n", op_has->file, op_has->line);
-              }
-            }
             
             SPerl_ARRAY_push(op_fields, op_has);
             SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);

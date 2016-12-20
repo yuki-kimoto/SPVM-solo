@@ -26,24 +26,6 @@ SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
   return type;
 }
 
-SPerl_boolean SPerl_TYPE_is_core_type_name(SPerl_PARSER* parser, SPerl_TYPE* type) {
-  if (type->code == SPerl_TYPE_C_CODE_WORD) {
-    SPerl_TYPE_COMPONENT_WORD* type_component_word = type->uv.type_component_word;
-    SPerl_WORD* name_word = type_component_word->op_name->uv.word;
-    SPerl_char* name = name_word->value;
-    
-    if (strcmp(name, "boolean") == 0 || strcmp(name, "char") == 0 || strcmp(name, "byte") == 0 || strcmp(name, "short") == 0
-      || strcmp(name, "int") == 0 || strcmp(name, "long") == 0 || strcmp(name, "float") == 0
-      || strcmp(name, "double") == 0) 
-    {
-      return 1;
-    }
-  }
-  else {
-    return 0;
-  }
-}
-
 void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* parts) {
   
   if (type->code == SPerl_TYPE_C_CODE_WORD) {

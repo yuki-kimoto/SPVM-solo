@@ -44,7 +44,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
     // Core package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
     package->size = SPerl_RESOLVED_TYPE_C_CORE_SIZES[i];
-    package->is_value = 1;
     
     // Name
     SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);

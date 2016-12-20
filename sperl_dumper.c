@@ -157,8 +157,6 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
       printf("    field[%" PRId32 "]\n", j);
       SPerl_DUMPER_dump_field(parser, field);
     }
-    
-    printf("  is_value => %d\n", package->is_value);
 
     printf("  constant_values\n");
     SPerl_DUMPER_dump_constants(parser, package->op_constants);
