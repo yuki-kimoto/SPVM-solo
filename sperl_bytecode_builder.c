@@ -482,7 +482,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 SPerl_RESOLVED_TYPE* resolved_type = op_cur->uv.resolved_type;
                 
                 if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BOOLEAN
-                  || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_CHAR
                   || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE)
                 {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_CALOAD);

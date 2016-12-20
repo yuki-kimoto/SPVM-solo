@@ -6,7 +6,6 @@
 
 uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
   "boolean",
-  "char",
   "byte",
   "short",
   "int",
@@ -16,7 +15,6 @@ uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
 };
 
 int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
-  1,
   1,
   1,
   1,
