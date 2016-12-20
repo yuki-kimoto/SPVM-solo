@@ -243,7 +243,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
       case SPerl_BYTECODE_C_CODE_LOAD_FLOAT:
       case SPerl_BYTECODE_C_CODE_LOAD_DOUBLE:
       case SPerl_BYTECODE_C_CODE_LOAD_REF:
-      case SPerl_BYTECODE_C_CODE_LOAD_CONSTANT:
+      case SPerl_BYTECODE_C_CODE_LDC:
       {
         i++;
         bytecode = bytecodes->values[i];
@@ -255,8 +255,8 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
       // Have tow operand
       case SPerl_BYTECODE_C_CODE_IINC:
       case SPerl_BYTECODE_C_CODE_SIPUSH:
-      case SPerl_BYTECODE_C_CODE_LOAD_CONSTANT2_W:
-      case SPerl_BYTECODE_C_CODE_LOAD_CONSTANT_W:
+      case SPerl_BYTECODE_C_CODE_LDC2_W:
+      case SPerl_BYTECODE_C_CODE_LDC_W:
       case SPerl_BYTECODE_C_CODE_IF_ACMPEQ:
       case SPerl_BYTECODE_C_CODE_IF_ACMPNE:
       case SPerl_BYTECODE_C_CODE_IF_ICMPEQ:
