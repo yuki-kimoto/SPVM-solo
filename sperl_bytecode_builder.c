@@ -443,10 +443,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               case SPerl_OP_C_CODE_BIT_XOR: {
                 
                 if (op_cur->uv.resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_BIT_XOR_INT);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IXOR);
                 }
                 else if (op_cur->uv.resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_BIT_XOR_LONG);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LXOR);
                 }
                 
                 break;
@@ -454,10 +454,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               case SPerl_OP_C_CODE_BIT_OR: {
                 
                 if (op_cur->uv.resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_BIT_OR_INT);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IOR);
                 }
                 else if (op_cur->uv.resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_BIT_OR_LONG);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOR);
                 }
                               
                 break;
@@ -465,10 +465,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               case SPerl_OP_C_CODE_BIT_AND: {
                 
                 if (op_cur->uv.resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_BIT_AND_INT);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IAND);
                 }
                 else if (op_cur->uv.resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_BIT_AND_LONG);
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LAND);
                 }
                 
                 break;
