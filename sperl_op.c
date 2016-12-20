@@ -982,7 +982,8 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 
                 if (first_resolved_type->id != last_resolved_type->id) {
                   SPerl_yyerror_format(parser, "Invalid type at %s line %d\n", op_cur->file, op_cur->line);
-                  break;
+                  parser->fatal_error = 1;
+                  return;
                 }
                 
                 SPerl_RESOLVED_TYPE* resolved_type = first_resolved_type;

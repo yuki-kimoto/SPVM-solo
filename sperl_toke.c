@@ -387,7 +387,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
         constant->code = SPerl_CONSTANT_C_CODE_BYTE;
         constant->uv.int_value = ch;
-        constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "char", strlen("char"));
+        constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte", strlen("byte"));
         
         op->uv.constant = constant;
         yylvalp->opval = op;
@@ -428,7 +428,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
         constant->code = SPerl_CONSTANT_C_CODE_STRING;
         constant->uv.string_value = str;
-        constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "char", strlen("char"));
+        constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte", strlen("byte"));
         op->uv.constant = constant;
         yylvalp->opval = (SPerl_OP*)op;
 

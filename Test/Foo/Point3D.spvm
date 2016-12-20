@@ -75,7 +75,7 @@ package Test::Foo::Point3D {
     # sum();
     # sum(1, 3, 5);
 
-    my $char : char = 'a';
+    my $char : byte = 'a';
   }
   
   sub sum5($self : Test::Foo::Point3D) : int {
