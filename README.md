@@ -1,17 +1,17 @@
-# Static Perl - Fast culculation, parallel process, GC, static typing, VM with  perlish syntax
+# Static Perl - Fast calculation, parallel processing, GC, static typing, VM with  perlish syntax
 
-Do you need **fast Perl**? Static Perl provide fast culculation system on Perl.
+Do you need a **fast Perl**? Static Perl is a fast calculation system of Perl.
 
-- **Fast culculation** - Perl biggest weekpoint is culculation performance. Static Perl provide fast culculation.
-- **Paralel process** - Support paralel process to process array fast
-- **GC** - You don't need to think about freeing memory
+- **Fast calculation** - The Perl's biggest weak point is the calculation performance. Static Perl provides fast calculations.
+- **Parallel processing** - Support parallel processing to manipulate arrays faster
+- **GC** - You don't need to care about freeing memory
 - **Static typing** - Static typing for performance
-- **VM** - Byte code is created and you can run it by Static Perl VM
-- **Perlish syntax** - syntax is very similar with Perl
+- **VM** - Byte codes are generated so that you can run them on Static Perl VM
+- **Perlish syntax** - the syntax is very similar to that of Perl
 
-This is now **developping**.
+This is now under **developing**.
 
-I have implmented only parts of **tokenizer** and **abstract syntax tree generator**.
+I have implemented only parts of **tokenizer** and **abstract syntax tree generator**.
 
 ```
 package Main {
@@ -178,9 +178,9 @@ grammer
 
 ## Test
 
-  gcc  -std=c99 -lm -O -o tmp_sperl_t_array t/sperl_t_array.c *.c && ./tmp_sperl_t_array
-  gcc  -std=c99 -lm -O -o tmp_sperl_t_hash t/sperl_t_hash.c *.c && ./tmp_sperl_t_hash
-  gcc  -std=c99 -lm -O -o tmp_sperl_t_memory_pool t/sperl_t_memory_pool.c *.c && ./tmp_sperl_t_memory_pool
+    gcc  -std=c99 -lm -O -o tmp_sperl_t_array t/sperl_t_array.c *.c && ./tmp_sperl_t_array
+    gcc  -std=c99 -lm -O -o tmp_sperl_t_hash t/sperl_t_hash.c *.c && ./tmp_sperl_t_hash
+    gcc  -std=c99 -lm -O -o tmp_sperl_t_memory_pool t/sperl_t_memory_pool.c *.c && ./tmp_sperl_t_memory_pool
 
 # SPVM specification
 
@@ -188,19 +188,19 @@ grammer
 
 core type is char, byte, short, int, long, float, double.
 
-  char    unsinged integer        1byte
-  byte    singed integer          1byte
-  short   singed integer          2byte
-  int     signed integer          4byte
-  long    singed integer          8byte
-  float   floating-point number   4byte
-  double  floating-point number   8byte
+    char    unsigned integer        1byte
+    byte    singed integer          1byte
+    short   singed integer          2byte
+    int     signed integer          4byte
+    long    singed integer          8byte
+    float   floating-point number   4byte
+    double  floating-point number   8byte
 
 ## Class name
 
 class name first character must be upper case. if class name contain "::", each part first character must be upper case.
 
-  Foo
-  Foo::Bar
-  ABC
-  ABC::DEF
+    Foo
+    Foo::Bar
+    ABC
+    ABC::DEF
