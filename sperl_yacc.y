@@ -86,14 +86,7 @@ decl_thing_in_grammer
   | decl_package
 
 decl_package
-  : PACKAGE package_name type ';'
-    {
-      $$ = SPerl_OP_build_decl_package(parser, $1, $2, $3, SPerl_OP_newOP_NULL(parser));
-      if (parser->fatal_error) {
-        YYABORT;
-      }
-    }
-  | PACKAGE package_name class_block
+  : PACKAGE package_name class_block
     {
       $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $3);
       if (parser->fatal_error) {

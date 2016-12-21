@@ -1626,100 +1626,87 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
     package->op_name = op_package_name;
     
-    // Type
-    SPerl_TYPE* type;
+    // Type(type is same as package name)
+    SPerl_TYPE* type = SPerl_TYPE_new(parser);
+    type->code = SPerl_TYPE_C_CODE_WORD;
+    SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
+    type_component_word->op_name = op_package_name;
+    type->uv.type_component_word = type_component_word;
     
-    // Class type
-    if (op_type->code == SPerl_OP_C_CODE_NULL) {
-      
-      // Type(type is same as package name)
-      type = SPerl_TYPE_new(parser);
-      type->code = SPerl_TYPE_C_CODE_WORD;
-      SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
-      type_component_word->op_name = op_package_name;
-      type->uv.type_component_word = type_component_word;
-      
-      // Type OP
-      op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);
-      op_type->uv.type = type;
-      
-      // Add type
-      package->op_type = op_type;
-      SPerl_ARRAY_push(parser->op_types, op_type);
-      
-      SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_new_array(parser, 0);
-      SPerl_HASH* field_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
-      
-      // Collect field and use information
-      SPerl_OP* op_decls = op_block->first;
-      SPerl_OP* op_decl = op_decls->first;
-      while (op_decl = SPerl_OP_sibling(parser, op_decl)) {
-        if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
-          SPerl_OP* op_has = op_decl;
-          SPerl_FIELD* field = op_has->uv.field;
-          uint8_t* field_name = field->op_name->uv.word->value;
-          SPerl_FIELD* found_field
-            = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
-          if (found_field) {
-            SPerl_yyerror_format(parser, "redeclaration of has \"%s\" at %s line %d\n", field_name, op_has->file, op_has->line);
-          }
-          else {
-            
-            SPerl_ARRAY_push(op_fields, op_has);
-            SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
-            
-            // Field absolute name
-            uint8_t* field_abs_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
-            SPerl_HASH_insert(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name), field);
-          }
+    // Type OP
+    op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);
+    op_type->uv.type = type;
+    
+    // Add type
+    package->op_type = op_type;
+    SPerl_ARRAY_push(parser->op_types, op_type);
+    
+    SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_new_array(parser, 0);
+    SPerl_HASH* field_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
+    
+    // Collect field and use information
+    SPerl_OP* op_decls = op_block->first;
+    SPerl_OP* op_decl = op_decls->first;
+    while (op_decl = SPerl_OP_sibling(parser, op_decl)) {
+      if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
+        SPerl_OP* op_has = op_decl;
+        SPerl_FIELD* field = op_has->uv.field;
+        uint8_t* field_name = field->op_name->uv.word->value;
+        SPerl_FIELD* found_field
+          = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
+        if (found_field) {
+          SPerl_yyerror_format(parser, "redeclaration of has \"%s\" at %s line %d\n", field_name, op_has->file, op_has->line);
+        }
+        else {
+          
+          SPerl_ARRAY_push(op_fields, op_has);
+          SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
+          
+          // Field absolute name
+          uint8_t* field_abs_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
+          SPerl_HASH_insert(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name), field);
         }
       }
+    }
+    
+    // Method information
+    SPerl_HASH* sub_abs_name_symtable = parser->sub_abs_name_symtable;
+    int32_t i = parser->cur_op_subs->length - 1;
+    while (1) {
+      if (i < 0) {
+        break;
+      }
+      SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->cur_op_subs, i);
+      SPerl_SUB* sub = op_sub->uv.sub;
+      if (sub->op_package) {
+        break;
+      }
       
-      // Method information
-      SPerl_HASH* sub_abs_name_symtable = parser->sub_abs_name_symtable;
-      int32_t i = parser->cur_op_subs->length - 1;
-      while (1) {
-        if (i < 0) {
-          break;
-        }
-        SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->cur_op_subs, i);
-        SPerl_SUB* sub = op_sub->uv.sub;
-        if (sub->op_package) {
-          break;
-        }
+      if (!sub->anon) {
+        SPerl_OP* op_sub_name = sub->op_name;
+        uint8_t* sub_name = op_sub_name->uv.word->value;
+        uint8_t* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
         
-        if (!sub->anon) {
-          SPerl_OP* op_sub_name = sub->op_name;
-          uint8_t* sub_name = op_sub_name->uv.word->value;
-          uint8_t* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
-          
-          SPerl_SUB* found_sub = NULL;
-          found_sub = SPerl_HASH_search(sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
-          
-          if (found_sub) {
-            SPerl_yyerror_format(parser, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
-          }
-          // Unknown sub
-          else {
-            SPerl_HASH_insert(sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name), sub);
-          }
-          i--;
+        SPerl_SUB* found_sub = NULL;
+        found_sub = SPerl_HASH_search(sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
+        
+        if (found_sub) {
+          SPerl_yyerror_format(parser, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
         }
-        sub->op_package = op_package;
+        // Unknown sub
+        else {
+          SPerl_HASH_insert(sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name), sub);
+        }
+        i--;
       }
-      
-      // Set package
-      package->op_fields = op_fields;
-      package->field_symtable = field_symtable;
-      package->op_subs = parser->cur_op_subs;
-      parser->cur_op_subs = SPerl_ALLOCATOR_new_array(parser, 0);
+      sub->op_package = op_package;
     }
-    // Typedef
-    else {
-      package->op_type = op_type;
-      type = op_type->uv.type;
-      SPerl_ARRAY_push(parser->op_types, op_type);
-    }
+    
+    // Set package
+    package->op_fields = op_fields;
+    package->field_symtable = field_symtable;
+    package->op_subs = parser->cur_op_subs;
+    parser->cur_op_subs = SPerl_ALLOCATOR_new_array(parser, 0);
     
     // Add package
     op_package->uv.package = package;
