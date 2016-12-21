@@ -262,14 +262,10 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
     }
-    case SPerl_OP_C_CODE_TYPE: {
-      resolved_type = op->uv.type->resolved_type;
-      break;
-    }
     default:
     {
       
-      resolved_type = op->resolved_type;
+      resolved_type = op->uv.resolved_type;
     }
   }
   
@@ -620,7 +616,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                     }
                   }
                   
-                  op_cur->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 }
                 
                 break;
@@ -669,7 +665,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                     }
                   }
                   
-                  op_cur->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 }
                 
                 break;
@@ -696,7 +692,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 // Insert type converting op
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
-                op_cur->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+                op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 
                 break;
               }
@@ -722,7 +718,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 // Insert type converting op
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
-                op_cur->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+                op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 
                 break;
               }
@@ -748,7 +744,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 // Insert type converting op
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
-                op_cur->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+                op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 
                 break;
               }
@@ -774,7 +770,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 // Insert type converting op
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
-                op_cur->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+                op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 
                 break;
               }
@@ -793,7 +789,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -812,7 +808,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -831,7 +827,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -851,7 +847,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                   break;
                 }
                 
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -870,7 +866,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -889,7 +885,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -908,7 +904,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -924,7 +920,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 
                 // Resolved type
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -946,7 +942,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -991,7 +987,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 
                 SPerl_RESOLVED_TYPE* resolved_type = first_resolved_type;
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 // Insert var op
                 if (op_cur->last->code == SPerl_OP_C_CODE_ASSIGN) {
@@ -1023,7 +1019,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                   }
                   
                   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                  op_cur->resolved_type = resolved_type;
+                  op_cur->uv.resolved_type = resolved_type;
                 }
                 
                 break;
@@ -1038,7 +1034,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;              
               }
@@ -1052,7 +1048,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -1069,7 +1065,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -1086,7 +1082,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -1103,7 +1099,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -1120,7 +1116,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -1137,7 +1133,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 SPerl_OP_insert_op_convert_type(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->resolved_type = resolved_type;
+                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -1156,7 +1152,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_yyerror_format(parser, "must be int in increment at %s line %d\n", op_cur->file, op_cur->line);
                 }
-                op_cur->resolved_type = first_resolved_type;
+                op_cur->uv.resolved_type = first_resolved_type;
                 break;
               }
               case SPerl_OP_C_CODE_CONSTANT: {
@@ -1283,18 +1279,19 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                   SPerl_yyerror_format(parser, "can't convert type %s to %s at %s line %d\n",
                     resolved_type_src->name, resolved_type_dist->name, op_cur->file, op_cur->line);
                 }
+                
                 // Resolve convert_type op
                 if (resolved_type_dist->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  op_cur->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 }
                 else if (resolved_type_dist->id <= SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                  op_cur->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
                 }
                 else if (resolved_type_dist->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                  op_cur->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
                 }
                 else if (resolved_type_dist->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                  op_cur->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
                 }
               }
               break;
@@ -1353,52 +1350,52 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
     
     if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-        type_convert_op->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
     }
     

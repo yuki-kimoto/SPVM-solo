@@ -151,8 +151,8 @@ struct SPerl_op {
   _Bool lvalue;
   _Bool condition;
   int32_t flag;
-  SPerl_RESOLVED_TYPE* resolved_type;
   union {
+    SPerl_RESOLVED_TYPE* resolved_type;
     SPerl_MY_VAR* my_var;
     SPerl_SUB* sub;
     SPerl_CONSTANT* constant;
