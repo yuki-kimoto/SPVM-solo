@@ -4,3 +4,4 @@ sperl
 core.*
 *.output
 tmp_*
+*.o
