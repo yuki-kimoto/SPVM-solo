@@ -52,6 +52,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
         else {
           while (1) {
             // [START]Postorder traversal position
+            
             switch (op_cur->code) {
               case SPerl_OP_C_CODE_CALL_SUB: {
                 

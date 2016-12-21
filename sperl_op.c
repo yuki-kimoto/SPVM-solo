@@ -245,7 +245,10 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
     }
     case SPerl_OP_C_CODE_VAR: {
       SPerl_VAR* var = op->uv.var;
-      resolved_type = var->op_my_var->uv.my_var->op_type->uv.type->resolved_type;
+      if (var->op_my_var->uv.my_var->op_type->uv.type) {
+        // TODO
+        resolved_type = var->op_my_var->uv.my_var->op_type->uv.type->resolved_type;
+      }
       break;
     }
     case SPerl_OP_C_CODE_CALL_SUB: {
@@ -1271,6 +1274,7 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 if (parser->fatal_error) {
                   return;
                 }
+                
                 break;
               }
               case SPerl_OP_C_CODE_CONVERT: {
@@ -1298,6 +1302,10 @@ void SPerl_OP_check_ops(SPerl_PARSER* parser) {
                 }
               }
               break;
+            }
+            
+            if (!op_cur->resolved_type) {
+              op_cur->resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
             }
             
             // [END]Postorder traversal position
