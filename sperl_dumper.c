@@ -142,7 +142,6 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
     
     if (package->op_type) {
       SPerl_TYPE* type = package->op_type->uv.type;
-      printf("  type => \"%s\"\n", type->name);
       printf("  resolved_type => \"%s\"\n", type->resolved_type->name);
     }
     
@@ -328,7 +327,6 @@ void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     printf("      id => %d\n", sub->id);
     printf("      anon => %d\n", sub->anon);
 
-    printf("      return_type => \"%s\"\n", sub->op_return_type->uv.type->name);
     printf("      resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
 
     printf("      argument_count => %" PRId32 "\n", sub->argument_count);
@@ -355,7 +353,6 @@ void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     printf("      name => \"%s\"\n", field->op_name->uv.word->value);
     
     SPerl_TYPE* type = field->op_type->uv.type;
-    printf("      type => \"%s\"\n", type->name);
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
 
   }
@@ -380,7 +377,6 @@ void SPerl_DUMPER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
     printf("          name => \"%s\"\n", my_var->op_name->uv.word->value);
     
     SPerl_TYPE* type = my_var->op_type->uv.type;
-    printf("          type => \"%s\"\n", type->name);
     printf("          resolved_type => \"%s\"\n", type->resolved_type->name);
     
   }
