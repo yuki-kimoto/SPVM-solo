@@ -8,7 +8,7 @@ all:
 .SUFFIXES: .c .o
 
 CC     := gcc
-CFLAGS := -std=c99 -O
+CFLAGS := -std=c99 -g -O
 LIBS   := -lm
 
 
