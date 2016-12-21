@@ -1422,11 +1422,6 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
 
 void SPerl_OP_resolve_types(SPerl_PARSER* parser) {
   SPerl_ARRAY* op_types = parser->op_types;
-
-  for (int32_t i = 0; i < op_types->length; i++) {
-    SPerl_OP* op_type = SPerl_ARRAY_fetch(op_types, i);
-    SPerl_TYPE_build_parts(parser, op_type->uv.type);
-  }
   
   for (int32_t i = 0; i < op_types->length; i++) {
     SPerl_OP* op_type = SPerl_ARRAY_fetch(op_types, i);
