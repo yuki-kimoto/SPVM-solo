@@ -1,7 +1,8 @@
-sperl
+/sperl
+/libsperl.a
 *.tab.c
 *.tab.h
 core.*
 *.output
-tmp_*
+/tmp_*
 /objs
