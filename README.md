@@ -119,7 +119,7 @@ pacakge -> packages
 packages -> grammar
 
 [Abstract Syntax Tree]
-grammer
+grammar
  package
   const string "Main"
   block

@@ -113,7 +113,7 @@ void SPerl_DUMPER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
 
 void SPerl_DUMPER_dump_parser(SPerl_PARSER* parser) {
   printf("\n[Abstract Syntax Tree]\n");
-  SPerl_DUMPER_dump_ast(parser, parser->op_grammer);
+  SPerl_DUMPER_dump_ast(parser, parser->op_grammar);
   
   printf("\n[Resolved types]\n");
   SPerl_DUMPER_dump_resolved_types(parser, parser->resolved_types);

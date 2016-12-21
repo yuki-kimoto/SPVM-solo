@@ -603,11 +603,11 @@ SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, S
   return op_convert_type;
 }
 
-SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
-  SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GRAMMER, op_packages->file, op_packages->line);
-  SPerl_OP_sibling_splice(parser, op_grammer, NULL, 0, op_packages);
+SPerl_OP* SPerl_OP_build_grammar(SPerl_PARSER* parser, SPerl_OP* op_packages) {
+  SPerl_OP* op_grammar = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GRAMMER, op_packages->file, op_packages->line);
+  SPerl_OP_sibling_splice(parser, op_grammar, NULL, 0, op_packages);
   
-  parser->op_grammer = op_grammer;
+  parser->op_grammar = op_grammar;
 
   // Resovle types, check types, and names.
   SPerl_OP_check(parser);
@@ -621,7 +621,7 @@ SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
   // Create bytecodes
   SPerl_BYTECODE_BUILDER_build_bytecodes(parser);
   
-  return op_grammer;
+  return op_grammar;
 }
 
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
