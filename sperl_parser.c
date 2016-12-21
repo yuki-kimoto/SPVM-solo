@@ -65,7 +65,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
     type->code = SPerl_TYPE_C_CODE_WORD;
     type->uv.type_component_word = type_component_word;
     type->resolved_type = resolved_type;
-    type->resolved = 1;
     
     // Type OP
     SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, NULL, NULL);

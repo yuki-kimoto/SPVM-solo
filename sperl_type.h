@@ -16,7 +16,6 @@ extern uint8_t* const SPerl_TYPE_C_CODE_NAMES[];
 struct SPerl_type {
   int32_t code;
   SPerl_RESOLVED_TYPE* resolved_type;
-  _Bool resolved;
   union {
     SPerl_TYPE_COMPONENT_WORD* type_component_word;
     SPerl_TYPE_COMPONENT_ARRAY* type_component_array;

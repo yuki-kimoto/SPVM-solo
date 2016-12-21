@@ -25,7 +25,7 @@ uint8_t* const SPerl_TYPE_C_CODE_NAMES[] = {
 void SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type, int32_t name_length) {
   SPerl_HASH* package_symtable = parser->package_symtable;
   
-  if (type->resolved) {
+  if (type->resolved_type) {
     return;
   }
   else {
@@ -95,7 +95,6 @@ void SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type, int32_t nam
       SPerl_HASH_insert(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
       type->resolved_type = resolved_type;
     }
-    type->resolved = 1;
   }
 }
 
