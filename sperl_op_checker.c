@@ -11,7 +11,6 @@
 #include "sperl_yacc.h"
 #include "sperl_op.h"
 #include "sperl_sub.h"
-#include "sperl_parser.h"
 #include "sperl_constant.h"
 #include "sperl_field.h"
 #include "sperl_my_var.h"
@@ -28,10 +27,7 @@
 #include "sperl_enumeration.h"
 #include "sperl_package.h"
 #include "sperl_name.h"
-#include "sperl_name.h"
 #include "sperl_resolved_type.h"
-#include "sperl_constant_pool.h"
-#include "sperl_bytecode_builder.h"
 
 void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
   for (int32_t i = 0; i < parser->op_packages->length; i++) {

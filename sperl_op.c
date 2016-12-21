@@ -11,7 +11,6 @@
 #include "sperl_yacc.h"
 #include "sperl_op.h"
 #include "sperl_sub.h"
-#include "sperl_parser.h"
 #include "sperl_constant.h"
 #include "sperl_field.h"
 #include "sperl_my_var.h"
@@ -24,24 +23,13 @@
 #include "sperl_type_component_word.h"
 #include "sperl_type_component_array.h"
 #include "sperl_type_component_sub.h"
-#include "sperl_type_part.h"
 #include "sperl_enumeration.h"
 #include "sperl_package.h"
-#include "sperl_name.h"
 #include "sperl_name.h"
 #include "sperl_resolved_type.h"
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_builder.h"
 #include "sperl_op_checker.h"
-
-
-
-
-
-
-
-
-
 
 uint8_t* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
