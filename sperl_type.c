@@ -14,6 +14,7 @@
 #include "sperl_hash.h"
 #include "sperl_resolved_type.h"
 #include "sperl_yacc.h"
+#include "sperl_package.h"
 
 uint8_t* const SPerl_TYPE_C_CODE_NAMES[] = {
   "word",
@@ -48,25 +49,9 @@ void SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type, int32_t nam
         SPerl_WORD* part_name_word = part->uv.op_name->uv.word;
         uint8_t* part_name = part_name_word->value;
         
-        SPerl_TYPE* found_type = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
-        if (found_type) {
-          _Bool is_self
-            = type->code == SPerl_TYPE_C_CODE_WORD && found_type->code == SPerl_TYPE_C_CODE_WORD
-            && strcmp(type->uv.type_component_word->op_name->uv.word->value, found_type->uv.type_component_word->op_name->uv.word->value) == 0;
-          
-          if (is_self) {
-            name_length += strlen(found_type->uv.type_component_word->op_name->uv.word->value);
-            uint8_t* found_part_name = found_type->uv.type_component_word->op_name->uv.word->value;
-            SPerl_ARRAY_push(resolved_type_part_names, found_part_name);
-          }
-          else {
-            SPerl_TYPE_resolve_type(parser, found_type, name_length);
-            name_length += found_type->resolved_type->name_length;
-            for (int32_t j = 0; j < found_type->resolved_type->part_names->length; j++) {
-              uint8_t* found_part_name = SPerl_ARRAY_fetch(found_type->resolved_type->part_names, j);
-              SPerl_ARRAY_push(resolved_type_part_names, found_part_name);
-            }
-          }
+        SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
+        if (found_package) {
+          SPerl_ARRAY_push(resolved_type_part_names, part_name);
         }
         else {
           SPerl_yyerror_format(parser, "unknown package \"%s\" at %s line %d\n", part_name, part_name_word->op->file, part_name_word->op->line);
