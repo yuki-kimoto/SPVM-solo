@@ -868,7 +868,7 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_
   SPerl_OP_sibling_splice(parser, op_sub, op_subargs, 0, op_type);
   SPerl_OP_sibling_splice(parser, op_sub, op_type, 0, op_block);
   
-  // Create sub infomation
+  // Create sub information
   SPerl_SUB* sub = SPerl_SUB_new(parser);
   if (op_sub_name->code == SPerl_OP_C_CODE_NULL) {
     sub->anon = 1;

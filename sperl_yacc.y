@@ -54,7 +54,7 @@ grammar
         YYABORT;
       }
       else {
-        // Dump parser infomation
+        // Dump parser information
         SPerl_DUMPER_dump_parser(parser);
       }
     }

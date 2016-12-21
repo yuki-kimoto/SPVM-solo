@@ -169,7 +169,7 @@ grammar
      return
       var "$num3"
 
-[Method infomation]
+[Method information]
 [0]name => main, argument_count => 0, return_type => int, op_block => 1b731c10
 [1]name => sum, argument_count => 2, return_type => int, op_block => 1b732280
 ```
