@@ -26,6 +26,8 @@ struct SPerl_type {
   } uv;
 };
 
+void SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type, int32_t name_length);
+
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser);
 void SPerl_TYPE_to_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* parts);
 void SPerl_TYPE_build_parts(SPerl_PARSER* parser, SPerl_TYPE* type);
