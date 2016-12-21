@@ -23,6 +23,10 @@ sperl: $(sperl_OBJS)
 	gcc -o $@ $(LDFLAGS) $(sperl_OBJS) $(sperl_LIBS)
 all: sperl
 
+.PHONY: clean
+clean:
+	-rm -f $(sperl_OBJS)
+
 # tests
 
 .PHONY: test test2
