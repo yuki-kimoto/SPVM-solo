@@ -980,7 +980,8 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
     SPerl_OP_sibling_splice(parser, op_statements, op_statements->first, 0, op_return);
     
     // Block
-    SPerl_OP* op_block = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_BLOCK, op_statements, NULL);
+    SPerl_OP* op_block = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_BLOCK);
+    SPerl_OP_sibling_splice(parser, op_block, NULL, 0, op_statements);
     
     SPerl_OP_build_decl_sub(parser, op_sub, op_sub_name, op_subargs, op_type, op_block);
   }
@@ -991,7 +992,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
 SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_sub_name, SPerl_OP* op_terms, _Bool anon) {
   
   // Build OP_SUB
-  SPerl_OP* op_call_sub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALL_SUB, NULL, NULL);
+  SPerl_OP* op_call_sub = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CALL_SUB);
   SPerl_OP_sibling_splice(parser, op_call_sub, NULL, 0, op_sub_name);
   SPerl_OP_sibling_splice(parser, op_call_sub, op_sub_name, 0, op_terms);
   
@@ -1000,7 +1001,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
   if (!anon) {
     SPerl_WORD* sub_name_word = op_sub_name->uv.word;
     uint8_t* sub_name = sub_name_word->value;
-    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, NULL, NULL);
+    SPerl_OP* op_name = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_WORD);
     
     if (strstr(sub_name, ":")) {
       op_name->uv.word = sub_name_word;
@@ -1071,7 +1072,9 @@ SPerl_OP* SPerl_OP_build_type_word(SPerl_PARSER* parser, SPerl_OP* op_word) {
   type->code = SPerl_TYPE_C_CODE_WORD;
   type->uv.type_component_word = type_component_word;
 
-  SPerl_OP* op_type_word = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_word, NULL);
+  SPerl_OP* op_type_word = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_TYPE);
+  SPerl_OP_sibling_splice(parser, op_type_word, NULL, 0, op_word);
+  
   op_type_word->uv.type = type;
   op_type_word->file = op_word->file;
   op_type_word->line = op_word->line;
@@ -1094,7 +1097,9 @@ SPerl_OP* SPerl_OP_build_type_array(SPerl_PARSER* parser, SPerl_OP* op_type, SPe
   type->uv.type_component_array = type_component_array;
   
   // Type OP
-  SPerl_OP* op_type_array = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_type, NULL);
+  SPerl_OP* op_type_array = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_TYPE);
+  SPerl_OP_sibling_splice(parser, op_type_array, NULL, 0, op_type);
+  
   op_type_array->uv.type = type;
   op_type_array->file = op_type->file;
   op_type_array->line = op_type->line;
@@ -1134,7 +1139,10 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   
   type->uv.type_component_sub = type_component_sub;
 
-  SPerl_OP* op_type_sub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_argument_types, op_return_type);
+  SPerl_OP* op_type_sub = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_TYPE);
+  SPerl_OP_sibling_splice(parser, op_type_sub, NULL, 0, op_argument_types);
+  SPerl_OP_sibling_splice(parser, op_type_sub, op_argument_types, 0, op_return_type);
+  
   op_type_sub->uv.type = type;
   op_type_sub->file = file;
   op_type_sub->line = line;
