@@ -1220,13 +1220,16 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_
   SPerl_OP *last_del = NULL;
   SPerl_OP *last_ins = NULL;
 
-  if (start)
+  if (start) {
     first = SPerl_OP_sibling(parser, start);
-  else if (!parent)
+  }
+  else if (!parent) {
     goto no_parent;
-  else
+  }
+  else {
     first = parent->first;
-
+  }
+  
   if (del_count && first) {
     last_del = first;
     while (--del_count && last_del->moresib)
@@ -1234,9 +1237,10 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_
     rest = SPerl_OP_sibling(parser, last_del);
     SPerl_OP_lastsib_set(parser, last_del, NULL);
   }
-  else
+  else {
     rest = first;
-
+  }
+  
   if (insert) {
     last_ins = insert;
     while (last_ins->moresib) {
@@ -1252,8 +1256,9 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_
     SPerl_OP_maybesib_set(parser, start, insert, NULL);
   }
   else {
-    if (!parent)
+    if (!parent) {
       goto no_parent;
+    }
     parent->first = insert;
   }
   
@@ -1261,14 +1266,15 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_
     /* update last etc */
     SPerl_OP *lastop;
 
-    if (!parent)
+    if (!parent) {
       goto no_parent;
-
+    }
     lastop = last_ins ? last_ins : start ? start : NULL;
     parent->last = lastop;
 
-    if (lastop)
+    if (lastop) {
       SPerl_OP_lastsib_set(parser, lastop, parent);
+    }
   }
   return last_del ? first : NULL;
 
