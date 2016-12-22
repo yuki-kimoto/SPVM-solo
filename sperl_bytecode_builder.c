@@ -15,6 +15,7 @@
 #include "sperl_package.h"
 #include "sperl_name_info.h"
 #include "sperl_hash.h"
+#include "sperl_field.h"
 
 void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
   for (int32_t i = 0; i < parser->op_packages->length; i++) {
@@ -59,7 +60,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
 
                 SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                 uint8_t* field_abs_name = name_info->abs_name;
-                SPerl_SUB* field = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
+                SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
                 int32_t id = field->id;
                 
                 SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);

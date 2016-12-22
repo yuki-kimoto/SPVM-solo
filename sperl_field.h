@@ -7,7 +7,7 @@
 struct SPerl_field {
   SPerl_OP* op_type;
   SPerl_OP* op_name;
-  uint32_t id;
+  int32_t id;
 };
 
 SPerl_FIELD* SPerl_FIELD_new(SPerl_PARSER* parser);

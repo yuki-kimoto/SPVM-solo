@@ -741,6 +741,9 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
           // Field absolute name
           uint8_t* field_abs_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
           SPerl_HASH_insert(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name), field);
+
+          SPerl_SUB* field_ = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
+          int32_t id_ = field_->id;
         }
       }
     }
