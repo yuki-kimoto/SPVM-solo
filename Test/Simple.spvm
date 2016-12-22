@@ -1,3 +1,4 @@
 package Test::Simple {
   has x : int;
+  has y : int;
 }

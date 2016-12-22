@@ -352,6 +352,9 @@ void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     
     SPerl_TYPE* type = field->op_type->uv.type;
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
+    
+    printf("      id => \"%d\"\n", field->id);
+    
 
   }
   else {
