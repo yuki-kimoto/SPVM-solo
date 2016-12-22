@@ -103,6 +103,10 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
             op_cur->first->lvalue = 1;
             break;
           }
+          case SPerl_OP_C_CODE_FIELD: {
+            op_cur->first->lvalue = 1;
+            break;
+          }
         }
         
         // [END]Preorder traversal position
@@ -584,8 +588,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   }
                 }
                 
-                op_cur->lvalue = 1;
-                
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
                 
@@ -889,6 +891,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 if (parser->fatal_error) {
                   return;
                 }
+                
                 break;
               }
               case SPerl_OP_C_CODE_CONVERT: {

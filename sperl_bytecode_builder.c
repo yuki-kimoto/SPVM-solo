@@ -56,15 +56,17 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
             switch (op_cur->code) {
               case SPerl_OP_C_CODE_FIELD: {
                 
-                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GETFIELD);
+                if (!op_cur->lvalue) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GETFIELD);
 
-                SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
-                uint8_t* field_abs_name = name_info->abs_name;
-                SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
-                int32_t id = field->id;
-                
-                SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
-                SPerl_BYTECODES_push(bytecodes, id & 0xFF);
+                  SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
+                  uint8_t* field_abs_name = name_info->abs_name;
+                  SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
+                  int32_t id = field->id;
+                  
+                  SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
+                  SPerl_BYTECODES_push(bytecodes, id & 0xFF);
+                }
                 
                 break;
               }
