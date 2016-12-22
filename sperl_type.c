@@ -47,8 +47,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_OP* op_type, int32_t n
         SPerl_ARRAY_push(resolved_type_part_names, part->uv.char_name);
       }
       else {
-        SPerl_WORD* part_name_word = part->uv.op_name->uv.word;
-        uint8_t* part_name = part_name_word->value;
+        uint8_t* part_name = part->uv.op_name->uv.word;
         
         SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
         if (found_package) {

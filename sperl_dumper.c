@@ -70,11 +70,10 @@ void SPerl_DUMPER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
     }
     else if (code == SPerl_OP_C_CODE_VAR) {
       SPerl_VAR* var = op_cur->uv.var;
-      printf(" \"%s\"", var->op_name->uv.word->value);
+      printf(" \"%s\"", var->op_name->uv.word);
     }
     else if (code == SPerl_OP_C_CODE_WORD) {
-      SPerl_WORD* word = op_cur->uv.word;
-      printf(" \"%s\"", word->value);
+      printf(" \"%s\"", op_cur->uv.word);
     }
     printf("\n");
     
@@ -138,7 +137,7 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
     printf("package[%d]\n", i);
     SPerl_OP* op_package = SPerl_ARRAY_fetch(op_packages, i);
     SPerl_PACKAGE* package = op_package->uv.package;
-    printf("  name => \"%s\"\n", package->op_name->uv.word->value);
+    printf("  name => \"%s\"\n", package->op_name->uv.word);
     
     if (package->op_type) {
       SPerl_TYPE* type = package->op_type->uv.type;
@@ -317,12 +316,12 @@ void SPerl_DUMPER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant) 
 
 void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
   if (sub) {
-    printf("      package_name => \"%s\"\n", sub->op_package->uv.package->op_name->uv.word->value);
+    printf("      package_name => \"%s\"\n", sub->op_package->uv.package->op_name->uv.word);
     if (sub->anon) {
       printf("      name => (NONE)\n");
     }
     else {
-      printf("      name => \"%s\"\n", sub->op_name->uv.word->value);
+      printf("      name => \"%s\"\n", sub->op_name->uv.word);
     }
     printf("      id => %d\n", sub->id);
     printf("      anon => %d\n", sub->anon);
@@ -350,7 +349,7 @@ void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
 
 void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
   if (field) {
-    printf("      name => \"%s\"\n", field->op_name->uv.word->value);
+    printf("      name => \"%s\"\n", field->op_name->uv.word);
     
     SPerl_TYPE* type = field->op_type->uv.type;
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
@@ -364,7 +363,7 @@ void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
 
 void SPerl_DUMPER_dump_enumeration_value(SPerl_PARSER* parser, SPerl_ENUMERATION_VALUE* enumeration_value) {
   if (enumeration_value) {
-    printf("      name => \"%s\"\n", enumeration_value->op_name->uv.word->value);
+    printf("      name => \"%s\"\n", enumeration_value->op_name->uv.word);
     printf("      value => %d\n", enumeration_value->op_constant->uv.constant->uv.int_value);
   }
   else {
@@ -374,7 +373,7 @@ void SPerl_DUMPER_dump_enumeration_value(SPerl_PARSER* parser, SPerl_ENUMERATION
 
 void SPerl_DUMPER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
   if (my_var) {
-    printf("          name => \"%s\"\n", my_var->op_name->uv.word->value);
+    printf("          name => \"%s\"\n", my_var->op_name->uv.word);
     
     SPerl_TYPE* type = my_var->op_type->uv.type;
     printf("          resolved_type => \"%s\"\n", type->resolved_type->name);

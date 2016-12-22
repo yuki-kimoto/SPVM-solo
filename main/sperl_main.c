@@ -25,10 +25,8 @@ int main(int argc, char *argv[])
   
   /* Build use information */
   SPerl_USE* use = SPerl_USE_new(parser);
-  SPerl_WORD* package_name_word = SPerl_WORD_new(parser);
-  package_name_word->value = package_name;
   SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, package_name, 1);
-  op_package_name->uv.word = package_name_word;
+  op_package_name->uv.word = package_name;
   use->op_package_name = op_package_name;
   
   // Use OP

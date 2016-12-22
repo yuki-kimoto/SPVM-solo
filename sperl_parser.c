@@ -44,9 +44,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     // Name
     SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, "CORE", 1);
     
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = name;
-    op_name->uv.word = name_word;
+    op_name->uv.word = name;
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
@@ -78,7 +76,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
     package->size = SPerl_RESOLVED_TYPE_C_CORE_SIZES[i];
     SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, "CORE", 1);
-    op_package_name->uv.word = name_word;
+    op_package_name->uv.word = name;
     package->op_name = op_package_name;
     package->op_type = op_type;
     
@@ -98,9 +96,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     
     // Name
     SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, "CORE", 1);
-    SPerl_WORD* name_word = SPerl_WORD_new(parser);
-    name_word->value = name;
-    op_name->uv.word = name_word;
+    op_name->uv.word = name;
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);

@@ -158,12 +158,12 @@ struct SPerl_op {
     SPerl_CONSTANT* constant;
     SPerl_NAME* name;
     SPerl_TYPE* type;
-    SPerl_WORD* word;
     SPerl_USE* use;
     SPerl_VAR* var;
     SPerl_FIELD* field;
     SPerl_PACKAGE* package;
     SPerl_ENUMERATION* enumeration;
+    uint8_t* word;
   } uv;
 };
 

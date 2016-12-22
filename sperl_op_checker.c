@@ -816,7 +816,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   SPerl_OP* op_my_var = op_cur->first;
                   if (op_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL && !op_cur->moresib) {
                     // Error
-                    SPerl_yyerror_format(parser, "\"my %s\" can't detect type at %s line %d\n", var->op_name->uv.word->value, op_cur->file, op_cur->line);
+                    SPerl_yyerror_format(parser, "\"my %s\" can't detect type at %s line %d\n", var->op_name->uv.word, op_cur->file, op_cur->line);
                     parser->fatal_error = 1;
                     return;
                   }
@@ -827,7 +827,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 for (int32_t i = op_my_var_stack->length - 1 ; i >= 0; i--) {
                   SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(op_my_var_stack, i);
                   SPerl_MY_VAR* my_var_tmp = op_my_var_tmp->uv.my_var;
-                  if (strcmp(var->op_name->uv.word->value, my_var_tmp->op_name->uv.word->value) == 0) {
+                  if (strcmp(var->op_name->uv.word, my_var_tmp->op_name->uv.word) == 0) {
                     op_my_var = op_my_var_tmp;
                     break;
                   }
@@ -839,7 +839,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 }
                 else {
                   // Error
-                  SPerl_yyerror_format(parser, "\"my %s\" undeclared at %s line %d\n", var->op_name->uv.word->value, op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(parser, "\"my %s\" undeclared at %s line %d\n", var->op_name->uv.word, op_cur->file, op_cur->line);
                   parser->fatal_error = 1;
                   return;
                 }
@@ -854,14 +854,14 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 for (int32_t i = op_my_var_stack->length - 1 ; i >= block_base; i--) {
                   SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(op_my_var_stack, i);
                   SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
-                  if (strcmp(my_var->op_name->uv.word->value, bef_my_var->op_name->uv.word->value) == 0) {
+                  if (strcmp(my_var->op_name->uv.word, bef_my_var->op_name->uv.word) == 0) {
                     found = 1;
                     break;
                   }
                 }
                 
                 if (found) {
-                  SPerl_yyerror_format(parser, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.word->value, op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(parser, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.word, op_cur->file, op_cur->line);
                 }
                 else {
                   // Add my var information

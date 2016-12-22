@@ -103,13 +103,12 @@ void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
   
   switch(type) {
     case WORD: {
-      SPerl_WORD* word = yylval.opval->uv.word;
-      fprintf(file, "\"%s\"", word->value);
+      fprintf(file, "\"%s\"", yylval.opval->uv.word);
       break;
     }
     case VAR: {
       SPerl_VAR* var = yylval.opval->uv.var;
-      fprintf(file, "\"%s\"", var->op_name->uv.word->value);
+      fprintf(file, "\"%s\"", var->op_name->uv.word);
       break;
     }
     case CONSTANT: {

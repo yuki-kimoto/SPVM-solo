@@ -528,11 +528,11 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   SPerl_OP* op;
   if (name->op_var) {
     uint8_t* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
-    uint8_t* base_name = name->op_name->uv.word->value;
+    uint8_t* base_name = name->op_name->uv.word;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   }
   else if (name->op_name) {
-    sub_abs_name = name->op_name->uv.word->value;
+    sub_abs_name = name->op_name->uv.word;
   }
   
   
@@ -555,7 +555,7 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   uint8_t* field_abs_name;
   SPerl_OP* op;
   uint8_t* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
-  uint8_t* base_name = name->op_name->uv.word->value;
+  uint8_t* base_name = name->op_name->uv.word;
   field_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   
   name->abs_name = field_abs_name;
@@ -690,8 +690,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_package_name);
   SPerl_OP_sibling_splice(parser, op_package, op_package_name, 0, op_block);
   
-  SPerl_WORD* package_name_word = op_package_name->uv.word;
-  uint8_t* package_name = package_name_word->value;
+  uint8_t* package_name = op_package_name->uv.word;
   SPerl_HASH* package_symtable = parser->package_symtable;
   
   // Redeclaration package error
@@ -729,7 +728,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
         SPerl_OP* op_field = op_decl;
         SPerl_FIELD* field = op_field->uv.field;
-        uint8_t* field_name = field->op_name->uv.word->value;
+        uint8_t* field_name = field->op_name->uv.word;
         SPerl_FIELD* found_field
           = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
         if (found_field) {
@@ -762,7 +761,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       
       if (!sub->anon) {
         SPerl_OP* op_sub_name = sub->op_name;
-        uint8_t* sub_name = op_sub_name->uv.word->value;
+        uint8_t* sub_name = op_sub_name->uv.word;
         uint8_t* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
         
         SPerl_SUB* found_sub = NULL;
@@ -803,7 +802,7 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_
   use->op_package_name = op_package_name;
   op_use->uv.use = use;
 
-  uint8_t* package_name = op_package_name->uv.word->value;
+  uint8_t* package_name = op_package_name->uv.word;
   
   SPerl_USE* found_use = SPerl_HASH_search(parser->use_package_symtable, package_name, strlen(package_name));
   
@@ -946,10 +945,8 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
     op_sub->line = op_enumeration_value->line;
     
     // sub name
-    SPerl_WORD* sub_name_word = SPerl_WORD_new(parser);
-    sub_name_word->value = enumeration_value->op_name->uv.word->value;
     SPerl_OP* op_sub_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, op_enumeration_value->file, op_enumeration_value->line);
-    op_sub_name->uv.word = sub_name_word;
+    op_sub_name->uv.word = enumeration_value->op_name->uv.word;
     
     // sub args
     SPerl_OP* op_subargs = SPerl_OP_newOP_LIST(parser, op_enumeration_value->file, op_enumeration_value->line);
@@ -992,12 +989,11 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
   SPerl_NAME* name = SPerl_NAME_new(parser);
   
   if (!anon) {
-    SPerl_WORD* sub_name_word = op_sub_name->uv.word;
-    uint8_t* sub_name = sub_name_word->value;
+    uint8_t* sub_name = op_sub_name->uv.word;
     SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, op_invocant->file, op_invocant->line);
     
     if (strstr(sub_name, ":")) {
-      op_name->uv.word = sub_name_word;
+      op_name->uv.word = sub_name;
       name->op_name = op_name;
     }
     else {
@@ -1006,10 +1002,8 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
         name->op_name = op_sub_name;
       }
       else {
-        SPerl_WORD* sub_abs_name_word = SPerl_WORD_new(parser);
         uint8_t* sub_abs_name = SPerl_OP_create_abs_name(parser, "CORE", sub_name);
-        sub_abs_name_word->value = sub_abs_name;
-        op_name->uv.word = sub_abs_name_word;
+        op_name->uv.word = sub_abs_name;
         name->op_name = op_name;
       }
     }

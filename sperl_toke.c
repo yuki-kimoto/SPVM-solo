@@ -51,7 +51,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
           if (op_use) {
             SPerl_USE* use = op_use->uv.use;
-            uint8_t* package_name = use->op_package_name->uv.word->value;
+            uint8_t* package_name = use->op_package_name->uv.word;
             
             SPerl_PACKAGE* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
             if (found_package) {
@@ -104,7 +104,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               }
               if (!fh) {
                 if (op_use) {
-                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->op_package_name->uv.word->value, op_use->file, op_use->line);
+                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->op_package_name->uv.word, op_use->file, op_use->line);
                 }
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_module_path);
@@ -450,16 +450,13 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
           
-          SPerl_WORD* var_name_word = SPerl_WORD_new(parser);
-          var_name_word->value = var_name;
-          
           // 
           SPerl_OP* op = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_VAR);
           SPerl_VAR* var = SPerl_VAR_new(parser);
           
           // Name OP
           SPerl_OP* op_name = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_WORD);
-          op_name->uv.word = var_name_word;
+          op_name->uv.word = var_name;
           
           var->op_name = op_name;
           
@@ -670,9 +667,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           SPerl_OP* op = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_WORD);
-          SPerl_WORD* word = SPerl_WORD_new(parser);
-          word->value = keyword;
-          op->uv.word = word;
+          op->uv.word = keyword;
           yylvalp->opval = op;
 
           if (expect == SPerl_TOKE_C_EXPECT_PACKAGENAME) {
