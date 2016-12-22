@@ -233,4 +233,6 @@ void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib, SPe
 
 SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPerl_OP* op_enum_block);
 
+SPerl_OP* SPerl_OP_newOP_(SPerl_PARSER* parser, int32_t code, uint8_t* file, uint32_t line);
+
 #endif
