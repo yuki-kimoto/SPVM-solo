@@ -1152,33 +1152,6 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   return op_type_sub;
 }
 
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, int32_t code, SPerl_OP* first, SPerl_OP* last, uint8_t flags, uint8_t private) {
-        
-  SPerl_OP *op = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
-  
-  memset(op, 0, sizeof(SPerl_OP));
-  
-  op->code = code;
-  op->first = first;
-  
-  if (last) {
-    if (!first) {
-      first = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
-      first->code = SPerl_OP_C_CODE_NULL;
-    }
-    
-    op->last = last;
-    SPerl_OP_moresib_set(parser, first, last);
-    if (op->last)
-      SPerl_OP_lastsib_set(parser, op->last, op);
-  }
-  else if (first) {
-    SPerl_OP_lastsib_set(parser, op->first, op);
-  }
-  
-  return op;
-}
-
 SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last) {
   if (!first)
     return last;
@@ -1210,8 +1183,14 @@ SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
 }
 
 SPerl_OP* SPerl_OP_newOP_(SPerl_PARSER* parser, int32_t code) {
+
+  SPerl_OP *op = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
   
-  return SPerl_OP_newOP_flag(parser, code, NULL, NULL, 0, 0);
+  memset(op, 0, sizeof(SPerl_OP));
+  
+  op->code = code;
+  
+  return op;
 }
 
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP* insert) {
