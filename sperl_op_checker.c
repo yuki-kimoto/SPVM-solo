@@ -154,7 +154,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
               }
               
               case SPerl_OP_C_CODE_CONDITION: {
-                if (op_cur->first && !op_cur->last) {
+                if ((op_cur->first && !op_cur->last) || op_cur->first == op_cur->last) {
                   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                   if (!resolved_type) {
                     SPerl_OP_convert_to_op_constant_false(parser, op_cur->first);

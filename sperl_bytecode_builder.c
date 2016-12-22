@@ -285,6 +285,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                 }
                 else if (op_condition_target) {
+                  
                   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target);
                   
                   if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {

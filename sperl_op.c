@@ -280,7 +280,10 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_whil
 
 SPerl_OP* SPerl_OP_build_if_statement(SPerl_PARSER* parser, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement) {
   
-  SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term, NULL);
+  SPerl_OP* op_condition = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONDITION);
+  op_condition->file = op_term->file;
+  op_condition->line = op_term->line;
+  SPerl_OP_sibling_splice(parser, op_condition, NULL, 0, op_term);
   
   op_block->flag |= SPerl_OP_C_FLAG_BLOCK_IF;
   op_condition->flag |= SPerl_OP_C_FLAG_CONDITION_IF;
