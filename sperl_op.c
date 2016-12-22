@@ -925,7 +925,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
   while (op_enumvalue = SPerl_OP_sibling(parser, op_enumvalue)) {
     SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_ENUMERATION_VALUE_new(parser);
     enumeration_value->op_name = op_enumvalue->first;
-    if (op_enumvalue->last) {
+    if (op_enumvalue->first != op_enumvalue->last) {
       enumeration_value->op_constant = op_enumvalue->last;
     }
     

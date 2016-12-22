@@ -126,11 +126,14 @@ decl_enumeration_values
 decl_enumeration_value
   : WORD
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1, NULL);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE);
+      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $1);
     }
   | WORD ASSIGN CONSTANT
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1, $3);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE);
+      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $$, $1, 0, $3);
     }
 
 throw_exception
