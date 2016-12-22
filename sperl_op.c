@@ -1141,7 +1141,7 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   return op_type_sub;
 }
 
-SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last) {
+SPerl_OP* SPerl_OP_append_elem_(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last, uint8_t* file, uint32_t line) {
   if (!first) {
     return last;
   }
@@ -1155,22 +1155,12 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *
     return first;
   }
   else {
-    SPerl_OP* op_list = SPerl_OP_newOP_LIST(parser);
+    SPerl_OP* op_list = SPerl_OP_newOP_LIST_(parser, file, line);
     SPerl_OP_sibling_splice(parser, op_list, op_list->first, 0, first);
     SPerl_OP_sibling_splice(parser, op_list, first, 0, last);
     
     return op_list;
   }
-}
-
-SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
-  
-  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PUSHMARK);
-  
-  SPerl_OP* op_list = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LIST);
-  SPerl_OP_sibling_splice(parser, op_list, NULL, 0, op_pushmark);
-  
-  return op_list;
 }
 
 SPerl_OP* SPerl_OP_newOP_LIST_(SPerl_PARSER* parser, uint8_t* file, uint32_t line) {

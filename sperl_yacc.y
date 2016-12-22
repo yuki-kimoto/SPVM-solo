@@ -78,7 +78,7 @@ opt_decl_things_in_grammer
 decl_things_in_grammer
   : decl_things_in_grammer decl_thing_in_grammer
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $2);
+      $$ = SPerl_OP_append_elem_(parser, $1, $2, $1->file, $1->line);
     }
   | decl_thing_in_grammer
 
@@ -121,7 +121,7 @@ opt_decl_enumeration_values
 decl_enumeration_values
   : decl_enumeration_values ',' decl_enumeration_value 
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $3);
+      $$ = SPerl_OP_append_elem_(parser, $1, $3, $1->file, $1->line);
     }
   | decl_enumeration_value
   
@@ -160,7 +160,7 @@ opt_statements
 statements
   : statements statement 
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $2);
+      $$ = SPerl_OP_append_elem_(parser, $1, $2, $1->file, $1->line);
     }
   | statement
 
@@ -302,7 +302,7 @@ opt_decl_things_in_class
 decl_things_in_class
   : decl_things_in_class decl_thing_in_class
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $2);
+      $$ = SPerl_OP_append_elem_(parser, $1, $2, $1->file, $1->line);
     }
   | decl_thing_in_class
 
@@ -347,7 +347,7 @@ opt_terms
 terms
   : terms ',' term
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $3);
+      $$ = SPerl_OP_append_elem_(parser, $1, $3, $1->file, $1->line);
     }
   | term
 
@@ -554,7 +554,7 @@ opt_sub_args
 sub_args
   : sub_args ',' sub_arg
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $3);
+      $$ = SPerl_OP_append_elem_(parser, $1, $3, $1->file, $1->line);
     }
   | sub_arg
 
@@ -566,7 +566,7 @@ sub_arg
 types
   : types ',' type
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $3);
+      $$ = SPerl_OP_append_elem_(parser, $1, $3, $1->file, $1->line);
     }
   | type
 
