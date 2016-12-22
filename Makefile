@@ -21,7 +21,9 @@ objs/%.o: %.c | objs objs/main objs/t
 libsperl_SRCS := $(wildcard *.c)
 libsperl_OBJS := $(libsperl_SRCS:%.c=objs/%.o)
 -include $(libsperl_OBJS:%.o=%.Po)
-sperl_yacc.tab.c: sperl_yacc.y
+objs/sperl_toke.o: sperl_toke.c sperl_yacc.tab.h
+objs/sperl_yacc.o: sperl_yacc.c sperl_yacc.tab.h 
+sperl_yacc.tab.h: sperl_yacc.y
 	bison -t -p SPerl_yy -d sperl_yacc.y
 libsperl.a: $(libsperl_OBJS)
 	$(AR) crs $@ $(libsperl_OBJS)
