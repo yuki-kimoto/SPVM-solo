@@ -166,7 +166,8 @@ statement
   | block
   | term ';'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POP, $1, NULL);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_POP);
+      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $1);
     }
   | expression ';'
     {
@@ -174,7 +175,7 @@ statement
     }
   | ';'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, NULL, NULL);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
     }
   | switch_statement
   | case_statement
@@ -216,7 +217,7 @@ if_statement
 else_statement
   : /* NULL */
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, NULL, NULL);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
     };
   | ELSE block
     {
