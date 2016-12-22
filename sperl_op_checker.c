@@ -26,7 +26,7 @@
 #include "sperl_type_part.h"
 #include "sperl_enumeration.h"
 #include "sperl_package.h"
-#include "sperl_name.h"
+#include "sperl_name_info.h"
 #include "sperl_resolved_type.h"
 
 void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
@@ -874,8 +874,8 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_CALL_SUB: {
                 // Check sub name
-                SPerl_NAME* name = op_cur->uv.name;
-                if (!name->anon) {
+                SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
+                if (!name_info->anon) {
                   SPerl_OP_check_sub_name(parser, op_cur);
                   if (parser->fatal_error) {
                     return;

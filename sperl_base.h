@@ -55,8 +55,8 @@ struct SPerl_package;
 typedef struct SPerl_package SPerl_PACKAGE;
 
 /* sperl_type.h */
-struct SPerl_name;
-typedef struct SPerl_name SPerl_NAME;
+struct SPerl_name_info;
+typedef struct SPerl_name_info SPerl_NAME_INFO;
 
 /* sperl_type.h */
 struct SPerl_type;

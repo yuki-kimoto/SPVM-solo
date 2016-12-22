@@ -156,7 +156,7 @@ struct SPerl_op {
     SPerl_MY_VAR* my_var;
     SPerl_SUB* sub;
     SPerl_CONSTANT* constant;
-    SPerl_NAME* name;
+    SPerl_NAME_INFO* name_info;
     SPerl_TYPE* type;
     SPerl_USE* use;
     SPerl_VAR* var;
