@@ -55,7 +55,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NULL,         // UNKNOWN
   SPerl_OP_C_CODE_LIST,         // UNKNOWN
   SPerl_OP_C_CODE_PUSHMARK,     // UNKNOWN
-  SPerl_OP_C_CODE_GRAMMER,      // UNKNOWN
+  SPerl_OP_C_CODE_GRAMMAR,      // UNKNOWN
   SPerl_OP_C_CODE_NAME,         // UNKNOWN
   SPerl_OP_C_CODE_DECL_PACKAGE,      // UNKNOWN
   SPerl_OP_C_CODE_DECL_MY_VAR,   // UNKNOWN

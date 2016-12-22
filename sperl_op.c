@@ -40,7 +40,7 @@ uint8_t* const SPerl_OP_C_CODE_NAMES[] = {
   "NULL",
   "LIST",
   "PUSHMARK",
-  "GRAMMER",
+  "GRAMMAR",
   "NAME",
   "DECL_PACKAGE",
   "DECL_MY_VAR",
@@ -604,7 +604,7 @@ SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, S
 }
 
 SPerl_OP* SPerl_OP_build_grammar(SPerl_PARSER* parser, SPerl_OP* op_packages) {
-  SPerl_OP* op_grammar = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GRAMMER, op_packages->file, op_packages->line);
+  SPerl_OP* op_grammar = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GRAMMAR, op_packages->file, op_packages->line);
   SPerl_OP_sibling_splice(parser, op_grammar, NULL, 0, op_packages);
   
   parser->op_grammar = op_grammar;
