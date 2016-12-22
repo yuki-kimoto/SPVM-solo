@@ -308,17 +308,18 @@ decl_thing_in_class
 class_block
   : '{' opt_decl_things_in_class '}'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CLASS_BLOCK, $2, NULL);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CLASS_BLOCK);
+      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $2);
     }
 
 expression
   : LAST
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LAST, NULL, NULL);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_LAST);
     }
   | NEXT
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEXT, NULL, NULL);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NEXT);
     }
   | RETURN term
     {
@@ -405,42 +406,42 @@ field
 call_op
   : '+' term %prec UMINUS
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PLUS, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_PLUS);
       op->file = $1->file;
       op->line = $1->line;
       $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
     }
   | '-' term %prec UMINUS
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEGATE, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NEGATE);
       op->file = $1->file;
       op->line = $1->line;
       $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
     }
   | INC term
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PRE_INC, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_PRE_INC);
       op->file = $1->file;
       op->line = $1->line;
       $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
     }
   | term INC
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POST_INC, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_POST_INC);
       op->file = $2->file;
       op->line = $2->line;
       $$ = SPerl_OP_build_call_op(parser, op, $1, NULL);
     }
   | DEC term
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PRE_DEC, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_PRE_DEC);
       op->file = $1->file;
       op->line = $1->line;
       $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
     }
   | term DEC
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POST_DEC, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_POST_DEC);
       op->file = $2->file;
       op->line = $2->line;
       $$ = SPerl_OP_build_call_op(parser, op, $1, NULL);
@@ -451,14 +452,14 @@ call_op
     }
   | term '+' term
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ADD, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_ADD);
       op->file = $2->file;
       op->line = $2->line;
       $$ = SPerl_OP_build_call_op(parser, op, $1, $3);
     }
   | term '-' term
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_SUBTRACT, NULL, NULL);
+      SPerl_OP* op = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_SUBTRACT);
       op->file = $2->file;
       op->line = $2->line;
       $$ = SPerl_OP_build_call_op(parser, op, $1, $3);
@@ -521,7 +522,10 @@ logical_op
 array_elem
   : VAR ARROW '[' term ']'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ARRAY_ELEM, $1, $4);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_ARRAY_ELEM);
+      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $1);
+      SPerl_OP_sibling_splice(parser, $$, $1, 0, $4);
+      
       $$->file = $1->file;
       $$->line = $1->line;
     }
@@ -543,7 +547,8 @@ call_sub
 block 
   : '{' opt_statements '}'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_BLOCK, $2, NULL);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_BLOCK);
+      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $2);
     }
 
 opt_sub_args
@@ -572,7 +577,7 @@ sub_args
 sub_arg
   : VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(parser, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_MY_VAR, NULL, NULL), $1, $3);
+      $$ = SPerl_OP_build_decl_my(parser, SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_DECL_MY_VAR), $1, $3);
     }
 types
   : types ',' type
