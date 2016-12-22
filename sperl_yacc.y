@@ -62,7 +62,7 @@ grammar
 opt_decl_things_in_grammer
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser);
+      $$ = SPerl_OP_newOP_LIST_(parser, parser->cur_module_path, parser->cur_line);
     }
   |	decl_things_in_grammer
     {
@@ -70,7 +70,7 @@ opt_decl_things_in_grammer
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser);
+        $$ = SPerl_OP_newOP_LIST_(parser, $1->file, $1->line);
         SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
       }
     }
@@ -105,7 +105,7 @@ enum_block
 opt_decl_enumeration_values
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser);
+      $$ = SPerl_OP_newOP_LIST_(parser, parser->cur_module_path, parser->cur_line);
     }
   |	decl_enumeration_values
     {
@@ -113,7 +113,7 @@ opt_decl_enumeration_values
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser);
+        $$ = SPerl_OP_newOP_LIST_(parser, $1->file, $1->line);
         SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
       }
     }
@@ -144,7 +144,7 @@ throw_exception
 opt_statements
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser);
+      $$ = SPerl_OP_newOP_LIST_(parser, parser->cur_module_path, parser->cur_line);
     }
   |	statements
     {
@@ -152,7 +152,7 @@ opt_statements
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser);
+        $$ = SPerl_OP_newOP_LIST_(parser, $1->file, $1->line);
         SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
       }
     }
@@ -274,7 +274,7 @@ decl_anon_sub
  : SUB '(' ')' ':' type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
-       SPerl_OP* op_sub_args = SPerl_OP_newOP_LIST(parser);
+       SPerl_OP* op_sub_args = SPerl_OP_newOP_LIST_(parser, $2->file, $2->line);
        $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL, $1->file, $1->line), op_sub_args, $5, $6);
      }
  | SUB '(' sub_args ')' ':' type block
@@ -286,7 +286,7 @@ decl_anon_sub
 opt_decl_things_in_class
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser);
+      $$ = SPerl_OP_newOP_LIST_(parser, parser->cur_module_path, parser->cur_line);
     }
   |	decl_things_in_class
     {
@@ -294,7 +294,7 @@ opt_decl_things_in_class
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser);
+        $$ = SPerl_OP_newOP_LIST_(parser, $1->file, $1->line);
         SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
       }
     }
@@ -331,7 +331,7 @@ expression
 opt_terms
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser);
+      $$ = SPerl_OP_newOP_LIST_(parser, parser->cur_module_path, parser->cur_line);
     }
   |	terms
     {
@@ -339,7 +339,7 @@ opt_terms
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser);
+        $$ = SPerl_OP_newOP_LIST_(parser, $1->file, $1->line);
         SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
       }
     }
@@ -538,7 +538,7 @@ block
 opt_sub_args
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser);
+      $$ = SPerl_OP_newOP_LIST_(parser, parser->cur_module_path, parser->cur_line);
     }
   |	sub_args
     {
@@ -546,7 +546,7 @@ opt_sub_args
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser);
+        $$ = SPerl_OP_newOP_LIST_(parser, $1->file, $1->line);
         SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
       }
     }
@@ -587,7 +587,7 @@ type_word
 type_sub
   : SUB '(' ')' type
     {
-      SPerl_OP* op_types = SPerl_OP_newOP_LIST(parser);
+      SPerl_OP* op_types = SPerl_OP_newOP_LIST_(parser, parser->cur_module_path, parser->cur_line);
       $$ = SPerl_OP_build_type_sub(parser, op_types, $4);
     }
   | SUB '(' types ')' type

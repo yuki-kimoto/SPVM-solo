@@ -948,7 +948,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
     op_sub_name->uv.word = sub_name_word;
     
     // sub args
-    SPerl_OP* op_subargs = SPerl_OP_newOP_LIST(parser);
+    SPerl_OP* op_subargs = SPerl_OP_newOP_LIST_(parser, op_enumeration_value->file, op_enumeration_value->line);
     
     // Type
     SPerl_OP* op_type = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_TYPE, op_enumeration_value->file, op_enumeration_value->line);
@@ -965,7 +965,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
     SPerl_OP_sibling_splice(parser, op_return, NULL, 0, op_constant);
     
     // Statement
-    SPerl_OP* op_statements = SPerl_OP_newOP_LIST(parser);
+    SPerl_OP* op_statements = SPerl_OP_newOP_LIST_(parser, op_enumeration_value->file, op_enumeration_value->line);
     SPerl_OP_sibling_splice(parser, op_statements, op_statements->first, 0, op_return);
     
     // Block
@@ -1168,6 +1168,16 @@ SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
   SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PUSHMARK);
   
   SPerl_OP* op_list = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LIST);
+  SPerl_OP_sibling_splice(parser, op_list, NULL, 0, op_pushmark);
+  
+  return op_list;
+}
+
+SPerl_OP* SPerl_OP_newOP_LIST_(SPerl_PARSER* parser, uint8_t* file, uint32_t line) {
+  
+  SPerl_OP* op_pushmark = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_PUSHMARK, file, line);
+  
+  SPerl_OP* op_list = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_LIST, file, line);
   SPerl_OP_sibling_splice(parser, op_list, NULL, 0, op_pushmark);
   
   return op_list;
