@@ -224,7 +224,7 @@ SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, int32_t type, SPerl_OP *firs
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP *insert);
 SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP* first, SPerl_OP* last);
 
-SPerl_OP* SPerl_OP_newOP_(SPerl_PARSER* parser, int32_t code);
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, int32_t code);
 
 SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* o);
 void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib);

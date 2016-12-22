@@ -131,7 +131,7 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
   if (first_type_id != last_type_id) {
     _Bool replace_first = 0;
     
-    SPerl_OP* type_convert_op = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONVERT);
+    SPerl_OP* type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT);
     
     if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -207,10 +207,10 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
 
 SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, SPerl_OP* op_term_loop_var, SPerl_OP* op_term_condition, SPerl_OP* op_term_next_value, SPerl_OP* op_block) {
 
-  SPerl_OP* op_condition = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONDITION);
+  SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION);
   SPerl_OP_sibling_splice(parser, op_condition, NULL, 0, op_term_condition);
 
-  SPerl_OP* op_loop = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_LOOP);
+  SPerl_OP* op_loop = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LOOP);
   op_loop->file = op_for->file;
   op_loop->line = op_for->line;
   
@@ -257,17 +257,17 @@ SPerl_OP* SPerl_OP_build_case_statement(SPerl_PARSER* parser, SPerl_OP* op_case,
 
 SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_while, SPerl_OP* op_term, SPerl_OP* op_block) {
 
-  SPerl_OP* op_condition = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONDITION);
+  SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION);
   SPerl_OP_sibling_splice(parser, op_condition, NULL, 0, op_term);
   
   op_block->flag |= SPerl_OP_C_FLAG_BLOCK_LOOP;
   op_condition->flag |= SPerl_OP_C_FLAG_CONDITION_LOOP;
 
-  SPerl_OP* op_loop = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_LOOP);
+  SPerl_OP* op_loop = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LOOP);
   op_loop->file = op_while->file;
   op_loop->line = op_while->line;
   
-  SPerl_OP* op_null = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
+  SPerl_OP* op_null = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL);
   
   SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_null);
   SPerl_OP_sibling_splice(parser, op_loop, op_null, 0, op_condition);
@@ -280,7 +280,7 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_whil
 
 SPerl_OP* SPerl_OP_build_if_statement(SPerl_PARSER* parser, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement) {
   
-  SPerl_OP* op_condition = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONDITION);
+  SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION);
   op_condition->file = op_term->file;
   op_condition->line = op_term->line;
   SPerl_OP_sibling_splice(parser, op_condition, NULL, 0, op_term);
@@ -305,7 +305,7 @@ SPerl_OP* SPerl_OP_build_array_length(SPerl_PARSER* parser, SPerl_OP* op_array_l
 }
 
 SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type) {
-  SPerl_OP* op_new_object = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NEW_TYPE);
+  SPerl_OP* op_new_object = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_TYPE);
   SPerl_OP_sibling_splice(parser, op_new_object, NULL, 0, op_type);
   op_new_object->file = op_new->file;
   op_new_object->line = op_new->line;
@@ -401,19 +401,19 @@ void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_OP* op_last = op->last;
   
   // Constant false 1
-  SPerl_OP* op_constant_false1 = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
+  SPerl_OP* op_constant_false1 = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_false(parser, op_constant_false1);
   
   // Constant false 2
-  SPerl_OP* op_constant_false2 = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
+  SPerl_OP* op_constant_false2 = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_false(parser, op_constant_false2);
   
   // Constant true
-  SPerl_OP* op_constant_true = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
+  SPerl_OP* op_constant_true = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_true(parser, op_constant_true);
   
   // if
-  SPerl_OP* op_if = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_IF);
+  SPerl_OP* op_if = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_IF);
   
   // and to if
   op->code = SPerl_OP_C_CODE_IF;
@@ -448,19 +448,19 @@ void SPerl_OP_convert_or_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_OP* op_last = op->last;
   
   // Constant true 1
-  SPerl_OP* op_constant_true1 = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
+  SPerl_OP* op_constant_true1 = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_true(parser, op_constant_true1);
   
   // Constant true 2
-  SPerl_OP* op_constant_true2 = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
+  SPerl_OP* op_constant_true2 = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_true(parser, op_constant_true2);
   
   // Constant false
-  SPerl_OP* op_constant_false = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
+  SPerl_OP* op_constant_false = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_false(parser, op_constant_false);
   
   // if
-  SPerl_OP* op_if = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_IF);
+  SPerl_OP* op_if = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_IF);
   
   // or to if
   op->code = SPerl_OP_C_CODE_IF;
@@ -488,11 +488,11 @@ void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_OP* op_first = op->first;
   
   // Constant true 1
-  SPerl_OP* op_constant_true = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
+  SPerl_OP* op_constant_true = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_true(parser, op_constant_true);
   
   // Constant false
-  SPerl_OP* op_constant_false = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
+  SPerl_OP* op_constant_false = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_false(parser, op_constant_false);
   
   // If
@@ -577,7 +577,7 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_fieldname) {
-  SPerl_OP* op_field = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_FIELD);
+  SPerl_OP* op_field = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_FIELD);
   SPerl_OP_sibling_splice(parser, op_field, NULL, 0, op_var);
   SPerl_OP_sibling_splice(parser, op_field, op_var, 0, op_fieldname);
   
@@ -591,7 +591,7 @@ SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP*
 }
 
 SPerl_OP* SPerl_OP_build_array_init(SPerl_PARSER* parser, SPerl_OP* op_opt_terms) {
-  SPerl_OP* op_new_array = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NEW_ARRAY_CONSTANT);
+  SPerl_OP* op_new_array = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_ARRAY_CONSTANT);
   SPerl_OP_sibling_splice(parser, op_new_array, NULL, 0, op_opt_terms);
   
   return op_new_array;
@@ -599,7 +599,7 @@ SPerl_OP* SPerl_OP_build_array_init(SPerl_PARSER* parser, SPerl_OP* op_opt_terms
 
 SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term) {
   
-  SPerl_OP* op_convert_type = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONVERT);
+  SPerl_OP* op_convert_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT);
   SPerl_OP_sibling_splice(parser, op_convert_type, NULL, 0, op_term);
   SPerl_OP_sibling_splice(parser, op_convert_type, op_term, 0, op_type);
   
@@ -610,7 +610,7 @@ SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, S
 }
 
 SPerl_OP* SPerl_OP_build_grammer(SPerl_PARSER* parser, SPerl_OP* op_packages) {
-  SPerl_OP* op_grammer = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_GRAMMER);
+  SPerl_OP* op_grammer = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_GRAMMER);
   SPerl_OP_sibling_splice(parser, op_grammer, NULL, 0, op_packages);
   
   parser->op_grammer = op_grammer;
@@ -717,7 +717,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
     type->uv.type_component_word = type_component_word;
     
     // Type OP
-    op_type = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_TYPE);
+    op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE);
     op_type->uv.type = type;
     
     // Add type
@@ -831,7 +831,7 @@ SPerl_OP* SPerl_OP_build_decl_my(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP
   SPerl_VAR* var = op_var->uv.var;
   
   // Name OP
-  SPerl_OP* op_name = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_WORD);
+  SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD);
   op_name->file = op_var->file;
   op_name->line = op_var->line;
   op_name->uv.word = var->op_name->uv.word;
@@ -940,7 +940,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
       constant->code = SPerl_CONSTANT_C_CODE_INT;
       constant->uv.int_value = start_value;
       constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-      SPerl_OP* op_constant = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONSTANT);
+      SPerl_OP* op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTANT);
       op_constant->uv.constant = constant;
       
       enumeration_value->op_constant = op_constant;
@@ -948,31 +948,31 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
     }
 
     // sub
-    SPerl_OP* op_sub = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_DECL_SUB);
+    SPerl_OP* op_sub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_SUB);
     op_sub->file = op_enumvalue->file;
     op_sub->line = op_enumvalue->line;
     
     // sub name
     SPerl_WORD* sub_name_word = SPerl_WORD_new(parser);
     sub_name_word->value = enumeration_value->op_name->uv.word->value;
-    SPerl_OP* op_sub_name = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_WORD);
+    SPerl_OP* op_sub_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD);
     op_sub_name->uv.word = sub_name_word;
     
     // sub args
     SPerl_OP* op_subargs = SPerl_OP_newOP_LIST(parser);
     
     // Type
-    SPerl_OP* op_type = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_TYPE);
+    SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE);
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
     type->resolved_type = constant->resolved_type;
     op_type->uv.type = type;
 
     // Constant
-    SPerl_OP* op_constant = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONSTANT);
+    SPerl_OP* op_constant = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONSTANT);
     op_constant->uv.constant = constant;
     
     // Return
-    SPerl_OP* op_return = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_RETURN);
+    SPerl_OP* op_return = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_RETURN);
     SPerl_OP_sibling_splice(parser, op_return, NULL, 0, op_constant);
     
     // Statement
@@ -980,7 +980,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
     SPerl_OP_sibling_splice(parser, op_statements, op_statements->first, 0, op_return);
     
     // Block
-    SPerl_OP* op_block = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_BLOCK);
+    SPerl_OP* op_block = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_BLOCK);
     SPerl_OP_sibling_splice(parser, op_block, NULL, 0, op_statements);
     
     SPerl_OP_build_decl_sub(parser, op_sub, op_sub_name, op_subargs, op_type, op_block);
@@ -992,7 +992,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
 SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_sub_name, SPerl_OP* op_terms, _Bool anon) {
   
   // Build OP_SUB
-  SPerl_OP* op_call_sub = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CALL_SUB);
+  SPerl_OP* op_call_sub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CALL_SUB);
   SPerl_OP_sibling_splice(parser, op_call_sub, NULL, 0, op_sub_name);
   SPerl_OP_sibling_splice(parser, op_call_sub, op_sub_name, 0, op_terms);
   
@@ -1001,7 +1001,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
   if (!anon) {
     SPerl_WORD* sub_name_word = op_sub_name->uv.word;
     uint8_t* sub_name = sub_name_word->value;
-    SPerl_OP* op_name = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_WORD);
+    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD);
     
     if (strstr(sub_name, ":")) {
       op_name->uv.word = sub_name_word;
@@ -1072,7 +1072,7 @@ SPerl_OP* SPerl_OP_build_type_word(SPerl_PARSER* parser, SPerl_OP* op_word) {
   type->code = SPerl_TYPE_C_CODE_WORD;
   type->uv.type_component_word = type_component_word;
 
-  SPerl_OP* op_type_word = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_TYPE);
+  SPerl_OP* op_type_word = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE);
   SPerl_OP_sibling_splice(parser, op_type_word, NULL, 0, op_word);
   
   op_type_word->uv.type = type;
@@ -1097,7 +1097,7 @@ SPerl_OP* SPerl_OP_build_type_array(SPerl_PARSER* parser, SPerl_OP* op_type, SPe
   type->uv.type_component_array = type_component_array;
   
   // Type OP
-  SPerl_OP* op_type_array = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_TYPE);
+  SPerl_OP* op_type_array = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE);
   SPerl_OP_sibling_splice(parser, op_type_array, NULL, 0, op_type);
   
   op_type_array->uv.type = type;
@@ -1139,7 +1139,7 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   
   type->uv.type_component_sub = type_component_sub;
 
-  SPerl_OP* op_type_sub = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_TYPE);
+  SPerl_OP* op_type_sub = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE);
   SPerl_OP_sibling_splice(parser, op_type_sub, NULL, 0, op_argument_types);
   SPerl_OP_sibling_splice(parser, op_type_sub, op_argument_types, 0, op_return_type);
   
@@ -1174,15 +1174,15 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *
 
 SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
   
-  SPerl_OP* op_pushmark = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_PUSHMARK);
+  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PUSHMARK);
   
-  SPerl_OP* op_list = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_LIST);
+  SPerl_OP* op_list = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LIST);
   SPerl_OP_sibling_splice(parser, op_list, NULL, 0, op_pushmark);
   
   return op_list;
 }
 
-SPerl_OP* SPerl_OP_newOP_(SPerl_PARSER* parser, int32_t code) {
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, int32_t code) {
 
   SPerl_OP *op = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
   
