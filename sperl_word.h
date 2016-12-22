@@ -6,7 +6,6 @@
 // Field information
 struct SPerl_word {
   uint8_t* value;
-  SPerl_OP* op;
 };
 
 SPerl_WORD* SPerl_WORD_new(SPerl_PARSER* parser);
