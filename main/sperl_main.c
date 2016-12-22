@@ -6,7 +6,6 @@
 #include "../sperl_yacc.h"
 #include "../sperl_array.h"
 #include "../sperl_use.h"
-#include "../sperl_word.h"
 #include "../sperl_op.h"
 
 int main(int argc, char *argv[])

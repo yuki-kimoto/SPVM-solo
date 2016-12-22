@@ -18,7 +18,6 @@
 #include "sperl_var.h"
 #include "sperl_memory_pool.h"
 #include "sperl_use.h"
-#include "sperl_word.h"
 #include "sperl_enumeration_value.h"
 #include "sperl_type.h"
 #include "sperl_type_component_word.h"

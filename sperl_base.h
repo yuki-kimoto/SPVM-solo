@@ -114,10 +114,6 @@ typedef struct SPerl_constant SPerl_CONSTANT;
 struct SPerl_op;
 typedef struct SPerl_op SPerl_OP;
 
-/* sperl_word.h */
-struct SPerl_word;
-typedef struct SPerl_word SPerl_WORD;
-
 /* sperl_field.h */
 struct SPerl_field;
 typedef struct SPerl_field SPerl_FIELD;

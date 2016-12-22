@@ -7,7 +7,6 @@
 #include "sperl_allocator.h"
 #include "sperl_yacc.tab.h"
 #include "sperl_constant.h"
-#include "sperl_word.h"
 #include "sperl_var.h"
 #include "sperl_op.h"
 

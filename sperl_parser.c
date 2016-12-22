@@ -6,7 +6,6 @@
 #include "sperl_package.h"
 #include "sperl_type_component_word.h"
 #include "sperl_type.h"
-#include "sperl_word.h"
 #include "sperl_op.h"
 #include "sperl_memory_pool.h"
 #include "sperl_hash.h"

@@ -6,7 +6,6 @@
 #include "sperl_type_component_array.h"
 #include "sperl_type_component_sub.h"
 #include "sperl_parser.h"
-#include "sperl_word.h"
 #include "sperl_array.h"
 #include "sperl_type_part.h"
 #include "sperl_op.h"

@@ -13,7 +13,6 @@
 #include "sperl_var.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
-#include "sperl_word.h"
 #include "sperl_descripter.h"
 #include "sperl_use.h"
 #include "sperl_type.h"
