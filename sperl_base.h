@@ -67,8 +67,8 @@ struct SPerl_type_part;
 typedef struct SPerl_type_part SPerl_TYPE_PART;
 
 /* sperl_type_component_array.h */
-struct SPerl_type_component_word;
-typedef struct SPerl_type_component_word SPerl_TYPE_COMPONENT_WORD;
+struct SPerl_type_component_name;
+typedef struct SPerl_type_component_name SPerl_TYPE_COMPONENT_NAME;
 
 /* sperl_type_component_array.h */
 struct SPerl_type_component_array;

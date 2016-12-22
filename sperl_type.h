@@ -6,7 +6,7 @@
 #include "sperl_base.h"
 
 enum {
-  SPerl_TYPE_C_CODE_WORD,
+  SPerl_TYPE_C_CODE_NAME,
   SPerl_TYPE_C_CODE_ARRAY,
   SPerl_TYPE_C_CODE_SUB,
 };
@@ -17,7 +17,7 @@ struct SPerl_type {
   int32_t code;
   SPerl_RESOLVED_TYPE* resolved_type;
   union {
-    SPerl_TYPE_COMPONENT_WORD* type_component_word;
+    SPerl_TYPE_COMPONENT_NAME* type_component_name;
     SPerl_TYPE_COMPONENT_ARRAY* type_component_array;
     SPerl_TYPE_COMPONENT_SUB* type_component_sub;
   } uv;

@@ -6,7 +6,7 @@
 // Expected token
 enum {
   SPerl_TOKE_C_EXPECT_NORMAL,
-  SPerl_TOKE_C_EXPECT_WORD,
+  SPerl_TOKE_C_EXPECT_NAME,
   SPerl_TOKE_C_EXPECT_PACKAGENAME
 };
 

@@ -20,7 +20,7 @@
 #include "sperl_use.h"
 #include "sperl_enumeration_value.h"
 #include "sperl_type.h"
-#include "sperl_type_component_word.h"
+#include "sperl_type_component_name.h"
 #include "sperl_type_component_array.h"
 #include "sperl_type_component_sub.h"
 #include "sperl_enumeration.h"
@@ -41,7 +41,7 @@ uint8_t* const SPerl_OP_C_CODE_NAMES[] = {
   "LIST",
   "PUSHMARK",
   "GRAMMER",
-  "WORD",
+  "NAME",
   "DECL_PACKAGE",
   "DECL_MY_VAR",
   "DECL_FIELD",
@@ -527,11 +527,11 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   SPerl_OP* op;
   if (name_info->op_var) {
     uint8_t* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
-    uint8_t* base_name = name_info->op_name->uv.word;
+    uint8_t* base_name = name_info->op_name->uv.name;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   }
   else if (name_info->op_name) {
-    sub_abs_name = name_info->op_name->uv.word;
+    sub_abs_name = name_info->op_name->uv.name;
   }
   
   name_info->abs_name = sub_abs_name;
@@ -553,7 +553,7 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_OP* op_name_info) {
   uint8_t* field_abs_name;
   SPerl_OP* op;
   uint8_t* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
-  uint8_t* base_name = name_info->op_name->uv.word;
+  uint8_t* base_name = name_info->op_name->uv.name;
   field_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   
   name_info->abs_name = field_abs_name;
@@ -688,7 +688,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_package_name);
   SPerl_OP_sibling_splice(parser, op_package, op_package_name, 0, op_block);
   
-  uint8_t* package_name = op_package_name->uv.word;
+  uint8_t* package_name = op_package_name->uv.name;
   SPerl_HASH* package_symtable = parser->package_symtable;
   
   // Redeclaration package error
@@ -703,10 +703,10 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
     
     // Type(type is same as package name)
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    type->code = SPerl_TYPE_C_CODE_WORD;
-    SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
-    type_component_word->op_name = op_package_name;
-    type->uv.type_component_word = type_component_word;
+    type->code = SPerl_TYPE_C_CODE_NAME;
+    SPerl_TYPE_COMPONENT_NAME* type_component_name = SPerl_TYPE_COMPONENT_NAME_new(parser);
+    type_component_name->op_name = op_package_name;
+    type->uv.type_component_name = type_component_name;
     
     // Type OP
     SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_package_name->file, op_package_name->line);
@@ -726,7 +726,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
         SPerl_OP* op_field = op_decl;
         SPerl_FIELD* field = op_field->uv.field;
-        uint8_t* field_name = field->op_name->uv.word;
+        uint8_t* field_name = field->op_name->uv.name;
         SPerl_FIELD* found_field
           = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
         if (found_field) {
@@ -759,7 +759,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       
       if (!sub->anon) {
         SPerl_OP* op_sub_name = sub->op_name;
-        uint8_t* sub_name = op_sub_name->uv.word;
+        uint8_t* sub_name = op_sub_name->uv.name;
         uint8_t* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
         
         SPerl_SUB* found_sub = NULL;
@@ -800,7 +800,7 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_
   use->op_package_name = op_package_name;
   op_use->uv.use = use;
 
-  uint8_t* package_name = op_package_name->uv.word;
+  uint8_t* package_name = op_package_name->uv.name;
   
   SPerl_USE* found_use = SPerl_HASH_search(parser->use_package_symtable, package_name, strlen(package_name));
   
@@ -823,8 +823,8 @@ SPerl_OP* SPerl_OP_build_decl_my(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP
   SPerl_VAR* var = op_var->uv.var;
   
   // Name OP
-  SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, op_var->file, op_var->line);
-  op_name->uv.word = var->op_name->uv.word;
+  SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NAME, op_var->file, op_var->line);
+  op_name->uv.name = var->op_name->uv.name;
   my_var->op_name = op_name;
   
   // type
@@ -943,8 +943,8 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
     op_sub->line = op_enumeration_value->line;
     
     // sub name
-    SPerl_OP* op_sub_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, op_enumeration_value->file, op_enumeration_value->line);
-    op_sub_name->uv.word = enumeration_value->op_name->uv.word;
+    SPerl_OP* op_sub_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NAME, op_enumeration_value->file, op_enumeration_value->line);
+    op_sub_name->uv.name = enumeration_value->op_name->uv.name;
     
     // sub args
     SPerl_OP* op_subargs = SPerl_OP_newOP_LIST(parser, op_enumeration_value->file, op_enumeration_value->line);
@@ -987,11 +987,11 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
   SPerl_NAME_INFO* name_info = SPerl_NAME_INFO_new(parser);
   
   if (!anon) {
-    uint8_t* sub_name = op_sub_name->uv.word;
-    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, op_invocant->file, op_invocant->line);
+    uint8_t* sub_name = op_sub_name->uv.name;
+    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->line);
     
     if (strstr(sub_name, ":")) {
-      op_name->uv.word = sub_name;
+      op_name->uv.name = sub_name;
       name_info->op_name = op_name;
     }
     else {
@@ -1001,7 +1001,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
       }
       else {
         uint8_t* sub_abs_name = SPerl_OP_create_abs_name(parser, "CORE", sub_name);
-        op_name->uv.word = sub_abs_name;
+        op_name->uv.name = sub_abs_name;
         name_info->op_name = op_name;
       }
     }
@@ -1046,27 +1046,27 @@ SPerl_OP* SPerl_OP_build_logical_op(SPerl_PARSER* parser, SPerl_OP* op_logical_o
   return op_logical_op;
 }
 
-SPerl_OP* SPerl_OP_build_type_word(SPerl_PARSER* parser, SPerl_OP* op_word) {
+SPerl_OP* SPerl_OP_build_type_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   
-  // Type component word
-  SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
-  type_component_word->op_name = op_word;
+  // Type component name
+  SPerl_TYPE_COMPONENT_NAME* type_component_name = SPerl_TYPE_COMPONENT_NAME_new(parser);
+  type_component_name->op_name = op_name;
   
   // 
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
-  type->code = SPerl_TYPE_C_CODE_WORD;
-  type->uv.type_component_word = type_component_word;
+  type->code = SPerl_TYPE_C_CODE_NAME;
+  type->uv.type_component_name = type_component_name;
 
-  SPerl_OP* op_type_word = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_word->file, op_word->line);
-  SPerl_OP_sibling_splice(parser, op_type_word, NULL, 0, op_word);
+  SPerl_OP* op_type_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_name->file, op_name->line);
+  SPerl_OP_sibling_splice(parser, op_type_name, NULL, 0, op_name);
   
-  op_type_word->uv.type = type;
-  op_type_word->file = op_word->file;
-  op_type_word->line = op_word->line;
+  op_type_name->uv.type = type;
+  op_type_name->file = op_name->file;
+  op_type_name->line = op_name->line;
 
-  SPerl_ARRAY_push(parser->op_types, op_type_word);
+  SPerl_ARRAY_push(parser->op_types, op_type_name);
   
-  return op_type_word;
+  return op_type_name;
 }
 
 SPerl_OP* SPerl_OP_build_type_array(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term) {

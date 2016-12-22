@@ -50,7 +50,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
           if (op_use) {
             SPerl_USE* use = op_use->uv.use;
-            uint8_t* package_name = use->op_package_name->uv.word;
+            uint8_t* package_name = use->op_package_name->uv.name;
             
             SPerl_PACKAGE* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
             if (found_package) {
@@ -103,7 +103,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               }
               if (!fh) {
                 if (op_use) {
-                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->op_package_name->uv.word, op_use->file, op_use->line);
+                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->op_package_name->uv.name, op_use->file, op_use->line);
                 }
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_module_path);
@@ -180,7 +180,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         
         if (*parser->bufptr == '>') {
           parser->bufptr++;
-          parser->expect = SPerl_TOKE_C_EXPECT_WORD;
+          parser->expect = SPerl_TOKE_C_EXPECT_NAME;
           yylvalp->opval = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_NULL);
           return ARROW;
         }
@@ -454,8 +454,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_VAR* var = SPerl_VAR_new(parser);
           
           // Name OP
-          SPerl_OP* op_name = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_WORD);
-          op_name->uv.word = var_name;
+          SPerl_OP* op_name = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_NAME);
+          op_name->uv.name = var_name;
           
           var->op_name = op_name;
           
@@ -523,7 +523,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             return CONSTANT;
           }
         }
-        // Keyword or word
+        // Keyname or name
         else if (isalpha(c) || c == '_') {
           // Save current position
           uint8_t* cur_token_ptr = parser->bufptr;
@@ -547,20 +547,20 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
           
-          // Keyword
-          if (expect != SPerl_TOKE_C_EXPECT_WORD) {
+          // Keyname
+          if (expect != SPerl_TOKE_C_EXPECT_NAME) {
             if (memcmp(keyword, "my", str_len) == 0) {
               yylvalp->opval = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_DECL_MY_VAR);
               return MY;
             }
             else if (memcmp(keyword, "has", str_len) == 0) {
               yylvalp->opval = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_DECL_FIELD);
-              parser->expect = SPerl_TOKE_C_EXPECT_WORD;
+              parser->expect = SPerl_TOKE_C_EXPECT_NAME;
               return HAS;
             }
             else if (memcmp(keyword, "sub", str_len) == 0) {
               yylvalp->opval = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_DECL_SUB);
-              parser->expect = SPerl_TOKE_C_EXPECT_WORD;
+              parser->expect = SPerl_TOKE_C_EXPECT_NAME;
               return SUB;
             }
             else if (memcmp(keyword, "package", str_len) == 0) {
@@ -665,8 +665,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             }
           }
           
-          SPerl_OP* op = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_WORD);
-          op->uv.word = keyword;
+          SPerl_OP* op = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_NAME);
+          op->uv.name = keyword;
           yylvalp->opval = op;
 
           if (expect == SPerl_TOKE_C_EXPECT_PACKAGENAME) {
@@ -676,7 +676,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             }
           }
           
-          return WORD;
+          return NAME;
         }
         
         /* Return character */

@@ -4,7 +4,7 @@
 #include "sperl_parser.h"
 #include "sperl_resolved_type.h"
 #include "sperl_package.h"
-#include "sperl_type_component_word.h"
+#include "sperl_type_component_name.h"
 #include "sperl_type.h"
 #include "sperl_op.h"
 #include "sperl_memory_pool.h"
@@ -41,9 +41,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     uint8_t* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     
     // Name
-    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, "CORE", 1);
+    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NAME, "CORE", 1);
     
-    op_name->uv.word = name;
+    op_name->uv.name = name;
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
@@ -54,14 +54,14 @@ SPerl_PARSER* SPerl_PARSER_new() {
     SPerl_ARRAY_push(parser->resolved_types, resolved_type);
     SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
     
-    // Type word
-    SPerl_TYPE_COMPONENT_WORD* type_component_word = SPerl_TYPE_COMPONENT_WORD_new(parser);
-    type_component_word->op_name = op_name;
+    // Type name
+    SPerl_TYPE_COMPONENT_NAME* type_component_name = SPerl_TYPE_COMPONENT_NAME_new(parser);
+    type_component_name->op_name = op_name;
     
     // Type
     SPerl_TYPE* type = SPerl_TYPE_new(parser);
-    type->code = SPerl_TYPE_C_CODE_WORD;
-    type->uv.type_component_word = type_component_word;
+    type->code = SPerl_TYPE_C_CODE_NAME;
+    type->uv.type_component_name = type_component_name;
     type->resolved_type = resolved_type;
     
     // Type OP
@@ -74,8 +74,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     // Package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
     package->size = SPerl_RESOLVED_TYPE_C_CORE_SIZES[i];
-    SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, "CORE", 1);
-    op_package_name->uv.word = name;
+    SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NAME, "CORE", 1);
+    op_package_name->uv.name = name;
     package->op_name = op_package_name;
     package->op_type = op_type;
     
@@ -94,8 +94,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     uint8_t* core_name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     
     // Name
-    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, "CORE", 1);
-    op_name->uv.word = name;
+    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NAME, "CORE", 1);
+    op_name->uv.name = name;
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);

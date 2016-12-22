@@ -5,7 +5,7 @@
 
 enum {
   SPerl_TYPE_PART_C_CODE_SUB,
-  SPerl_TYPE_PART_C_CODE_WORD,
+  SPerl_TYPE_PART_C_CODE_NAME,
   SPerl_TYPE_PART_C_CODE_BYTE
 };
 

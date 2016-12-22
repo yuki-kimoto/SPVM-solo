@@ -4,7 +4,7 @@
 
 uint8_t* const SPerl_TYPE_PART_C_CODE_NAMES[] = {
   "sub",
-  "word",
+  "name",
   "char"
 };
 

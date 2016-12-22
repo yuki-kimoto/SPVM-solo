@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "sperl_type.h"
-#include "sperl_type_component_word.h"
+#include "sperl_type_component_name.h"
 #include "sperl_type_component_array.h"
 #include "sperl_type_component_sub.h"
 #include "sperl_parser.h"
@@ -16,7 +16,7 @@
 #include "sperl_package.h"
 
 uint8_t* const SPerl_TYPE_C_CODE_NAMES[] = {
-  "word",
+  "name",
   "array",
   "sub",
 };
@@ -46,7 +46,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_OP* op_type, int32_t n
         SPerl_ARRAY_push(resolved_type_part_names, part->uv.char_name);
       }
       else {
-        uint8_t* part_name = part->uv.op_name->uv.word;
+        uint8_t* part_name = part->uv.op_name->uv.name;
         
         SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
         if (found_package) {
@@ -93,10 +93,10 @@ SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
 
 void SPerl_TYPE_build_parts(SPerl_PARSER* parser, SPerl_TYPE* type, SPerl_ARRAY* parts) {
   
-  if (type->code == SPerl_TYPE_C_CODE_WORD) {
+  if (type->code == SPerl_TYPE_C_CODE_NAME) {
     SPerl_TYPE_PART* part = SPerl_TYPE_PART_new(parser);
-    part->code = SPerl_TYPE_PART_C_CODE_WORD;
-    part->uv.op_name = type->uv.type_component_word->op_name;
+    part->code = SPerl_TYPE_PART_C_CODE_NAME;
+    part->uv.op_name = type->uv.type_component_name->op_name;
     SPerl_ARRAY_push(parts, part);
   }
   else if (type->code == SPerl_TYPE_C_CODE_ARRAY) {

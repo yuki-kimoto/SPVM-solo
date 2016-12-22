@@ -13,7 +13,7 @@
 %}
 
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE NEW
-%token <opval> LAST NEXT WORD VAR CONSTANT ENUM DESCRIPTER CORETYPE UNDEF DIE
+%token <opval> LAST NEXT NAME VAR CONSTANT ENUM DESCRIPTER CORETYPE UNDEF DIE
 %token <opval> SWITCH CASE DEFAULT
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
@@ -22,7 +22,7 @@
 %type <opval> decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_things_in_grammer opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammer type_sub types not_type_sub opt_term throw_exception
-%type <opval> field array_elem convert_type decl_enum new_object array_init type_word array_length logical_op decl_thing_in_grammer
+%type <opval> field array_elem convert_type decl_enum new_object array_init type_name array_length logical_op decl_thing_in_grammer
 %type <opval> switch_statement case_statement default_statement
 %type <opval> ';'
 
@@ -126,12 +126,12 @@ decl_enumeration_values
   | decl_enumeration_value
   
 decl_enumeration_value
-  : WORD
+  : NAME
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1->file, $1->line);
       SPerl_OP_sibling_splice(parser, $$, NULL, 0, $1);
     }
-  | WORD ASSIGN CONSTANT
+  | NAME ASSIGN CONSTANT
     {
       $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1->file, $1->line);
       SPerl_OP_sibling_splice(parser, $$, NULL, 0, $1);
@@ -575,13 +575,13 @@ type
   | type_sub
 
 not_type_sub
-  : type_word
+  : type_name
   | type_array
 
-type_word
-  : WORD
+type_name
+  : NAME
     {
-      $$ = SPerl_OP_build_type_word(parser, $1);
+      $$ = SPerl_OP_build_type_name(parser, $1);
     }
 
 type_sub
@@ -615,9 +615,9 @@ type_array
       $$ = SPerl_OP_build_type_array(parser, $2, $5);
     }
 
-field_name : WORD
-sub_name : WORD
-package_name : WORD
+field_name : NAME
+sub_name : NAME
+package_name : NAME
 
 %%
 

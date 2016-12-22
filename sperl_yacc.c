@@ -101,13 +101,13 @@ void SPerl_yyerror(SPerl_PARSER* parser, const uint8_t* message)
 void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
   
   switch(type) {
-    case WORD: {
-      fprintf(file, "\"%s\"", yylval.opval->uv.word);
+    case NAME: {
+      fprintf(file, "\"%s\"", yylval.opval->uv.name);
       break;
     }
     case VAR: {
       SPerl_VAR* var = yylval.opval->uv.var;
-      fprintf(file, "\"%s\"", var->op_name->uv.word);
+      fprintf(file, "\"%s\"", var->op_name->uv.name);
       break;
     }
     case CONSTANT: {

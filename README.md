@@ -44,12 +44,12 @@ The above source code output:
 
 ```
 [Token reduction]
-WORD -> pkgname
-WORD -> subname
+NAME -> pkgname
+NAME -> subname
 NULL -> optsubargs
-WORD -> type (int)
+NAME -> type (int)
 type -> desctype
-WORD -> type (int)
+NAME -> type (int)
 type -> desctype
 MY VAR : desctype -> declvar
 declvar -> term
@@ -57,7 +57,7 @@ CONST(int 2) -> term
 term ASSIGNOP term -> term
 term ; -> statement
 statement -> statements
-WORD -> type (int)
+NAME -> type (int)
 type -> desctype
 MY VAR : desctype -> declvar
 declvar -> term
@@ -65,11 +65,11 @@ CONST(int 5) -> term
 term ASSIGNOP term -> term
 term ; -> statement
 statements statement -> statements
-WORD -> type (int)
+NAME -> type (int)
 type -> desctype
 MY VAR : desctype -> declvar
 declvar -> term
-WORD -> subname
+NAME -> subname
 VAR($num1) -> term
 term -> terms
 VAR($num3) -> term
@@ -82,19 +82,19 @@ statements statement -> statements
 { statements } -> block
 SUB subname ( optsubargs ) : desctype block -> statement
 statement -> statements
-WORD -> subname
-WORD -> type (int)
+NAME -> subname
+NAME -> type (int)
 type -> desctype
 VAR : desctype -> subarg ($num1)
 subarg -> subargs
-WORD -> type (int)
+NAME -> type (int)
 type -> desctype
 VAR : desctype -> subarg ($num2)
 subargs , subarg
 subargs -> optsubargs
-WORD -> type (int)
+NAME -> type (int)
 type -> desctype
-WORD -> type (int)
+NAME -> type (int)
 type -> desctype
 MY VAR : desctype -> declvar
 declvar -> term

@@ -56,7 +56,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_LIST,         // UNKNOWN
   SPerl_OP_C_CODE_PUSHMARK,     // UNKNOWN
   SPerl_OP_C_CODE_GRAMMER,      // UNKNOWN
-  SPerl_OP_C_CODE_WORD,         // UNKNOWN
+  SPerl_OP_C_CODE_NAME,         // UNKNOWN
   SPerl_OP_C_CODE_DECL_PACKAGE,      // UNKNOWN
   SPerl_OP_C_CODE_DECL_MY_VAR,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_FIELD,   // UNKNOWN
@@ -163,7 +163,7 @@ struct SPerl_op {
     SPerl_FIELD* field;
     SPerl_PACKAGE* package;
     SPerl_ENUMERATION* enumeration;
-    uint8_t* word;
+    uint8_t* name;
   } uv;
 };
 
@@ -200,7 +200,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
 SPerl_OP* SPerl_OP_build_call_op(SPerl_PARSER* parser, SPerl_OP* op_call_op, SPerl_OP* op_first, SPerl_OP* op_last);
 void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op);
 
-SPerl_OP* SPerl_OP_build_type_word(SPerl_PARSER* parser, SPerl_OP* op_type_word);
+SPerl_OP* SPerl_OP_build_type_name(SPerl_PARSER* parser, SPerl_OP* op_type_name);
 SPerl_OP* SPerl_OP_build_type_array(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term);
 SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_types, SPerl_OP* op_return_type);
 
