@@ -88,7 +88,7 @@ decl_thing_in_grammer
 decl_package
   : PACKAGE package_name class_block
     {
-      $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL), $3);
+      $$ = SPerl_OP_build_decl_package(parser, $1, $2, $3);
       if (parser->fatal_error) {
         YYABORT;
       }

@@ -682,12 +682,11 @@ uint8_t* SPerl_OP_create_abs_name(SPerl_PARSER* parser, uint8_t* package_name, u
   return abs_name;
 }
 
-SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_type, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block) {
   int32_t i;
   
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_package_name);
-  SPerl_OP_sibling_splice(parser, op_package, op_package_name, 0, op_type);
-  SPerl_OP_sibling_splice(parser, op_package, op_type, 0, op_block);
+  SPerl_OP_sibling_splice(parser, op_package, op_package_name, 0, op_block);
   
   SPerl_WORD* package_name_word = op_package_name->uv.word;
   uint8_t* package_name = package_name_word->value;
@@ -711,7 +710,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
     type->uv.type_component_word = type_component_word;
     
     // Type OP
-    op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE);
+    SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE);
     op_type->uv.type = type;
     
     // Add type
