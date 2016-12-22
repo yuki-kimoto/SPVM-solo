@@ -49,6 +49,10 @@ package Test {
     }
 
     my $simple3 = new Test::Simple;
+    
+    $simple3->x;
+    $simple3->y;
+
     my $simple2 : Test::Simple = new Test::Simple;
     
     if (1) { }

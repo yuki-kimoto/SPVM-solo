@@ -55,7 +55,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
             switch (op_cur->code) {
               case SPerl_OP_C_CODE_FIELD: {
                 
-                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_PUTFIELD);
+                SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GETFIELD);
 
                 SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                 uint8_t* field_abs_name = name_info->abs_name;

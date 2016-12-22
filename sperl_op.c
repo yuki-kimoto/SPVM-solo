@@ -566,8 +566,8 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_OP* op_name_info) {
   if (!found_field) {
     SPerl_yyerror_format(parser, "unknown field \"%s\" at %s line %d\n",
       field_abs_name, op_name_info->file, op_name_info->line);
+    parser->fatal_error = 1;
   }
-
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_field_name) {
@@ -780,7 +780,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
     
     // Set package
     package->op_fields = op_fields;
-    package->field_symtable = field_symtable;
     package->op_subs = parser->cur_op_subs;
     parser->cur_op_subs = SPerl_ALLOCATOR_new_array(parser, 0);
     
