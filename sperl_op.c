@@ -1152,10 +1152,6 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   return op_type_sub;
 }
 
-SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, uint8_t type, SPerl_OP* first, SPerl_OP* last) {
-  return SPerl_OP_newOP_flag(parser, type, first, last, 0, 0);
-}
-
 SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, int32_t code, SPerl_OP* first, SPerl_OP* last, uint8_t flags, uint8_t private) {
         
   SPerl_OP *op = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
@@ -1205,9 +1201,12 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *
 
 SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
   
-  SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PUSHMARK, NULL, NULL);
+  SPerl_OP* op_pushmark = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_PUSHMARK);
   
-  return SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LIST, op_pushmark, NULL);
+  SPerl_OP* op_list = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_LIST);
+  SPerl_OP_sibling_splice(parser, op_list, NULL, 0, op_pushmark);
+  
+  return op_list;
 }
 
 SPerl_OP* SPerl_OP_newOP_(SPerl_PARSER* parser, int32_t code) {

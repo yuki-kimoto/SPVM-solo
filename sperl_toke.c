@@ -19,7 +19,7 @@
 #include "sperl_type.h"
 
 SPerl_OP* SPerl_TOKE_newOP(SPerl_PARSER* parser, uint8_t type) {
-  SPerl_OP* op = SPerl_OP_newOP(parser, type, NULL, NULL);
+  SPerl_OP* op = SPerl_OP_newOP_(parser, type);
   op->file = parser->cur_module_path;
   op->line = parser->cur_line;
   

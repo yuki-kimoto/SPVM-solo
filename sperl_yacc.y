@@ -97,7 +97,8 @@ decl_package
 enum_block 
   : '{' opt_decl_enumeration_values '}'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ENUM_BLOCK, $2, NULL);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_ENUM_BLOCK);
+      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $2);
     }
 
 opt_decl_enumeration_values
