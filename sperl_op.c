@@ -948,7 +948,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
     op_sub_name->uv.word = sub_name_word;
     
     // sub args
-    SPerl_OP* op_subargs = SPerl_OP_newOP_LIST_(parser, op_enumeration_value->file, op_enumeration_value->line);
+    SPerl_OP* op_subargs = SPerl_OP_newOP_LIST(parser, op_enumeration_value->file, op_enumeration_value->line);
     
     // Type
     SPerl_OP* op_type = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_TYPE, op_enumeration_value->file, op_enumeration_value->line);
@@ -965,7 +965,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
     SPerl_OP_sibling_splice(parser, op_return, NULL, 0, op_constant);
     
     // Statement
-    SPerl_OP* op_statements = SPerl_OP_newOP_LIST_(parser, op_enumeration_value->file, op_enumeration_value->line);
+    SPerl_OP* op_statements = SPerl_OP_newOP_LIST(parser, op_enumeration_value->file, op_enumeration_value->line);
     SPerl_OP_sibling_splice(parser, op_statements, op_statements->first, 0, op_return);
     
     // Block
@@ -1141,7 +1141,7 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   return op_type_sub;
 }
 
-SPerl_OP* SPerl_OP_append_elem_(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last, uint8_t* file, uint32_t line) {
+SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last, uint8_t* file, uint32_t line) {
   if (!first) {
     return last;
   }
@@ -1155,7 +1155,7 @@ SPerl_OP* SPerl_OP_append_elem_(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP 
     return first;
   }
   else {
-    SPerl_OP* op_list = SPerl_OP_newOP_LIST_(parser, file, line);
+    SPerl_OP* op_list = SPerl_OP_newOP_LIST(parser, file, line);
     SPerl_OP_sibling_splice(parser, op_list, op_list->first, 0, first);
     SPerl_OP_sibling_splice(parser, op_list, first, 0, last);
     
@@ -1163,7 +1163,7 @@ SPerl_OP* SPerl_OP_append_elem_(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP 
   }
 }
 
-SPerl_OP* SPerl_OP_newOP_LIST_(SPerl_PARSER* parser, uint8_t* file, uint32_t line) {
+SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser, uint8_t* file, uint32_t line) {
   
   SPerl_OP* op_pushmark = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_PUSHMARK, file, line);
   
