@@ -23,11 +23,12 @@ uint8_t* const SPerl_TYPE_C_CODE_NAMES[] = {
 };
 
 // Resolve type and index type
-void SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type, int32_t name_length) {
+_Bool SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_OP* op_type, int32_t name_length) {
   SPerl_HASH* package_symtable = parser->package_symtable;
+  SPerl_TYPE* type = op_type->uv.type;
   
   if (type->resolved_type) {
-    return;
+    return 1;
   }
   else {
     SPerl_ARRAY* resolved_type_part_names = SPerl_ALLOCATOR_new_array(parser, 0);
@@ -54,7 +55,8 @@ void SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type, int32_t nam
           SPerl_ARRAY_push(resolved_type_part_names, part_name);
         }
         else {
-          SPerl_yyerror_format(parser, "unknown package \"%s\" at %s line %d\n", part_name, part_name_word->op->file, part_name_word->op->line);
+          SPerl_yyerror_format(parser, "unknown package \"%s\" at %s line %d\n", part_name, op_type->file, op_type->line);
+          return 0;
         }
       }
     }
@@ -81,6 +83,8 @@ void SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type, int32_t nam
       type->resolved_type = resolved_type;
     }
   }
+  
+  return 1;
 }
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl_PARSER* parser) {
