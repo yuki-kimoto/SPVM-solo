@@ -1153,11 +1153,13 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
 }
 
 SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last) {
-  if (!first)
+  if (!first) {
     return last;
-
-  if (!last)
+  }
+  
+  if (!last) {
     return first;
+  }
   
   if (first->code == SPerl_OP_C_CODE_LIST) {
     SPerl_OP_sibling_splice(parser, first, first->last, 0, last);
