@@ -11,5 +11,6 @@ enum {
 };
 
 int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser);
+SPerl_OP* SPerl_TOKE_newOP(SPerl_PARSER* parser, uint8_t type);
 
 #endif

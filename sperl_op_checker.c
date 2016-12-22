@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include "sperl_array.h"
 #include "sperl_hash.h"
@@ -66,6 +67,12 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
       SPerl_OP* op_cur = op_base;
       _Bool finish = 0;
       while (op_cur) {
+        
+        // Check file and line
+        // warn("AAAAAAAAAA %s", SPerl_OP_C_CODE_NAMES[op_cur->code]);
+        // assert(op_cur->file);
+        // assert(op_cur->line);
+        
         // [START]Preorder traversal position
         
         switch (op_cur->code) {
