@@ -115,7 +115,7 @@ SUB subname ( optsubargs ) : desctype block -> statement
 statements statement -> statements
 { statements } -> block
 PACKAGE pkgname block -> package
-pacakge -> packages
+package -> packages
 packages -> grammar
 
 [Abstract Syntax Tree]
@@ -189,10 +189,10 @@ grammar
 core type is char, byte, short, int, long, float, double.
 
     char    unsigned integer        1byte
-    byte    singed integer          1byte
-    short   singed integer          2byte
+    byte    signed integer          1byte
+    short   signed integer          2byte
     int     signed integer          4byte
-    long    singed integer          8byte
+    long    signed integer          8byte
     float   floating-point number   4byte
     double  floating-point number   8byte
 
