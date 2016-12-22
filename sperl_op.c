@@ -131,7 +131,7 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
   if (first_type_id != last_type_id) {
     _Bool replace_first = 0;
     
-    SPerl_OP* type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT, NULL, NULL);
+    SPerl_OP* type_convert_op = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONVERT);
     
     if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -207,7 +207,8 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
 
 SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, SPerl_OP* op_term_loop_var, SPerl_OP* op_term_condition, SPerl_OP* op_term_next_value, SPerl_OP* op_block) {
 
-  SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term_condition, NULL);
+  SPerl_OP* op_condition = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONDITION);
+  SPerl_OP_sibling_splice(parser, op_condition, NULL, 0, op_term_condition);
 
   SPerl_OP* op_loop = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LOOP, NULL, NULL);
   op_loop->file = op_for->file;
@@ -256,16 +257,17 @@ SPerl_OP* SPerl_OP_build_case_statement(SPerl_PARSER* parser, SPerl_OP* op_case,
 
 SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_while, SPerl_OP* op_term, SPerl_OP* op_block) {
 
-  SPerl_OP* op_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONDITION, op_term, NULL);
+  SPerl_OP* op_condition = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_CONDITION);
+  SPerl_OP_sibling_splice(parser, op_condition, NULL, 0, op_term);
   
   op_block->flag |= SPerl_OP_C_FLAG_BLOCK_LOOP;
   op_condition->flag |= SPerl_OP_C_FLAG_CONDITION_LOOP;
 
-  SPerl_OP* op_loop = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LOOP, NULL, NULL);
+  SPerl_OP* op_loop = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_LOOP);
   op_loop->file = op_while->file;
   op_loop->line = op_while->line;
   
-  SPerl_OP* op_null = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP* op_null = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
   
   SPerl_OP_sibling_splice(parser, op_loop, NULL, 0, op_null);
   SPerl_OP_sibling_splice(parser, op_loop, op_null, 0, op_condition);
@@ -1194,6 +1196,11 @@ SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
 SPerl_OP* SPerl_OP_newOP_NULL(SPerl_PARSER* parser) {
   
   return SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, NULL, NULL);
+}
+
+SPerl_OP* SPerl_OP_newOP_(SPerl_PARSER* parser, int32_t code) {
+  
+  return SPerl_OP_newOP_flag(parser, code, NULL, NULL, 0, 0);
 }
 
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP* insert) {
