@@ -27,12 +27,12 @@ int main(int argc, char *argv[])
   SPerl_USE* use = SPerl_USE_new(parser);
   SPerl_WORD* package_name_word = SPerl_WORD_new(parser);
   package_name_word->value = package_name;
-  SPerl_OP* op_package_name = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_WORD, package_name, 1);
+  SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, package_name, 1);
   op_package_name->uv.word = package_name_word;
   use->op_package_name = op_package_name;
   
   // Use OP
-  SPerl_OP* op_use = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_USE, package_name, 1);
+  SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_USE, package_name, 1);
   op_use->uv.use = use;
   
   /* Push package use infomation stack */

@@ -575,7 +575,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 if (op_cur->first->first && op_cur->first->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
                   SPerl_OP* op_my_var = op_cur->first->first;
                   if (op_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL) {
-                    SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE);
+                    SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, op_my_var->file, op_my_var->line);
                     SPerl_TYPE* type = SPerl_TYPE_new(parser);
                     type->resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->last);
                     
@@ -615,7 +615,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 
                 // Insert var op
                 if (op_cur->last->code == SPerl_OP_C_CODE_ASSIGN) {
-                  SPerl_OP* op_var = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_VAR);
+                  SPerl_OP* op_var = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_VAR, op_cur->file, op_cur->line);
                   op_var->uv.var = op_cur->last->first->uv.var;
                   
                   SPerl_OP* op_last_old = op_cur->last;

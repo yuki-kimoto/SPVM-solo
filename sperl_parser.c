@@ -42,7 +42,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
     uint8_t* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     
     // Name
-    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD);
+    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, "CORE", 1);
+    
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = name;
     op_name->uv.word = name_word;
@@ -67,7 +68,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     type->resolved_type = resolved_type;
     
     // Type OP
-    SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE);
+    SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_TYPE, "CORE", 1);
     op_type->uv.type = type;
     
     // Add type
@@ -76,19 +77,19 @@ SPerl_PARSER* SPerl_PARSER_new() {
     // Package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(parser);
     package->size = SPerl_RESOLVED_TYPE_C_CORE_SIZES[i];
-    SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD);
+    SPerl_OP* op_package_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, "CORE", 1);
     op_package_name->uv.word = name_word;
     package->op_name = op_package_name;
     package->op_type = op_type;
     
     // Package OP
-    SPerl_OP* op_package = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_PACKAGE);
+    SPerl_OP* op_package = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_PACKAGE, "CORE", 1);
     op_package->uv.package = package;
     
     SPerl_ARRAY_push(parser->op_packages, op_package);
     SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
-
+  
   // Core array types
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name
@@ -96,7 +97,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     uint8_t* core_name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     
     // Name
-    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD);
+    SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_WORD, "CORE", 1);
     SPerl_WORD* name_word = SPerl_WORD_new(parser);
     name_word->value = name;
     op_name->uv.word = name_word;

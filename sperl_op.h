@@ -220,10 +220,7 @@ void SPerl_OP_resolve_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert
 
 uint8_t* SPerl_OP_create_abs_name(SPerl_PARSER* parser, uint8_t* package_name, uint8_t* base_name);
 
-SPerl_OP* SPerl_OP_newOP_flag(SPerl_PARSER* parser, int32_t type, SPerl_OP *first, SPerl_OP *last, uint8_t flags, uint8_t private);
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP *insert);
-
-SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, int32_t code);
 
 SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* o);
 void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib);
@@ -232,7 +229,7 @@ void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib, SPe
 
 SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPerl_OP* op_enum_block);
 
-SPerl_OP* SPerl_OP_newOP_(SPerl_PARSER* parser, int32_t code, uint8_t* file, uint32_t line);
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, int32_t code, uint8_t* file, uint32_t line);
 
 SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last, uint8_t* file, uint32_t line);
 
