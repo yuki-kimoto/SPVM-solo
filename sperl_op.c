@@ -525,13 +525,14 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   uint8_t* sub_abs_name;
   SPerl_OP* op;
   if (name->op_var) {
-    uint8_t* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
+    uint8_t* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
     uint8_t* base_name = name->op_name->uv.word->value;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   }
   else if (name->op_name) {
     sub_abs_name = name->op_name->uv.word->value;
   }
+  
   
   name->abs_name = sub_abs_name;
   
@@ -546,25 +547,27 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   }
 }
 
-void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_NAME* name) {
-  uint8_t* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_sub->uv.sub->op_package->uv.package->op_name->uv.word->value;
-  SPerl_OP* op_name = name->op_name;
-  SPerl_WORD* base_name_word = op_name->uv.word;
-  uint8_t* base_name = base_name_word->value;
+void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
+  SPerl_NAME* name = op_name->uv.name;
   
-  uint8_t* abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
-  name->abs_name = abs_name;
+  uint8_t* field_abs_name;
+  SPerl_OP* op;
+  uint8_t* package_name = name->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
+  uint8_t* base_name = name->op_name->uv.word->value;
+  field_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
+  
+  name->abs_name = field_abs_name;
   
   SPerl_FIELD* found_field= SPerl_HASH_search(
     parser->field_abs_name_symtable,
-    abs_name,
-    strlen(abs_name)
+    field_abs_name,
+    strlen(field_abs_name)
   );
-  
   if (!found_field) {
     SPerl_yyerror_format(parser, "unknown field \"%s\" at %s line %d\n",
-      abs_name, op_name->file, op_name->line);
+      field_abs_name, op_name->file, op_name->line);
   }
+
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_var, SPerl_OP* op_fieldname) {

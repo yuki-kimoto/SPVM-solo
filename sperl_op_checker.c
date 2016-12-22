@@ -879,8 +879,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_FIELD: {
                 // Check field name
-                SPerl_NAME* name = op_cur->uv.name;
-                SPerl_OP_check_field_name(parser, name);
+                SPerl_OP_check_field_name(parser, op_cur);
                 if (parser->fatal_error) {
                   return;
                 }

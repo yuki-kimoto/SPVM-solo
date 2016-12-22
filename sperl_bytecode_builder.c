@@ -648,6 +648,20 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_AASTORE);
                   }
                 }
+                else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
+                  SPerl_OP* op_field = op_cur->first;
+                  
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_PUTFIELD);
+                  
+                  // Call subroutine
+                  SPerl_NAME* name = op_cur->first->uv.name;
+                  uint8_t* field_abs_name = name->abs_name;
+                  SPerl_SUB* field = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
+                  int32_t id = field->id;
+                  
+                  SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
+                  SPerl_BYTECODES_push(bytecodes, id & 0xFF);
+                }
                 
                 break;
               }

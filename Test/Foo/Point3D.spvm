@@ -58,16 +58,12 @@ package Test::Foo::Point3D {
     $title >> 2;
 
     $self->x;
-    $test->sum();
-    $test->sum(1);
-    $test->sum(1, 2);
+    $self->sum();
 
     Test::Foo::Point3D::sum();
-    Test::Foo::Point3D::sum(1);
-    Test::Foo::Point3D::sum(1, 2);
 
     $self->x = 3;
-    $test->last;
+    $self->last;
 
     my $title8 : boolean = true;
     my $title9 : boolean = false;
