@@ -88,7 +88,7 @@ decl_thing_in_grammer
 decl_package
   : PACKAGE package_name class_block
     {
-      $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_NULL(parser), $3);
+      $$ = SPerl_OP_build_decl_package(parser, $1, $2, SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL), $3);
       if (parser->fatal_error) {
         YYABORT;
       }
@@ -259,7 +259,7 @@ decl_my
     }
   | MY VAR
     {
-      SPerl_OP* op_type = SPerl_OP_newOP_NULL(parser);
+      SPerl_OP* op_type = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
       
       $$ = SPerl_OP_build_decl_my(parser, $1, $2, op_type);
     }
@@ -269,12 +269,12 @@ decl_anon_sub
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
        SPerl_OP* op_sub_args = SPerl_OP_newOP_LIST(parser);
-       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), op_sub_args, $5, $6);
+       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL), op_sub_args, $5, $6);
      }
  | SUB '(' sub_args ')' ':' type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
-       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_NULL(parser), $3, $6, $7);
+       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL), $3, $6, $7);
      }
 
 opt_decl_things_in_class
@@ -359,7 +359,7 @@ array_length
 opt_term
   : /* NULL */
     {
-      $$ = SPerl_OP_newOP_NULL(parser);
+      $$ = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
     }
   | term
 term
@@ -529,7 +529,7 @@ array_elem
 call_sub
   : sub_name '(' opt_terms  ')'
     {
-      $$ = SPerl_OP_build_call_sub(parser, SPerl_OP_newOP_NULL(parser), $1, $3, 0);
+      $$ = SPerl_OP_build_call_sub(parser, SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL), $1, $3, 0);
     }
   | VAR ARROW sub_name '(' opt_terms ')'
     {
@@ -537,7 +537,7 @@ call_sub
     }
   | VAR ARROW '(' opt_terms ')'
     {
-      $$ = SPerl_OP_build_call_sub(parser, $1, SPerl_OP_newOP_NULL(parser), $4, 1);
+      $$ = SPerl_OP_build_call_sub(parser, $1, SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL), $4, 1);
     }
 
 block 
@@ -609,7 +609,7 @@ type_sub
 type_array
   : not_type_sub '[' ']'
     {
-      SPerl_OP* op_null = SPerl_OP_newOP_NULL(parser);
+      SPerl_OP* op_null = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
       $$ = SPerl_OP_build_type_array(parser, $1, op_null);
     }
   | not_type_sub '[' term ']'
@@ -618,7 +618,7 @@ type_array
     }
   | '(' type_sub ')' '[' ']'
     {
-      SPerl_OP* op_null = SPerl_OP_newOP_NULL(parser);
+      SPerl_OP* op_null = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
       $$ = SPerl_OP_build_type_array(parser, $2, op_null);
     }
   | '(' type_sub ')' '[' term ']'

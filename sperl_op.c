@@ -305,7 +305,7 @@ SPerl_OP* SPerl_OP_build_array_length(SPerl_PARSER* parser, SPerl_OP* op_array_l
 }
 
 SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type) {
-  SPerl_OP* op_new_object = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEW_TYPE, NULL, NULL);
+  SPerl_OP* op_new_object = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NEW_TYPE);
   SPerl_OP_sibling_splice(parser, op_new_object, NULL, 0, op_type);
   op_new_object->file = op_new->file;
   op_new_object->line = op_new->line;
@@ -401,15 +401,15 @@ void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_OP* op_last = op->last;
   
   // Constant false 1
-  SPerl_OP* op_constant_false1 = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP* op_constant_false1 = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_false(parser, op_constant_false1);
   
   // Constant false 2
-  SPerl_OP* op_constant_false2 = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP* op_constant_false2 = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_false(parser, op_constant_false2);
   
   // Constant true
-  SPerl_OP* op_constant_true = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP* op_constant_true = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_true(parser, op_constant_true);
   
   // if
@@ -448,15 +448,15 @@ void SPerl_OP_convert_or_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_OP* op_last = op->last;
   
   // Constant true 1
-  SPerl_OP* op_constant_true1 = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP* op_constant_true1 = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_true(parser, op_constant_true1);
   
   // Constant true 2
-  SPerl_OP* op_constant_true2 = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP* op_constant_true2 = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_true(parser, op_constant_true2);
   
   // Constant false
-  SPerl_OP* op_constant_false = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP* op_constant_false = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_false(parser, op_constant_false);
   
   // if
@@ -488,11 +488,11 @@ void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op) {
   SPerl_OP* op_first = op->first;
   
   // Constant true 1
-  SPerl_OP* op_constant_true = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP* op_constant_true = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_true(parser, op_constant_true);
   
   // Constant false
-  SPerl_OP* op_constant_false = SPerl_OP_newOP_NULL(parser);
+  SPerl_OP* op_constant_false = SPerl_OP_newOP_(parser, SPerl_OP_C_CODE_NULL);
   SPerl_OP_convert_to_op_constant_false(parser, op_constant_false);
   
   // If
@@ -1194,11 +1194,6 @@ SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser) {
   SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PUSHMARK, NULL, NULL);
   
   return SPerl_OP_newOP(parser, SPerl_OP_C_CODE_LIST, op_pushmark, NULL);
-}
-
-SPerl_OP* SPerl_OP_newOP_NULL(SPerl_PARSER* parser) {
-  
-  return SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, NULL, NULL);
 }
 
 SPerl_OP* SPerl_OP_newOP_(SPerl_PARSER* parser, int32_t code) {
