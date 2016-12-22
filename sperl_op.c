@@ -727,17 +727,17 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
     SPerl_OP* op_decl = op_decls->first;
     while (op_decl = SPerl_OP_sibling(parser, op_decl)) {
       if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
-        SPerl_OP* op_has = op_decl;
-        SPerl_FIELD* field = op_has->uv.field;
+        SPerl_OP* op_field = op_decl;
+        SPerl_FIELD* field = op_field->uv.field;
         uint8_t* field_name = field->op_name->uv.word->value;
         SPerl_FIELD* found_field
           = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
         if (found_field) {
-          SPerl_yyerror_format(parser, "redeclaration of has \"%s\" at %s line %d\n", field_name, op_has->file, op_has->line);
+          SPerl_yyerror_format(parser, "redeclaration of has \"%s\" at %s line %d\n", field_name, op_field->file, op_field->line);
         }
         else {
           
-          SPerl_ARRAY_push(op_fields, op_has);
+          SPerl_ARRAY_push(op_fields, op_field);
           SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
           
           // Field absolute name
@@ -839,11 +839,11 @@ SPerl_OP* SPerl_OP_build_decl_my(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP
   return op_var;
 }
 
-SPerl_OP* SPerl_OP_build_decl_field(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* op_type) {
+SPerl_OP* SPerl_OP_build_decl_field(SPerl_PARSER* parser, SPerl_OP* op_field, SPerl_OP* op_field_name, SPerl_OP* op_type) {
   
   // Build OP
-  SPerl_OP_sibling_splice(parser, op_has, NULL, 0, op_field_name);
-  SPerl_OP_sibling_splice(parser, op_has, op_field_name, 0, op_type);
+  SPerl_OP_sibling_splice(parser, op_field, NULL, 0, op_field_name);
+  SPerl_OP_sibling_splice(parser, op_field, op_field_name, 0, op_type);
   
   // Create field information
   SPerl_FIELD* field = SPerl_FIELD_new(parser);
@@ -855,9 +855,9 @@ SPerl_OP* SPerl_OP_build_decl_field(SPerl_PARSER* parser, SPerl_OP* op_has, SPer
   field->op_type = op_type;
   
   // Set field informaiton
-  op_has->uv.field = field;
+  op_field->uv.field = field;
   
-  return op_has;
+  return op_field;
 }
 
 SPerl_OP* SPerl_OP_build_decl_sub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_subargs, SPerl_OP* op_type, SPerl_OP* op_block) {
