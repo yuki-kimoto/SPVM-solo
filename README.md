@@ -204,3 +204,7 @@ class name first character must be upper case. if class name contain "::", each 
     Foo::Bar
     ABC
     ABC::DEF
+
+## Contributers
+
+*[akinomyoga](https://github.com/akinomyoga)
