@@ -8,7 +8,7 @@ Do you need a **fast Perl**? Static Perl is a fast calculation system of Perl.
 - **Static typing** - Static typing for performance
 - **VM** - Byte codes are generated so that you can run them on Static Perl VM
 - **Perlish syntax** - the syntax is very similar to that of Perl
-- **Static Perl will be used from Perl itself as module.
+- **Perl module** - Static Perl will be used from Perl itself as module.
 
 This is now under **developing**.
 
