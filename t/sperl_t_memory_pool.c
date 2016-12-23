@@ -116,4 +116,6 @@ int main(int argc, char *argv[])
     
     SPerl_MEMORY_POOL_free(memory_pool);
   }
+  
+  return 0;
 }

@@ -152,5 +152,5 @@ int main(int argc, char *argv[])
     SPerl_ARRAY_push(array, &value14);
   }
   
-  return 1;
+  return 0;
 }

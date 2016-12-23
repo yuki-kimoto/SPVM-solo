@@ -134,5 +134,5 @@ int main(int argc, char *argv[])
     SPerl_HASH_free(hash);
   }
   
-  return 1;
+  return 0;
 }
