@@ -28,8 +28,8 @@ struct SPerl_yy_parser_{
   // Syntax error count
   int32_t error_count;
   
-  // AST grammer
-  SPerl_OP* op_grammer;
+  // AST grammar
+  SPerl_OP* op_grammar;
   
   // Packages
   SPerl_ARRAY* op_packages;

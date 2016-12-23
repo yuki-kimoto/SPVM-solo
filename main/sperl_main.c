@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
   SPerl_OP* op_use = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_USE, package_name, 1);
   op_use->uv.use = use;
   
-  /* Push package use infomation stack */
+  /* Push package use information stack */
   SPerl_ARRAY_push(parser->op_use_stack, op_use);
   
   /* call SPerl_yyparse */
