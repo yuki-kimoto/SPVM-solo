@@ -11,23 +11,25 @@ Do you need a **fast Perl**? Static Perl is a fast calculation system of Perl.
 
 This is now under **developing**.
 
-I have implemented only parts of **tokenizer** and **abstract syntax tree generator**.
+I have implemented only the following parts.
+
+1. tokenizer
+1. abstract syntax tree builder
+1. bytecode builder
 
 ```
 package Main {
 
   sub main () : int {
-    my $num1 : int = 2;
-    my $num2 : int = 5;
-
-    my $num3 : int = sum($num1, $num3);
+    my $num1 = 2;
+    my $num2 = 5;
+    
+    my $num3 = Main::sum($num1, $num3);
   }
 
   sub sum ($num1 : int, $num2 : int) : int {
-    my $num3 : int;
-
-    $num3 = $num1 + $num1;
-
+    my $num3 = $num1 + $num1;
+    
     return $num3;
   }
 }
@@ -35,146 +37,267 @@ package Main {
 
 ## Run
 
-    bison -t -p SPerl_yy -d sperl_yacc.y && gcc -std=c99 -lm -O -o sperl main/sperl_main.c *.c && ./sperl Test
-    bison -t -p SPerl_yy -d sperl_yacc.y && gcc -std=c99 -lm -O -o sperl main/sperl_main.c *.c && ./sperl Test2
+    bison -t -p SPerl_yy -d sperl_yacc.y && gcc -std=c99 -g -lm -O -o sperl main/sperl_main.c *.c && ./sperl Main
 
-Now I only print the result of **token reduction** and **abstract syntax tree**.
+Now I only print AST and bytecodes.
 
-The above source code output:
+The output of above source code is
 
 ```
-[Token reduction]
-NAME -> pkgname
-NAME -> subname
-NULL -> optsubargs
-NAME -> type (int)
-type -> desctype
-NAME -> type (int)
-type -> desctype
-MY VAR : desctype -> declvar
-declvar -> term
-CONST(int 2) -> term
-term ASSIGNOP term -> term
-term ; -> statement
-statement -> statements
-NAME -> type (int)
-type -> desctype
-MY VAR : desctype -> declvar
-declvar -> term
-CONST(int 5) -> term
-term ASSIGNOP term -> term
-term ; -> statement
-statements statement -> statements
-NAME -> type (int)
-type -> desctype
-MY VAR : desctype -> declvar
-declvar -> term
-NAME -> subname
-VAR($num1) -> term
-term -> terms
-VAR($num3) -> term
-terms , term -> terms
-terms -> optterms
-subname (optterms) -> term
-term ASSIGNOP term -> term
-term ; -> statement
-statements statement -> statements
-{ statements } -> block
-SUB subname ( optsubargs ) : desctype block -> statement
-statement -> statements
-NAME -> subname
-NAME -> type (int)
-type -> desctype
-VAR : desctype -> subarg ($num1)
-subarg -> subargs
-NAME -> type (int)
-type -> desctype
-VAR : desctype -> subarg ($num2)
-subargs , subarg
-subargs -> optsubargs
-NAME -> type (int)
-type -> desctype
-NAME -> type (int)
-type -> desctype
-MY VAR : desctype -> declvar
-declvar -> term
-term ; -> statement
-statement -> statements
-VAR($num3) -> term
-VAR($num1) -> term
-VAR($num1) -> term
-term + term -> term
-term ASSIGNOP term -> term
-term ; -> statement
-statements statement -> statements
-VAR($num3) -> term
-RETURN term ; -> statement
-statements statement -> statements
-{ statements } -> block
-SUB subname ( optsubargs ) : desctype block -> statement
-statements statement -> statements
-{ statements } -> block
-PACKAGE pkgname block -> package
-package -> packages
-packages -> grammar
-
 [Abstract Syntax Tree]
-grammar
- package
-  const string "Main"
-  block
-   sub
-    const string "main"
-    null
-    const string "int"
-    block
-     assign
-      my
-       var "$num1"
-       const string "int"
-      const int 2
-     assign
-      my
-       var "$num2"
-       const string "int"
-      const int 5
-     assign
-      my
-       var "$num3"
-       const string "int"
-      callsub
-       const string "sum"
-       list
-        var "$num1"
-        var "$num3"
-   sub
-    const string "sum"
-    list
-     subarg
-      var "$num1"
-      const string "int"
-     subarg
-      var "$num2"
-      const string "int"
-    const string "int"
-    block
-     my
-      var "$num3"
-      const string "int"
-     assign
-      var "$num3"
-      add
-       var "$num1"
-       var "$num1"
-     return
-      var "$num3"
+GRAMMAR
+ LIST
+  PUSHMARK
+  DECL_PACKAGE
+   NAME "Main"
+   CLASS_BLOCK
+    LIST
+     PUSHMARK
+     DECL_SUB
+      NAME "main"
+      LIST
+       PUSHMARK
+      TYPE
+       NAME "int"
+      BLOCK
+       LIST
+        PUSHMARK
+        POP
+         ASSIGN
+          VAR "$num1"
+           DECL_MY_VAR
+            NULL
+          CONSTANT INT 2
+        POP
+         ASSIGN
+          VAR "$num2"
+           DECL_MY_VAR
+            NULL
+          CONSTANT INT 5
+        POP
+         ASSIGN
+          VAR "$num3"
+           DECL_MY_VAR
+            NULL
+          CALL_SUB
+           NAME "Main::sum"
+           LIST
+            PUSHMARK
+            VAR "$num1"
+            VAR "$num3"
+     DECL_SUB
+      NAME "sum"
+      LIST
+       PUSHMARK
+       VAR "$num1"
+        DECL_MY_VAR
+         TYPE
+          NAME "int"
+       VAR "$num2"
+        DECL_MY_VAR
+         TYPE
+          NAME "int"
+      TYPE
+       NAME "int"
+      BLOCK
+       LIST
+        PUSHMARK
+        POP
+         ASSIGN
+          VAR "$num3"
+           DECL_MY_VAR
+            NULL
+          ADD
+           VAR "$num1"
+           VAR "$num1"
+        RETURN
+         VAR "$num3"
 
-[Method information]
-[0]name => main, argument_count => 0, return_type => int, op_block => 1b731c10
-[1]name => sum, argument_count => 2, return_type => int, op_block => 1b732280
-```
+[Resolved types]
+resolved_type[0]
+    name => "boolean"
+    id => "0"
+resolved_type[1]
+    name => "byte"
+    id => "1"
+resolved_type[2]
+    name => "short"
+    id => "2"
+resolved_type[3]
+    name => "int"
+    id => "3"
+resolved_type[4]
+    name => "long"
+    id => "4"
+resolved_type[5]
+    name => "float"
+    id => "5"
+resolved_type[6]
+    name => "double"
+    id => "6"
+resolved_type[7]
+    name => "boolean[]"
+    id => "7"
+resolved_type[8]
+    name => "byte[]"
+    id => "8"
+resolved_type[9]
+    name => "short[]"
+    id => "9"
+resolved_type[10]
+    name => "int[]"
+    id => "10"
+resolved_type[11]
+    name => "long[]"
+    id => "11"
+resolved_type[12]
+    name => "float[]"
+    id => "12"
+resolved_type[13]
+    name => "double[]"
+    id => "13"
+resolved_type[14]
+    name => "Main"
+    id => "14"
 
+[Packages information]
+package[0]
+  name => "boolean"
+  resolved_type => "boolean"
+  size => 1
+  fields
+  constant_values
+  constant_pool
+  subs
+package[1]
+  name => "byte"
+  resolved_type => "byte"
+  size => 1
+  fields
+  constant_values
+  constant_pool
+  subs
+package[2]
+  name => "short"
+  resolved_type => "short"
+  size => 1
+  fields
+  constant_values
+  constant_pool
+  subs
+package[3]
+  name => "int"
+  resolved_type => "int"
+  size => 1
+  fields
+  constant_values
+  constant_pool
+  subs
+package[4]
+  name => "long"
+  resolved_type => "long"
+  size => 2
+  fields
+  constant_values
+  constant_pool
+  subs
+package[5]
+  name => "float"
+  resolved_type => "float"
+  size => 1
+  fields
+  constant_values
+  constant_pool
+  subs
+package[6]
+  name => "double"
+  resolved_type => "double"
+  size => 2
+  fields
+  constant_values
+  constant_pool
+  subs
+package[7]
+  name => "Main"
+  resolved_type => "Main"
+  size => 0
+  fields
+  constant_values
+    constant[0]
+      int 2
+      pool_pos => 0
+    constant[1]
+      int 5
+      pool_pos => 1
+  constant_pool
+    constant_pool[0] 2
+    constant_pool[1] 5
+  subs
+    sub[0]
+      package_name => "Main"
+      name => "main"
+      id => 0
+      anon => 0
+      resolved_type => "int"
+      argument_count => 0
+      my_vars
+        my_var[0]
+          name => "$num1"
+          resolved_type => "int"
+        my_var[1]
+          name => "$num2"
+          resolved_type => "int"
+        my_var[2]
+          name => "$num3"
+          resolved_type => "int"
+      op_block => 970a58
+      bytecodes
+        [0] ICONST_2
+        [1] ISTORE_0
+        [2] ICONST_5
+        [3] ISTORE_1
+        [4] ILOAD_0
+        [5] ILOAD_2
+        [6] INVOKESTATIC
+        [7] 0
+        [8] 1
+        [9] ISTORE_2
+    sub[1]
+      package_name => "Main"
+      name => "sum"
+      id => 1
+      anon => 0
+      resolved_type => "int"
+      argument_count => 2
+      my_vars
+        my_var[0]
+          name => "$num1"
+          resolved_type => "int"
+        my_var[1]
+          name => "$num2"
+          resolved_type => "int"
+        my_var[2]
+          name => "$num3"
+          resolved_type => "int"
+      op_block => 971970
+      bytecodes
+        [0] ILOAD_0
+        [1] ILOAD_0
+        [2] IADD
+        [3] ISTORE_2
+        [4] ILOAD_2
+        [5] IRETURN
+        
 # Development
+
+## Run
+   
+    # Run using command direcotry
+    bison -t -p SPerl_yy -d sperl_yacc.y && gcc -std=c99 -g -lm -O -o sperl main/sperl_main.c *.c && ./sperl Test
+    
+    # Run using Makefile
+    make
+    make test
 
 ## Test
 
@@ -186,15 +309,16 @@ grammar
 
 ## Core type
 
-core type is char, byte, short, int, long, float, double.
+core type is byte, short, int, long, float, double.
 
-    char    unsigned integer        1byte
     byte    signed integer          1byte
     short   signed integer          2byte
     int     signed integer          4byte
     long    signed integer          8byte
     float   floating-point number   4byte
     double  floating-point number   8byte
+
+Culculation and type convertion rule is same as Java virtual machine.
 
 ## Class name
 
