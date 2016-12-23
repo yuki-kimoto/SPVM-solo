@@ -331,7 +331,7 @@ class name first character must be upper case. if class name contain "::", each 
     ABC
     ABC::DEF
 
-## Contributers
+## Contributors
 
 * [akinomyoga](https://github.com/akinomyoga)
 
