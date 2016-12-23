@@ -207,4 +207,4 @@ class name first character must be upper case. if class name contain "::", each 
 
 ## Contributers
 
-*[akinomyoga](https://github.com/akinomyoga)
+* [akinomyoga](https://github.com/akinomyoga)
