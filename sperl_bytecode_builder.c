@@ -40,7 +40,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
       SPerl_ARRAY* loop_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
       SPerl_ARRAY* last_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
       
+      // Current switch
       SPerl_OP* cur_op_switch_info = NULL;
+      
+      // Current case addresses
+      
       
       while (op_cur) {
         // [START]Preorder traversal position
@@ -67,9 +71,33 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 
                 if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_TABLESWITCH) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_TABLESWITCH);
+                  
+                  int32_t length = switch_info->length;
+                  int32_t max = switch_info->max;
+                  int32_t min = switch_info->min;
+                  int32_t padding = (int)(length / 4);
+                  
+                  int32_t bytecode_length
+                    = 1 + padding + 4 + 4 + 4 + (4 * length);
+                  
+                  for (int32_t i = 0; i < bytecode_length; i++) {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+                  }
                 }
                 else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOOKUPSWITCH);
+                  
+                  int32_t length = switch_info->length;
+                  int32_t max = switch_info->max;
+                  int32_t min = switch_info->min;
+                  int32_t padding = (int)(length / 4);
+                  
+                  int32_t bytecode_length
+                    = 1 + padding + 4 + 4 + (4 * length);
+                  
+                  for (int32_t i = 0; i < bytecode_length; i++) {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+                  }
                 }
                 
                 break;
@@ -1033,6 +1061,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_CONSTANT: {
                 SPerl_CONSTANT* constant = op_cur->uv.constant;
+                
+                if (op_cur->flag == SPerl_OP_C_FLAG_CONSTANT_CASE) {
+                  break;
+                }
                 
                 _Bool bytecode_set = 0;
                 if (constant->code == SPerl_CONSTANT_C_CODE_BOOLEAN) {

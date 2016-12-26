@@ -128,21 +128,27 @@ enum {                          // [GROUP]
 extern uint8_t* const SPerl_OP_C_CODE_NAMES[];
 
 enum {
-  // Block type
+  // Block flag
   SPerl_OP_C_FLAG_BLOCK_IF = 1,
   SPerl_OP_C_FLAG_BLOCK_LOOP = 2,
   SPerl_OP_C_FLAG_BLOCK_SWITCH = 4,
 };
 
 enum {
-  // Condition type
+  // Condition flag
   SPerl_OP_C_FLAG_CONDITION_IF = 1,
   SPerl_OP_C_FLAG_CONDITION_LOOP = 2,
+};
+
+enum {
+  // Case flag
+  SPerl_OP_C_FLAG_CONSTANT_CASE = 1,
 };
 
 /* Binary operation */
 struct SPerl_op {
   int32_t code;
+  int32_t flag;
   SPerl_OP* first;
   SPerl_OP* last;
   SPerl_OP* sibparent;
@@ -151,7 +157,6 @@ struct SPerl_op {
   _Bool moresib;
   _Bool lvalue;
   _Bool condition;
-  int32_t flag;
   union {
     uint8_t* name;
     SPerl_RESOLVED_TYPE* resolved_type;
