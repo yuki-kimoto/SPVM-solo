@@ -1,10 +1,10 @@
-#ifndef SPERL_SWITCH_H
-#define SPERL_SWITCH_H
+#ifndef SPERL_SWITCH_INFO_H
+#define SPERL_SWITCH_INFO_H
 
 #include "sperl_base.h"
 
 // Parser information
-struct SPerl_switch {
+struct SPerl_switch_info {
   SPerl_ARRAY* op_cases;
 };
 

@@ -152,6 +152,7 @@ struct SPerl_op {
   _Bool condition;
   int32_t flag;
   union {
+    uint8_t* name;
     SPerl_RESOLVED_TYPE* resolved_type;
     SPerl_MY_VAR* my_var;
     SPerl_SUB* sub;
@@ -163,7 +164,7 @@ struct SPerl_op {
     SPerl_FIELD* field;
     SPerl_PACKAGE* package;
     SPerl_ENUMERATION* enumeration;
-    uint8_t* name;
+    SPerl_SWITCH_INFO* switch_info;
   } uv;
 };
 

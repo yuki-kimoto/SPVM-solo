@@ -4,8 +4,8 @@
 #include <stdint.h>
 
 /* sperl_switch.h */
-struct SPerl_switch;
-typedef struct SPerl_switch SPerl_SWITCH;
+struct SPerl_switch_info;
+typedef struct SPerl_switch_info SPerl_SWITCH_INFO;
 
 /* sperl_allocator.h */
 struct SPerl_allocator;
