@@ -126,7 +126,24 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 break;
               }
               case SPerl_OP_C_CODE_SWITCH: {
+                
+                SPerl_SWITCH_INFO* switch_info = cur_op_switch_info->uv.switch_info;
+                
+                if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_TABLESWITCH) {
+                  // Default offset
+                  int32_t default_offset = cur_default_address - cur_switch_address;
+                  bytecodes->values[cur_switch_address + 1] = (default_offset >> 24) & 0xFF;
+                  bytecodes->values[cur_switch_address + 2] = (default_offset >> 16) & 0xFF;
+                  bytecodes->values[cur_switch_address + 3] = (default_offset >> 8) & 0xFF;
+                  bytecodes->values[cur_switch_address + 4] = default_offset & 0xFF;
+                }
+                else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
+                  
+                }
+                
                 cur_op_switch_info = NULL;
+                cur_default_address = -1;
+                cur_case_addresses = NULL;
                 
                 break;
               }
