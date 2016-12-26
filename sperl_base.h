@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+/* sperl_switch.h */
+struct SPerl_switch;
+typedef struct SPerl_switch SPerl_SWITCH;
+
 /* sperl_allocator.h */
 struct SPerl_allocator;
 typedef struct SPerl_allocator SPerl_ALLOCATOR;
