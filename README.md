@@ -307,6 +307,19 @@ package[7]
     gcc  -std=c99 -lm -O -o tmp_sperl_t_hash t/sperl_t_hash.c *.c && ./tmp_sperl_t_hash
     gcc  -std=c99 -lm -O -o tmp_sperl_t_memory_pool t/sperl_t_memory_pool.c *.c && ./tmp_sperl_t_memory_pool
 
+## Types
+
+Use the following types in source code. This is defined in standard "stdint.h" library.
+
+  _Bool
+  uint8_t
+  int8_t
+  int16_t
+  int32_t
+  int64_t
+  float
+  double
+
 # SPVM specification
 
 ## Core type
@@ -320,21 +333,25 @@ core type is byte, short, int, long, float, double.
     float   floating-point number   4byte
     double  floating-point number   8byte
 
-Culculation and type convertion rule is same as Java virtual machine.
+Calculation and type convertion rule is same as Java.
 
-## Class name
+## Package name
 
-class name first character must be upper case. if class name contain "::", each part first character must be upper case.
-
+Package name is conbination of alphabet, number, and "::". Number must not be the first of the part.
+    
+    # OK
     Foo
     Foo::Bar
-    ABC
-    ABC::DEF
+    Foo1::Bar1
+    
+    # Not OK
+    1Foo
+    Foo::2Bar
 
-## Contributors
+# Contributors
 
 * [akinomyoga](https://github.com/akinomyoga)
 
-## Caution
+# Caution
 
 Static Perl will be renamed because same name project "static perl" already exists.

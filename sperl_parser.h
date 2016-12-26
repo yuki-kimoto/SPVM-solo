@@ -79,7 +79,7 @@ struct SPerl_yy_parser_{
   
   _Bool fatal_error;
   
-  SPerl_ARRAY* cur_case_statements;
+  SPerl_ARRAY* cur_op_cases;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();

@@ -3,17 +3,6 @@
 
 #include <stdint.h>
 
-/* Use the following type in source code
-_Bool
-uint8_t
-int8_t
-int16_t
-int32_t
-int64_t
-float
-double
-*/
-
 /* sperl_allocator.h */
 struct SPerl_allocator;
 typedef struct SPerl_allocator SPerl_ALLOCATOR;

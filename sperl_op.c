@@ -249,6 +249,8 @@ SPerl_OP* SPerl_OP_build_case_statement(SPerl_PARSER* parser, SPerl_OP* op_case,
   
   SPerl_OP_sibling_splice(parser, op_case, NULL, 0, op_term);
   
+  SPerl_ARRAY_push(parser->cur_op_cases, op_case);
+  
   return op_case;
 }
 
