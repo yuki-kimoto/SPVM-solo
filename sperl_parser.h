@@ -78,6 +78,8 @@ struct SPerl_yy_parser_{
   SPerl_HASH* resolved_type_symtable;
   
   _Bool fatal_error;
+  
+  SPerl_ARRAY* cur_case_statements;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();

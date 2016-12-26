@@ -34,6 +34,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   parser->resolved_types = SPerl_ALLOCATOR_new_array(parser, 0);
   parser->resolved_type_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
   parser->use_package_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
+  parser->cur_case_statements = SPerl_ALLOCATOR_new_array(parser, 0);
   
   // Core types
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
