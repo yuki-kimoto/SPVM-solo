@@ -30,6 +30,7 @@
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_builder.h"
 #include "sperl_op_checker.h"
+#include "sperl_switch_info.h"
 
 uint8_t* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
@@ -241,6 +242,11 @@ SPerl_OP* SPerl_OP_build_switch_statement(SPerl_PARSER* parser, SPerl_OP* op_swi
   SPerl_OP_sibling_splice(parser, op_switch, op_term, 0, op_block);
   
   op_block->flag |= SPerl_OP_C_FLAG_BLOCK_SWITCH;
+  
+  op_switch->uv.switch_info = SPerl_SWITCH_INFO_new(parser);
+  op_switch->uv.switch_info->op_cases = parser->cur_op_cases;
+  
+  parser->cur_op_cases = SPerl_ALLOCATOR_new_array(parser, 0);
   
   return op_switch;
 }
