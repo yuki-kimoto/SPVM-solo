@@ -44,7 +44,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
       SPerl_OP* cur_op_switch_info = NULL;
       
       // Current case addresses
+      int32_t cur_switch_address = -1;
       
+      int32_t cur_default_address = -1;
+      SPerl_ARRAY* cur_case_addresses;
       
       while (op_cur) {
         // [START]Preorder traversal position
@@ -52,6 +55,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
         switch (op_cur->code) {
           case SPerl_OP_C_CODE_SWITCH: {
             cur_op_switch_info = op_cur;
+            cur_case_addresses = SPerl_ALLOCATOR_new_array(parser, 0);
             break;
           }
         }
@@ -65,12 +69,29 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
           while (1) {
             // [START]Postorder traversal position
             switch (op_cur->code) {
+              case SPerl_OP_C_CODE_DEFAULT: {
+                
+                cur_default_address = bytecodes->length - 1;
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_CASE: {
+                
+                int32_t* address_ptr = SPerl_ALLOCATOR_new_int(parser);
+                *address_ptr = bytecodes->length - 1;
+                
+                SPerl_ARRAY_push(cur_case_addresses, address_ptr);
+                
+                break;
+              }
               case SPerl_OP_C_CODE_SWITCH_CONDITION: {
                 
                 SPerl_SWITCH_INFO* switch_info = cur_op_switch_info->uv.switch_info;
                 
                 if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_TABLESWITCH) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_TABLESWITCH);
+                  
+                  cur_switch_address = bytecodes->length - 1;
                   
                   int32_t length = switch_info->length;
                   int32_t max = switch_info->max;
@@ -86,6 +107,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 }
                 else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOOKUPSWITCH);
+                  
+                  cur_switch_address = bytecodes->length - 1;
                   
                   int32_t length = switch_info->length;
                   int32_t max = switch_info->max;
