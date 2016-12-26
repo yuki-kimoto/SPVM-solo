@@ -3,6 +3,11 @@
 
 #include <stdint.h>
 
+enum {
+  SPerl_BASE_C_INT_MIN = -2147483648,
+  SPerl_BASE_C_INT_MAX = 2147483647,
+};
+
 /* sperl_switch.h */
 struct SPerl_switch_info;
 typedef struct SPerl_switch_info SPerl_SWITCH_INFO;

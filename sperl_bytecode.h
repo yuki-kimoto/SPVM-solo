@@ -217,9 +217,4 @@ enum {
 
 extern uint8_t* const SPerl_BYTECODE_C_CODE_NAMES[];
 
-/*
-tableswitch if the following. SWITCHRTIO is 1.5 by default
-4 + range <= (3 + 2 * entries) * SWITCHRTIO
-*/
-
 #endif

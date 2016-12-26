@@ -28,6 +28,7 @@
 #include "sperl_package.h"
 #include "sperl_name_info.h"
 #include "sperl_resolved_type.h"
+#include "sperl_switch_info.h"
 
 void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
   for (int32_t i = 0; i < parser->op_packages->length; i++) {
@@ -163,6 +164,43 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 in_switch = 0;
                 cur_default_op = NULL;
                 cur_case_ops = NULL;
+                
+                // tableswitch if the following. SWITCHRTIO is 1.5 by default
+                // 4 + range <= (3 + 2 * length) * SWITCHRTIO
+                
+                SPerl_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
+                SPerl_ARRAY* op_cases = switch_info->op_cases;
+                int32_t length = op_cases->length;
+                int32_t min = SPerl_BASE_C_INT_MAX;
+                int32_t max = SPerl_BASE_C_INT_MIN;
+                
+                for (int32_t i = 0; i < op_cases->length; i++) {
+                  SPerl_OP* op_case = SPerl_ARRAY_fetch(op_cases, i);
+                  SPerl_OP* op_constant = op_case->first;
+                  int32_t value = op_constant->uv.constant->uv.int_value;
+                  if (value < min) {
+                    min = value;
+                  }
+                  if (value > max) {
+                    max = value;
+                  }
+                }
+                
+                int32_t range = max - min;
+                
+                int32_t code;
+                if (4 + range <= (3 + 2 * length) * 1.5) {
+                  code = SPerl_SWITCH_INFO_C_CODE_TABLESWITCH;
+                }
+                else {
+                  code = SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH;
+                }
+                
+                switch_info->code = code;
+                switch_info->min = min;
+                switch_info->max = max;
+                switch_info->length = length;
+                
                 break;
               }
               
