@@ -84,6 +84,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
             else {
               in_switch = 1;
             }
+            
             break;
           }
           // Start scope
@@ -130,8 +131,17 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_CASE: {
                 
-                if (op_cur->first->code != SPerl_OP_C_CODE_CONSTANT) {
+                SPerl_OP* op_term = op_cur->first;
+                
+                if (op_term->code != SPerl_OP_C_CODE_CONSTANT) {
                   SPerl_yyerror_format(parser, "case need constant at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(parser, op_term);
+                if (op_term_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  SPerl_yyerror_format(parser, "case need int at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
                 }
                 
                 if (!cur_case_ops) {
