@@ -16,6 +16,7 @@
 #include "sperl_name_info.h"
 #include "sperl_hash.h"
 #include "sperl_field.h"
+#include "sperl_switch_info.h"
 
 void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
   for (int32_t i = 0; i < parser->op_packages->length; i++) {
@@ -39,10 +40,16 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
       SPerl_ARRAY* loop_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
       SPerl_ARRAY* last_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
       
+      SPerl_OP* cur_op_switch_info = NULL;
+      
       while (op_cur) {
         // [START]Preorder traversal position
         
         switch (op_cur->code) {
+          case SPerl_OP_C_CODE_SWITCH: {
+            cur_op_switch_info = op_cur;
+            break;
+          }
         }
         
         // [END]Preorder traversal position
@@ -54,6 +61,24 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
           while (1) {
             // [START]Postorder traversal position
             switch (op_cur->code) {
+              case SPerl_OP_C_CODE_SWITCH_CONDITION: {
+                
+                SPerl_SWITCH_INFO* switch_info = cur_op_switch_info->uv.switch_info;
+                
+                if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_TABLESWITCH) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_TABLESWITCH);
+                }
+                else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
+                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOOKUPSWITCH);
+                }
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_SWITCH: {
+                cur_op_switch_info = NULL;
+                
+                break;
+              }
               case SPerl_OP_C_CODE_FIELD: {
                 
                 if (!op_cur->lvalue) {

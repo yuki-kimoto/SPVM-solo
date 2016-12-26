@@ -68,11 +68,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
       _Bool finish = 0;
       while (op_cur) {
         
-        // Check file and line
-        // warn("AAAAAAAAAA %s", SPerl_OP_C_CODE_NAMES[op_cur->code]);
-        // assert(op_cur->file);
-        // assert(op_cur->line);
-        
         // [START]Preorder traversal position
         
         switch (op_cur->code) {

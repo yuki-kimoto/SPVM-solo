@@ -108,6 +108,7 @@ uint8_t* const SPerl_OP_C_CODE_NAMES[] = {
   "SWITCH",
   "CASE",
   "DEFAULT",
+  "SWITCH_CONDITION",
 };
 
 void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
@@ -238,8 +239,11 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, S
 
 SPerl_OP* SPerl_OP_build_switch_statement(SPerl_PARSER* parser, SPerl_OP* op_switch, SPerl_OP* op_term, SPerl_OP* op_block) {
   
-  SPerl_OP_sibling_splice(parser, op_switch, NULL, 0, op_term);
-  SPerl_OP_sibling_splice(parser, op_switch, op_term, 0, op_block);
+  SPerl_OP* op_switch_condition = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_SWITCH_CONDITION, op_term->file, op_term->line);
+  SPerl_OP_sibling_splice(parser, op_switch_condition, NULL, 0, op_term);
+  
+  SPerl_OP_sibling_splice(parser, op_switch, NULL, 0, op_switch_condition);
+  SPerl_OP_sibling_splice(parser, op_switch, op_switch_condition, 0, op_block);
   
   op_block->flag |= SPerl_OP_C_FLAG_BLOCK_SWITCH;
   
@@ -318,6 +322,10 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   SPerl_RESOLVED_TYPE*  resolved_type;
   
   switch (op->code) {
+    case SPerl_OP_C_CODE_SWITCH_CONDITION : {
+      resolved_type = SPerl_OP_get_resolved_type(parser, op->first);
+      break;
+    }
     case SPerl_OP_C_CODE_UNDEF : {
       resolved_type = NULL;
       break;
