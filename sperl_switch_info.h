@@ -12,7 +12,6 @@ enum {
 struct SPerl_switch_info {
   uint32_t code;
   SPerl_ARRAY* op_cases;
-  uint32_t length;
   uint32_t max;
   uint32_t min;
 };

@@ -194,7 +194,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 switch_info->code = code;
                 switch_info->min = min;
                 switch_info->max = max;
-                switch_info->length = length;
                 
                 break;
               }

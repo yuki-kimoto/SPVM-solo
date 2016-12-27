@@ -93,7 +93,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   
                   cur_switch_address = bytecodes->length - 1;
                   
-                  int32_t length = switch_info->length;
+                  int32_t length = switch_info->op_cases->length;
                   int32_t max = switch_info->max;
                   int32_t min = switch_info->min;
                   int32_t padding = (int)(length / 4);
@@ -110,7 +110,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   
                   cur_switch_address = bytecodes->length - 1;
                   
-                  int32_t length = switch_info->length;
+                  int32_t length = switch_info->op_cases->length;
                   int32_t max = switch_info->max;
                   int32_t min = switch_info->min;
                   int32_t padding = (int)(length / 4);
