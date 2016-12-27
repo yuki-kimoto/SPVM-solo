@@ -189,6 +189,7 @@ void SPerl_DUMPER_dump_constant_pool(SPerl_PARSER* parser, SPerl_CONSTANT_POOL* 
 
 void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecodes) {
   for (int32_t i = 0; i < bytecodes->length; i++) {
+    
     uint8_t bytecode = bytecodes->values[i];
     printf("        [%d] %s\n", i, SPerl_BYTECODE_C_CODE_NAMES[bytecode]);
     
@@ -287,10 +288,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
       case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
         
         // Padding
-        int32_t padding = i % 4;
-        if (padding == 4) {
-          padding = 0;
-        }
+        int32_t padding = 3 - (i % 4);
         for (int32_t j = 0; j < padding; j++) {
           i++;
           bytecode = bytecodes->values[i];
@@ -305,7 +303,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
         }
         
         // Low
-        int32_t min;
+        int32_t min = 0;
         for (int32_t j = 0; j < 4; j++) {
           i++;
           bytecode = bytecodes->values[i];
@@ -314,7 +312,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
         }
         
         // High
-        int32_t max;
+        int32_t max = 0;
         for (int32_t j = 0; j < 4; j++) {
           i++;
           bytecode = bytecodes->values[i];

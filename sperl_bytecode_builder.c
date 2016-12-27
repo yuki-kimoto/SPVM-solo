@@ -123,7 +123,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                   
                   // Addresses
-                  for (int32_t j = 0; j < length * 4; j++) {
+                  for (int32_t j = 0; j < (max - min + 1) * 4; j++) {
                     SPerl_BYTECODES_push(bytecodes, 0);
                   }
                 }
