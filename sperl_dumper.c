@@ -284,6 +284,54 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
         
         break;
       }
+      case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
+        
+        // Padding
+        int32_t padding = i % 4;
+        if (padding == 4) {
+          padding = 0;
+        }
+        for (int32_t j = 0; j < padding; j++) {
+          i++;
+          bytecode = bytecodes->values[i];
+          printf("        [%d] %d\n", i, bytecode);
+        }
+        
+        // Default
+        for (int32_t j = 0; j < 4; j++) {
+          i++;
+          bytecode = bytecodes->values[i];
+          printf("        [%d] %d\n", i, bytecode);
+        }
+        
+        // Low
+        int32_t min;
+        for (int32_t j = 0; j < 4; j++) {
+          i++;
+          bytecode = bytecodes->values[i];
+          min += bytecode << (24 - (8 * j));
+          printf("        [%d] %d\n", i, bytecode);
+        }
+        
+        // High
+        int32_t max;
+        for (int32_t j = 0; j < 4; j++) {
+          i++;
+          bytecode = bytecodes->values[i];
+          max += bytecode << (24 - (8 * j));
+          printf("        [%d] %d\n", i, bytecode);
+        }
+        
+        // Addresses
+        int32_t length = max - min + 1;
+        for (int32_t j = 0; j < length * 4; j++) {
+          i++;
+          bytecode = bytecodes->values[i];
+          printf("        [%d] %d\n", i, bytecode);
+        }
+        
+        break;
+      }
     }
   }
 }

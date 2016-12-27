@@ -102,13 +102,29 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                     padding = 0;
                   }
                   cur_switch_padding = padding;
-                  warn("AAAAAAAAAAAAAAAA %d", padding);
+
+                  for (int32_t j = 0; j < padding; j++) {
+                    SPerl_BYTECODES_push(bytecodes, 0);
+                  }
                   
-                  int32_t operands_length
-                    = padding + 4 + 4 + 4 + (4 * length);
+                  // Default
+                  for (int32_t j = 0; j < 4; j++) {
+                    SPerl_BYTECODES_push(bytecodes, 0);
+                  }
                   
-                  for (int32_t i = 0; i < operands_length; i++) {
-                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+                  // Low
+                  for (int32_t j = 0; j < 4; j++) {
+                    SPerl_BYTECODES_push(bytecodes, (min >> (24 - (8 * j))) & 0xFF);
+                  }
+                  
+                  // High
+                  for (int32_t j = 0; j < 4; j++) {
+                    SPerl_BYTECODES_push(bytecodes, (max >> (24 - (8 * j))) & 0xFF);
+                  }
+                  
+                  // Addresses
+                  for (int32_t j = 0; j < length * 4; j++) {
+                    SPerl_BYTECODES_push(bytecodes, 0);
                   }
                 }
                 else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
