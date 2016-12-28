@@ -238,12 +238,46 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   
                   int32_t length = switch_info->op_cases->length;
                   
+                  SPerl_ARRAY* ordered_op_cases = SPerl_ALLOCATOR_new_array(parser, 0);
                   for (int32_t i = 0; i < length; i++) {
                     SPerl_OP* op_case = SPerl_ARRAY_fetch(cur_op_cases, i);
+                    SPerl_ARRAY_push(ordered_op_cases, op_case);
+                  }
+                  SPerl_ARRAY* ordered_case_addresses = SPerl_ALLOCATOR_new_array(parser, 0);
+                  for (int32_t i = 0; i < length; i++) {
+                    SPerl_OP* case_address = SPerl_ARRAY_fetch(cur_case_addresses, i);
+                    SPerl_ARRAY_push(ordered_case_addresses, case_address);
+                  }
+                  
+                  // sort by asc order
+                  for (int32_t i = 0; i < length; i++) {
+                    for (int32_t j = i + 1; j < length; j++) {
+                      SPerl_OP* op_case_i = SPerl_ARRAY_fetch(ordered_op_cases, i);
+                      SPerl_OP* op_case_j = SPerl_ARRAY_fetch(ordered_op_cases, j);
+                      int32_t match_i = op_case_i->first->uv.constant->uv.int_value;
+                      int32_t match_j = op_case_j->first->uv.constant->uv.int_value;
+                      
+                      SPerl_OP* case_address_i = SPerl_ARRAY_fetch(ordered_case_addresses, i);
+                      SPerl_OP* case_address_j = SPerl_ARRAY_fetch(ordered_case_addresses, j);
+
+                      
+                      if (match_i > match_j) {
+                        SPerl_OP* op_tmp = op_case_i;
+                        ordered_op_cases->values[i] = op_case_j;
+                        ordered_op_cases->values[j] = op_case_i;
+                        
+                        ordered_case_addresses->values[i] = case_address_j;
+                        ordered_case_addresses->values[j] = case_address_i;
+                      }
+                    }
+                  }
+                  
+                  for (int32_t i = 0; i < length; i++) {
+                    SPerl_OP* op_case = SPerl_ARRAY_fetch(ordered_op_cases, i);
                     SPerl_OP* op_constant = op_case->first;
                     int32_t match = op_constant->uv.constant->uv.int_value;
 
-                    int32_t* case_address_ptr = SPerl_ARRAY_fetch(cur_case_addresses, i);
+                    int32_t* case_address_ptr = SPerl_ARRAY_fetch(ordered_case_addresses, i);
                     int32_t case_offset = *case_address_ptr - cur_switch_address;
                     
                     // Match
