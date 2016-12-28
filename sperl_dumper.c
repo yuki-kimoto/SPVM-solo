@@ -357,7 +357,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
         }
         
         // Addresses
-        for (int32_t j = 0; j < length * 4; j++) {
+        for (int32_t j = 0; j < length * 8; j++) {
           i++;
           bytecode = bytecodes->values[i];
           printf("        [%d] %d\n", i, bytecode);
