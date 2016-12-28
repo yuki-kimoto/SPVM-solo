@@ -19,13 +19,13 @@
 #include "sperl_switch_info.h"
 
 void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
-  for (int32_t i = 0; i < parser->op_packages->length; i++) {
-    SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, i);
+  for (int32_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_pos);
     SPerl_PACKAGE* package = op_package->uv.package;
     
-    for (int32_t k = 0; k < package->op_subs->length; k++) {
+    for (int32_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
       
-      SPerl_OP* op_sub = SPerl_ARRAY_fetch(package->op_subs, k);
+      SPerl_OP* op_sub = SPerl_ARRAY_fetch(package->op_subs, sub_pos);
       SPerl_SUB* sub = op_sub->uv.sub;
       
       // VM codes
@@ -85,27 +85,27 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   int32_t min = switch_info->min;
                   int32_t padding = 3 - ((bytecodes->length - 1) % 4);
                   
-                  for (int32_t j = 0; j < padding; j++) {
+                  for (int32_t i = 0; i < padding; i++) {
                     SPerl_BYTECODES_push(bytecodes, 0);
                   }
                   
                   // Default
-                  for (int32_t j = 0; j < 4; j++) {
+                  for (int32_t i = 0; i < 4; i++) {
                     SPerl_BYTECODES_push(bytecodes, 0);
                   }
                   
                   // Low
-                  for (int32_t j = 0; j < 4; j++) {
-                    SPerl_BYTECODES_push(bytecodes, (min >> (24 - (8 * j))) & 0xFF);
+                  for (int32_t i = 0; i < 4; i++) {
+                    SPerl_BYTECODES_push(bytecodes, (min >> (24 - (8 * i))) & 0xFF);
                   }
                   
                   // High
-                  for (int32_t j = 0; j < 4; j++) {
-                    SPerl_BYTECODES_push(bytecodes, (max >> (24 - (8 * j))) & 0xFF);
+                  for (int32_t i = 0; i < 4; i++) {
+                    SPerl_BYTECODES_push(bytecodes, (max >> (24 - (8 * i))) & 0xFF);
                   }
                   
                   // Addresses
-                  for (int32_t j = 0; j < (max - min + 1) * 4; j++) {
+                  for (int32_t i = 0; i < (max - min + 1) * 4; i++) {
                     SPerl_BYTECODES_push(bytecodes, 0);
                   }
                 }
@@ -119,22 +119,22 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   
                   int32_t padding = 3 - ((bytecodes->length - 1) % 4);
                   
-                  for (int32_t j = 0; j < padding; j++) {
+                  for (int32_t i = 0; i < padding; i++) {
                     SPerl_BYTECODES_push(bytecodes, 0);
                   }
                   
                   // Default
-                  for (int32_t j = 0; j < 4; j++) {
+                  for (int32_t i = 0; i < 4; i++) {
                     SPerl_BYTECODES_push(bytecodes, 0);
                   }
                   
                   // Case count
-                  for (int32_t j = 0; j < 4; j++) {
-                    SPerl_BYTECODES_push(bytecodes, (length >> (24 - (8 * j))) & 0xFF);
+                  for (int32_t i = 0; i < 4; i++) {
+                    SPerl_BYTECODES_push(bytecodes, (length >> (24 - (8 * i))) & 0xFF);
                   }
                   
                   // Addresses
-                  for (int32_t j = 0; j < length * 4; j++) {
+                  for (int32_t i = 0; i < length * 4; i++) {
                     SPerl_BYTECODES_push(bytecodes, 0);
                   }
                 }
@@ -194,27 +194,27 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   int32_t length = max - min + 1;
                   
                   int32_t case_pos = 0;
-                  for (int32_t j = 0; j < length; j++) {
+                  for (int32_t i = 0; i < length; i++) {
                     SPerl_OP* op_case = SPerl_ARRAY_fetch(cur_op_cases, case_pos);
                     SPerl_OP* op_constant = op_case->first;
-                    if (op_constant->uv.constant->uv.int_value - min == j) {
+                    if (op_constant->uv.constant->uv.int_value - min == i) {
                       // Case
                       int32_t* case_address_ptr = SPerl_ARRAY_fetch(cur_case_addresses, case_pos);
                       int32_t case_offset = *case_address_ptr - cur_switch_address;
                       
-                      bytecodes->values[cur_switch_address + padding + 13 + (4 * j)] = (case_offset >> 24) & 0xFF;
-                      bytecodes->values[cur_switch_address + padding + 14 + (4 * j)] = (case_offset >> 16) & 0xFF;
-                      bytecodes->values[cur_switch_address + padding + 15 + (4 * j)] = (case_offset >> 8) & 0xFF;
-                      bytecodes->values[cur_switch_address + padding + 16 + (4 * j)] = case_offset & 0xFF;
+                      bytecodes->values[cur_switch_address + padding + 13 + (4 * i)] = (case_offset >> 24) & 0xFF;
+                      bytecodes->values[cur_switch_address + padding + 14 + (4 * i)] = (case_offset >> 16) & 0xFF;
+                      bytecodes->values[cur_switch_address + padding + 15 + (4 * i)] = (case_offset >> 8) & 0xFF;
+                      bytecodes->values[cur_switch_address + padding + 16 + (4 * i)] = case_offset & 0xFF;
                       
                       case_pos++;
                     }
                     else {
                       // Default
-                      bytecodes->values[cur_switch_address + padding + 13 + (4 * j)] = (default_offset >> 24) & 0xFF;
-                      bytecodes->values[cur_switch_address + padding + 14 + (4 * j)] = (default_offset >> 16) & 0xFF;
-                      bytecodes->values[cur_switch_address + padding + 15 + (4 * j)] = (default_offset >> 8) & 0xFF;
-                      bytecodes->values[cur_switch_address + padding + 16 + (4 * j)] = default_offset & 0xFF;
+                      bytecodes->values[cur_switch_address + padding + 13 + (4 * i)] = (default_offset >> 24) & 0xFF;
+                      bytecodes->values[cur_switch_address + padding + 14 + (4 * i)] = (default_offset >> 16) & 0xFF;
+                      bytecodes->values[cur_switch_address + padding + 15 + (4 * i)] = (default_offset >> 8) & 0xFF;
+                      bytecodes->values[cur_switch_address + padding + 16 + (4 * i)] = default_offset & 0xFF;
                     }
                   }
                 }
@@ -236,17 +236,17 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   
                   int32_t length = switch_info->op_cases->length;
                   
-                  for (int32_t j = 0; j < length; j++) {
-                    SPerl_OP* op_case = SPerl_ARRAY_fetch(cur_op_cases, j);
+                  for (int32_t i = 0; i < length; i++) {
+                    SPerl_OP* op_case = SPerl_ARRAY_fetch(cur_op_cases, i);
                     SPerl_OP* op_constant = op_case->first;
 
-                    int32_t* case_address_ptr = SPerl_ARRAY_fetch(cur_case_addresses, j);
+                    int32_t* case_address_ptr = SPerl_ARRAY_fetch(cur_case_addresses, i);
                     int32_t case_offset = *case_address_ptr - cur_switch_address;
                     
-                    bytecodes->values[cur_switch_address + padding + 9 + (4 * j)] = (case_offset >> 24) & 0xFF;
-                    bytecodes->values[cur_switch_address + padding + 10 + (4 * j)] = (case_offset >> 16) & 0xFF;
-                    bytecodes->values[cur_switch_address + padding + 11 + (4 * j)] = (case_offset >> 8) & 0xFF;
-                    bytecodes->values[cur_switch_address + padding + 12 + (4 * j)] = case_offset & 0xFF;
+                    bytecodes->values[cur_switch_address + padding + 9 + (4 * i)] = (case_offset >> 24) & 0xFF;
+                    bytecodes->values[cur_switch_address + padding + 10 + (4 * i)] = (case_offset >> 16) & 0xFF;
+                    bytecodes->values[cur_switch_address + padding + 11 + (4 * i)] = (case_offset >> 8) & 0xFF;
+                    bytecodes->values[cur_switch_address + padding + 12 + (4 * i)] = case_offset & 0xFF;
                   }
                 }
                 
