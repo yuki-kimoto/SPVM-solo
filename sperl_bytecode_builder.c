@@ -45,7 +45,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
       
       // Current case addresses
       int32_t cur_switch_address = -1;
-      int32_t cur_switch_padding = 0;
       
       int32_t cur_default_address = -1;
       SPerl_ARRAY* cur_case_addresses;
@@ -97,12 +96,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   int32_t length = switch_info->op_cases->length;
                   int32_t max = switch_info->max;
                   int32_t min = switch_info->min;
-                  int32_t padding = 4 - (bytecodes->length % 4);
-                  if (padding == 4) {
-                    padding = 0;
-                  }
-                  cur_switch_padding = padding;
-
+                  int32_t padding = 3 - ((bytecodes->length - 1) % 4);
+                  
                   for (int32_t j = 0; j < padding; j++) {
                     SPerl_BYTECODES_push(bytecodes, 0);
                   }
@@ -152,12 +147,14 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 SPerl_SWITCH_INFO* switch_info = cur_op_switch_info->uv.switch_info;
                 
                 if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_TABLESWITCH) {
+                  int32_t padding = 3 - (cur_switch_address % 4);
+
                   // Default offset
                   int32_t default_offset = cur_default_address - cur_switch_address;
-                  bytecodes->values[cur_switch_address + cur_switch_padding + 1] = (default_offset >> 24) & 0xFF;
-                  bytecodes->values[cur_switch_address + cur_switch_padding + 2] = (default_offset >> 16) & 0xFF;
-                  bytecodes->values[cur_switch_address + cur_switch_padding + 3] = (default_offset >> 8) & 0xFF;
-                  bytecodes->values[cur_switch_address + cur_switch_padding + 4] = default_offset & 0xFF;
+                  bytecodes->values[cur_switch_address + padding + 1] = (default_offset >> 24) & 0xFF;
+                  bytecodes->values[cur_switch_address + padding + 2] = (default_offset >> 16) & 0xFF;
+                  bytecodes->values[cur_switch_address + padding + 3] = (default_offset >> 8) & 0xFF;
+                  bytecodes->values[cur_switch_address + padding + 4] = default_offset & 0xFF;
                 }
                 else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
                   
