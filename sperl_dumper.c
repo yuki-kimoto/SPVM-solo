@@ -330,6 +330,41 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
         
         break;
       }
+      case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
+        
+        // Padding
+        int32_t padding = 3 - (i % 4);
+        for (int32_t j = 0; j < padding; j++) {
+          i++;
+          bytecode = bytecodes->values[i];
+          printf("        [%d] %d\n", i, bytecode);
+        }
+        
+        // Default
+        for (int32_t j = 0; j < 4; j++) {
+          i++;
+          bytecode = bytecodes->values[i];
+          printf("        [%d] %d\n", i, bytecode);
+        }
+        
+        // Count
+        int32_t length = 0;
+        for (int32_t j = 0; j < 4; j++) {
+          i++;
+          bytecode = bytecodes->values[i];
+          length += bytecode << (24 - (8 * j));
+          printf("        [%d] %d\n", i, bytecode);
+        }
+        
+        // Addresses
+        for (int32_t j = 0; j < length * 4; j++) {
+          i++;
+          bytecode = bytecodes->values[i];
+          printf("        [%d] %d\n", i, bytecode);
+        }
+        
+        break;
+      }
     }
   }
 }

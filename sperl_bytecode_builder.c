@@ -219,7 +219,35 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                 }
                 else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
+                  int32_t padding = 3 - (cur_switch_address % 4);
+
+                  // Default offset
+                  int32_t default_offset;
+                  if (cur_default_address == -1) {
+                    default_offset = bytecodes->length - cur_switch_address;
+                  }
+                  else {
+                    default_offset = cur_default_address - cur_switch_address;
+                  }
+                  bytecodes->values[cur_switch_address + padding + 1] = (default_offset >> 24) & 0xFF;
+                  bytecodes->values[cur_switch_address + padding + 2] = (default_offset >> 16) & 0xFF;
+                  bytecodes->values[cur_switch_address + padding + 3] = (default_offset >> 8) & 0xFF;
+                  bytecodes->values[cur_switch_address + padding + 4] = default_offset & 0xFF;
                   
+                  int32_t length = switch_info->op_cases->length;
+                  
+                  for (int32_t j = 0; j < length; j++) {
+                    SPerl_OP* op_case = SPerl_ARRAY_fetch(cur_op_cases, j);
+                    SPerl_OP* op_constant = op_case->first;
+
+                    int32_t* case_address_ptr = SPerl_ARRAY_fetch(cur_case_addresses, j);
+                    int32_t case_offset = *case_address_ptr - cur_switch_address;
+                    
+                    bytecodes->values[cur_switch_address + padding + 9 + (4 * j)] = (case_offset >> 24) & 0xFF;
+                    bytecodes->values[cur_switch_address + padding + 10 + (4 * j)] = (case_offset >> 16) & 0xFF;
+                    bytecodes->values[cur_switch_address + padding + 11 + (4 * j)] = (case_offset >> 8) & 0xFF;
+                    bytecodes->values[cur_switch_address + padding + 12 + (4 * j)] = case_offset & 0xFF;
+                  }
                 }
                 
                 cur_op_switch_info = NULL;
