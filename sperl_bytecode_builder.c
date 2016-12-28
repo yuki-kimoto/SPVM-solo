@@ -93,7 +93,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   
                   cur_switch_address = bytecodes->length - 1;
                   
-                  int32_t length = switch_info->op_cases->length;
                   int32_t max = switch_info->max;
                   int32_t min = switch_info->min;
                   int32_t padding = 3 - ((bytecodes->length - 1) % 4);
@@ -125,18 +124,29 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LOOKUPSWITCH);
                   
+                  int32_t length = switch_info->op_cases->length;
+                  
                   cur_switch_address = bytecodes->length - 1;
                   
-                  int32_t length = switch_info->op_cases->length;
-                  int32_t max = switch_info->max;
-                  int32_t min = switch_info->min;
-                  int32_t padding = (int)(length / 4);
+                  int32_t padding = 3 - ((bytecodes->length - 1) % 4);
                   
-                  int32_t bytecode_length
-                    = 1 + padding + 4 + 4 + (4 * length);
+                  for (int32_t j = 0; j < padding; j++) {
+                    SPerl_BYTECODES_push(bytecodes, 0);
+                  }
                   
-                  for (int32_t i = 0; i < bytecode_length; i++) {
-                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NOP);
+                  // Default
+                  for (int32_t j = 0; j < 4; j++) {
+                    SPerl_BYTECODES_push(bytecodes, 0);
+                  }
+                  
+                  // Case count
+                  for (int32_t j = 0; j < 4; j++) {
+                    SPerl_BYTECODES_push(bytecodes, (length >> (24 - (8 * j))) & 0xFF);
+                  }
+                  
+                  // Addresses
+                  for (int32_t j = 0; j < length * 4; j++) {
+                    SPerl_BYTECODES_push(bytecodes, 0);
                   }
                 }
                 
