@@ -3,7 +3,17 @@
 all:
 .PHONY: all
 
-# Disable the default rule: sperl_yacc.y -> sperl_yacc.c
+#------------------------------------------------------------------------------
+# Disable the default suffix rule ".y.c: ; $(YACC) $(YFLAGS) $<"
+#
+#   This package contains independent two files sperl_yacc.c and sperl_yacc.y.
+#   While, there is a default suffix rule .y.c to generate %.c from %.y.
+#   Because of this rule, make try to overwrite sperl_yacc.c by the command
+#   $(YACC) $(YFLAGS) sperl_yacc.y. To disable the default rule,
+#
+#   1. clear the suffices (the first line)
+#   2. specify .c and .o as suffix (the second line)
+#
 .SUFFIXES:
 .SUFFIXES: .c .o
 
