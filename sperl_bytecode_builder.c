@@ -165,7 +165,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   int32_t padding = 3 - (cur_switch_address % 4);
 
                   // Default offset
-                  int32_t default_offset = cur_default_address - cur_switch_address;
+                  int32_t default_offset;
+                  if (cur_default_address == -1) {
+                    default_offset = bytecodes->length - cur_switch_address;
+                  }
+                  else {
+                    default_offset = cur_default_address - cur_switch_address;
+                  }
                   bytecodes->values[cur_switch_address + padding + 1] = (default_offset >> 24) & 0xFF;
                   bytecodes->values[cur_switch_address + padding + 2] = (default_offset >> 16) & 0xFF;
                   bytecodes->values[cur_switch_address + padding + 3] = (default_offset >> 8) & 0xFF;
