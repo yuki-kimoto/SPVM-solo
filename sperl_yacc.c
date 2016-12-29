@@ -10,12 +10,12 @@
 #include "sperl_var.h"
 #include "sperl_op.h"
 
-void SPerl_yyerror_format(SPerl_PARSER* parser, uint8_t* message_template, ...) {
+void SPerl_yyerror_format(SPerl_PARSER* parser, const char* message_template, ...) {
   
   int32_t message_length = 0;
   
   // Prefix
-  uint8_t* prefix = "Error:";
+  const char* prefix = "Error:";
   int32_t prefix_length = strlen(prefix);
    
   // Message template
@@ -23,7 +23,7 @@ void SPerl_yyerror_format(SPerl_PARSER* parser, uint8_t* message_template, ...) 
   
   // Messsage template with prefix
   int32_t message_template_with_prefix_length = prefix_length + message_template_length;
-  uint8_t* message_template_with_prefix = SPerl_ALLOCATOR_new_string(parser, message_template_with_prefix_length);
+  char* message_template_with_prefix = SPerl_ALLOCATOR_new_string(parser, message_template_with_prefix_length);
   strncpy(message_template_with_prefix, prefix, prefix_length);
   strncpy(message_template_with_prefix + prefix_length, message_template, message_template_length);
   message_template_with_prefix[message_template_with_prefix_length] = '\0';
@@ -33,12 +33,12 @@ void SPerl_yyerror_format(SPerl_PARSER* parser, uint8_t* message_template, ...) 
   va_start(args, message_template);
   
   // Argument count
-  uint8_t* found_ptr = message_template_with_prefix;
+  char* found_ptr = message_template_with_prefix;
   while (1) {
     found_ptr = strchr(found_ptr, '%');
     if (found_ptr) {
       if (*(found_ptr + 1) == 's') {
-        uint8_t* arg = va_arg(args, uint8_t*);
+        char* arg = va_arg(args, char*);
         message_length += strlen(arg);
       }
       else if (*(found_ptr + 1) == 'd') {
@@ -57,7 +57,7 @@ void SPerl_yyerror_format(SPerl_PARSER* parser, uint8_t* message_template, ...) 
   }
   va_end(args);
   
-  uint8_t* message = SPerl_ALLOCATOR_new_string(parser, message_length);
+  char* message = SPerl_ALLOCATOR_new_string(parser, message_length);
   
   va_start(args, message_template);
   vsprintf(message, message_template_with_prefix, args);
@@ -67,7 +67,7 @@ void SPerl_yyerror_format(SPerl_PARSER* parser, uint8_t* message_template, ...) 
 }
 
 // Print error
-void SPerl_yyerror(SPerl_PARSER* parser, const uint8_t* message)
+void SPerl_yyerror(SPerl_PARSER* parser, const char* message)
 {
   parser->error_count++;
   
@@ -79,7 +79,7 @@ void SPerl_yyerror(SPerl_PARSER* parser, const uint8_t* message)
     // Current token
     int32_t length = 0;
     int32_t empty_count = 0;
-    uint8_t* ptr = parser->befbufptr;
+    const char* ptr = parser->befbufptr;
     while (ptr != parser->bufptr) {
       if (*ptr == ' ' || *ptr == '\t' || *ptr == '\n') {
         empty_count++;
@@ -89,10 +89,10 @@ void SPerl_yyerror(SPerl_PARSER* parser, const uint8_t* message)
       }
       ptr++;
     }
-    uint8_t* token = calloc(length + 1, sizeof(uint8_t));
+    char* token = (char*) calloc(length + 1, sizeof(char));
     memcpy(token, parser->befbufptr + empty_count, length);
     token[length] = '\0';
-    
+
     fprintf(stderr, "Error: unexpected token \"%s\" at %s line %d\n", token, parser->cur_module_path, parser->cur_line);
   }
 }
@@ -118,7 +118,7 @@ void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
           fprintf(file, "boolean %d", constant->uv.int_value);
           break;
         case SPerl_CONSTANT_C_CODE_BYTE:
-          fprintf(file, "char '%c'", (uint8_t)constant->uv.int_value);
+          fprintf(file, "char '%c'", (char) constant->uv.int_value);
           break;
         case SPerl_CONSTANT_C_CODE_INT:
           fprintf(file, "int %d", constant->uv.int_value);
