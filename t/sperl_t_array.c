@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
     OK(array->length == 2);
     
     // push pointer value
-    uint8_t* value3 = "foo";
-    SPerl_ARRAY_push(array, value3);
+    const char* value3 = "foo";
+    SPerl_ARRAY_push(array, (void*) value3);
     OK(array->values[2] == value3);
   }
 
