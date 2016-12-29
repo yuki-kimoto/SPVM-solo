@@ -13,7 +13,7 @@ SPerl_VM* SPerl_VM_new(SPerl_PARSER* parser) {
 }
 
 void SPerl_VM_run(SPerl_PARSER* parser) {
-  uint8_t* entry_point = parser->entry_point;
+  const char* entry_point = parser->entry_point;
   
   SPerl_SUB* sub_entry_point = SPerl_HASH_search(parser->sub_abs_name_symtable, entry_point, strlen(entry_point));
   
