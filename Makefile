@@ -18,7 +18,7 @@ all:
 .SUFFIXES: .c .o
 
 CC     	 := gcc
-CFLAGS 	 := -std=c99 -g -O
+CFLAGS 	 := -std=c99 -g -O -Wall -Wextra
 LIBS   	 := -lm
 DIRS     :=
 CPPFLAGS  = -MD -MF $(@:%.o=%.Po)
