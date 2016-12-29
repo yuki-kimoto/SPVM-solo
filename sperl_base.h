@@ -9,6 +9,10 @@ enum {
 };
 
 /* sperl_vm.h */
+struct SPerl_vm_stack;
+typedef struct SPerl_vm_stack SPerl_VM_STACK;
+
+/* sperl_vm.h */
 struct SPerl_vm;
 typedef struct SPerl_vm SPerl_VM;
 
