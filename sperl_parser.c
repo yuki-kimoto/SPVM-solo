@@ -138,11 +138,11 @@ int32_t SPerl_PARSER_parse(SPerl_PARSER* parser, uint8_t* package_name) {
   strncpy(entry_point + strlen(package_name), "::main", 6);
   parser->entry_point = entry_point;
   
-  warn("AAAAAAAAAA %s", entry_point);
-  
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;
   int32_t parse_success = SPerl_yyparse(parser);
+  
+  SPerl_VM_run(parser);
   
   return parse_success;
 }

@@ -84,7 +84,7 @@ struct SPerl_yy_parser_{
   SPerl_ARRAY* cur_op_cases;
   
   // Entry point subroutine
-  uint8_t entry_point;
+  uint8_t* entry_point;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
