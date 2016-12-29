@@ -114,10 +114,6 @@ SPerl_PARSER* SPerl_PARSER_new() {
   return parser;
 }
 
-void* SPerl_ALLOCATOR_alloc_memory_pool(SPerl_PARSER* parser, int32_t size) {
-  return SPerl_MEMORY_POOL_alloc(parser->memory_pool, size);
-}
-
 void SPerl_PARSER_free(SPerl_PARSER* parser) {
 
   // Free all array pointers

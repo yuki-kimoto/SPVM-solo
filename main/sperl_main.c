@@ -39,8 +39,6 @@ int main(int argc, char *argv[])
   SPerl_yydebug = 0;
   int32_t parse_success = SPerl_yyparse(parser);
   
-  SPerl_VM_run(parser);
-  
   SPerl_PARSER_free(parser);
   
   return parse_success;

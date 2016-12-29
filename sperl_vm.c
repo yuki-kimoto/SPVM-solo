@@ -7,5 +7,5 @@ SPerl_VM* SPerl_VM_new(SPerl_PARSER* parser) {
 }
 
 void SPerl_VM_run(SPerl_PARSER* parser) {
-  
+
 }

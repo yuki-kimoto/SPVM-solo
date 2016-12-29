@@ -6,6 +6,10 @@
 #include "sperl_memory_pool.h"
 #include "sperl_allocator.h"
 
+void* SPerl_ALLOCATOR_alloc_memory_pool(SPerl_PARSER* parser, int32_t size) {
+  return SPerl_MEMORY_POOL_alloc(parser->memory_pool, size);
+}
+
 SPerl_ARRAY* SPerl_ALLOCATOR_new_array(SPerl_PARSER* parser, int32_t capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(capacity);
   
