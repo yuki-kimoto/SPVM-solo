@@ -11,16 +11,18 @@ int main(int argc, char *argv[])
     exit(1);
   }
   
-  // Source file
+  // Package name
   uint8_t* package_name = argv[1];
   
-  // initialize parser
+  // Parse
   SPerl_PARSER* parser = SPerl_PARSER_new();
   SPerl_ARRAY_push(parser->include_pathes, ".");
-  
-  // Parse
   int32_t parse_success = SPerl_PARSER_parse(parser, package_name);
   
+  // Run
+  SPerl_VM_run(parser);
+  
+  // Free parser
   SPerl_PARSER_free(parser);
   
   return parse_success;
