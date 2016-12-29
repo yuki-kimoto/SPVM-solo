@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
   }
   
   // Package name
-  uint8_t* package_name = argv[1];
+  const char* package_name = argv[1];
   
   // Parse
   SPerl_PARSER* parser = SPerl_PARSER_new();
