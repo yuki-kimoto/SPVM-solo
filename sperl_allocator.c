@@ -33,7 +33,7 @@ int32_t* SPerl_ALLOCATOR_new_int(SPerl_PARSER* parser) {
 }
 
 uint8_t* SPerl_ALLOCATOR_new_string(SPerl_PARSER* parser, int32_t length) {
-  uint8_t* str = malloc(length + 1);
+  uint8_t* str;
   
   if (length < 40) {
     str = SPerl_MEMORY_POOL_alloc(parser->memory_pool, 40);
