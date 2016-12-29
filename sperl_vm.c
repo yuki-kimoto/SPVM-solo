@@ -30,10 +30,10 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
     switch (*cur_bytecode_value_ptr) {
       
       case SPerl_BYTECODE_C_CODE_NOP:
-      
+        // None
         break;
       case SPerl_BYTECODE_C_CODE_ACONST_NULL:
-      
+        
         break;
       case SPerl_BYTECODE_C_CODE_ICONST_M1:
         op_stack_pos++;
@@ -64,31 +64,46 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
         op_stack[op_stack_pos] = 5;
         break;
       case SPerl_BYTECODE_C_CODE_LCONST_0:
-      
+        op_stack_pos++;
+        *((int64_t*)&op_stack[op_stack_pos]) = 0L;
+        op_stack_pos++;
         break;
       case SPerl_BYTECODE_C_CODE_LCONST_1:
-      
+        op_stack_pos++;
+        *((int64_t*)&op_stack[op_stack_pos]) = 1L;
+        op_stack_pos++;
         break;
       case SPerl_BYTECODE_C_CODE_FCONST_0:
-      
+        op_stack_pos++;
+        *((float*)&op_stack[op_stack_pos]) = 0.F;
         break;
       case SPerl_BYTECODE_C_CODE_FCONST_1:
-      
+        op_stack_pos++;
+        *((float*)&op_stack[op_stack_pos]) = 1.F;
         break;
       case SPerl_BYTECODE_C_CODE_FCONST_2:
-      
+        op_stack_pos++;
+        *((float*)&op_stack[op_stack_pos]) = 2.F;
         break;
       case SPerl_BYTECODE_C_CODE_DCONST_0:
-      
+        op_stack_pos++;
+        *((double*)&op_stack[op_stack_pos]) = 0.;
+        op_stack_pos++;
         break;
       case SPerl_BYTECODE_C_CODE_DCONST_1:
-      
+        op_stack_pos++;
+        *((double*)&op_stack[op_stack_pos]) = 1.;
+        op_stack_pos++;
         break;
       case SPerl_BYTECODE_C_CODE_BIPUSH:
-      
+        op_stack_pos++;
+
+        cur_bytecode_value_ptr++;
+        op_stack[op_stack_pos] = *cur_bytecode_value_ptr;
+        
         break;
       case SPerl_BYTECODE_C_CODE_SIPUSH:
-      
+        
         break;
       case SPerl_BYTECODE_C_CODE_LDC:
       
