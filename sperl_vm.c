@@ -23,6 +23,7 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
   uint8_t* end_bytecode_value_ptr = &bytecodes->values[bytecodes->length - 1];
   
   int32_t op_stack[255];
+  int32_t* op_stack_ptr = op_stack;
   
   while (1) {
     
@@ -36,25 +37,32 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
       
         break;
       case SPerl_BYTECODE_C_CODE_ICONST_M1:
-      
+        *op_stack_ptr = -1;
+        op_stack_ptr++;
         break;
       case SPerl_BYTECODE_C_CODE_ICONST_0:
-      
+        *op_stack_ptr = 0;
+        op_stack_ptr++;
         break;
       case SPerl_BYTECODE_C_CODE_ICONST_1:
-      
+        *op_stack_ptr = 1;
+        op_stack_ptr++;
         break;
       case SPerl_BYTECODE_C_CODE_ICONST_2:
-
+        *op_stack_ptr = 2;
+        op_stack_ptr++;
         break;
       case SPerl_BYTECODE_C_CODE_ICONST_3:
-      
+        *op_stack_ptr = 3;
+        op_stack_ptr++;
         break;
       case SPerl_BYTECODE_C_CODE_ICONST_4:
-      
+        *op_stack_ptr = 4;
+        op_stack_ptr++;
         break;
       case SPerl_BYTECODE_C_CODE_ICONST_5:
-      
+        *op_stack_ptr = 5;
+        op_stack_ptr++;
         break;
       case SPerl_BYTECODE_C_CODE_LCONST_0:
       
@@ -291,10 +299,12 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
       
         break;
       case SPerl_BYTECODE_C_CODE_POP:
-      
+        op_stack_ptr--;
+        
         break;
       case SPerl_BYTECODE_C_CODE_POP2:
-      
+        op_stack_ptr -= 2;
+        
         break;
       case SPerl_BYTECODE_C_CODE_DUP:
       
@@ -318,7 +328,9 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
       
         break;
       case SPerl_BYTECODE_C_CODE_IADD:
-      
+        *(op_stack_ptr - 2) += *(op_stack_ptr - 1);
+        op_stack_ptr--;
+        
         break;
       case SPerl_BYTECODE_C_CODE_LADD:
       
