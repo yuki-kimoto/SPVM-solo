@@ -18,16 +18,17 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
   SPerl_SUB* sub_entry_point = SPerl_HASH_search(parser->sub_abs_name_symtable, entry_point, strlen(entry_point));
   
   SPerl_BYTECODES* bytecodes = sub_entry_point->bytecodes;
+  uint8_t* bytecodes_values = bytecodes->values;
   
-  uint8_t* cur_bytecode_value_ptr = &bytecodes->values[0];
-  uint8_t* end_bytecode_value_ptr = &bytecodes->values[bytecodes->length - 1];
+  // Program counter
+  int32_t pc = 0;
   
   int32_t op_stack[255];
   int32_t op_stack_pos = -1;
   
-  while (1) {
+  while (pc != bytecodes->length) {
     
-    switch (*cur_bytecode_value_ptr) {
+    switch (bytecodes_values[pc]) {
       
       case SPerl_BYTECODE_C_CODE_NOP:
         // None
@@ -96,11 +97,6 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
         op_stack_pos++;
         break;
       case SPerl_BYTECODE_C_CODE_BIPUSH:
-        op_stack_pos++;
-
-        cur_bytecode_value_ptr++;
-        op_stack[op_stack_pos] = *cur_bytecode_value_ptr;
-        
         break;
       case SPerl_BYTECODE_C_CODE_SIPUSH:
         
@@ -675,9 +671,6 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
         break;
     }
     
-    if (cur_bytecode_value_ptr == end_bytecode_value_ptr) {
-      break;
-    }
-    cur_bytecode_value_ptr++;
+    pc++;
   }
 }
