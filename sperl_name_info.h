@@ -7,7 +7,7 @@ struct SPerl_name_info {
   SPerl_OP* op_var;
   SPerl_OP* op_name;
   _Bool anon;
-  uint8_t* abs_name;
+  const char* abs_name;
 };
 
 SPerl_NAME_INFO* SPerl_NAME_INFO_new(SPerl_PARSER* parser);
