@@ -11,7 +11,7 @@ enum {
   SPerl_TYPE_C_CODE_SUB,
 };
 
-extern uint8_t* const SPerl_TYPE_C_CODE_NAMES[];
+extern const char* const SPerl_TYPE_C_CODE_NAMES[];
 
 struct SPerl_type {
   int32_t code;

@@ -17,15 +17,15 @@ enum {
   SPerl_RESOLVED_TYPE_C_ID_DOUBLE,
 };
 
-extern uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[];
+extern const char* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[];
 extern int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[];
 
-extern uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[];
+extern const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[];
 
 struct SPerl_resolved_type {
   int32_t code;
   SPerl_ARRAY* part_names;
-  uint8_t* name;
+  const char* name;
   int32_t name_length;
   int32_t id;
 };

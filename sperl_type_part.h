@@ -9,13 +9,13 @@ enum {
   SPerl_TYPE_PART_C_CODE_BYTE
 };
 
-extern uint8_t* const SPerl_TYPE_PART_C_CODE_NAMES[];
+extern const char* const SPerl_TYPE_PART_C_CODE_NAMES[];
 
 struct SPerl_type_part {
   int32_t code;
   union {
     SPerl_OP* op_name;
-    uint8_t* char_name;
+    const char* char_name;
   } uv;
 };
 

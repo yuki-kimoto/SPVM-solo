@@ -15,7 +15,7 @@
 #include "sperl_yacc.h"
 #include "sperl_package.h"
 
-uint8_t* const SPerl_TYPE_C_CODE_NAMES[] = {
+const char* const SPerl_TYPE_C_CODE_NAMES[] = {
   "name",
   "array",
   "sub",
@@ -43,14 +43,14 @@ _Bool SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_OP* op_type, int32_t n
       }
       else if (part->code == SPerl_TYPE_PART_C_CODE_BYTE) {
         name_length++;
-        SPerl_ARRAY_push(resolved_type_part_names, part->uv.char_name);
+        SPerl_ARRAY_push(resolved_type_part_names, (void*) part->uv.char_name);
       }
       else {
-        uint8_t* part_name = part->uv.op_name->uv.name;
+        const char* part_name = part->uv.op_name->uv.name;
         
         SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
         if (found_package) {
-          SPerl_ARRAY_push(resolved_type_part_names, part_name);
+          SPerl_ARRAY_push(resolved_type_part_names, (void*) part_name);
         }
         else {
           SPerl_yyerror_format(parser, "unknown package \"%s\" at %s line %d\n", part_name, op_type->file, op_type->line);
@@ -58,10 +58,10 @@ _Bool SPerl_TYPE_resolve_type(SPerl_PARSER* parser, SPerl_OP* op_type, int32_t n
         }
       }
     }
-    uint8_t* resolved_type_name = SPerl_ALLOCATOR_new_string(parser, name_length);
+    char* resolved_type_name = SPerl_ALLOCATOR_new_string(parser, name_length);
     int32_t cur_pos = 0;
     for (int32_t i = 0; i < resolved_type_part_names->length; i++) {
-      uint8_t* resolved_type_part_name = SPerl_ARRAY_fetch(resolved_type_part_names, i);
+      const char* resolved_type_part_name = (const char*) SPerl_ARRAY_fetch(resolved_type_part_names, i);
       int32_t resolved_type_part_name_length = strlen(resolved_type_part_name);
       memcpy(resolved_type_name + cur_pos, resolved_type_part_name, resolved_type_part_name_length);
       cur_pos += resolved_type_part_name_length;
