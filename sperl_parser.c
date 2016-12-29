@@ -132,6 +132,14 @@ int32_t SPerl_PARSER_parse(SPerl_PARSER* parser, uint8_t* package_name) {
   /* Push package use information stack */
   SPerl_ARRAY_push(parser->op_use_stack, op_use);
   
+  // Entry point
+  uint8_t* entry_point = SPerl_ALLOCATOR_new_string(parser, strlen(package_name) + 6);
+  strncpy(entry_point, package_name, strlen(package_name));
+  strncpy(entry_point + strlen(package_name), "::main", 6);
+  parser->entry_point = entry_point;
+  
+  warn("AAAAAAAAAA %s", entry_point);
+  
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;
   int32_t parse_success = SPerl_yyparse(parser);

@@ -77,9 +77,14 @@ struct SPerl_yy_parser_{
   // Resolved type string symbol table
   SPerl_HASH* resolved_type_symtable;
   
+  // Error is fatal
   _Bool fatal_error;
   
+  // Current case statements in switch statement
   SPerl_ARRAY* cur_op_cases;
+  
+  // Entry point subroutine
+  uint8_t entry_point;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
