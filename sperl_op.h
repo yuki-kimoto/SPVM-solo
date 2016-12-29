@@ -125,7 +125,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_SWITCH_CONDITION,
 };
 
-extern uint8_t* const SPerl_OP_C_CODE_NAMES[];
+extern const char* const SPerl_OP_C_CODE_NAMES[];
 
 enum {
   // Block flag
@@ -152,13 +152,13 @@ struct SPerl_op {
   SPerl_OP* first;
   SPerl_OP* last;
   SPerl_OP* sibparent;
-  uint8_t* file;
+  const char* file;
   int32_t line;
   _Bool moresib;
   _Bool lvalue;
   _Bool condition;
   union {
-    uint8_t* name;
+    const char* name;
     SPerl_RESOLVED_TYPE* resolved_type;
     SPerl_MY_VAR* my_var;
     SPerl_SUB* sub;
@@ -221,11 +221,11 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl_PARSER* parser, SPerl_OP* op_packages);
 SPerl_OP* SPerl_OP_build_decl_use(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_package_name);
 SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_subname, SPerl_OP* op_terms, _Bool anon);
 void SPerl_OP_build_const_pool(SPerl_PARSER* parser);
-SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser, uint8_t* file, uint32_t line);
+SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser, const char* file, uint32_t line);
 SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term);
 void SPerl_OP_resolve_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert_type);
 
-uint8_t* SPerl_OP_create_abs_name(SPerl_PARSER* parser, uint8_t* package_name, uint8_t* base_name);
+const char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, const char* package_name, const char* base_name);
 
 SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP *insert);
 
@@ -236,8 +236,8 @@ void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib, SPe
 
 SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPerl_OP* op_enum_block);
 
-SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, int32_t code, uint8_t* file, uint32_t line);
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, int32_t code, const char* file, uint32_t line);
 
-SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last, uint8_t* file, uint32_t line);
+SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last, const char* file, uint32_t line);
 
 #endif
