@@ -8,6 +8,10 @@ enum {
   SPerl_BASE_C_INT_MAX = 2147483647,
 };
 
+/* sperl_vm.h */
+struct SPerl_vm;
+typedef struct SPerl_vm SPerl_VM;
+
 /* sperl_switch.h */
 struct SPerl_switch_info;
 typedef struct SPerl_switch_info SPerl_SWITCH_INFO;
