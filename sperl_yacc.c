@@ -94,6 +94,7 @@ void SPerl_yyerror(SPerl_PARSER* parser, const char* message)
     token[length] = '\0';
 
     fprintf(stderr, "Error: unexpected token \"%s\" at %s line %d\n", token, parser->cur_module_path, parser->cur_line);
+    free(token);
   }
 }
 
