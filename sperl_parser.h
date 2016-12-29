@@ -85,5 +85,6 @@ struct SPerl_yy_parser_{
 SPerl_PARSER* SPerl_PARSER_new();
 
 void SPerl_PARSER_free(SPerl_PARSER* parser);
+int32_t SPerl_PARSER_parse(SPerl_PARSER* parser, uint8_t* package_name);
 
 #endif
