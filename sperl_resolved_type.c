@@ -4,7 +4,7 @@
 #include "sperl_allocator.h"
 #include "sperl_package.h"
 
-uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
+const char* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
   "boolean",
   "byte",
   "short",
@@ -14,7 +14,7 @@ uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
   "double"
 };
 
-uint8_t* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[] = {
+const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[] = {
   "boolean[]",
   "byte[]",
   "short[]",
@@ -46,8 +46,8 @@ _Bool SPerl_RESOLVED_TYPE_is_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* re
   int32_t length = strlen(resolved_type->name);
   
   if (strlen(resolved_type->name) >= 2) {
-    uint8_t char1 = resolved_type->name[length - 2];
-    uint8_t char2 = resolved_type->name[length - 1];
+    char char1 = resolved_type->name[length - 2];
+    char char2 = resolved_type->name[length - 1];
     
     if (char1 == '[' && char2 == ']') {
       return 1;
@@ -65,10 +65,10 @@ _Bool SPerl_RESOLVED_TYPE_is_multi_array(SPerl_PARSER* parser, SPerl_RESOLVED_TY
   int32_t length = strlen(resolved_type->name);
   
   if (strlen(resolved_type->name) >= 4) {
-    uint8_t char1 = resolved_type->name[length - 4];
-    uint8_t char2 = resolved_type->name[length - 3];
-    uint8_t char3 = resolved_type->name[length - 2];
-    uint8_t char4 = resolved_type->name[length - 1];
+    char char1 = resolved_type->name[length - 4];
+    char char2 = resolved_type->name[length - 3];
+    char char3 = resolved_type->name[length - 2];
+    char char4 = resolved_type->name[length - 1];
     
     if (char1 == '[' && char2 == ']' && char3 == '[' && char4 == ']' ) {
       return 1;
@@ -83,9 +83,9 @@ _Bool SPerl_RESOLVED_TYPE_is_multi_array(SPerl_PARSER* parser, SPerl_RESOLVED_TY
 }
 
 _Bool SPerl_RESOLVED_TYPE_contain_sub(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
-  uint8_t* name = resolved_type->name;
+  const char* name = resolved_type->name;
   
-  uint8_t* found = strchr(name, '(');
+  const char* found = strchr(name, '(');
   if (found) {
     return 1;
   }
@@ -104,9 +104,9 @@ _Bool SPerl_RESOLVED_TYPE_is_integral(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE*
 }
 
 _Bool SPerl_RESOLVED_TYPE_is_core_type_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
-  uint8_t* name = resolved_type->name;
+  const char* name = resolved_type->name;
   
-  uint8_t* found = strchr(name, '(');
+  const char* found = strchr(name, '('); // akinomyoga: no one use this
   if (strcmp(name, "boolean[]") == 0 || strcmp(name, "char[]") == 0 || strcmp(name, "byte[]") == 0 || strcmp(name, "short[]") == 0
     || strcmp(name, "int[]") == 0 || strcmp(name, "long[]") == 0 || strcmp(name, "float[]") == 0 || strcmp(name, "double[]") == 0)
   {

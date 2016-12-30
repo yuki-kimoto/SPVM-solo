@@ -32,7 +32,7 @@
 #include "sperl_op_checker.h"
 #include "sperl_switch_info.h"
 
-uint8_t* const SPerl_OP_C_CODE_NAMES[] = {
+const char* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
   "ELSIF",
   "ELSE",
@@ -349,14 +349,14 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
     }
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
-      uint8_t* abs_name = name_info->abs_name;
+      const char* abs_name = name_info->abs_name;
       SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = sub->op_return_type->uv.type->resolved_type;
       break;
     }
     case SPerl_OP_C_CODE_FIELD: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
-      uint8_t* abs_name = name_info->abs_name;
+      const char* abs_name = name_info->abs_name;
       SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
@@ -541,11 +541,11 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
 void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   SPerl_NAME_INFO* name_info = op_name->uv.name_info;
   
-  uint8_t* sub_abs_name;
+  const char* sub_abs_name;
   SPerl_OP* op;
   if (name_info->op_var) {
-    uint8_t* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
-    uint8_t* base_name = name_info->op_name->uv.name;
+    const char* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
+    const char* base_name = name_info->op_name->uv.name;
     sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   }
   else if (name_info->op_name) {
@@ -568,10 +568,10 @@ void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
 void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_OP* op_name_info) {
   SPerl_NAME_INFO* name_info = op_name_info->uv.name_info;
   
-  uint8_t* field_abs_name;
+  const char* field_abs_name;
   SPerl_OP* op;
-  uint8_t* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
-  uint8_t* base_name = name_info->op_name->uv.name;
+  const char* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
+  const char* base_name = name_info->op_name->uv.name;
   field_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
   
   name_info->abs_name = field_abs_name;
@@ -690,10 +690,10 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
   }
 }
 
-uint8_t* SPerl_OP_create_abs_name(SPerl_PARSER* parser, uint8_t* package_name, uint8_t* base_name) {
+const char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, const char* package_name, const char* base_name) {
   int32_t length = strlen(package_name) + 2 + strlen(base_name);
   
-  uint8_t* abs_name = SPerl_ALLOCATOR_new_string(parser, length);
+  char* abs_name = SPerl_ALLOCATOR_new_string(parser, length);
   
   sprintf(abs_name, "%s::%s", package_name, base_name);
   
@@ -706,7 +706,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_package_name);
   SPerl_OP_sibling_splice(parser, op_package, op_package_name, 0, op_block);
   
-  uint8_t* package_name = op_package_name->uv.name;
+  const char* package_name = op_package_name->uv.name;
   SPerl_HASH* package_symtable = parser->package_symtable;
   
   // Redeclaration package error
@@ -744,7 +744,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
         SPerl_OP* op_field = op_decl;
         SPerl_FIELD* field = op_field->uv.field;
-        uint8_t* field_name = field->op_name->uv.name;
+        const char* field_name = field->op_name->uv.name;
         SPerl_FIELD* found_field
           = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
         if (found_field) {
@@ -757,7 +757,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
           SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
           
           // Field absolute name
-          uint8_t* field_abs_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
+          const char* field_abs_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
           SPerl_HASH_insert(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name), field);
 
           SPerl_SUB* field_ = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
@@ -781,8 +781,8 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
       
       if (!sub->anon) {
         SPerl_OP* op_sub_name = sub->op_name;
-        uint8_t* sub_name = op_sub_name->uv.name;
-        uint8_t* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
+        const char* sub_name = op_sub_name->uv.name;
+        const char* sub_abs_name = SPerl_OP_create_abs_name(parser, package_name, sub_name);
         
         SPerl_SUB* found_sub = NULL;
         found_sub = SPerl_HASH_search(sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
@@ -821,7 +821,7 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_
   use->op_package_name = op_package_name;
   op_use->uv.use = use;
 
-  uint8_t* package_name = op_package_name->uv.name;
+  const char* package_name = op_package_name->uv.name;
   
   SPerl_USE* found_use = SPerl_HASH_search(parser->use_package_symtable, package_name, strlen(package_name));
   
@@ -1008,7 +1008,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
   SPerl_NAME_INFO* name_info = SPerl_NAME_INFO_new(parser);
   
   if (!anon) {
-    uint8_t* sub_name = op_sub_name->uv.name;
+    const char* sub_name = op_sub_name->uv.name;
     SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->line);
     
     if (strstr(sub_name, ":")) {
@@ -1021,7 +1021,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, S
         name_info->op_name = op_sub_name;
       }
       else {
-        uint8_t* sub_abs_name = SPerl_OP_create_abs_name(parser, "CORE", sub_name);
+        const char* sub_abs_name = SPerl_OP_create_abs_name(parser, "CORE", sub_name);
         op_name->uv.name = sub_abs_name;
         name_info->op_name = op_name;
       }
@@ -1120,7 +1120,7 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   SPerl_TYPE* type = SPerl_TYPE_new(parser);
   type->code = SPerl_TYPE_C_CODE_SUB;
   
-  uint8_t* file = NULL;
+  const char* file = NULL;
   int32_t line = -1;
   
   // sub type
@@ -1158,7 +1158,7 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   return op_type_sub;
 }
 
-SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last, uint8_t* file, uint32_t line) {
+SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last, const char* file, uint32_t line) {
   if (!first) {
     return last;
   }
@@ -1180,7 +1180,7 @@ SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *
   }
 }
 
-SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser, uint8_t* file, uint32_t line) {
+SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser, const char* file, uint32_t line) {
   
   SPerl_OP* op_pushmark = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PUSHMARK, file, line);
   
@@ -1191,7 +1191,7 @@ SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser, uint8_t* file, uint32_t line
 }
 
 
-SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, int32_t code, uint8_t* file, uint32_t line) {
+SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, int32_t code, const char* file, uint32_t line) {
 
   SPerl_OP *op = SPerl_MEMORY_POOL_alloc(parser->memory_pool, sizeof(SPerl_OP));
   

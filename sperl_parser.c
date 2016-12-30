@@ -42,7 +42,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   // Core types
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name
-    uint8_t* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
+    const char* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     
     // Name
     SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NAME, "CORE", 1);
@@ -51,7 +51,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
-    SPerl_ARRAY_push(resolved_type->part_names, name);
+    SPerl_ARRAY_push(resolved_type->part_names, (void*) name);
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
@@ -94,8 +94,8 @@ SPerl_PARSER* SPerl_PARSER_new() {
   // Core array types
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name
-    uint8_t* name = SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[i];
-    uint8_t* core_name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
+    const char* name = SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[i];
+    const char* core_name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     
     // Name
     SPerl_OP* op_name = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NAME, "CORE", 1);
@@ -103,9 +103,9 @@ SPerl_PARSER* SPerl_PARSER_new() {
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(parser);
-    SPerl_ARRAY_push(resolved_type->part_names, core_name);
-    SPerl_ARRAY_push(resolved_type->part_names, "[");
-    SPerl_ARRAY_push(resolved_type->part_names, "]");
+    SPerl_ARRAY_push(resolved_type->part_names, (void*) core_name);
+    SPerl_ARRAY_push(resolved_type->part_names, (void*) "[");
+    SPerl_ARRAY_push(resolved_type->part_names, (void*) "]");
     
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
@@ -117,7 +117,7 @@ SPerl_PARSER* SPerl_PARSER_new() {
   return parser;
 }
 
-int32_t SPerl_PARSER_parse(SPerl_PARSER* parser, uint8_t* package_name) {
+int32_t SPerl_PARSER_parse(SPerl_PARSER* parser, const char* package_name) {
 
   /* Build use information */
   SPerl_USE* use = SPerl_USE_new(parser);
@@ -133,7 +133,7 @@ int32_t SPerl_PARSER_parse(SPerl_PARSER* parser, uint8_t* package_name) {
   SPerl_ARRAY_push(parser->op_use_stack, op_use);
   
   // Entry point
-  uint8_t* entry_point = SPerl_ALLOCATOR_new_string(parser, strlen(package_name) + 6);
+  char* entry_point = SPerl_ALLOCATOR_new_string(parser, strlen(package_name) + 6);
   strncpy(entry_point, package_name, strlen(package_name));
   strncpy(entry_point + strlen(package_name), "::main", 6);
   parser->entry_point = entry_point;
@@ -163,7 +163,7 @@ void SPerl_PARSER_free(SPerl_PARSER* parser) {
   
   // Free all string pointers;
   for (int32_t i = 0; i < parser->long_str_ptrs->length; i++) {
-    uint8_t* str = SPerl_ARRAY_fetch(parser->long_str_ptrs, i);
+    void* str = SPerl_ARRAY_fetch(parser->long_str_ptrs, i);
     free(str);
   }
   SPerl_ARRAY_free(parser->long_str_ptrs);

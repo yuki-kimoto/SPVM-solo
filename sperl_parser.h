@@ -8,19 +8,19 @@
 // Parser information
 struct SPerl_yy_parser_{
   // Before buffer position
-  uint8_t* befbufptr;
+  const char* befbufptr;
   
   // Current buffer position
-  uint8_t* bufptr;
+  const char* bufptr;
   
   // Expect next token type
   int32_t expect;
 
   // Current file name
-  uint8_t* cur_module_path;
+  const char* cur_module_path;
   
   // Source data
-  uint8_t* cur_src;
+  const char* cur_src;
   
   // Current line number
   int32_t cur_line;
@@ -84,12 +84,12 @@ struct SPerl_yy_parser_{
   SPerl_ARRAY* cur_op_cases;
   
   // Entry point subroutine
-  uint8_t* entry_point;
+  const char* entry_point;
 };
 
 SPerl_PARSER* SPerl_PARSER_new();
 
 void SPerl_PARSER_free(SPerl_PARSER* parser);
-int32_t SPerl_PARSER_parse(SPerl_PARSER* parser, uint8_t* package_name);
+int32_t SPerl_PARSER_parse(SPerl_PARSER* parser, const char* package_name);
 
 #endif

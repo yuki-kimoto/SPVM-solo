@@ -13,7 +13,7 @@ enum {
   SPerl_CONSTANT_C_CODE_STRING,
 };
 
-extern uint8_t* const SPerl_CONSTANT_C_CODE_NAMES[];
+extern const char* const SPerl_CONSTANT_C_CODE_NAMES[];
 
 struct SPerl_constant {
   int32_t code;
@@ -22,7 +22,7 @@ struct SPerl_constant {
     int32_t long_value;
     float float_value;
     double double_value;
-    uint8_t* string_value;
+    const char* string_value;
   } uv;
   SPerl_RESOLVED_TYPE* resolved_type;
   int32_t pool_pos;

@@ -35,7 +35,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
   
   while(1) {
     // Get current character
-    uint8_t c = *parser->bufptr;
+    char c = *parser->bufptr;
     
     // line end
     switch(c) {
@@ -50,7 +50,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
           if (op_use) {
             SPerl_USE* use = op_use->uv.use;
-            uint8_t* package_name = use->op_package_name->uv.name;
+            const char* package_name = use->op_package_name->uv.name;
             
             SPerl_PACKAGE* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
             if (found_package) {
@@ -59,9 +59,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
             else {
               
               // Change :: to / and add ".spvm"
-              uint8_t* module_path_base = SPerl_ALLOCATOR_new_string(parser, strlen(package_name)  + 6);
-              uint8_t* bufptr_orig = package_name;
-              uint8_t* bufptr_to = module_path_base;
+              char* module_path_base = SPerl_ALLOCATOR_new_string(parser, strlen(package_name)  + 6);
+              const char* bufptr_orig = package_name;
+              char* bufptr_to = module_path_base;
               while (*bufptr_orig) {
                 if (*bufptr_orig == ':' && *(bufptr_orig + 1) == ':') {
                   *bufptr_to = '/';
@@ -79,16 +79,16 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               *bufptr_to = '\0';
               
               // module is template
-              uint8_t* underline_ptr;
+              char* underline_ptr;
               if (underline_ptr = strchr(module_path_base, '_')) {
                 *(underline_ptr - 2) = '\0';
               }
               
               // Search module file
-              uint8_t* cur_module_path;
+              char* cur_module_path;
               FILE* fh;
               for (int32_t i = 0; i < parser->include_pathes->length; i++) {
-                uint8_t* include_path = SPerl_ARRAY_fetch(parser->include_pathes, i);
+                const char* include_path = (const char*) SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
                 // File name
                 cur_module_path = SPerl_ALLOCATOR_new_string(parser, strlen(include_path) + 1 + strlen(module_path_base));
@@ -118,7 +118,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               fseek(fh, 0, SEEK_END);
               int32_t file_size = ftell(fh);
               fseek(fh, 0, SEEK_SET);
-              uint8_t* src = SPerl_ALLOCATOR_new_string(parser, file_size);
+              char* src = SPerl_ALLOCATOR_new_string(parser, file_size);
               if (fread(src, 1, file_size, fh) == -1) {
                 if (op_use) {
                   fprintf(stderr, "Can't read file %s at %s line %d\n", cur_module_path, op_use->file, op_use->line);
@@ -362,9 +362,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         
         /* Save current position */
-        uint8_t* cur_token_ptr = parser->bufptr;
+        const char* cur_token_ptr = parser->bufptr; // akinomyoga: no one use this
         
-        uint8_t ch;
+        char ch;
         if (*parser->bufptr == '\'') {
           ch = '\0';
           parser->bufptr++;
@@ -383,7 +383,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         SPerl_OP* op = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_CONSTANT);
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(parser);
         constant->code = SPerl_CONSTANT_C_CODE_BYTE;
-        constant->uv.int_value = ch;
+        constant->uv.int_value = (int32_t) (uint8_t) ch;
         constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte", strlen("byte"));
         
         op->uv.constant = constant;
@@ -395,9 +395,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         
         /* Save current position */
-        uint8_t* cur_token_ptr = parser->bufptr;
+        const char* cur_token_ptr = parser->bufptr;
         
-        uint8_t* str;
+        char* str;
         if (*(parser->bufptr + 1) == '"') {
           str = SPerl_ALLOCATOR_new_string(parser, 0);
           str[0] = '\0';
@@ -435,7 +435,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         /* Variable */
         if (c == '$') {
           /* Save current position */
-          uint8_t* cur_token_ptr = parser->bufptr;
+          const char* cur_token_ptr = parser->bufptr;
           
           parser->bufptr++;
           
@@ -445,7 +445,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          uint8_t* var_name = SPerl_ALLOCATOR_new_string(parser, str_len);
+          char* var_name = SPerl_ALLOCATOR_new_string(parser, str_len);
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
           
@@ -466,7 +466,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         }
         /* Number literal */
         else if (isdigit(c)) {
-          uint8_t* cur_token_ptr = parser->bufptr;
+          const char* cur_token_ptr = parser->bufptr;
           
           int32_t point_count = 0;
           
@@ -487,7 +487,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           
           // Number literal
           size_t str_len = parser->bufptr - cur_token_ptr;
-          uint8_t* num_str = malloc(str_len + 1);
+          char* num_str = (char*) malloc(str_len + 1);
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
           
@@ -526,7 +526,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         // Keyname or name
         else if (isalpha(c) || c == '_') {
           // Save current position
-          uint8_t* cur_token_ptr = parser->bufptr;
+          const char* cur_token_ptr = parser->bufptr;
           
           parser->bufptr++;
           
@@ -543,7 +543,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          uint8_t* keyword = SPerl_ALLOCATOR_new_string(parser, str_len);
+          char* keyword = SPerl_ALLOCATOR_new_string(parser, str_len);
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
           
@@ -672,7 +672,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           if (expect == SPerl_TOKE_C_EXPECT_PACKAGENAME) {
             // Template class
             if (strchr(keyword, '_')) {
-              
+              // akinomyoga: not yet implemented?
             }
           }
           
@@ -683,7 +683,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
         parser->bufptr++;
         yylvalp->opval = SPerl_TOKE_newOP(parser, SPerl_OP_C_CODE_NULL);
         
-        return c;
+        return (int) (uint8_t) c;
     }
   }
 }

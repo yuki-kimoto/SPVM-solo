@@ -5,7 +5,7 @@
 #include "sperl_allocator.h"
 #include "sperl_hash.h"
 
-uint8_t* const SPerl_CONSTANT_C_CODE_NAMES[] = {
+const char* const SPerl_CONSTANT_C_CODE_NAMES[] = {
   "BOOLEAN",
   "BYTE",
   "INT",

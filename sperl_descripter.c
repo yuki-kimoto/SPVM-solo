@@ -2,7 +2,7 @@
 #include "sperl_parser.h"
 #include "sperl_allocator.h"
 
-uint8_t* const SPerl_DESCRIPTER_CODE_NAMES[] = {
+const char* const SPerl_DESCRIPTER_CODE_NAMES[] = {
   "const",
   "static",
   "value",

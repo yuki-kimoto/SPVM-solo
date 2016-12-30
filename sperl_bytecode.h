@@ -215,6 +215,6 @@ enum {
   SPerl_BYTECODE_C_CODE_IMPDEP2, // Not used
 };
 
-extern uint8_t* const SPerl_BYTECODE_C_CODE_NAMES[];
+extern const char* const SPerl_BYTECODE_C_CODE_NAMES[];
 
 #endif
