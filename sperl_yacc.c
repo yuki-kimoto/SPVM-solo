@@ -42,6 +42,7 @@ void SPerl_yyerror_format(SPerl_PARSER* parser, const char* message_template, ..
         message_length += strlen(arg);
       }
       else if (*(found_ptr + 1) == 'd') {
+        (void) va_arg(args, int);
         message_length += 30;
       }
       else {
