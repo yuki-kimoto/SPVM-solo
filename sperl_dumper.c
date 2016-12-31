@@ -45,16 +45,16 @@ void SPerl_DUMPER_dump_ast(SPerl_PARSER* parser, SPerl_OP* op_base) {
       printf(" %s", SPerl_CONSTANT_C_CODE_NAMES[constant->code]);
       switch (constant->code) {
         case SPerl_CONSTANT_C_CODE_BOOLEAN:
-          printf(" %d", constant->uv.int_value);
+          printf(" %" PRId32, constant->uv.int_value);
           break;
         case SPerl_CONSTANT_C_CODE_BYTE:
           printf(" '%c'", constant->uv.int_value);
           break;
         case SPerl_CONSTANT_C_CODE_INT:
-          printf(" %d", constant->uv.int_value);
+          printf(" %" PRId32, constant->uv.int_value);
           break;
         case SPerl_CONSTANT_C_CODE_LONG:
-          printf(" %ld", constant->uv.long_value);
+          printf(" %" PRId64, constant->uv.long_value);
           break;
         case SPerl_CONSTANT_C_CODE_FLOAT:
           printf(" %f", constant->uv.float_value);
@@ -133,7 +133,7 @@ void SPerl_DUMPER_dump_constants(SPerl_PARSER* parser, SPerl_ARRAY* op_constants
 
 void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) {
   for (int32_t i = 0; i < op_packages->length; i++) {
-    printf("package[%d]\n", i);
+    printf("package[%" PRId32 "]\n", i);
     SPerl_OP* op_package = SPerl_ARRAY_fetch(op_packages, i);
     SPerl_PACKAGE* package = op_package->uv.package;
     printf("  name => \"%s\"\n", package->op_name->uv.name);
@@ -176,10 +176,10 @@ void SPerl_DUMPER_dump_resolved_types(SPerl_PARSER* parser, SPerl_ARRAY* resolve
   (void)parser;
   
   for (int32_t i = 0; i < resolved_types->length; i++) {
-    printf("resolved_type[%d]\n", i);
+    printf("resolved_type[%" PRId32 "]\n", i);
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_ARRAY_fetch(resolved_types, i);
     printf("    name => \"%s\"\n", resolved_type->name);
-    printf("    id => \"%d\"\n", resolved_type->id);
+    printf("    id => \"%" PRId32 "\"\n", resolved_type->id);
   }
 }
 
@@ -187,7 +187,7 @@ void SPerl_DUMPER_dump_constant_pool(SPerl_PARSER* parser, SPerl_CONSTANT_POOL* 
   (void)parser;
   
   for (int32_t i = 0; i < constant_pool->length; i++) {
-    printf("    constant_pool[%d] %d\n", i, constant_pool->values[i]);
+    printf("    constant_pool[%" PRId32 "] %" PRId32 "\n", i, constant_pool->values[i]);
   }
 }
 
@@ -197,7 +197,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
   for (int32_t i = 0; i < bytecodes->length; i++) {
     
     uint8_t bytecode = bytecodes->values[i];
-    printf("        [%d] %s\n", i, SPerl_BYTECODE_C_CODE_NAMES[bytecode]);
+    printf("        [%" PRId32 "] %s\n", i, SPerl_BYTECODE_C_CODE_NAMES[bytecode]);
     
     // Operand
     switch (bytecode) {
@@ -220,11 +220,11 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
           {
             i++;
             bytecode = bytecodes->values[i];
-            printf("        [%d] %d\n", i, bytecode);
+            printf("        [%" PRId32 "] %d\n", i, bytecode);
             
             i++;
             bytecode = bytecodes->values[i];
-            printf("        [%d] %d\n", i, bytecode);
+            printf("        [%" PRId32 "] %d\n", i, bytecode);
             
             break;
           }
@@ -249,7 +249,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
       {
         i++;
         bytecode = bytecodes->values[i];
-        printf("        [%d] %d\n", i, bytecode);
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
         
         break;
       }
@@ -283,11 +283,11 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
       {
         i++;
         bytecode = bytecodes->values[i];
-        printf("        [%d] %d\n", i, bytecode);
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
         
         i++;
         bytecode = bytecodes->values[i];
-        printf("        [%d] %d\n", i, bytecode);
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
         
         break;
       }
@@ -298,14 +298,14 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
         for (int32_t j = 0; j < padding; j++) {
           i++;
           bytecode = bytecodes->values[i];
-          printf("        [%d] %d\n", i, bytecode);
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         // Default
         for (int32_t j = 0; j < 4; j++) {
           i++;
           bytecode = bytecodes->values[i];
-          printf("        [%d] %d\n", i, bytecode);
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         // Low
@@ -314,7 +314,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
           i++;
           bytecode = bytecodes->values[i];
           min += bytecode << (24 - (8 * j));
-          printf("        [%d] %d\n", i, bytecode);
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         // High
@@ -323,7 +323,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
           i++;
           bytecode = bytecodes->values[i];
           max += bytecode << (24 - (8 * j));
-          printf("        [%d] %d\n", i, bytecode);
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         // Addresses
@@ -331,7 +331,7 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
         for (int32_t j = 0; j < length * 4; j++) {
           i++;
           bytecode = bytecodes->values[i];
-          printf("        [%d] %d\n", i, bytecode);
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         break;
@@ -343,14 +343,14 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
         for (int32_t j = 0; j < padding; j++) {
           i++;
           bytecode = bytecodes->values[i];
-          printf("        [%d] %d\n", i, bytecode);
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         // Default
         for (int32_t j = 0; j < 4; j++) {
           i++;
           bytecode = bytecodes->values[i];
-          printf("        [%d] %d\n", i, bytecode);
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         // Count
@@ -359,14 +359,14 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
           i++;
           bytecode = bytecodes->values[i];
           length += bytecode << (24 - (8 * j));
-          printf("        [%d] %d\n", i, bytecode);
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         // Addresses
         for (int32_t j = 0; j < length * 8; j++) {
           i++;
           bytecode = bytecodes->values[i];
-          printf("        [%d] %d\n", i, bytecode);
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         break;
@@ -413,7 +413,7 @@ void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     else {
       printf("      name => \"%s\"\n", sub->op_name->uv.name);
     }
-    printf("      id => %d\n", sub->id);
+    printf("      id => %" PRId32 "\n", sub->id);
     printf("      anon => %d\n", sub->anon);
 
     printf("      resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
@@ -424,7 +424,7 @@ void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
     for (int32_t i = 0; i < op_my_vars->length; i++) {
       SPerl_OP* op_my_var = SPerl_ARRAY_fetch(sub->op_my_vars, i);
       SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
-      printf("        my_var[%d]\n", i);
+      printf("        my_var[%" PRId32 "]\n", i);
       SPerl_DUMPER_dump_my_var(parser, my_var);
     }
     printf("      op_block => %p\n", sub->op_block);
@@ -446,7 +446,7 @@ void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
     SPerl_TYPE* type = field->op_type->uv.type;
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
     
-    printf("      id => \"%d\"\n", field->id);
+    printf("      id => \"%" PRId32 "\"\n", field->id);
     
 
   }
@@ -461,7 +461,7 @@ void SPerl_DUMPER_dump_enumeration_value(SPerl_PARSER* parser, SPerl_ENUMERATION
   
   if (enumeration_value) {
     printf("      name => \"%s\"\n", enumeration_value->op_name->uv.name);
-    printf("      value => %d\n", enumeration_value->op_constant->uv.constant->uv.int_value);
+    printf("      value => %" PRId32 "\n", enumeration_value->op_constant->uv.constant->uv.int_value);
   }
   else {
     printf("      None\n");
