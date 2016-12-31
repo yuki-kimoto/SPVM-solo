@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <inttypes.h>
 
 #include "sperl_yacc.h"
 #include "sperl_parser.h"
@@ -115,16 +116,16 @@ void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
       
       switch(constant->code) {
         case SPerl_CONSTANT_C_CODE_BOOLEAN:
-          fprintf(file, "boolean %d", constant->uv.int_value);
+          fprintf(file, "boolean %" PRId32, constant->uv.int_value);
           break;
         case SPerl_CONSTANT_C_CODE_BYTE:
           fprintf(file, "char '%c'", (char) constant->uv.int_value);
           break;
         case SPerl_CONSTANT_C_CODE_INT:
-          fprintf(file, "int %d", constant->uv.int_value);
+          fprintf(file, "int %" PRId32, constant->uv.int_value);
           break;
         case SPerl_CONSTANT_C_CODE_LONG:
-          fprintf(file, "long %ld", constant->uv.long_value);
+          fprintf(file, "long %" PRId64, constant->uv.long_value);
           break;
         case SPerl_CONSTANT_C_CODE_FLOAT:
           fprintf(file, "float %f", constant->uv.float_value);
