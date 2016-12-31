@@ -116,10 +116,14 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               
               // Read file content
               fseek(fh, 0, SEEK_END);
-              uint32_t file_size = ftell(fh);
+              long file_size = ftell(fh);
+              if (file_size < 0) {
+                fprintf(stderr, "Can't read file %s at %s line %d\n", cur_module_path, op_use->file, op_use->line);
+                exit(1);
+              }
               fseek(fh, 0, SEEK_SET);
               char* src = SPerl_ALLOCATOR_new_string(parser, file_size);
-              if (fread(src, 1, file_size, fh) < file_size) {
+              if (fread(src, 1, file_size, fh) < (size_t) file_size) {
                 if (op_use) {
                   fprintf(stderr, "Can't read file %s at %s line %d\n", cur_module_path, op_use->file, op_use->line);
                 }
