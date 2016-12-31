@@ -3,6 +3,8 @@
 #include <string.h>
 
 #include "../sperl_parser.h"
+#include "../sperl_array.h"
+#include "../sperl_vm.h"
 
 int main(int argc, char *argv[])
 {

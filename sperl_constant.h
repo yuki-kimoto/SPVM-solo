@@ -19,7 +19,7 @@ struct SPerl_constant {
   int32_t code;
   union {
     int32_t int_value;
-    int32_t long_value;
+    int64_t long_value;
     float float_value;
     double double_value;
     const char* string_value;

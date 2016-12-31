@@ -43,6 +43,8 @@ SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl_PARSER* parser) {
 }
 
 _Bool SPerl_RESOLVED_TYPE_is_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)parser;
+  
   int32_t length = strlen(resolved_type->name);
   
   if (strlen(resolved_type->name) >= 2) {
@@ -62,6 +64,8 @@ _Bool SPerl_RESOLVED_TYPE_is_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* re
 }
 
 _Bool SPerl_RESOLVED_TYPE_is_multi_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)parser;
+  
   int32_t length = strlen(resolved_type->name);
   
   if (strlen(resolved_type->name) >= 4) {
@@ -83,6 +87,8 @@ _Bool SPerl_RESOLVED_TYPE_is_multi_array(SPerl_PARSER* parser, SPerl_RESOLVED_TY
 }
 
 _Bool SPerl_RESOLVED_TYPE_contain_sub(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)parser;
+  
   const char* name = resolved_type->name;
   
   const char* found = strchr(name, '(');
@@ -95,6 +101,8 @@ _Bool SPerl_RESOLVED_TYPE_contain_sub(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE*
 }
 
 _Bool SPerl_RESOLVED_TYPE_is_integral(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)parser;
+  
   if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_LONG) {
     return 1;
   }
@@ -104,9 +112,10 @@ _Bool SPerl_RESOLVED_TYPE_is_integral(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE*
 }
 
 _Bool SPerl_RESOLVED_TYPE_is_core_type_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)parser;
+  
   const char* name = resolved_type->name;
   
-  const char* found = strchr(name, '('); // akinomyoga: no one use this
   if (strcmp(name, "boolean[]") == 0 || strcmp(name, "char[]") == 0 || strcmp(name, "byte[]") == 0 || strcmp(name, "short[]") == 0
     || strcmp(name, "int[]") == 0 || strcmp(name, "long[]") == 0 || strcmp(name, "float[]") == 0 || strcmp(name, "double[]") == 0)
   {
@@ -118,6 +127,7 @@ _Bool SPerl_RESOLVED_TYPE_is_core_type_array(SPerl_PARSER* parser, SPerl_RESOLVE
 }
 
 _Bool SPerl_RESOLVED_TYPE_is_core_type(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)parser;
   
   if (resolved_type && resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
     return 1;

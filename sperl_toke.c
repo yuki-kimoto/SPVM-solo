@@ -80,13 +80,13 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               
               // module is template
               char* underline_ptr;
-              if (underline_ptr = strchr(module_path_base, '_')) {
+              if ((underline_ptr = strchr(module_path_base, '_'))) {
                 *(underline_ptr - 2) = '\0';
               }
               
               // Search module file
-              char* cur_module_path;
-              FILE* fh;
+              char* cur_module_path = NULL;
+              FILE* fh = NULL;
               for (int32_t i = 0; i < parser->include_pathes->length; i++) {
                 const char* include_path = (const char*) SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
@@ -116,10 +116,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
               
               // Read file content
               fseek(fh, 0, SEEK_END);
-              int32_t file_size = ftell(fh);
+              uint32_t file_size = ftell(fh);
               fseek(fh, 0, SEEK_SET);
               char* src = SPerl_ALLOCATOR_new_string(parser, file_size);
-              if (fread(src, 1, file_size, fh) == -1) {
+              if (fread(src, 1, file_size, fh) < file_size) {
                 if (op_use) {
                   fprintf(stderr, "Can't read file %s at %s line %d\n", cur_module_path, op_use->file, op_use->line);
                 }
@@ -361,9 +361,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
       case '\'': {
         parser->bufptr++;
         
-        /* Save current position */
-        const char* cur_token_ptr = parser->bufptr; // akinomyoga: no one use this
-        
         char ch;
         if (*parser->bufptr == '\'') {
           ch = '\0';
@@ -532,7 +529,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser) {
           
           while(isalnum(*parser->bufptr)
             || *parser->bufptr == '_'
-            || *parser->bufptr == ':' && *(parser->bufptr + 1) == ':')
+            || (*parser->bufptr == ':' && *(parser->bufptr + 1) == ':'))
           {
             if (*parser->bufptr == ':' && *(parser->bufptr + 1) == ':') {
               parser->bufptr += 2;

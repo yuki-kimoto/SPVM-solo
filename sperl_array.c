@@ -46,8 +46,6 @@ void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, int32_t index) {
 }
 
 void* SPerl_ARRAY_pop(SPerl_ARRAY* array) {
-  int32_t length = array->length;
-  
   array->length--;
   
   if (array->length < 0) {

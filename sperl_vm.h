@@ -5,9 +5,7 @@
 
 // Field information
 struct SPerl_vm {
-  SPerl_OP* op_type;
-  SPerl_OP* op_name;
-  int32_t id;
+  int32_t tmp;
 };
 
 SPerl_VM* SPerl_VM_new(SPerl_PARSER* parser);

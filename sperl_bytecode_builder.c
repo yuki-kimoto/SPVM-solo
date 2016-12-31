@@ -47,8 +47,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
       int32_t cur_switch_address = -1;
       
       int32_t cur_default_address = -1;
-      SPerl_ARRAY* cur_case_addresses;
-      SPerl_ARRAY* cur_op_cases;
+      SPerl_ARRAY* cur_case_addresses = NULL;
+      SPerl_ARRAY* cur_op_cases = NULL;
       
       while (op_cur) {
         // [START]Preorder traversal position
@@ -262,7 +262,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
 
                       
                       if (match_i > match_j) {
-                        SPerl_OP* op_tmp = op_case_i;
                         ordered_op_cases->values[i] = op_case_j;
                         ordered_op_cases->values[j] = op_case_i;
                         
@@ -391,7 +390,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   
                   // Set last position
                   int32_t* last_pos_ptr;
-                  while (last_pos_ptr = SPerl_ARRAY_pop(last_bytecode_pos_stack)) {
+                  while ((last_pos_ptr = SPerl_ARRAY_pop(last_bytecode_pos_stack))) {
                     // Last offset
                     int32_t last_offset = bytecodes->length - *last_pos_ptr;
                     
@@ -913,8 +912,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                 }
                 else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
-                  SPerl_OP* op_field = op_cur->first;
-                  
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_PUTFIELD);
                   
                   // Call subroutine

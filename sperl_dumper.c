@@ -173,6 +173,8 @@ void SPerl_DUMPER_dump_packages(SPerl_PARSER* parser, SPerl_ARRAY* op_packages) 
 }
 
 void SPerl_DUMPER_dump_resolved_types(SPerl_PARSER* parser, SPerl_ARRAY* resolved_types) {
+  (void)parser;
+  
   for (int32_t i = 0; i < resolved_types->length; i++) {
     printf("resolved_type[%d]\n", i);
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_ARRAY_fetch(resolved_types, i);
@@ -182,12 +184,16 @@ void SPerl_DUMPER_dump_resolved_types(SPerl_PARSER* parser, SPerl_ARRAY* resolve
 }
 
 void SPerl_DUMPER_dump_constant_pool(SPerl_PARSER* parser, SPerl_CONSTANT_POOL* constant_pool) {
+  (void)parser;
+  
   for (int32_t i = 0; i < constant_pool->length; i++) {
     printf("    constant_pool[%d] %d\n", i, constant_pool->values[i]);
   }
 }
 
 void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecodes) {
+  (void)parser;
+  
   for (int32_t i = 0; i < bytecodes->length; i++) {
     
     uint8_t bytecode = bytecodes->values[i];
@@ -370,6 +376,8 @@ void SPerl_DUMPER_dump_bytecodes(SPerl_PARSER* parser, SPerl_BYTECODES* bytecode
 }
 
 void SPerl_DUMPER_dump_constant(SPerl_PARSER* parser, SPerl_CONSTANT* constant) {
+  (void)parser;
+  
   switch(constant->code) {
     case SPerl_CONSTANT_C_CODE_BOOLEAN:
       printf("      boolean %" PRId32 "\n", constant->uv.int_value);
@@ -419,7 +427,7 @@ void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
       printf("        my_var[%d]\n", i);
       SPerl_DUMPER_dump_my_var(parser, my_var);
     }
-    printf("      op_block => %x\n", sub->op_block);
+    printf("      op_block => %p\n", sub->op_block);
     
     printf("      bytecodes\n");
     SPerl_DUMPER_dump_bytecodes(parser, sub->bytecodes);
@@ -430,6 +438,8 @@ void SPerl_DUMPER_dump_sub(SPerl_PARSER* parser, SPerl_SUB* sub) {
 }
 
 void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
+  (void)parser;
+  
   if (field) {
     printf("      name => \"%s\"\n", field->op_name->uv.name);
     
@@ -447,6 +457,8 @@ void SPerl_DUMPER_dump_field(SPerl_PARSER* parser, SPerl_FIELD* field) {
 
 
 void SPerl_DUMPER_dump_enumeration_value(SPerl_PARSER* parser, SPerl_ENUMERATION_VALUE* enumeration_value) {
+  (void)parser;
+  
   if (enumeration_value) {
     printf("      name => \"%s\"\n", enumeration_value->op_name->uv.name);
     printf("      value => %d\n", enumeration_value->op_constant->uv.constant->uv.int_value);
@@ -457,6 +469,8 @@ void SPerl_DUMPER_dump_enumeration_value(SPerl_PARSER* parser, SPerl_ENUMERATION
 }
 
 void SPerl_DUMPER_dump_my_var(SPerl_PARSER* parser, SPerl_MY_VAR* my_var) {
+  (void)parser;
+
   if (my_var) {
     printf("          name => \"%s\"\n", my_var->op_name->uv.name);
     

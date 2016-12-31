@@ -41,7 +41,6 @@ void* SPerl_MEMORY_POOL_alloc(SPerl_MEMORY_POOL* memory_pool, int32_t block_size
 
   // Create next memroy page
   uint8_t* data_ptr;
-  uint8_t* page;
   if (current_pos + block_size > current_capacity) {
     page_depth++;
     current_pos = 0;

@@ -124,7 +124,7 @@ void* SPerl_HASH_insert(SPerl_HASH* hash, const char* key, int32_t length, void*
     SPerl_HASH_rehash(hash, new_capacity);
   }
   
-  SPerl_HASH_insert_norehash(hash, key, length, value);
+  return SPerl_HASH_insert_norehash(hash, key, length, value);
 }
 
 void* SPerl_HASH_search(SPerl_HASH* hash, const char* key, int32_t length) {

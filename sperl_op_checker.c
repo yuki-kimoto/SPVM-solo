@@ -43,7 +43,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
       // my var informations
       int32_t next_my_var_pos = 0;
       SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_new_array(parser, 0);
-      SPerl_HASH* my_var_symtable = SPerl_ALLOCATOR_new_hash(parser, 0);
       
       // my variable stack
       SPerl_ARRAY* op_my_var_stack = SPerl_ALLOCATOR_new_array(parser, 0);
