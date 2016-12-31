@@ -541,8 +541,7 @@ void SPerl_OP_check(SPerl_PARSER* parser) {
 void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* op_name) {
   SPerl_NAME_INFO* name_info = op_name->uv.name_info;
   
-  const char* sub_abs_name;
-  SPerl_OP* op;
+  const char* sub_abs_name = NULL;
   if (name_info->op_var) {
     const char* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
     const char* base_name = name_info->op_name->uv.name;
@@ -569,7 +568,6 @@ void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_OP* op_name_info) {
   SPerl_NAME_INFO* name_info = op_name_info->uv.name_info;
   
   const char* field_abs_name;
-  SPerl_OP* op;
   const char* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
   const char* base_name = name_info->op_name->uv.name;
   field_abs_name = SPerl_OP_create_abs_name(parser, package_name, base_name);
@@ -652,7 +650,6 @@ void SPerl_OP_build_const_pool(SPerl_PARSER* parser) {
     SPerl_ARRAY* op_constants = package->op_constants;
     
     // Create constant pool
-    int32_t const_pool_pos = 0;
     for (int32_t j = 0; j < op_constants->length; j++) {
       SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, j);
       SPerl_CONSTANT* constant = op_constant->uv.constant;
@@ -701,8 +698,7 @@ const char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, const char* package_n
 }
 
 SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block) {
-  int32_t i;
-  
+
   SPerl_OP_sibling_splice(parser, op_package, NULL, 0, op_package_name);
   SPerl_OP_sibling_splice(parser, op_package, op_package_name, 0, op_block);
   
@@ -740,7 +736,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
     // Collect field and use information
     SPerl_OP* op_decls = op_block->first;
     SPerl_OP* op_decl = op_decls->first;
-    while (op_decl = SPerl_OP_sibling(parser, op_decl)) {
+    while ((op_decl = SPerl_OP_sibling(parser, op_decl))) {
       if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
         SPerl_OP* op_field = op_decl;
         SPerl_FIELD* field = op_field->uv.field;
@@ -759,9 +755,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package
           // Field absolute name
           const char* field_abs_name = SPerl_OP_create_abs_name(parser, package_name, field_name);
           SPerl_HASH_insert(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name), field);
-
-          SPerl_SUB* field_ = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
-          int32_t id_ = field_->id;
         }
       }
     }
@@ -898,7 +891,7 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_
   // subargs
   int32_t argument_count = 0;
   SPerl_OP* op_subarg = op_subargs->first;
-  while (op_subarg = SPerl_OP_sibling(parser, op_subarg)) {
+  while ((op_subarg = SPerl_OP_sibling(parser, op_subarg))) {
     // Increment argument count
     argument_count++;
   }
@@ -926,14 +919,11 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPer
   // Build OP_SUB
   SPerl_OP_sibling_splice(parser, op_enum, NULL, 0, op_enum_block);
   
-  // Enum values
-  SPerl_ARRAY* enumeration_values = SPerl_ALLOCATOR_new_array(parser, 0);
-  
   // Starting value
   int64_t start_value = 0;
   SPerl_OP* op_enumeration_values = op_enum_block->first;
   SPerl_OP* op_enumeration_value = op_enumeration_values->first;
-  while (op_enumeration_value = SPerl_OP_sibling(parser, op_enumeration_value)) {
+  while ((op_enumeration_value = SPerl_OP_sibling(parser, op_enumeration_value))) {
     SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_ENUMERATION_VALUE_new(parser);
     enumeration_value->op_name = op_enumeration_value->first;
     if (op_enumeration_value->first != op_enumeration_value->last) {
@@ -1128,7 +1118,7 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_ty
   SPerl_ARRAY* argument_types = SPerl_ALLOCATOR_new_array(parser, 0);
   {
     SPerl_OP* op_argument_type = op_argument_types->first;
-    while (op_argument_type = SPerl_OP_sibling(parser, op_argument_type)) {
+    while ((op_argument_type = SPerl_OP_sibling(parser, op_argument_type))) {
       if (file == NULL) {
         file = op_argument_type->file;
         line = op_argument_type->line;
@@ -1278,20 +1268,26 @@ SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_
 }
 
 SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* op) {
+  (void)parser;
+  
   return op->moresib ? op->sibparent : NULL;
 }
 
 void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* sib) {
+  (void)parser;
+  
   op->moresib = 1;
   op->sibparent = sib;
 }
 
 void SPerl_OP_lastsib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* parent) {
+  (void)parser;
   op->moresib = 0;
   op->sibparent = parent;
 }
 
 void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* op, SPerl_OP* sib, SPerl_OP* parent) {
+  (void)parser;
   op->moresib = sib ? 1 : 0;
   op->sibparent = op->moresib ? sib : parent;
 }
