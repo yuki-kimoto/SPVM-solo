@@ -501,22 +501,24 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
         *((double*)&op_stack[op_stack_pos]) = (double)*((float*)&op_stack[op_stack_pos - 1]);
         break;
       case SPerl_BYTECODE_C_CODE_D2I:
-        
+        op_stack[op_stack_pos - 1] = (int32_t)*((double*)&op_stack[op_stack_pos - 1]);
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_D2L:
-      
+        *((int64_t*)&op_stack[op_stack_pos - 1]) = (int64_t)*((double*)&op_stack[op_stack_pos - 1]);
         break;
       case SPerl_BYTECODE_C_CODE_D2F:
-      
+        *((float*)&op_stack[op_stack_pos - 1]) = (float)*((double*)&op_stack[op_stack_pos - 1]);
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_I2B:
-      
+        op_stack[op_stack_pos] = op_stack[op_stack_pos] & 1;
         break;
       case SPerl_BYTECODE_C_CODE_I2C:
-      
+        /* Not used */
         break;
       case SPerl_BYTECODE_C_CODE_I2S:
-      
+        op_stack[op_stack_pos] = op_stack[op_stack_pos] & 0xF;
         break;
       case SPerl_BYTECODE_C_CODE_LCMP:
       
