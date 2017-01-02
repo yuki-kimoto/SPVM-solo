@@ -730,9 +730,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 // Insert type converting op
                 SPerl_OP_insert_op_convert(parser, op_cur);
                 
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->uv.resolved_type = resolved_type;
-                
                 break;
               }
               case SPerl_OP_C_CODE_SUBTRACT: {
@@ -746,9 +743,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 }
                 // Insert type converting op
                 SPerl_OP_insert_op_convert(parser, op_cur);
-                
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -764,9 +758,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 // Insert type converting op
                 SPerl_OP_insert_op_convert(parser, op_cur);
                 
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->uv.resolved_type = resolved_type;
-                
                 break;
               }
               case SPerl_OP_C_CODE_DIVIDE: {
@@ -781,9 +772,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 // Insert type converting op
                 SPerl_OP_insert_op_convert(parser, op_cur);
                 
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->uv.resolved_type = resolved_type;
-                
                 break;
               }
               case SPerl_OP_C_CODE_REMAINDER: {
@@ -797,9 +785,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 }
                 // Insert type converting op
                 SPerl_OP_insert_op_convert(parser, op_cur);
-                
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
-                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -818,7 +803,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_yyerror_format(parser, "must be int in increment at %s line %d\n", op_cur->file, op_cur->line);
                 }
-                op_cur->uv.resolved_type = first_resolved_type;
+
                 break;
               }
               case SPerl_OP_C_CODE_CONSTANT: {

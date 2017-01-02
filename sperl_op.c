@@ -331,6 +331,19 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   SPerl_RESOLVED_TYPE*  resolved_type;
   
   switch (op->code) {
+    case SPerl_OP_C_CODE_ADD:
+    case SPerl_OP_C_CODE_SUBTRACT:
+    case SPerl_OP_C_CODE_MULTIPLY:
+    case SPerl_OP_C_CODE_DIVIDE:
+    case SPerl_OP_C_CODE_REMAINDER:
+    case SPerl_OP_C_CODE_PRE_INC:
+    case SPerl_OP_C_CODE_POST_INC:
+    case SPerl_OP_C_CODE_PRE_DEC:
+    case SPerl_OP_C_CODE_POST_DEC:
+    {
+      resolved_type = SPerl_OP_get_resolved_type(parser, op->first);
+      break;
+    }
     case SPerl_OP_C_CODE_CONVERT: {
       SPerl_OP* op_type = op->last;
       resolved_type = SPerl_OP_get_resolved_type(parser, op_type);
