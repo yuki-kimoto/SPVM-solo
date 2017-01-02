@@ -324,6 +324,10 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   SPerl_RESOLVED_TYPE*  resolved_type;
   
   switch (op->code) {
+    case SPerl_OP_C_CODE_TYPE: {
+      resolved_type = op->uv.type->resolved_type;
+      break;
+    }
     case SPerl_OP_C_CODE_SWITCH_CONDITION : {
       resolved_type = SPerl_OP_get_resolved_type(parser, op->first);
       break;
