@@ -470,7 +470,6 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
         op_stack_pos++;
         op_stack[op_stack_pos] = (op_stack[op_stack_pos - 1] >> 8);
         op_stack[op_stack_pos - 1] = 0;
-        
         break;
       case SPerl_BYTECODE_C_CODE_I2F:
         *((float*)&op_stack[op_stack_pos]) = (float)op_stack[op_stack_pos];
@@ -482,10 +481,10 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
       case SPerl_BYTECODE_C_CODE_L2I:
         op_stack[op_stack_pos - 1] = op_stack[op_stack_pos];
         op_stack_pos--;
-        
         break;
       case SPerl_BYTECODE_C_CODE_L2F:
-      
+        *((float*)&op_stack[op_stack_pos - 1]) = (float)*((uint64_t*)&op_stack[op_stack_pos - 1]);
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_L2D:
       
