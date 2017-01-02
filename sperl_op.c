@@ -331,6 +331,13 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
   SPerl_RESOLVED_TYPE*  resolved_type = NULL;
   
   switch (op->code) {
+    case SPerl_OP_C_CODE_ARRAY_LENGTH:
+      resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+    case SPerl_OP_C_CODE_ARRAY_ELEM: {
+      SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op->first);
+     resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
+      break;
+    }
     case SPerl_OP_C_CODE_RETURN: {
       if (op->first) {
         resolved_type = SPerl_OP_get_resolved_type(parser, op->first);
@@ -355,6 +362,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
     case SPerl_OP_C_CODE_BIT_AND:
     case SPerl_OP_C_CODE_PLUS:
     case SPerl_OP_C_CODE_NEGATE:
+    case SPerl_OP_C_CODE_ASSIGN:
     {
       resolved_type = SPerl_OP_get_resolved_type(parser, op->first);
       break;

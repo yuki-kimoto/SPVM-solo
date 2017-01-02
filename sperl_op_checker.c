@@ -554,10 +554,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   break;
                 }
                 
-                // Resolved type
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-                op_cur->uv.resolved_type = resolved_type;
-                
                 break;
               }
               case SPerl_OP_C_CODE_ARRAY_ELEM: {
@@ -576,9 +572,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   SPerl_yyerror_format(parser, "array index must be integer at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
-                op_cur->uv.resolved_type = resolved_type;
                 
                 break;
               }
@@ -619,9 +612,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   parser->fatal_error = 1;
                   return;
                 }
-                
-                SPerl_RESOLVED_TYPE* resolved_type = first_resolved_type;
-                op_cur->uv.resolved_type = resolved_type;
                 
                 // Insert var op
                 if (op_cur->last->code == SPerl_OP_C_CODE_ASSIGN) {
