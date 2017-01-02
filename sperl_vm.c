@@ -26,7 +26,7 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
   int32_t op_stack[255];
   int32_t op_stack_pos = -1;
   
-  while (pc != bytecodes->length) {
+  while (pc < bytecodes->length) {
     
     switch (bytecodes_values[pc]) {
       
@@ -97,8 +97,20 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
         op_stack_pos++;
         break;
       case SPerl_BYTECODE_C_CODE_BIPUSH:
+        op_stack_pos++;
+        
+        pc++;
+        op_stack[op_stack_pos] = bytecodes_values[pc];
+        
         break;
       case SPerl_BYTECODE_C_CODE_SIPUSH:
+        op_stack_pos++;
+        
+        pc++;
+        op_stack[op_stack_pos] = bytecodes_values[pc] << 8;
+        
+        pc++;
+        op_stack[op_stack_pos] += bytecodes_values[pc];
         
         break;
       case SPerl_BYTECODE_C_CODE_LDC:
