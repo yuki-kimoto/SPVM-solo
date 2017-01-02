@@ -111,7 +111,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "SWITCH_CONDITION",
 };
 
-void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
+void SPerl_OP_insert_op_convert(SPerl_PARSER* parser, SPerl_OP* op) {
 
   SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op->first);
   SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op->last);
@@ -132,76 +132,76 @@ void SPerl_OP_insert_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op) {
   if (first_type_id != last_type_id) {
     _Bool replace_first = 0;
     
-    SPerl_OP* type_convert_op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT, op->file, op->line);
+    SPerl_OP* op_convert = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CONVERT, op->file, op->line);
     
     if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-        type_convert_op->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+        op_convert->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
     }
     
     if (replace_first) {
-      type_convert_op->sibparent = op->first->sibparent;
-      type_convert_op->moresib = op->first->moresib;
-      type_convert_op->first = op->first;
-      op->first->sibparent = type_convert_op;
+      op_convert->sibparent = op->first->sibparent;
+      op_convert->moresib = op->first->moresib;
+      op_convert->first = op->first;
+      op->first->sibparent = op_convert;
       op->first->moresib = 0;
-      op->first = type_convert_op;
+      op->first = op_convert;
     }
     else {
-      type_convert_op->sibparent = op->last->sibparent;
-      type_convert_op->moresib = op->last->moresib;
-      type_convert_op->first = op->last;
-      op->last->sibparent = type_convert_op;
+      op_convert->sibparent = op->last->sibparent;
+      op_convert->moresib = op->last->moresib;
+      op_convert->first = op->last;
+      op->last->sibparent = op_convert;
       op->last->moresib = 0;
-      op->last = type_convert_op;
+      op->last = op_convert;
       
-      op->first->sibparent = type_convert_op;
+      op->first->sibparent = op_convert;
     }
   }
 }

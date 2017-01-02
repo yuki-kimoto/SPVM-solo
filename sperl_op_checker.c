@@ -272,7 +272,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   else {
                     if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
                       // Insert type converting op
-                      SPerl_OP_insert_op_convert_type(parser, op_cur);
+                      SPerl_OP_insert_op_convert(parser, op_cur);
                     }
                     else if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type)) {
                       SPerl_yyerror_format(parser, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
@@ -321,7 +321,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   else {
                     if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
                       // Insert type converting op
-                      SPerl_OP_insert_op_convert_type(parser, op_cur);
+                      SPerl_OP_insert_op_convert(parser, op_cur);
                     }
                     else if (!SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type)) {
                       SPerl_yyerror_format(parser, "!= right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
@@ -358,7 +358,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 }
                 
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 
@@ -384,7 +384,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 }
                 
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 
@@ -410,7 +410,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 }
                 
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 
@@ -436,7 +436,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 }
                 
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 
@@ -531,7 +531,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 }
                 
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 op_cur->uv.resolved_type = resolved_type;
@@ -550,7 +550,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 }
                 
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 op_cur->uv.resolved_type = resolved_type;
@@ -569,7 +569,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 }
                 
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 op_cur->uv.resolved_type = resolved_type;
@@ -640,7 +640,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 
                 // Convert type
                 if (SPerl_RESOLVED_TYPE_is_core_type(parser, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(parser, last_resolved_type)) {
-                  SPerl_OP_insert_op_convert_type(parser, op_cur);
+                  SPerl_OP_insert_op_convert(parser, op_cur);
                 }
                 
                 first_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
@@ -728,7 +728,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   break;
                 }
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 op_cur->uv.resolved_type = resolved_type;
@@ -745,7 +745,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   break;
                 }
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 op_cur->uv.resolved_type = resolved_type;
@@ -762,7 +762,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   break;
                 }
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 op_cur->uv.resolved_type = resolved_type;
@@ -779,7 +779,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   break;
                 }
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 op_cur->uv.resolved_type = resolved_type;
@@ -796,7 +796,7 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                   break;
                 }
                 // Insert type converting op
-                SPerl_OP_insert_op_convert_type(parser, op_cur);
+                SPerl_OP_insert_op_convert(parser, op_cur);
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur->first);
                 op_cur->uv.resolved_type = resolved_type;
