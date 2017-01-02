@@ -159,7 +159,6 @@ struct SPerl_op {
   _Bool condition;
   union {
     const char* name;
-    SPerl_RESOLVED_TYPE* resolved_type;
     SPerl_MY_VAR* my_var;
     SPerl_SUB* sub;
     SPerl_CONSTANT* constant;

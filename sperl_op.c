@@ -413,10 +413,6 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* 
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
     }
-    default:
-    {
-      resolved_type = op->uv.resolved_type;
-    }
   }
   
   return resolved_type;
