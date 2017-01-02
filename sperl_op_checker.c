@@ -283,8 +283,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                       break;
                     }
                   }
-                  
-                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 }
                 
                 break;
@@ -332,8 +330,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                       break;
                     }
                   }
-                  
-                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 }
                 
                 break;
@@ -360,8 +356,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 // Insert type converting op
                 SPerl_OP_insert_op_convert(parser, op_cur);
                 
-                op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-                
                 break;
               }
               case SPerl_OP_C_CODE_LE: {
@@ -385,8 +379,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 
                 // Insert type converting op
                 SPerl_OP_insert_op_convert(parser, op_cur);
-                
-                op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 
                 break;
               }
@@ -412,8 +404,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 // Insert type converting op
                 SPerl_OP_insert_op_convert(parser, op_cur);
                 
-                op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-                
                 break;
               }
               case SPerl_OP_C_CODE_GE: {
@@ -437,8 +427,6 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 
                 // Insert type converting op
                 SPerl_OP_insert_op_convert(parser, op_cur);
-                
-                op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
                 
                 break;
               }

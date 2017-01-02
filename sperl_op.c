@@ -328,7 +328,7 @@ SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPer
 }
 
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op) {
-  SPerl_RESOLVED_TYPE*  resolved_type;
+  SPerl_RESOLVED_TYPE*  resolved_type = NULL;
   
   switch (op->code) {
     case SPerl_OP_C_CODE_ADD:
