@@ -973,7 +973,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 
                 SPerl_OP* op_term = op_cur->first;
                 SPerl_OP* op_type = op_cur->last;
-                SPerl_RESOLVED_TYPE* op_type_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_type_resolved_type = SPerl_OP_get_resolved_type(parser, op_type);
                 SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(parser, op_term);
                 if (op_type_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   if (op_term_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {

@@ -941,27 +941,12 @@ void SPerl_OP_CHECKER_check(SPerl_PARSER* parser) {
                 SPerl_OP* op_type = op_cur->last;
                 
                 SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(parser, op_term);
-                
                 SPerl_RESOLVED_TYPE* op_type_resolved_type = SPerl_OP_get_resolved_type(parser, op_type);;
                 
                 // Can receive only core type
                 if (!SPerl_RESOLVED_TYPE_is_core_type(parser, op_term_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(parser, op_type_resolved_type)) {
                   SPerl_yyerror_format(parser, "can't convert type %s to %s at %s line %d\n",
                     op_term_resolved_type->name, op_type_resolved_type->name, op_cur->file, op_cur->line);
-                }
-                
-                // Resolve convert_type op
-                if (op_type_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-                }
-                else if (op_type_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
-                }
-                else if (op_type_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
-                }
-                else if (op_type_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                  op_cur->uv.resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
                 }
               }
               break;
