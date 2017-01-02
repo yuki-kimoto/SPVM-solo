@@ -362,7 +362,8 @@ void SPerl_VM_run(SPerl_PARSER* parser) {
         
         break;
       case SPerl_BYTECODE_C_CODE_FADD:
-      
+        *((float*)&op_stack[op_stack_pos - 1]) += (float)op_stack[op_stack_pos];
+        
         break;
       case SPerl_BYTECODE_C_CODE_DADD:
       
