@@ -3,8 +3,9 @@
 #include <stdarg.h>
 #include <inttypes.h>
 
-#include "sperl_yacc.h"
 #include "sperl.h"
+#include "sperl_parser.h"
+#include "sperl_yacc.h"
 #include "sperl_allocator.h"
 #include "sperl_yacc.tab.h"
 #include "sperl_constant.h"
@@ -70,6 +71,8 @@ void SPerl_yyerror_format(SPerl* sperl, const char* message_template, ...) {
 // Print error
 void SPerl_yyerror(SPerl* sperl, const char* message)
 {
+  SPerl_PARSER* parser = sperl->parser;
+  
   sperl->error_count++;
   
   if (memcmp(message, "Error:", 6) == 0) {
@@ -80,8 +83,8 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
     // Current token
     int32_t length = 0;
     int32_t empty_count = 0;
-    const char* ptr = sperl->befbufptr;
-    while (ptr != sperl->bufptr) {
+    const char* ptr = parser->befbufptr;
+    while (ptr != parser->bufptr) {
       if (*ptr == ' ' || *ptr == '\t' || *ptr == '\n') {
         empty_count++;
       }
@@ -91,7 +94,7 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
       ptr++;
     }
     char* token = (char*) calloc(length + 1, sizeof(char));
-    memcpy(token, sperl->befbufptr + empty_count, length);
+    memcpy(token, parser->befbufptr + empty_count, length);
     token[length] = '\0';
 
     fprintf(stderr, "Error: unexpected token \"%s\" at %s line %d\n", token, sperl->cur_module_path, sperl->cur_line);

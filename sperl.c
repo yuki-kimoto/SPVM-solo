@@ -26,7 +26,7 @@ SPerl* SPerl_new() {
   sperl->memory_pool = SPerl_MEMORY_POOL_new(0);
 
   // Parser
-  SPerl_PARSER* parser = SPerl_PARSER_new(sperl);
+  sperl->parser = SPerl_PARSER_new(sperl);
   
   // Parser information
   sperl->cur_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
@@ -37,7 +37,6 @@ SPerl* SPerl_new() {
   sperl->op_use_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
   sperl->field_abs_name_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
   sperl->include_pathes = SPerl_ALLOCATOR_new_array(sperl, 0);
-  sperl->bufptr = "";
   sperl->resolved_types = SPerl_ALLOCATOR_new_array(sperl, 0);
   sperl->resolved_type_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
   sperl->use_package_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);

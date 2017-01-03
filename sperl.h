@@ -10,15 +10,6 @@ struct sperl_ {
   
   SPerl_PARSER* parser;
   
-  // Before buffer position
-  const char* befbufptr;
-  
-  // Current buffer position
-  const char* bufptr;
-  
-  // Expect next token type
-  int32_t expect;
-
   // Current file name
   const char* cur_module_path;
   

@@ -3,11 +3,12 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "sperl.h"
+#include "sperl_parser.h"
 #include "sperl_toke.h"
 #include "sperl_yacc.h"
 #include "sperl_yacc.tab.h"
 #include "sperl_op.h"
-#include "sperl.h"
 #include "sperl_allocator.h"
 #include "sperl_constant.h"
 #include "sperl_var.h"
@@ -25,17 +26,20 @@ SPerl_OP* SPerl_TOKE_newOP(SPerl* sperl, uint8_t type) {
 
 // Get token
 int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
+  
+  // Parser
+  SPerl_PARSER* parser = sperl->parser;
 
   // Get expected and retrun back to normal
-  uint8_t expect = sperl->expect;
-  sperl->expect = SPerl_TOKE_C_EXPECT_NORMAL;
+  uint8_t expect = parser->expect;
+  parser->expect = SPerl_TOKE_C_EXPECT_NORMAL;
   
   // Save buf pointer
-  sperl->befbufptr = sperl->bufptr;
+  parser->befbufptr = parser->bufptr;
   
   while(1) {
     // Get current character
-    char c = *sperl->bufptr;
+    char c = *parser->bufptr;
     
     // line end
     switch(c) {
@@ -135,8 +139,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               fclose(fh);
               src[file_size] = '\0';
               sperl->cur_src = src;
-              sperl->bufptr = src;
-              sperl->befbufptr = src;
+              parser->bufptr = src;
+              parser->befbufptr = src;
               sperl->current_package_count = 0;
               sperl->cur_line = 1;
               break;
@@ -156,20 +160,20 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
       /* Skip space character */
       case ' ':
       case '\t':
-        sperl->bufptr++;
+        parser->bufptr++;
         continue;
 
       case '\n':
-        sperl->bufptr++;
+        parser->bufptr++;
         sperl->cur_line++;
         continue;
       
       /* Addition */
       case '+':
-        sperl->bufptr++;
+        parser->bufptr++;
         
-        if (*sperl->bufptr == '+') {
-          sperl->bufptr++;
+        if (*parser->bufptr == '+') {
+          parser->bufptr++;
           yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NULL);
           return INC;
         }
@@ -180,16 +184,16 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
       
       /* Subtract */
       case '-':
-        sperl->bufptr++;
+        parser->bufptr++;
         
-        if (*sperl->bufptr == '>') {
-          sperl->bufptr++;
-          sperl->expect = SPerl_TOKE_C_EXPECT_NAME;
+        if (*parser->bufptr == '>') {
+          parser->bufptr++;
+          parser->expect = SPerl_TOKE_C_EXPECT_NAME;
           yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NULL);
           return ARROW;
         }
-        else if (*sperl->bufptr == '-') {
-          sperl->bufptr++;
+        else if (*parser->bufptr == '-') {
+          parser->bufptr++;
           yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NULL);
           return DEC;
         }
@@ -199,41 +203,41 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         }
       /* Multiply */
       case '*':
-        sperl->bufptr++;
+        parser->bufptr++;
         SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_MULTIPLY);
         yylvalp->opval = op;
         return MULTIPLY;
       
       /* Divide */
       case '/': {
-        sperl->bufptr++;
+        parser->bufptr++;
         SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DIVIDE);
         yylvalp->opval = op;
         return DIVIDE;
       }
       case '%': {
-        sperl->bufptr++;
+        parser->bufptr++;
         SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_REMAINDER);
         yylvalp->opval = op;
         return REMAINDER;
       }
       case '^': {
-        sperl->bufptr++;
+        parser->bufptr++;
         SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_BIT_XOR);
         yylvalp->opval = op;
         return BIT_XOR;
       }
       case '@': {
-        sperl->bufptr++;
+        parser->bufptr++;
         SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_ARRAY_LENGTH);
         yylvalp->opval = op;
         return '@';
       }
       case '|':
-        sperl->bufptr++;
+        parser->bufptr++;
         /* Or */
-        if (*sperl->bufptr == '|') {
-          sperl->bufptr++;
+        if (*parser->bufptr == '|') {
+          parser->bufptr++;
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_OR);
           yylvalp->opval = op;
           return OR;
@@ -246,10 +250,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         }
 
       case '&':
-        sperl->bufptr++;
+        parser->bufptr++;
         /* Or */
-        if (*sperl->bufptr == '&') {
-          sperl->bufptr++;
+        if (*parser->bufptr == '&') {
+          parser->bufptr++;
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_AND);
           yylvalp->opval = op;
           return AND;
@@ -263,22 +267,22 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
       
       /* Comment */
       case '#':
-        sperl->bufptr++;
+        parser->bufptr++;
         while(1) {
-          if (*sperl->bufptr == '\r' || *sperl->bufptr == '\n' || *sperl->bufptr == '\0') {
+          if (*parser->bufptr == '\r' || *parser->bufptr == '\n' || *parser->bufptr == '\0') {
             break;
           }
-          sperl->bufptr++;
+          parser->bufptr++;
         }
         
         continue;
       
       case '=':
-        sperl->bufptr++;
+        parser->bufptr++;
         
         /* == */
-        if (*sperl->bufptr == '=') {
-          sperl->bufptr++;
+        if (*parser->bufptr == '=') {
+          parser->bufptr++;
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_EQ);
           yylvalp->opval = op;
           return REL;
@@ -291,17 +295,17 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         }
         
       case '<':
-        sperl->bufptr++;
+        parser->bufptr++;
         
-        if (*sperl->bufptr == '<') {
-          sperl->bufptr++;
+        if (*parser->bufptr == '<') {
+          parser->bufptr++;
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_LEFT_SHIFT);
           yylvalp->opval = op;
           return SHIFT;
         }
         /* <= */
-        else if (*sperl->bufptr == '=') {
-          sperl->bufptr++;
+        else if (*parser->bufptr == '=') {
+          parser->bufptr++;
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_LE);
           yylvalp->opval = op;
           return REL;
@@ -314,12 +318,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         }
       
       case '>':
-        sperl->bufptr++;
+        parser->bufptr++;
         
-        if (*sperl->bufptr == '>') {
-          sperl->bufptr++;
-          if (*sperl->bufptr == '>') {
-            sperl->bufptr++;
+        if (*parser->bufptr == '>') {
+          parser->bufptr++;
+          if (*parser->bufptr == '>') {
+            parser->bufptr++;
             SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED);
             yylvalp->opval = op;
             return SHIFT;
@@ -329,8 +333,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           return SHIFT;
         }
         /* >= */
-        else if (*sperl->bufptr == '=') {
-          sperl->bufptr++;
+        else if (*parser->bufptr == '=') {
+          parser->bufptr++;
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_GE);
           yylvalp->opval = op;
           return REL;
@@ -342,10 +346,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           return REL;
         }
       case '!':
-        sperl->bufptr++;
+        parser->bufptr++;
         
-        if (*sperl->bufptr == '=') {
-          sperl->bufptr++;
+        if (*parser->bufptr == '=') {
+          parser->bufptr++;
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NE);
           yylvalp->opval = op;
           return REL;
@@ -357,27 +361,27 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         }
         
       case '~': {
-        sperl->bufptr++;
+        parser->bufptr++;
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_COMPLEMENT);
           yylvalp->opval = op;
         return '~';
       }
       case '\'': {
-        sperl->bufptr++;
+        parser->bufptr++;
         
         char ch;
-        if (*sperl->bufptr == '\'') {
+        if (*parser->bufptr == '\'') {
           ch = '\0';
-          sperl->bufptr++;
+          parser->bufptr++;
         }
         else {
-          ch = *sperl->bufptr;
-          sperl->bufptr++;
-          if (*sperl->bufptr != '\'') {
+          ch = *parser->bufptr;
+          parser->bufptr++;
+          if (*parser->bufptr != '\'') {
             fprintf(stderr, "syntax error: string don't finish\n");
             exit(1);
           }
-          sperl->bufptr++;
+          parser->bufptr++;
         }
         
         // Constant 
@@ -393,33 +397,33 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         return CONSTANT;
       }
       case '"': {
-        sperl->bufptr++;
+        parser->bufptr++;
         
         /* Save current position */
-        const char* cur_token_ptr = sperl->bufptr;
+        const char* cur_token_ptr = parser->bufptr;
         
         char* str;
-        if (*(sperl->bufptr + 1) == '"') {
+        if (*(parser->bufptr + 1) == '"') {
           str = SPerl_ALLOCATOR_new_string(sperl, 0);
           str[0] = '\0';
-          sperl->bufptr++;
-          sperl->bufptr++;
+          parser->bufptr++;
+          parser->bufptr++;
         }
         else {
-          while(*sperl->bufptr != '"' && *sperl->bufptr != '\0') {
-            sperl->bufptr++;
+          while(*parser->bufptr != '"' && *parser->bufptr != '\0') {
+            parser->bufptr++;
           }
-          if (*sperl->bufptr == '\0') {
+          if (*parser->bufptr == '\0') {
             fprintf(stderr, "syntax error: string don't finish\n");
             exit(1);
           }
           
-          size_t str_len = sperl->bufptr - cur_token_ptr;
+          size_t str_len = parser->bufptr - cur_token_ptr;
           str = SPerl_ALLOCATOR_new_string(sperl, str_len);
           memcpy(str, cur_token_ptr, str_len);
           str[str_len] = '\0';
 
-          sperl->bufptr++;
+          parser->bufptr++;
         }
         
         SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
@@ -436,16 +440,16 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         /* Variable */
         if (c == '$') {
           /* Save current position */
-          const char* cur_token_ptr = sperl->bufptr;
+          const char* cur_token_ptr = parser->bufptr;
           
-          sperl->bufptr++;
+          parser->bufptr++;
           
           /* Next is graph */
-          while(isalnum(*sperl->bufptr) || (*sperl->bufptr) == '_' || (*sperl->bufptr) == ':') {
-            sperl->bufptr++;
+          while(isalnum(*parser->bufptr) || (*parser->bufptr) == '_' || (*parser->bufptr) == ':') {
+            parser->bufptr++;
           }
           
-          size_t str_len = sperl->bufptr - cur_token_ptr;
+          size_t str_len = parser->bufptr - cur_token_ptr;
           char* var_name = SPerl_ALLOCATOR_new_string(sperl, str_len);
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
@@ -467,18 +471,18 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         }
         /* Number literal */
         else if (isdigit(c)) {
-          const char* cur_token_ptr = sperl->bufptr;
+          const char* cur_token_ptr = parser->bufptr;
           
           int32_t point_count = 0;
           
-          sperl->bufptr++;
+          parser->bufptr++;
           
           // Scan number
-          while(isdigit(*sperl->bufptr) || *sperl->bufptr == '.') {
-            if (*sperl->bufptr == '.') {
+          while(isdigit(*parser->bufptr) || *parser->bufptr == '.') {
+            if (*parser->bufptr == '.') {
               point_count++;
             }
-            sperl->bufptr++;
+            parser->bufptr++;
           }
           
           if (point_count >= 2) {
@@ -487,7 +491,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           }
           
           // Number literal
-          size_t str_len = sperl->bufptr - cur_token_ptr;
+          size_t str_len = parser->bufptr - cur_token_ptr;
           char* num_str = (char*) malloc(str_len + 1);
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
@@ -527,23 +531,23 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         // Keyname or name
         else if (isalpha(c) || c == '_') {
           // Save current position
-          const char* cur_token_ptr = sperl->bufptr;
+          const char* cur_token_ptr = parser->bufptr;
           
-          sperl->bufptr++;
+          parser->bufptr++;
           
-          while(isalnum(*sperl->bufptr)
-            || *sperl->bufptr == '_'
-            || (*sperl->bufptr == ':' && *(sperl->bufptr + 1) == ':'))
+          while(isalnum(*parser->bufptr)
+            || *parser->bufptr == '_'
+            || (*parser->bufptr == ':' && *(parser->bufptr + 1) == ':'))
           {
-            if (*sperl->bufptr == ':' && *(sperl->bufptr + 1) == ':') {
-              sperl->bufptr += 2;
+            if (*parser->bufptr == ':' && *(parser->bufptr + 1) == ':') {
+              parser->bufptr += 2;
             }
             else {
-              sperl->bufptr++;
+              parser->bufptr++;
             }
           }
           
-          size_t str_len = sperl->bufptr - cur_token_ptr;
+          size_t str_len = parser->bufptr - cur_token_ptr;
           char* keyword = SPerl_ALLOCATOR_new_string(sperl, str_len);
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
@@ -556,12 +560,12 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             }
             else if (memcmp(keyword, "has", str_len) == 0) {
               yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_FIELD);
-              sperl->expect = SPerl_TOKE_C_EXPECT_NAME;
+              parser->expect = SPerl_TOKE_C_EXPECT_NAME;
               return HAS;
             }
             else if (memcmp(keyword, "sub", str_len) == 0) {
               yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_SUB);
-              sperl->expect = SPerl_TOKE_C_EXPECT_NAME;
+              parser->expect = SPerl_TOKE_C_EXPECT_NAME;
               return SUB;
             }
             else if (memcmp(keyword, "package", str_len) == 0) {
@@ -573,7 +577,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               sperl->current_package_count++;
               
               // Next is package name
-              sperl->expect = SPerl_TOKE_C_EXPECT_PACKAGENAME;
+              parser->expect = SPerl_TOKE_C_EXPECT_PACKAGENAME;
               
               yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_PACKAGE);
               return PACKAGE;
@@ -681,7 +685,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         }
         
         /* Return character */
-        sperl->bufptr++;
+        parser->bufptr++;
         yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NULL);
         
         return (int) (uint8_t) c;
