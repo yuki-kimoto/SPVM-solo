@@ -17,22 +17,22 @@
 #include "sperl_use.h"
 
 SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
-  SPerl_PARSER* parser = calloc(1, sizeof(SPerl_PARSER));
+  SPerl_PARSER* parser = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_PARSER));
   
   // Parser information
-  sperl->cur_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
-  sperl->sub_abs_name_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
-  sperl->op_packages = SPerl_ALLOCATOR_new_array(sperl, 0);
-  sperl->package_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
-  sperl->op_types = SPerl_ALLOCATOR_new_array(sperl, 0);
-  sperl->op_use_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-  sperl->field_abs_name_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
-  sperl->include_pathes = SPerl_ALLOCATOR_new_array(sperl, 0);
-  sperl->bufptr = "";
-  sperl->resolved_types = SPerl_ALLOCATOR_new_array(sperl, 0);
-  sperl->resolved_type_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
-  sperl->use_package_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
-  sperl->cur_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
+  parser->cur_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
+  parser->sub_abs_name_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
+  parser->op_packages = SPerl_ALLOCATOR_new_array(sperl, 0);
+  parser->package_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
+  parser->op_types = SPerl_ALLOCATOR_new_array(sperl, 0);
+  parser->op_use_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+  parser->field_abs_name_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
+  parser->include_pathes = SPerl_ALLOCATOR_new_array(sperl, 0);
+  parser->bufptr = "";
+  parser->resolved_types = SPerl_ALLOCATOR_new_array(sperl, 0);
+  parser->resolved_type_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
+  parser->use_package_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
+  parser->cur_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
   
   // Core types
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
@@ -50,8 +50,8 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
-    SPerl_ARRAY_push(sperl->resolved_types, resolved_type);
-    SPerl_HASH_insert(sperl->resolved_type_symtable, name, strlen(name), resolved_type);
+    SPerl_ARRAY_push(parser->resolved_types, resolved_type);
+    SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
     
     // Type name
     SPerl_TYPE_COMPONENT_NAME* type_component_name = SPerl_TYPE_COMPONENT_NAME_new(sperl);
@@ -68,7 +68,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     op_type->uv.type = type;
     
     // Add type
-    SPerl_ARRAY_push(sperl->op_types, op_type);
+    SPerl_ARRAY_push(parser->op_types, op_type);
     
     // Package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(sperl);
@@ -82,8 +82,8 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     SPerl_OP* op_package = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_PACKAGE, "CORE", 1);
     op_package->uv.package = package;
     
-    SPerl_ARRAY_push(sperl->op_packages, op_package);
-    SPerl_HASH_insert(sperl->package_symtable, name, strlen(name), type);
+    SPerl_ARRAY_push(parser->op_packages, op_package);
+    SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
   
   // Core array types
@@ -105,11 +105,11 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = SPerl_RESOLVED_TYPE_C_CORE_LENGTH + i;
-    SPerl_ARRAY_push(sperl->resolved_types, resolved_type);
-    SPerl_HASH_insert(sperl->resolved_type_symtable, name, strlen(name), resolved_type);
+    SPerl_ARRAY_push(parser->resolved_types, resolved_type);
+    SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
-  return sperl;
+  return parser;
 }
 
 int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
