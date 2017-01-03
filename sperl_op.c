@@ -5,9 +5,10 @@
 #include <stdint.h>
 #include <assert.h>
 
+#include "sperl.h"
+#include "sperl_parser.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
-#include "sperl.h"
 #include "sperl_allocator.h"
 #include "sperl_yacc.h"
 #include "sperl_op.h"
@@ -112,6 +113,8 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
 };
 
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {
+  
+  SPerl_PARSER* parser = sperl->parser;
 
   SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op->first);
   SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op->last);
@@ -141,52 +144,52 @@ void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {
     
     if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "long", strlen("long"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "float", strlen("float"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "double", strlen("double"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "long", strlen("long"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "float", strlen("float"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
         replace_first = 1;
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "double", strlen("double"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "float", strlen("float"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "long", strlen("long"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "double", strlen("double"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
         replace_first = 1;
       }
     }
     else if (first_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
       if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "double", strlen("double"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "long", strlen("long"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
       }
       else if (last_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-        op_type->uv.type->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "float", strlen("float"));
+        op_type->uv.type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
       }
     }
     
@@ -246,6 +249,8 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl* sperl, SPerl_OP* op_for, SPerl_OP*
 
 SPerl_OP* SPerl_OP_build_switch_statement(SPerl* sperl, SPerl_OP* op_switch, SPerl_OP* op_term, SPerl_OP* op_block) {
   
+  SPerl_PARSER* parser = sperl->parser;
+  
   SPerl_OP* op_switch_condition = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_SWITCH_CONDITION, op_term->file, op_term->line);
   SPerl_OP_sibling_splice(sperl, op_switch_condition, NULL, 0, op_term);
   
@@ -255,20 +260,22 @@ SPerl_OP* SPerl_OP_build_switch_statement(SPerl* sperl, SPerl_OP* op_switch, SPe
   op_block->flag |= SPerl_OP_C_FLAG_BLOCK_SWITCH;
   
   op_switch->uv.switch_info = SPerl_SWITCH_INFO_new(sperl);
-  op_switch->uv.switch_info->op_cases = sperl->cur_op_cases;
+  op_switch->uv.switch_info->op_cases = parser->cur_op_cases;
   
-  sperl->cur_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
+  parser->cur_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
   
   return op_switch;
 }
 
 SPerl_OP* SPerl_OP_build_case_statement(SPerl* sperl, SPerl_OP* op_case, SPerl_OP* op_term) {
   
+  SPerl_PARSER* parser = sperl->parser;
+  
   SPerl_OP_sibling_splice(sperl, op_case, NULL, 0, op_term);
   
   op_term->flag = SPerl_OP_C_FLAG_CONSTANT_CASE;
   
-  SPerl_ARRAY_push(sperl->cur_op_cases, op_case);
+  SPerl_ARRAY_push(parser->cur_op_cases, op_case);
   
   return op_case;
 }
@@ -319,23 +326,29 @@ SPerl_OP* SPerl_OP_build_array_length(SPerl* sperl, SPerl_OP* op_array_length, S
 }
 
 SPerl_OP* SPerl_OP_build_new_object(SPerl* sperl, SPerl_OP* op_new, SPerl_OP* op_type) {
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
   SPerl_OP* op_new_object = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NEW_TYPE, op_new->file, op_new->line);
   SPerl_OP_sibling_splice(sperl, op_new_object, NULL, 0, op_type);
   
-  SPerl_ARRAY_push(sperl->op_types, op_type);
+  SPerl_ARRAY_push(parser->op_types, op_type);
   
   return op_new_object;
 }
 
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
   SPerl_RESOLVED_TYPE*  resolved_type = NULL;
   
   switch (op->code) {
     case SPerl_OP_C_CODE_ARRAY_LENGTH:
-      resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "int", strlen("int"));
+      resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
     case SPerl_OP_C_CODE_ARRAY_ELEM: {
       SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op->first);
-     resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
+     resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
       break;
     }
     case SPerl_OP_C_CODE_RETURN: {
@@ -402,14 +415,14 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->abs_name;
-      SPerl_SUB* sub = SPerl_HASH_search(sperl->sub_abs_name_symtable, abs_name, strlen(abs_name));
+      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = sub->op_return_type->uv.type->resolved_type;
       break;
     }
     case SPerl_OP_C_CODE_FIELD: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->abs_name;
-      SPerl_FIELD* field = SPerl_HASH_search(sperl->field_abs_name_symtable, abs_name, strlen(abs_name));
+      SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
     }
@@ -419,20 +432,26 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
 }
 
 void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op) {
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
   op->code = SPerl_OP_C_CODE_CONSTANT;
   SPerl_CONSTANT* constant_true = SPerl_CONSTANT_new(sperl);
   constant_true->code = SPerl_CONSTANT_C_CODE_INT;
-  constant_true->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "int", strlen("int"));
+  constant_true->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
   constant_true->uv.int_value = 1;
   op->uv.constant = constant_true;
 }
 
 void SPerl_OP_convert_to_op_constant_false(SPerl* sperl, SPerl_OP* op) {
+
+  SPerl_PARSER* parser = sperl->parser;
+
   op->code = SPerl_OP_C_CODE_CONSTANT;
   SPerl_CONSTANT* constant_false = SPerl_CONSTANT_new(sperl);
   constant_false->code = SPerl_CONSTANT_C_CODE_INT;
   constant_false->uv.int_value = 0;
-  constant_false->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "int", strlen("int"));
+  constant_false->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
   op->uv.constant = constant_false;
 }
 
@@ -559,13 +578,16 @@ void SPerl_OP_convert_not_to_if(SPerl* sperl, SPerl_OP* op) {
 }
 
 void SPerl_OP_resolve_types(SPerl* sperl) {
-  SPerl_ARRAY* op_types = sperl->op_types;
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
+  SPerl_ARRAY* op_types = parser->op_types;
   
   for (int32_t i = 0; i < op_types->length; i++) {
     SPerl_OP* op_type = SPerl_ARRAY_fetch(op_types, i);
     _Bool success = SPerl_TYPE_resolve_type(sperl, op_type, 0);
     if (!success) {
-      sperl->fatal_error = 1;
+      parser->fatal_error = 1;
       return;
     }
   }
@@ -573,20 +595,25 @@ void SPerl_OP_resolve_types(SPerl* sperl) {
 
 void SPerl_OP_check(SPerl* sperl) {
   
+  SPerl_PARSER* parser = sperl->parser;
+  
   // Resolve types
   SPerl_OP_resolve_types(sperl);
-  if (sperl->fatal_error) {
+  if (parser->fatal_error) {
     return;
   }
   
   // Check types
   SPerl_OP_CHECKER_check(sperl);
-  if (sperl->fatal_error) {
+  if (parser->fatal_error) {
     return;
   }
 }
 
 void SPerl_OP_check_sub_name(SPerl* sperl, SPerl_OP* op_name) {
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
   SPerl_NAME_INFO* name_info = op_name->uv.name_info;
   
   const char* sub_abs_name = NULL;
@@ -602,7 +629,7 @@ void SPerl_OP_check_sub_name(SPerl* sperl, SPerl_OP* op_name) {
   name_info->abs_name = sub_abs_name;
   
   SPerl_SUB* found_sub= SPerl_HASH_search(
-    sperl->sub_abs_name_symtable,
+    parser->sub_abs_name_symtable,
     sub_abs_name,
     strlen(sub_abs_name)
   );
@@ -613,6 +640,9 @@ void SPerl_OP_check_sub_name(SPerl* sperl, SPerl_OP* op_name) {
 }
 
 void SPerl_OP_check_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
   SPerl_NAME_INFO* name_info = op_name_info->uv.name_info;
   
   const char* field_abs_name;
@@ -623,14 +653,14 @@ void SPerl_OP_check_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
   name_info->abs_name = field_abs_name;
   
   SPerl_FIELD* found_field= SPerl_HASH_search(
-    sperl->field_abs_name_symtable,
+    parser->field_abs_name_symtable,
     field_abs_name,
     strlen(field_abs_name)
   );
   if (!found_field) {
     SPerl_yyerror_format(sperl, "unknown field \"%s\" at %s line %d\n",
       field_abs_name, op_name_info->file, op_name_info->line);
-    sperl->fatal_error = 1;
+    parser->fatal_error = 1;
   }
 }
 
@@ -668,14 +698,17 @@ SPerl_OP* SPerl_OP_build_convert_type(SPerl* sperl, SPerl_OP* op_type, SPerl_OP*
 }
 
 SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
   SPerl_OP* op_grammar = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_GRAMMAR, op_packages->file, op_packages->line);
   SPerl_OP_sibling_splice(sperl, op_grammar, NULL, 0, op_packages);
   
-  sperl->op_grammar = op_grammar;
+  parser->op_grammar = op_grammar;
 
   // Resovle types, check types, and names.
   SPerl_OP_check(sperl);
-  if (sperl->fatal_error) {
+  if (parser->fatal_error) {
     return NULL;
   }
   
@@ -690,8 +723,10 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
 
 void SPerl_OP_build_const_pool(SPerl* sperl) {
   
-  for (int32_t i = 0; i < sperl->op_packages->length; i++) {
-    SPerl_OP* op_package = SPerl_ARRAY_fetch(sperl->op_packages, i);
+  SPerl_PARSER* parser = sperl->parser;
+  
+  for (int32_t i = 0; i < parser->op_packages->length; i++) {
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, i);
     SPerl_PACKAGE* package = op_package->uv.package;
     
     // Set constant informations
@@ -746,12 +781,14 @@ const char* SPerl_OP_create_abs_name(SPerl* sperl, const char* package_name, con
 }
 
 SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block) {
+  
+  SPerl_PARSER* parser = sperl->parser;
 
   SPerl_OP_sibling_splice(sperl, op_package, NULL, 0, op_package_name);
   SPerl_OP_sibling_splice(sperl, op_package, op_package_name, 0, op_block);
   
   const char* package_name = op_package_name->uv.name;
-  SPerl_HASH* package_symtable = sperl->package_symtable;
+  SPerl_HASH* package_symtable = parser->package_symtable;
   
   // Redeclaration package error
   SPerl_TYPE* found_package = SPerl_HASH_search(package_symtable, package_name, strlen(package_name));
@@ -776,7 +813,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     
     // Add type
     package->op_type = op_type;
-    SPerl_ARRAY_push(sperl->op_types, op_type);
+    SPerl_ARRAY_push(parser->op_types, op_type);
     
     SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_new_array(sperl, 0);
     SPerl_HASH* field_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
@@ -802,19 +839,19 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           
           // Field absolute name
           const char* field_abs_name = SPerl_OP_create_abs_name(sperl, package_name, field_name);
-          SPerl_HASH_insert(sperl->field_abs_name_symtable, field_abs_name, strlen(field_abs_name), field);
+          SPerl_HASH_insert(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name), field);
         }
       }
     }
     
     // Method information
-    SPerl_HASH* sub_abs_name_symtable = sperl->sub_abs_name_symtable;
-    int32_t i = sperl->cur_op_subs->length - 1;
+    SPerl_HASH* sub_abs_name_symtable = parser->sub_abs_name_symtable;
+    int32_t i = parser->cur_op_subs->length - 1;
     while (1) {
       if (i < 0) {
         break;
       }
-      SPerl_OP* op_sub = SPerl_ARRAY_fetch(sperl->cur_op_subs, i);
+      SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->cur_op_subs, i);
       SPerl_SUB* sub = op_sub->uv.sub;
       if (sub->op_package) {
         break;
@@ -842,19 +879,21 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     
     // Set package
     package->op_fields = op_fields;
-    package->op_subs = sperl->cur_op_subs;
-    sperl->cur_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
+    package->op_subs = parser->cur_op_subs;
+    parser->cur_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
     
     // Add package
     op_package->uv.package = package;
-    SPerl_ARRAY_push(sperl->op_packages, op_package);
-    SPerl_HASH_insert(sperl->package_symtable, package_name, strlen(package_name), type);
+    SPerl_ARRAY_push(parser->op_packages, op_package);
+    SPerl_HASH_insert(parser->package_symtable, package_name, strlen(package_name), type);
   }
   
   return op_package;
 }
 
 SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_package_name) {
+
+  SPerl_PARSER* parser = sperl->parser;
 
   SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);
   
@@ -864,11 +903,11 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_p
 
   const char* package_name = op_package_name->uv.name;
   
-  SPerl_USE* found_use = SPerl_HASH_search(sperl->use_package_symtable, package_name, strlen(package_name));
+  SPerl_USE* found_use = SPerl_HASH_search(parser->use_package_symtable, package_name, strlen(package_name));
   
   if (!found_use) {
-    SPerl_ARRAY_push(sperl->op_use_stack, op_use);
-    SPerl_HASH_insert(sperl->use_package_symtable, package_name, strlen(package_name), op_use);
+    SPerl_ARRAY_push(parser->op_use_stack, op_use);
+    SPerl_HASH_insert(parser->use_package_symtable, package_name, strlen(package_name), op_use);
   }
   
   return op_use;
@@ -921,6 +960,8 @@ SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* 
 
 SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_subargs, SPerl_OP* op_type, SPerl_OP* op_block) {
   
+  SPerl_PARSER* parser = sperl->parser;
+  
   // Build OP_SUB
   SPerl_OP_sibling_splice(sperl, op_sub, NULL, 0, op_sub_name);
   SPerl_OP_sibling_splice(sperl, op_sub, op_sub_name, 0, op_subargs);
@@ -952,10 +993,10 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   sub->op_block = op_block;
   
   // ID
-  sub->id = sperl->cur_op_subs->length;
+  sub->id = parser->cur_op_subs->length;
   
   // Add sub information
-  SPerl_ARRAY_push(sperl->cur_op_subs, op_sub);
+  SPerl_ARRAY_push(parser->cur_op_subs, op_sub);
   
   op_sub->uv.sub = sub;
   
@@ -963,6 +1004,8 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
 }
 
 SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op_enum_block) {
+  
+  SPerl_PARSER* parser = sperl->parser;
   
   // Build OP_SUB
   SPerl_OP_sibling_splice(sperl, op_enum, NULL, 0, op_enum_block);
@@ -988,7 +1031,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op
       constant = SPerl_CONSTANT_new(sperl);
       constant->code = SPerl_CONSTANT_C_CODE_INT;
       constant->uv.int_value = start_value;
-      constant->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "int", strlen("int"));
+      constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
       SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
       op_constant->uv.constant = constant;
       
@@ -1107,6 +1150,8 @@ SPerl_OP* SPerl_OP_build_logical_op(SPerl* sperl, SPerl_OP* op_logical_op, SPerl
 
 SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_name) {
   
+  SPerl_PARSER* parser = sperl->parser;
+  
   // Type component name
   SPerl_TYPE_COMPONENT_NAME* type_component_name = SPerl_TYPE_COMPONENT_NAME_new(sperl);
   type_component_name->op_name = op_name;
@@ -1123,12 +1168,14 @@ SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_name) {
   op_type_name->file = op_name->file;
   op_type_name->line = op_name->line;
 
-  SPerl_ARRAY_push(sperl->op_types, op_type_name);
+  SPerl_ARRAY_push(parser->op_types, op_type_name);
   
   return op_type_name;
 }
 
 SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term) {
+  
+  SPerl_PARSER* parser = sperl->parser;
   
   // Type array
   SPerl_TYPE_COMPONENT_ARRAY* type_component_array = SPerl_TYPE_COMPONENT_ARRAY_new(sperl);
@@ -1148,12 +1195,14 @@ SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* o
   op_type_array->file = op_type->file;
   op_type_array->line = op_type->line;
   
-  SPerl_ARRAY_push(sperl->op_types, op_type_array);
+  SPerl_ARRAY_push(parser->op_types, op_type_array);
   
   return op_type_array;
 }
 
 SPerl_OP* SPerl_OP_build_type_sub(SPerl* sperl, SPerl_OP* op_argument_types, SPerl_OP* op_return_type) {
+
+  SPerl_PARSER* parser = sperl->parser;
   
   SPerl_TYPE* type = SPerl_TYPE_new(sperl);
   type->code = SPerl_TYPE_C_CODE_SUB;
@@ -1191,7 +1240,7 @@ SPerl_OP* SPerl_OP_build_type_sub(SPerl* sperl, SPerl_OP* op_argument_types, SPe
   op_type_sub->file = file;
   op_type_sub->line = line;
 
-  SPerl_ARRAY_push(sperl->op_types, op_type_sub);
+  SPerl_ARRAY_push(parser->op_types, op_type_sub);
   
   return op_type_sub;
 }

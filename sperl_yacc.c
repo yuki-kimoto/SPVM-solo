@@ -73,7 +73,7 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
 {
   SPerl_PARSER* parser = sperl->parser;
   
-  sperl->error_count++;
+  parser->error_count++;
   
   if (memcmp(message, "Error:", 6) == 0) {
     fprintf(stderr, "%s", message);
@@ -97,7 +97,7 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
     memcpy(token, parser->befbufptr + empty_count, length);
     token[length] = '\0';
 
-    fprintf(stderr, "Error: unexpected token \"%s\" at %s line %d\n", token, sperl->cur_module_path, sperl->cur_line);
+    fprintf(stderr, "Error: unexpected token \"%s\" at %s line %d\n", token, parser->cur_module_path, parser->cur_line);
     free(token);
   }
 }

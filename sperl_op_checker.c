@@ -5,9 +5,10 @@
 #include <stdint.h>
 #include <assert.h>
 
+#include "sperl.h"
+#include "sperl_parser.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
-#include "sperl.h"
 #include "sperl_allocator.h"
 #include "sperl_yacc.h"
 #include "sperl_op.h"
@@ -31,8 +32,11 @@
 #include "sperl_switch_info.h"
 
 void SPerl_OP_CHECKER_check(SPerl* sperl) {
-  for (int32_t i = 0; i < sperl->op_packages->length; i++) {
-    SPerl_OP* op_package = SPerl_ARRAY_fetch(sperl->op_packages, i);
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
+  for (int32_t i = 0; i < parser->op_packages->length; i++) {
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, i);
     SPerl_PACKAGE* package = op_package->uv.package;
     
     for (int32_t k = 0; k < package->op_subs->length; k++) {
@@ -73,7 +77,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           case SPerl_OP_C_CODE_SWITCH: {
             if (in_switch) {
               SPerl_yyerror_format(sperl, "duplicate switch is forbidden at %s line %d\n", op_cur->file, op_cur->line);
-              sperl->fatal_error = 1;
+              parser->fatal_error = 1;
               return;
             }
             else {
@@ -116,7 +120,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               case SPerl_OP_C_CODE_DEFAULT: {
                 if (cur_default_op) {
                   SPerl_yyerror_format(sperl, "multiple default is forbidden at %s line %d\n", op_cur->file, op_cur->line);
-                  sperl->fatal_error = 1;
+                  parser->fatal_error = 1;
                   return;
                 }
                 else {
@@ -595,7 +599,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 if (!first_resolved_type) {
                   SPerl_yyerror_format(sperl, "Type can't be detected at %s line %d\n", op_cur->first->file, op_cur->first->line);
-                  sperl->fatal_error = 1;
+                  parser->fatal_error = 1;
                   return;
                 }
                 
@@ -609,7 +613,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 if (first_resolved_type->id != last_resolved_type->id) {
                   SPerl_yyerror_format(sperl, "Invalid type at %s line %d\n", op_cur->file, op_cur->line);
-                  sperl->fatal_error = 1;
+                  parser->fatal_error = 1;
                   return;
                 }
                 
@@ -793,7 +797,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   if (op_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL && !op_cur->moresib) {
                     // Error
                     SPerl_yyerror_format(sperl, "\"my %s\" can't detect type at %s line %d\n", var->op_name->uv.name, op_cur->file, op_cur->line);
-                    sperl->fatal_error = 1;
+                    parser->fatal_error = 1;
                     return;
                   }
                 }
@@ -816,7 +820,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 else {
                   // Error
                   SPerl_yyerror_format(sperl, "\"my %s\" undeclared at %s line %d\n", var->op_name->uv.name, op_cur->file, op_cur->line);
-                  sperl->fatal_error = 1;
+                  parser->fatal_error = 1;
                   return;
                 }
                 break;
@@ -854,7 +858,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                 if (!name_info->anon) {
                   SPerl_OP_check_sub_name(sperl, op_cur);
-                  if (sperl->fatal_error) {
+                  if (parser->fatal_error) {
                     return;
                   }
                 }
@@ -863,7 +867,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               case SPerl_OP_C_CODE_FIELD: {
                 // Check field name
                 SPerl_OP_check_field_name(sperl, op_cur);
-                if (sperl->fatal_error) {
+                if (parser->fatal_error) {
                   return;
                 }
                 

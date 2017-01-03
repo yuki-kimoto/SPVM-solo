@@ -3,8 +3,9 @@
 #include <string.h>
 #include <inttypes.h>
 
-#include "sperl_dumper.h"
 #include "sperl.h"
+#include "sperl_parser.h"
+#include "sperl_dumper.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
 #include "sperl_constant.h"
@@ -112,14 +113,17 @@ void SPerl_DUMPER_dump_ast(SPerl* sperl, SPerl_OP* op_base) {
 }
 
 void SPerl_DUMPER_dump_sperl(SPerl* sperl) {
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
   printf("\n[Abstract Syntax Tree]\n");
-  SPerl_DUMPER_dump_ast(sperl, sperl->op_grammar);
+  SPerl_DUMPER_dump_ast(sperl, parser->op_grammar);
   
   printf("\n[Resolved types]\n");
-  SPerl_DUMPER_dump_resolved_types(sperl, sperl->resolved_types);
+  SPerl_DUMPER_dump_resolved_types(sperl, parser->resolved_types);
 
   printf("\n[Packages information]\n");
-  SPerl_DUMPER_dump_packages(sperl, sperl->op_packages);
+  SPerl_DUMPER_dump_packages(sperl, parser->op_packages);
 }
 
 void SPerl_DUMPER_dump_constants(SPerl* sperl, SPerl_ARRAY* op_constants) {

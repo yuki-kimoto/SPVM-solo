@@ -35,18 +35,6 @@ struct SPerl_parser {
   SPerl_ARRAY* op_packages;
   SPerl_HASH* package_symtable;
   
-  // Memory_pool
-  SPerl_MEMORY_POOL* memory_pool;
-  
-  // All array pointers
-  SPerl_ARRAY* array_ptrs;
-  
-  // All hash pointers
-  SPerl_ARRAY* hash_ptrs;
-  
-  // All long string pointers
-  SPerl_ARRAY* long_str_ptrs;
-  
   // Class loading stack
   SPerl_ARRAY* op_use_stack;
 
@@ -88,6 +76,6 @@ struct SPerl_parser {
 };
 
 SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl);
-int32_t SPerl_PRASER_parse(SPerl* sperl, const char* package_name);
+int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name);
 
 #endif

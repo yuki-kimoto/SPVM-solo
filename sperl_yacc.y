@@ -5,9 +5,10 @@
 %{
   #include <stdio.h>
   
+  #include "sperl.h"
+  #include "sperl_parser.h"
   #include "sperl_yacc.h"
   #include "sperl_toke.h"
-  #include "sperl.h"
   #include "sperl_op.h"
   #include "sperl_dumper.h"
 %}
@@ -50,7 +51,7 @@ grammar
       $$ = SPerl_OP_build_grammar(sperl, $1);
 
       // Syntax error
-      if (sperl->error_count) {
+      if (sperl->parser->error_count) {
         YYABORT;
       }
       else {
@@ -62,7 +63,7 @@ grammar
 opt_decl_things_in_grammar
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
   |	decl_things_in_grammar
     {
@@ -90,7 +91,7 @@ decl_package
   : PACKAGE package_name class_block
     {
       $$ = SPerl_OP_build_decl_package(sperl, $1, $2, $3);
-      if (sperl->fatal_error) {
+      if (sperl->parser->fatal_error) {
         YYABORT;
       }
     }
@@ -105,7 +106,7 @@ enum_block
 opt_decl_enumeration_values
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
   |	decl_enumeration_values
     {
@@ -144,7 +145,7 @@ throw_exception
 opt_statements
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
   |	statements
     {
@@ -222,7 +223,7 @@ if_statement
 else_statement
   : /* NULL */
     {
-      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, sperl->cur_module_path, sperl->cur_line);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, sperl->parser->cur_module_path, sperl->parser->cur_line);
     };
   | ELSE block
     {
@@ -286,7 +287,7 @@ decl_anon_sub
 opt_decl_things_in_class
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
   |	decl_things_in_class
     {
@@ -331,7 +332,7 @@ expression
 opt_terms
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
   |	terms
     {
@@ -360,7 +361,7 @@ array_length
 opt_term
   : /* NULL */
     {
-      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, sperl->cur_module_path, sperl->cur_line);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
   | term
 term
@@ -538,7 +539,7 @@ block
 opt_sub_args
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
   |	sub_args
     {
@@ -587,7 +588,7 @@ type_name
 type_sub
   : SUB '(' ')' type
     {
-      SPerl_OP* op_types = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
+      SPerl_OP* op_types = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
       $$ = SPerl_OP_build_type_sub(sperl, op_types, $4);
     }
   | SUB '(' types ')' type

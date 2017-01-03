@@ -1,9 +1,10 @@
 #include <string.h>
 
+#include "sperl.h"
+#include "sperl_parser.h"
 #include "sperl_bytecode_builder.h"
 #include "sperl_bytecode.h"
 #include "sperl_bytecodes.h"
-#include "sperl.h"
 #include "sperl_constant.h"
 #include "sperl_op.h"
 #include "sperl_resolved_type.h"
@@ -19,8 +20,11 @@
 #include "sperl_switch_info.h"
 
 void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl* sperl) {
-  for (int32_t package_pos = 0; package_pos < sperl->op_packages->length; package_pos++) {
-    SPerl_OP* op_package = SPerl_ARRAY_fetch(sperl->op_packages, package_pos);
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
+  for (int32_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_pos);
     SPerl_PACKAGE* package = op_package->uv.package;
     
     for (int32_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
@@ -306,7 +310,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl* sperl) {
 
                   SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                   const char* field_abs_name = name_info->abs_name;
-                  SPerl_FIELD* field = SPerl_HASH_search(sperl->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
+                  SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
                   int32_t id = field->id;
                   
                   SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
@@ -321,7 +325,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl* sperl) {
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_INVOKESTATIC);
                 SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                 const char* sub_abs_name = name_info->abs_name;
-                SPerl_SUB* sub = SPerl_HASH_search(sperl->sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
+                SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
                 int32_t id = sub->id;
                 
                 SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
@@ -917,7 +921,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl* sperl) {
                   // Call subroutine
                   SPerl_NAME_INFO* name_info = op_cur->first->uv.name_info;
                   const char* field_abs_name = name_info->abs_name;
-                  SPerl_FIELD* field = SPerl_HASH_search(sperl->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
+                  SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
                   int32_t id = field->id;
                   
                   SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);

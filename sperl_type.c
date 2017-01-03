@@ -1,11 +1,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "sperl.h"
+#include "sperl_parser.h"
 #include "sperl_type.h"
 #include "sperl_type_component_name.h"
 #include "sperl_type_component_array.h"
 #include "sperl_type_component_sub.h"
-#include "sperl.h"
 #include "sperl_array.h"
 #include "sperl_type_part.h"
 #include "sperl_op.h"
@@ -23,7 +24,10 @@ const char* const SPerl_TYPE_C_CODE_NAMES[] = {
 
 // Resolve type and index type
 _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_length) {
-  SPerl_HASH* package_symtable = sperl->package_symtable;
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
+  SPerl_HASH* package_symtable = parser->package_symtable;
   SPerl_TYPE* type = op_type->uv.type;
   
   if (type->resolved_type) {
@@ -68,16 +72,16 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
     }
     
     // Create resolved type id
-    SPerl_RESOLVED_TYPE* found_resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name));
+    SPerl_RESOLVED_TYPE* found_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name));
     if (found_resolved_type) {
       type->resolved_type = found_resolved_type;
     }
     else {
       SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-      resolved_type->id = sperl->resolved_types->length;
+      resolved_type->id = parser->resolved_types->length;
       resolved_type->name = resolved_type_name;
-      SPerl_ARRAY_push(sperl->resolved_types, resolved_type);
-      SPerl_HASH_insert(sperl->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
+      SPerl_ARRAY_push(parser->resolved_types, resolved_type);
+      SPerl_HASH_insert(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
       type->resolved_type = resolved_type;
     }
   }

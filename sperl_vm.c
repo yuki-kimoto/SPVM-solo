@@ -1,7 +1,8 @@
 #include <string.h>
 
-#include "sperl_vm.h"
 #include "sperl.h"
+#include "sperl_parser.h"
+#include "sperl_vm.h"
 #include "sperl_allocator.h"
 #include "sperl_hash.h"
 #include "sperl_bytecodes.h"
@@ -13,9 +14,12 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
 }
 
 void SPerl_VM_run(SPerl* sperl) {
-  const char* entry_point = sperl->entry_point;
   
-  SPerl_SUB* sub_entry_point = SPerl_HASH_search(sperl->sub_abs_name_symtable, entry_point, strlen(entry_point));
+  SPerl_PARSER* parser = sperl->parser;
+  
+  const char* entry_point = parser->entry_point;
+  
+  SPerl_SUB* sub_entry_point = SPerl_HASH_search(parser->sub_abs_name_symtable, entry_point, strlen(entry_point));
   
   SPerl_BYTECODES* bytecodes = sub_entry_point->bytecodes;
   uint8_t* bytecodes_values = bytecodes->values;

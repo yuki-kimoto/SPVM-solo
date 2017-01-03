@@ -19,7 +19,10 @@
 #include "sperl_type.h"
 
 SPerl_OP* SPerl_TOKE_newOP(SPerl* sperl, uint8_t type) {
-  SPerl_OP* op = SPerl_OP_newOP(sperl, type, sperl->cur_module_path, sperl->cur_line);
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
+  SPerl_OP* op = SPerl_OP_newOP(sperl, type, parser->cur_module_path, parser->cur_line);
   
   return op;
 }
@@ -44,11 +47,11 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
     // line end
     switch(c) {
       case '\0':
-        sperl->cur_module_path = NULL;
-        sperl->cur_src = NULL;
+        parser->cur_module_path = NULL;
+        parser->cur_src = NULL;
         
         // If there are more module, load it
-        SPerl_ARRAY* op_use_stack = sperl->op_use_stack;
+        SPerl_ARRAY* op_use_stack = parser->op_use_stack;
         
         while (1) {
           SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
@@ -56,7 +59,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             SPerl_USE* use = op_use->uv.use;
             const char* package_name = use->op_package_name->uv.name;
             
-            SPerl_PACKAGE* found_package = SPerl_HASH_search(sperl->package_symtable, package_name, strlen(package_name));
+            SPerl_PACKAGE* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
             if (found_package) {
               continue;
             }
@@ -91,8 +94,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               // Search module file
               char* cur_module_path = NULL;
               FILE* fh = NULL;
-              for (int32_t i = 0; i < sperl->include_pathes->length; i++) {
-                const char* include_path = (const char*) SPerl_ARRAY_fetch(sperl->include_pathes, i);
+              for (int32_t i = 0; i < parser->include_pathes->length; i++) {
+                const char* include_path = (const char*) SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
                 // File name
                 cur_module_path = SPerl_ALLOCATOR_new_string(sperl, strlen(include_path) + 1 + strlen(module_path_base));
@@ -101,7 +104,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
                 // Open source file
                 fh = fopen(cur_module_path, "r");
                 if (fh) {
-                  sperl->cur_module_path = cur_module_path;
+                  parser->cur_module_path = cur_module_path;
                   break;
                 }
               }
@@ -115,7 +118,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
                 exit(1);
               }
               
-              sperl->cur_module_path = cur_module_path;
+              parser->cur_module_path = cur_module_path;
               
               
               // Read file content
@@ -138,11 +141,11 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               }
               fclose(fh);
               src[file_size] = '\0';
-              sperl->cur_src = src;
+              parser->cur_src = src;
               parser->bufptr = src;
               parser->befbufptr = src;
-              sperl->current_package_count = 0;
-              sperl->cur_line = 1;
+              parser->current_package_count = 0;
+              parser->cur_line = 1;
               break;
             }
           }
@@ -150,7 +153,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             return 0;
           }
         }
-        if (sperl->cur_src) {
+        if (parser->cur_src) {
           continue;
         }
         else {
@@ -165,7 +168,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
 
       case '\n':
         parser->bufptr++;
-        sperl->cur_line++;
+        parser->cur_line++;
         continue;
       
       /* Addition */
@@ -389,7 +392,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
         constant->code = SPerl_CONSTANT_C_CODE_BYTE;
         constant->uv.int_value = (int32_t) (uint8_t) ch;
-        constant->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "byte", strlen("byte"));
+        constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte", strlen("byte"));
         
         op->uv.constant = constant;
         yylvalp->opval = op;
@@ -430,7 +433,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
         constant->code = SPerl_CONSTANT_C_CODE_STRING;
         constant->uv.string_value = str;
-        constant->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "byte[]", strlen("byte[]"));
+        constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
         op->uv.constant = constant;
         yylvalp->opval = (SPerl_OP*)op;
 
@@ -506,7 +509,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
             constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
             constant->uv.double_value = num;
-            constant->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "double", strlen("double"));
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
             op->uv.constant = constant;
             yylvalp->opval = (SPerl_OP*)op;
             
@@ -521,7 +524,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
             constant->code = SPerl_CONSTANT_C_CODE_INT;
             constant->uv.int_value = num;
-            constant->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "int", strlen("int"));
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
             op->uv.constant = constant;
             yylvalp->opval = (SPerl_OP*)op;
             
@@ -570,11 +573,11 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             }
             else if (memcmp(keyword, "package", str_len) == 0) {
               // File can contains only one package
-              if (sperl->current_package_count) {
-                fprintf(stderr, "Can't write second package declaration in file at %s line %d\n", sperl->cur_module_path, sperl->cur_line);
+              if (parser->current_package_count) {
+                fprintf(stderr, "Can't write second package declaration in file at %s line %d\n", parser->cur_module_path, parser->cur_line);
                 exit(1);
               }
-              sperl->current_package_count++;
+              parser->current_package_count++;
               
               // Next is package name
               parser->expect = SPerl_TOKE_C_EXPECT_PACKAGENAME;
@@ -651,7 +654,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
               constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
               constant->uv.int_value = 1;
-              constant->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "boolean", strlen("boolean"));
+              constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
               op->uv.constant = constant;
               yylvalp->opval = op;
 
@@ -662,7 +665,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
               constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
               constant->uv.int_value = 0;
-              constant->resolved_type = SPerl_HASH_search(sperl->resolved_type_symtable, "boolean", strlen("boolean"));
+              constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
               op->uv.constant = constant;
               yylvalp->opval = op;
 
