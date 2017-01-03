@@ -6,7 +6,8 @@
 #include "sperl_base.h"
 
 // Parser information
-struct SPerl_yy_sperl_{
+struct sperl_ {
+  
   // Before buffer position
   const char* befbufptr;
   

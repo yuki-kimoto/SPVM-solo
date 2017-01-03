@@ -8,6 +8,10 @@ enum {
   SPerl_BASE_C_INT_MAX = 2147483647,
 };
 
+/* sperl_parser.h */
+struct SPerl_parser;
+typedef struct SPerl_parser SPerl_PARSER;
+
 /* sperl_vm.h */
 struct SPerl_vm_stack;
 typedef struct SPerl_vm_stack SPerl_VM_STACK;
@@ -144,9 +148,8 @@ struct SPerl_hash;
 typedef struct SPerl_hash SPerl_HASH;
 
 /* sperl.h */
-struct SPerl_yy_sperl_;
-typedef struct SPerl_yy_sperl_ SPerl_yy_sperl;
-typedef SPerl_yy_sperl SPerl;
+struct sperl_;
+typedef struct sperl_ SPerl;
 
 union SPerl_yystype;
 typedef union SPerl_yystype SPerl_YYSTYPE;

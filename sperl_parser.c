@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "sperl.h"
 #include "sperl_parser.h"
 #include "sperl_resolved_type.h"
 #include "sperl_package.h"
