@@ -87,9 +87,7 @@ struct SPerl_parser {
   const char* entry_point;
 };
 
-SPerl* SPerl_PARSER_new();
-
-void SPerl_PRSER_free(SPerl* sperl);
+SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl);
 int32_t SPerl_PRASER_parse(SPerl* sperl, const char* package_name);
 
 #endif
