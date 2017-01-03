@@ -3,12 +3,11 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "sperl.h"
-#include "sperl_parser.h"
 #include "sperl_toke.h"
 #include "sperl_yacc.h"
 #include "sperl_yacc.tab.h"
 #include "sperl_op.h"
+#include "sperl.h"
 #include "sperl_allocator.h"
 #include "sperl_constant.h"
 #include "sperl_var.h"
@@ -31,11 +30,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
   uint8_t expect = sperl->expect;
   sperl->expect = SPerl_TOKE_C_EXPECT_NORMAL;
   
-  // Parser
-  SPerl_PARSER* parser = sperl->parser;
-  
   // Save buf pointer
-  parser->befbufptr = sperl->bufptr;
+  sperl->befbufptr = sperl->bufptr;
   
   while(1) {
     // Get current character
@@ -140,7 +136,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               src[file_size] = '\0';
               sperl->cur_src = src;
               sperl->bufptr = src;
-              parser->befbufptr = src;
+              sperl->befbufptr = src;
               sperl->current_package_count = 0;
               sperl->cur_line = 1;
               break;
