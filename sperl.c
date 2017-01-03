@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "sperl.h"
+#include "sperl_parser.h"
 #include "sperl_resolved_type.h"
 #include "sperl_package.h"
 #include "sperl_type_component_name.h"
@@ -23,6 +24,9 @@ SPerl* SPerl_new() {
   sperl->hash_ptrs = SPerl_ARRAY_new(0);
   sperl->long_str_ptrs = SPerl_ARRAY_new(0);
   sperl->memory_pool = SPerl_MEMORY_POOL_new(0);
+
+  // Parser
+  SPerl_PARSER* parser = SPerl_PARSER_new(sperl);
   
   // Parser information
   sperl->cur_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
