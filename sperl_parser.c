@@ -113,7 +113,9 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
 }
 
 int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
-
+  
+  SPerl_PARSER* parser = sperl->parser;
+  
   /* Build use information */
   SPerl_USE* use = SPerl_USE_new(sperl);
   SPerl_OP* op_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, package_name, 1);
@@ -125,13 +127,13 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   op_use->uv.use = use;
   
   /* Push package use information stack */
-  SPerl_ARRAY_push(sperl->op_use_stack, op_use);
+  SPerl_ARRAY_push(parser->op_use_stack, op_use);
   
   // Entry point
   char* entry_point = SPerl_ALLOCATOR_new_string(sperl, strlen(package_name) + 6);
   strncpy(entry_point, package_name, strlen(package_name));
   strncpy(entry_point + strlen(package_name), "::main", 6);
-  sperl->entry_point = entry_point;
+  parser->entry_point = entry_point;
   
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;
