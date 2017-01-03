@@ -8,8 +8,8 @@
 // Parser information
 struct sperl_ {
   
-  // Before buffer position
-  const char* befbufptr;
+  // Parser
+  SPerl_PARSER* parser;
   
   // Current buffer position
   const char* bufptr;

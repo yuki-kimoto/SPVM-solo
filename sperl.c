@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "sperl.h"
+#include "sperl_parser.h"
 #include "sperl_resolved_type.h"
 #include "sperl_package.h"
 #include "sperl_type_component_name.h"
@@ -17,6 +18,8 @@
 
 SPerl* SPerl_new() {
   SPerl* sperl = calloc(1, sizeof(SPerl));
+  
+  sperl->parser = SPerl_PARSER_new(sperl);
   
   // Manipulate memory. This is freed last.
   sperl->array_ptrs = SPerl_ARRAY_new(0);
