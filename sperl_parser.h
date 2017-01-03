@@ -1,5 +1,5 @@
-#ifndef SPERL_H
-#define SPERL_H
+#ifndef SPERL_PARSER_H
+#define SPERL_PARSER_H
 
 #include <stdio.h>
 
@@ -87,9 +87,9 @@ struct SPerl_yy_sperl_{
   const char* entry_point;
 };
 
-SPerl* SPerl_new();
+SPerl* SPerl_PARSER_new();
 
-void SPerl_free(SPerl* sperl);
-int32_t SPerl_parse(SPerl* sperl, const char* package_name);
+void SPerl_PRSER_free(SPerl* sperl);
+int32_t SPerl_PRASER_parse(SPerl* sperl, const char* package_name);
 
 #endif
