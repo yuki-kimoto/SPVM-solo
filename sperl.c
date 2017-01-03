@@ -3,18 +3,10 @@
 
 #include "sperl.h"
 #include "sperl_parser.h"
-#include "sperl_resolved_type.h"
-#include "sperl_package.h"
-#include "sperl_type_component_name.h"
-#include "sperl_type.h"
-#include "sperl_op.h"
 #include "sperl_memory_pool.h"
 #include "sperl_hash.h"
 #include "sperl_array.h"
 #include "sperl_allocator.h"
-#include "sperl_yacc.h"
-#include "sperl_array.h"
-#include "sperl_use.h"
 
 SPerl* SPerl_new() {
   SPerl* sperl = calloc(1, sizeof(SPerl));
