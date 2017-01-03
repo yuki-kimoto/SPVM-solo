@@ -16,6 +16,6 @@ struct SPerl_sub {
   SPerl_BYTECODES* bytecodes;
 };
 
-SPerl_SUB* SPerl_SUB_new(SPerl_PARSER* parser);
+SPerl_SUB* SPerl_SUB_new(SPerl* sperl);
 
 #endif

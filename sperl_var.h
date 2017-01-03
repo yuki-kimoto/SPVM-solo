@@ -9,6 +9,6 @@ struct SPerl_var {
   int32_t version;
 };
 
-SPerl_VAR* SPerl_VAR_new(SPerl_PARSER* parser);
+SPerl_VAR* SPerl_VAR_new(SPerl* sperl);
 
 #endif

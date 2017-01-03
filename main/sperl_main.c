@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../sperl_parser.h"
+#include "../sperl.h"
 #include "../sperl_array.h"
 #include "../sperl_vm.h"
 
@@ -17,15 +17,15 @@ int main(int argc, char *argv[])
   const char* package_name = argv[1];
   
   // Parse
-  SPerl_PARSER* parser = SPerl_PARSER_new();
-  SPerl_ARRAY_push(parser->include_pathes, ".");
-  int32_t parse_success = SPerl_PARSER_parse(parser, package_name);
+  SPerl* sperl = SPerl_new();
+  SPerl_ARRAY_push(sperl->include_pathes, ".");
+  int32_t parse_success = SPerl_parse(sperl, package_name);
   
   // Run
-  SPerl_VM_run(parser);
+  SPerl_VM_run(sperl);
   
-  // Free parser
-  SPerl_PARSER_free(parser);
+  // Free sperl
+  SPerl_free(sperl);
   
   return parse_success;
 }

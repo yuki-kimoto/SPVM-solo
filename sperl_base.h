@@ -143,10 +143,10 @@ typedef struct SPerl_hash_entry SPerl_HASH_ENTRY;
 struct SPerl_hash;
 typedef struct SPerl_hash SPerl_HASH;
 
-/* sperl_parser.h */
-struct SPerl_yy_parser_;
-typedef struct SPerl_yy_parser_ SPerl_yy_parser;
-typedef SPerl_yy_parser SPerl_PARSER;
+/* sperl.h */
+struct SPerl_yy_sperl_;
+typedef struct SPerl_yy_sperl_ SPerl_yy_sperl;
+typedef SPerl_yy_sperl SPerl;
 
 union SPerl_yystype;
 typedef union SPerl_yystype SPerl_YYSTYPE;

@@ -16,6 +16,6 @@ struct SPerl_switch_info {
   uint32_t min;
 };
 
-SPerl_SWITCH_INFO* SPerl_SWITCH_INFO_new(SPerl_PARSER* parser);
+SPerl_SWITCH_INFO* SPerl_SWITCH_INFO_new(SPerl* sperl);
 
 #endif

@@ -4,14 +4,14 @@
 #include <inttypes.h>
 
 #include "sperl_yacc.h"
-#include "sperl_parser.h"
+#include "sperl.h"
 #include "sperl_allocator.h"
 #include "sperl_yacc.tab.h"
 #include "sperl_constant.h"
 #include "sperl_var.h"
 #include "sperl_op.h"
 
-void SPerl_yyerror_format(SPerl_PARSER* parser, const char* message_template, ...) {
+void SPerl_yyerror_format(SPerl* sperl, const char* message_template, ...) {
   
   int32_t message_length = 0;
   
@@ -24,7 +24,7 @@ void SPerl_yyerror_format(SPerl_PARSER* parser, const char* message_template, ..
   
   // Messsage template with prefix
   int32_t message_template_with_prefix_length = prefix_length + message_template_length;
-  char* message_template_with_prefix = SPerl_ALLOCATOR_new_string(parser, message_template_with_prefix_length);
+  char* message_template_with_prefix = SPerl_ALLOCATOR_new_string(sperl, message_template_with_prefix_length);
   strncpy(message_template_with_prefix, prefix, prefix_length);
   strncpy(message_template_with_prefix + prefix_length, message_template, message_template_length);
   message_template_with_prefix[message_template_with_prefix_length] = '\0';
@@ -58,19 +58,19 @@ void SPerl_yyerror_format(SPerl_PARSER* parser, const char* message_template, ..
   }
   va_end(args);
   
-  char* message = SPerl_ALLOCATOR_new_string(parser, message_length);
+  char* message = SPerl_ALLOCATOR_new_string(sperl, message_length);
   
   va_start(args, message_template);
   vsprintf(message, message_template_with_prefix, args);
   va_end(args);
   
-  SPerl_yyerror(parser, message);
+  SPerl_yyerror(sperl, message);
 }
 
 // Print error
-void SPerl_yyerror(SPerl_PARSER* parser, const char* message)
+void SPerl_yyerror(SPerl* sperl, const char* message)
 {
-  parser->error_count++;
+  sperl->error_count++;
   
   if (memcmp(message, "Error:", 6) == 0) {
     fprintf(stderr, "%s", message);
@@ -80,8 +80,8 @@ void SPerl_yyerror(SPerl_PARSER* parser, const char* message)
     // Current token
     int32_t length = 0;
     int32_t empty_count = 0;
-    const char* ptr = parser->befbufptr;
-    while (ptr != parser->bufptr) {
+    const char* ptr = sperl->befbufptr;
+    while (ptr != sperl->bufptr) {
       if (*ptr == ' ' || *ptr == '\t' || *ptr == '\n') {
         empty_count++;
       }
@@ -91,10 +91,10 @@ void SPerl_yyerror(SPerl_PARSER* parser, const char* message)
       ptr++;
     }
     char* token = (char*) calloc(length + 1, sizeof(char));
-    memcpy(token, parser->befbufptr + empty_count, length);
+    memcpy(token, sperl->befbufptr + empty_count, length);
     token[length] = '\0';
 
-    fprintf(stderr, "Error: unexpected token \"%s\" at %s line %d\n", token, parser->cur_module_path, parser->cur_line);
+    fprintf(stderr, "Error: unexpected token \"%s\" at %s line %d\n", token, sperl->cur_module_path, sperl->cur_line);
     free(token);
   }
 }

@@ -3,7 +3,7 @@
 #include "sperl_bytecode_builder.h"
 #include "sperl_bytecode.h"
 #include "sperl_bytecodes.h"
-#include "sperl_parser.h"
+#include "sperl.h"
 #include "sperl_constant.h"
 #include "sperl_op.h"
 #include "sperl_resolved_type.h"
@@ -18,9 +18,9 @@
 #include "sperl_field.h"
 #include "sperl_switch_info.h"
 
-void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
-  for (int32_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
-    SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_pos);
+void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl* sperl) {
+  for (int32_t package_pos = 0; package_pos < sperl->op_packages->length; package_pos++) {
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(sperl->op_packages, package_pos);
     SPerl_PACKAGE* package = op_package->uv.package;
     
     for (int32_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
@@ -36,9 +36,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
       SPerl_OP* op_cur = op_base;
       _Bool finish = 0;
       
-      SPerl_ARRAY* if_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
-      SPerl_ARRAY* loop_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
-      SPerl_ARRAY* last_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(parser, 0);
+      SPerl_ARRAY* if_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+      SPerl_ARRAY* loop_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+      SPerl_ARRAY* last_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
       
       // Current switch
       SPerl_OP* cur_op_switch_info = NULL;
@@ -56,8 +56,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
         switch (op_cur->code) {
           case SPerl_OP_C_CODE_SWITCH: {
             cur_op_switch_info = op_cur;
-            cur_case_addresses = SPerl_ALLOCATOR_new_array(parser, 0);
-            cur_op_cases = SPerl_ALLOCATOR_new_array(parser, 0);
+            cur_case_addresses = SPerl_ALLOCATOR_new_array(sperl, 0);
+            cur_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
             break;
           }
         }
@@ -143,7 +143,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_CASE: {
                 
-                int32_t* address_ptr = SPerl_ALLOCATOR_new_int(parser);
+                int32_t* address_ptr = SPerl_ALLOCATOR_new_int(sperl);
                 *address_ptr = bytecodes->length;
                 
                 SPerl_ARRAY_push(cur_case_addresses, address_ptr);
@@ -238,12 +238,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   
                   int32_t length = switch_info->op_cases->length;
                   
-                  SPerl_ARRAY* ordered_op_cases = SPerl_ALLOCATOR_new_array(parser, 0);
+                  SPerl_ARRAY* ordered_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
                   for (int32_t i = 0; i < length; i++) {
                     SPerl_OP* op_case = SPerl_ARRAY_fetch(cur_op_cases, i);
                     SPerl_ARRAY_push(ordered_op_cases, op_case);
                   }
-                  SPerl_ARRAY* ordered_case_addresses = SPerl_ALLOCATOR_new_array(parser, 0);
+                  SPerl_ARRAY* ordered_case_addresses = SPerl_ALLOCATOR_new_array(sperl, 0);
                   for (int32_t i = 0; i < length; i++) {
                     SPerl_OP* case_address = SPerl_ARRAY_fetch(cur_case_addresses, i);
                     SPerl_ARRAY_push(ordered_case_addresses, case_address);
@@ -306,7 +306,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
 
                   SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                   const char* field_abs_name = name_info->abs_name;
-                  SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
+                  SPerl_FIELD* field = SPerl_HASH_search(sperl->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
                   int32_t id = field->id;
                   
                   SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
@@ -321,7 +321,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_INVOKESTATIC);
                 SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                 const char* sub_abs_name = name_info->abs_name;
-                SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
+                SPerl_SUB* sub = SPerl_HASH_search(sperl->sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
                 int32_t id = sub->id;
                 
                 SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
@@ -337,7 +337,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 // Add goto
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GOTO);
                 
-                int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(parser);
+                int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(sperl);
                 *pos_ptr = bytecodes->length - 1;
                 SPerl_ARRAY_push(last_bytecode_pos_stack, pos_ptr);
                 
@@ -404,8 +404,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 SPerl_OP* op_condition_target = op_cur->first;
                 
                 if (op_condition_target->code == SPerl_OP_C_CODE_EQ) {
-                  SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->first);
-                  SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->last);
+                  SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target->first);
+                  SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target->last);
                   
                   if (!first_resolved_type || !last_resolved_type) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFNULL);
@@ -435,8 +435,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                 }
                 else if (op_condition_target->code == SPerl_OP_C_CODE_NE) {
-                  SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->first);
-                  SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->last);
+                  SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target->first);
+                  SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target->last);
                   
                   if (!first_resolved_type || !last_resolved_type) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFNONNULL);
@@ -467,7 +467,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                 }
                 else if (op_condition_target->code == SPerl_OP_C_CODE_GT) {
-                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->first);
+                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target->first);
                   if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPGT);
                   }
@@ -487,7 +487,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                 }
                 else if (op_condition_target->code == SPerl_OP_C_CODE_GE) {
-                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->first);
+                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target->first);
                   if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPGE);
                   }
@@ -507,7 +507,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                 }
                 else if (op_condition_target->code == SPerl_OP_C_CODE_LT) {
-                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->first);
+                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target->first);
                   if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPLT);
                   }
@@ -527,7 +527,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                 }
                 else if (op_condition_target->code == SPerl_OP_C_CODE_LE) {
-                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target->first);
+                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target->first);
                   if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IF_ICMPLE);
                   }
@@ -548,7 +548,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 }
                 else if (op_condition_target) {
                   
-                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_condition_target);
+                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target);
                   
                   if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IFNE);
@@ -572,7 +572,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   }
                 }
                 
-                int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(parser);
+                int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(sperl);
                 *pos_ptr = bytecodes->length - 1;
                 
                 if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_IF) {
@@ -594,7 +594,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 break;
               }
               case SPerl_OP_C_CODE_LEFT_SHIFT: {
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
                 if (op_cur_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ISHL);
@@ -606,7 +606,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 break;
               }
               case SPerl_OP_C_CODE_RIGHT_SHIFT: {
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
                 if (op_cur_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ISHR);
@@ -618,7 +618,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 break;
               }
               case SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED: {
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
                 if (op_cur_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IUSHR);
@@ -630,15 +630,15 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 break;
               }
               case SPerl_OP_C_CODE_NEW_TYPE: {
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
-                if (SPerl_RESOLVED_TYPE_is_core_type_array(parser, op_cur_resolved_type)) {
+                if (SPerl_RESOLVED_TYPE_is_core_type_array(sperl, op_cur_resolved_type)) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_NEWARRAY);
                 }
-                else if (SPerl_RESOLVED_TYPE_is_multi_array(parser, op_cur_resolved_type)) {
+                else if (SPerl_RESOLVED_TYPE_is_multi_array(sperl, op_cur_resolved_type)) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_MULTIANEWARRAY);
                 }
-                else if (SPerl_RESOLVED_TYPE_is_array(parser, op_cur_resolved_type)) {
+                else if (SPerl_RESOLVED_TYPE_is_array(sperl, op_cur_resolved_type)) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ANEWARRAY);
                 }
                 else {
@@ -658,7 +658,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 SPerl_VAR* var = op_cur->first->uv.var;
                 SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IINC);
                   SPerl_BYTECODES_push(bytecodes, my_var->pos);
@@ -673,7 +673,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 SPerl_VAR* var = op_cur->first->uv.var;
                 SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IINC);
                   SPerl_BYTECODES_push(bytecodes, my_var->pos);
@@ -686,7 +686,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 SPerl_VAR* var = op_cur->first->uv.var;
                 SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IINC);
                   SPerl_BYTECODES_push(bytecodes, my_var->pos);
@@ -701,7 +701,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 SPerl_VAR* var = op_cur->first->uv.var;
                 SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IINC);
                   SPerl_BYTECODES_push(bytecodes, my_var->pos);
@@ -712,7 +712,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_BIT_XOR: {
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IXOR);
                 }
@@ -724,7 +724,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_BIT_OR: {
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IOR);
                 }
@@ -735,7 +735,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 break;
               }
               case SPerl_OP_C_CODE_BIT_AND: {
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
                 if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IAND);
@@ -752,7 +752,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   break;
                 }
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
                 if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BOOLEAN
                   || op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE)
@@ -781,7 +781,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_ASSIGN: {
                 
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
                 if (op_cur->first->code == SPerl_OP_C_CODE_VAR) {
                   SPerl_OP* op_var = op_cur->first;
@@ -917,7 +917,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   // Call subroutine
                   SPerl_NAME_INFO* name_info = op_cur->first->uv.name_info;
                   const char* field_abs_name = name_info->abs_name;
-                  SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
+                  SPerl_FIELD* field = SPerl_HASH_search(sperl->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
                   int32_t id = field->id;
                   
                   SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
@@ -929,7 +929,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               
               case SPerl_OP_C_CODE_RETURN: {
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (!op_cur_resolved_type) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_RETURN);
                 }
@@ -953,7 +953,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_NEGATE: {
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_INEG);
                 }
@@ -973,8 +973,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                 
                 SPerl_OP* op_term = op_cur->first;
                 SPerl_OP* op_type = op_cur->last;
-                SPerl_RESOLVED_TYPE* op_type_resolved_type = SPerl_OP_get_resolved_type(parser, op_type);
-                SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(parser, op_term);
+                SPerl_RESOLVED_TYPE* op_type_resolved_type = SPerl_OP_get_resolved_type(sperl, op_type);
+                SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term);
                 if (op_type_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   if (op_term_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
                     SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_L2I);
@@ -1025,7 +1025,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               case SPerl_OP_C_CODE_POP: {
                 
                 SPerl_OP* op_first = op_cur->first;
-                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(parser, op_first);
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_first);
                 if (!first_resolved_type) {
                   break;
                 }
@@ -1043,7 +1043,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_ADD: {
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IADD);
                 }
@@ -1061,7 +1061,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_SUBTRACT: {
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_ISUB);
                 }
@@ -1079,7 +1079,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_MULTIPLY: {
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IMUL);
                 }
@@ -1097,7 +1097,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_DIVIDE: {
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IDIV);
                 }
@@ -1115,7 +1115,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
               }
               case SPerl_OP_C_CODE_REMAINDER: {
                 
-                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 if (op_cur_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_IREM);
                 }
@@ -1138,7 +1138,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
                   break;
                 }
                 
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(parser, op_cur);
+                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
                 int32_t my_var_pos = var->op_my_var->uv.my_var->pos;
                 
@@ -1374,7 +1374,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl_PARSER* parser) {
             
             // Next sibling
             if (op_cur->moresib) {
-              op_cur = SPerl_OP_sibling(parser, op_cur);
+              op_cur = SPerl_OP_sibling(sperl, op_cur);
               break;
             }
             // Next is parent

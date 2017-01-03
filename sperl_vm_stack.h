@@ -8,6 +8,6 @@ struct SPerl_vm_stack {
   int32_t frames;
 };
 
-SPerl_VM_STACK* SPerl_VM_STACK_new(SPerl_PARSER* parser);
+SPerl_VM_STACK* SPerl_VM_STACK_new(SPerl* sperl);
 
 #endif

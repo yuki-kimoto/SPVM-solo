@@ -9,6 +9,6 @@ struct SPerl_enumeration_value {
   SPerl_OP* op_constant;
 };
 
-SPerl_ENUMERATION_VALUE* SPerl_ENUMERATION_VALUE_new(SPerl_PARSER* parser);
+SPerl_ENUMERATION_VALUE* SPerl_ENUMERATION_VALUE_new(SPerl* sperl);
 
 #endif

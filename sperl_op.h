@@ -173,70 +173,70 @@ struct SPerl_op {
   } uv;
 };
 
-void SPerl_OP_convert_to_op_constant_true(SPerl_PARSER* parser, SPerl_OP* op);
-void SPerl_OP_convert_to_op_constant_false(SPerl_PARSER* parser, SPerl_OP* op);
+void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op);
+void SPerl_OP_convert_to_op_constant_false(SPerl* sperl, SPerl_OP* op);
 
-void SPerl_OP_convert_not_to_if(SPerl_PARSER* parser, SPerl_OP* op);
-void SPerl_OP_convert_and_to_if(SPerl_PARSER* parser, SPerl_OP* op);
-void SPerl_OP_convert_or_to_if(SPerl_PARSER* parser, SPerl_OP* op);
+void SPerl_OP_convert_not_to_if(SPerl* sperl, SPerl_OP* op);
+void SPerl_OP_convert_and_to_if(SPerl* sperl, SPerl_OP* op);
+void SPerl_OP_convert_or_to_if(SPerl* sperl, SPerl_OP* op);
 
-SPerl_OP* SPerl_OP_build_switch_statement(SPerl_PARSER* parser, SPerl_OP* op_switch, SPerl_OP* op_term, SPerl_OP* op_block);
-SPerl_OP* SPerl_OP_build_case_statement(SPerl_PARSER* parser, SPerl_OP* op_case, SPerl_OP* op_term);
+SPerl_OP* SPerl_OP_build_switch_statement(SPerl* sperl, SPerl_OP* op_switch, SPerl_OP* op_term, SPerl_OP* op_block);
+SPerl_OP* SPerl_OP_build_case_statement(SPerl* sperl, SPerl_OP* op_case, SPerl_OP* op_term);
 
-SPerl_OP* SPerl_OP_build_logical_op(SPerl_PARSER* parser, SPerl_OP* op_logical_op, SPerl_OP* op_first, SPerl_OP* op_last);
+SPerl_OP* SPerl_OP_build_logical_op(SPerl* sperl, SPerl_OP* op_logical_op, SPerl_OP* op_first, SPerl_OP* op_last);
 
-SPerl_OP* SPerl_OP_build_for_statement(SPerl_PARSER* parser, SPerl_OP* op_for, SPerl_OP* op_term_loop_var, SPerl_OP* op_term_condition, SPerl_OP* op_term_next_value, SPerl_OP* op_block);
+SPerl_OP* SPerl_OP_build_for_statement(SPerl* sperl, SPerl_OP* op_for, SPerl_OP* op_term_loop_var, SPerl_OP* op_term_condition, SPerl_OP* op_term_next_value, SPerl_OP* op_block);
 
-SPerl_OP* SPerl_OP_build_while_statement(SPerl_PARSER* parser, SPerl_OP* op_while, SPerl_OP* op_term_condition, SPerl_OP* op_block);
+SPerl_OP* SPerl_OP_build_while_statement(SPerl* sperl, SPerl_OP* op_while, SPerl_OP* op_term_condition, SPerl_OP* op_block);
 
 
-SPerl_OP* SPerl_OP_build_if_statement(SPerl_PARSER* parser, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement);
+SPerl_OP* SPerl_OP_build_if_statement(SPerl* sperl, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block, SPerl_OP* op_else_statement);
 
-SPerl_OP* SPerl_OP_build_array_length(SPerl_PARSER* parser, SPerl_OP* op_array_length, SPerl_OP* op_term);
+SPerl_OP* SPerl_OP_build_array_length(SPerl* sperl, SPerl_OP* op_array_length, SPerl_OP* op_term);
 
-SPerl_OP* SPerl_OP_build_new_object(SPerl_PARSER* parser, SPerl_OP* op_new, SPerl_OP* op_type);
+SPerl_OP* SPerl_OP_build_new_object(SPerl* sperl, SPerl_OP* op_new, SPerl_OP* op_type);
 
-SPerl_OP* SPerl_OP_build_array_init(SPerl_PARSER* parser, SPerl_OP* op_opt_terms);
-void SPerl_OP_resolve_type(SPerl_PARSER* parser, SPerl_TYPE* type, int32_t name_length);
-void SPerl_OP_check(SPerl_PARSER* parser);
-void SPerl_OP_check_sub_name(SPerl_PARSER* parser, SPerl_OP* name);
-void SPerl_OP_check_field_name(SPerl_PARSER* parser, SPerl_OP* op_name);
+SPerl_OP* SPerl_OP_build_array_init(SPerl* sperl, SPerl_OP* op_opt_terms);
+void SPerl_OP_resolve_type(SPerl* sperl, SPerl_TYPE* type, int32_t name_length);
+void SPerl_OP_check(SPerl* sperl);
+void SPerl_OP_check_sub_name(SPerl* sperl, SPerl_OP* name);
+void SPerl_OP_check_field_name(SPerl* sperl, SPerl_OP* op_name);
 
-SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl_PARSER* parser, SPerl_OP* op);
-SPerl_OP* SPerl_OP_build_call_op(SPerl_PARSER* parser, SPerl_OP* op_call_op, SPerl_OP* op_first, SPerl_OP* op_last);
-void SPerl_OP_insert_op_convert(SPerl_PARSER* parser, SPerl_OP* op);
+SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op);
+SPerl_OP* SPerl_OP_build_call_op(SPerl* sperl, SPerl_OP* op_call_op, SPerl_OP* op_first, SPerl_OP* op_last);
+void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op);
 
-SPerl_OP* SPerl_OP_build_type_name(SPerl_PARSER* parser, SPerl_OP* op_type_name);
-SPerl_OP* SPerl_OP_build_type_array(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term);
-SPerl_OP* SPerl_OP_build_type_sub(SPerl_PARSER* parser, SPerl_OP* op_argument_types, SPerl_OP* op_return_type);
+SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_type_name);
+SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term);
+SPerl_OP* SPerl_OP_build_type_sub(SPerl* sperl, SPerl_OP* op_argument_types, SPerl_OP* op_return_type);
 
-SPerl_OP* SPerl_OP_build_field(SPerl_PARSER* parser, SPerl_OP* op_packagename, SPerl_OP* op_fieldname);
-SPerl_OP* SPerl_OP_build_decl_package(SPerl_PARSER* parser, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block);
-SPerl_OP* SPerl_OP_build_decl_sub(SPerl_PARSER* parser, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* type, SPerl_OP* op_block);
-SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl_PARSER* parser, SPerl_OP* op_const);
-SPerl_OP* SPerl_OP_build_decl_field(SPerl_PARSER* parser, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* type);
-SPerl_OP* SPerl_OP_build_decl_my(SPerl_PARSER* parser, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_type);
-SPerl_OP* SPerl_OP_build_grammar(SPerl_PARSER* parser, SPerl_OP* op_packages);
-SPerl_OP* SPerl_OP_build_decl_use(SPerl_PARSER* parser, SPerl_OP* op_use, SPerl_OP* op_package_name);
-SPerl_OP* SPerl_OP_build_call_sub(SPerl_PARSER* parser, SPerl_OP* op_invocant, SPerl_OP* op_subname, SPerl_OP* op_terms, _Bool anon);
-void SPerl_OP_build_const_pool(SPerl_PARSER* parser);
-SPerl_OP* SPerl_OP_newOP_LIST(SPerl_PARSER* parser, const char* file, uint32_t line);
-SPerl_OP* SPerl_OP_build_convert_type(SPerl_PARSER* parser, SPerl_OP* op_type, SPerl_OP* op_term);
-void SPerl_OP_resolve_op_convert_type(SPerl_PARSER* parser, SPerl_OP* op_convert_type);
+SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_packagename, SPerl_OP* op_fieldname);
+SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block);
+SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* type, SPerl_OP* op_block);
+SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl* sperl, SPerl_OP* op_const);
+SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_has, SPerl_OP* op_field_name, SPerl_OP* type);
+SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_type);
+SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages);
+SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_package_name);
+SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_subname, SPerl_OP* op_terms, _Bool anon);
+void SPerl_OP_build_const_pool(SPerl* sperl);
+SPerl_OP* SPerl_OP_newOP_LIST(SPerl* sperl, const char* file, uint32_t line);
+SPerl_OP* SPerl_OP_build_convert_type(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term);
+void SPerl_OP_resolve_op_convert_type(SPerl* sperl, SPerl_OP* op_convert_type);
 
-const char* SPerl_OP_create_abs_name(SPerl_PARSER* parser, const char* package_name, const char* base_name);
+const char* SPerl_OP_create_abs_name(SPerl* sperl, const char* package_name, const char* base_name);
 
-SPerl_OP* SPerl_OP_sibling_splice(SPerl_PARSER* parser, SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP *insert);
+SPerl_OP* SPerl_OP_sibling_splice(SPerl* sperl, SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP *insert);
 
-SPerl_OP* SPerl_OP_sibling(SPerl_PARSER* parser, SPerl_OP* o);
-void SPerl_OP_moresib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib);
-void SPerl_OP_lastsib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* parent);
-void SPerl_OP_maybesib_set(SPerl_PARSER* parser, SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
+SPerl_OP* SPerl_OP_sibling(SPerl* sperl, SPerl_OP* o);
+void SPerl_OP_moresib_set(SPerl* sperl, SPerl_OP* o, SPerl_OP* sib);
+void SPerl_OP_lastsib_set(SPerl* sperl, SPerl_OP* o, SPerl_OP* parent);
+void SPerl_OP_maybesib_set(SPerl* sperl, SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
 
-SPerl_OP* SPerl_OP_build_decl_enum(SPerl_PARSER* parser, SPerl_OP* op_enum, SPerl_OP* op_enum_block);
+SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op_enum_block);
 
-SPerl_OP* SPerl_OP_newOP(SPerl_PARSER* parser, int32_t code, const char* file, uint32_t line);
+SPerl_OP* SPerl_OP_newOP(SPerl* sperl, int32_t code, const char* file, uint32_t line);
 
-SPerl_OP* SPerl_OP_append_elem(SPerl_PARSER* parser, SPerl_OP *first, SPerl_OP *last, const char* file, uint32_t line);
+SPerl_OP* SPerl_OP_append_elem(SPerl* sperl, SPerl_OP *first, SPerl_OP *last, const char* file, uint32_t line);
 
 #endif

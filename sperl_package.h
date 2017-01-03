@@ -13,6 +13,6 @@ struct SPerl_package {
   SPerl_CONSTANT_POOL* constant_pool;
 };
 
-SPerl_PACKAGE* SPerl_PACKAGE_new(SPerl_PARSER* parser);
+SPerl_PACKAGE* SPerl_PACKAGE_new(SPerl* sperl);
 
 #endif

@@ -1,13 +1,13 @@
 %pure-parser
-%parse-param	{ SPerl_PARSER* parser }
-%lex-param	{ SPerl_PARSER* parser }
+%parse-param	{ SPerl* sperl }
+%lex-param	{ SPerl* sperl }
 
 %{
   #include <stdio.h>
   
   #include "sperl_yacc.h"
   #include "sperl_toke.h"
-  #include "sperl_parser.h"
+  #include "sperl.h"
   #include "sperl_op.h"
   #include "sperl_dumper.h"
 %}
@@ -47,22 +47,22 @@
 grammar
   : opt_decl_things_in_grammar
     {
-      $$ = SPerl_OP_build_grammar(parser, $1);
+      $$ = SPerl_OP_build_grammar(sperl, $1);
 
       // Syntax error
-      if (parser->error_count) {
+      if (sperl->error_count) {
         YYABORT;
       }
       else {
-        // Dump parser information
-        SPerl_DUMPER_dump_parser(parser);
+        // Dump sperl information
+        SPerl_DUMPER_dump_sperl(sperl);
       }
     }
 
 opt_decl_things_in_grammar
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser, parser->cur_module_path, parser->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
     }
   |	decl_things_in_grammar
     {
@@ -70,15 +70,15 @@ opt_decl_things_in_grammar
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser, $1->file, $1->line);
-        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+        $$ = SPerl_OP_newOP_LIST(sperl, $1->file, $1->line);
+        SPerl_OP_sibling_splice(sperl, $$, $$->first, 0, $1);
       }
     }
   
 decl_things_in_grammar
   : decl_things_in_grammar decl_thing_in_grammar
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $2, $1->file, $1->line);
+      $$ = SPerl_OP_append_elem(sperl, $1, $2, $1->file, $1->line);
     }
   | decl_thing_in_grammar
 
@@ -89,8 +89,8 @@ decl_thing_in_grammar
 decl_package
   : PACKAGE package_name class_block
     {
-      $$ = SPerl_OP_build_decl_package(parser, $1, $2, $3);
-      if (parser->fatal_error) {
+      $$ = SPerl_OP_build_decl_package(sperl, $1, $2, $3);
+      if (sperl->fatal_error) {
         YYABORT;
       }
     }
@@ -98,14 +98,14 @@ decl_package
 enum_block 
   : '{' opt_decl_enumeration_values '}'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ENUM_BLOCK, $1->file, $1->line);
-      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $2);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ENUM_BLOCK, $1->file, $1->line);
+      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
 
 opt_decl_enumeration_values
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser, parser->cur_module_path, parser->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
     }
   |	decl_enumeration_values
     {
@@ -113,29 +113,29 @@ opt_decl_enumeration_values
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser, $1->file, $1->line);
-        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+        $$ = SPerl_OP_newOP_LIST(sperl, $1->file, $1->line);
+        SPerl_OP_sibling_splice(sperl, $$, $$->first, 0, $1);
       }
     }
     
 decl_enumeration_values
   : decl_enumeration_values ',' decl_enumeration_value 
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $3, $1->file, $1->line);
+      $$ = SPerl_OP_append_elem(sperl, $1, $3, $1->file, $1->line);
     }
   | decl_enumeration_value
   
 decl_enumeration_value
   : NAME
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1->file, $1->line);
-      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $1);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1->file, $1->line);
+      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $1);
     }
   | NAME ASSIGN CONSTANT
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1->file, $1->line);
-      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $1);
-      SPerl_OP_sibling_splice(parser, $$, $1, 0, $3);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1->file, $1->line);
+      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $1);
+      SPerl_OP_sibling_splice(sperl, $$, $1, 0, $3);
     }
 
 throw_exception
@@ -144,7 +144,7 @@ throw_exception
 opt_statements
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser, parser->cur_module_path, parser->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
     }
   |	statements
     {
@@ -152,15 +152,15 @@ opt_statements
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser, $1->file, $1->line);
-        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+        $$ = SPerl_OP_newOP_LIST(sperl, $1->file, $1->line);
+        SPerl_OP_sibling_splice(sperl, $$, $$->first, 0, $1);
       }
     }
     
 statements
   : statements statement 
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $2, $1->file, $1->line);
+      $$ = SPerl_OP_append_elem(sperl, $1, $2, $1->file, $1->line);
     }
   | statement
 
@@ -171,8 +171,8 @@ statement
   | block
   | term ';'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POP, $1->file, $1->line);
-      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $1);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_POP, $1->file, $1->line);
+      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $1);
     }
   | expression ';'
     {
@@ -180,7 +180,7 @@ statement
     }
   | ';'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, $1->file, $1->line);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line);
     }
   | switch_statement
   | case_statement
@@ -189,25 +189,25 @@ statement
 for_statement
   : FOR '(' opt_term ';' term ';' opt_term ')' block
     {
-      $$ = SPerl_OP_build_for_statement(parser, $1, $3, $5, $7, $9);
+      $$ = SPerl_OP_build_for_statement(sperl, $1, $3, $5, $7, $9);
     }
 
 while_statement
   : WHILE '(' term ')' block
     {
-      $$ = SPerl_OP_build_while_statement(parser, $1, $3, $5);
+      $$ = SPerl_OP_build_while_statement(sperl, $1, $3, $5);
     }
 
 switch_statement
   : SWITCH '(' term ')' block
     {
-      $$ = SPerl_OP_build_switch_statement(parser, $1, $3, $5);
+      $$ = SPerl_OP_build_switch_statement(sperl, $1, $3, $5);
     }
 
 case_statement
   : CASE term ':'
     {
-      $$ = SPerl_OP_build_case_statement(parser, $1, $2);
+      $$ = SPerl_OP_build_case_statement(sperl, $1, $2);
     }
 
 default_statement
@@ -216,13 +216,13 @@ default_statement
 if_statement
   : IF '(' term ')' block else_statement
     {
-      $$ = SPerl_OP_build_if_statement(parser, $1, $3, $5, $6);
+      $$ = SPerl_OP_build_if_statement(sperl, $1, $3, $5, $6);
     }
 
 else_statement
   : /* NULL */
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, parser->cur_module_path, parser->cur_line);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, sperl->cur_module_path, sperl->cur_line);
     };
   | ELSE block
     {
@@ -230,63 +230,63 @@ else_statement
     }
   | ELSIF '(' term ')' block else_statement
     {
-      $$ = SPerl_OP_build_if_statement(parser, $1, $3, $5, $6);
+      $$ = SPerl_OP_build_if_statement(sperl, $1, $3, $5, $6);
     }
 
 decl_use
   : USE package_name ';'
     {
-      $$ = SPerl_OP_build_decl_use(parser, $1, $2);
+      $$ = SPerl_OP_build_decl_use(sperl, $1, $2);
     }
 
 
 decl_field
   : HAS field_name ':' type ';'
     {
-      $$ = SPerl_OP_build_decl_field(parser, $1, $2, $4);
+      $$ = SPerl_OP_build_decl_field(sperl, $1, $2, $4);
     }
 
 decl_sub
  : SUB sub_name '(' opt_sub_args ')' ':' type block
      {
-       $$ = SPerl_OP_build_decl_sub(parser, $1, $2, $4, $7, $8);
+       $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $7, $8);
      }
 
 decl_enum
   : ENUM enum_block
     {
-      $$ = SPerl_OP_build_decl_enum(parser, $1, $2);
+      $$ = SPerl_OP_build_decl_enum(sperl, $1, $2);
     }
 
 decl_my
   : MY VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(parser, $1, $2, $4);
+      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, $4);
     }
   | MY VAR
     {
-      SPerl_OP* op_type = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, $2->file, $2->line);
+      SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $2->file, $2->line);
       
-      $$ = SPerl_OP_build_decl_my(parser, $1, $2, op_type);
+      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, op_type);
     }
 
 decl_anon_sub
  : SUB '(' ')' ':' type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
-       SPerl_OP* op_sub_args = SPerl_OP_newOP_LIST(parser, $2->file, $2->line);
-       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, $1->file, $1->line), op_sub_args, $5, $6);
+       SPerl_OP* op_sub_args = SPerl_OP_newOP_LIST(sperl, $2->file, $2->line);
+       $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), op_sub_args, $5, $6);
      }
  | SUB '(' sub_args ')' ':' type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
-       $$ = SPerl_OP_build_decl_sub(parser, $1, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $3, $6, $7);
+       $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $3, $6, $7);
      }
 
 opt_decl_things_in_class
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser, parser->cur_module_path, parser->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
     }
   |	decl_things_in_class
     {
@@ -294,15 +294,15 @@ opt_decl_things_in_class
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser, $1->file, $1->line);
-        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+        $$ = SPerl_OP_newOP_LIST(sperl, $1->file, $1->line);
+        SPerl_OP_sibling_splice(sperl, $$, $$->first, 0, $1);
       }
     }
 
 decl_things_in_class
   : decl_things_in_class decl_thing_in_class
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $2, $1->file, $1->line);
+      $$ = SPerl_OP_append_elem(sperl, $1, $2, $1->file, $1->line);
     }
   | decl_thing_in_class
 
@@ -314,8 +314,8 @@ decl_thing_in_class
 class_block
   : '{' opt_decl_things_in_class '}'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_CLASS_BLOCK, $1->file, $1->line);
-      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $2);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CLASS_BLOCK, $1->file, $1->line);
+      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
 
 expression
@@ -324,14 +324,14 @@ expression
   | RETURN term
     {
       $$ = $1;
-      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $2);
+      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
   | throw_exception
 
 opt_terms
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser, parser->cur_module_path, parser->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
     }
   |	terms
     {
@@ -339,28 +339,28 @@ opt_terms
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser, $1->file, $1->line);
-        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+        $$ = SPerl_OP_newOP_LIST(sperl, $1->file, $1->line);
+        SPerl_OP_sibling_splice(sperl, $$, $$->first, 0, $1);
       }
     }
     
 terms
   : terms ',' term
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $3, $1->file, $1->line);
+      $$ = SPerl_OP_append_elem(sperl, $1, $3, $1->file, $1->line);
     }
   | term
 
 array_length
   : '@' term
     {
-      $$ = SPerl_OP_build_array_length(parser, $1, $2);
+      $$ = SPerl_OP_build_array_length(sperl, $1, $2);
     }
 
 opt_term
   : /* NULL */
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, parser->cur_module_path, parser->cur_line);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, sperl->cur_module_path, sperl->cur_line);
     }
   | term
 term
@@ -382,107 +382,107 @@ term
 array_init
   : '[' opt_terms ']'
     {
-      $$ = SPerl_OP_build_array_init(parser, $2);
+      $$ = SPerl_OP_build_array_init(sperl, $2);
     }
 
 new_object
   : NEW type
     {
-      $$ = SPerl_OP_build_new_object(parser, $1, $2);
+      $$ = SPerl_OP_build_new_object(sperl, $1, $2);
     }
 
 convert_type
   : '(' type ')' term
     {
-      $$ = SPerl_OP_build_convert_type(parser, $2, $4);
+      $$ = SPerl_OP_build_convert_type(sperl, $2, $4);
     }
 
 field
   : VAR ARROW field_name
     {
-      $$ = SPerl_OP_build_field(parser, $1, $3);
+      $$ = SPerl_OP_build_field(sperl, $1, $3);
     }
 
 call_op
   : '+' term %prec UMINUS
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PLUS, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_PLUS, $1->file, $1->line);
+      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
     }
   | '-' term %prec UMINUS
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NEGATE, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NEGATE, $1->file, $1->line);
+      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
     }
   | INC term
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PRE_INC, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_PRE_INC, $1->file, $1->line);
+      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
     }
   | term INC
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POST_INC, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(parser, op, $1, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_POST_INC, $2->file, $2->line);
+      $$ = SPerl_OP_build_call_op(sperl, op, $1, NULL);
     }
   | DEC term
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_PRE_DEC, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(parser, op, $2, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_PRE_DEC, $1->file, $1->line);
+      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
     }
   | term DEC
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_POST_DEC, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(parser, op, $1, NULL);
+      SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_POST_DEC, $2->file, $2->line);
+      $$ = SPerl_OP_build_call_op(sperl, op, $1, NULL);
     }
   | '~' term
     {
-      $$ = SPerl_OP_build_call_op(parser, $1, $2, NULL);
+      $$ = SPerl_OP_build_call_op(sperl, $1, $2, NULL);
     }
   | term '+' term
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ADD, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(parser, op, $1, $3);
+      SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ADD, $2->file, $2->line);
+      $$ = SPerl_OP_build_call_op(sperl, op, $1, $3);
     }
   | term '-' term
     {
-      SPerl_OP* op = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_SUBTRACT, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(parser, op, $1, $3);
+      SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_SUBTRACT, $2->file, $2->line);
+      $$ = SPerl_OP_build_call_op(sperl, op, $1, $3);
     }
   | term MULTIPLY term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
     }
   | term DIVIDE term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
     }
   | term REMAINDER term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
     }
   | term BIT_XOR term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
     }
   | term BIT_AND term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
     }
   | term BIT_OR term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
     }
   | term SHIFT term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
     }
   | term REL term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
     }
   | term ASSIGN term
     {
-      $$ = SPerl_OP_build_call_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
     }
   | '(' term ')'
     {
@@ -492,23 +492,23 @@ call_op
 logical_op
   : term AND term
     {
-      $$ = SPerl_OP_build_logical_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_logical_op(sperl, $2, $1, $3);
     }
   | term OR term
     {
-      $$ = SPerl_OP_build_logical_op(parser, $2, $1, $3);
+      $$ = SPerl_OP_build_logical_op(sperl, $2, $1, $3);
     }
   | NOT term
     {
-      $$ = SPerl_OP_build_logical_op(parser, $1, $2, NULL);
+      $$ = SPerl_OP_build_logical_op(sperl, $1, $2, NULL);
     }
 
 array_elem
   : VAR ARROW '[' term ']'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_ARRAY_ELEM, $1->file, $1->line);
-      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $1);
-      SPerl_OP_sibling_splice(parser, $$, $1, 0, $4);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ARRAY_ELEM, $1->file, $1->line);
+      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $1);
+      SPerl_OP_sibling_splice(sperl, $$, $1, 0, $4);
       
       $$->file = $1->file;
       $$->line = $1->line;
@@ -517,28 +517,28 @@ array_elem
 call_sub
   : sub_name '(' opt_terms  ')'
     {
-      $$ = SPerl_OP_build_call_sub(parser, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $1, $3, 0);
+      $$ = SPerl_OP_build_call_sub(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $1, $3, 0);
     }
   | VAR ARROW sub_name '(' opt_terms ')'
     {
-      $$ = SPerl_OP_build_call_sub(parser, $1, $3, $5, 0);
+      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5, 0);
     }
   | VAR ARROW '(' opt_terms ')'
     {
-      $$ = SPerl_OP_build_call_sub(parser, $1, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $4, 1);
+      $$ = SPerl_OP_build_call_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $4, 1);
     }
 
 block 
   : '{' opt_statements '}'
     {
-      $$ = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_BLOCK, $1->file, $1->line);
-      SPerl_OP_sibling_splice(parser, $$, NULL, 0, $2);
+      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_BLOCK, $1->file, $1->line);
+      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
 
 opt_sub_args
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser, parser->cur_module_path, parser->cur_line);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
     }
   |	sub_args
     {
@@ -546,27 +546,27 @@ opt_sub_args
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser, $1->file, $1->line);
-        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+        $$ = SPerl_OP_newOP_LIST(sperl, $1->file, $1->line);
+        SPerl_OP_sibling_splice(sperl, $$, $$->first, 0, $1);
       }
     }
 
 sub_args
   : sub_args ',' sub_arg
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $3, $1->file, $1->line);
+      $$ = SPerl_OP_append_elem(sperl, $1, $3, $1->file, $1->line);
     }
   | sub_arg
 
 sub_arg
   : VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(parser, SPerl_OP_newOP(parser, SPerl_OP_C_CODE_DECL_MY_VAR, $1->file, $1->line), $1, $3);
+      $$ = SPerl_OP_build_decl_my(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, $1->file, $1->line), $1, $3);
     }
 types
   : types ',' type
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $3, $1->file, $1->line);
+      $$ = SPerl_OP_append_elem(sperl, $1, $3, $1->file, $1->line);
     }
   | type
 
@@ -581,38 +581,38 @@ not_type_sub
 type_name
   : NAME
     {
-      $$ = SPerl_OP_build_type_name(parser, $1);
+      $$ = SPerl_OP_build_type_name(sperl, $1);
     }
 
 type_sub
   : SUB '(' ')' type
     {
-      SPerl_OP* op_types = SPerl_OP_newOP_LIST(parser, parser->cur_module_path, parser->cur_line);
-      $$ = SPerl_OP_build_type_sub(parser, op_types, $4);
+      SPerl_OP* op_types = SPerl_OP_newOP_LIST(sperl, sperl->cur_module_path, sperl->cur_line);
+      $$ = SPerl_OP_build_type_sub(sperl, op_types, $4);
     }
   | SUB '(' types ')' type
     {
-      $$ = SPerl_OP_build_type_sub(parser, $3, $5);
+      $$ = SPerl_OP_build_type_sub(sperl, $3, $5);
     }
 
 type_array
   : not_type_sub '[' ']'
     {
-      SPerl_OP* op_null = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, $1->file, $1->line);
-      $$ = SPerl_OP_build_type_array(parser, $1, op_null);
+      SPerl_OP* op_null = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line);
+      $$ = SPerl_OP_build_type_array(sperl, $1, op_null);
     }
   | not_type_sub '[' term ']'
     {
-      $$ = SPerl_OP_build_type_array(parser, $1, $3);
+      $$ = SPerl_OP_build_type_array(sperl, $1, $3);
     }
   | '(' type_sub ')' '[' ']'
     {
-      SPerl_OP* op_null = SPerl_OP_newOP(parser, SPerl_OP_C_CODE_NULL, $1->file, $1->line);
-      $$ = SPerl_OP_build_type_array(parser, $2, op_null);
+      SPerl_OP* op_null = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line);
+      $$ = SPerl_OP_build_type_array(sperl, $2, op_null);
     }
   | '(' type_sub ')' '[' term ']'
     {
-      $$ = SPerl_OP_build_type_array(parser, $2, $5);
+      $$ = SPerl_OP_build_type_array(sperl, $2, $5);
     }
 
 field_name : NAME

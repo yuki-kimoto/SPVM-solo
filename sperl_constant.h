@@ -28,7 +28,7 @@ struct SPerl_constant {
   int32_t pool_pos;
 };
 
-SPerl_CONSTANT* SPerl_CONSTANT_new(SPerl_PARSER* parser);
-SPerl_CONSTANT* SPerl_CONSTANT_create_int_1(SPerl_PARSER* parser);
+SPerl_CONSTANT* SPerl_CONSTANT_new(SPerl* sperl);
+SPerl_CONSTANT* SPerl_CONSTANT_create_int_1(SPerl* sperl);
 
 #endif

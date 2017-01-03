@@ -1,7 +1,7 @@
 #ifndef SPERL_TOKE_H
 #define SPERL_TOKE_H
 
-#include "sperl_parser.h"
+#include "sperl.h"
 
 // Expected token
 enum {
@@ -10,7 +10,7 @@ enum {
   SPerl_TOKE_C_EXPECT_PACKAGENAME
 };
 
-int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl_PARSER* parser);
-SPerl_OP* SPerl_TOKE_newOP(SPerl_PARSER* parser, uint8_t type);
+int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl);
+SPerl_OP* SPerl_TOKE_newOP(SPerl* sperl, uint8_t type);
 
 #endif

@@ -7,6 +7,6 @@ struct SPerl_type_component_name {
   SPerl_OP* op_name;
 };
 
-SPerl_TYPE_COMPONENT_NAME* SPerl_TYPE_COMPONENT_NAME_new(SPerl_PARSER* parser);
+SPerl_TYPE_COMPONENT_NAME* SPerl_TYPE_COMPONENT_NAME_new(SPerl* sperl);
 
 #endif

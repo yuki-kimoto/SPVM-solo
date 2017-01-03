@@ -3,6 +3,6 @@
 
 #include "sperl_base.h"
 
-void SPerl_OP_CHECKER_check(SPerl_PARSER* parser);
+void SPerl_OP_CHECKER_check(SPerl* sperl);
 
 #endif

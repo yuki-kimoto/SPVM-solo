@@ -1,6 +1,6 @@
 #include <string.h>
 #include "sperl_resolved_type.h"
-#include "sperl_parser.h"
+#include "sperl.h"
 #include "sperl_allocator.h"
 #include "sperl_package.h"
 
@@ -34,16 +34,16 @@ int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
   2
 };
 
-SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl_PARSER* parser) {
-  SPerl_RESOLVED_TYPE* resolved_type = SPerl_ALLOCATOR_alloc_memory_pool(parser, sizeof(SPerl_RESOLVED_TYPE));
+SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl* sperl) {
+  SPerl_RESOLVED_TYPE* resolved_type = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_RESOLVED_TYPE));
   
-  resolved_type->part_names = SPerl_ALLOCATOR_new_array(parser, 0);
+  resolved_type->part_names = SPerl_ALLOCATOR_new_array(sperl, 0);
   
   return resolved_type;
 }
 
-_Bool SPerl_RESOLVED_TYPE_is_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
-  (void)parser;
+_Bool SPerl_RESOLVED_TYPE_is_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)sperl;
   
   int32_t length = strlen(resolved_type->name);
   
@@ -63,8 +63,8 @@ _Bool SPerl_RESOLVED_TYPE_is_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* re
   }
 }
 
-_Bool SPerl_RESOLVED_TYPE_is_multi_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
-  (void)parser;
+_Bool SPerl_RESOLVED_TYPE_is_multi_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)sperl;
   
   int32_t length = strlen(resolved_type->name);
   
@@ -86,8 +86,8 @@ _Bool SPerl_RESOLVED_TYPE_is_multi_array(SPerl_PARSER* parser, SPerl_RESOLVED_TY
   }
 }
 
-_Bool SPerl_RESOLVED_TYPE_contain_sub(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
-  (void)parser;
+_Bool SPerl_RESOLVED_TYPE_contain_sub(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)sperl;
   
   const char* name = resolved_type->name;
   
@@ -100,8 +100,8 @@ _Bool SPerl_RESOLVED_TYPE_contain_sub(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE*
   }
 }
 
-_Bool SPerl_RESOLVED_TYPE_is_integral(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
-  (void)parser;
+_Bool SPerl_RESOLVED_TYPE_is_integral(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)sperl;
   
   if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_LONG) {
     return 1;
@@ -111,8 +111,8 @@ _Bool SPerl_RESOLVED_TYPE_is_integral(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE*
   }
 }
 
-_Bool SPerl_RESOLVED_TYPE_is_core_type_array(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
-  (void)parser;
+_Bool SPerl_RESOLVED_TYPE_is_core_type_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)sperl;
   
   const char* name = resolved_type->name;
   
@@ -126,8 +126,8 @@ _Bool SPerl_RESOLVED_TYPE_is_core_type_array(SPerl_PARSER* parser, SPerl_RESOLVE
   }
 }
 
-_Bool SPerl_RESOLVED_TYPE_is_core_type(SPerl_PARSER* parser, SPerl_RESOLVED_TYPE* resolved_type) {
-  (void)parser;
+_Bool SPerl_RESOLVED_TYPE_is_core_type(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)sperl;
   
   if (resolved_type && resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
     return 1;

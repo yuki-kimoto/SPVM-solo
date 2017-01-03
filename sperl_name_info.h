@@ -10,6 +10,6 @@ struct SPerl_name_info {
   const char* abs_name;
 };
 
-SPerl_NAME_INFO* SPerl_NAME_INFO_new(SPerl_PARSER* parser);
+SPerl_NAME_INFO* SPerl_NAME_INFO_new(SPerl* sperl);
 
 #endif

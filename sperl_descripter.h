@@ -17,6 +17,6 @@ struct SPerl_descripter {
   int32_t code;
 };
 
-SPerl_DESCRIPTER* SPerl_DESCRIPTER_new(SPerl_PARSER* parser);
+SPerl_DESCRIPTER* SPerl_DESCRIPTER_new(SPerl* sperl);
 
 #endif

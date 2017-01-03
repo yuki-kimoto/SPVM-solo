@@ -8,7 +8,7 @@ struct SPerl_vm {
   int32_t tmp;
 };
 
-SPerl_VM* SPerl_VM_new(SPerl_PARSER* parser);
-void SPerl_VM_run(SPerl_PARSER* parser);
+SPerl_VM* SPerl_VM_new(SPerl* sperl);
+void SPerl_VM_run(SPerl* sperl);
 
 #endif

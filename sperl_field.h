@@ -10,6 +10,6 @@ struct SPerl_field {
   int32_t id;
 };
 
-SPerl_FIELD* SPerl_FIELD_new(SPerl_PARSER* parser);
+SPerl_FIELD* SPerl_FIELD_new(SPerl* sperl);
 
 #endif

@@ -19,6 +19,6 @@ struct SPerl_type_part {
   } uv;
 };
 
-SPerl_TYPE_PART* SPerl_TYPE_PART_new(SPerl_PARSER* parser);
+SPerl_TYPE_PART* SPerl_TYPE_PART_new(SPerl* sperl);
 
 #endif
