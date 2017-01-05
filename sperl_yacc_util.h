@@ -1,8 +1,8 @@
 #ifndef SPERL_YACC_H
 #define SPERL_YACC_H
 
+#include <stdio.h>
 #include "sperl_base.h"
-#include "stdio.h"
 
 union SPerl_yystype
 {
