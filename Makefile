@@ -15,9 +15,10 @@ $(OBJDIR)/%.o: %.c | $(OBJDIR) $(OBJDIR)/main $(OBJDIR)/t
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 # libsperl
-libsperl_SRCS := $(wildcard *.c)
+libsperl_SRCS := $(wildcard *.c) sperl_yacc.c
 libsperl_OBJS := $(libsperl_SRCS:%.c=$(OBJDIR)/%.o)
 -include $(libsperl_OBJS:%.o=%.Po)
+generated_sources += sperl_yacc.c sperl_yacc.h
 sperl_yacc.c: sperl_yacc.y
 	bison -t -p SPerl_yy -d sperl_yacc.y
 	mv -f sperl_yacc.tab.c $@
@@ -61,3 +62,4 @@ $(DIRS):
 .PHONY: clean
 clean:
 	-find $(OBJDIR) -name \*.o -o -name \*.Po | xargs rm -rf
+	-rm -rf libsperl.a $(generated_sources)
