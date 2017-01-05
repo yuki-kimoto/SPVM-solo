@@ -302,7 +302,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl* sperl) {
               
               if (!op_cur->lvalue) {
                 SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_GETFIELD);
-
+                
                 SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                 const char* field_abs_name = name_info->abs_name;
                 SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, field_abs_name, strlen(field_abs_name));
@@ -1347,18 +1347,36 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl* sperl) {
               
               if (!bytecode_set) {
                 if (constant->code == SPerl_CONSTANT_C_CODE_LONG || constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LDC2_W);
-                  SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 8) & 0xFF);
-                  SPerl_BYTECODES_push(bytecodes, constant->pool_pos & 0xFF);
-                }
-                else if (constant->pool_pos > 0xFF) {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LDC_W);
-                  SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 8) & 0xFF);
-                  SPerl_BYTECODES_push(bytecodes, constant->pool_pos & 0xFF);
+                  if (constant->pool_pos > 0xFFFF) {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LDC2_WW);
+                    SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 24) & 0xFF);
+                    SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 16) & 0xFF);
+                    SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 8) & 0xFF);
+                    SPerl_BYTECODES_push(bytecodes, constant->pool_pos & 0xFF);
+                  }
+                  else {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LDC2_W);
+                    SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 8) & 0xFF);
+                    SPerl_BYTECODES_push(bytecodes, constant->pool_pos & 0xFF);
+                  }
                 }
                 else {
-                  SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LDC);
-                  SPerl_BYTECODES_push(bytecodes, constant->pool_pos &0xFF);
+                  if (constant->pool_pos > 0xFFFF) {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LDC_WW);
+                    SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 24) & 0xFF);
+                    SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 16) & 0xFF);
+                    SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 8) & 0xFF);
+                    SPerl_BYTECODES_push(bytecodes, constant->pool_pos & 0xFF);
+                  }
+                  else if (constant->pool_pos > 0xFF) {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LDC_W);
+                    SPerl_BYTECODES_push(bytecodes, (constant->pool_pos >> 8) & 0xFF);
+                    SPerl_BYTECODES_push(bytecodes, constant->pool_pos & 0xFF);
+                  }
+                  else {
+                    SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_LDC);
+                    SPerl_BYTECODES_push(bytecodes, constant->pool_pos &0xFF);
+                  }
                 }
               }
               
