@@ -21,14 +21,17 @@
 
 void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
   
+  // Parser
   SPerl_PARSER* parser = sperl->parser;
+  
+  // Bytecode
+  SPerl_BYTECODE_ARRAY* bytecode_array = parser->bytecode_array;
   
   for (int32_t sub_pos = 0; sub_pos < parser->op_subs->length; sub_pos++) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_pos);
     SPerl_SUB* sub = op_sub->uv.sub;
     
-    // VM codes
-    SPerl_BYTECODE_ARRAY* bytecode_array = sub->bytecode_array;
+    sub->bytecode_start_pos = bytecode_array->length;
     
     // Run OPs
     SPerl_OP* op_base = op_sub;
@@ -1406,5 +1409,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
         }
       }
     }
+    sub->bytecode_length = bytecode_array->length - sub->bytecode_start_pos;
+    warn("AAAAAAAAAAAAA %d %d %d", sub->bytecode_length, bytecode_array->length, sub->bytecode_start_pos);
   }
 }

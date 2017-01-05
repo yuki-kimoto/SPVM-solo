@@ -21,7 +21,7 @@ void SPerl_VM_run(SPerl* sperl) {
   
   SPerl_SUB* sub_entry_point = SPerl_HASH_search(parser->sub_abs_name_symtable, entry_point, strlen(entry_point));
   
-  SPerl_BYTECODE_ARRAY* bytecode_array = sub_entry_point->bytecode_array;
+  SPerl_BYTECODE_ARRAY* bytecode_array = parser->bytecode_array;
   uint8_t* bytecodes = bytecode_array->values;
   
   // Program counter

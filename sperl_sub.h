@@ -13,7 +13,8 @@ struct SPerl_sub {
   SPerl_OP* op_block;
   _Bool anon;
   int32_t id;
-  SPerl_BYTECODE_ARRAY* bytecode_array;
+  int32_t bytecode_start_pos;
+  int32_t bytecode_length;
 };
 
 SPerl_SUB* SPerl_SUB_new(SPerl* sperl);

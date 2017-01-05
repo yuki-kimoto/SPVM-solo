@@ -16,6 +16,7 @@
 #include "sperl_array.h"
 #include "sperl_use.h"
 #include "sperl_constant_pool.h"
+#include "sperl_bytecode_array.h"
 
 SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   SPerl_PARSER* parser = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_PARSER));
@@ -37,6 +38,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   
   parser->op_constants = SPerl_ALLOCATOR_new_array(sperl, 0);
   parser->constant_pool = SPerl_CONSTANT_POOL_new();
+  parser->bytecode_array = SPerl_BYTECODE_ARRAY_new(sperl, 0);
   
   // Core types
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {

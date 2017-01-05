@@ -79,6 +79,8 @@ struct SPerl_parser {
   
   // Entry point subroutine
   const char* entry_point;
+  
+  SPerl_BYTECODE_ARRAY* bytecode_array;
 };
 
 SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl);
