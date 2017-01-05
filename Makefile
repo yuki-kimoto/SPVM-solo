@@ -50,22 +50,22 @@ sperl: $(sperl_OBJS) libsperl.a
 	$(CC) -o $@ $(sperl_LDFLAGS) $(sperl_OBJS) $(sperl_LIBS)
 all: sperl
 
-# test
-test_names += sperl_t_array
-test_names += sperl_t_hash
-test_names += sperl_t_memory_pool
+# test (t/sperl_t_*)
+test_names := $(wildcard t/sperl_t_*.c)
+test_names := $(test_names:t/sperl_t_%.c=sperl_t_%)
 
 sperl_t_LDFLAGS := $(LDFLAGS) -L .
 sperl_t_LIBS    := -lsperl $(LIBS)
 -include $(test_names:sperl_t_%=$(OBJDIR)/t/sperl_t_%.Po)
-tmp_sperl_t_%: $(OBJDIR)/t/sperl_t_%.o libsperl.a
+$(OBJDIR)/t/sperl_t_%: $(OBJDIR)/t/sperl_t_%.o libsperl.a
 	$(CC) $(sperl_t_LDFLAGS) -o $@ $< $(sperl_t_LIBS)
-.PRECIOUS: $(OBJDIR)/t/sperl_t_%.o
-sperl_t_%: tmp_sperl_t_%
+sperl_t_%: $(OBJDIR)/t/sperl_t_%
 	./$<
+.PRECIOUS: $(OBJDIR)/t/sperl_t_%.o $(OBJDIR)/t/sperl_t_%
 check: $(test_names)
 .PHONY: check
 
+# test (*.spvm)
 .PHONY: test test2
 test: sperl
 	./$< Test
