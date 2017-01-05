@@ -12,7 +12,7 @@
 #include "sperl_hash.h"
 #include "sperl_array.h"
 #include "sperl_allocator.h"
-#include "sperl_yacc.h"
+#include "sperl_yacc_util.h"
 #include "sperl_array.h"
 #include "sperl_use.h"
 #include "sperl_constant_pool.h"

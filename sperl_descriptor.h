@@ -13,7 +13,7 @@ enum {
 extern const char* const SPerl_DESCRIPTER_CODE_NAMES[];
 
 // Field information
-struct SPerl_descripter {
+struct SPerl_descriptor {
   int32_t code;
 };
 
