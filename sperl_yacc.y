@@ -7,7 +7,7 @@
   
   #include "sperl.h"
   #include "sperl_parser.h"
-  #include "sperl_yacc.h"
+  #include "sperl_yacc_util.h"
   #include "sperl_toke.h"
   #include "sperl_op.h"
   #include "sperl_dumper.h"

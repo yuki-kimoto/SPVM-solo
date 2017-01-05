@@ -10,7 +10,7 @@
 #include "sperl_array.h"
 #include "sperl_hash.h"
 #include "sperl_allocator.h"
-#include "sperl_yacc.h"
+#include "sperl_yacc_util.h"
 #include "sperl_op.h"
 #include "sperl_sub.h"
 #include "sperl_constant.h"

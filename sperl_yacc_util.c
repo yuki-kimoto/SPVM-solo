@@ -5,9 +5,9 @@
 
 #include "sperl.h"
 #include "sperl_parser.h"
-#include "sperl_yacc.h"
+#include "sperl_yacc_util.h"
 #include "sperl_allocator.h"
-#include "sperl_yacc.tab.h"
+#include "sperl_yacc.h"
 #include "sperl_constant.h"
 #include "sperl_var.h"
 #include "sperl_op.h"

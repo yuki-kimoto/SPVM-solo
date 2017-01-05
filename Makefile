@@ -3,10 +3,6 @@
 all:
 .PHONY: all
 
-# Disable the default rule: sperl_yacc.y -> sperl_yacc.c
-.SUFFIXES:
-.SUFFIXES: .c .o
-
 CC     	 := gcc
 CFLAGS 	 := -std=c99 -g -O -Wall -Wextra
 LIBS   	 := -lm
@@ -22,10 +18,13 @@ $(OBJDIR)/%.o: %.c | $(OBJDIR) $(OBJDIR)/main $(OBJDIR)/t
 libsperl_SRCS := $(wildcard *.c)
 libsperl_OBJS := $(libsperl_SRCS:%.c=$(OBJDIR)/%.o)
 -include $(libsperl_OBJS:%.o=%.Po)
-$(OBJDIR)/sperl_toke.o: sperl_toke.c sperl_yacc.tab.h
-$(OBJDIR)/sperl_yacc.o: sperl_yacc.c sperl_yacc.tab.h 
-sperl_yacc.tab.h: sperl_yacc.y
+sperl_yacc.c: sperl_yacc.y
 	bison -t -p SPerl_yy -d sperl_yacc.y
+	mv -f sperl_yacc.tab.c $@
+	mv -f sperl_yacc.tab.h $(@:%.c=%.h)
+sperl_yacc.h: sperl_yacc.c
+$(OBJDIR)/sperl_toke.o: sperl_toke.c sperl_yacc.h
+$(OBJDIR)/sperl_yacc.o: sperl_yacc.c sperl_yacc.h
 libsperl.a: $(libsperl_OBJS)
 	$(AR) crs $@ $(libsperl_OBJS)
 all: libsperl.a
