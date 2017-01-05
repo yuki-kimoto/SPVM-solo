@@ -34,6 +34,9 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   parser->use_package_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
   parser->cur_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
   
+  parser->op_constants = SPerl_ALLOCATOR_new_array(sperl, 0);
+  parser->constant_pool = SPerl_CONSTANT_POOL_new();
+  
   // Core types
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name

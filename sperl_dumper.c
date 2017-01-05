@@ -113,7 +113,6 @@ void SPerl_DUMPER_dump_ast(SPerl* sperl, SPerl_OP* op_base) {
 }
 
 void SPerl_DUMPER_dump_sperl(SPerl* sperl) {
-  
   SPerl_PARSER* parser = sperl->parser;
   
   printf("\n[Abstract Syntax Tree]\n");
@@ -121,10 +120,16 @@ void SPerl_DUMPER_dump_sperl(SPerl* sperl) {
   
   printf("\n[Resolved types]\n");
   SPerl_DUMPER_dump_resolved_types(sperl, parser->resolved_types);
-
+  
   printf("\n[Packages information]\n");
   SPerl_DUMPER_dump_packages(sperl, parser->op_packages);
   
+  printf("\n[Constant information]\n");
+  SPerl_DUMPER_dump_constants(sperl, parser->op_constants);
+  
+  printf("\n[Constant pool\n");
+  SPerl_DUMPER_dump_constant_pool(sperl, parser->constant_pool);
+
   printf("\n[Subroutine information]\n");
   SPerl_ARRAY* op_subs = parser->op_subs;
   for (int32_t i = 0; i < op_subs->length; i++) {
@@ -167,13 +172,6 @@ void SPerl_DUMPER_dump_packages(SPerl* sperl, SPerl_ARRAY* op_packages) {
       printf("    field[%" PRId32 "]\n", j);
       SPerl_DUMPER_dump_field(sperl, field);
     }
-
-    printf("  constant_values\n");
-    SPerl_DUMPER_dump_constants(sperl, package->op_constants);
-
-    printf("  constant_pool\n");
-    SPerl_DUMPER_dump_constant_pool(sperl, package->constant_pool);
-    
   }
 }
 

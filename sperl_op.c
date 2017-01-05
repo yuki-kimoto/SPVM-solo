@@ -725,47 +725,42 @@ void SPerl_OP_build_const_pool(SPerl* sperl) {
   
   SPerl_PARSER* parser = sperl->parser;
   
-  for (int32_t i = 0; i < parser->op_packages->length; i++) {
-    SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, i);
-    SPerl_PACKAGE* package = op_package->uv.package;
+  // Set constant informations
+  SPerl_ARRAY* op_constants = parser->op_constants;
+  
+  // Create constant pool
+  for (int32_t constant_pos = 0; constant_pos < op_constants->length; constant_pos++) {
+    SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, constant_pos);
+    SPerl_CONSTANT* constant = op_constant->uv.constant;
     
-    // Set constant informations
-    SPerl_ARRAY* op_constants = package->op_constants;
-    
-    // Create constant pool
-    for (int32_t j = 0; j < op_constants->length; j++) {
-      SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, j);
-      SPerl_CONSTANT* constant = op_constant->uv.constant;
-      
-      int32_t value1;
-      int32_t value2;
+    int32_t value1;
+    int32_t value2;
 
-      constant->pool_pos = package->constant_pool->length;
-      switch (constant->code) {
-        case SPerl_CONSTANT_C_CODE_BOOLEAN:
-        case SPerl_CONSTANT_C_CODE_BYTE:
-        case SPerl_CONSTANT_C_CODE_INT:
-          SPerl_CONSTANT_POOL_push(package->constant_pool, constant->uv.int_value);
-          break;
-        case SPerl_CONSTANT_C_CODE_LONG:
-          memcpy(&value1, &constant->uv.long_value, 4);
-          memcpy(&value2, ((int32_t*)&constant->uv.long_value) + 1, 4);
-          
-          SPerl_CONSTANT_POOL_push(package->constant_pool, value1);
-          SPerl_CONSTANT_POOL_push(package->constant_pool, value2);
-          break;
-        case SPerl_CONSTANT_C_CODE_FLOAT:
-          memcpy(&value1, &constant->uv.float_value, 4);
-          SPerl_CONSTANT_POOL_push(package->constant_pool, value1);
-          break;
-        case SPerl_CONSTANT_C_CODE_DOUBLE:
-          memcpy(&value1, &constant->uv.double_value, 4);
-          memcpy(&value2, ((int32_t*)&constant->uv.double_value) + 1, 4);
-          
-          SPerl_CONSTANT_POOL_push(package->constant_pool, value1);
-          SPerl_CONSTANT_POOL_push(package->constant_pool, value2);
-          break;
-      }
+    constant->pool_pos = parser->constant_pool->length;
+    switch (constant->code) {
+      case SPerl_CONSTANT_C_CODE_BOOLEAN:
+      case SPerl_CONSTANT_C_CODE_BYTE:
+      case SPerl_CONSTANT_C_CODE_INT:
+        SPerl_CONSTANT_POOL_push(parser->constant_pool, constant->uv.int_value);
+        break;
+      case SPerl_CONSTANT_C_CODE_LONG:
+        memcpy(&value1, &constant->uv.long_value, 4);
+        memcpy(&value2, ((int32_t*)&constant->uv.long_value) + 1, 4);
+        
+        SPerl_CONSTANT_POOL_push(parser->constant_pool, value1);
+        SPerl_CONSTANT_POOL_push(parser->constant_pool, value2);
+        break;
+      case SPerl_CONSTANT_C_CODE_FLOAT:
+        memcpy(&value1, &constant->uv.float_value, 4);
+        SPerl_CONSTANT_POOL_push(parser->constant_pool, value1);
+        break;
+      case SPerl_CONSTANT_C_CODE_DOUBLE:
+        memcpy(&value1, &constant->uv.double_value, 4);
+        memcpy(&value2, ((int32_t*)&constant->uv.double_value) + 1, 4);
+        
+        SPerl_CONSTANT_POOL_push(parser->constant_pool, value1);
+        SPerl_CONSTANT_POOL_push(parser->constant_pool, value2);
+        break;
     }
   }
 }
