@@ -128,9 +128,9 @@ typedef struct SPerl_op SPerl_OP;
 struct SPerl_field;
 typedef struct SPerl_field SPerl_FIELD;
 
-/* sperl_descripter.h */
-struct SPerl_descripter;
-typedef struct SPerl_descripter SPerl_DESCRIPTER;
+/* sperl_descriptor.h */
+struct SPerl_descriptor;
+typedef struct SPerl_descriptor SPerl_DESCRIPTER;
 
 /* sperl_sub.h */
 struct SPerl_sub;
