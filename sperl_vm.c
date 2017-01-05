@@ -5,7 +5,7 @@
 #include "sperl_vm.h"
 #include "sperl_allocator.h"
 #include "sperl_hash.h"
-#include "sperl_bytecodes.h"
+#include "sperl_bytecode_array.h"
 #include "sperl_bytecode.h"
 #include "sperl_sub.h"
 
@@ -21,8 +21,8 @@ void SPerl_VM_run(SPerl* sperl) {
   
   SPerl_SUB* sub_entry_point = SPerl_HASH_search(parser->sub_abs_name_symtable, entry_point, strlen(entry_point));
   
-  SPerl_BYTECODES* bytecodes = sub_entry_point->bytecodes;
-  uint8_t* bytecodes_values = bytecodes->values;
+  SPerl_BYTECODE_ARRAY* bytecode_array = sub_entry_point->bytecode_array;
+  uint8_t* bytecodes = bytecode_array->values;
   
   // Program counter
   int32_t pc = 0;
@@ -30,9 +30,9 @@ void SPerl_VM_run(SPerl* sperl) {
   int32_t op_stack[255];
   int32_t op_stack_pos = -1;
   
-  while (pc < bytecodes->length) {
+  while (pc < bytecode_array->length) {
     
-    switch (bytecodes_values[pc]) {
+    switch (bytecodes[pc]) {
       
       case SPerl_BYTECODE_C_CODE_NOP:
         // None
@@ -104,17 +104,17 @@ void SPerl_VM_run(SPerl* sperl) {
         op_stack_pos++;
         
         pc++;
-        op_stack[op_stack_pos] = bytecodes_values[pc];
+        op_stack[op_stack_pos] = bytecodes[pc];
         
         break;
       case SPerl_BYTECODE_C_CODE_SIPUSH:
         op_stack_pos++;
         
         pc++;
-        op_stack[op_stack_pos] = bytecodes_values[pc] << 8;
+        op_stack[op_stack_pos] = bytecodes[pc] << 8;
         
         pc++;
-        op_stack[op_stack_pos] += bytecodes_values[pc];
+        op_stack[op_stack_pos] += bytecodes[pc];
         
         break;
       case SPerl_BYTECODE_C_CODE_LDC:

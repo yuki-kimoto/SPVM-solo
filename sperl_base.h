@@ -32,9 +32,9 @@ typedef struct SPerl_allocator SPerl_ALLOCATOR;
 struct SPerl_dumper;
 typedef struct SPerl_dumper SPerl_DUMPER;
 
-/* sperl_bytecode.h */
-struct SPerl_bytecodes;
-typedef struct SPerl_bytecodes SPerl_BYTECODES;
+/* sperl_bytecode_array.h */
+struct SPerl_bytecode_array;
+typedef struct SPerl_bytecode_array SPerl_BYTECODE_ARRAY;
 
 /* sperl_assign.h */
 struct SPerl_bytecode;

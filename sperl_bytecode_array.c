@@ -1,11 +1,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "sperl_bytecodes.h"
+#include "sperl_bytecode_array.h"
 
-SPerl_BYTECODES* SPerl_BYTECODES_new() {
+SPerl_BYTECODE_ARRAY* SPerl_BYTECODE_ARRAY_new() {
   
-  SPerl_BYTECODES* bytecodes = malloc(sizeof(SPerl_BYTECODES));
+  SPerl_BYTECODE_ARRAY* bytecodes = malloc(sizeof(SPerl_BYTECODE_ARRAY));
   bytecodes->capacity = 64;
   bytecodes->length = 0;
   
@@ -15,7 +15,7 @@ SPerl_BYTECODES* SPerl_BYTECODES_new() {
   return bytecodes;
 }
 
-void SPerl_BYTECODES_push(SPerl_BYTECODES* bytecodes, uint8_t value) {
+void SPerl_BYTECODE_ARRAY_push(SPerl_BYTECODE_ARRAY* bytecodes, uint8_t value) {
   int32_t length = bytecodes->length;
   int32_t capacity = bytecodes->capacity;
   
@@ -29,7 +29,7 @@ void SPerl_BYTECODES_push(SPerl_BYTECODES* bytecodes, uint8_t value) {
   bytecodes->length++;
 }
 
-void SPerl_BYTECODES_free(SPerl_BYTECODES* bytecodes) {
+void SPerl_BYTECODE_ARRAY_free(SPerl_BYTECODE_ARRAY* bytecodes) {
   free(bytecodes->values);
   free(bytecodes);
 }

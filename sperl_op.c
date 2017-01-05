@@ -716,7 +716,7 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
   SPerl_OP_build_const_pool(sperl);
   
   // Create bytecodes
-  SPerl_BYTECODE_BUILDER_build_bytecodes(sperl);
+  SPerl_BYTECODE_BUILDER_build_bytecode_array(sperl);
   
   return op_grammar;
 }
