@@ -305,14 +305,14 @@ package[7]
 
 Use the following types in source code. This is defined in standard "stdint.h" library.
 
-  _Bool
-  uint8_t
-  int8_t
-  int16_t
-  int32_t
-  int64_t
-  float
-  double
+    _Bool
+    uint8_t
+    int8_t
+    int16_t
+    int32_t
+    int64_t
+    float
+    double
 
 # SPVM specification
 
