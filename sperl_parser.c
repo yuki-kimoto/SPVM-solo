@@ -15,6 +15,7 @@
 #include "sperl_yacc.h"
 #include "sperl_array.h"
 #include "sperl_use.h"
+#include "sperl_constant_pool.h"
 
 SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   SPerl_PARSER* parser = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_PARSER));
