@@ -13,7 +13,7 @@
 #include "sperl_allocator.h"
 #include "sperl_hash.h"
 #include "sperl_resolved_type.h"
-#include "sperl_yacc.h"
+#include "sperl_yacc_util.h"
 #include "sperl_package.h"
 
 const char* const SPerl_TYPE_C_CODE_NAMES[] = {

@@ -1,4 +1,4 @@
-#include "sperl_descripter.h"
+#include "sperl_descriptor.h"
 #include "sperl.h"
 #include "sperl_allocator.h"
 
