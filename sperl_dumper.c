@@ -124,6 +124,15 @@ void SPerl_DUMPER_dump_sperl(SPerl* sperl) {
 
   printf("\n[Packages information]\n");
   SPerl_DUMPER_dump_packages(sperl, parser->op_packages);
+  
+  printf("\n[Subroutine information]\n");
+  SPerl_ARRAY* op_subs = parser->op_subs;
+  for (int32_t i = 0; i < op_subs->length; i++) {
+    SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
+    SPerl_SUB* sub = op_sub->uv.sub;
+    printf("  sub[%" PRId32 "]\n", i);
+    SPerl_DUMPER_dump_sub(sperl, sub);
+  }
 }
 
 void SPerl_DUMPER_dump_constants(SPerl* sperl, SPerl_ARRAY* op_constants) {
@@ -165,14 +174,6 @@ void SPerl_DUMPER_dump_packages(SPerl* sperl, SPerl_ARRAY* op_packages) {
     printf("  constant_pool\n");
     SPerl_DUMPER_dump_constant_pool(sperl, package->constant_pool);
     
-    printf("  subs\n");
-    SPerl_ARRAY* op_subs = package->op_subs;
-    for (int32_t i = 0; i < op_subs->length; i++) {
-      SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
-      SPerl_SUB* sub = op_sub->uv.sub;
-      printf("    sub[%" PRId32 "]\n", i);
-      SPerl_DUMPER_dump_sub(sperl, sub);
-    }
   }
 }
 
@@ -410,34 +411,34 @@ void SPerl_DUMPER_dump_constant(SPerl* sperl, SPerl_CONSTANT* constant) {
 
 void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
   if (sub) {
-    printf("      package_name => \"%s\"\n", sub->op_package->uv.package->op_name->uv.name);
+    printf("    package_name => \"%s\"\n", sub->op_package->uv.package->op_name->uv.name);
     if (sub->anon) {
-      printf("      name => (NONE)\n");
+      printf("    name => (NONE)\n");
     }
     else {
-      printf("      name => \"%s\"\n", sub->op_name->uv.name);
+      printf("    name => \"%s\"\n", sub->op_name->uv.name);
     }
-    printf("      id => %" PRId32 "\n", sub->id);
-    printf("      anon => %d\n", sub->anon);
+    printf("    id => %" PRId32 "\n", sub->id);
+    printf("    anon => %d\n", sub->anon);
 
-    printf("      resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
+    printf("    resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
 
-    printf("      argument_count => %" PRId32 "\n", sub->argument_count);
-    printf("      my_vars\n");
+    printf("    argument_count => %" PRId32 "\n", sub->argument_count);
+    printf("    my_vars\n");
     SPerl_ARRAY* op_my_vars = sub->op_my_vars;
     for (int32_t i = 0; i < op_my_vars->length; i++) {
       SPerl_OP* op_my_var = SPerl_ARRAY_fetch(sub->op_my_vars, i);
       SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
-      printf("        my_var[%" PRId32 "]\n", i);
+      printf("      my_var[%" PRId32 "]\n", i);
       SPerl_DUMPER_dump_my_var(sperl, my_var);
     }
-    printf("      op_block => %p\n", sub->op_block);
+    printf("    op_block => %p\n", sub->op_block);
     
-    printf("      bytecodes\n");
+    printf("    bytecodes\n");
     SPerl_DUMPER_dump_bytecodes(sperl, sub->bytecodes);
   }
   else {
-    printf("      None\n");
+    printf("    None\n");
   }
 }
 

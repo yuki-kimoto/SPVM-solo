@@ -846,12 +846,12 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     
     // Method information
     SPerl_HASH* sub_abs_name_symtable = parser->sub_abs_name_symtable;
-    int32_t i = parser->cur_op_subs->length - 1;
+    int32_t i = parser->op_subs->length - 1;
     while (1) {
       if (i < 0) {
         break;
       }
-      SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->cur_op_subs, i);
+      SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
       SPerl_SUB* sub = op_sub->uv.sub;
       if (sub->op_package) {
         break;
@@ -879,8 +879,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     
     // Set package
     package->op_fields = op_fields;
-    package->op_subs = parser->cur_op_subs;
-    parser->cur_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
     
     // Add package
     op_package->uv.package = package;
@@ -993,10 +991,10 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   sub->op_block = op_block;
   
   // ID
-  sub->id = parser->cur_op_subs->length;
+  sub->id = parser->op_subs->length;
   
   // Add sub information
-  SPerl_ARRAY_push(parser->cur_op_subs, op_sub);
+  SPerl_ARRAY_push(parser->op_subs, op_sub);
   
   op_sub->uv.sub = sub;
   
