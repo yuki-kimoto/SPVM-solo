@@ -54,15 +54,7 @@ sperl_t_%: $(OBJDIR)/t/sperl_t_%
 check: $(test_names)
 .PHONY: check
 
-# test (*.spvm)
-.PHONY: test test2
-test: sperl
-	./$< Test
-test2: sperl
-	./$< Test2
-
 # misc
-
 $(DIRS):
 	mkdir -p $@
 
