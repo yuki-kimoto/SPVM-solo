@@ -1,4 +1,4 @@
-#include "malloc.h"
+#include <stdlib.h>
 #include "sperl_memory_pool_page.h"
 
 SPerl_MEMORY_POOL_PAGE* SPerl_MEMORY_POOL_PAGE_new() {
