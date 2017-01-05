@@ -51,8 +51,8 @@ $(OBJDIR)/t/sperl_t_%: $(OBJDIR)/t/sperl_t_%.o libsperl.a
 sperl_t_%: $(OBJDIR)/t/sperl_t_%
 	./$<
 .PRECIOUS: $(OBJDIR)/t/sperl_t_%.o $(OBJDIR)/t/sperl_t_%
-check: $(test_names)
-.PHONY: check
+test: $(test_names)
+.PHONY: test
 
 # misc
 $(DIRS):
