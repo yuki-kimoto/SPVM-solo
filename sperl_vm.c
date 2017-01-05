@@ -25,12 +25,13 @@ void SPerl_VM_run(SPerl* sperl) {
   uint8_t* bytecodes = bytecode_array->values;
   
   // Program counter
-  int32_t pc = 0;
+  int32_t pc = sub_entry_point->bytecode_start_pos;
+  int32_t end_pos = sub_entry_point->bytecode_start_pos + sub_entry_point->bytecode_length - 1;
   
   int32_t op_stack[255];
   int32_t op_stack_pos = -1;
   
-  while (pc < bytecode_array->length) {
+  while (pc <= end_pos) {
     
     switch (bytecodes[pc]) {
       

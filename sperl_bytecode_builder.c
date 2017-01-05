@@ -1410,6 +1410,5 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
       }
     }
     sub->bytecode_length = bytecode_array->length - sub->bytecode_start_pos;
-    warn("AAAAAAAAAAAAA %d %d %d", sub->bytecode_length, bytecode_array->length, sub->bytecode_start_pos);
   }
 }

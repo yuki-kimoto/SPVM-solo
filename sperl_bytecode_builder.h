@@ -3,6 +3,6 @@
 
 #include "sperl_base.h"
 
-void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl* sperl);
-
+void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl);
+\
 #endif
