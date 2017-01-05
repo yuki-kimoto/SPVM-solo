@@ -38,7 +38,7 @@ package Main {
 
 ## Run
 
-    bison -t -p SPerl_yy -d sperl_yacc.y && gcc -std=c99 -g -lm -O -o sperl main/sperl_main.c *.c && ./sperl Main
+    make && ./sperl Main
 
 Now I only print AST and bytecodes.
 
@@ -293,19 +293,12 @@ package[7]
 # Development
 
 ## Run
-   
-    # Run using command direcotry
-    bison -t -p SPerl_yy -d sperl_yacc.y && gcc -std=c99 -g -lm -O -o sperl main/sperl_main.c *.c && ./sperl Test
     
-    # Run using Makefile
-    make
-    make test
+    make && ./sperl Test
 
 ## Test
-
-    gcc  -std=c99 -lm -O -o tmp_sperl_t_array t/sperl_t_array.c *.c && ./tmp_sperl_t_array
-    gcc  -std=c99 -lm -O -o tmp_sperl_t_hash t/sperl_t_hash.c *.c && ./tmp_sperl_t_hash
-    gcc  -std=c99 -lm -O -o tmp_sperl_t_memory_pool t/sperl_t_memory_pool.c *.c && ./tmp_sperl_t_memory_pool
+    
+    make test
 
 ## Types
 
