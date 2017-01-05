@@ -279,7 +279,6 @@ void SPerl_DUMPER_dump_bytecodes(SPerl* sperl, SPerl_BYTECODES* bytecodes) {
       case SPerl_BYTECODE_C_CODE_IFNONNULL:
       case SPerl_BYTECODE_C_CODE_IFNULL:
       case SPerl_BYTECODE_C_CODE_GOTO:
-      case SPerl_BYTECODE_C_CODE_INVOKESTATIC:
       case SPerl_BYTECODE_C_CODE_JSR:
       case SPerl_BYTECODE_C_CODE_PUTFIELD:
       case SPerl_BYTECODE_C_CODE_GETFIELD:
@@ -294,6 +293,28 @@ void SPerl_DUMPER_dump_bytecodes(SPerl* sperl, SPerl_BYTECODES* bytecodes) {
         
         break;
       }
+      // Have four operand
+      case SPerl_BYTECODE_C_CODE_CALLSUB:
+      {
+        i++;
+        bytecode = bytecodes->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecodes->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecodes->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecodes->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        break;
+      }
+      
       case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
         
         // Padding

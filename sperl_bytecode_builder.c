@@ -317,12 +317,14 @@ void SPerl_BYTECODE_BUILDER_build_bytecodes(SPerl* sperl) {
             case SPerl_OP_C_CODE_CALL_SUB: {
               
               // Call subroutine
-              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_INVOKESTATIC);
+              SPerl_BYTECODES_push(bytecodes, SPerl_BYTECODE_C_CODE_CALLSUB);
               SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
               const char* sub_abs_name = name_info->abs_name;
               SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
               int32_t id = sub->id;
               
+              SPerl_BYTECODES_push(bytecodes, (id >> 24) & 0xFF);
+              SPerl_BYTECODES_push(bytecodes, (id >> 16) & 0xFF);
               SPerl_BYTECODES_push(bytecodes, (id >> 8) & 0xFF);
               SPerl_BYTECODES_push(bytecodes, id & 0xFF);
               

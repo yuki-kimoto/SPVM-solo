@@ -210,6 +210,7 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "GOTO_W",
   "JSR_W",
   "BREAKPOINT",
+  "CALLSUB",
   "UNDEFINED",
   "IMPDEP1",
   "IMPDEP2",

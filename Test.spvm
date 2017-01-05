@@ -204,8 +204,14 @@ package Test {
 
     my $bar : double = (double)1;
     undef;
+    
+    Test::sum1(1, 2);
   }
-
+  
+  sub sum1 ($num1 : int, $num2 : int) : int {
+    return $num1 + $num2;
+  }
+  
   sub sum3 ($simple : Test::Simple, $foo : int, $bar : float) : int {
     
     if (3) {
