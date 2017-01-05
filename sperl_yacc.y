@@ -14,7 +14,7 @@
 %}
 
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE NEW
-%token <opval> LAST NEXT NAME VAR CONSTANT ENUM DESCRIPTER CORETYPE UNDEF DIE
+%token <opval> LAST NEXT NAME VAR CONSTANT ENUM DESCRIPTOR CORETYPE UNDEF DIE
 %token <opval> SWITCH CASE DEFAULT
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
