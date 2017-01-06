@@ -14,7 +14,6 @@ struct SPerl_name_info {
   uint8_t code;
   SPerl_OP* op_var;
   SPerl_OP* op_name;
-  _Bool anon;
   const char* resolved_name;
 };
 

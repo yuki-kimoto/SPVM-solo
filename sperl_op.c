@@ -1110,7 +1110,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
     SPerl_OP_sibling_splice(sperl, op_terms, op_terms->first, 0, op_invocant);
   }
   
-  name_info->anon = anon;
+  name_info->code = SPerl_NAME_INFO_C_CODE_ANON;
   
   op_call_sub->uv.name_info = name_info;
   
