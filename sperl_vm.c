@@ -24,7 +24,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   uint8_t* bytecodes = bytecode_array->values;
   
   // Program counter
-  int32_t pc = sub->bytecode_start_pos;
+  uint8_t* pc = &bytecodes[sub->bytecode_start_pos];
   
   int32_t op_stack[255];
   int32_t op_stack_pos = -1;
@@ -32,7 +32,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   int32_t frame_count = 1;
   
   while (1) {
-    switch (bytecodes[pc]) {
+    switch (*pc) {
       
       case SPerl_BYTECODE_C_CODE_NOP:
         // None
@@ -104,17 +104,17 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         op_stack_pos++;
         
         pc++;
-        op_stack[op_stack_pos] = bytecodes[pc];
+        op_stack[op_stack_pos] = *pc;
         
         break;
       case SPerl_BYTECODE_C_CODE_SIPUSH:
         op_stack_pos++;
         
         pc++;
-        op_stack[op_stack_pos] = bytecodes[pc] << 8;
+        op_stack[op_stack_pos] = *pc << 8;
         
         pc++;
-        op_stack[op_stack_pos] += bytecodes[pc];
+        op_stack[op_stack_pos] += *pc;
         
         break;
       case SPerl_BYTECODE_C_CODE_LDC:
