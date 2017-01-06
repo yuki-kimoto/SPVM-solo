@@ -476,28 +476,33 @@ void SPerl_VM_run(SPerl* sperl) {
       case SPerl_BYTECODE_C_CODE_LUSHR:
         *((int64_t*)&op_stack[op_stack_pos - 3]) = (*((int64_t*)&op_stack[op_stack_pos - 3]) >> *((int64_t*)&op_stack[op_stack_pos - 1])) & 0xFFFFFFFFFFFFFFFF;
         op_stack_pos -= 2;
-        
         break;
       case SPerl_BYTECODE_C_CODE_IAND:
-      
+        op_stack[op_stack_pos - 1] &= op_stack[op_stack_pos];
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_LAND:
-      
+        *((int64_t*)&op_stack[op_stack_pos - 3]) &= *((int64_t*)&op_stack[op_stack_pos - 1]);
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_IOR:
-      
+        op_stack[op_stack_pos - 1] |= op_stack[op_stack_pos];
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_LOR:
-      
+        *((int64_t*)&op_stack[op_stack_pos - 3]) |= *((int64_t*)&op_stack[op_stack_pos - 1]);
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_IXOR:
-      
+        op_stack[op_stack_pos - 1] ^= op_stack[op_stack_pos];
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_LXOR:
-      
+        *((int64_t*)&op_stack[op_stack_pos - 3]) ^= *((int64_t*)&op_stack[op_stack_pos - 1]);
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_IINC:
-      
+        
         break;
       case SPerl_BYTECODE_C_CODE_I2L:
         op_stack_pos++;
