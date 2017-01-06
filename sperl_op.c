@@ -414,14 +414,14 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     }
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
-      const char* abs_name = name_info->abs_name;
+      const char* abs_name = name_info->resolved_name;
       SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = sub->op_return_type->uv.type->resolved_type;
       break;
     }
     case SPerl_OP_C_CODE_FIELD: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
-      const char* abs_name = name_info->abs_name;
+      const char* abs_name = name_info->resolved_name;
       SPerl_FIELD* field = SPerl_HASH_search(parser->field_abs_name_symtable, abs_name, strlen(abs_name));
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
@@ -626,7 +626,7 @@ void SPerl_OP_check_sub_name(SPerl* sperl, SPerl_OP* op_name) {
     sub_abs_name = name_info->op_name->uv.name;
   }
   
-  name_info->abs_name = sub_abs_name;
+  name_info->resolved_name = sub_abs_name;
   
   SPerl_SUB* found_sub= SPerl_HASH_search(
     parser->sub_abs_name_symtable,
@@ -650,7 +650,7 @@ void SPerl_OP_check_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
   const char* base_name = name_info->op_name->uv.name;
   field_abs_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
   
-  name_info->abs_name = field_abs_name;
+  name_info->resolved_name = field_abs_name;
   
   SPerl_FIELD* found_field= SPerl_HASH_search(
     parser->field_abs_name_symtable,
