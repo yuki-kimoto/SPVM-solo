@@ -502,7 +502,7 @@ void SPerl_VM_run(SPerl* sperl) {
         op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_IINC:
-        
+        op_stack[op_stack_pos]++;
         break;
       case SPerl_BYTECODE_C_CODE_I2L:
         op_stack_pos++;
