@@ -1,4 +1,5 @@
 #include <string.h>
+#include <math.h>
 
 #include "sperl.h"
 #include "sperl_parser.h"
@@ -375,50 +376,64 @@ void SPerl_VM_run(SPerl* sperl) {
         op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_LSUB:
-      
+        *((int64_t*)&op_stack[op_stack_pos - 3]) -= (int64_t)op_stack[op_stack_pos - 1];
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FSUB:
-      
+        *((float*)&op_stack[op_stack_pos - 1]) -= (float)op_stack[op_stack_pos];
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_DSUB:
-      
+        *((double*)&op_stack[op_stack_pos - 3]) -= (double)op_stack[op_stack_pos - 1];
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_IMUL:
         op_stack[op_stack_pos - 1] *= op_stack[op_stack_pos];
         op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_LMUL:
-      
+        *((int64_t*)&op_stack[op_stack_pos - 3]) *= (int64_t)op_stack[op_stack_pos - 1];
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FMUL:
-      
+        *((float*)&op_stack[op_stack_pos - 1]) *= (float)op_stack[op_stack_pos];
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_DMUL:
-      
+        *((double*)&op_stack[op_stack_pos - 3]) *= (double)op_stack[op_stack_pos - 1];
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_IDIV:
-      
+        op_stack[op_stack_pos - 1] /= op_stack[op_stack_pos];
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_LDIV:
-      
+        *((int64_t*)&op_stack[op_stack_pos - 3]) /= (int64_t)op_stack[op_stack_pos - 1];
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FDIV:
-      
+        *((float*)&op_stack[op_stack_pos - 1]) /= (float)op_stack[op_stack_pos];
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_DDIV:
-      
+        *((double*)&op_stack[op_stack_pos - 3]) /= (double)op_stack[op_stack_pos - 1];
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_IREM:
-      
+        op_stack[op_stack_pos - 1] %= op_stack[op_stack_pos];
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_LREM:
-      
+        *((int64_t*)&op_stack[op_stack_pos - 3]) %= (int64_t)op_stack[op_stack_pos - 1];
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FREM:
-      
+        *((float*)&op_stack[op_stack_pos - 1]) = (float)fmod((double)*((float*)&op_stack[op_stack_pos - 1]), (double)(float)op_stack[op_stack_pos]);
+        op_stack_pos--;
         break;
       case SPerl_BYTECODE_C_CODE_DREM:
-      
+        *((double*)&op_stack[op_stack_pos - 3]) = fmod(*((double*)&op_stack[op_stack_pos - 3]), (double)op_stack[op_stack_pos - 1]);
+        op_stack_pos -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_INEG:
       
