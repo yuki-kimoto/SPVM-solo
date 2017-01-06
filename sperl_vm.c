@@ -15,26 +15,23 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   return SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
 }
 
-void SPerl_VM_run(SPerl* sperl) {
+void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   
   SPerl_PARSER* parser = sperl->parser;
-  
-  const char* entry_point = parser->entry_point;
-  
-  SPerl_SUB* sub_entry_point = SPerl_HASH_search(parser->sub_abs_name_symtable, entry_point, strlen(entry_point));
+  SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_name, strlen(sub_name));
   
   SPerl_BYTECODE_ARRAY* bytecode_array = parser->bytecode_array;
   uint8_t* bytecodes = bytecode_array->values;
   
   // Program counter
-  int32_t pc = sub_entry_point->bytecode_start_pos;
-  int32_t end_pos = sub_entry_point->bytecode_start_pos + sub_entry_point->bytecode_length - 1;
+  int32_t pc = sub->bytecode_start_pos;
   
   int32_t op_stack[255];
   int32_t op_stack_pos = -1;
   
-  while (pc <= end_pos) {
-    
+  int32_t frame_count = 1;
+  
+  while (1) {
     switch (bytecodes[pc]) {
       
       case SPerl_BYTECODE_C_CODE_NOP:
@@ -630,22 +627,40 @@ void SPerl_VM_run(SPerl* sperl) {
       
         break;
       case SPerl_BYTECODE_C_CODE_IRETURN:
-      
+        frame_count--;
+        if (frame_count == 0) {
+          return;
+        }
         break;
       case SPerl_BYTECODE_C_CODE_LRETURN:
-      
+        frame_count--;
+        if (frame_count == 0) {
+          return;
+        }
         break;
       case SPerl_BYTECODE_C_CODE_FRETURN:
-      
+        frame_count--;
+        if (frame_count == 0) {
+          return;
+        }
         break;
       case SPerl_BYTECODE_C_CODE_DRETURN:
-      
+        frame_count--;
+        if (frame_count == 0) {
+          return;
+        }
         break;
       case SPerl_BYTECODE_C_CODE_ARETURN:
-      
+        frame_count--;
+        if (frame_count == 0) {
+          return;
+        }
         break;
       case SPerl_BYTECODE_C_CODE_RETURN:
-      
+        frame_count--;
+        if (frame_count == 0) {
+          return;
+        }
         break;
       case SPerl_BYTECODE_C_CODE_GETSTATIC:
       

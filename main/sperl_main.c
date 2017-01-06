@@ -24,8 +24,11 @@ int main(int argc, char *argv[])
   SPerl_ARRAY_push(parser->include_pathes, ".");
   int32_t parse_success = SPerl_PARSER_parse(sperl, package_name);
   
+  // Entry point
+  const char* entry_point = parser->entry_point;
+  
   // Run
-  SPerl_VM_run(sperl);
+  SPerl_VM_run(sperl, entry_point);
   
   // Free sperl
   SPerl_free(sperl);
