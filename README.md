@@ -25,7 +25,7 @@ package Main {
     my $num1 = 2;
     my $num2 = 5;
     
-    my $num3 = Main::sum($num1, $num3);
+    my $num3 = sum($num1, $num3);
   }
 
   sub sum ($num1 : int, $num2 : int) : int {

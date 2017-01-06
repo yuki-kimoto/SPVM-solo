@@ -323,7 +323,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_CALLSUB);
               SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
               const char* sub_abs_name = name_info->resolved_name;
+              
               SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_abs_name, strlen(sub_abs_name));
+              
               int32_t id = sub->id;
               
               SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);

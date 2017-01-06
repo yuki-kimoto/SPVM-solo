@@ -206,6 +206,7 @@ package Test {
     undef;
     
     Test::sum1(1, 2);
+    sum1(1, 2);
   }
   
   sub sum1 ($num1 : int, $num2 : int) : int {

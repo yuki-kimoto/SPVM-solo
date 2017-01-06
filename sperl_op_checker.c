@@ -102,6 +102,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           op_cur->first->lvalue = 1;
           break;
         }
+        
       }
       
       // [END]Preorder traversal position
@@ -860,18 +861,13 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             }
             case SPerl_OP_C_CODE_CALL_SUB: {
               // Check sub name
-              SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
-              if (name_info->code == SPerl_NAME_INFO_C_CODE_ANON) {
-                SPerl_OP_check_sub_name(sperl, op_cur);
-              }
+              SPerl_OP_check_sub_name(sperl, sub->op_package, op_cur);
+              
               break;
             }
             case SPerl_OP_C_CODE_FIELD: {
               // Check field name
               SPerl_OP_check_field_name(sperl, op_cur);
-              if (parser->fatal_error) {
-                return;
-              }
               
               break;
             }

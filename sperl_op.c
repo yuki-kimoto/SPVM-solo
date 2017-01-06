@@ -610,20 +610,38 @@ void SPerl_OP_check(SPerl* sperl) {
   }
 }
 
-void SPerl_OP_check_sub_name(SPerl* sperl, SPerl_OP* op_name) {
+void SPerl_OP_check_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_name) {
   
   SPerl_PARSER* parser = sperl->parser;
   
   SPerl_NAME_INFO* name_info = op_name->uv.name_info;
   
   const char* sub_abs_name = NULL;
-  if (name_info->op_var) {
+  if (name_info->code == SPerl_NAME_INFO_C_CODE_ANON) {
+    return;
+  }
+  else if (name_info->code == SPerl_NAME_INFO_C_CODE_VARBASENAME) {
     const char* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
     const char* base_name = name_info->op_name->uv.name;
     sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
   }
-  else if (name_info->op_name) {
+  else if (name_info->code == SPerl_NAME_INFO_C_CODE_ABSNAME) {
     sub_abs_name = name_info->op_name->uv.name;
+  }
+  else if (name_info->code == SPerl_NAME_INFO_C_CODE_BASENAME) {
+    const char* package_name = op_package->uv.package->op_name->uv.name;
+    const char* base_name = name_info->op_name->uv.name;
+    sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
+    
+    SPerl_SUB* found_sub= SPerl_HASH_search(
+      parser->sub_abs_name_symtable,
+      sub_abs_name,
+      strlen(sub_abs_name)
+    );
+    
+    if (!found_sub) {
+      sub_abs_name = SPerl_OP_create_abs_name(sperl, "CORE", base_name);
+    }
   }
   
   name_info->resolved_name = sub_abs_name;
@@ -670,9 +688,15 @@ SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_fiel
   SPerl_OP_sibling_splice(sperl, op_field, op_var, 0, op_field_name);
   
   SPerl_NAME_INFO* name_info = SPerl_NAME_INFO_new(sperl);
+  
+  if (strstr(op_field_name->uv.name, ":")) {
+    SPerl_yyerror_format(sperl, "field name \"%s\" can't contain :: at %s line %d\n",
+      op_field_name, op_field_name->file, op_field_name->line);
+  }
+  
+  name_info->code = SPerl_NAME_INFO_C_CODE_VARBASENAME;
   name_info->op_var = op_var;
   name_info->op_name = op_field_name;
-  
   op_field->uv.name_info = name_info;
   
   return op_field;
@@ -1084,22 +1108,29 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
   
   SPerl_NAME_INFO* name_info = SPerl_NAME_INFO_new(sperl);
   
-  if (!anon) {
+  // Anon
+  if (anon) {
+    name_info->code = SPerl_NAME_INFO_C_CODE_ANON;
+  }
+  else {
     const char* sub_name = op_sub_name->uv.name;
     SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->line);
     
+    // Absolute
     if (strstr(sub_name, ":")) {
+      name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
       op_name->uv.name = sub_name;
       name_info->op_name = op_name;
     }
     else {
       if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
+        name_info->code = SPerl_NAME_INFO_C_CODE_VARBASENAME;
         name_info->op_var = op_invocant;
         name_info->op_name = op_sub_name;
       }
       else {
-        const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, "CORE", sub_name);
-        op_name->uv.name = sub_abs_name;
+        name_info->code = SPerl_NAME_INFO_C_CODE_BASENAME;
+        op_name->uv.name = sub_name;
         name_info->op_name = op_name;
       }
     }
@@ -1109,8 +1140,6 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
   if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
     SPerl_OP_sibling_splice(sperl, op_terms, op_terms->first, 0, op_invocant);
   }
-  
-  name_info->code = SPerl_NAME_INFO_C_CODE_ANON;
   
   op_call_sub->uv.name_info = name_info;
   
