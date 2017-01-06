@@ -705,7 +705,7 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
   SPerl_OP_sibling_splice(sperl, op_grammar, NULL, 0, op_packages);
   
   parser->op_grammar = op_grammar;
-
+  
   // Resovle types, check types, and names.
   SPerl_OP_check(sperl);
   if (parser->fatal_error) {
@@ -716,6 +716,9 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
   SPerl_OP_build_const_pool(sperl);
   
   // Create bytecodes
+  if (parser->error_count > 0) {
+    return NULL;
+  }
   SPerl_BYTECODE_BUILDER_build_bytecode_array(sperl);
   
   return op_grammar;

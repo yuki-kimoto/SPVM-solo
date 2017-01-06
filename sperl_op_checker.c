@@ -863,9 +863,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
               if (!name_info->anon) {
                 SPerl_OP_check_sub_name(sperl, op_cur);
-                if (parser->fatal_error) {
-                  return;
-                }
               }
               break;
             }
