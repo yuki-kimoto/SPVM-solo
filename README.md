@@ -17,6 +17,7 @@ I have implemented only the following parts.
 1. tokenizer
 1. abstract syntax tree builder
 1. bytecode builder
+1. some parts of virtual machine
 
 ```
 package Main {
@@ -344,6 +345,7 @@ Package name is conbination of alphabet, number, and "::". Number must not be th
 # Contributors
 
 * [akinomyoga](https://github.com/akinomyoga)
+* [NAGAYASU Shinya](https://github.com/nagayasu-shinya)
 
 # Caution
 
