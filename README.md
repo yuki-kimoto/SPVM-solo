@@ -344,7 +344,7 @@ Package name is conbination of alphabet, number, and "::". Number must not be th
 
 # Contributors
 
-* [akinomyoga](https://github.com/akinomyoga)
+* [Koichi Murase](https://github.com/akinomyoga)
 * [NAGAYASU Shinya](https://github.com/nagayasu-shinya)
 
 # Caution
