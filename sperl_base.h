@@ -9,6 +9,10 @@ enum {
 };
 
 /* sperl_parser.h */
+struct SPerl_thread;
+typedef struct SPerl_thread SPerl_THREAD;
+
+/* sperl_parser.h */
 struct SPerl_parser;
 typedef struct SPerl_parser SPerl_PARSER;
 

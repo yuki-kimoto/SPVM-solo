@@ -8,7 +8,8 @@
 #include "sperl_bytecode_array.h"
 
 SPerl_SUB* SPerl_SUB_new(SPerl* sperl) {
-  SPerl_SUB* sub = (SPerl_SUB*)calloc(1, sizeof(SPerl_SUB));
+  
+  SPerl_SUB* sub = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_SUB));
   
   sub->op_my_vars = SPerl_ALLOCATOR_new_array(sperl, 0);
   
