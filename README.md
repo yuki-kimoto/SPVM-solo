@@ -41,9 +41,9 @@ package Main {
 
     make && ./sperl Main
 
-Now I only print AST and bytecodes.
+Now only AST and bytecodes are printed.
 
-The output of above source code is
+The output for the above source code will be
 
 ```
 [Abstract Syntax Tree]
@@ -303,7 +303,7 @@ package[7]
 
 ## Types
 
-Use the following types in source code. This is defined in standard "stdint.h" library.
+Use the following types in source codes. This is defined in the standard header `<stdint.h>`.
 
     _Bool
     uint8_t
@@ -318,7 +318,7 @@ Use the following types in source code. This is defined in standard "stdint.h" l
 
 ## Core type
 
-core type is byte, short, int, long, float, double.
+Core types are `byte`, `short`, `int`, `long`, `float`, `double`.
 
     byte    signed integer          1byte
     short   signed integer          2byte
@@ -327,11 +327,11 @@ core type is byte, short, int, long, float, double.
     float   floating-point number   4byte
     double  floating-point number   8byte
 
-Calculation and type convertion rule is same as Java.
+Calculation and type convertion rules are same as Java.
 
 ## Package name
 
-Package name is conbination of alphabet, number, and "::". Number must not be the first of the part.
+Package name is a conbination of alphabets, numbers, and "::". Numbers should not appear as the first character.
     
     # OK
     Foo
@@ -349,4 +349,4 @@ Package name is conbination of alphabet, number, and "::". Number must not be th
 
 # Caution
 
-Static Perl will be renamed because same name project "static perl" already exists.
+Static Perl will be renamed because the same name project "static perl" already exists.
