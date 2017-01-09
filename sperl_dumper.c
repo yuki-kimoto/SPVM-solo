@@ -464,6 +464,11 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
       SPerl_DUMPER_dump_my_var(sperl, my_var);
     }
     
+    printf("    operand_stack_max => %d\n", sub->operand_stack_max);
+    
+    
+    printf("    call_stack_max => %d\n", sub->call_stack_max);
+    
     printf("    bytecode_array\n");
     SPerl_DUMPER_dump_bytecode_array(sperl, sperl->parser->bytecode_array, sub->bytecode_start_pos, sub->bytecode_length);
   }
