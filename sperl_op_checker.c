@@ -65,6 +65,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // Max depth
     int32_t max_depth = 0;
     
+    // Call stack max
+    int32_t call_stack_max = 0;
+    
+    // Argument total max size of subroutine call
+    int32_t argument_max_size = 0;
+    
     // Run OPs
     SPerl_OP* op_base = op_sub;
     SPerl_OP* op_cur = op_base;
@@ -970,5 +976,20 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     
     // Operand stack max
     sub->operand_stack_max = max_depth * 2;
+    
+    // Caluculat call_stack_max
+    int32_t argument_count = sub->argument_count;
+    for (int32_t i = argument_count; i < op_my_vars->length; i++) {
+      SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
+      SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
+      SPerl_RESOLVED_TYPE* resolved_type = my_var->op_type->uv.type->resolved_type;
+      if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+        call_stack_max += 2;
+      }
+      else {
+        call_stack_max++;
+      }
+    }
+    sub->call_stack_max = call_stack_max;
   }
 }
