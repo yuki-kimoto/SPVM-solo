@@ -32,6 +32,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   int32_t operand_stack_top = -1;
   int32_t* call_stack = malloc(sizeof(int32_t) * 255);
   int32_t call_stack_top = -1;
+  int32_t call_stack_base = -1;
   
   int32_t frame_count = 1;
   
