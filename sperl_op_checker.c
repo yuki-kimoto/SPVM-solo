@@ -59,6 +59,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // Current default statement
     SPerl_OP* cur_default_op = NULL;
     
+    // Depth
+    int32_t depth = 0;
+    
+    // Max depth
+    int32_t max_depth = 0;
+    
     // Run OPs
     SPerl_OP* op_base = op_sub;
     SPerl_OP* op_cur = op_base;
@@ -107,6 +113,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       // [END]Preorder traversal position
       if (op_cur->first) {
         op_cur = op_cur->first;
+        depth++;
+        if (depth > max_depth) {
+          max_depth = depth;
+        }
       }
       else {
         while (1) {
@@ -947,6 +957,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           // Next is parent
           else {
             op_cur = op_cur->sibparent;
+            depth--;
           }
         }
         if (finish) {
@@ -956,5 +967,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     }
     // Set my var information
     sub->op_my_vars = op_my_vars;
+    
+    // Operand stack max
+    sub->operand_stack_max = max_depth * 2;
   }
 }
