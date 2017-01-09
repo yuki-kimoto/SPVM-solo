@@ -28,20 +28,43 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   // Program counter
   uint8_t* pc = &bytecodes[sub->bytecode_start_pos];
   
+  // Capacity of openrad stack
+  int32_t operand_stack_capacity = 255;
+  
   // Operand stack
-  int32_t* operand_stack = malloc(sizeof(int32_t) * 255);
+  int32_t* operand_stack = malloc(sizeof(int32_t) * operand_stack_capacity);
   
   // Top position of operand stack
   int32_t operand_stack_top = -1;
   
+  // Capacity of operand stack
+  int32_t call_stack_capacity = 255;
+  
   // Call stack
-  int32_t* call_stack = malloc(sizeof(int32_t) * 255);
+  int32_t* call_stack = malloc(sizeof(int32_t) * call_stack_capacity);
   
   // Top position of call stack
   int32_t call_stack_top = -1;
   
   // Base position of call stack
   int32_t call_stack_base = -1;
+  
+  // Prepare call subroutine
+  {
+    // Extend operand stack
+    while (operand_stack_top + sub->operand_stack_max > operand_stack_capacity) {
+      operand_stack_capacity = operand_stack_capacity * 2;
+      operand_stack = realloc(operand_stack, sizeof(int32_t) * operand_stack_capacity);
+    }
+    
+    // Extend call stack
+    while (call_stack_top + sub->call_stack_max > call_stack_capacity) {
+      call_stack_capacity = call_stack_capacity * 2;
+      call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
+    }
+  }
+  
+  
   
   int32_t frame_count = 1;
   
