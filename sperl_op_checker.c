@@ -30,30 +30,6 @@
 #include "sperl_resolved_type.h"
 #include "sperl_switch_info.h"
 
-void SPerl_OP_CHECKER_update_operand_stack_info(SPerl* sperl, SPerl_OP* op, int32_t* operand_stack_max, int32_t* operand_stack_count) {
-  
-  if (!op->lvalue) {
-    SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op);
-    
-    switch (op->code) {
-      case SPerl_OP_C_CODE_ADD:
-      {
-        if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-          *operand_stack_count -= 2;
-        }
-        else {
-          (*operand_stack_count)--;
-        }
-        break;
-      }
-    }
-    
-    if (*operand_stack_count > *operand_stack_max) {
-      *operand_stack_max = *operand_stack_count;
-    }
-  }
-}
-
 void SPerl_OP_CHECKER_check(SPerl* sperl) {
   
   SPerl_PARSER* parser = sperl->parser;
@@ -83,23 +59,22 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // Current default statement
     SPerl_OP* cur_default_op = NULL;
     
-    // Operand stack max;
-    int32_t operand_stack_max = 0;
-    
-    // Operand stack count
-    int32_t operand_stack_count = 0;
-    
     // Call stack max
     int32_t call_stack_max = 0;
     
     // Argument total max size of subroutine call
     int32_t argument_total_size_max = 0;
     
+    // op count
+    int32_t op_count;
+    
     // Run OPs
     SPerl_OP* op_base = op_sub;
     SPerl_OP* op_cur = op_base;
     _Bool finish = 0;
     while (op_cur) {
+      
+      op_count++;
       
       // [START]Preorder traversal position
       
@@ -965,8 +940,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             }
             break;
           }
-
-          SPerl_OP_CHECKER_update_operand_stack_info(sperl, op_cur, &operand_stack_max, &operand_stack_count);
           
           // [END]Postorder traversal position
           
@@ -1039,7 +1012,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     sub->op_my_vars = op_my_vars;
     
     // Operand stack max
-    sub->operand_stack_max = operand_stack_max;
+    sub->operand_stack_max = op_count * 2;
     
     // Calculate call_stack_max
     int32_t argument_count = sub->op_sub_args->length;
