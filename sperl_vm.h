@@ -11,4 +11,6 @@ struct SPerl_vm {
 SPerl_VM* SPerl_VM_new(SPerl* sperl);
 void SPerl_VM_run(SPerl* sperl, const char* sub_name);
 
+void SPerl_VM_init_frame(SPerl* sperl, SPerl_FRAME* frame);
+
 #endif
