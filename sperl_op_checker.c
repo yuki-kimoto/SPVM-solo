@@ -1003,7 +1003,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     sub->operand_stack_max = max_depth * 2;
     
     // Calculate call_stack_max
-    int32_t argument_count = sub->argument_count;
+    int32_t argument_count = sub->op_sub_args->length;
     for (int32_t i = argument_count; i < op_my_vars->length; i++) {
       SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
       SPerl_MY_VAR* my_var = op_my_var->uv.my_var;

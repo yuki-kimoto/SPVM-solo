@@ -913,9 +913,8 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_p
 
 SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_type) {
   
-  SPerl_OP_sibling_splice(sperl, op_my, NULL, 0, op_type);
-  
   SPerl_OP_sibling_splice(sperl, op_var, NULL, 0, op_my);
+  SPerl_OP_sibling_splice(sperl, op_my, NULL, 0, op_type);
   
   // Create my var information
   SPerl_MY_VAR* my_var = SPerl_MY_VAR_new(sperl);
@@ -976,13 +975,10 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   }
   
   // subargs
-  int32_t argument_count = 0;
   SPerl_OP* op_subarg = op_subargs->first;
   while ((op_subarg = SPerl_OP_sibling(sperl, op_subarg))) {
-    // Increment argument count
-    argument_count++;
+    SPerl_ARRAY_push(sub->op_sub_args, op_subarg->first);
   }
-  sub->argument_count = argument_count;
   
   // return type
   sub->op_return_type = op_type;
