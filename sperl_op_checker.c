@@ -66,7 +66,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     int32_t argument_total_size_max = 0;
     
     // op count
-    int32_t op_count;
+    int32_t op_count = 0;
     
     // Run OPs
     SPerl_OP* op_base = op_sub;
