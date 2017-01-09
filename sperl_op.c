@@ -609,7 +609,7 @@ void SPerl_OP_check(SPerl* sperl) {
   }
 }
 
-void SPerl_OP_check_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_name) {
+void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_name) {
   
   SPerl_PARSER* parser = sperl->parser;
   
@@ -644,19 +644,9 @@ void SPerl_OP_check_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_na
   }
   
   name_info->resolved_name = sub_abs_name;
-  
-  SPerl_SUB* found_sub= SPerl_HASH_search(
-    parser->sub_abs_name_symtable,
-    sub_abs_name,
-    strlen(sub_abs_name)
-  );
-  if (!found_sub) {
-    SPerl_yyerror_format(sperl, "unknown sub \"%s\" at %s line %d\n",
-      sub_abs_name, op_name->file, op_name->line);
-  }
 }
 
-void SPerl_OP_check_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
+void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
   
   SPerl_PARSER* parser = sperl->parser;
   
@@ -668,17 +658,6 @@ void SPerl_OP_check_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
   field_abs_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
   
   name_info->resolved_name = field_abs_name;
-  
-  SPerl_FIELD* found_field= SPerl_HASH_search(
-    parser->field_abs_name_symtable,
-    field_abs_name,
-    strlen(field_abs_name)
-  );
-  if (!found_field) {
-    SPerl_yyerror_format(sperl, "unknown field \"%s\" at %s line %d\n",
-      field_abs_name, op_name_info->file, op_name_info->line);
-    parser->fatal_error = 1;
-  }
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_field_name) {

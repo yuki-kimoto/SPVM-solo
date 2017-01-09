@@ -876,13 +876,38 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             }
             case SPerl_OP_C_CODE_CALL_SUB: {
               // Check sub name
-              SPerl_OP_check_sub_name(sperl, sub->op_package, op_cur);
+              SPerl_OP_resolve_sub_name(sperl, sub->op_package, op_cur);
+              
+              const char* sub_abs_name = op_cur->uv.name_info->resolved_name;
+              
+              SPerl_SUB* found_sub= SPerl_HASH_search(
+                parser->sub_abs_name_symtable,
+                sub_abs_name,
+                strlen(sub_abs_name)
+              );
+              if (!found_sub) {
+                SPerl_yyerror_format(sperl, "unknown sub \"%s\" at %s line %d\n",
+                  sub_abs_name, op_cur->file, op_cur->line);
+              }
               
               break;
             }
             case SPerl_OP_C_CODE_FIELD: {
               // Check field name
-              SPerl_OP_check_field_name(sperl, op_cur);
+              SPerl_OP_resolve_field_name(sperl, op_cur);
+              
+              const char* field_abs_name = op_cur->uv.name_info->resolved_name;
+              
+              SPerl_FIELD* found_field= SPerl_HASH_search(
+                parser->field_abs_name_symtable,
+                field_abs_name,
+                strlen(field_abs_name)
+              );
+              if (!found_field) {
+                SPerl_yyerror_format(sperl, "unknown field \"%s\" at %s line %d\n",
+                  field_abs_name, op_cur->file, op_cur->line);
+                parser->fatal_error = 1;
+              }
               
               break;
             }
@@ -977,7 +1002,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // Operand stack max
     sub->operand_stack_max = max_depth * 2;
     
-    // Caluculat call_stack_max
+    // Calculate call_stack_max
     int32_t argument_count = sub->argument_count;
     for (int32_t i = argument_count; i < op_my_vars->length; i++) {
       SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
