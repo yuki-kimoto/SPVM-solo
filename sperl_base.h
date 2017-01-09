@@ -130,7 +130,7 @@ typedef struct SPerl_field SPerl_FIELD;
 
 /* sperl_descriptor.h */
 struct SPerl_descriptor;
-typedef struct SPerl_descriptor SPerl_DESCRIPTER;
+typedef struct SPerl_descriptor SPerl_DESCRIPTOR;
 
 /* sperl_sub.h */
 struct SPerl_sub;
