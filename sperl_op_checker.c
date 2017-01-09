@@ -59,11 +59,11 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // Current default statement
     SPerl_OP* cur_default_op = NULL;
     
-    // Depth
-    int32_t depth = 0;
+    // Operand stack max;
+    int32_t operand_stack_max = 0;
     
-    // Max depth
-    int32_t max_depth = 0;
+    // Operand stack count
+    int32_t operand_stack_count = 0;
     
     // Call stack max
     int32_t call_stack_max = 0;
@@ -119,10 +119,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       // [END]Preorder traversal position
       if (op_cur->first) {
         op_cur = op_cur->first;
-        depth++;
-        if (depth > max_depth) {
-          max_depth = depth;
-        }
       }
       else {
         while (1) {
@@ -1006,7 +1002,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           // Next is parent
           else {
             op_cur = op_cur->sibparent;
-            depth--;
           }
         }
         if (finish) {
@@ -1018,7 +1013,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     sub->op_my_vars = op_my_vars;
     
     // Operand stack max
-    sub->operand_stack_max = max_depth * 2;
+    sub->operand_stack_max = operand_stack_max;
     
     // Calculate call_stack_max
     int32_t argument_count = sub->op_sub_args->length;
