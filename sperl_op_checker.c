@@ -30,6 +30,20 @@
 #include "sperl_resolved_type.h"
 #include "sperl_switch_info.h"
 
+void SPerl_OP_CHECKER_update_operand_stack_max(SPerl* sperl, SPerl_OP* op, int32_t* operand_stack_max, int32_t* operand_stack_count) {
+  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op);
+  
+  if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+    *operand_stack_count += 2;
+  }
+  else {
+    (*operand_stack_count)++;
+  }
+  if (*operand_stack_count > *operand_stack_max) {
+    *operand_stack_max = *operand_stack_count;
+  }
+}
+
 void SPerl_OP_CHECKER_check(SPerl* sperl) {
   
   SPerl_PARSER* parser = sperl->parser;
