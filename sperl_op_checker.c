@@ -69,7 +69,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     int32_t call_stack_max = 0;
     
     // Argument total max size of subroutine call
-    int32_t argument_max_size = 0;
+    int32_t argument_total_size_max = 0;
     
     // Run OPs
     SPerl_OP* op_base = op_sub;
@@ -889,6 +889,24 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_yyerror_format(sperl, "unknown sub \"%s\" at %s line %d\n",
                   sub_abs_name, op_cur->file, op_cur->line);
               }
+
+              // Add call stack max size
+              int32_t argument_total_size = 0;
+              for (int32_t i = 0; i < found_sub->op_sub_args->length; i++) {
+                SPerl_ARRAY* op_sub_args = found_sub->op_sub_args;
+                SPerl_OP* op_sub_arg = SPerl_ARRAY_fetch(op_sub_args, i);
+                SPerl_MY_VAR* my_var = op_sub_arg->uv.my_var;
+                SPerl_RESOLVED_TYPE* resolved_type = my_var->op_type->uv.type->resolved_type;
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+                  argument_total_size += 2;
+                }
+                else {
+                  argument_total_size++;
+                }
+              }
+              if (argument_total_size_max > argument_total_size) {
+                argument_total_size_max = argument_total_size;
+              }
               
               break;
             }
@@ -1015,6 +1033,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         call_stack_max++;
       }
     }
+    call_stack_max += argument_total_size_max;
     sub->call_stack_max = call_stack_max;
   }
 }
