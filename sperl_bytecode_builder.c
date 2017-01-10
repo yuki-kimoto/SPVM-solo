@@ -667,7 +667,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
               if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IINC);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->pos);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, 1);
               }
               
@@ -682,7 +682,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
               if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IINC);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->pos);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, 1);
               }
 
@@ -695,7 +695,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
               if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IINC);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->pos);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, -1);
               }
               
@@ -710,7 +710,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               SPerl_RESOLVED_TYPE* op_cur_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
               if (op_cur_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IINC);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->pos);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, -1);
               }
 
@@ -791,7 +791,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               if (op_cur->first->code == SPerl_OP_C_CODE_VAR) {
                 SPerl_OP* op_var = op_cur->first;
-                int32_t my_var_pos = op_var->uv.var->op_my_var->uv.my_var->pos;
+                int32_t my_var_pos = op_var->uv.var->op_my_var->uv.my_var->address;
                 
                 if (my_var_pos > 0xFF) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_WIDE);
@@ -1146,7 +1146,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
               
-              int32_t my_var_pos = var->op_my_var->uv.my_var->pos;
+              int32_t my_var_pos = var->op_my_var->uv.my_var->address;
               
               if (my_var_pos > 0xFF) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_WIDE);

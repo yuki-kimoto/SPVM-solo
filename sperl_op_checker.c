@@ -39,7 +39,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     SPerl_SUB* sub = op_sub->uv.sub;
       
     // my var informations
-    int32_t next_my_var_pos = 0;
     SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_new_array(sperl, 0);
     
     // my variable stack
@@ -854,8 +853,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_yyerror_format(sperl, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
               }
               else {
-                // Add my var information
-                my_var->pos = next_my_var_pos++;
                 SPerl_ARRAY_push(op_my_vars, op_cur);
                 SPerl_ARRAY_push(op_my_var_stack, op_cur);
               }
@@ -988,19 +985,24 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // Operand stack max
     sub->operand_stack_max = op_count * 2;
     
-    // Calculate my var total size
+    // Calculate my var total size and address
     int32_t my_vars_size = 0;
+    int32_t next_my_var_address = 0;
     for (int32_t i = 0; i < op_my_vars->length; i++) {
       SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
       SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
       SPerl_RESOLVED_TYPE* resolved_type = my_var->op_type->uv.type->resolved_type;
+      
+      my_var->address = next_my_var_address;
+      
       if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        my_vars_size += 2;
+        next_my_var_address += 2;
       }
       else {
-        my_vars_size++;
+        next_my_var_address++;
       }
     }
-    sub->my_vars_size = my_vars_size;
+    
+    sub->my_vars_size = next_my_var_address;
   }
 }
