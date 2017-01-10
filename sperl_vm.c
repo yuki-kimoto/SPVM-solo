@@ -49,6 +49,9 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   // Base position of call stack
   int32_t call_stack_base = 0;
   
+  // Before position of call stack;
+  int32_t call_stack_base_before = 0;
+  
   // Prepare call subroutine
   {
     // Extend operand stack
@@ -63,9 +66,8 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
       call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
     }
     
-    // Pusy base address
-    call_stack[call_stack_next] = call_stack_base;
-    call_stack_next++;
+    // Save base address
+    call_stack_base_before = call_stack_base;
     
     // Update call_stack_base
     call_stack_base = call_stack_next;
