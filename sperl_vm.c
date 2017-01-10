@@ -44,10 +44,10 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   int32_t* call_stack = malloc(sizeof(int32_t) * call_stack_capacity);
   
   // Top position of call stack
-  int32_t call_stack_top = -1;
+  int32_t call_stack_top = 0;
   
   // Base position of call stack
-  int32_t call_stack_base = -1;
+  int32_t call_stack_base = 0;
   
   // Prepare call subroutine
   {
@@ -63,16 +63,18 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
       call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
     }
     
-    // Save base address
-    call_stack_top++;
+    // Pusy base address
     call_stack[call_stack_top] = call_stack_base;
+    call_stack_top++;
     
     // Update call_stack_base
     call_stack_base = call_stack_top;
     
-    
-    
+    // Push my variable area
+    memset(&call_stack[call_stack_top], 0, sub->my_vars_size * 4);
+    call_stack_top += sub->my_vars_size;
   }
+  
   
   
   
