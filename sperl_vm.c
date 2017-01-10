@@ -317,28 +317,36 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
       
         break;
       case SPerl_BYTECODE_C_CODE_ISTORE_0:
-      
+        call_stack[call_stack_base] = operand_stack[operand_stack_top];
+        operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_ISTORE_1:
-      
+        call_stack[call_stack_base + 1] = operand_stack[operand_stack_top];
+        operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_ISTORE_2:
-      
+        call_stack[call_stack_base + 2] = operand_stack[operand_stack_top];
+        operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_ISTORE_3:
-      
+        call_stack[call_stack_base + 3] = operand_stack[operand_stack_top];
+        operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_LSTORE_0:
-      
+        *((int64_t*)&call_stack[call_stack_base]) = *((int64_t*)&operand_stack[operand_stack_top - 1]);
+        operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_LSTORE_1:
-      
+        *((int64_t*)&call_stack[call_stack_base + 1]) = *((int64_t*)&operand_stack[operand_stack_top - 1]);
+        operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_LSTORE_2:
-      
+        *((int64_t*)&call_stack[call_stack_base + 2]) = *((int64_t*)&operand_stack[operand_stack_top - 1]);
+        operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_LSTORE_3:
-      
+        *((int64_t*)&call_stack[call_stack_base + 3]) = *((int64_t*)&operand_stack[operand_stack_top - 1]);
+        operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FSTORE_0:
       
@@ -499,7 +507,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         break;
       case SPerl_BYTECODE_C_CODE_LREM:
         // z = a - (a/b) * b;
-        *((int64_t*)&operand_stack[operand_stack_top - 3]) = *((int64_t*)&operand_stack[operand_stack_top - 3]) % *((int64_t*)&operand_stack[operand_stack_top - 1]);
+        *((int64_t*)&operand_stack[operand_stack_top - 3]) = *((int64_t*)&operand_stack[operand_stack_top - 3]) % *(int64_t*)&operand_stack[operand_stack_top - 1];
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FREM:
