@@ -16,7 +16,7 @@ struct SPerl_sub {
   int32_t bytecode_start_pos;
   int32_t bytecode_length;
   int32_t operand_stack_max;
-  int32_t call_stack_max;
+  int32_t my_vars_size;
 };
 
 SPerl_SUB* SPerl_SUB_new(SPerl* sperl);

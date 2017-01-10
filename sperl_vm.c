@@ -58,7 +58,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
     }
     
     // Extend call stack
-    while (call_stack_top + sub->call_stack_max > call_stack_capacity) {
+    while (call_stack_top + sub->my_vars_size + 2 > call_stack_capacity) {
       call_stack_capacity = call_stack_capacity * 2;
       call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
     }

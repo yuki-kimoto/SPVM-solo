@@ -59,12 +59,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // Current default statement
     SPerl_OP* cur_default_op = NULL;
     
-    // Call stack max
-    int32_t call_stack_max = 0;
-    
-    // Argument total max size of subroutine call
-    int32_t argument_total_size_max = 0;
-    
     // op count
     int32_t op_count = 0;
     
@@ -884,24 +878,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_yyerror_format(sperl, "unknown sub \"%s\" at %s line %d\n",
                   sub_abs_name, op_cur->file, op_cur->line);
               }
-
-              // Add call stack max size
-              int32_t argument_total_size = 0;
-              for (int32_t i = 0; i < found_sub->op_sub_args->length; i++) {
-                SPerl_ARRAY* op_sub_args = found_sub->op_sub_args;
-                SPerl_OP* op_sub_arg = SPerl_ARRAY_fetch(op_sub_args, i);
-                SPerl_MY_VAR* my_var = op_sub_arg->uv.my_var;
-                SPerl_RESOLVED_TYPE* resolved_type = my_var->op_type->uv.type->resolved_type;
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                  argument_total_size += 2;
-                }
-                else {
-                  argument_total_size++;
-                }
-              }
-              if (argument_total_size_max > argument_total_size) {
-                argument_total_size_max = argument_total_size;
-              }
               
               break;
             }
@@ -1014,20 +990,19 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // Operand stack max
     sub->operand_stack_max = op_count * 2;
     
-    // Calculate call_stack_max
-    int32_t argument_count = sub->op_sub_args->length;
-    for (int32_t i = argument_count; i < op_my_vars->length; i++) {
+    // Calculate my var total size
+    int32_t my_vars_size = 0;
+    for (int32_t i = 0; i < op_my_vars->length; i++) {
       SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
       SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
       SPerl_RESOLVED_TYPE* resolved_type = my_var->op_type->uv.type->resolved_type;
       if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        call_stack_max += 2;
+        my_vars_size += 2;
       }
       else {
-        call_stack_max++;
+        my_vars_size++;
       }
     }
-    call_stack_max += argument_total_size_max;
-    sub->call_stack_max = call_stack_max;
+    sub->my_vars_size = my_vars_size;
   }
 }
