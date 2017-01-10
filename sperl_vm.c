@@ -26,7 +26,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   uint8_t* bytecodes = bytecode_array->values;
   
   // Program counter
-  uint8_t* pc = &bytecodes[sub->bytecode_start_pos];
+  register uint8_t* pc = &bytecodes[sub->bytecode_start_pos];
   
   // Capacity of openrad stack
   int32_t operand_stack_capacity = 255;
@@ -35,7 +35,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   int32_t* operand_stack = malloc(sizeof(int32_t) * operand_stack_capacity);
   
   // Top position of operand stack
-  int32_t operand_stack_top = -1;
+  register int32_t operand_stack_top = -1;
   
   // Capacity of operand stack
   int32_t call_stack_capacity = 255;
@@ -47,7 +47,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   int32_t call_stack_next = 0;
   
   // Base position of call stack
-  int32_t call_stack_base = 0;
+  register int32_t call_stack_base = 0;
   
   // Before position of call stack;
   int32_t call_stack_base_before = 0;
