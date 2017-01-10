@@ -62,6 +62,16 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
       call_stack_capacity = call_stack_capacity * 2;
       call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
     }
+    
+    // Save base address
+    call_stack_top++;
+    call_stack[call_stack_top] = call_stack_base;
+    
+    // Update call_stack_base
+    call_stack_base = call_stack_top;
+    
+    
+    
   }
   
   
