@@ -8,6 +8,7 @@ use Test::Simple;
 
 package Test {
   sub main() : int {
+
     my $num2 = 5;
     
     switch($num2) {
@@ -207,6 +208,18 @@ package Test {
     
     Test::sum1(1, 2);
     sum1(1, 2);
+    
+    test1();
+  }
+  
+  sub test1 () : int {
+    my $num0 = 1;
+    my $num1 = 2;
+    my $num2 = 3;
+    my $num3 = 4;
+    my $num4 = 5;
+    
+    return 1;
   }
   
   sub sum1 ($num1 : int, $num2 : int) : int {
