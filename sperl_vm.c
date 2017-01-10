@@ -81,7 +81,6 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   
   while (1) {
     switch (*pc) {
-      
       case SPerl_BYTECODE_C_CODE_NOP:
         // None
         break;
@@ -175,7 +174,6 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
       
         break;
       case SPerl_BYTECODE_C_CODE_ILOAD:
-      
         break;
       case SPerl_BYTECODE_C_CODE_LLOAD:
       
@@ -190,16 +188,20 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
       
         break;
       case SPerl_BYTECODE_C_CODE_ILOAD_0:
-      
+        operand_stack[operand_stack_top] = call_stack[call_stack_base];
+        operand_stack_top++;
         break;
       case SPerl_BYTECODE_C_CODE_ILOAD_1:
-      
+        operand_stack[operand_stack_top] = call_stack[call_stack_base + 1];
+        operand_stack_top++;
         break;
       case SPerl_BYTECODE_C_CODE_ILOAD_2:
-      
+        operand_stack[operand_stack_top] = call_stack[call_stack_base + 2];
+        operand_stack_top++;
         break;
       case SPerl_BYTECODE_C_CODE_ILOAD_3:
-      
+        operand_stack[operand_stack_top] = call_stack[call_stack_base + 3];
+        operand_stack_top++;
         break;
       case SPerl_BYTECODE_C_CODE_LLOAD_0:
       
