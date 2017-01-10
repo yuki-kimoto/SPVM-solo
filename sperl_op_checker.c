@@ -857,8 +857,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 // Add my var information
                 my_var->pos = next_my_var_pos++;
                 SPerl_ARRAY_push(op_my_vars, op_cur);
-                my_var->op_sub = op_sub;
-                
                 SPerl_ARRAY_push(op_my_var_stack, op_cur);
               }
               break;
