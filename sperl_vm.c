@@ -308,16 +308,24 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_LSTORE:
-      
+        pc++;
+        *((int64_t*)&call_stack[call_stack_base + *pc]) = *((int64_t*)&operand_stack[operand_stack_top - 1]);
+        operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FSTORE:
-      
+        pc++;
+        *((float*)&call_stack[call_stack_base + *pc]) = *((float*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_DSTORE:
-      
+        pc++;
+        *((double*)&call_stack[call_stack_base + *pc]) = *((double*)&operand_stack[operand_stack_top - 1]);
+        operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_ASTORE:
-      
+        pc++;
+        call_stack[call_stack_base + *pc] = operand_stack[operand_stack_top];
+        operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_ISTORE_0:
         call_stack[call_stack_base] = operand_stack[operand_stack_top];
