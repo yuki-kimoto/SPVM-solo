@@ -43,8 +43,8 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   // Call stack
   int32_t* call_stack = malloc(sizeof(int32_t) * call_stack_capacity);
   
-  // Top position of call stack
-  int32_t call_stack_top = 0;
+  // Next position of call stack
+  int32_t call_stack_next = 0;
   
   // Base position of call stack
   int32_t call_stack_base = 0;
@@ -58,25 +58,22 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
     }
     
     // Extend call stack
-    while (call_stack_top + sub->my_vars_size + 2 > call_stack_capacity) {
+    while (call_stack_next + sub->my_vars_size + 2 > call_stack_capacity) {
       call_stack_capacity = call_stack_capacity * 2;
       call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
     }
     
     // Pusy base address
-    call_stack[call_stack_top] = call_stack_base;
-    call_stack_top++;
+    call_stack[call_stack_next] = call_stack_base;
+    call_stack_next++;
     
     // Update call_stack_base
-    call_stack_base = call_stack_top;
+    call_stack_base = call_stack_next;
     
     // Push my variable area
-    memset(&call_stack[call_stack_top], 0, sub->my_vars_size * 4);
-    call_stack_top += sub->my_vars_size;
+    memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
+    call_stack_next += sub->my_vars_size;
   }
-  
-  
-  
   
   int32_t frame_count = 1;
   
