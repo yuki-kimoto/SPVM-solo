@@ -438,11 +438,11 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FADD:
-        *((float*)&operand_stack[operand_stack_top - 1]) += (float)operand_stack[operand_stack_top];
+        *((float*)&operand_stack[operand_stack_top - 1]) += *(float*)&operand_stack[operand_stack_top];
         operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_DADD:
-        *((double*)&operand_stack[operand_stack_top - 3]) += (double)operand_stack[operand_stack_top - 1];
+        *((double*)&operand_stack[operand_stack_top - 3]) += *(double*)&operand_stack[operand_stack_top - 1];
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_ISUB:
@@ -454,11 +454,11 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FSUB:
-        *((float*)&operand_stack[operand_stack_top - 1]) -= (float)operand_stack[operand_stack_top];
+        *((float*)&operand_stack[operand_stack_top - 1]) -= *(float*)&operand_stack[operand_stack_top];
         operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_DSUB:
-        *((double*)&operand_stack[operand_stack_top - 3]) -= (double)operand_stack[operand_stack_top - 1];
+        *((double*)&operand_stack[operand_stack_top - 3]) -= *(double*)&operand_stack[operand_stack_top - 1];
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_IMUL:
@@ -470,11 +470,11 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FMUL:
-        *((float*)&operand_stack[operand_stack_top - 1]) *= (float)operand_stack[operand_stack_top];
+        *((float*)&operand_stack[operand_stack_top - 1]) *= *(float*)&operand_stack[operand_stack_top];
         operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_DMUL:
-        *((double*)&operand_stack[operand_stack_top - 3]) *= (double)operand_stack[operand_stack_top - 1];
+        *((double*)&operand_stack[operand_stack_top - 3]) *= *(double*)&operand_stack[operand_stack_top - 1];
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_IDIV:
@@ -486,11 +486,11 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FDIV:
-        *((float*)&operand_stack[operand_stack_top - 1]) /= (float)operand_stack[operand_stack_top];
+        *((float*)&operand_stack[operand_stack_top - 1]) /= *(float*)&operand_stack[operand_stack_top];
         operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_DDIV:
-        *((double*)&operand_stack[operand_stack_top - 3]) /= (double)operand_stack[operand_stack_top - 1];
+        *((double*)&operand_stack[operand_stack_top - 3]) /= *(double*)&operand_stack[operand_stack_top - 1];
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_IREM:
@@ -503,11 +503,11 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_FREM:
-        *((float*)&operand_stack[operand_stack_top - 1]) = (float)fmod((double)*((float*)&operand_stack[operand_stack_top - 1]), (double)(float)operand_stack[operand_stack_top]);
+        *((float*)&operand_stack[operand_stack_top - 1]) = (float)fmod((double)*((float*)&operand_stack[operand_stack_top - 1]), (double)*(float*)&operand_stack[operand_stack_top]);
         operand_stack_top--;
         break;
       case SPerl_BYTECODE_C_CODE_DREM:
-        *((double*)&operand_stack[operand_stack_top - 3]) = fmod(*((double*)&operand_stack[operand_stack_top - 3]), (double)operand_stack[operand_stack_top - 1]);
+        *((double*)&operand_stack[operand_stack_top - 3]) = fmod(*(double*)&operand_stack[operand_stack_top - 3], *(double*)&operand_stack[operand_stack_top - 1]);
         operand_stack_top -= 2;
         break;
       case SPerl_BYTECODE_C_CODE_INEG:
@@ -579,14 +579,14 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         break;
       case SPerl_BYTECODE_C_CODE_I2L:
         operand_stack_top++;
-        *((int64_t*)&operand_stack[operand_stack_top - 1]) = (int64_t)operand_stack[operand_stack_top - 1];
+        *((int64_t*)&operand_stack[operand_stack_top - 1]) = *(int64_t*)&operand_stack[operand_stack_top - 1];
         break;
       case SPerl_BYTECODE_C_CODE_I2F:
-        *((float*)&operand_stack[operand_stack_top]) = (float)operand_stack[operand_stack_top];
+        *((float*)&operand_stack[operand_stack_top]) = *(float*)&operand_stack[operand_stack_top];
         break;
       case SPerl_BYTECODE_C_CODE_I2D:
         operand_stack_top++;
-        *((double*)&operand_stack[operand_stack_top - 1]) = (double)operand_stack[operand_stack_top - 1];
+        *((double*)&operand_stack[operand_stack_top - 1]) = *(double*)&operand_stack[operand_stack_top - 1];
         break;
       case SPerl_BYTECODE_C_CODE_L2I:
         operand_stack[operand_stack_top - 1] = operand_stack[operand_stack_top];
