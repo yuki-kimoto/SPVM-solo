@@ -25,7 +25,7 @@ sperl_yacc.c: sperl_yacc.y
 	mv -f sperl_yacc.tab.h $(@:%.c=%.h)
 sperl_yacc.h: sperl_yacc.c
 $(OBJDIR)/sperl_toke.o: sperl_toke.c sperl_yacc.h
-$(OBJDIR)/sperl_yacc.o: sperl_yacc.c sperl_yacc.h
+$(OBJDIR)/sperl_yacc_util.o: sperl_yacc_util.c sperl_yacc.h
 libsperl.a: $(libsperl_OBJS)
 	$(AR) crs $@ $(libsperl_OBJS)
 all: libsperl.a
