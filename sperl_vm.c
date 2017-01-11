@@ -36,6 +36,9 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   // Operand stack
   int32_t* operand_stack = malloc(sizeof(int32_t) * operand_stack_capacity);
   
+  // Operand stack base
+  int32_t operand_stack_base = 0;
+  
   // Top position of operand stack
   register int32_t operand_stack_top = -1;
   
@@ -725,6 +728,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
       
         break;
       case SPerl_BYTECODE_C_CODE_IRETURN:
+        
         frame_count--;
         if (frame_count == 0) {
           return;
@@ -875,6 +879,9 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         // Prepare arguments
         memcpy(&operand_stack[operand_stack_top - sub->sub_args_size + 1], &call_stack[call_stack_base], sub->sub_args_size);
         operand_stack_top -= sub->sub_args_size;
+        
+        // Save operand stack base
+        operand_stack_base = operand_stack_top + 1;
         
         // Set program counter to next byte code
         pc = &bytecodes[sub->bytecode_start_pos];
