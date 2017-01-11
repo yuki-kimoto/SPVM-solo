@@ -817,13 +817,13 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_GOTO:
-      
-        break;
+        pc += 3;
+        continue;
       case SPerl_BYTECODE_C_CODE_JSR:
-      
+        // Not used
         break;
       case SPerl_BYTECODE_C_CODE_RET:
-      
+        // Not used
         break;
       case SPerl_BYTECODE_C_CODE_TABLESWITCH:
       
@@ -890,80 +890,86 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         }
         break;
       case SPerl_BYTECODE_C_CODE_GETSTATIC:
-      
+        // Not used
         break;
       case SPerl_BYTECODE_C_CODE_PUTSTATIC:
-      
+        // Not used
         break;
       case SPerl_BYTECODE_C_CODE_GETFIELD:
-      
-        break;
+        pc += 3;
+        continue;
       case SPerl_BYTECODE_C_CODE_PUTFIELD:
-      
-        break;
+        pc += 3;
+        continue;
       case SPerl_BYTECODE_C_CODE_INVOKEVIRTUAL:
-      
+        // Not used
         break;
       case SPerl_BYTECODE_C_CODE_INVOKESPECIAL:
-      
+        // Not used
         break;
       case SPerl_BYTECODE_C_CODE_INVOKESTATIC:
-      
+        // Not used
         break;
       case SPerl_BYTECODE_C_CODE_INVOKEINTERFACE:
-      
+        // Not used
         break;
       case SPerl_BYTECODE_C_CODE_INVOKEDYNAMIC:
-      
+        // Not used
         break;
       case SPerl_BYTECODE_C_CODE_NEW:
-      
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_NEWARRAY:
-      
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ANEWARRAY:
-      
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
-        
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
-      
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ATHROW:
-      
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_CHECKCAST:
-      
-        break;
+        // Not used
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_INSTANCEOF:
-      
-        break;
+        // Not used
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_MONITORENTER:
-      
-        break;
+        // Not used
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_MONITOREXIT:
-      
-        break;
+        // Not used
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_WIDE:
-      
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_IFNULL:
-      
-        break;
+        pc += 3;
+        continue;
       case SPerl_BYTECODE_C_CODE_IFNONNULL:
-      
-        break;
+        pc += 3;
+        continue;
       case SPerl_BYTECODE_C_CODE_GOTO_W:
-      
-        break;
+        pc += 5;
+        continue;
       case SPerl_BYTECODE_C_CODE_JSR_W:
-      
-        break;
+        // Not used
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_BREAKPOINT:
-      
-        break;
+        // Not used
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_CALLSUB:
       {
         /*
