@@ -736,9 +736,6 @@ void SPerl_OP_build_constant_pool(SPerl* sperl) {
     SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, constant_pos);
     SPerl_CONSTANT* constant = op_constant->uv.constant;
     
-    int32_t value1;
-    int32_t value2;
-
     constant->address = parser->constant_pool->length;
     switch (constant->code) {
       case SPerl_CONSTANT_C_CODE_INT:
