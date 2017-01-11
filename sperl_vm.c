@@ -6,10 +6,12 @@
 #include "sperl_parser.h"
 #include "sperl_vm.h"
 #include "sperl_allocator.h"
+#include "sperl_array.h"
 #include "sperl_hash.h"
 #include "sperl_bytecode_array.h"
 #include "sperl_bytecode.h"
 #include "sperl_sub.h"
+#include "sperl_op.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   return SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
@@ -835,8 +837,47 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         break;
       case SPerl_BYTECODE_C_CODE_CALLSUB:
       {
+        // Save return address to call stack
+        call_stack[call_stack_next] = *(pc + 5);
+        call_stack_next++;
         
+        // Save before call stack base
+        call_stack[call_stack_next] = call_stack_base;
+        call_stack_next++;
+
+        // Update call stack base
+        call_stack_base = call_stack_next;
         
+        // Get subroutine ID
+        pc++;
+        int32_t sub_id = (*pc << 24) + (*(pc + 1) << 16) + (*(pc + 2) << 8) + *(pc + 3);
+        
+        // Subroutine
+        SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_id);
+        SPerl_SUB* sub = op_sub->uv.sub;
+        
+        // Extend operand stack if need
+        while (operand_stack_top + sub->operand_stack_max > operand_stack_capacity) {
+          operand_stack_capacity = operand_stack_capacity * 2;
+          operand_stack = realloc(operand_stack, sizeof(int32_t) * operand_stack_capacity);
+        }
+        
+        // Extend call stack if need (lexical variable area + return address + before call_stack_base)
+        while (call_stack_next + sub->my_vars_size + 2 > call_stack_capacity) {
+          call_stack_capacity = call_stack_capacity * 2;
+          call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
+        }
+        
+        // Push lexical variable area
+        memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
+        call_stack_next += sub->my_vars_size;
+        
+        // Prepare arguments
+        memcpy(&operand_stack[operand_stack_top - sub->sub_args_size + 1], &call_stack[call_stack_base], sub->sub_args_size);
+        
+        // Set program counter to next byte code
+        pc = &bytecodes[sub->bytecode_start_pos];
+        continue;
         
         break;
       }
