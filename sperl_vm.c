@@ -834,8 +834,12 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
       
         break;
       case SPerl_BYTECODE_C_CODE_CALLSUB:
-      
+      {
+        
+        
+        
         break;
+      }
       case SPerl_BYTECODE_C_CODE_UNDEFINED:
       
         break;

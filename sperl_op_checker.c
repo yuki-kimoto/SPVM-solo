@@ -986,8 +986,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     sub->operand_stack_max = op_count * 2;
     
     // Calculate my var total size and address
-    int32_t my_vars_size = 0;
     int32_t next_my_var_address = 0;
+    int32_t sub_args_size = 0;
     for (int32_t i = 0; i < op_my_vars->length; i++) {
       SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
       SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
@@ -997,12 +997,19 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       
       if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
         next_my_var_address += 2;
+        if (i < sub->op_sub_args->length) {
+          sub_args_size += 2;
+        }
       }
       else {
         next_my_var_address++;
+        if (i < sub->op_sub_args->length) {
+          sub_args_size++;
+        }
       }
     }
     
     sub->my_vars_size = next_my_var_address;
+    sub->sub_args_size = sub_args_size;
   }
 }
