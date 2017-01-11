@@ -417,7 +417,7 @@ void SPerl_DUMPER_dump_constant(SPerl* sperl, SPerl_CONSTANT* constant) {
       printf("      string \"%s\"\n", constant->uv.string_value);
       break;
   }
-  printf("      pool_pos => %d\n", constant->pool_pos);
+  printf("      address => %d\n", constant->address);
 }
 
 void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {

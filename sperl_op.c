@@ -713,7 +713,7 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
   }
   
   // Build constant pool
-  SPerl_OP_build_const_pool(sperl);
+  SPerl_OP_build_constant_pool(sperl);
   
   // Create bytecodes
   if (parser->error_count > 0) {
@@ -724,7 +724,7 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
   return op_grammar;
 }
 
-void SPerl_OP_build_const_pool(SPerl* sperl) {
+void SPerl_OP_build_constant_pool(SPerl* sperl) {
   
   SPerl_PARSER* parser = sperl->parser;
   
@@ -739,7 +739,7 @@ void SPerl_OP_build_const_pool(SPerl* sperl) {
     int32_t value1;
     int32_t value2;
 
-    constant->pool_pos = parser->constant_pool->length;
+    constant->address = parser->constant_pool->length;
     switch (constant->code) {
       case SPerl_CONSTANT_C_CODE_INT:
         SPerl_CONSTANT_POOL_push(parser->constant_pool, constant->uv.int_value);

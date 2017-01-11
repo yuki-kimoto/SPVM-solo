@@ -23,7 +23,7 @@ struct SPerl_constant {
     const char* string_value;
   } uv;
   SPerl_RESOLVED_TYPE* resolved_type;
-  int32_t pool_pos;
+  int32_t address;
 };
 
 SPerl_CONSTANT* SPerl_CONSTANT_new(SPerl* sperl);
