@@ -729,10 +729,31 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         break;
       case SPerl_BYTECODE_C_CODE_IRETURN:
         
-        frame_count--;
-        if (frame_count == 0) {
+        /*
+        
+        // Save retrun value
+        operand_stack[operand_stack_base] = operand_stack[operand_stack_top];
+        operand_stack_top = operand_stack_base;
+        
+        // Finish vm
+        if (call_stack_base == 0) {
           return;
         }
+        
+        // Return address
+        int32_t return_address = call_stack[call_stack_base - 2];
+        
+        // Resotre call stack top
+        call_stack_next = call_stack_base - 2;
+        
+        // Resotre call stack base
+        call_stack_base = call_stack[call_stack_base - 1];
+        
+        pc = &bytecodes[return_address];
+        continue;
+        
+        */
+        
         break;
       case SPerl_BYTECODE_C_CODE_LRETURN:
         frame_count--;
@@ -841,6 +862,8 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         break;
       case SPerl_BYTECODE_C_CODE_CALLSUB:
       {
+        /*
+        
         // Save return address to call stack
         call_stack[call_stack_next] = *(pc + 5);
         call_stack_next++;
@@ -886,6 +909,8 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         // Set program counter to next byte code
         pc = &bytecodes[sub->bytecode_start_pos];
         continue;
+        
+        */
         
         break;
       }
