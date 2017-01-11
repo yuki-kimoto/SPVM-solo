@@ -12,6 +12,7 @@
 #include "sperl_bytecode.h"
 #include "sperl_sub.h"
 #include "sperl_op.h"
+#include "sperl_constant_pool.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   return SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
@@ -21,9 +22,14 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
 
 void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   
+  // Subroutine
   SPerl_PARSER* parser = sperl->parser;
   SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_name, strlen(sub_name));
   
+  // Constant pool
+  int32_t* constants = parser->constant_pool->values;
+  
+  // Bytecode
   SPerl_BYTECODE_ARRAY* bytecode_array = parser->bytecode_array;
   uint8_t* bytecodes = bytecode_array->values;
   
@@ -157,22 +163,25 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         operand_stack_top++;
         operand_stack[operand_stack_top] = *(pc + 1);
         pc += 2;
-        
-        break;
+        continue;
       case SPerl_BYTECODE_C_CODE_SIPUSH:
         operand_stack_top++;
         operand_stack[operand_stack_top] = (*(pc + 1) << 8) + *(pc + 2);
         pc += 3;
-        break;
+        continue;
       case SPerl_BYTECODE_C_CODE_LDC:
-      
-        break;
+        operand_stack_top++;
+        operand_stack[operand_stack_top] = constants[*(pc + 1)];
+        pc += 2;
+        continue;
       case SPerl_BYTECODE_C_CODE_LDC_W:
-      
-        break;
+        operand_stack_top++;
+        operand_stack[operand_stack_top] = constants[(*(pc + 1) << 8) + *(pc + 2)];
+        pc += 3;
+        continue;
       case SPerl_BYTECODE_C_CODE_LDC2_W:
-      
-        break;
+        pc += 3;
+        continue;
       case SPerl_BYTECODE_C_CODE_ILOAD:
         operand_stack_top++;
         operand_stack[operand_stack_top] = call_stack[call_stack_base + *(pc + 1)];
@@ -918,15 +927,23 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         
         break;
       }
+      case SPerl_BYTECODE_C_CODE_LDC_WW:
+        operand_stack_top++;
+        operand_stack[operand_stack_top] = constants[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LDC2_WW:
+        pc += 5;
+        continue;
       case SPerl_BYTECODE_C_CODE_UNDEFINED:
-      
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_IMPDEP1:
-      
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_IMPDEP2:
-      
-        break;
+        pc++;
+        continue;
     }
     
     pc++;
