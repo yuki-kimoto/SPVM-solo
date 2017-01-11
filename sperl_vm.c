@@ -78,67 +78,81 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   while (1) {
     switch (*pc) {
       case SPerl_BYTECODE_C_CODE_NOP:
-        // None
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ACONST_NULL:
-        
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ICONST_M1:
         operand_stack_top++;
         operand_stack[operand_stack_top] = -1;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ICONST_0:
         operand_stack_top++;
         operand_stack[operand_stack_top] = 0;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ICONST_1:
         operand_stack_top++;
         operand_stack[operand_stack_top] = 1;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ICONST_2:
         operand_stack_top++;
         operand_stack[operand_stack_top] = 2;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ICONST_3:
         operand_stack_top++;
         operand_stack[operand_stack_top] = 3;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ICONST_4:
         operand_stack_top++;
         operand_stack[operand_stack_top] = 4;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ICONST_5:
         operand_stack_top++;
         operand_stack[operand_stack_top] = 5;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_LCONST_0:
         operand_stack_top += 2;
         *((int64_t*)&operand_stack[operand_stack_top - 1]) = 0L;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_LCONST_1:
         operand_stack_top += 2;
         *((int64_t*)&operand_stack[operand_stack_top - 1]) = 1L;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_FCONST_0:
         operand_stack_top++;
         *((float*)&operand_stack[operand_stack_top]) = 0.F;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_FCONST_1:
         operand_stack_top++;
         *((float*)&operand_stack[operand_stack_top]) = 1.F;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_FCONST_2:
         operand_stack_top++;
         *((float*)&operand_stack[operand_stack_top]) = 2.F;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_DCONST_0:
         operand_stack_top += 2;
         *((double*)&operand_stack[operand_stack_top - 1]) = 0.;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_DCONST_1:
         operand_stack_top += 2;
         *((double*)&operand_stack[operand_stack_top - 1]) = 1.;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_BIPUSH:
         operand_stack_top++;
         operand_stack[operand_stack_top] = *(pc + 1);
