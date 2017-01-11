@@ -19,7 +19,7 @@ void SPerl_CONSTANT_POOL_maybe_extend(SPerl_CONSTANT_POOL* constant_pool) {
   int32_t length = constant_pool->length;
   int32_t capacity = constant_pool->capacity;
   
-  if (length >= capacity) {
+  if (length + 2 >= capacity) {
     int32_t new_capacity = capacity * 2;
     constant_pool->values = realloc(constant_pool->values, new_capacity * sizeof(int32_t));
     memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(int32_t));
@@ -34,6 +34,33 @@ void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int32_t va
   
   constant_pool->values[length] = value;
   constant_pool->length++;
+}
+
+void SPerl_CONSTANT_POOL_push_long(SPerl_CONSTANT_POOL* constant_pool, int64_t value) {
+  int32_t length = constant_pool->length;
+  
+  SPerl_CONSTANT_POOL_maybe_extend(constant_pool);
+  
+  *(int64_t*)&constant_pool->values[length] = value;
+  constant_pool->length += 2;
+}
+
+void SPerl_CONSTANT_POOL_push_float(SPerl_CONSTANT_POOL* constant_pool, float value) {
+  int32_t length = constant_pool->length;
+  
+  SPerl_CONSTANT_POOL_maybe_extend(constant_pool);
+  
+  *(float*)&constant_pool->values[length] = value;
+  constant_pool->length++;
+}
+
+void SPerl_CONSTANT_POOL_push_double(SPerl_CONSTANT_POOL* constant_pool, double value) {
+  int32_t length = constant_pool->length;
+  
+  SPerl_CONSTANT_POOL_maybe_extend(constant_pool);
+  
+  *(double*)&constant_pool->values[length] = value;
+  constant_pool->length += 2;
 }
 
 void SPerl_CONSTANT_POOL_free(SPerl_CONSTANT_POOL* constant_pool) {

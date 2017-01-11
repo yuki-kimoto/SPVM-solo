@@ -12,8 +12,10 @@ struct SPerl_constant_pool {
 
 // Array function
 SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new();
-void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int value);
 void SPerl_CONSTANT_POOL_extend(SPerl_CONSTANT_POOL* constant_pool);
 void SPerl_CONSTANT_POOL_maybe_extend(SPerl_CONSTANT_POOL* constant_pool);
+void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int value);
+void SPerl_CONSTANT_POOL_push_long(SPerl_CONSTANT_POOL* constant_pool, int64_t value);
+void SPerl_CONSTANT_POOL_push_double(SPerl_CONSTANT_POOL* constant_pool, double value);
 
 #endif
