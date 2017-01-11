@@ -823,12 +823,14 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_JSR:
         // Not used
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_RET:
         // Not used
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_TABLESWITCH:
-      
+        
         break;
       case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH:
       
