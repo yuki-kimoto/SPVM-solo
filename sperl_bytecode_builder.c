@@ -347,8 +347,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               *pos_ptr = bytecode_array->length - 1;
               SPerl_ARRAY_push(last_bytecode_pos_stack, pos_ptr);
               
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NOP);
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NOP);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
               break;
             }
             case SPerl_OP_C_CODE_NEXT: {
@@ -589,8 +589,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               }
               
               // Prepare for bytecode position of branch
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NOP);
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NOP);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
               
               break;
             }
