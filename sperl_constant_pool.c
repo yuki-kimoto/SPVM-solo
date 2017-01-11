@@ -15,7 +15,7 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new() {
   return constant_pool;
 }
 
-void SPerl_CONSTANT_POOL_push(SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
+void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
   int32_t length = constant_pool->length;
   int32_t capacity = constant_pool->capacity;
   

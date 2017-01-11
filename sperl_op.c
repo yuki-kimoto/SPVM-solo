@@ -742,25 +742,25 @@ void SPerl_OP_build_constant_pool(SPerl* sperl) {
     constant->address = parser->constant_pool->length;
     switch (constant->code) {
       case SPerl_CONSTANT_C_CODE_INT:
-        SPerl_CONSTANT_POOL_push(parser->constant_pool, constant->uv.int_value);
+        SPerl_CONSTANT_POOL_push_int(parser->constant_pool, constant->uv.int_value);
         break;
       case SPerl_CONSTANT_C_CODE_LONG:
         memcpy(&value1, &constant->uv.long_value, 4);
         memcpy(&value2, ((int32_t*)&constant->uv.long_value) + 1, 4);
         
-        SPerl_CONSTANT_POOL_push(parser->constant_pool, value1);
-        SPerl_CONSTANT_POOL_push(parser->constant_pool, value2);
+        SPerl_CONSTANT_POOL_push_int(parser->constant_pool, value1);
+        SPerl_CONSTANT_POOL_push_int(parser->constant_pool, value2);
         break;
       case SPerl_CONSTANT_C_CODE_FLOAT:
         memcpy(&value1, &constant->uv.float_value, 4);
-        SPerl_CONSTANT_POOL_push(parser->constant_pool, value1);
+        SPerl_CONSTANT_POOL_push_int(parser->constant_pool, value1);
         break;
       case SPerl_CONSTANT_C_CODE_DOUBLE:
         memcpy(&value1, &constant->uv.double_value, 4);
         memcpy(&value2, ((int32_t*)&constant->uv.double_value) + 1, 4);
         
-        SPerl_CONSTANT_POOL_push(parser->constant_pool, value1);
-        SPerl_CONSTANT_POOL_push(parser->constant_pool, value2);
+        SPerl_CONSTANT_POOL_push_int(parser->constant_pool, value1);
+        SPerl_CONSTANT_POOL_push_int(parser->constant_pool, value2);
         break;
     }
   }
