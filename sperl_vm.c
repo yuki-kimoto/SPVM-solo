@@ -874,6 +874,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         
         // Prepare arguments
         memcpy(&operand_stack[operand_stack_top - sub->sub_args_size + 1], &call_stack[call_stack_base], sub->sub_args_size);
+        operand_stack_top -= sub->sub_args_size;
         
         // Set program counter to next byte code
         pc = &bytecodes[sub->bytecode_start_pos];
