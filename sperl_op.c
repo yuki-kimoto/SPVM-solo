@@ -753,6 +753,9 @@ void SPerl_OP_build_constant_pool(SPerl* sperl) {
       case SPerl_CONSTANT_C_CODE_DOUBLE:
         SPerl_CONSTANT_POOL_push_double(parser->constant_pool, constant->uv.double_value);
         break;
+      case SPerl_CONSTANT_C_CODE_STRING:
+        SPerl_CONSTANT_POOL_push_string(parser->constant_pool, constant->uv.string_value);
+        break;
     }
   }
 }

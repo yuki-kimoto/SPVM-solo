@@ -425,7 +425,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           str = SPerl_ALLOCATOR_new_string(sperl, str_len);
           memcpy(str, cur_token_ptr, str_len);
           str[str_len] = '\0';
-
+          
           parser->bufptr++;
         }
         
@@ -436,7 +436,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
         op->uv.constant = constant;
         yylvalp->opval = (SPerl_OP*)op;
-
+        
         return CONSTANT;
       }
       default:

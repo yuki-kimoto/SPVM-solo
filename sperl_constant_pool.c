@@ -30,7 +30,7 @@ void SPerl_CONSTANT_POOL_extend(SPerl_CONSTANT_POOL* constant_pool, int32_t exte
 void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
   int32_t length = constant_pool->length;
   
-  SPerl_CONSTANT_POOL_extend(constant_pool, 4);
+  SPerl_CONSTANT_POOL_extend(constant_pool, 1);
   
   constant_pool->values[length] = value;
   constant_pool->length++;
@@ -39,7 +39,7 @@ void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int32_t va
 void SPerl_CONSTANT_POOL_push_long(SPerl_CONSTANT_POOL* constant_pool, int64_t value) {
   int32_t length = constant_pool->length;
   
-  SPerl_CONSTANT_POOL_extend(constant_pool, 8);
+  SPerl_CONSTANT_POOL_extend(constant_pool, 2);
   
   *(int64_t*)&constant_pool->values[length] = value;
   constant_pool->length += 2;
@@ -48,7 +48,7 @@ void SPerl_CONSTANT_POOL_push_long(SPerl_CONSTANT_POOL* constant_pool, int64_t v
 void SPerl_CONSTANT_POOL_push_float(SPerl_CONSTANT_POOL* constant_pool, float value) {
   int32_t length = constant_pool->length;
   
-  SPerl_CONSTANT_POOL_extend(constant_pool, 4);
+  SPerl_CONSTANT_POOL_extend(constant_pool, 1);
   
   *(float*)&constant_pool->values[length] = value;
   constant_pool->length++;
@@ -57,10 +57,30 @@ void SPerl_CONSTANT_POOL_push_float(SPerl_CONSTANT_POOL* constant_pool, float va
 void SPerl_CONSTANT_POOL_push_double(SPerl_CONSTANT_POOL* constant_pool, double value) {
   int32_t length = constant_pool->length;
   
-  SPerl_CONSTANT_POOL_extend(constant_pool, 8);
+  SPerl_CONSTANT_POOL_extend(constant_pool, 2);
   
   *(double*)&constant_pool->values[length] = value;
   constant_pool->length += 2;
+}
+
+void SPerl_CONSTANT_POOL_push_string(SPerl_CONSTANT_POOL* constant_pool, const char* string) {
+  int32_t length = constant_pool->length;
+  
+  int32_t string_length = strlen(string);
+  int32_t real_string_length = string_length + 1;
+  
+  int32_t constant_pool_string_length;
+  if (real_string_length % 4 == 0) {
+    constant_pool_string_length = real_string_length / 4;
+  }
+  else {
+    constant_pool_string_length = (real_string_length / 4) + 1;
+  }
+  
+  SPerl_CONSTANT_POOL_extend(constant_pool, constant_pool_string_length);
+  
+  memcpy(&constant_pool->values[length], string, string_length + 1);
+  constant_pool->length += constant_pool_string_length;
 }
 
 void SPerl_CONSTANT_POOL_free(SPerl_CONSTANT_POOL* constant_pool) {

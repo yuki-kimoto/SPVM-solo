@@ -8,7 +8,7 @@ use Test::Simple;
 
 package Test {
   sub main() : int {
-
+    "abc";
     my $num2 = 5;
     
     switch($num2) {
