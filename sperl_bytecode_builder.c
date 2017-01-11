@@ -1264,17 +1264,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               }
               
               _Bool bytecode_set = 0;
-              if (constant->code == SPerl_CONSTANT_C_CODE_BOOLEAN) {
-                if (constant->uv.int_value == 0) {
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ICONST_0);
-                  bytecode_set = 1;
-                }
-                else if (constant->uv.int_value == 1) {
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ICONST_1);
-                  bytecode_set = 1;
-                }
-              }
-              else if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
+              if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
                 if (constant->uv.int_value == -1) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ICONST_M1);
                   bytecode_set = 1;

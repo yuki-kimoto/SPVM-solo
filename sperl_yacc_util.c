@@ -119,12 +119,6 @@ void SPerl_yyprint (FILE *file, int type, YYSTYPE yylval) {
       SPerl_CONSTANT* constant = yylval.opval->uv.constant;
       
       switch(constant->code) {
-        case SPerl_CONSTANT_C_CODE_BOOLEAN:
-          fprintf(file, "boolean %" PRId32, constant->uv.int_value);
-          break;
-        case SPerl_CONSTANT_C_CODE_BYTE:
-          fprintf(file, "char '%c'", (char) constant->uv.int_value);
-          break;
         case SPerl_CONSTANT_C_CODE_INT:
           fprintf(file, "int %" PRId32, constant->uv.int_value);
           break;

@@ -648,8 +648,6 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
 
 void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
   
-  SPerl_PARSER* parser = sperl->parser;
-  
   SPerl_NAME_INFO* name_info = op_name_info->uv.name_info;
   
   const char* field_abs_name;
@@ -743,8 +741,6 @@ void SPerl_OP_build_const_pool(SPerl* sperl) {
 
     constant->pool_pos = parser->constant_pool->length;
     switch (constant->code) {
-      case SPerl_CONSTANT_C_CODE_BOOLEAN:
-      case SPerl_CONSTANT_C_CODE_BYTE:
       case SPerl_CONSTANT_C_CODE_INT:
         SPerl_CONSTANT_POOL_push(parser->constant_pool, constant->uv.int_value);
         break;

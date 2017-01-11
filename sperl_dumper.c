@@ -45,12 +45,6 @@ void SPerl_DUMPER_dump_ast(SPerl* sperl, SPerl_OP* op_base) {
       SPerl_CONSTANT* constant = op_cur->uv.constant;
       printf(" %s", SPerl_CONSTANT_C_CODE_NAMES[constant->code]);
       switch (constant->code) {
-        case SPerl_CONSTANT_C_CODE_BOOLEAN:
-          printf(" %" PRId32, constant->uv.int_value);
-          break;
-        case SPerl_CONSTANT_C_CODE_BYTE:
-          printf(" '%c'", constant->uv.int_value);
-          break;
         case SPerl_CONSTANT_C_CODE_INT:
           printf(" %" PRId32, constant->uv.int_value);
           break;
@@ -407,12 +401,6 @@ void SPerl_DUMPER_dump_constant(SPerl* sperl, SPerl_CONSTANT* constant) {
   (void)sperl;
   
   switch(constant->code) {
-    case SPerl_CONSTANT_C_CODE_BOOLEAN:
-      printf("      boolean %" PRId32 "\n", constant->uv.int_value);
-      break;
-    case SPerl_CONSTANT_C_CODE_BYTE:
-      printf("      char '%c'\n", constant->uv.int_value);
-      break;
     case SPerl_CONSTANT_C_CODE_INT:
       printf("      int %" PRId32 "\n", constant->uv.int_value);
       break;
