@@ -15,7 +15,7 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new() {
   return constant_pool;
 }
 
-void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
+void SPerl_CONSTANT_POOL_maybe_extend(SPerl_CONSTANT_POOL* constant_pool) {
   int32_t length = constant_pool->length;
   int32_t capacity = constant_pool->capacity;
   
@@ -25,6 +25,12 @@ void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int32_t va
     memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(int32_t));
     constant_pool->capacity = new_capacity;
   }
+}
+
+void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
+  int32_t length = constant_pool->length;
+  
+  SPerl_CONSTANT_POOL_maybe_extend(constant_pool);
   
   constant_pool->values[length] = value;
   constant_pool->length++;
