@@ -34,7 +34,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   uint8_t* bytecodes = bytecode_array->values;
   
   // Program counter
-  register uint8_t* pc = &bytecodes[sub->bytecode_start_pos];
+  register uint8_t* pc = &bytecodes[sub->bytecode_start_address];
   
   // Capacity of openrad stack
   int32_t operand_stack_capacity = 255;
@@ -1094,7 +1094,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         operand_stack_base = operand_stack_top;
         
         // Set program counter to next byte code
-        pc = &bytecodes[sub->bytecode_start_pos];
+        pc = &bytecodes[sub->bytecode_start_address];
         continue;
         
         */
