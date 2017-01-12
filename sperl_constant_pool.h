@@ -18,5 +18,6 @@ void SPerl_CONSTANT_POOL_push_long(SPerl_CONSTANT_POOL* constant_pool, int64_t v
 void SPerl_CONSTANT_POOL_push_float(SPerl_CONSTANT_POOL* constant_pool, float value);
 void SPerl_CONSTANT_POOL_push_double(SPerl_CONSTANT_POOL* constant_pool, double value);
 void SPerl_CONSTANT_POOL_push_string(SPerl_CONSTANT_POOL* constant_pool, const char* string);
+void SPerl_CONSTANT_POOL_push_constant(SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant);
 
 #endif

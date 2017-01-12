@@ -20,8 +20,6 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   return SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
 }
 
-
-
 void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   
   // Subroutine
