@@ -13,6 +13,5 @@ struct SPerl_bytecode_array {
 // Array function
 SPerl_BYTECODE_ARRAY* SPerl_BYTECODE_ARRAY_new();
 void SPerl_BYTECODE_ARRAY_push(SPerl_BYTECODE_ARRAY* bytecodes, uint8_t value);
-void SPerl_BYTECODE_ARRAY_extend(SPerl_BYTECODE_ARRAY* bytecodes, int32_t extend);
 
 #endif
