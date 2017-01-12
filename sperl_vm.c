@@ -32,7 +32,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   int32_t* constants = sperl->constant_pool->values;
   
   // Bytecode
-  SPerl_BYTECODE_ARRAY* bytecode_array = parser->bytecode_array;
+  SPerl_BYTECODE_ARRAY* bytecode_array = sperl->bytecode_array;
   uint8_t* bytecodes = bytecode_array->values;
   
   // Program counter

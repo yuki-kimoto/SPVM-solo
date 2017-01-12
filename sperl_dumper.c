@@ -456,7 +456,7 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     printf("    my_vars_size => %d\n", sub->my_vars_size);
     
     printf("    bytecode_array\n");
-    SPerl_DUMPER_dump_bytecode_array(sperl, sperl->parser->bytecode_array, sub->bytecode_start_pos, sub->bytecode_length);
+    SPerl_DUMPER_dump_bytecode_array(sperl, sperl->bytecode_array, sub->bytecode_start_pos, sub->bytecode_length);
   }
   else {
     printf("    None\n");

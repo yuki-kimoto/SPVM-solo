@@ -26,7 +26,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
   SPerl_PARSER* parser = sperl->parser;
   
   // Bytecode
-  SPerl_BYTECODE_ARRAY* bytecode_array = parser->bytecode_array;
+  SPerl_BYTECODE_ARRAY* bytecode_array = sperl->bytecode_array;
   
   for (int32_t sub_pos = 0; sub_pos < parser->op_subs->length; sub_pos++) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_pos);

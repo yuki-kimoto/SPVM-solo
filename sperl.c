@@ -8,6 +8,7 @@
 #include "sperl_array.h"
 #include "sperl_allocator.h"
 #include "sperl_constant_pool.h"
+#include "sperl_bytecode_array.h"
 
 SPerl* SPerl_new() {
   SPerl* sperl = calloc(1, sizeof(SPerl));
@@ -23,6 +24,9 @@ SPerl* SPerl_new() {
   
   // Constant pool
   sperl->constant_pool = SPerl_CONSTANT_POOL_new();
+  
+  // Bytecodes
+  sperl->bytecode_array = SPerl_BYTECODE_ARRAY_new(sperl, 0);
   
   return sperl;
 }

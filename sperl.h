@@ -24,6 +24,9 @@ struct sperl_ {
   
   // Constant pool
   SPerl_CONSTANT_POOL* constant_pool;
+  
+  // Bytecodes
+  SPerl_BYTECODE_ARRAY* bytecode_array;
 };
 
 SPerl* SPerl_new();
