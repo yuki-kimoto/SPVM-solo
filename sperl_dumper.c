@@ -118,9 +118,6 @@ void SPerl_DUMPER_dump_sperl(SPerl* sperl) {
   
   printf("\n[Packages information]\n");
   SPerl_DUMPER_dump_packages(sperl, parser->op_packages);
-  
-  printf("\n[Constant pool\n");
-  SPerl_DUMPER_dump_constant_pool(sperl, sperl->constant_pool);
 
   printf("\n[Subroutine information]\n");
   SPerl_ARRAY* op_subs = parser->op_subs;
@@ -178,11 +175,13 @@ void SPerl_DUMPER_dump_resolved_types(SPerl* sperl, SPerl_ARRAY* resolved_types)
   }
 }
 
-void SPerl_DUMPER_dump_constant_pool(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool) {
+void SPerl_DUMPER_dump_constant_pool(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t start_address, int32_t length) {
   (void)sperl;
-  
-  for (int32_t i = 0; i < constant_pool->length; i++) {
-    printf("    constant_pool[%" PRId32 "] %" PRId32 "\n", i, constant_pool->values[i]);
+
+  int32_t end_address = start_address + length - 1;
+
+  for (int32_t i = start_address; i <= end_address; i++) {
+    printf("      constant_pool[%" PRId32 "] %" PRId32 "\n", i, constant_pool->values[i]);
   }
 }
 
@@ -454,7 +453,11 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     
     
     printf("    my_vars_size => %d\n", sub->my_vars_size);
-    
+
+  
+    printf("    constant_pool\n");
+    SPerl_DUMPER_dump_constant_pool(sperl, sperl->constant_pool, sub->constant_pool_start_address, sub->constant_pool_length);
+
     printf("    bytecode_array\n");
     SPerl_DUMPER_dump_bytecode_array(sperl, sperl->bytecode_array, sub->bytecode_start_address, sub->bytecode_length);
   }

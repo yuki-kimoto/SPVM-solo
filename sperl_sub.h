@@ -18,6 +18,8 @@ struct SPerl_sub {
   int32_t bytecode_start_address;
   int32_t bytecode_length;
   int32_t operand_stack_max;
+  int32_t constant_pool_start_address;
+  int32_t constant_pool_length;
 };
 
 SPerl_SUB* SPerl_SUB_new(SPerl* sperl);

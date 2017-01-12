@@ -62,6 +62,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // op count
     int32_t op_count = 0;
     
+    // Set constant pool start address
+    sub->constant_pool_start_address = sperl->constant_pool->length;
+    
     // Run OPs
     SPerl_OP* op_base = op_sub;
     SPerl_OP* op_cur = op_base;
@@ -1015,5 +1018,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     
     sub->my_vars_size = next_my_var_address;
     sub->args_size = sub_args_size;
+    
+    // Set constant pool length
+    sub->constant_pool_length = sperl->constant_pool->length - sub->constant_pool_start_address;
   }
 }
