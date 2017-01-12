@@ -15,10 +15,10 @@ struct SPerl_sub {
   SPerl_OP* op_block;
   _Bool anon;
   int32_t id;
-  int32_t bytecode_start_address;
+  int32_t bytecode_base;
   int32_t bytecode_length;
   int32_t operand_stack_max;
-  int32_t constant_pool_start_address;
+  int32_t constant_pool_base;
   int32_t constant_pool_length;
 };
 

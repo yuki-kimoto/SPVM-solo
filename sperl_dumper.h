@@ -15,7 +15,7 @@ void SPerl_DUMPER_dump_enumeration_value(SPerl* sperl, SPerl_ENUMERATION_VALUE* 
 void SPerl_DUMPER_dump_packages(SPerl* sperl, SPerl_ARRAY* packages);
 void SPerl_DUMPER_dump_resolved_types(SPerl* sperl, SPerl_ARRAY* resolved_types);
 void SPerl_DUMPER_dump_ast(SPerl* sperl, SPerl_OP* op);
-void SPerl_DUMPER_dump_constant_pool(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t start_address, int32_t length);
-void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecode_array, int32_t start_address, int32_t length);
+void SPerl_DUMPER_dump_constant_pool(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t base, int32_t length);
+void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecode_array, int32_t base, int32_t length);
 
 #endif

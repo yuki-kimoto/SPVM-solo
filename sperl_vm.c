@@ -27,14 +27,14 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_name, strlen(sub_name));
   
   // Constant pool
-  int32_t* constants = sperl->constant_pool->values;
+  int32_t* constant_pool = sperl->constant_pool->values;
   
   // Bytecode
   SPerl_BYTECODE_ARRAY* bytecode_array = sperl->bytecode_array;
   uint8_t* bytecodes = bytecode_array->values;
   
   // Program counter
-  register uint8_t* pc = &bytecodes[sub->bytecode_start_address];
+  register uint8_t* pc = &bytecodes[sub->bytecode_base];
   
   // Capacity of openrad stack
   int32_t operand_stack_capacity = 255;
@@ -171,17 +171,17 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_LDC:
         operand_stack_top++;
-        memcpy(&operand_stack[operand_stack_top], &constants[*(pc + 1)], 4);
+        memcpy(&operand_stack[operand_stack_top], &constant_pool[*(pc + 1)], 4);
         pc += 2;
         continue;
       case SPerl_BYTECODE_C_CODE_LDC_W:
         operand_stack_top++;
-        memcpy(&operand_stack[operand_stack_top], &constants[(*(pc + 1) << 8) + *(pc + 2)], 4);
+        memcpy(&operand_stack[operand_stack_top], &constant_pool[(*(pc + 1) << 8) + *(pc + 2)], 4);
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_LDC2_W:
         operand_stack_top += 2;
-        memcpy(&operand_stack[operand_stack_top - 1], &constants[(*(pc + 1) << 8) + *(pc + 2)], 8);
+        memcpy(&operand_stack[operand_stack_top - 1], &constant_pool[(*(pc + 1) << 8) + *(pc + 2)], 8);
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_ILOAD:
@@ -1094,7 +1094,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         operand_stack_base = operand_stack_top;
         
         // Set program counter to next byte code
-        pc = &bytecodes[sub->bytecode_start_address];
+        pc = &bytecodes[sub->bytecode_base];
         continue;
         
         */
@@ -1103,12 +1103,12 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
       }
       case SPerl_BYTECODE_C_CODE_LDC_WW:
         operand_stack_top++;
-        memcpy(&operand_stack[operand_stack_top], &constants[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)], 4);
+        memcpy(&operand_stack[operand_stack_top], &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)], 4);
         pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_LDC2_WW:
         operand_stack_top += 2;
-        memcpy(&operand_stack[operand_stack_top - 1], &constants[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)], 4);
+        memcpy(&operand_stack[operand_stack_top - 1], &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)], 4);
         pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_UNDEFINED:
