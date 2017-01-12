@@ -852,12 +852,26 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         pc += 1 + padding + 12 + (max - min + 1) * 4;
         
         continue;
-        
-        break;
       }
-      case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH:
-      
-        break;
+      case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
+        
+        // Machine address to culculate padding
+        uintptr_t pc_machine_address = (uintptr_t)pc;
+        
+        // Padding
+        int32_t padding = 3 - (pc_machine_address % 4);
+        
+        // npare
+        int32_t pair_count
+          = (*(pc + padding + 5) << 24)
+          + (*(pc + padding + 6) << 16)
+          + (*(pc + padding + 7) << 8)
+          + *(pc + padding + 8);
+        
+        pc += 1 + padding + 8 + pair_count * 8;
+        
+        continue;
+      }
       case SPerl_BYTECODE_C_CODE_IRETURN:
         
         /*
