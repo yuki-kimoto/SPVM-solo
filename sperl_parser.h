@@ -41,9 +41,6 @@ struct SPerl_parser {
   // Current subs(named sub + anon sub) in class 
   SPerl_ARRAY* op_subs;
   
-  // Constant pool
-  SPerl_CONSTANT_POOL* constant_pool;
-  
   // Include pathes
   SPerl_ARRAY* include_pathes;
   

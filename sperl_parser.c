@@ -15,7 +15,6 @@
 #include "sperl_yacc_util.h"
 #include "sperl_array.h"
 #include "sperl_use.h"
-#include "sperl_constant_pool.h"
 #include "sperl_bytecode_array.h"
 
 SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
@@ -36,7 +35,6 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   parser->use_package_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
   parser->cur_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
   
-  parser->constant_pool = SPerl_CONSTANT_POOL_new();
   parser->bytecode_array = SPerl_BYTECODE_ARRAY_new(sperl, 0);
   
   // Core types

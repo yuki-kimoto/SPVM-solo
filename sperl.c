@@ -7,6 +7,7 @@
 #include "sperl_hash.h"
 #include "sperl_array.h"
 #include "sperl_allocator.h"
+#include "sperl_constant_pool.h"
 
 SPerl* SPerl_new() {
   SPerl* sperl = calloc(1, sizeof(SPerl));
@@ -19,6 +20,9 @@ SPerl* SPerl_new() {
 
   // Parser
   sperl->parser = SPerl_PARSER_new(sperl);
+  
+  // Constant pool
+  sperl->constant_pool = SPerl_CONSTANT_POOL_new();
   
   return sperl;
 }

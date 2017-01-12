@@ -120,7 +120,7 @@ void SPerl_DUMPER_dump_sperl(SPerl* sperl) {
   SPerl_DUMPER_dump_packages(sperl, parser->op_packages);
   
   printf("\n[Constant pool\n");
-  SPerl_DUMPER_dump_constant_pool(sperl, parser->constant_pool);
+  SPerl_DUMPER_dump_constant_pool(sperl, sperl->constant_pool);
 
   printf("\n[Subroutine information]\n");
   SPerl_ARRAY* op_subs = parser->op_subs;

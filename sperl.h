@@ -21,6 +21,9 @@ struct sperl_ {
   
   // Parser
   SPerl_PARSER* parser;
+  
+  // Constant pool
+  SPerl_CONSTANT_POOL* constant_pool;
 };
 
 SPerl* SPerl_new();

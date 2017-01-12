@@ -773,24 +773,24 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               SPerl_CONSTANT* constant = op_cur->uv.constant;
               
-              constant->address = parser->constant_pool->length;
+              constant->address = sperl->constant_pool->length;
               switch (constant->code) {
                 case SPerl_CONSTANT_C_CODE_BOOLEAN:
                 case SPerl_CONSTANT_C_CODE_SHORT:
                 case SPerl_CONSTANT_C_CODE_INT:
-                  SPerl_CONSTANT_POOL_push_int(parser->constant_pool, constant->uv.int_value);
+                  SPerl_CONSTANT_POOL_push_int(sperl->constant_pool, constant->uv.int_value);
                   break;
                 case SPerl_CONSTANT_C_CODE_LONG:
-                  SPerl_CONSTANT_POOL_push_int(parser->constant_pool, constant->uv.long_value);
+                  SPerl_CONSTANT_POOL_push_int(sperl->constant_pool, constant->uv.long_value);
                   break;
                 case SPerl_CONSTANT_C_CODE_FLOAT:
-                  SPerl_CONSTANT_POOL_push_float(parser->constant_pool, constant->uv.float_value);
+                  SPerl_CONSTANT_POOL_push_float(sperl->constant_pool, constant->uv.float_value);
                   break;
                 case SPerl_CONSTANT_C_CODE_DOUBLE:
-                  SPerl_CONSTANT_POOL_push_double(parser->constant_pool, constant->uv.double_value);
+                  SPerl_CONSTANT_POOL_push_double(sperl->constant_pool, constant->uv.double_value);
                   break;
                 case SPerl_CONSTANT_C_CODE_STRING:
-                  SPerl_CONSTANT_POOL_push_string(parser->constant_pool, constant->uv.string_value);
+                  SPerl_CONSTANT_POOL_push_string(sperl->constant_pool, constant->uv.string_value);
                   break;
               }
               

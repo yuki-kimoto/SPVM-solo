@@ -29,7 +29,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_name, strlen(sub_name));
   
   // Constant pool
-  int32_t* constants = parser->constant_pool->values;
+  int32_t* constants = sperl->constant_pool->values;
   
   // Bytecode
   SPerl_BYTECODE_ARRAY* bytecode_array = parser->bytecode_array;
