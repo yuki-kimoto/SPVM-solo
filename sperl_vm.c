@@ -330,6 +330,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_CALOAD:
+        // Not used
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_SALOAD:
