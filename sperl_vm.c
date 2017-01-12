@@ -42,9 +42,6 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   // Operand stack
   int32_t* operand_stack = malloc(sizeof(int32_t) * operand_stack_capacity);
   
-  // Operand stack base
-  int32_t operand_stack_base = 0;
-  
   // Top position of operand stack
   register int32_t operand_stack_top = -1;
   

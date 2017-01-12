@@ -48,6 +48,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
     // Current case addresses
     int32_t cur_switch_address = -1;
     
+    // Current swtich machine address
+    uintptr_t cur_switch_machine_address = 0;
+    
     int32_t cur_default_address = -1;
     SPerl_ARRAY* cur_case_addresses = NULL;
     SPerl_ARRAY* cur_op_cases = NULL;
@@ -85,7 +88,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 int32_t max = switch_info->max;
                 int32_t min = switch_info->min;
-                int32_t padding = 3 - ((bytecode_array->length - 1) % 4);
+                
+                // Machine address to culculate padding
+                cur_switch_machine_address = (uintptr_t)&bytecode_array->values[bytecode_array->length - 1];
+                
+                // Padding
+                int32_t padding = 3 - (cur_switch_machine_address % 4);
                 
                 for (int32_t i = 0; i < padding; i++) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
@@ -119,7 +127,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 cur_switch_address = bytecode_array->length - 1;
                 
-                int32_t padding = 3 - ((bytecode_array->length - 1) % 4);
+                // Machine address to culculate padding
+                cur_switch_machine_address = (uintptr_t)&bytecode_array->values[bytecode_array->length - 1];
+                
+                // Padding
+                int32_t padding = 3 - (cur_switch_machine_address % 4);
                 
                 for (int32_t i = 0; i < padding; i++) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
@@ -165,7 +177,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               // tableswitch
               if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_TABLESWITCH) {
-                int32_t padding = 3 - (cur_switch_address % 4);
+                int32_t padding = 3 - (cur_switch_machine_address % 4);
 
                 // Default offset
                 int32_t default_offset;
@@ -223,7 +235,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               }
               // looupswitch
               else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
-                int32_t padding = 3 - (cur_switch_address % 4);
+                int32_t padding = 3 - (cur_switch_machine_address % 4);
 
                 // Default offset
                 int32_t default_offset;
