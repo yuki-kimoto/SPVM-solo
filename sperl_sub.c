@@ -10,7 +10,7 @@
 SPerl_SUB* SPerl_SUB_new(SPerl* sperl) {
   SPerl_SUB* sub = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_SUB));
   
-  sub->op_sub_args = SPerl_ALLOCATOR_new_array(sperl, 0);
+  sub->op_args = SPerl_ALLOCATOR_new_array(sperl, 0);
   sub->op_my_vars = SPerl_ALLOCATOR_new_array(sperl, 0);
   
   return sub;

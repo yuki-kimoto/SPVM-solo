@@ -19,7 +19,7 @@
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
 %type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub call_op
-%type <opval> opt_terms terms term sub_args sub_arg opt_sub_args decl_use decl_thing_in_class decl_things_in_class
+%type <opval> opt_terms terms term args arg opt_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_name sub_name decl_package decl_things_in_grammar opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar type_sub types not_type_sub opt_term throw_exception
@@ -248,7 +248,7 @@ decl_field
     }
 
 decl_sub
- : SUB sub_name '(' opt_sub_args ')' ':' type block
+ : SUB sub_name '(' opt_args ')' ':' type block
      {
        $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $7, $8);
      }
@@ -275,10 +275,10 @@ decl_anon_sub
  : SUB '(' ')' ':' type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
-       SPerl_OP* op_sub_args = SPerl_OP_newOP_LIST(sperl, $2->file, $2->line);
-       $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), op_sub_args, $5, $6);
+       SPerl_OP* op_args = SPerl_OP_newOP_LIST(sperl, $2->file, $2->line);
+       $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), op_args, $5, $6);
      }
- | SUB '(' sub_args ')' ':' type block
+ | SUB '(' args ')' ':' type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
        $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $3, $6, $7);
@@ -536,12 +536,12 @@ block
       SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
 
-opt_sub_args
+opt_args
   :	/* Empty */
     {
       $$ = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
-  |	sub_args
+  |	args
     {
       if ($1->code == SPerl_OP_C_CODE_LIST) {
         $$ = $1;
@@ -552,14 +552,14 @@ opt_sub_args
       }
     }
 
-sub_args
-  : sub_args ',' sub_arg
+args
+  : args ',' arg
     {
       $$ = SPerl_OP_append_elem(sperl, $1, $3, $1->file, $1->line);
     }
-  | sub_arg
+  | arg
 
-sub_arg
+arg
   : VAR ':' type
     {
       $$ = SPerl_OP_build_decl_my(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, $1->file, $1->line), $1, $3);

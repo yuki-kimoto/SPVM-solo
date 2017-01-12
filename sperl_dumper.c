@@ -432,12 +432,12 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
 
     printf("    resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
 
-    printf("    sub_args\n");
-    SPerl_ARRAY* op_sub_args = sub->op_sub_args;
-    for (int32_t i = 0; i < op_sub_args->length; i++) {
-      SPerl_OP* op_sub_arg = SPerl_ARRAY_fetch(sub->op_sub_args, i);
-      SPerl_MY_VAR* my_var = op_sub_arg->uv.my_var;
-      printf("      sub_arg[%" PRId32 "]\n", i);
+    printf("    args\n");
+    SPerl_ARRAY* op_args = sub->op_args;
+    for (int32_t i = 0; i < op_args->length; i++) {
+      SPerl_OP* op_arg = SPerl_ARRAY_fetch(sub->op_args, i);
+      SPerl_MY_VAR* my_var = op_arg->uv.my_var;
+      printf("      arg[%" PRId32 "]\n", i);
       SPerl_DUMPER_dump_my_var(sperl, my_var);
     }
     

@@ -905,14 +905,14 @@ SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* 
   return op_field;
 }
 
-SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_subargs, SPerl_OP* op_type, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_args, SPerl_OP* op_type, SPerl_OP* op_block) {
   
   SPerl_PARSER* parser = sperl->parser;
   
   // Build OP_SUB
   SPerl_OP_sibling_splice(sperl, op_sub, NULL, 0, op_sub_name);
-  SPerl_OP_sibling_splice(sperl, op_sub, op_sub_name, 0, op_subargs);
-  SPerl_OP_sibling_splice(sperl, op_sub, op_subargs, 0, op_type);
+  SPerl_OP_sibling_splice(sperl, op_sub, op_sub_name, 0, op_args);
+  SPerl_OP_sibling_splice(sperl, op_sub, op_args, 0, op_type);
   SPerl_OP_sibling_splice(sperl, op_sub, op_type, 0, op_block);
   
   // Create sub information
@@ -925,9 +925,9 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   }
   
   // subargs
-  SPerl_OP* op_subarg = op_subargs->first;
-  while ((op_subarg = SPerl_OP_sibling(sperl, op_subarg))) {
-    SPerl_ARRAY_push(sub->op_sub_args, op_subarg->first);
+  SPerl_OP* op_arg = op_args->first;
+  while ((op_arg = SPerl_OP_sibling(sperl, op_arg))) {
+    SPerl_ARRAY_push(sub->op_args, op_arg->first);
   }
   
   // return type
@@ -993,7 +993,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op
     op_sub_name->uv.name = enumeration_value->op_name->uv.name;
     
     // sub args
-    SPerl_OP* op_subargs = SPerl_OP_newOP_LIST(sperl, op_enumeration_value->file, op_enumeration_value->line);
+    SPerl_OP* op_args = SPerl_OP_newOP_LIST(sperl, op_enumeration_value->file, op_enumeration_value->line);
     
     // Type
     SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_enumeration_value->file, op_enumeration_value->line);
@@ -1017,7 +1017,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op
     SPerl_OP* op_block = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_BLOCK, op_enumeration_value->file, op_enumeration_value->line);
     SPerl_OP_sibling_splice(sperl, op_block, NULL, 0, op_statements);
     
-    SPerl_OP_build_decl_sub(sperl, op_sub, op_sub_name, op_subargs, op_type, op_block);
+    SPerl_OP_build_decl_sub(sperl, op_sub, op_sub_name, op_args, op_type, op_block);
   }
   
   return op_enum;

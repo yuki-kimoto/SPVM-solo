@@ -1001,19 +1001,19 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       
       if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
         next_my_var_address += 2;
-        if (i < sub->op_sub_args->length) {
+        if (i < sub->op_args->length) {
           sub_args_size += 2;
         }
       }
       else {
         next_my_var_address++;
-        if (i < sub->op_sub_args->length) {
+        if (i < sub->op_args->length) {
           sub_args_size++;
         }
       }
     }
     
     sub->my_vars_size = next_my_var_address;
-    sub->sub_args_size = sub_args_size;
+    sub->args_size = sub_args_size;
   }
 }
