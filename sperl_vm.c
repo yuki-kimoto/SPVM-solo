@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include "sperl.h"
 #include "sperl_parser.h"
@@ -45,6 +46,9 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
   
   // Top position of operand stack
   register int32_t operand_stack_top = -1;
+  
+  // Base position of operand stack
+  int32_t operand_stack_base = -1;
   
   // Capacity of operand stack
   int32_t call_stack_capacity = 255;
@@ -874,12 +878,10 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_IRETURN:
-        
+      case SPerl_BYTECODE_C_CODE_IRETURN: {
         /*
-        
         // Save retrun value
-        operand_stack[operand_stack_base] = operand_stack[operand_stack_top];
+        operand_stack[operand_stack_base + 1] = operand_stack[operand_stack_top];
         operand_stack_top = operand_stack_base;
         
         // Finish vm
@@ -898,45 +900,67 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         
         pc = &bytecodes[return_address];
         continue;
-        
         */
-        
         break;
-      case SPerl_BYTECODE_C_CODE_LRETURN:
+      }
+      case SPerl_BYTECODE_C_CODE_LRETURN: {
+        
         frame_count--;
         if (frame_count == 0) {
           return;
         }
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_FRETURN:
+      }
+      case SPerl_BYTECODE_C_CODE_FRETURN: {
+        
         frame_count--;
         if (frame_count == 0) {
           return;
         }
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_DRETURN:
+      }
+      case SPerl_BYTECODE_C_CODE_DRETURN: {
         frame_count--;
         if (frame_count == 0) {
           return;
         }
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_ARETURN:
+      }
+      case SPerl_BYTECODE_C_CODE_ARETURN: {
         frame_count--;
         if (frame_count == 0) {
           return;
         }
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_RETURN:
-        frame_count--;
-        if (frame_count == 0) {
+      }
+      case SPerl_BYTECODE_C_CODE_RETURN: {
+        /*
+        // Restore openrad stack top
+        operand_stack_top = operand_stack_base;
+        
+        // Finish vm
+        if (call_stack_base == 0) {
           return;
         }
-        pc++;
+        
+        // Return address
+        int32_t return_address = call_stack[call_stack_base - 2];
+        
+        // Resotre call stack top
+        call_stack_next = call_stack_base - 2;
+        
+        // Resotre call stack base
+        call_stack_base = call_stack[call_stack_base - 1];
+        
+        pc = &bytecodes[return_address];
         continue;
+        */
+        break;
+      }
       case SPerl_BYTECODE_C_CODE_GETSTATIC:
         // Not used
         pc++;
@@ -1041,8 +1065,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         call_stack_base = call_stack_next;
         
         // Get subroutine ID
-        pc++;
-        int32_t sub_id = (*pc << 24) + (*(pc + 1) << 16) + (*(pc + 2) << 8) + *(pc + 3);
+        int32_t sub_id = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         
         // Subroutine
         SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_id);
@@ -1069,7 +1092,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         operand_stack_top -= sub->sub_args_size;
         
         // Save operand stack base
-        operand_stack_base = operand_stack_top + 1;
+        operand_stack_base = operand_stack_top;
         
         // Set program counter to next byte code
         pc = &bytecodes[sub->bytecode_start_pos];
