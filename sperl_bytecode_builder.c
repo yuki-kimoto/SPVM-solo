@@ -1350,35 +1350,19 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               if (!bytecode_set) {
                 if (constant->code == SPerl_CONSTANT_C_CODE_LONG || constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
-                  if (constant->address > 0xFFFF) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LDC2_WW);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 24) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 16) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 8) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address & 0xFF);
-                  }
-                  else {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LDC2_W);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 8) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address & 0xFF);
-                  }
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LDC2_W);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 8) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address & 0xFF);
                 }
                 else {
-                  if (constant->address > 0xFFFF) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LDC_WW);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 24) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 16) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 8) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address & 0xFF);
-                  }
-                  else if (constant->address > 0xFF) {
+                  if (constant->address > 0xFF) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LDC_W);
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 8) & 0xFF);
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address & 0xFF);
                   }
                   else {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LDC);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address &0xFF);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address & 0xFF);
                   }
                 }
               }
