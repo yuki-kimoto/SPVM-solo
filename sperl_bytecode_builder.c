@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdint.h>
 
 #include "sperl.h"
 #include "sperl_parser.h"

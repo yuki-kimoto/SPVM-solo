@@ -1,6 +1,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "sperl.h"
 #include "sperl_parser.h"
@@ -826,9 +827,34 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         // Not used
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_TABLESWITCH:
+      case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
+        
+        // Machine address to culculate padding
+        uintptr_t pc_machine_address = (uintptr_t)pc;
+        
+        // Padding
+        int32_t padding = 3 - (pc_machine_address % 4);
+        
+        // min
+        int32_t min
+          = (*(pc + padding + 5) << 24)
+          + (*(pc + padding + 6) << 16)
+          + (*(pc + padding + 7) << 8)
+          + *(pc + padding + 8);
+        
+        // max
+        int32_t max
+          = (*(pc + padding + 9) << 24)
+          + (*(pc + padding + 10) << 16)
+          + (*(pc + padding + 11) << 8)
+          + *(pc + padding + 12);
+        
+        pc += 1 + padding + 12 + (max - min + 1) * 4;
+        
+        continue;
         
         break;
+      }
       case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH:
       
         break;
