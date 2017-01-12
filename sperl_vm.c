@@ -482,10 +482,12 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_POP:
         operand_stack_top--;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_POP2:
         operand_stack_top -= 2;
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_DUP:
         pc++;
         continue;
@@ -905,37 +907,44 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         if (frame_count == 0) {
           return;
         }
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_FRETURN:
         frame_count--;
         if (frame_count == 0) {
           return;
         }
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_DRETURN:
         frame_count--;
         if (frame_count == 0) {
           return;
         }
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ARETURN:
         frame_count--;
         if (frame_count == 0) {
           return;
         }
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_RETURN:
         frame_count--;
         if (frame_count == 0) {
           return;
         }
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_GETSTATIC:
         // Not used
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_PUTSTATIC:
         // Not used
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_GETFIELD:
         pc += 3;
         continue;
@@ -944,19 +953,24 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_INVOKEVIRTUAL:
         // Not used
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_INVOKESPECIAL:
         // Not used
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_INVOKESTATIC:
         // Not used
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_INVOKEINTERFACE:
         // Not used
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_INVOKEDYNAMIC:
         // Not used
-        break;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_NEW:
         pc++;
         continue;
