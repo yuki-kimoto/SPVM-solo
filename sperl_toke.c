@@ -652,7 +652,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             else if (memcmp(keyword, "true", str_len) == 0) {
               SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
               SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
-              constant->code = SPerl_CONSTANT_C_CODE_INT;
+              constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
               constant->uv.int_value = 1;
               constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
               op->uv.constant = constant;
@@ -663,7 +663,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             else if (memcmp(keyword, "false", str_len) == 0) {
               SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
               SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
-              constant->code = SPerl_CONSTANT_C_CODE_INT;
+              constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
               constant->uv.int_value = 0;
               constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
               op->uv.constant = constant;

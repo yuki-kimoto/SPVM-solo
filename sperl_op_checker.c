@@ -29,6 +29,7 @@
 #include "sperl_name_info.h"
 #include "sperl_resolved_type.h"
 #include "sperl_switch_info.h"
+#include "sperl_constant_pool.h"
 
 void SPerl_OP_CHECKER_check(SPerl* sperl) {
   
@@ -765,12 +766,34 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
                 SPerl_yyerror_format(sperl, "must be int in increment at %s line %d\n", op_cur->file, op_cur->line);
               }
-
+              
               break;
             }
             case SPerl_OP_C_CODE_CONSTANT: {
-
-              SPerl_ARRAY_push(parser->op_constants, op_cur);
+              
+              SPerl_CONSTANT* constant = op_cur->uv.constant;
+              
+              constant->address = parser->constant_pool->length;
+              switch (constant->code) {
+                case SPerl_CONSTANT_C_CODE_BOOLEAN:
+                case SPerl_CONSTANT_C_CODE_SHORT:
+                case SPerl_CONSTANT_C_CODE_INT:
+                  SPerl_CONSTANT_POOL_push_int(parser->constant_pool, constant->uv.int_value);
+                  break;
+                case SPerl_CONSTANT_C_CODE_LONG:
+                  SPerl_CONSTANT_POOL_push_int(parser->constant_pool, constant->uv.long_value);
+                  break;
+                case SPerl_CONSTANT_C_CODE_FLOAT:
+                  SPerl_CONSTANT_POOL_push_float(parser->constant_pool, constant->uv.float_value);
+                  break;
+                case SPerl_CONSTANT_C_CODE_DOUBLE:
+                  SPerl_CONSTANT_POOL_push_double(parser->constant_pool, constant->uv.double_value);
+                  break;
+                case SPerl_CONSTANT_C_CODE_STRING:
+                  SPerl_CONSTANT_POOL_push_string(parser->constant_pool, constant->uv.string_value);
+                  break;
+              }
+              
               break;
             }
             // End of scope

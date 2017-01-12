@@ -219,7 +219,6 @@ SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my, SPerl_OP* op_var
 SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages);
 SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_package_name);
 SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_subname, SPerl_OP* op_terms, _Bool anon);
-void SPerl_OP_build_constant_pool(SPerl* sperl);
 SPerl_OP* SPerl_OP_newOP_LIST(SPerl* sperl, const char* file, uint32_t line);
 SPerl_OP* SPerl_OP_build_convert_type(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term);
 void SPerl_OP_resolve_op_convert_type(SPerl* sperl, SPerl_OP* op_convert_type);

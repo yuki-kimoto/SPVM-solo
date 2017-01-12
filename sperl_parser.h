@@ -41,9 +41,6 @@ struct SPerl_parser {
   // Current subs(named sub + anon sub) in class 
   SPerl_ARRAY* op_subs;
   
-  // Constant information
-  SPerl_ARRAY* op_constants;
-  
   // Constant pool
   SPerl_CONSTANT_POOL* constant_pool;
   

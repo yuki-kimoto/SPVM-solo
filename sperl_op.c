@@ -707,9 +707,6 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
     return NULL;
   }
   
-  // Build constant pool
-  SPerl_OP_build_constant_pool(sperl);
-  
   // Create bytecodes
   if (parser->error_count > 0) {
     return NULL;
@@ -717,39 +714,6 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
   SPerl_BYTECODE_BUILDER_build_bytecode_array(sperl);
   
   return op_grammar;
-}
-
-void SPerl_OP_build_constant_pool(SPerl* sperl) {
-  
-  SPerl_PARSER* parser = sperl->parser;
-  
-  // Set constant informations
-  SPerl_ARRAY* op_constants = parser->op_constants;
-  
-  // Create constant pool
-  for (int32_t constant_pos = 0; constant_pos < op_constants->length; constant_pos++) {
-    SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, constant_pos);
-    SPerl_CONSTANT* constant = op_constant->uv.constant;
-    
-    constant->address = parser->constant_pool->length;
-    switch (constant->code) {
-      case SPerl_CONSTANT_C_CODE_INT:
-        SPerl_CONSTANT_POOL_push_int(parser->constant_pool, constant->uv.int_value);
-        break;
-      case SPerl_CONSTANT_C_CODE_LONG:
-        SPerl_CONSTANT_POOL_push_int(parser->constant_pool, constant->uv.long_value);
-        break;
-      case SPerl_CONSTANT_C_CODE_FLOAT:
-        SPerl_CONSTANT_POOL_push_float(parser->constant_pool, constant->uv.float_value);
-        break;
-      case SPerl_CONSTANT_C_CODE_DOUBLE:
-        SPerl_CONSTANT_POOL_push_double(parser->constant_pool, constant->uv.double_value);
-        break;
-      case SPerl_CONSTANT_C_CODE_STRING:
-        SPerl_CONSTANT_POOL_push_string(parser->constant_pool, constant->uv.string_value);
-        break;
-    }
-  }
 }
 
 const char* SPerl_OP_create_abs_name(SPerl* sperl, const char* package_name, const char* base_name) {
