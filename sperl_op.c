@@ -431,10 +431,12 @@ void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op) {
   
   op->code = SPerl_OP_C_CODE_CONSTANT;
   SPerl_CONSTANT* constant_true = SPerl_CONSTANT_new(sperl);
-  constant_true->code = SPerl_CONSTANT_C_CODE_INT;
-  constant_true->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+  constant_true->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
+  constant_true->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
   constant_true->uv.int_value = 1;
   op->uv.constant = constant_true;
+  
+  SPerl_CONSTANT_POOL_push_constant(sperl->constant_pool, constant_true);
 }
 
 void SPerl_OP_convert_to_op_constant_false(SPerl* sperl, SPerl_OP* op) {
@@ -443,10 +445,12 @@ void SPerl_OP_convert_to_op_constant_false(SPerl* sperl, SPerl_OP* op) {
 
   op->code = SPerl_OP_C_CODE_CONSTANT;
   SPerl_CONSTANT* constant_false = SPerl_CONSTANT_new(sperl);
-  constant_false->code = SPerl_CONSTANT_C_CODE_INT;
+  constant_false->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
   constant_false->uv.int_value = 0;
-  constant_false->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+  constant_false->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
   op->uv.constant = constant_false;
+
+  SPerl_CONSTANT_POOL_push_constant(sperl->constant_pool, constant_false);
 }
 
 void SPerl_OP_convert_and_to_if(SPerl* sperl, SPerl_OP* op) {
