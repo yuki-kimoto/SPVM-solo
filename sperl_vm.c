@@ -842,6 +842,13 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         
         // Padding
         int32_t padding = 3 - (pc_machine_address % 4);
+
+        // default offset
+        int32_t default_offset
+          = (*(pc + padding + 1) << 24)
+          + (*(pc + padding + 2) << 16)
+          + (*(pc + padding + 3) << 8)
+          + *(pc + padding + 4);
         
         // min
         int32_t min
@@ -857,7 +864,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
           + (*(pc + padding + 11) << 8)
           + *(pc + padding + 12);
         
-        pc += 1 + padding + 12 + (max - min + 1) * 4;
+        pc += default_offset;
         
         continue;
       }
@@ -868,6 +875,13 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         
         // Padding
         int32_t padding = 3 - (pc_machine_address % 4);
+
+        // default offset
+        int32_t default_offset
+          = (*(pc + padding + 1) << 24)
+          + (*(pc + padding + 2) << 16)
+          + (*(pc + padding + 3) << 8)
+          + *(pc + padding + 4);
         
         // npare
         int32_t pair_count
@@ -876,12 +890,12 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
           + (*(pc + padding + 7) << 8)
           + *(pc + padding + 8);
         
-        pc += 1 + padding + 8 + pair_count * 8;
+        pc += default_offset;
         
         continue;
       }
       case SPerl_BYTECODE_C_CODE_IRETURN: {
-        /*
+
         // Save retrun value
         operand_stack[operand_stack_base + 1] = operand_stack[operand_stack_top];
         operand_stack_top = operand_stack_base;
@@ -902,10 +916,9 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         
         pc = &bytecodes[return_address];
         continue;
-        */
-        break;
       }
       case SPerl_BYTECODE_C_CODE_LRETURN: {
+        assert(0);
         frame_count--;
         if (frame_count == 0) {
           return;
@@ -914,6 +927,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_FRETURN: {
+        assert(0);
         frame_count--;
         if (frame_count == 0) {
           return;
@@ -922,6 +936,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_DRETURN: {
+        assert(0);
         frame_count--;
         if (frame_count == 0) {
           return;
@@ -930,6 +945,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_ARETURN: {
+        assert(0);
         frame_count--;
         if (frame_count == 0) {
           return;
@@ -938,7 +954,6 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
-        /*
         // Restore openrad stack top
         operand_stack_top = operand_stack_base;
         
@@ -958,8 +973,6 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         
         pc = &bytecodes[return_address];
         continue;
-        */
-        break;
       }
       case SPerl_BYTECODE_C_CODE_GETSTATIC:
         // Not used

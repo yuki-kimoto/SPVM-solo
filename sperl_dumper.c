@@ -310,8 +310,12 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       
       case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
         
+        // Machine address to culculate padding
+        uintptr_t pc_machine_address = (uintptr_t)&bytecode_array->values[i];
+        
         // Padding
-        int32_t padding = 3 - (i % 4);
+        int32_t padding = 3 - (pc_machine_address % 4);
+        
         for (int32_t j = 0; j < padding; j++) {
           i++;
           bytecode = bytecode_array->values[i];
@@ -355,8 +359,12 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       }
       case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
         
+        // Machine address to culculate padding
+        uintptr_t pc_machine_address = (uintptr_t)&bytecode_array->values[i];
+        
         // Padding
-        int32_t padding = 3 - (i % 4);
+        int32_t padding = 3 - (pc_machine_address % 4);
+        
         for (int32_t j = 0; j < padding; j++) {
           i++;
           bytecode = bytecode_array->values[i];

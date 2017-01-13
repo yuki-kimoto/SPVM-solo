@@ -180,6 +180,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_TABLESWITCH) {
                 int32_t padding = 3 - (cur_switch_machine_address % 4);
 
+                warn("BBBBBBB %d", padding);
+
                 // Default offset
                 int32_t default_offset;
                 if (cur_default_address == -1) {
