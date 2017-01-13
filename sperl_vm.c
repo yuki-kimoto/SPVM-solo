@@ -919,39 +919,95 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_LRETURN: {
-        assert(0);
-        frame_count--;
-        if (frame_count == 0) {
+        // Save retrun value
+        memcpy(&operand_stack[operand_stack_base + 1], &operand_stack[operand_stack_top], 8);
+        operand_stack_top = operand_stack_base;
+        
+        // Finish vm
+        if (call_stack_base == 0) {
           return;
         }
-        pc++;
+        
+        // Return address
+        int32_t return_address = call_stack[call_stack_base - 2];
+        
+        // Resotre call stack top
+        call_stack_next = call_stack_base - 2;
+        
+        // Resotre call stack base
+        call_stack_base = call_stack[call_stack_base - 1];
+        
+        pc = return_address;
+        
         continue;
       }
       case SPerl_BYTECODE_C_CODE_FRETURN: {
-        assert(0);
-        frame_count--;
-        if (frame_count == 0) {
+        // Save retrun value
+        *((float*)&operand_stack[operand_stack_base + 1]) = *((float*)&operand_stack[operand_stack_top]);
+        operand_stack_top = operand_stack_base;
+        
+        // Finish vm
+        if (call_stack_base == 0) {
           return;
         }
-        pc++;
+        
+        // Return address
+        int32_t return_address = call_stack[call_stack_base - 2];
+        
+        // Resotre call stack top
+        call_stack_next = call_stack_base - 2;
+        
+        // Resotre call stack base
+        call_stack_base = call_stack[call_stack_base - 1];
+        
+        pc = return_address;
+        
         continue;
       }
       case SPerl_BYTECODE_C_CODE_DRETURN: {
-        assert(0);
-        frame_count--;
-        if (frame_count == 0) {
+        // Save retrun value
+        memcpy(&operand_stack[operand_stack_base + 1], &operand_stack[operand_stack_top], 8);
+        operand_stack_top = operand_stack_base;
+        
+        // Finish vm
+        if (call_stack_base == 0) {
           return;
         }
-        pc++;
+        
+        // Return address
+        int32_t return_address = call_stack[call_stack_base - 2];
+        
+        // Resotre call stack top
+        call_stack_next = call_stack_base - 2;
+        
+        // Resotre call stack base
+        call_stack_base = call_stack[call_stack_base - 1];
+        
+        pc = return_address;
+        
         continue;
       }
       case SPerl_BYTECODE_C_CODE_ARETURN: {
-        assert(0);
-        frame_count--;
-        if (frame_count == 0) {
+        // Save retrun value
+        operand_stack[operand_stack_base + 1] = operand_stack[operand_stack_top];
+        operand_stack_top = operand_stack_base;
+        
+        // Finish vm
+        if (call_stack_base == 0) {
           return;
         }
-        pc++;
+        
+        // Return address
+        int32_t return_address = call_stack[call_stack_base - 2];
+        
+        // Resotre call stack top
+        call_stack_next = call_stack_base - 2;
+        
+        // Resotre call stack base
+        call_stack_base = call_stack[call_stack_base - 1];
+        
+        pc = return_address;
+        
         continue;
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
