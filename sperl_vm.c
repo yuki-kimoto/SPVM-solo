@@ -895,7 +895,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_IRETURN: {
-
+        
         // Save retrun value
         operand_stack[operand_stack_base + 1] = operand_stack[operand_stack_top];
         operand_stack_top = operand_stack_base;
@@ -914,7 +914,8 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         // Resotre call stack base
         call_stack_base = call_stack[call_stack_base - 1];
         
-        pc = &bytecodes[return_address];
+        pc = return_address;
+        
         continue;
       }
       case SPerl_BYTECODE_C_CODE_LRETURN: {
@@ -1064,16 +1065,14 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_CALLSUB:
       {
-        /*
-        
         // Save return address to call stack
-        call_stack[call_stack_next] = *(pc + 5);
+        call_stack[call_stack_next] = pc + 5;
         call_stack_next++;
         
         // Save before call stack base
         call_stack[call_stack_next] = call_stack_base;
         call_stack_next++;
-
+        
         // Update call stack base
         call_stack_base = call_stack_next;
         
@@ -1101,19 +1100,16 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         call_stack_next += sub->my_vars_size;
         
         // Prepare arguments
-        memcpy(&operand_stack[operand_stack_top - sub->sub_args_size + 1], &call_stack[call_stack_base], sub->sub_args_size);
-        operand_stack_top -= sub->sub_args_size;
+        memcpy(&operand_stack[operand_stack_top - sub->args_size + 1], &call_stack[call_stack_base], sub->args_size);
+        operand_stack_top -= sub->args_size;
         
         // Save operand stack base
         operand_stack_base = operand_stack_top;
         
         // Set program counter to next byte code
         pc = &bytecodes[sub->bytecode_base];
+        
         continue;
-        
-        */
-        
-        break;
       }
     }
     
