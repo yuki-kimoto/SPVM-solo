@@ -906,7 +906,6 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         break;
       }
       case SPerl_BYTECODE_C_CODE_LRETURN: {
-        
         frame_count--;
         if (frame_count == 0) {
           return;
@@ -915,7 +914,6 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_FRETURN: {
-        
         frame_count--;
         if (frame_count == 0) {
           return;
