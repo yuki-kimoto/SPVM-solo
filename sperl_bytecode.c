@@ -211,9 +211,4 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "JSR_W",
   "BREAKPOINT",
   "CALLSUB",
-  "LDC_WW",
-  "LDC2_WW",
-  "UNDEFINED",
-  "IMPDEP1",
-  "IMPDEP2",
 };

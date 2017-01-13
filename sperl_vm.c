@@ -1104,15 +1104,6 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
         
         break;
       }
-      case SPerl_BYTECODE_C_CODE_UNDEFINED:
-        pc++;
-        continue;
-      case SPerl_BYTECODE_C_CODE_IMPDEP1:
-        pc++;
-        continue;
-      case SPerl_BYTECODE_C_CODE_IMPDEP2:
-        pc++;
-        continue;
     }
     
     pc++;
