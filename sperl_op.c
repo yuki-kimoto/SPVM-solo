@@ -643,6 +643,11 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
   }
   
   name_info->resolved_name = sub_abs_name;
+  
+  // Add name information to constant_pool
+  name_info->constant_pool_address = sperl->constant_pool->length;
+  SPerl_CONSTANT_POOL_push_int(sperl->constant_pool, strlen(sub_abs_name));
+  SPerl_CONSTANT_POOL_push_string(sperl->constant_pool, sub_abs_name);
 }
 
 void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
@@ -655,6 +660,11 @@ void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
   field_abs_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
   
   name_info->resolved_name = field_abs_name;
+  
+  // Add name information to constant_pool
+  name_info->constant_pool_address = sperl->constant_pool->length;
+  SPerl_CONSTANT_POOL_push_int(sperl->constant_pool, strlen(field_abs_name));
+  SPerl_CONSTANT_POOL_push_string(sperl->constant_pool, field_abs_name);
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_field_name) {
