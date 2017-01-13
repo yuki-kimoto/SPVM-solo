@@ -2,7 +2,6 @@ use Test::EnumA;
 use Test::EnumB;
 use Test::EnumC;
 use Test::Foo;
-use Test::Foo::Point3D;
 use Test::Simple;
 
 package Test {

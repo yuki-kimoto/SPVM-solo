@@ -5,7 +5,13 @@ package Test::Simple {
   has y : int;
 
   has z : sub (int, int) int;
-  
+
+  has last : int;
+
+  has title : int;
+
+  sub last ($foo : int) : int { }
+
   sub get2 () : int {
     1;
     my $var1 : int;
@@ -16,4 +22,62 @@ package Test::Simple {
   sub get4 ($foo : int) : int {}
   sub get7 ($foo : int, $bar : int) : int {}
 
+  sub sum4 ($self : Test::Simple) : int {
+    
+    my $title : int;
+    my $title1 : double = 4.1567;
+   
+    my $title2 : int;
+    my $title3 : int;
+    my $title4 : int;
+    my $title5 : int = 1;
+    my $title6 : int;
+    my $title7 : int = 4;
+
+    # $title->();
+    # $title->(1);
+    # $title->(1, 2);
+    
+    my $test : int = 0;
+    ++$test;
+    $test++;
+
+    --$test;
+    $test--;
+
+    +$test;
+    -$test;
+    # +$test - -$test;
+        
+    1 + 2;
+
+    $title % $title;
+
+    $title ^ $title;
+
+    ~$title;
+
+    $title << 2;
+    $title >> 2;
+
+    $self->x;
+    $self->sum5();
+
+    Test::Simple::sum5($self);
+
+    $self->x = 3;
+    $self->last;
+
+    my $title8 : boolean = true;
+    my $title9 : boolean = false;
+
+    # sum();
+    # sum(1, 3, 5);
+
+    my $char : byte = 'a';
+  }
+  
+  sub sum5($self : Test::Simple) : int {
+    $self->x;
+  }
 }
