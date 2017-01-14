@@ -895,16 +895,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               // Check sub name
               SPerl_OP_resolve_sub_name(sperl, sub->op_package, op_cur);
               
-              const char* sub_abs_name = op_cur->uv.name_info->resolved_name;
+              const char* sub_name = op_cur->uv.name_info->resolved_name;
               
               SPerl_SUB* found_sub= SPerl_HASH_search(
-                parser->sub_abs_name_symtable,
-                sub_abs_name,
-                strlen(sub_abs_name)
+                parser->sub_name_symtable,
+                sub_name,
+                strlen(sub_name)
               );
               if (!found_sub) {
                 SPerl_yyerror_format(sperl, "unknown sub \"%s\" at %s line %d\n",
-                  sub_abs_name, op_cur->file, op_cur->line);
+                  sub_name, op_cur->file, op_cur->line);
               }
               
               break;
@@ -913,16 +913,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               // Check field name
               SPerl_OP_resolve_field_name(sperl, op_cur);
               
-              const char* field_abs_name = op_cur->uv.name_info->resolved_name;
+              const char* field_name = op_cur->uv.name_info->resolved_name;
               
               SPerl_FIELD* found_field= SPerl_HASH_search(
-                parser->field_abs_name_symtable,
-                field_abs_name,
-                strlen(field_abs_name)
+                parser->field_name_symtable,
+                field_name,
+                strlen(field_name)
               );
               if (!found_field) {
                 SPerl_yyerror_format(sperl, "unknown field \"%s\" at %s line %d\n",
-                  field_abs_name, op_cur->file, op_cur->line);
+                  field_name, op_cur->file, op_cur->line);
                 parser->fatal_error = 1;
               }
               

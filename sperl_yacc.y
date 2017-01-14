@@ -21,7 +21,7 @@
 %type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub call_op
 %type <opval> opt_terms terms term args arg opt_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> decl_enumeration_values decl_enumeration_value decl_anon_sub
-%type <opval> type package_name field_name sub_name decl_package decl_things_in_grammar opt_decl_enumeration_values type_array
+%type <opval> type package_name field_base_name sub_base_name decl_package decl_things_in_grammar opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar type_sub types not_type_sub opt_term throw_exception
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_name array_length logical_op decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement
@@ -242,13 +242,13 @@ decl_use
 
 
 decl_field
-  : HAS field_name ':' type ';'
+  : HAS field_base_name ':' type ';'
     {
       $$ = SPerl_OP_build_decl_field(sperl, $1, $2, $4);
     }
 
 decl_sub
- : SUB sub_name '(' opt_args ')' ':' type block
+ : SUB sub_base_name '(' opt_args ')' ':' type block
      {
        $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $7, $8);
      }
@@ -399,7 +399,7 @@ convert_type
     }
 
 field
-  : VAR ARROW field_name
+  : VAR ARROW field_base_name
     {
       $$ = SPerl_OP_build_field(sperl, $1, $3);
     }
@@ -516,11 +516,11 @@ array_elem
     }
 
 call_sub
-  : sub_name '(' opt_terms  ')'
+  : sub_base_name '(' opt_terms  ')'
     {
       $$ = SPerl_OP_build_call_sub(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $1, $3, 0);
     }
-  | VAR ARROW sub_name '(' opt_terms ')'
+  | VAR ARROW sub_base_name '(' opt_terms ')'
     {
       $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5, 0);
     }
@@ -616,8 +616,8 @@ type_array
       $$ = SPerl_OP_build_type_array(sperl, $2, $5);
     }
 
-field_name : NAME
-sub_name : NAME
+field_base_name : NAME
+sub_base_name : NAME
 package_name : NAME
 
 %%

@@ -6,7 +6,7 @@
 // Method information
 struct SPerl_sub {
   SPerl_OP* op_package;
-  SPerl_OP* op_name;
+  SPerl_OP* op_base_name;
   SPerl_OP* op_return_type;
   SPerl_ARRAY* op_args;
   int32_t args_size;

@@ -20,11 +20,11 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   return SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
 }
 
-void SPerl_VM_run(SPerl* sperl, const char* sub_name) {
+void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
   
   // Subroutine
   SPerl_PARSER* parser = sperl->parser;
-  SPerl_SUB* sub = SPerl_HASH_search(parser->sub_abs_name_symtable, sub_name, strlen(sub_name));
+  SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
   
   // Constant pool
   int32_t* constant_pool = sperl->constant_pool->values;
