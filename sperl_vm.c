@@ -850,6 +850,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
           + (*(pc + padding + 3) << 8)
           + *(pc + padding + 4);
         
+        /*
         // min
         int32_t min
           = (*(pc + padding + 5) << 24)
@@ -863,6 +864,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
           + (*(pc + padding + 10) << 16)
           + (*(pc + padding + 11) << 8)
           + *(pc + padding + 12);
+        */
         
         pc += default_offset;
         
@@ -883,12 +885,14 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
           + (*(pc + padding + 3) << 8)
           + *(pc + padding + 4);
         
+        /*
         // npare
         int32_t pair_count
           = (*(pc + padding + 5) << 24)
           + (*(pc + padding + 6) << 16)
           + (*(pc + padding + 7) << 8)
           + *(pc + padding + 8);
+        */
         
         pc += default_offset;
         
