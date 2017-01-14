@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "sperl_constant_pool.h"
 #include "sperl_constant.h"
@@ -54,8 +55,8 @@ void SPerl_CONSTANT_POOL_push_constant(SPerl_CONSTANT_POOL* constant_pool, SPerl
 void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
   int32_t length = constant_pool->length;
   
+  // Add int value
   SPerl_CONSTANT_POOL_extend(constant_pool, 1);
-  
   constant_pool->values[length] = value;
   constant_pool->length++;
 }
@@ -63,8 +64,14 @@ void SPerl_CONSTANT_POOL_push_int(SPerl_CONSTANT_POOL* constant_pool, int32_t va
 void SPerl_CONSTANT_POOL_push_long(SPerl_CONSTANT_POOL* constant_pool, int64_t value) {
   int32_t length = constant_pool->length;
   
-  SPerl_CONSTANT_POOL_extend(constant_pool, 2);
+  // Adjust alignment
+  if ((intptr_t)&constant_pool->values[length] % 8 != 0) {
+    SPerl_CONSTANT_POOL_push_int(constant_pool, 0);
+  }
+  assert((intptr_t)&constant_pool->values[constant_pool->length] % 8 == 0);
   
+  // Add long value
+  SPerl_CONSTANT_POOL_extend(constant_pool, 2);
   *(int64_t*)&constant_pool->values[length] = value;
   constant_pool->length += 2;
 }
@@ -72,8 +79,8 @@ void SPerl_CONSTANT_POOL_push_long(SPerl_CONSTANT_POOL* constant_pool, int64_t v
 void SPerl_CONSTANT_POOL_push_float(SPerl_CONSTANT_POOL* constant_pool, float value) {
   int32_t length = constant_pool->length;
   
+  // Add float value
   SPerl_CONSTANT_POOL_extend(constant_pool, 1);
-  
   *(float*)&constant_pool->values[length] = value;
   constant_pool->length++;
 }
@@ -81,8 +88,14 @@ void SPerl_CONSTANT_POOL_push_float(SPerl_CONSTANT_POOL* constant_pool, float va
 void SPerl_CONSTANT_POOL_push_double(SPerl_CONSTANT_POOL* constant_pool, double value) {
   int32_t length = constant_pool->length;
   
-  SPerl_CONSTANT_POOL_extend(constant_pool, 2);
+  // Adjust alignment
+  if ((intptr_t)&constant_pool->values[length] % 8 != 0) {
+    SPerl_CONSTANT_POOL_push_int(constant_pool, 0);
+  }
+  assert((intptr_t)&constant_pool->values[constant_pool->length] % 8 == 0);
   
+  // Add double value
+  SPerl_CONSTANT_POOL_extend(constant_pool, 2);
   *(double*)&constant_pool->values[length] = value;
   constant_pool->length += 2;
 }
@@ -93,18 +106,18 @@ void SPerl_CONSTANT_POOL_push_string(SPerl_CONSTANT_POOL* constant_pool, const c
   int32_t string_length = strlen(string);
   int32_t real_string_length = string_length + 1;
   
-  int32_t constant_pool_string_length;
+  // Calculate constant pool size
+  int32_t constant_pool_size;
   if (real_string_length % 4 == 0) {
-    constant_pool_string_length = real_string_length / 4;
+    constant_pool_size = real_string_length / 4;
   }
   else {
-    constant_pool_string_length = (real_string_length / 4) + 1;
+    constant_pool_size = (real_string_length / 4) + 1;
   }
   
-  SPerl_CONSTANT_POOL_extend(constant_pool, constant_pool_string_length);
-  
+  SPerl_CONSTANT_POOL_extend(constant_pool, constant_pool_size);
   memcpy(&constant_pool->values[length], string, string_length + 1);
-  constant_pool->length += constant_pool_string_length;
+  constant_pool->length += constant_pool_size;
 }
 
 void SPerl_CONSTANT_POOL_free(SPerl_CONSTANT_POOL* constant_pool) {
