@@ -410,7 +410,9 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
       SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, abs_name, strlen(abs_name));
-      resolved_type = sub->op_return_type->uv.type->resolved_type;
+      if (!sub->is_core) {
+        resolved_type = sub->op_return_type->uv.type->resolved_type;
+      }
       break;
     }
     case SPerl_OP_C_CODE_FIELD: {
