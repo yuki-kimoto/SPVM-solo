@@ -82,8 +82,6 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
     call_stack_next += sub->my_vars_size;
   }
   
-  int32_t frame_count = 1;
-  
   while (1) {
     switch (*pc) {
       case SPerl_BYTECODE_C_CODE_NOP:
@@ -838,7 +836,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
         
         // Machine address to culculate padding
-        uintptr_t pc_machine_address = (uintptr_t)pc;
+        intptr_t pc_machine_address = (intptr_t)pc;
         
         // Padding
         int32_t padding = 3 - (pc_machine_address % 4);
@@ -873,7 +871,7 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
         
         // Machine address to culculate padding
-        uintptr_t pc_machine_address = (uintptr_t)pc;
+        intptr_t pc_machine_address = (intptr_t)pc;
         
         // Padding
         int32_t padding = 3 - (pc_machine_address % 4);
