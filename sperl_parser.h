@@ -57,7 +57,7 @@ struct SPerl_parser {
   SPerl_HASH* use_package_symtable;
   
   // Constant string table
-  SPerl_HASH* constant_string_symtable;
+  SPerl_HASH* constant_utf8_symtable;
   
   // Types
   SPerl_ARRAY* op_types;

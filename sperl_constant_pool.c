@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "sperl.h"
+#include "sperl_parser.h"
 #include "sperl_constant_pool.h"
 #include "sperl_constant.h"
+#include "sperl_hash.h"
 
 SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   (void)sperl;
@@ -112,26 +115,45 @@ void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   constant_pool->length += 2;
 }
 
-void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, const char* string) {
-  (void)sperl;
+void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, const char* utf8) {
   
-  int32_t length = constant_pool->length;
+  SPerl_HASH* constant_utf8_symtable = sperl->parser->constant_utf8_symtable;
   
-  int32_t string_length = strlen(string);
-  int32_t real_string_length = string_length + 1;
+  SPerl_CONSTANT* found_constant_utf8 = SPerl_HASH_search(constant_utf8_symtable, utf8, strlen(utf8));
   
-  // Calculate constant pool size
-  int32_t constant_pool_size;
-  if (real_string_length % 4 == 0) {
-    constant_pool_size = real_string_length / 4;
+  // Already exists
+  if (found_constant_utf8) {
+    // Add string
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, found_constant_utf8->address);
   }
   else {
-    constant_pool_size = (real_string_length / 4) + 1;
+    int32_t length = constant_pool->length;
+    
+    // Create constant utf8
+    SPerl_CONSTANT* new_constant_utf8 = SPerl_CONSTANT_new(sperl);
+    new_constant_utf8->code = SPerl_CONSTANT_C_CODE_UTF8;
+    new_constant_utf8->address = length;
+    SPerl_HASH_insert(constant_utf8_symtable, utf8, strlen(utf8), new_constant_utf8);
+    
+    int32_t utf8_length = strlen(utf8);
+    int32_t real_utf8_length = utf8_length + 1;
+    
+    // Calculate constant pool size
+    int32_t constant_pool_size;
+    if (real_utf8_length % 4 == 0) {
+      constant_pool_size = real_utf8_length / 4;
+    }
+    else {
+      constant_pool_size = (real_utf8_length / 4) + 1;
+    }
+    
+    SPerl_CONSTANT_POOL_extend(sperl, constant_pool, constant_pool_size);
+    memcpy(&constant_pool->values[length], utf8, utf8_length + 1);
+    constant_pool->length += constant_pool_size;
+    
+    // Add string
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, new_constant_utf8->address);
   }
-  
-  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, constant_pool_size);
-  memcpy(&constant_pool->values[length], string, string_length + 1);
-  constant_pool->length += constant_pool_size;
 }
 
 void SPerl_CONSTANT_POOL_free(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool) {
