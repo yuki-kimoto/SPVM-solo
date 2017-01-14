@@ -425,6 +425,10 @@ void SPerl_DUMPER_dump_constant(SPerl* sperl, SPerl_CONSTANT* constant) {
 
 void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
   if (sub) {
+    if (sub->is_core) {
+      return;
+    }
+    
     printf("    package_name => \"%s\"\n", sub->op_package->uv.package->op_name->uv.name);
     if (sub->anon) {
       printf("    name => (NONE)\n");

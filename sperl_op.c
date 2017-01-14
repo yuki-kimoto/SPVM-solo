@@ -817,7 +817,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         break;
       }
       
-      if (!sub->anon) {
+      if (!sub->anon  & !sub->is_core) {
         SPerl_OP* op_sub_base_name = sub->op_base_name;
         const char* sub_base_name = op_sub_base_name->uv.name;
         const char* sub_name = SPerl_OP_create_abs_name(sperl, package_name, sub_base_name);

@@ -16,6 +16,11 @@
 #include "sperl_array.h"
 #include "sperl_use.h"
 #include "sperl_bytecode_array.h"
+#include "sperl_sub.h"
+
+void SPerl_print(int32_t* call_stack, int32_t* operand_stack) {
+  warn("AAAAA");
+}
 
 SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   SPerl_PARSER* parser = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_PARSER));
@@ -110,6 +115,19 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     SPerl_ARRAY_push(parser->resolved_types, resolved_type);
     SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
+  
+  // Core sub
+  SPerl_OP* op_package = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_PACKAGE, "CORE", 1);
+  SPerl_PACKAGE* package = SPerl_PACKAGE_new(sperl);
+  SPerl_OP* op_sub = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_SUB, "CORE", 1);
+  SPerl_SUB* sub = SPerl_SUB_new(sperl);
+  op_sub->uv.sub = sub;
+  sub->id = 0;
+  sub->is_native = 1;
+  sub->is_core = 1;
+  sub->native_address = &SPerl_print;
+  SPerl_ARRAY_push(parser->op_subs, op_sub);
+  SPerl_HASH_insert(parser->sub_name_symtable, "CORE::print", strlen("CORE::print"), sub);
   
   return parser;
 }

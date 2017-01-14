@@ -38,6 +38,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
   for (int32_t sub_pos = 0; sub_pos < parser->op_subs->length; sub_pos++) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_pos);
     SPerl_SUB* sub = op_sub->uv.sub;
+    
+    if (sub->is_core) {
+      continue;
+    }
       
     // my var informations
     SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_new_array(sperl, 0);

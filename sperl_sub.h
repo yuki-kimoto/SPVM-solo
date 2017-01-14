@@ -23,6 +23,7 @@ struct SPerl_sub {
   int32_t constant_pool_address;
   _Bool anon;
   _Bool is_native;
+  _Bool is_core;
 };
 
 SPerl_SUB* SPerl_SUB_new(SPerl* sperl);
