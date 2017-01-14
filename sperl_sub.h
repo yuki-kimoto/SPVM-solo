@@ -20,6 +20,7 @@ struct SPerl_sub {
   int32_t operand_stack_max;
   int32_t constant_pool_base;
   int32_t constant_pool_length;
+  int32_t constant_pool_address;
 };
 
 SPerl_SUB* SPerl_SUB_new(SPerl* sperl);
