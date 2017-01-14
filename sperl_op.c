@@ -436,7 +436,7 @@ void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op) {
   constant_true->uv.int_value = 1;
   op->uv.constant = constant_true;
   
-  SPerl_CONSTANT_POOL_push_constant(sperl->constant_pool, constant_true);
+  SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant_true);
 }
 
 void SPerl_OP_convert_to_op_constant_false(SPerl* sperl, SPerl_OP* op) {
@@ -450,7 +450,7 @@ void SPerl_OP_convert_to_op_constant_false(SPerl* sperl, SPerl_OP* op) {
   constant_false->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
   op->uv.constant = constant_false;
 
-  SPerl_CONSTANT_POOL_push_constant(sperl->constant_pool, constant_false);
+  SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant_false);
 }
 
 void SPerl_OP_convert_and_to_if(SPerl* sperl, SPerl_OP* op) {
@@ -646,8 +646,8 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
   
   // Add name information to constant_pool
   name_info->constant_pool_address = sperl->constant_pool->length;
-  SPerl_CONSTANT_POOL_push_int(sperl->constant_pool, strlen(sub_name));
-  SPerl_CONSTANT_POOL_push_string(sperl->constant_pool, sub_name);
+  SPerl_CONSTANT_POOL_push_int(sperl, sperl->constant_pool, strlen(sub_name));
+  SPerl_CONSTANT_POOL_push_string(sperl, sperl->constant_pool, sub_name);
 }
 
 void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
@@ -663,8 +663,8 @@ void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
   
   // Add name information to constant_pool
   name_info->constant_pool_address = sperl->constant_pool->length;
-  SPerl_CONSTANT_POOL_push_int(sperl->constant_pool, strlen(field_name));
-  SPerl_CONSTANT_POOL_push_string(sperl->constant_pool, field_name);
+  SPerl_CONSTANT_POOL_push_int(sperl, sperl->constant_pool, strlen(field_name));
+  SPerl_CONSTANT_POOL_push_string(sperl, sperl->constant_pool, field_name);
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_field_base_name) {

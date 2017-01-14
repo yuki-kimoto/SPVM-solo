@@ -23,7 +23,7 @@ SPerl* SPerl_new() {
   sperl->parser = SPerl_PARSER_new(sperl);
   
   // Constant pool
-  sperl->constant_pool = SPerl_CONSTANT_POOL_new();
+  sperl->constant_pool = SPerl_CONSTANT_POOL_new(sperl);
   
   // Bytecodes
   sperl->bytecode_array = SPerl_BYTECODE_ARRAY_new(sperl, 0);
