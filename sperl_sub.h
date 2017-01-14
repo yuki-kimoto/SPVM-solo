@@ -11,6 +11,7 @@ struct SPerl_sub {
   SPerl_OP* op_block;
   SPerl_ARRAY* op_args;
   SPerl_ARRAY* op_my_vars;
+  void* native_address;
   int32_t args_size;
   int32_t my_vars_size;
   int32_t id;
