@@ -1165,8 +1165,13 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
         operand_stack_base = operand_stack_top;
         
         // Set program counter to next byte code
-        pc = sub->bytecode_base;
-        
+        if (sub->is_native) {
+          (*sub->native_address)(&call_stack[call_stack_base], &operand_stack[operand_stack_base]);
+          pc++;
+        }
+        else {
+          pc = sub->bytecode_base;
+        }
         continue;
       }
     }

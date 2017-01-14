@@ -125,7 +125,8 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   sub->id = 0;
   sub->is_native = 1;
   sub->is_core = 1;
-  sub->native_address = &SPerl_print;
+  void (*native_address)(int32_t* call_stack, int32_t* operand_stack) = SPerl_print;
+  sub->native_address = native_address;
   SPerl_ARRAY_push(parser->op_subs, op_sub);
   SPerl_HASH_insert(parser->sub_name_symtable, "CORE::print", strlen("CORE::print"), sub);
   
