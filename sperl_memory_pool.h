@@ -4,8 +4,8 @@
 #include "sperl_base.h"
 
 struct SPerl_memory_pool {
-  int32_t base_capacity;
   SPerl_MEMORY_POOL_PAGE* page;
+  int32_t base_capacity;
   int32_t page_depth;
   int32_t current_pos;
 };

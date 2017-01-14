@@ -17,7 +17,7 @@ enum {
 extern const char* const SPerl_CONSTANT_C_CODE_NAMES[];
 
 struct SPerl_constant {
-  int32_t code;
+  SPerl_RESOLVED_TYPE* resolved_type;
   union {
     int32_t int_value;
     int64_t long_value;
@@ -25,7 +25,7 @@ struct SPerl_constant {
     double double_value;
     const char* string_value;
   } uv;
-  SPerl_RESOLVED_TYPE* resolved_type;
+  int32_t code;
   int32_t address;
 };
 

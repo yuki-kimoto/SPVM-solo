@@ -13,21 +13,12 @@ struct SPerl_parser {
   // Current buffer position
   const char* bufptr;
   
-  // Expect next token type
-  int32_t expect;
-
   // Current file name
   const char* cur_module_path;
   
   // Source data
   const char* cur_src;
-  
-  // Current line number
-  int32_t cur_line;
-  
-  // Syntax error count
-  int32_t error_count;
-  
+
   // AST grammar
   SPerl_OP* op_grammar;
   
@@ -43,10 +34,7 @@ struct SPerl_parser {
   
   // Include pathes
   SPerl_ARRAY* include_pathes;
-  
-  // Current package count
-  int32_t current_package_count;
-  
+
   // Method absolute name symbol table
   SPerl_HASH* sub_name_symtable;
   
@@ -67,15 +55,27 @@ struct SPerl_parser {
   
   // Resolved type string symbol table
   SPerl_HASH* resolved_type_symtable;
-  
-  // Error is fatal
-  _Bool fatal_error;
-  
+
   // Current case statements in switch statement
   SPerl_ARRAY* cur_op_cases;
   
   // Entry point subroutine
   const char* entry_point;
+
+  // Expect next token type
+  int32_t expect;
+  
+  // Current line number
+  int32_t cur_line;
+  
+  // Syntax error count
+  int32_t error_count;
+  
+  // Current package count
+  int32_t current_package_count;
+  
+  // Error is fatal
+  _Bool fatal_error;
 };
 
 SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl);

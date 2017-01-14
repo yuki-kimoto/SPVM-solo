@@ -11,10 +11,10 @@ enum {
 };
 
 struct SPerl_name_info {
-  uint8_t code;
   SPerl_OP* op_var;
   SPerl_OP* op_name;
   const char* resolved_name;
+  int32_t code;
   int32_t constant_pool_address;
 };
 

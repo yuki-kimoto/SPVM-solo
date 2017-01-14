@@ -147,16 +147,10 @@ enum {
 
 /* Binary operation */
 struct SPerl_op {
-  int32_t code;
-  int32_t flag;
   SPerl_OP* first;
   SPerl_OP* last;
   SPerl_OP* sibparent;
   const char* file;
-  int32_t line;
-  _Bool moresib;
-  _Bool lvalue;
-  _Bool condition;
   union {
     const char* name;
     SPerl_MY_VAR* my_var;
@@ -171,6 +165,12 @@ struct SPerl_op {
     SPerl_ENUMERATION* enumeration;
     SPerl_SWITCH_INFO* switch_info;
   } uv;
+  int32_t code;
+  int32_t flag;
+  int32_t line;
+  _Bool moresib;
+  _Bool lvalue;
+  _Bool condition;
 };
 
 void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op);

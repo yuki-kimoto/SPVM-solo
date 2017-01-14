@@ -6,8 +6,8 @@
 struct SPerl_package {
   SPerl_OP* op_name;
   SPerl_OP* op_type;
-  int32_t size;
   SPerl_ARRAY* op_fields;
+  int32_t size;
 };
 
 SPerl_PACKAGE* SPerl_PACKAGE_new(SPerl* sperl);

@@ -12,11 +12,11 @@ enum {
 extern const char* const SPerl_TYPE_PART_C_CODE_NAMES[];
 
 struct SPerl_type_part {
-  int32_t code;
   union {
     SPerl_OP* op_name;
     const char* char_name;
   } uv;
+  int32_t code;
 };
 
 SPerl_TYPE_PART* SPerl_TYPE_PART_new(SPerl* sperl);

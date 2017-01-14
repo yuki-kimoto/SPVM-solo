@@ -5,9 +5,9 @@
 
 // Array
 struct SPerl_bytecode_array {
+  uint8_t* values;
   int32_t length;
   int32_t capacity;
-  uint8_t* values;
 };
 
 // Array function
