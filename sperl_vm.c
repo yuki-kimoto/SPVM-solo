@@ -697,8 +697,8 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_IINC:
-        operand_stack[operand_stack_top]++;
-        pc++;
+        call_stack[call_stack_base + *(pc + 1)] += (int32_t)*(pc + 2);
+        pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_I2L:
         operand_stack_top++;
@@ -1169,6 +1169,6 @@ void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
       }
     }
     
-    pc++;
+    assert(0);
   }
 }

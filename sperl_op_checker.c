@@ -1050,5 +1050,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     if (sub->constant_pool_length > 0xFFFF) {
       SPerl_yyerror_format(sperl, "Constant pool max size is 65,535\n", op_cur->file, op_cur->line);
     }
+    
+    // 
   }
 }
