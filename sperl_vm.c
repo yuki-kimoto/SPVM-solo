@@ -1147,7 +1147,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Subroutine
         SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_id);
-        SPerl_SUB* sub = op_sub->uv.sub;
+        sub = op_sub->uv.sub;
         
         CALLSUB:
         
