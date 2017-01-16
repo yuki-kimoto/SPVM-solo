@@ -210,6 +210,8 @@ package Test {
     sum1(1, 2);
     
     test1();
+    
+    return 0;
   }
   
   sub test1 () : int {
@@ -219,7 +221,7 @@ package Test {
     my $num3 = 4;
     my $num4 = 5;
     
-    return 1;
+    return 0;
   }
   
   sub sum1 ($num1 : int, $num2 : int) : int {
@@ -262,7 +264,7 @@ package Test {
       
     }
     
-    return 1;
+    return 0;
   }
 
 }

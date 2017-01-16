@@ -928,6 +928,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_LRETURN: {
+        assert(0);
+        
         // Save retrun value
         memcpy(&operand_stack[vm->operand_stack_bottom + 1], &operand_stack[operand_stack_top], 8);
         operand_stack_top = vm->operand_stack_bottom;
@@ -951,6 +953,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_FRETURN: {
+        assert(0);
+        
         // Save retrun value
         *((float*)&operand_stack[vm->operand_stack_bottom + 1]) = *((float*)&operand_stack[operand_stack_top]);
         operand_stack_top = vm->operand_stack_bottom;
@@ -974,6 +978,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_DRETURN: {
+        assert(0);
+        
         // Save retrun value
         memcpy(&operand_stack[vm->operand_stack_bottom + 1], &operand_stack[operand_stack_top], 8);
         operand_stack_top = vm->operand_stack_bottom;
@@ -997,6 +1003,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_ARETURN: {
+        assert(0);
+        
         // Save retrun value
         operand_stack[vm->operand_stack_bottom + 1] = operand_stack[operand_stack_top];
         operand_stack_top = vm->operand_stack_bottom;
@@ -1020,6 +1028,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
+        assert(0);
+        
         // Restore openrad stack top
         operand_stack_top = vm->operand_stack_bottom;
         
