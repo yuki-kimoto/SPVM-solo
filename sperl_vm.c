@@ -59,8 +59,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   int32_t* constant_pool = sperl->constant_pool->values;
   
   // Bytecode
-  SPerl_BYTECODE_ARRAY* bytecode_array = sperl->bytecode_array;
-  uint8_t* bytecodes = bytecode_array->values;
+  uint8_t* bytecodes = sperl->bytecode_array->values;
   
   // Operand stack
   int32_t* operand_stack = vm->operand_stack;
@@ -1154,8 +1153,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_id);
         SPerl_SUB* sub = op_sub->uv.sub;
         
+        // Save operand stack top before calling subroutine
+        vm->operand_stack_top = operand_stack_top;
+        
         // Extend operand stack if need
-        while (operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
+        while (vm->operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
           vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
           operand_stack = realloc(operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
         }
@@ -1168,11 +1170,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         vm->call_stack_next += sub->my_vars_size;
         
         // Prepare arguments
-        memcpy(&operand_stack[operand_stack_top - sub->args_size + 1], &call_stack[call_stack_base], sub->args_size);
-        operand_stack_top -= sub->args_size;
+        memcpy(&operand_stack[vm->operand_stack_top - sub->args_size + 1], &call_stack[call_stack_base], sub->args_size);
+        vm->operand_stack_top -= sub->args_size;
         
         // Save operand stack base
-        vm->operand_stack_base = operand_stack_top;
+        vm->operand_stack_base = vm->operand_stack_top;
         
         // Set program counter to next byte code
         if (sub->is_native) {
