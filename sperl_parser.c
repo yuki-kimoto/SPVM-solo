@@ -18,7 +18,7 @@
 #include "sperl_bytecode_array.h"
 #include "sperl_sub.h"
 
-void SPerl_print(int32_t* call_stack, int32_t* operand_stack) {
+void SPerl_print(SPerl_VM* vm) {
   warn("AAAAA");
 }
 
