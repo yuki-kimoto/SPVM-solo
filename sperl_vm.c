@@ -1168,7 +1168,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
 
         // Prepare arguments
-        memcpy(&vm->operand_stack[vm->operand_stack_top - sub->args_size + 1], &call_stack[call_stack_base], sub->args_size);
+        memcpy(&call_stack[call_stack_base], &vm->operand_stack[vm->operand_stack_top - sub->args_size + 1], sub->args_size * 4);
         vm->operand_stack_top -= sub->args_size;
         
         // Save operand stack base
