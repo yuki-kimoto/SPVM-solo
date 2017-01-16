@@ -24,52 +24,12 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   
   // Operand stack
   vm->operand_stack = malloc(sizeof(int32_t) * vm->operand_stack_capacity);
-
-  // Capacity of call stack
-  vm->call_stack_capacity = 255;
-  
-  // Operand stack
-  vm->call_stack = malloc(sizeof(int32_t) * vm->call_stack_capacity);
-  
-  vm->call_stack_next = 0;
   
   vm->operand_stack_top = -1;
   
   vm->operand_stack_base = -1;
   
   return vm;
-}
-
-SPerl_VM* SPerl_VM_extend_call_stack(SPerl* sperl, SPerl_VM* vm, int32_t extend) {
-  
-  // Extend call stack(lexical variable area + return address + before call_stack_base)
-  while (vm->call_stack_next + extend + 2 > vm->call_stack_capacity) {
-    vm->call_stack_capacity = vm->call_stack_capacity * 2;
-    vm->call_stack = realloc(vm->call_stack, sizeof(int32_t) * vm->call_stack_capacity);
-  }
-}
-
-SPerl_VM* SPerl_VM_prepare_call_sub(SPerl* sperl, SPerl_VM* vm, SPerl_SUB* sub) {
-  
-  // Extend operand stack if need
-  while (vm->operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
-    vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
-    vm->operand_stack = realloc(vm->operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
-  }
-
-  // Extend call stack
-  SPerl_VM_extend_call_stack(sperl, vm, sub->my_vars_size);
-
-  // Push lexical variable area
-  memset(&vm->call_stack[vm->call_stack_next], 0, sub->my_vars_size * 4);
-  vm->call_stack_next += sub->my_vars_size;
-
-  // Prepare arguments
-  memcpy(&vm->operand_stack[vm->operand_stack_top - sub->args_size + 1], &vm->call_stack[vm->call_stack_base], sub->args_size);
-  vm->operand_stack_top -= sub->args_size;
-
-  // Save operand stack base
-  vm->operand_stack_base = vm->operand_stack_top;
 }
 
 void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
@@ -87,12 +47,14 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Operand stack
   int32_t* operand_stack = vm->operand_stack;
 
-  // Call stack
-  int32_t* call_stack = vm->call_stack;
+  int32_t call_stack_capacity = 255;
 
+  // Call stack
+  int32_t* call_stack = malloc(sizeof(int32_t) * call_stack_capacity);
+  
   // Constant pool base
   int32_t constant_pool_base = sub->constant_pool_base;
-
+  
   // Program counter
   register int32_t pc = sub->bytecode_base;
   
@@ -102,6 +64,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Base position of call stack
   register int32_t call_stack_base = 0;
   
+  int32_t call_stack_next = 0;
+  
+  // Capacity of call stack
+  
   // Prepare call subroutine
   {
     // Extend operand stack
@@ -110,11 +76,15 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       operand_stack = realloc(operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
     }
 
-    SPerl_VM_extend_call_stack(sperl, vm, sub->my_vars_size);
+    // Extend call stack(lexical variable area + return address + before call_stack_base)
+    while (call_stack_next + sub->my_vars_size > call_stack_capacity) {
+      call_stack_capacity = call_stack_capacity * 2;
+      call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
+    }
     
     // Push lexical variable area
-    memset(&call_stack[vm->call_stack_next], 0, sub->my_vars_size * 4);
-    vm->call_stack_next += sub->my_vars_size;
+    memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
+    call_stack_next += sub->my_vars_size;
   }
   
   while (1) {
@@ -948,7 +918,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         int32_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
-        vm->call_stack_next = call_stack_base - 2;
+        call_stack_next = call_stack_base - 2;
         
         // Resotre call stack base
         call_stack_base = call_stack[call_stack_base - 1];
@@ -971,7 +941,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         int32_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
-        vm->call_stack_next = call_stack_base - 2;
+        call_stack_next = call_stack_base - 2;
         
         // Resotre call stack base
         call_stack_base = call_stack[call_stack_base - 1];
@@ -994,7 +964,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         int32_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
-        vm->call_stack_next = call_stack_base - 2;
+        call_stack_next = call_stack_base - 2;
         
         // Resotre call stack base
         call_stack_base = call_stack[call_stack_base - 1];
@@ -1017,7 +987,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         int32_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
-        vm->call_stack_next = call_stack_base - 2;
+        call_stack_next = call_stack_base - 2;
         
         // Resotre call stack base
         call_stack_base = call_stack[call_stack_base - 1];
@@ -1040,7 +1010,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         int32_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
-        vm->call_stack_next = call_stack_base - 2;
+        call_stack_next = call_stack_base - 2;
         
         // Resotre call stack base
         call_stack_base = call_stack[call_stack_base - 1];
@@ -1062,7 +1032,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         int32_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
-        vm->call_stack_next = call_stack_base - 2;
+        call_stack_next = call_stack_base - 2;
         
         // Resotre call stack base
         call_stack_base = call_stack[call_stack_base - 1];
@@ -1161,12 +1131,12 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_CALLSUB:
       {
         // Save return address to call stack
-        call_stack[vm->call_stack_next] = pc + 5;
-        vm->call_stack_next++;
+        call_stack[call_stack_next] = pc + 5;
+        call_stack_next++;
         
         // Save before call stack base
-        call_stack[vm->call_stack_next] = call_stack_base;
-        vm->call_stack_next++;
+        call_stack[call_stack_next] = call_stack_base;
+        call_stack_next++;
         
         // Get subroutine ID
         int32_t sub_id = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
@@ -1176,12 +1146,27 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         SPerl_SUB* sub = op_sub->uv.sub;
 
         // Update call stack base
-        call_stack_base = vm->call_stack_next;
+        call_stack_base = call_stack_next;
         
         // Prepare calling subroutine
         vm->operand_stack_top = operand_stack_top;
-        vm->call_stack_base = call_stack_base;
-        SPerl_VM* SPerl_VM_prepare_call_sub(sperl, vm, sub);
+        
+        // Extend operand stack if need
+        while (vm->operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
+          vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
+          vm->operand_stack = realloc(vm->operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
+        }
+        
+        // Push lexical variable area
+        memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
+        call_stack_next += sub->my_vars_size;
+        
+        // Prepare arguments
+        memcpy(&vm->operand_stack[vm->operand_stack_top - sub->args_size + 1], &call_stack[call_stack_base], sub->args_size);
+        vm->operand_stack_top -= sub->args_size;
+        
+        // Save operand stack base
+        vm->operand_stack_base = vm->operand_stack_top;
         
         // Set program counter to next byte code
         if (sub->is_native) {
