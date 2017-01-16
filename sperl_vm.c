@@ -31,8 +31,19 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   
   // Operand stack
   vm->call_stack = malloc(sizeof(int32_t) * vm->call_stack_capacity);
+  
+  vm->call_stack_next = 0;
 
   return vm;
+}
+
+SPerl_VM* SPerl_VM_extend_call_stack(SPerl* sperl, SPerl_VM* vm, int32_t extend) {
+  
+  // Extend call stack(lexical variable area + return address + before call_stack_base)
+  while (vm->call_stack_next + extend + 2 > vm->call_stack_capacity) {
+    vm->call_stack_capacity = vm->call_stack_capacity * 2;
+    vm->call_stack = realloc(vm->call_stack, sizeof(int32_t) * vm->call_stack_capacity);
+  }
 }
 
 void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
@@ -68,9 +79,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
   // Base position of call stack
   register int32_t call_stack_base = 0;
-
+  
   // Next position of call stack
-  int32_t call_stack_next = 0;
+  int32_t call_stack_next = vm->call_stack_next;
   
   // Prepare call subroutine
   {
@@ -79,12 +90,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
       operand_stack = realloc(operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
     }
-    
-    // Extend call stack(lexical variable area + return address + before call_stack_base)
-    while (call_stack_next + sub->my_vars_size + 2 > vm->call_stack_capacity) {
-      vm->call_stack_capacity = vm->call_stack_capacity * 2;
-      call_stack = realloc(call_stack, sizeof(int32_t) * vm->call_stack_capacity);
-    }
+
+    SPerl_VM_extend_call_stack(sperl, vm, sub->my_vars_size);
     
     // Push lexical variable area
     memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);

@@ -10,9 +10,11 @@ struct SPerl_vm {
   SPerl_FRAME* frame_stack;
   int32_t operand_stack_capacity;
   int32_t call_stack_capacity;
+  int32_t call_stack_next;
 };
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl);
 void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name);
+SPerl_VM* SPerl_VM_extend_call_stack(SPerl* sperl, SPerl_VM* vm, int32_t extend);
 
 #endif
