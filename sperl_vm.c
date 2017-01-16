@@ -32,7 +32,11 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   vm->call_stack = malloc(sizeof(int32_t) * vm->call_stack_capacity);
   
   vm->call_stack_next = 0;
-
+  
+  vm->operand_stack_top = -1;
+  
+  vm->operand_stack_base = -1;
+  
   return vm;
 }
 
@@ -54,27 +58,24 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Constant pool
   int32_t* constant_pool = sperl->constant_pool->values;
   
-  // Constant pool base
-  int32_t constant_pool_base = sub->constant_pool_base;
-  
   // Bytecode
   SPerl_BYTECODE_ARRAY* bytecode_array = sperl->bytecode_array;
   uint8_t* bytecodes = bytecode_array->values;
   
+  // Operand stack
+  int32_t* operand_stack = vm->operand_stack;
+
+  // Call stack
+  int32_t* call_stack = vm->call_stack;
+
+  // Constant pool base
+  int32_t constant_pool_base = sub->constant_pool_base;
+
   // Program counter
   register int32_t pc = sub->bytecode_base;
   
-  // Operand stack
-  int32_t* operand_stack = vm->operand_stack;
-  
   // Top position of operand stack
-  register int32_t operand_stack_top = -1;
-  
-  // Base position of operand stack
-  int32_t operand_stack_base = -1;
-  
-  // Call stack
-  int32_t* call_stack = vm->call_stack;
+  register int32_t operand_stack_top = vm->operand_stack_top;
   
   // Base position of call stack
   register int32_t call_stack_base = 0;
@@ -911,8 +912,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_IRETURN: {
         
         // Save retrun value
-        operand_stack[operand_stack_base + 1] = operand_stack[operand_stack_top];
-        operand_stack_top = operand_stack_base;
+        operand_stack[vm->operand_stack_base + 1] = operand_stack[operand_stack_top];
+        operand_stack_top = vm->operand_stack_base;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -934,8 +935,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_LRETURN: {
         // Save retrun value
-        memcpy(&operand_stack[operand_stack_base + 1], &operand_stack[operand_stack_top], 8);
-        operand_stack_top = operand_stack_base;
+        memcpy(&operand_stack[vm->operand_stack_base + 1], &operand_stack[operand_stack_top], 8);
+        operand_stack_top = vm->operand_stack_base;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -957,8 +958,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_FRETURN: {
         // Save retrun value
-        *((float*)&operand_stack[operand_stack_base + 1]) = *((float*)&operand_stack[operand_stack_top]);
-        operand_stack_top = operand_stack_base;
+        *((float*)&operand_stack[vm->operand_stack_base + 1]) = *((float*)&operand_stack[operand_stack_top]);
+        operand_stack_top = vm->operand_stack_base;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -980,8 +981,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_DRETURN: {
         // Save retrun value
-        memcpy(&operand_stack[operand_stack_base + 1], &operand_stack[operand_stack_top], 8);
-        operand_stack_top = operand_stack_base;
+        memcpy(&operand_stack[vm->operand_stack_base + 1], &operand_stack[operand_stack_top], 8);
+        operand_stack_top = vm->operand_stack_base;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -1003,8 +1004,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_ARETURN: {
         // Save retrun value
-        operand_stack[operand_stack_base + 1] = operand_stack[operand_stack_top];
-        operand_stack_top = operand_stack_base;
+        operand_stack[vm->operand_stack_base + 1] = operand_stack[operand_stack_top];
+        operand_stack_top = vm->operand_stack_base;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -1026,7 +1027,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
         // Restore openrad stack top
-        operand_stack_top = operand_stack_base;
+        operand_stack_top = vm->operand_stack_base;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -1171,11 +1172,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         operand_stack_top -= sub->args_size;
         
         // Save operand stack base
-        operand_stack_base = operand_stack_top;
+        vm->operand_stack_base = operand_stack_top;
         
         // Set program counter to next byte code
         if (sub->is_native) {
-          (*sub->native_address)(&call_stack[call_stack_base], &operand_stack[operand_stack_base]);
+          (*sub->native_address)(&call_stack[call_stack_base], &operand_stack[vm->operand_stack_base]);
           pc++;
         }
         else {

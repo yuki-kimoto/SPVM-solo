@@ -9,7 +9,7 @@ struct SPerl_vm {
   int32_t* call_stack;
   int32_t operand_stack_capacity;
   int32_t operand_stack_base;
-  int32_t openrad_stack_top;
+  int32_t operand_stack_top;
   int32_t call_stack_capacity;
   int32_t call_stack_base;
   int32_t call_stack_next;
