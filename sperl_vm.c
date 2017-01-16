@@ -912,6 +912,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Save retrun value
         operand_stack[vm->operand_stack_base + 1] = operand_stack[operand_stack_top];
+        
+        // Restore openrad stack top
         operand_stack_top = vm->operand_stack_base;
         
         // Finish vm
@@ -1143,11 +1145,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         call_stack[vm->call_stack_next] = call_stack_base;
         vm->call_stack_next++;
         
-        // Update call stack base
-        call_stack_base = vm->call_stack_next;
-        
         // Get subroutine ID
         int32_t sub_id = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+
+        // Update call stack base
+        call_stack_base = vm->call_stack_next;
         
         // Subroutine
         SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_id);
@@ -1175,6 +1177,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Save operand stack base
         vm->operand_stack_base = vm->operand_stack_top;
+        
         
         // Set program counter to next byte code
         if (sub->is_native) {
