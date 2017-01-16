@@ -66,6 +66,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
   int32_t call_stack_next = 0;
   
+  int32_t return_address = -1;
+  
   // Capacity of call stack
   
   // Prepare call subroutine
@@ -914,9 +916,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           return;
         }
         
-        // Return address
-        int32_t return_address = call_stack[call_stack_base - 2];
-        
         // Resotre call stack top
         call_stack_next = call_stack_base - 2;
         
@@ -936,9 +935,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         if (call_stack_base == 0) {
           return;
         }
-        
-        // Return address
-        int32_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
         call_stack_next = call_stack_base - 2;
@@ -960,9 +956,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           return;
         }
         
-        // Return address
-        int32_t return_address = call_stack[call_stack_base - 2];
-        
         // Resotre call stack top
         call_stack_next = call_stack_base - 2;
         
@@ -982,9 +975,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         if (call_stack_base == 0) {
           return;
         }
-        
-        // Return address
-        int32_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
         call_stack_next = call_stack_base - 2;
@@ -1006,9 +996,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           return;
         }
         
-        // Return address
-        int32_t return_address = call_stack[call_stack_base - 2];
-        
         // Resotre call stack top
         call_stack_next = call_stack_base - 2;
         
@@ -1027,9 +1014,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         if (call_stack_base == 0) {
           return;
         }
-        
-        // Return address
-        int32_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
         call_stack_next = call_stack_base - 2;
@@ -1131,6 +1115,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_CALLSUB:
       {
         // Save return address to call stack
+        return_address = pc + 5;
         call_stack[call_stack_next] = pc + 5;
         call_stack_next++;
         
