@@ -27,8 +27,11 @@ int main(int argc, char *argv[])
   // Entry point
   const char* entry_point = parser->entry_point;
   
+  // Create VM
+  SPerl_VM* vm = SPerl_VM_new(sperl);
+  
   // Run
-  SPerl_VM_run(sperl, entry_point);
+  SPerl_VM_call_sub(sperl, vm, entry_point);
   
   // Free sperl
   SPerl_free(sperl);

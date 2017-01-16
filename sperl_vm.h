@@ -9,6 +9,6 @@ struct SPerl_vm {
 };
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl);
-void SPerl_VM_run(SPerl* sperl, const char* sub_base_name);
+void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name);
 
 #endif

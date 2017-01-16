@@ -15,12 +15,13 @@
 #include "sperl_sub.h"
 #include "sperl_op.h"
 #include "sperl_constant_pool.h"
+#include "sperl_frame.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   return SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
 }
 
-void SPerl_VM_run(SPerl* sperl, const char* sub_base_name) {
+void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
   // Subroutine
   SPerl_PARSER* parser = sperl->parser;
