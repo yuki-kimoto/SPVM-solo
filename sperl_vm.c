@@ -18,7 +18,15 @@
 #include "sperl_frame.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
-  return SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
+  SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
+
+  // Capacity of openrad stack
+  vm->operand_stack_capacity = 255;
+  
+  // Operand stack
+  vm->operand_stack = malloc(sizeof(int32_t) * vm->operand_stack_capacity);
+  
+  return vm;
 }
 
 void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
@@ -40,11 +48,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Program counter
   register int32_t pc = sub->bytecode_base;
   
-  // Capacity of openrad stack
-  int32_t operand_stack_capacity = 255;
-  
   // Operand stack
-  int32_t* operand_stack = malloc(sizeof(int32_t) * operand_stack_capacity);
+  int32_t* operand_stack = vm->operand_stack;
   
   // Top position of operand stack
   register int32_t operand_stack_top = -1;
@@ -67,9 +72,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Prepare call subroutine
   {
     // Extend operand stack
-    while (operand_stack_top + sub->operand_stack_max > operand_stack_capacity) {
-      operand_stack_capacity = operand_stack_capacity * 2;
-      operand_stack = realloc(operand_stack, sizeof(int32_t) * operand_stack_capacity);
+    while (operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
+      vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
+      operand_stack = realloc(operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
     }
     
     // Extend call stack(lexical variable area + return address + before call_stack_base)
@@ -1143,9 +1148,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         SPerl_SUB* sub = op_sub->uv.sub;
         
         // Extend operand stack if need
-        while (operand_stack_top + sub->operand_stack_max > operand_stack_capacity) {
-          operand_stack_capacity = operand_stack_capacity * 2;
-          operand_stack = realloc(operand_stack, sizeof(int32_t) * operand_stack_capacity);
+        while (operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
+          vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
+          operand_stack = realloc(operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
         }
         
         // Extend call stack if need (lexical variable area + return address + before call_stack_base)

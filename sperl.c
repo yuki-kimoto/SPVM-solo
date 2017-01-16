@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "sperl.h"
+#include "sperl_vm.h"
 #include "sperl_parser.h"
 #include "sperl_memory_pool.h"
 #include "sperl_hash.h"

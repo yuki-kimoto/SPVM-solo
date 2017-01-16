@@ -5,7 +5,11 @@
 
 // Field information
 struct SPerl_vm {
-  int32_t tmp;
+  int32_t* operand_stack;
+  int32_t* call_stack;
+  SPerl_FRAME* frame_stack;
+  int32_t operand_stack_capacity;
+  int32_t call_stack_capacity;
 };
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl);
