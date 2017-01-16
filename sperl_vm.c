@@ -1147,6 +1147,16 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
 
         // Update call stack base
         call_stack_base = call_stack_next;
+
+        // Extend call stack(lexical variable area + return address + before call_stack_base)
+        while (call_stack_next + sub->my_vars_size > call_stack_capacity) {
+          call_stack_capacity = call_stack_capacity * 2;
+          call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
+        }
+        
+        // Initialize my variables
+        memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
+        call_stack_next += sub->my_vars_size;
         
         // Prepare calling subroutine
         vm->operand_stack_top = operand_stack_top;
@@ -1157,16 +1167,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           vm->operand_stack = realloc(vm->operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
         }
 
-        // Extend call stack(lexical variable area + return address + before call_stack_base)
-        while (call_stack_next + sub->my_vars_size > call_stack_capacity) {
-          call_stack_capacity = call_stack_capacity * 2;
-          call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
-        }
-        
-        // Push lexical variable area
-        memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
-        call_stack_next += sub->my_vars_size;
-        
         // Prepare arguments
         memcpy(&vm->operand_stack[vm->operand_stack_top - sub->args_size + 1], &call_stack[call_stack_base], sub->args_size);
         vm->operand_stack_top -= sub->args_size;
@@ -1176,7 +1176,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Set program counter to next byte code
         if (sub->is_native) {
-          (*sub->native_address)(&call_stack[call_stack_base], &operand_stack[vm->operand_stack_base]);
+          (*sub->native_address)(vm);
           pc++;
         }
         else {

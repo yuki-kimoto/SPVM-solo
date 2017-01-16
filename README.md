@@ -3,7 +3,6 @@
 Do you need a **fast Perl**? Static Perl is a fast calculation system of Perl.
 
 - **Fast calculation** - The Perl's biggest weak point is the calculation performance. Static Perl provides fast calculations.
-- **Parallel processing** - Support parallel processing to manipulate arrays faster
 - **GC** - You don't need to care about freeing memory
 - **Static typing** - Static typing for performance
 - **VM** - Byte codes are generated so that you can run them on Static Perl VM
