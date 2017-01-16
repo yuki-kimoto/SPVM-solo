@@ -44,6 +44,17 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   return vm;
 }
 
+SPerl_FRAME* SPerl_VM_create_frame(SPerl* sperl, SPerl_VM* vm) {
+  
+  SPerl_FRAME* frame = &vm->frame_stack[vm->frame_next];
+  frame->operand_stack = &vm->operand_stack[vm->operand_stack_base];
+  frame->call_stack = &vm->call_stack[vm->call_stack_base];
+  
+  vm->frame_next++;
+  
+  return frame;
+}
+
 SPerl_VM* SPerl_VM_extend_call_stack(SPerl* sperl, SPerl_VM* vm, int32_t extend) {
   
   // Extend call stack(lexical variable area + return address + before call_stack_base)
