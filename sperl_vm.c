@@ -36,7 +36,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
   // Subroutine
   SPerl_PARSER* parser = sperl->parser;
-  SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
   
   // Constant pool
   int32_t* constant_pool = sperl->constant_pool->values;
@@ -67,6 +66,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Call stack next
   int32_t call_stack_next = 0;
   
+  // Get subroutine
+  SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
+  
+  // Goto subroutine
   goto CALLSUB;
 
   while (1) {
