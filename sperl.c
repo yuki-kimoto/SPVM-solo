@@ -10,6 +10,23 @@
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_array.h"
 
+void SPerl_run(SPerl* sperl, const char* package_name) {
+
+  SPerl_PARSER* parser = sperl->parser;
+  
+  SPerl_ARRAY_push(parser->include_pathes, ".");
+  int32_t parse_success = SPerl_PARSER_parse(sperl, package_name);
+  
+  // Entry point
+  const char* entry_point = parser->entry_point;
+  
+  // Create VM
+  SPerl_VM* vm = SPerl_VM_new(sperl);
+  
+  // Run
+  SPerl_VM_call_sub(sperl, vm, entry_point);
+}
+
 SPerl* SPerl_new() {
   SPerl* sperl = calloc(1, sizeof(SPerl));
   

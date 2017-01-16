@@ -3,9 +3,6 @@
 #include <string.h>
 
 #include "../sperl.h"
-#include "../sperl_parser.h"
-#include "../sperl_array.h"
-#include "../sperl_vm.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,24 +14,14 @@ int main(int argc, char *argv[])
   // Package name
   const char* package_name = argv[1];
   
-  // Parse
+  // Create sperl
   SPerl* sperl = SPerl_new();
-  SPerl_PARSER* parser = sperl->parser;
-  
-  SPerl_ARRAY_push(parser->include_pathes, ".");
-  int32_t parse_success = SPerl_PARSER_parse(sperl, package_name);
-  
-  // Entry point
-  const char* entry_point = parser->entry_point;
-  
-  // Create VM
-  SPerl_VM* vm = SPerl_VM_new(sperl);
   
   // Run
-  SPerl_VM_call_sub(sperl, vm, entry_point);
+  SPerl_run(sperl, package_name);
   
   // Free sperl
   SPerl_free(sperl);
   
-  return parse_success;
+  return 0;
 }
