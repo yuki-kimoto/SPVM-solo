@@ -70,7 +70,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
   
   // Goto subroutine
-  goto CALLSUB;
+  goto CALLSUB_COMMON;
 
   while (1) {
     switch (bytecodes[pc]) {
@@ -1144,7 +1144,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Update call stack base
         call_stack_base = call_stack_next;
-
+        
+        CALLSUB_COMMON:
+        
         // Extend call stack(lexical variable area + return address + before call_stack_base)
         while (call_stack_next + sub->my_vars_size > call_stack_capacity) {
           call_stack_capacity = call_stack_capacity * 2;
@@ -1162,6 +1164,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         while (vm->operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
           vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
           vm->operand_stack = realloc(vm->operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
+          operand_stack = vm->operand_stack;
         }
 
         // Prepare arguments
@@ -1171,7 +1174,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Save operand stack base
         vm->operand_stack_bottom = vm->operand_stack_top;
         
-        CALLSUB:
         
         // Set operand stack top
         operand_stack_top = vm->operand_stack_top;
