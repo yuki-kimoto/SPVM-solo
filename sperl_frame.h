@@ -4,7 +4,7 @@
 #include "sperl.h"
 
 struct SPerl_frame {
-  int32_t* operand_stack;
+  int32_t* openrad_stack;
   int32_t* call_stack;
 };
 

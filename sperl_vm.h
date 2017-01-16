@@ -7,14 +7,14 @@
 struct SPerl_vm {
   int32_t* operand_stack;
   int32_t* call_stack;
-  SPerl_FRAME* frame_stack;
   int32_t operand_stack_capacity;
   int32_t operand_stack_base;
   int32_t operand_stack_top;
   int32_t call_stack_capacity;
   int32_t call_stack_base;
   int32_t call_stack_next;
-  int32_t frame_next;
+  SPerl_FRAME* frame_stack;
+  SPerl_FRAME* frame_next;
 };
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl);
