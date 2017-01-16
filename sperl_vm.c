@@ -49,6 +49,29 @@ SPerl_VM* SPerl_VM_extend_call_stack(SPerl* sperl, SPerl_VM* vm, int32_t extend)
   }
 }
 
+SPerl_VM* SPerl_VM_prepare_call_sub(SPerl* sperl, SPerl_VM* vm, SPerl_SUB* sub) {
+  
+  // Extend operand stack if need
+  while (vm->operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
+    vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
+    vm->operand_stack = realloc(vm->operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
+  }
+
+  // Extend call stack
+  SPerl_VM_extend_call_stack(sperl, vm, sub->my_vars_size);
+
+  // Push lexical variable area
+  memset(&vm->call_stack[vm->call_stack_next], 0, sub->my_vars_size * 4);
+  vm->call_stack_next += sub->my_vars_size;
+
+  // Prepare arguments
+  memcpy(&vm->operand_stack[vm->operand_stack_top - sub->args_size + 1], &vm->call_stack[vm->call_stack_base], sub->args_size);
+  vm->operand_stack_top -= sub->args_size;
+
+  // Save operand stack base
+  vm->operand_stack_base = vm->operand_stack_top;
+}
+
 void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
   // Subroutine
@@ -1148,36 +1171,17 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Get subroutine ID
         int32_t sub_id = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
 
-        // Update call stack base
-        call_stack_base = vm->call_stack_next;
-        
         // Subroutine
         SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_id);
         SPerl_SUB* sub = op_sub->uv.sub;
+
+        // Update call stack base
+        call_stack_base = vm->call_stack_next;
         
-        // Save operand stack top before calling subroutine
+        // Prepare calling subroutine
         vm->operand_stack_top = operand_stack_top;
-        
-        // Extend operand stack if need
-        while (vm->operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
-          vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
-          operand_stack = realloc(operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
-        }
-        
-        // Extend call stack
-        SPerl_VM_extend_call_stack(sperl, vm, sub->my_vars_size);
-        
-        // Push lexical variable area
-        memset(&call_stack[vm->call_stack_next], 0, sub->my_vars_size * 4);
-        vm->call_stack_next += sub->my_vars_size;
-        
-        // Prepare arguments
-        memcpy(&operand_stack[vm->operand_stack_top - sub->args_size + 1], &call_stack[call_stack_base], sub->args_size);
-        vm->operand_stack_top -= sub->args_size;
-        
-        // Save operand stack base
-        vm->operand_stack_base = vm->operand_stack_top;
-        
+        vm->call_stack_base = call_stack_base;
+        SPerl_VM* SPerl_VM_prepare_call_sub(sperl, vm, sub);
         
         // Set program counter to next byte code
         if (sub->is_native) {
