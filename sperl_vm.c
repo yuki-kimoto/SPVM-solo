@@ -25,7 +25,13 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   
   // Operand stack
   vm->operand_stack = malloc(sizeof(int32_t) * vm->operand_stack_capacity);
+
+  // Capacity of call stack
+  vm->call_stack_capacity = 255;
   
+  // Operand stack
+  vm->call_stack = malloc(sizeof(int32_t) * vm->call_stack_capacity);
+
   return vm;
 }
 
@@ -57,11 +63,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Base position of operand stack
   int32_t operand_stack_base = -1;
   
-  // Capacity of operand stack
-  int32_t call_stack_capacity = 255;
-  
   // Call stack
-  int32_t* call_stack = malloc(sizeof(int32_t) * call_stack_capacity);
+  int32_t* call_stack = vm->call_stack;
   
   // Base position of call stack
   register int32_t call_stack_base = 0;
@@ -78,9 +81,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
     }
     
     // Extend call stack(lexical variable area + return address + before call_stack_base)
-    while (call_stack_next + sub->my_vars_size + 2 > call_stack_capacity) {
-      call_stack_capacity = call_stack_capacity * 2;
-      call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
+    while (call_stack_next + sub->my_vars_size + 2 > vm->call_stack_capacity) {
+      vm->call_stack_capacity = vm->call_stack_capacity * 2;
+      call_stack = realloc(call_stack, sizeof(int32_t) * vm->call_stack_capacity);
     }
     
     // Push lexical variable area
@@ -1154,9 +1157,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
         
         // Extend call stack if need (lexical variable area + return address + before call_stack_base)
-        while (call_stack_next + sub->my_vars_size + 2 > call_stack_capacity) {
-          call_stack_capacity = call_stack_capacity * 2;
-          call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
+        while (call_stack_next + sub->my_vars_size + 2 > vm->call_stack_capacity) {
+          vm->call_stack_capacity = vm->call_stack_capacity * 2;
+          call_stack = realloc(call_stack, sizeof(int32_t) * vm->call_stack_capacity);
         }
         
         // Push lexical variable area
