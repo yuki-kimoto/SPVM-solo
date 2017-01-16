@@ -13,6 +13,8 @@ struct SPerl_vm {
   int32_t call_stack_capacity;
   int32_t call_stack_base;
   int32_t call_stack_next;
+  SPerl_FRAME* frame_stack;
+  SPerl_FRAME* frame_next;
 };
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl);
