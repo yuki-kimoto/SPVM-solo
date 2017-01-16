@@ -53,17 +53,18 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   int32_t* call_stack = malloc(sizeof(int32_t) * call_stack_capacity);
   
   // Constant pool base
-  int32_t constant_pool_base = sub->constant_pool_base;
+  int32_t constant_pool_base = 0;;
   
   // Program counter
   register int32_t pc = 0;
   
   // Top position of operand stack
-  register int32_t operand_stack_top = vm->operand_stack_top;
+  register int32_t operand_stack_top = 0;
   
   // Base position of call stack
   register int32_t call_stack_base = 0;
   
+  // Call stack next
   int32_t call_stack_next = 0;
   
   goto CALLSUB;
@@ -1166,8 +1167,14 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Save operand stack base
         vm->operand_stack_bottom = vm->operand_stack_top;
-
+        
         CALLSUB:
+        
+        // Set operand stack top
+        operand_stack_top = vm->operand_stack_top;
+        
+        // Set constant pool base
+        constant_pool_base = sub->constant_pool_base;
         
         // Set program counter to next byte code
         if (sub->is_native) {
