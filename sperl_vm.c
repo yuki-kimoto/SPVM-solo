@@ -27,7 +27,7 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   
   vm->operand_stack_top = -1;
   
-  vm->operand_stack_base = -1;
+  vm->operand_stack_bottom = -1;
   
   return vm;
 }
@@ -66,7 +66,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
   int32_t call_stack_next = 0;
   
-  // Capacity of call stack
+  
   
   // Prepare call subroutine
   {
@@ -904,10 +904,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_IRETURN: {
         
         // Save retrun value
-        operand_stack[vm->operand_stack_base + 1] = operand_stack[operand_stack_top];
+        operand_stack[vm->operand_stack_bottom + 1] = operand_stack[operand_stack_top];
         
         // Restore openrad stack top
-        operand_stack_top = vm->operand_stack_base;
+        operand_stack_top = vm->operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -929,8 +929,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_LRETURN: {
         // Save retrun value
-        memcpy(&operand_stack[vm->operand_stack_base + 1], &operand_stack[operand_stack_top], 8);
-        operand_stack_top = vm->operand_stack_base;
+        memcpy(&operand_stack[vm->operand_stack_bottom + 1], &operand_stack[operand_stack_top], 8);
+        operand_stack_top = vm->operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -952,8 +952,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_FRETURN: {
         // Save retrun value
-        *((float*)&operand_stack[vm->operand_stack_base + 1]) = *((float*)&operand_stack[operand_stack_top]);
-        operand_stack_top = vm->operand_stack_base;
+        *((float*)&operand_stack[vm->operand_stack_bottom + 1]) = *((float*)&operand_stack[operand_stack_top]);
+        operand_stack_top = vm->operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -975,8 +975,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_DRETURN: {
         // Save retrun value
-        memcpy(&operand_stack[vm->operand_stack_base + 1], &operand_stack[operand_stack_top], 8);
-        operand_stack_top = vm->operand_stack_base;
+        memcpy(&operand_stack[vm->operand_stack_bottom + 1], &operand_stack[operand_stack_top], 8);
+        operand_stack_top = vm->operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -998,8 +998,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_ARETURN: {
         // Save retrun value
-        operand_stack[vm->operand_stack_base + 1] = operand_stack[operand_stack_top];
-        operand_stack_top = vm->operand_stack_base;
+        operand_stack[vm->operand_stack_bottom + 1] = operand_stack[operand_stack_top];
+        operand_stack_top = vm->operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -1021,7 +1021,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
         // Restore openrad stack top
-        operand_stack_top = vm->operand_stack_base;
+        operand_stack_top = vm->operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -1130,6 +1130,15 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_CALLSUB:
       {
+        // Get subroutine ID
+        int32_t sub_id = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        
+        // Subroutine
+        SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_id);
+        SPerl_SUB* sub = op_sub->uv.sub;
+        
+        CALLSUB:
+        
         // Save return address to call stack
         call_stack[call_stack_next] = pc + 5;
         call_stack_next++;
@@ -1138,13 +1147,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         call_stack[call_stack_next] = call_stack_base;
         call_stack_next++;
         
-        // Get subroutine ID
-        int32_t sub_id = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
-
-        // Subroutine
-        SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_id);
-        SPerl_SUB* sub = op_sub->uv.sub;
-
         // Update call stack base
         call_stack_base = call_stack_next;
 
@@ -1168,11 +1170,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
 
         // Prepare arguments
-        memcpy(&call_stack[call_stack_base], &vm->operand_stack[vm->operand_stack_top - sub->args_size + 1], sub->args_size * 4);
         vm->operand_stack_top -= sub->args_size;
+        memcpy(&call_stack[call_stack_base], &vm->operand_stack[vm->operand_stack_top + 1], sub->args_size * 4);
         
         // Save operand stack base
-        vm->operand_stack_base = vm->operand_stack_top;
+        vm->operand_stack_bottom = vm->operand_stack_top;
         
         // Set program counter to next byte code
         if (sub->is_native) {
