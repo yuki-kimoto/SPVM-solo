@@ -903,8 +903,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_IRETURN: {
         
+        int32_t return_value = operand_stack[operand_stack_top];
+        
         // Save retrun value
-        operand_stack[vm->operand_stack_bottom + 1] = operand_stack[operand_stack_top];
+        operand_stack[vm->operand_stack_bottom + 1] = return_value;
         
         // Restore openrad stack top
         operand_stack_top = vm->operand_stack_bottom;
