@@ -3,11 +3,6 @@
 
 #include "sperl.h"
 
-struct SPerl_frame {
-  int32_t* openrad_stack;
-  int32_t* call_stack;
-};
-
 SPerl_OP* SPerl_FRAME_newOP(SPerl* sperl);
 
 #endif

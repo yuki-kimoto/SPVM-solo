@@ -15,13 +15,9 @@
 #include "sperl_sub.h"
 #include "sperl_op.h"
 #include "sperl_constant_pool.h"
-#include "sperl_frame.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
-
-  // Operand stack
-  vm->frame_stack = malloc(sizeof(SPerl_FRAME) * 255);
 
   // Capacity of openrad stack
   vm->operand_stack_capacity = 255;
@@ -1185,7 +1181,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Prepare calling subroutine
         vm->operand_stack_top = operand_stack_top;
         vm->call_stack_base = call_stack_base;
-        SPerl_VM_prepare_call_sub(sperl, vm, sub);
+        SPerl_VM* SPerl_VM_prepare_call_sub(sperl, vm, sub);
         
         // Set program counter to next byte code
         if (sub->is_native) {
