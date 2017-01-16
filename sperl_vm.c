@@ -67,26 +67,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   int32_t call_stack_next = 0;
   
   goto CALLSUB;
-  
-  // Prepare call subroutine
-  {
-    // Extend operand stack
-    while (operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
-      vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
-      operand_stack = realloc(operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
-    }
 
-    // Extend call stack(lexical variable area + return address + before call_stack_base)
-    while (call_stack_next + sub->my_vars_size > call_stack_capacity) {
-      call_stack_capacity = call_stack_capacity * 2;
-      call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
-    }
-    
-    // Push lexical variable area
-    memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
-    call_stack_next += sub->my_vars_size;
-  }
-  
   while (1) {
     switch (bytecodes[pc]) {
       case SPerl_BYTECODE_C_CODE_NOP:
