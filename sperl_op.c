@@ -121,6 +121,14 @@ void SPerl_CORE_printi(SPerl_FRAME* frame) {
   warn("TEST: %d", value);
 }
 
+void SPerl_CORE_printl(SPerl_FRAME* frame) {
+  
+  int64_t value;
+  memcpy(&value, frame->call_stack, 8);
+  
+  warn("TEST: %ld", value);
+}
+
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {
   
   SPerl_PARSER* parser = sperl->parser;
@@ -845,8 +853,10 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           // Bind CORE subroutine
           if (sub->is_native) {
             if (strcmp(sub_name, "CORE::printi") == 0) {
-              void (*native_address)(SPerl_VM* vm) = SPerl_CORE_printi;
-              sub->native_address = native_address;
+              sub->native_address = SPerl_CORE_printi;
+            }
+            else if (strcmp(sub_name, "CORE::printl") == 0) {
+              sub->native_address = SPerl_CORE_printl;
             }
           }
         }
