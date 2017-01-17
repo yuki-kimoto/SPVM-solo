@@ -45,7 +45,7 @@ void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* consta
       SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant->uv.int_value);
       break;
     case SPerl_CONSTANT_C_CODE_LONG:
-      SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant->uv.long_value);
+      SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, constant->uv.long_value);
       break;
     case SPerl_CONSTANT_C_CODE_FLOAT:
       SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant->uv.float_value);

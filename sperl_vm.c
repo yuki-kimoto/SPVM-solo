@@ -77,6 +77,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Get subroutine
   SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
   
+  // Temparary value
+  int64_t tmp_int64;
+  
   // Goto subroutine
   goto CALLSUB_COMMON;
   
@@ -125,12 +128,14 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_LCONST_0:
         operand_stack_top += 2;
-        *((int64_t*)&operand_stack[operand_stack_top - 1]) = 0L;
+        tmp_int64 = 0L;
+        memcpy(&operand_stack[operand_stack_top - 1], &tmp_int64, 8);
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_LCONST_1:
         operand_stack_top += 2;
-        *((int64_t*)&operand_stack[operand_stack_top - 1]) = 1L;
+        tmp_int64 = 1L;
+        memcpy(&operand_stack[operand_stack_top - 1], &tmp_int64, 8);
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FCONST_0:

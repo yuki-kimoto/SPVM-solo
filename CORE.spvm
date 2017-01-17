@@ -1,3 +1,4 @@
 package CORE {
   sub printi ($value : int) : native int {}
+  sub printl ($value : long) : native int {}
 }

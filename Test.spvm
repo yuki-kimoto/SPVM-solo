@@ -9,10 +9,10 @@ package Test {
   sub main() : int {
     
     # Constant long
-    #printl(-1);
-    #printl(0);
-    #printl(1);
-    #printl(2);
+    printl(-1L);
+    printl(0L);
+    printl(1L);
+    printl(2L);
     
     # Constant int
     printi(-2);
