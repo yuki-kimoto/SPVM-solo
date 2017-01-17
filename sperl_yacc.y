@@ -250,7 +250,7 @@ decl_field
 decl_sub
  : SUB sub_base_name '(' opt_args ')' ':' opt_descriptors type block
      {
-       $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $8, $9);
+       $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $7, $8, $9);
      }
 
 decl_enum
@@ -272,16 +272,16 @@ decl_my
     }
 
 decl_anon_sub
- : SUB '(' ')' ':' type block
+ : SUB '(' ')' ':' opt_descriptors type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
        SPerl_OP* op_args = SPerl_OP_newOP_LIST(sperl, $2->file, $2->line);
-       $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), op_args, $5, $6);
+       $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), op_args, $5, $6, $7);
      }
- | SUB '(' args ')' ':' type block
+ | SUB '(' args ')' ':' opt_descriptors type block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
-       $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $3, $6, $7);
+       $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $3, $6, $7, $8);
      }
 
 opt_decl_things_in_class

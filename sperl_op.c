@@ -918,14 +918,15 @@ SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* 
   return op_field;
 }
 
-SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_base_name, SPerl_OP* op_args, SPerl_OP* op_type, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_base_name, SPerl_OP* op_args, SPerl_OP* op_descriptors, SPerl_OP* op_type, SPerl_OP* op_block) {
   
   SPerl_PARSER* parser = sperl->parser;
   
   // Build OP_SUB
   SPerl_OP_sibling_splice(sperl, op_sub, NULL, 0, op_sub_base_name);
   SPerl_OP_sibling_splice(sperl, op_sub, op_sub_base_name, 0, op_args);
-  SPerl_OP_sibling_splice(sperl, op_sub, op_args, 0, op_type);
+  SPerl_OP_sibling_splice(sperl, op_sub, op_args, 0, op_descriptors);
+  SPerl_OP_sibling_splice(sperl, op_sub, op_descriptors, 0, op_type);
   SPerl_OP_sibling_splice(sperl, op_sub, op_type, 0, op_block);
   
   // Create sub information
@@ -1008,6 +1009,9 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op
     // sub args
     SPerl_OP* op_args = SPerl_OP_newOP_LIST(sperl, op_enumeration_value->file, op_enumeration_value->line);
     
+    // Descriptors
+    SPerl_OP* op_descriptors = SPerl_OP_newOP_LIST(sperl, op_enumeration_value->file, op_enumeration_value->line);
+    
     // Type
     SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_enumeration_value->file, op_enumeration_value->line);
     SPerl_TYPE* type = SPerl_TYPE_new(sperl);
@@ -1030,7 +1034,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op
     SPerl_OP* op_block = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_BLOCK, op_enumeration_value->file, op_enumeration_value->line);
     SPerl_OP_sibling_splice(sperl, op_block, NULL, 0, op_statements);
     
-    SPerl_OP_build_decl_sub(sperl, op_sub, op_sub_base_name, op_args, op_type, op_block);
+    SPerl_OP_build_decl_sub(sperl, op_sub, op_sub_base_name, op_args, op_descriptors, op_type, op_block);
   }
   
   return op_enum;
