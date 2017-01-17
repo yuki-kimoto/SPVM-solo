@@ -39,10 +39,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_pos);
     SPerl_SUB* sub = op_sub->uv.sub;
     
-    if (sub->is_core) {
-      continue;
-    }
-      
     // my var informations
     SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_new_array(sperl, 0);
     
@@ -956,7 +952,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             SPerl_OP* op_block = op_cur->last;
             SPerl_OP* op_statements = op_block->first;
             
-            if (op_statements->last->code != SPerl_OP_C_CODE_RETURN) {
+            if (!sub->is_native && op_statements->last->code != SPerl_OP_C_CODE_RETURN) {
               // Add return to the end of subroutine
               SPerl_RESOLVED_TYPE* op_return_resolved_type = sub->op_return_type->uv.type->resolved_type;
               SPerl_OP* op_return = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_RETURN, op_cur->file, op_cur->line);

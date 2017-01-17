@@ -1,0 +1,3 @@
+package CORE {
+  sub print2 ($value : int) : native int {}
+}

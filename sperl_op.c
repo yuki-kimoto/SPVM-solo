@@ -113,6 +113,10 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "DESCRIPTOR",   // UNKNOWN
 };
 
+void SPerl_print2(SPerl_VM* vm) {
+  warn("print2");
+}
+
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {
   
   SPerl_PARSER* parser = sperl->parser;
@@ -412,9 +416,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
       SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, abs_name, strlen(abs_name));
-      if (!sub->is_core) {
-        resolved_type = sub->op_return_type->uv.type->resolved_type;
-      }
+      resolved_type = sub->op_return_type->uv.type->resolved_type;
       break;
     }
     case SPerl_OP_C_CODE_FIELD: {
@@ -808,7 +810,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
       }
     }
     
-    // Method information
+    // Subroutine information
     SPerl_HASH* sub_name_symtable = parser->sub_name_symtable;
     int32_t i = parser->op_subs->length - 1;
     while (1) {
@@ -821,7 +823,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         break;
       }
       
-      if (!sub->anon  & !sub->is_core) {
+      if (!sub->anon) {
         SPerl_OP* op_sub_base_name = sub->op_base_name;
         const char* sub_base_name = op_sub_base_name->uv.name;
         const char* sub_name = SPerl_OP_create_abs_name(sperl, package_name, sub_base_name);
@@ -835,6 +837,14 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         // Unknown sub
         else {
           SPerl_HASH_insert(sub_name_symtable, sub_name, strlen(sub_name), sub);
+          
+          // Bind CORE subroutine
+          if (sub->is_native) {
+            if (strcmp(sub_name, "CORE::print2") == 0) {
+              void (*native_address)(SPerl_VM* vm) = SPerl_print2;
+              sub->native_address = native_address;
+            }
+          }
         }
         i--;
       }
