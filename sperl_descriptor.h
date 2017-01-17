@@ -8,7 +8,7 @@ enum {
   SPerl_DESCRIPTOR_C_CODE_CONST,
 };
 
-extern const char* const SPerl_DESCRIPTOR_CODE_NAMES[];
+extern const char* const SPerl_DESCRIPTOR_C_CODE_NAMES[];
 
 // Field information
 struct SPerl_descriptor {

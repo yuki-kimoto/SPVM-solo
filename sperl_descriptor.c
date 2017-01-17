@@ -2,7 +2,7 @@
 #include "sperl.h"
 #include "sperl_allocator.h"
 
-const char* const SPerl_DESCRIPTOR_CODE_NAMES[] = {
+const char* const SPerl_DESCRIPTOR_C_CODE_NAMES[] = {
   "native",
   "const",
 };

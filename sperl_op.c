@@ -31,6 +31,7 @@
 #include "sperl_bytecode_builder.h"
 #include "sperl_op_checker.h"
 #include "sperl_switch_info.h"
+#include "sperl_descriptor.h"
 
 const char* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
@@ -936,6 +937,17 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   }
   else {
     sub->op_base_name = op_sub_base_name;
+  }
+  
+  // Descriptors
+  SPerl_OP* op_descriptor = op_descriptors->first;
+  while ((op_descriptor = SPerl_OP_sibling(sperl, op_descriptor))) {
+    if (op_descriptor->code == SPerl_DESCRIPTOR_C_CODE_NATIVE) {
+      sub->is_native = 1;
+    }
+    else {
+      SPerl_yyerror_format(sperl, "invalid descriptor %s", SPerl_DESCRIPTOR_C_CODE_NAMES[op_descriptor->code], op_descriptors->file, op_descriptors->line);
+    }
   }
   
   // subargs
