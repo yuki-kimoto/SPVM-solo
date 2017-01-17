@@ -73,9 +73,12 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Get subroutine
   SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
   
+  // Frame stack
+  SPerl_FRAME* frame = malloc(sizeof(SPerl_FRAME));
+  
   // Goto subroutine
   goto CALLSUB_COMMON;
-
+  
   while (1) {
     switch (bytecodes[pc]) {
       case SPerl_BYTECODE_C_CODE_NOP:
@@ -1141,29 +1144,12 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Call native subroutine
         if (sub->is_native) {
-          // Frame stack capacity
-          int32_t frame_stack_capacity = 255;
-          
-          // Frame stack
-          SPerl_FRAME* frame_stack = malloc(sizeof(SPerl_FRAME) * frame_stack_capacity);
-          
-          // Frame stack top
-          int32_t frame_stack_top = -1;
-
-          // Increment frame stack top
-          frame_stack_top++;
-          
-          // Extend frame stack
-          if (frame_stack_top > frame_stack_capacity) {
-            frame_stack_capacity = frame_stack_capacity * 2;
-            frame_stack = realloc(frame_stack, sizeof(int32_t) * frame_stack_capacity);
-          }
           
           // Set frame
-          frame_stack[frame_stack_top].operand_stack = &operand_stack[operand_stack_bottom + 1];
-          frame_stack[frame_stack_top].call_stack = &call_stack[call_stack_base];
+          frame->operand_stack = &operand_stack[operand_stack_bottom + 1];
+          frame->call_stack = &call_stack[call_stack_base];
           
-          (*sub->native_address)(&frame_stack[frame_stack_top]);
+          (*sub->native_address)(frame);
           
           pc++;
         }
