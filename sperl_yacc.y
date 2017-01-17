@@ -25,7 +25,7 @@
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar type_sub types not_type_sub opt_term throw_exception
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_name array_length logical_op decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement
-%type <opval> ';'
+%type <opval> ';' opt_descriptors descriptors
 
 %right <opval> ASSIGN
 %left <opval> OR
@@ -570,6 +570,29 @@ types
       $$ = SPerl_OP_append_elem(sperl, $1, $3, $1->file, $1->line);
     }
   | type
+
+opt_descriptors
+  :	/* Empty */
+    {
+      $$ = SPerl_OP_newOP_LIST(parser);
+    }
+  |	descriptors
+    {
+      if ($1->code == SPerl_OP_C_CODE_LIST) {
+        $$ = $1;
+      }
+      else {
+        $$ = SPerl_OP_newOP_LIST(parser);
+        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+      }
+    }
+    
+descriptors
+  : descriptors DESCRIPTOR
+    {
+      $$ = SPerl_OP_append_elem(parser, $1, $2);
+    }
+  | DESCRIPTOR
 
 type
   : not_type_sub
