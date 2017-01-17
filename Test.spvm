@@ -7,7 +7,7 @@ use CORE;
 
 package Test {
   sub main() : int {
-    print2();
+    printi();
     
     "abc";
     my $num2 = 5;

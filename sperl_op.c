@@ -113,8 +113,8 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "DESCRIPTOR",   // UNKNOWN
 };
 
-void SPerl_print2(SPerl_VM* vm) {
-  warn("print2");
+void SPerl_CORE_printi(SPerl_VM* vm) {
+  
 }
 
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {
@@ -840,8 +840,8 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           
           // Bind CORE subroutine
           if (sub->is_native) {
-            if (strcmp(sub_name, "CORE::print2") == 0) {
-              void (*native_address)(SPerl_VM* vm) = SPerl_print2;
+            if (strcmp(sub_name, "CORE::printi") == 0) {
+              void (*native_address)(SPerl_VM* vm) = SPerl_CORE_printi;
               sub->native_address = native_address;
             }
           }
