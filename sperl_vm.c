@@ -15,6 +15,7 @@
 #include "sperl_sub.h"
 #include "sperl_op.h"
 #include "sperl_constant_pool.h"
+#include "sperl_frame.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
@@ -68,6 +69,15 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
   // Call stack next
   int32_t call_stack_next = 0;
+  
+  // Frame stack capacity
+  int32_t frame_stack_capacity = 255;
+  
+  // Frame stack
+  SPerl_FRAME* frame_stack = malloc(sizeof(SPerl_FRAME) * frame_stack_capacity);
+  
+  // Frame stack top
+  int32_t frame_stack_top = -1;
   
   // Get subroutine
   SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
@@ -1169,9 +1179,22 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Set constant pool base
         constant_pool_base = sub->constant_pool_base;
         
+        // Increment frame stack top
+        frame_stack_top++;
+        
+        // Extend frame stack
+        if (frame_stack_top > frame_stack_capacity) {
+          frame_stack_capacity = frame_stack_capacity * 2;
+          frame_stack = realloc(frame_stack, sizeof(int32_t) * frame_stack_capacity);
+        }
+        
+        // Set frame
+        frame_stack[frame_stack_top].operand_stack = &operand_stack[operand_stack_bottom + 1];
+        frame_stack[frame_stack_top].call_stack = &call_stack[call_stack_base];
+        
         // Set program counter to next byte code
         if (sub->is_native) {
-          (*sub->native_address)(vm);
+          (*sub->native_address)(&frame_stack[frame_stack_top]);
           pc++;
         }
         else {

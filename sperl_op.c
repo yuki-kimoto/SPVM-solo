@@ -32,6 +32,7 @@
 #include "sperl_op_checker.h"
 #include "sperl_switch_info.h"
 #include "sperl_descriptor.h"
+#include "sperl_frame.h"
 
 const char* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
@@ -113,8 +114,8 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "DESCRIPTOR",   // UNKNOWN
 };
 
-void SPerl_CORE_printi(SPerl_VM* vm) {
-  
+void SPerl_CORE_printi(SPerl_FRAME* frame) {
+  warn("PPPPPPPPPPPPPPPPP");
 }
 
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {
