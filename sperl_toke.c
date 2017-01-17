@@ -487,29 +487,54 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             }
             parser->bufptr++;
           }
-          
+
           if (point_count >= 2) {
             fprintf(stderr, "Invalid number literal\n");
             exit(1);
           }
-          
+
           // Number literal
           size_t str_len = parser->bufptr - cur_token_ptr;
           char* num_str = (char*) malloc(str_len + 1);
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
           
-          warn("AAAAAAAA %s", num_str);
+          // Constant type
+          int32_t constant_code;
+          if (point_count) {
+            if (*parser->bufptr == 'f' || *parser->bufptr == 'F')  {
+              constant_code = SPerl_CONSTANT_C_CODE_FLOAT;
+              parser->bufptr++;
+            }
+            else if (*parser->bufptr == 'd' || *parser->bufptr == 'D')  {
+              constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
+              parser->bufptr++;
+            }
+            else {
+              constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
+            }
+          }
+          else {
+            if (*parser->bufptr == 'l' || *parser->bufptr == 'L') {
+              constant_code = SPerl_CONSTANT_C_CODE_LONG;
+              parser->bufptr++;
+            }
+            else {
+              constant_code = SPerl_CONSTANT_C_CODE_INT;
+            }
+          }
+          
+          // Constant
+          SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
+          SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+          constant->code = constant_code;
           
           // Convert to double
-          if (point_count) {
+          if (constant_code == SPerl_CONSTANT_C_CODE_FLOAT || constant_code == SPerl_CONSTANT_C_CODE_DOUBLE) {
             char* ends;
             double num = strtod(num_str, &ends);
             free(num_str);
-
-            SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
-            SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
-            constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
+            
             constant->uv.double_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
             op->uv.constant = constant;

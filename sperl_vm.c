@@ -190,17 +190,19 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_LLOAD:
         operand_stack_top += 2;
-        *((int64_t*)&operand_stack[operand_stack_top - 1]) = *((int64_t*)&call_stack[call_stack_base + bytecodes[pc + 1]]);
+        operand_stack[operand_stack_top - 1] = call_stack[call_stack_base + bytecodes[pc + 1]];
+        operand_stack[operand_stack_top] = call_stack[call_stack_base + bytecodes[pc + 1] + 1];
         pc += 2;
         continue;
       case SPerl_BYTECODE_C_CODE_FLOAD:
         operand_stack_top++;
-        *((float*)&operand_stack[operand_stack_top]) = *((float*)&call_stack[call_stack_base + bytecodes[pc + 1]]);
+        operand_stack[operand_stack_top] = call_stack[call_stack_base + bytecodes[pc + 1]];
         pc += 2;
         continue;
       case SPerl_BYTECODE_C_CODE_DLOAD:
         operand_stack_top += 2;
-        *((double*)&operand_stack[operand_stack_top - 1]) = *((double*)&call_stack[call_stack_base + bytecodes[pc + 1]]);
+        operand_stack[operand_stack_top - 1] = call_stack[call_stack_base + bytecodes[pc + 1]];
+        operand_stack[operand_stack_top] = call_stack[call_stack_base + bytecodes[pc + 1] + 1];
         pc += 2;
         continue;
       case SPerl_BYTECODE_C_CODE_ALOAD:
