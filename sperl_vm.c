@@ -1146,40 +1146,42 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         call_stack_base = call_stack_next;
         
         CALLSUB_COMMON:
-        
-        // Extend call stack(lexical variable area + return address + before call_stack_base)
-        while (call_stack_next + sub->my_vars_size > call_stack_capacity) {
-          call_stack_capacity = call_stack_capacity * 2;
-          call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
-        }
-        
-        // Initialize my variables
-        memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
-        call_stack_next += sub->my_vars_size;
-        
-        // Prepare calling subroutine
+
+        // Save operand stack top to vm
         vm->operand_stack_top = operand_stack_top;
         
-        // Extend operand stack if need
-        while (vm->operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
-          vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
-          vm->operand_stack = realloc(vm->operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
-          operand_stack = vm->operand_stack;
-        }
+        // Prepare calling subroutine
+        {
+          // Extend call stack(lexical variable area + return address + before call_stack_base)
+          while (call_stack_next + sub->my_vars_size > call_stack_capacity) {
+            call_stack_capacity = call_stack_capacity * 2;
+            call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
+          }
+          
+          // Initialize my variables
+          memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
+          call_stack_next += sub->my_vars_size;
+          
+          // Extend operand stack if need
+          while (vm->operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
+            vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
+            vm->operand_stack = realloc(vm->operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
+            operand_stack = vm->operand_stack;
+          }
 
-        // Prepare arguments
-        vm->operand_stack_top -= sub->args_size;
-        memcpy(&call_stack[call_stack_base], &vm->operand_stack[vm->operand_stack_top + 1], sub->args_size * 4);
+          // Prepare arguments
+          vm->operand_stack_top -= sub->args_size;
+          memcpy(&call_stack[call_stack_base], &vm->operand_stack[vm->operand_stack_top + 1], sub->args_size * 4);
+          
+          // Save operand stack base
+          vm->operand_stack_bottom = vm->operand_stack_top;
+
+          // Set constant pool base
+          constant_pool_base = sub->constant_pool_base;
+        }
         
-        // Save operand stack base
-        vm->operand_stack_bottom = vm->operand_stack_top;
-        
-        
-        // Set operand stack top
+        // Load operand stack_top from vm
         operand_stack_top = vm->operand_stack_top;
-        
-        // Set constant pool base
-        constant_pool_base = sub->constant_pool_base;
         
         // Set program counter to next byte code
         if (sub->is_native) {
