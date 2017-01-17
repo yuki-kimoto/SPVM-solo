@@ -323,8 +323,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_CALOAD:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_SALOAD:
         pc++;
         continue;
@@ -820,12 +819,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_JSR:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_RET:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
         
         // Machine address to culculate padding
@@ -1045,12 +1042,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_GETSTATIC:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_PUTSTATIC:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_GETFIELD:
         pc += 3;
         continue;
@@ -1059,24 +1054,19 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_INVOKEVIRTUAL:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_INVOKESPECIAL:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_INVOKESTATIC:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_INVOKEINTERFACE:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_INVOKEDYNAMIC:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_NEW:
         pc++;
         continue;
@@ -1097,20 +1087,17 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_CHECKCAST:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_INSTANCEOF:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_MONITORENTER:
         // Not used
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_MONITOREXIT:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_WIDE:
         pc++;
         continue;
@@ -1125,12 +1112,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_JSR_W:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_BREAKPOINT:
         // Not used
-        pc++;
-        continue;
+        assert(0);
       case SPerl_BYTECODE_C_CODE_CALLSUB:
       {
         // Get subroutine ID
