@@ -109,6 +109,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "CASE",
   "DEFAULT",
   "SWITCH_CONDITION",
+  "DESCRIPTOR",   // UNKNOWN
 };
 
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {

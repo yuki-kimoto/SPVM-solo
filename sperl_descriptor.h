@@ -4,10 +4,8 @@
 #include "sperl_base.h"
 
 enum {
+  SPerl_DESCRIPTOR_C_CODE_NATIVE,
   SPerl_DESCRIPTOR_C_CODE_CONST,
-  SPerl_DESCRIPTOR_C_CODE_STATIC,
-  SPerl_DESCRIPTOR_C_CODE_VALUE,
-  SPerl_DESCRIPTOR_C_CODE_ENUM
 };
 
 extern const char* const SPerl_DESCRIPTOR_CODE_NAMES[];

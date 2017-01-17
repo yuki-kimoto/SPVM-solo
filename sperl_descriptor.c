@@ -3,10 +3,8 @@
 #include "sperl_allocator.h"
 
 const char* const SPerl_DESCRIPTOR_CODE_NAMES[] = {
+  "native",
   "const",
-  "static",
-  "value",
-  "enum"
 };
 
 SPerl_DESCRIPTOR* SPerl_DESCRIPTOR_new(SPerl* sperl) {

@@ -671,6 +671,20 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
 
               return CONSTANT;
             }
+            else if (memcmp(keyword, "native", str_len) == 0) {
+              SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DESCRIPTOR);
+              op->code = SPerl_DESCRIPTOR_C_CODE_NATIVE;
+              yylvalp->opval = op;
+              
+              return DESCRIPTOR;
+            }
+            else if (memcmp(keyword, "const", str_len) == 0) {
+              SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DESCRIPTOR);
+              op->code = SPerl_DESCRIPTOR_C_CODE_CONST;
+              yylvalp->opval = op;
+              
+              return DESCRIPTOR;
+            }
           }
           
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NAME);
