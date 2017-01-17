@@ -248,9 +248,9 @@ decl_field
     }
 
 decl_sub
- : SUB sub_base_name '(' opt_args ')' ':' type block
+ : SUB sub_base_name '(' opt_args ')' ':' opt_descriptors type block
      {
-       $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $7, $8);
+       $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $8, $9);
      }
 
 decl_enum
@@ -574,7 +574,7 @@ types
 opt_descriptors
   :	/* Empty */
     {
-      $$ = SPerl_OP_newOP_LIST(parser);
+      $$ = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
   |	descriptors
     {
@@ -582,15 +582,15 @@ opt_descriptors
         $$ = $1;
       }
       else {
-        $$ = SPerl_OP_newOP_LIST(parser);
-        SPerl_OP_sibling_splice(parser, $$, $$->first, 0, $1);
+        $$ = SPerl_OP_newOP_LIST(sperl, $1->file, $1->line);
+        SPerl_OP_sibling_splice(sperl, $$, $$->first, 0, $1);
       }
     }
     
 descriptors
-  : descriptors DESCRIPTOR
+  : descriptors ',' DESCRIPTOR
     {
-      $$ = SPerl_OP_append_elem(parser, $1, $2);
+      $$ = SPerl_OP_append_elem(sperl, $1, $3, $1->file, $1->line);
     }
   | DESCRIPTOR
 
