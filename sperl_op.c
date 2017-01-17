@@ -118,7 +118,7 @@ void SPerl_CORE_printi(SPerl_FRAME* frame) {
   
   int32_t value = frame->call_stack[0];
   
-  warn("PPPPPPPPPPP %d", value);
+  warn("TEST: %d", value);
 }
 
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {

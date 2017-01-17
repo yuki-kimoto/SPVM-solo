@@ -613,22 +613,18 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_INEG:
         operand_stack[operand_stack_top] = -operand_stack[operand_stack_top];
-        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_LNEG:
         *((int64_t*)&operand_stack[operand_stack_top - 1]) = -*((int64_t*)&operand_stack[operand_stack_top - 1]);
-        operand_stack_top -= 2;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FNEG:
         *((float*)&operand_stack[operand_stack_top - 1]) = -*((float*)&operand_stack[operand_stack_top - 1]);
-        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_DNEG:
         *((double*)&operand_stack[operand_stack_top - 1]) = -*((double*)&operand_stack[operand_stack_top - 1]);
-        operand_stack_top -= 2;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_ISHL:

@@ -499,6 +499,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
           
+          warn("AAAAAAAA %s", num_str);
+          
           // Convert to double
           if (point_count) {
             char* ends;
