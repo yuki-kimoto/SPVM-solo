@@ -25,9 +25,8 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   // Operand stack
   vm->operand_stack = malloc(sizeof(int32_t) * vm->operand_stack_capacity);
   
+  // Operand stack top
   vm->operand_stack_top = -1;
-  
-  vm->operand_stack_bottom = -1;
   
   return vm;
 }
@@ -58,7 +57,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   register int32_t pc = 0;
   
   // Top position of operand stack
-  register int32_t operand_stack_top = 0;
+  register int32_t operand_stack_top = vm->operand_stack_top;
+  vm->operand_stack_top = -1;
+  
+  // Bottom position of operand stack
+  int32_t operand_stack_bottom = -1;
   
   // Base position of call stack
   register int32_t call_stack_base = 0;
@@ -891,10 +894,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         int32_t return_value = operand_stack[operand_stack_top];
         
         // Resotre call stack top
-        operand_stack_top = vm->operand_stack_bottom;
+        operand_stack_top = operand_stack_bottom;
         
         // Resotre call stack base
-        vm->operand_stack_bottom = operand_stack[vm->operand_stack_bottom];
+        operand_stack_bottom = operand_stack[operand_stack_bottom];
         
         // Restore openrad stack top
         operand_stack[operand_stack_top] = return_value;
@@ -921,8 +924,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         assert(0);
         
         // Save retrun value
-        memcpy(&operand_stack[vm->operand_stack_bottom + 1], &operand_stack[operand_stack_top], 8);
-        operand_stack_top = vm->operand_stack_bottom;
+        memcpy(&operand_stack[operand_stack_bottom + 1], &operand_stack[operand_stack_top], 8);
+        operand_stack_top = operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -946,8 +949,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         assert(0);
         
         // Save retrun value
-        *((float*)&operand_stack[vm->operand_stack_bottom + 1]) = *((float*)&operand_stack[operand_stack_top]);
-        operand_stack_top = vm->operand_stack_bottom;
+        *((float*)&operand_stack[operand_stack_bottom + 1]) = *((float*)&operand_stack[operand_stack_top]);
+        operand_stack_top = operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -971,8 +974,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         assert(0);
         
         // Save retrun value
-        memcpy(&operand_stack[vm->operand_stack_bottom + 1], &operand_stack[operand_stack_top], 8);
-        operand_stack_top = vm->operand_stack_bottom;
+        memcpy(&operand_stack[operand_stack_bottom + 1], &operand_stack[operand_stack_top], 8);
+        operand_stack_top = operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -996,8 +999,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         assert(0);
         
         // Save retrun value
-        operand_stack[vm->operand_stack_bottom + 1] = operand_stack[operand_stack_top];
-        operand_stack_top = vm->operand_stack_bottom;
+        operand_stack[operand_stack_bottom + 1] = operand_stack[operand_stack_top];
+        operand_stack_top = operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -1021,7 +1024,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         assert(0);
         
         // Restore openrad stack top
-        operand_stack_top = vm->operand_stack_bottom;
+        operand_stack_top = operand_stack_bottom;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -1150,45 +1153,36 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         CALLSUB_COMMON:
         
-        // Save operand stack top to vm
-        vm->operand_stack_top = operand_stack_top;
-        
-        // Prepare calling subroutine
-        {
-          // Extend call stack(lexical variable area + return address + before call_stack_base)
-          while (call_stack_next + sub->my_vars_size > call_stack_capacity) {
-            call_stack_capacity = call_stack_capacity * 2;
-            call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
-          }
-          
-          // Initialize my variables
-          memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
-          call_stack_next += sub->my_vars_size;
-          
-          // Extend operand stack if need(operand stack max + before operand_stack_bottom)
-          while (vm->operand_stack_top + sub->operand_stack_max + 1 > vm->operand_stack_capacity) {
-            vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
-            vm->operand_stack = realloc(vm->operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
-            operand_stack = vm->operand_stack;
-          }
-          
-          // Prepare arguments
-          vm->operand_stack_top -= sub->args_size;
-          memcpy(&call_stack[call_stack_base], &vm->operand_stack[vm->operand_stack_top + 1], sub->args_size * 4);
-          
-          // Push before operand stack bottom
-          vm->operand_stack_top++;
-          vm->operand_stack[vm->operand_stack_top] = vm->operand_stack_bottom;
-          
-          // Save operand stack bottom
-          vm->operand_stack_bottom = vm->operand_stack_top;
-          
-          // Set constant pool base
-          constant_pool_base = sub->constant_pool_base;
+        // Extend call stack(lexical variable area + return address + before call_stack_base)
+        while (call_stack_next + sub->my_vars_size > call_stack_capacity) {
+          call_stack_capacity = call_stack_capacity * 2;
+          call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
         }
         
-        // Load operand stack_top from vm
-        operand_stack_top = vm->operand_stack_top;
+        // Initialize my variables
+        memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
+        call_stack_next += sub->my_vars_size;
+        
+        // Extend operand stack if need(operand stack max + before operand_stack_bottom)
+        while (operand_stack_top + sub->operand_stack_max + 1 > vm->operand_stack_capacity) {
+          vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
+          vm->operand_stack = realloc(vm->operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
+          operand_stack = vm->operand_stack;
+        }
+        
+        // Prepare arguments
+        operand_stack_top -= sub->args_size;
+        memcpy(&call_stack[call_stack_base], &vm->operand_stack[operand_stack_top + 1], sub->args_size * 4);
+        
+        // Push before operand stack bottom
+        operand_stack_top++;
+        operand_stack[operand_stack_top] = operand_stack_bottom;
+        
+        // Save operand stack bottom
+        operand_stack_bottom = operand_stack_top;
+        
+        // Set constant pool base
+        constant_pool_base = sub->constant_pool_base;
         
         // Set program counter to next byte code
         if (sub->is_native) {
