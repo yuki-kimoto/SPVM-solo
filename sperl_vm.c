@@ -19,7 +19,7 @@
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
-
+  
   // Capacity of openrad stack
   vm->operand_stack_capacity = 255;
   
@@ -28,6 +28,12 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   
   // Operand stack top
   vm->operand_stack_top = -1;
+  
+  vm->current_frame = malloc(sizeof(SPerl_FRAME));
+  
+  vm->call_stack_capacity = 255;
+  
+  vm->call_stack = malloc(sizeof(int32_t) * vm->call_stack_capacity);
   
   return vm;
 }
@@ -45,11 +51,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
   // Operand stack
   int32_t* operand_stack = vm->operand_stack;
-
-  int32_t call_stack_capacity = 255;
-
+  
   // Call stack
-  int32_t* call_stack = malloc(sizeof(int32_t) * call_stack_capacity);
+  int32_t* call_stack = vm->call_stack;
   
   // Constant pool base
   int32_t constant_pool_base = 0;;
@@ -74,7 +78,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
   
   // Frame stack
-  SPerl_FRAME* frame = malloc(sizeof(SPerl_FRAME));
+  SPerl_FRAME* current_frame = vm->current_frame;
   
   // Goto subroutine
   goto CALLSUB_COMMON;
@@ -1144,21 +1148,20 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Call native subroutine
         if (sub->is_native) {
-          
           // Set frame
-          frame->operand_stack = &operand_stack[operand_stack_bottom + 1];
-          frame->call_stack = &call_stack[call_stack_base];
+          current_frame->operand_stack = &operand_stack[operand_stack_bottom + 1];
+          current_frame->call_stack = &call_stack[call_stack_base];
           
-          (*sub->native_address)(frame);
+          (*sub->native_address)(current_frame);
           
           pc++;
         }
         // Call normal subroutine
         else {
           // Extend call stack(lexical variable area + return address + before call_stack_base)
-          while (call_stack_next + sub->my_vars_size > call_stack_capacity) {
-            call_stack_capacity = call_stack_capacity * 2;
-            call_stack = realloc(call_stack, sizeof(int32_t) * call_stack_capacity);
+          while (call_stack_next + sub->my_vars_size > vm->call_stack_capacity) {
+            vm->call_stack_capacity = vm->call_stack_capacity * 2;
+            call_stack = realloc(call_stack, sizeof(int32_t) * vm->call_stack_capacity);
           }
           
           // Initialize my variables
