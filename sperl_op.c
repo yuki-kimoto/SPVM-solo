@@ -115,7 +115,10 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
 };
 
 void SPerl_CORE_printi(SPerl_FRAME* frame) {
-  warn("PPPPPPPPPPPPPPPPP");
+  
+  int32_t value = frame->call_stack[0];
+  
+  warn("PPPPPPPPPPP %d", value);
 }
 
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {
