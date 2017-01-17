@@ -7,7 +7,22 @@ use CORE;
 
 package Test {
   sub main() : int {
+    
+    # Constant int
+    printi(-2);
+    printi(-1);
+    printi(0);
+    printi(1);
+    printi(2);
+    printi(3);
+    printi(4);
     printi(5);
+    printi(6);
+    printi(255);
+    printi(256);
+    printi(65535);
+    printi(65536);
+    
     
     "abc";
     my $num2 = 5;

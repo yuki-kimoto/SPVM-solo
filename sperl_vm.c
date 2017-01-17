@@ -895,10 +895,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         int32_t return_value = operand_stack[operand_stack_top];
         
-        // Resotre call stack top
+        // Resotre operand stack top
         operand_stack_top = operand_stack_bottom;
         
-        // Resotre call stack base
+        // Resotre operand stack base
         operand_stack_bottom = operand_stack[operand_stack_bottom];
         
         // Restore openrad stack top
@@ -1173,7 +1173,18 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           
           (*sub->native_address)(vm->current_frame);
           
-          pc++;
+          operand_stack_top++;
+
+          // Return address
+          int32_t return_address = call_stack[call_stack_base - 2];
+          
+          // Resotre call stack top
+          call_stack_next = call_stack_base - 2;
+          
+          // Resotre call stack base
+          call_stack_base = call_stack[call_stack_base - 1];
+          
+          pc = return_address;
         }
         // Call normal subroutine
         else {
