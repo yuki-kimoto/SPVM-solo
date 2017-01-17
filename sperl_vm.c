@@ -77,9 +77,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Get subroutine
   SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
   
-  // Frame stack
-  SPerl_FRAME* current_frame = vm->current_frame;
-  
   // Goto subroutine
   goto CALLSUB_COMMON;
   
@@ -909,6 +906,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Finish vm
         if (call_stack_base == 0) {
+          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
@@ -1149,10 +1147,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Call native subroutine
         if (sub->is_native) {
           // Set frame
-          current_frame->operand_stack = &operand_stack[operand_stack_bottom + 1];
-          current_frame->call_stack = &call_stack[call_stack_base];
+          vm->current_frame->operand_stack = &operand_stack[operand_stack_bottom + 1];
+          vm->current_frame->call_stack = &call_stack[call_stack_base];
           
-          (*sub->native_address)(current_frame);
+          (*sub->native_address)(vm->current_frame);
           
           pc++;
         }
