@@ -890,11 +890,14 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         int32_t return_value = operand_stack[operand_stack_top];
         
-        // Save retrun value
-        operand_stack[vm->operand_stack_bottom + 1] = return_value;
+        // Resotre call stack top
+        operand_stack_top = vm->operand_stack_bottom;
+        
+        // Resotre call stack base
+        vm->operand_stack_bottom = operand_stack[vm->operand_stack_bottom];
         
         // Restore openrad stack top
-        operand_stack_top = vm->operand_stack_bottom;
+        operand_stack[operand_stack_top] = return_value;
         
         // Finish vm
         if (call_stack_base == 0) {
@@ -1146,7 +1149,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         call_stack_base = call_stack_next;
         
         CALLSUB_COMMON:
-
+        
         // Save operand stack top to vm
         vm->operand_stack_top = operand_stack_top;
         
@@ -1162,20 +1165,24 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           memset(&call_stack[call_stack_next], 0, sub->my_vars_size * 4);
           call_stack_next += sub->my_vars_size;
           
-          // Extend operand stack if need
-          while (vm->operand_stack_top + sub->operand_stack_max > vm->operand_stack_capacity) {
+          // Extend operand stack if need(operand stack max + before operand_stack_bottom)
+          while (vm->operand_stack_top + sub->operand_stack_max + 1 > vm->operand_stack_capacity) {
             vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
             vm->operand_stack = realloc(vm->operand_stack, sizeof(int32_t) * vm->operand_stack_capacity);
             operand_stack = vm->operand_stack;
           }
-
+          
           // Prepare arguments
           vm->operand_stack_top -= sub->args_size;
           memcpy(&call_stack[call_stack_base], &vm->operand_stack[vm->operand_stack_top + 1], sub->args_size * 4);
           
-          // Save operand stack base
+          // Push before operand stack bottom
+          vm->operand_stack_top++;
+          vm->operand_stack[vm->operand_stack_top] = vm->operand_stack_bottom;
+          
+          // Save operand stack bottom
           vm->operand_stack_bottom = vm->operand_stack_top;
-
+          
           // Set constant pool base
           constant_pool_base = sub->constant_pool_base;
         }
