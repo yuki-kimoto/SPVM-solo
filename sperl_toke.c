@@ -530,7 +530,19 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           constant->code = constant_code;
           
           // Convert to double
-          if (constant_code == SPerl_CONSTANT_C_CODE_FLOAT || constant_code == SPerl_CONSTANT_C_CODE_DOUBLE) {
+          if (constant_code == SPerl_CONSTANT_C_CODE_FLOAT) {
+            char* ends;
+            double num = strtof(num_str, &ends);
+            free(num_str);
+            
+            constant->uv.float_value = num;
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+            op->uv.constant = constant;
+            yylvalp->opval = op;
+            
+            return CONSTANT;
+          }
+          else if (constant_code == SPerl_CONSTANT_C_CODE_DOUBLE) {
             char* ends;
             double num = strtod(num_str, &ends);
             free(num_str);
@@ -538,22 +550,31 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             constant->uv.double_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
             op->uv.constant = constant;
-            yylvalp->opval = (SPerl_OP*)op;
+            yylvalp->opval = op;
             
             return CONSTANT;
           }
-          // Convert to integer
-          else {
+          // int
+          else if (constant_code == SPerl_CONSTANT_C_CODE_INT) {
             int32_t num = atoi(num_str);
             free(num_str);
             
-            SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
-            SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
-            constant->code = SPerl_CONSTANT_C_CODE_INT;
             constant->uv.int_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
             op->uv.constant = constant;
-            yylvalp->opval = (SPerl_OP*)op;
+            yylvalp->opval = op;
+            
+            return CONSTANT;
+          }
+          // long
+          else if (constant_code == SPerl_CONSTANT_C_CODE_LONG) {
+            int64_t num = atol(num_str);
+            free(num_str);
+            
+            constant->uv.long_value = num;
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+            op->uv.constant = constant;
+            yylvalp->opval = op;
             
             return CONSTANT;
           }
