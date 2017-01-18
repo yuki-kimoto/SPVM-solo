@@ -1337,7 +1337,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DCONST_0);
                   bytecode_set = 1;
                 }
-                else if (constant->uv.double_value == 2) {
+                else if (constant->uv.double_value == 1) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DCONST_1);
                   bytecode_set = 1;
                 }

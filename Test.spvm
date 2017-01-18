@@ -7,8 +7,14 @@ use CORE;
 
 package Test {
   sub main() : int {
+
+    # Constant double
+    printd(0d);
+    printd(1d);
+    printd(1.2);
     
     # Constant long
+    printl(0l);
     printl(-1L);
     printl(0L);
     printl(1L);

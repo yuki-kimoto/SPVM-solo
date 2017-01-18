@@ -75,15 +75,9 @@ void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_p
   
   int32_t length = constant_pool->length;
   
-  // Adjust alignment
-  if ((intptr_t)&constant_pool->values[length] % 8 != 0) {
-    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
-  }
-  assert((intptr_t)&constant_pool->values[constant_pool->length] % 8 == 0);
-  
   // Add long value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);
-  *(int64_t*)&constant_pool->values[length] = value;
+  memcpy(&constant_pool->values[length], &value, 8);
   constant_pool->length += 2;
 }
 
@@ -103,15 +97,9 @@ void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   
   int32_t length = constant_pool->length;
   
-  // Adjust alignment
-  if ((intptr_t)&constant_pool->values[length] % 8 != 0) {
-    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
-  }
-  assert((intptr_t)&constant_pool->values[constant_pool->length] % 8 == 0);
-  
   // Add double value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);
-  *(double*)&constant_pool->values[length] = value;
+  memcpy(&constant_pool->values[length], &value, 8);
   constant_pool->length += 2;
 }
 

@@ -503,23 +503,21 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           
           // Constant type
           int32_t constant_code;
-          if (point_count) {
-            if (*parser->bufptr == 'f' || *parser->bufptr == 'F')  {
-              constant_code = SPerl_CONSTANT_C_CODE_FLOAT;
-              parser->bufptr++;
-            }
-            else if (*parser->bufptr == 'd' || *parser->bufptr == 'D')  {
-              constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
-              parser->bufptr++;
-            }
-            else {
-              constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
-            }
+          if (*parser->bufptr == 'f' || *parser->bufptr == 'F')  {
+            constant_code = SPerl_CONSTANT_C_CODE_FLOAT;
+            parser->bufptr++;
+          }
+          else if (*parser->bufptr == 'd' || *parser->bufptr == 'D')  {
+            constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
+            parser->bufptr++;
+          }
+          else if (*parser->bufptr == 'l' || *parser->bufptr == 'L') {
+            constant_code = SPerl_CONSTANT_C_CODE_LONG;
+            parser->bufptr++;
           }
           else {
-            if (*parser->bufptr == 'l' || *parser->bufptr == 'L') {
-              constant_code = SPerl_CONSTANT_C_CODE_LONG;
-              parser->bufptr++;
+            if (point_count) {
+              constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
             }
             else {
               constant_code = SPerl_CONSTANT_C_CODE_INT;

@@ -132,6 +132,21 @@ void SPerl_CORE_printl(SPerl_FRAME* frame) {
   printf("TEST: %" PRId64 "\n", value);
 }
 
+void SPerl_CORE_printf(SPerl_FRAME* frame) {
+  
+  float value = (float)frame->call_stack[0];
+  
+  printf("TEST: %f\n", value);
+}
+
+void SPerl_CORE_printd(SPerl_FRAME* frame) {
+  
+  double value;
+  memcpy(&value, frame->call_stack, 8);
+  
+  printf("TEST: %f\n", value);
+}
+
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {
   
   SPerl_PARSER* parser = sperl->parser;
@@ -860,6 +875,12 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
             }
             else if (strcmp(sub_name, "CORE::printl") == 0) {
               sub->native_address = SPerl_CORE_printl;
+            }
+            else if (strcmp(sub_name, "CORE::printf") == 0) {
+              sub->native_address = SPerl_CORE_printf;
+            }
+            else if (strcmp(sub_name, "CORE::printd") == 0) {
+              sub->native_address = SPerl_CORE_printd;
             }
           }
         }

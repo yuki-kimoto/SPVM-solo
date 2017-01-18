@@ -157,13 +157,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_DCONST_0:
         operand_stack_top += 2;
-        tmp_double = 0.;
+        tmp_double = 0.0;
         memcpy(&operand_stack[operand_stack_top - 1], &tmp_double, 8);
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_DCONST_1:
         operand_stack_top += 2;
-        tmp_double = 1.;
+        tmp_double = 1.0;
         memcpy(&operand_stack[operand_stack_top - 1], &tmp_double, 8);
         pc++;
         continue;
