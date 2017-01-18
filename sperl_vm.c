@@ -86,6 +86,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   goto CALLSUB_COMMON;
   
   while (1) {
+    
     switch (bytecodes[pc]) {
       case SPerl_BYTECODE_C_CODE_NOP:
         // Not used
@@ -1176,6 +1177,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           vm->current_frame->operand_stack = &operand_stack[operand_stack_top + 1];
           vm->current_frame->call_stack = &call_stack[call_stack_base];
           
+          
           (*sub->native_address)(vm->current_frame);
           
           if (sub->return_size == 2) {
@@ -1198,12 +1200,12 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
         // Call normal subroutine
         else {
-          // Push before operand stack bottom
+          
           operand_stack_top++;
           operand_stack[operand_stack_top] = operand_stack_bottom;
           
-          // Save operand stack bottom
           operand_stack_bottom = operand_stack_top;
+
           
           // Set constant pool base
           constant_pool_base = sub->constant_pool_base;

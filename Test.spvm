@@ -6,7 +6,16 @@ use Test::Simple;
 use CORE;
 
 package Test {
+  sub sum1 ($num1 : int, $num2 : int) : int {
+    return $num1 + $num2;
+  }
+  sub sum0($num1 : int, $num2 : int) : int {
+    return $num1 + $num2;
+  }
   sub main() : int {
+
+    sum0(1, 1);
+    sum1(1, 2);
 
     # Constant float
     printf(1F);
@@ -54,6 +63,9 @@ package Test {
     printi(65535);
     printi(65536);
     printi(2147483647);
+    
+    printi(sum1(1, 2));
+    printi(sum1(1, 5));
     
     "abc";
     my $num2 = 5;
@@ -271,7 +283,7 @@ package Test {
     return 0;
   }
   
-  sub sum1 ($num1 : int, $num2 : int) : int {
+  sub sum4($num1 : int, $num2 : int) : int {
     return $num1 + $num2;
   }
   
