@@ -17,6 +17,11 @@ package Test {
     printl(-9223372036854775808L);
     
     # Constant int
+    printi(65536);
+    printi(-32769);
+    printi(-32768);
+    printi(-129);
+    printi(-128);
     printi(-2);
     printi(-1);
     printi(0);
@@ -26,12 +31,16 @@ package Test {
     printi(4);
     printi(5);
     printi(6);
+    printi(127);
+    printi(128);
     printi(255);
     printi(256);
+    printi(32767);
+    printi(32768);
     printi(65535);
     printi(65536);
     printi(2147483647);
-    printi(-2147483648);
+    printi(2147483648);
     
     "abc";
     my $num2 = 5;

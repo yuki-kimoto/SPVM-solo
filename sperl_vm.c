@@ -169,12 +169,12 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_BIPUSH:
         operand_stack_top++;
-        operand_stack[operand_stack_top] = bytecodes[pc + 1];
+        operand_stack[operand_stack_top] = (int32_t)(int8_t)bytecodes[pc + 1];
         pc += 2;
         continue;
       case SPerl_BYTECODE_C_CODE_SIPUSH:
         operand_stack_top++;
-        operand_stack[operand_stack_top] = (bytecodes[pc + 1] << 8) +  bytecodes[pc + 2];
+        operand_stack[operand_stack_top] = (int32_t)(int16_t)((bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]);
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_LDC:
