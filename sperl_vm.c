@@ -199,7 +199,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_LLOAD:
         operand_stack_top += 2;
-        memcpy(operand_stack[operand_stack_top - 1], call_stack[call_stack_base + bytecodes[pc + 1]], 8);
+        memcpy(&operand_stack[operand_stack_top - 1], &call_stack[call_stack_base + bytecodes[pc + 1]], 8);
         pc += 2;
         continue;
       case SPerl_BYTECODE_C_CODE_FLOAD:
@@ -209,7 +209,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_DLOAD:
         operand_stack_top += 2;
-        memcpy(operand_stack[operand_stack_top - 1], call_stack[call_stack_base + bytecodes[pc + 1]], 8);
+        memcpy(&operand_stack[operand_stack_top - 1], &call_stack[call_stack_base + bytecodes[pc + 1]], 8);
         pc += 2;
         continue;
       case SPerl_BYTECODE_C_CODE_ALOAD:

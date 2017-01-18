@@ -16,7 +16,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   SPerl_PARSER* parser = sperl->parser;
   
   SPerl_ARRAY_push(parser->include_pathes, ".");
-  int32_t parse_success = SPerl_PARSER_parse(sperl, package_name);
+  SPerl_PARSER_parse(sperl, package_name);
   
   // Entry point
   const char* entry_point = parser->entry_point;
