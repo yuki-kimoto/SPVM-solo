@@ -1178,8 +1178,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           
           (*sub->native_address)(vm->current_frame);
           
-          operand_stack_top++;
-
+          if (sub->return_size == 2) {
+            operand_stack_top += 2;
+          }
+          else if (sub->return_size == 1) {
+            operand_stack_top++;
+          }
+          
           // Return address
           int32_t return_address = call_stack[call_stack_base - 2];
           

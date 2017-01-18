@@ -1091,6 +1091,17 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     sub->my_vars_size = next_my_var_address;
     sub->args_size = sub_args_size;
     
+    // Return type size
+    SPerl_RESOLVED_TYPE* return_resolved_type = sub->op_return_type->uv.type->resolved_type;
+    if (return_resolved_type) {
+      if (return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+        sub->return_size = 2;
+      }
+      else {
+        sub->return_size = 1;
+      }
+    }
+    
     // Set constant pool length
     sub->constant_pool_length = sperl->constant_pool->length - sub->constant_pool_base;
     if (sub->constant_pool_length > 0xFFFF) {

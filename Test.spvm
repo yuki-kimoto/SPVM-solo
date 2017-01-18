@@ -8,13 +8,13 @@ use CORE;
 package Test {
   sub main() : int {
 
-    # Constant double
+    # Constant float
     printf(1F);
     printf(0f);
     printf(1f);
     printf(2f);
     printf(1.2);
-
+    
     # Constant double
     printd(1D);
     printd(0d);
@@ -313,5 +313,4 @@ package Test {
     
     return 0;
   }
-
 }
