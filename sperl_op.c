@@ -134,7 +134,7 @@ void SPerl_CORE_printl(SPerl_FRAME* frame) {
 
 void SPerl_CORE_printf(SPerl_FRAME* frame) {
   
-  float value = (float)frame->call_stack[0];
+  float value = *(float*)frame->call_stack;
   
   printf("TEST: %f\n", value);
 }

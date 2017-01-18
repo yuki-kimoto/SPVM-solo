@@ -9,6 +9,14 @@ package Test {
   sub main() : int {
 
     # Constant double
+    printf(1F);
+    printf(0f);
+    printf(1f);
+    printf(2f);
+    printf(1.2);
+
+    # Constant double
+    printd(1D);
     printd(0d);
     printd(1d);
     printd(1.2);
