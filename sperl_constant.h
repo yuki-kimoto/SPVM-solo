@@ -27,6 +27,8 @@ struct SPerl_constant {
   } uv;
   int32_t code;
   int32_t address;
+  char* num_str;
+  _Bool neg;
 };
 
 SPerl_CONSTANT* SPerl_CONSTANT_new(SPerl* sperl);

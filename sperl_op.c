@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include <assert.h>
 
+#include <inttypes.h>
+
+
 #include "sperl.h"
 #include "sperl_parser.h"
 #include "sperl_array.h"
@@ -118,7 +121,7 @@ void SPerl_CORE_printi(SPerl_FRAME* frame) {
   
   int32_t value = frame->call_stack[0];
   
-  warn("TEST: %d", value);
+  printf("TEST: %" PRId32 "\n", value);
 }
 
 void SPerl_CORE_printl(SPerl_FRAME* frame) {
@@ -126,7 +129,7 @@ void SPerl_CORE_printl(SPerl_FRAME* frame) {
   int64_t value;
   memcpy(&value, frame->call_stack, 8);
   
-  warn("TEST: %ld", value);
+  printf("TEST: %" PRId64 "\n", value);
 }
 
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {

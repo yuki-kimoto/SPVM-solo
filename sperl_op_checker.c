@@ -76,6 +76,20 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       // [START]Preorder traversal position
       
       switch (op_cur->code) {
+        case SPerl_OP_C_CODE_NEGATE: {
+          if (op_cur->first->code == SPerl_OP_C_CODE_CONSTANT) {
+            // Constant negate
+            SPerl_OP* op_constant = op_cur->first;
+            SPerl_CONSTANT* constant = op_constant->uv.constant;
+            constant->neg = 1;
+            
+            // Replace
+            op_cur->code = SPerl_OP_C_CODE_CONSTANT;
+            op_cur->uv.constant = constant;
+            op_cur->first == NULL;
+          }
+          break;
+        }
         case SPerl_OP_C_CODE_SWITCH: {
           if (in_switch) {
             SPerl_yyerror_format(sperl, "duplicate switch is forbidden at %s line %d\n", op_cur->file, op_cur->line);
@@ -776,6 +790,34 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               // Add constant to constant pool
               SPerl_CONSTANT* constant = op_cur->uv.constant;
+              
+              if (constant->num_str) {
+                // Convert to double
+                if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
+                  char* ends;
+                  float num = strtof(constant->num_str, &ends);
+                  constant->uv.float_value = num;
+                  constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+                }
+                else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
+                  char* ends;
+                  double num = strtod(constant->num_str, &ends);
+                  constant->uv.double_value = num;
+                  constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+                }
+                // int
+                else if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
+                  int32_t num = atoi(constant->num_str);
+                  constant->uv.int_value = num;
+                  constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+                }
+                // long
+                else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
+                  int64_t num = strtol(constant->num_str, NULL, 0);
+                  constant->uv.long_value = num;
+                  constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+                }
+              }
               
               // Constant pool adding condition
               _Bool isnt_add = 0;

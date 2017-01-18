@@ -13,6 +13,8 @@ package Test {
     printl(0L);
     printl(1L);
     printl(2L);
+    printl(9223372036854775807L);
+    printl(9223372036854775808L);
     
     # Constant int
     printi(-2);
