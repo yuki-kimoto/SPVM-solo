@@ -78,7 +78,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       switch (op_cur->code) {
         case SPerl_OP_C_CODE_NEGATE: {
           if (op_cur->first->code == SPerl_OP_C_CODE_CONSTANT) {
-            warn("AAAAAAAAAAAAAA");
             
             // Constant negate
             SPerl_OP* op_constant = op_cur->first;
