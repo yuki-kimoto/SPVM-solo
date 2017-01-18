@@ -81,12 +81,14 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             // Constant negate
             SPerl_OP* op_constant = op_cur->first;
             SPerl_CONSTANT* constant = op_constant->uv.constant;
-            constant->neg = 1;
-            
-            // Replace
-            op_cur->code = SPerl_OP_C_CODE_CONSTANT;
-            op_cur->uv.constant = constant;
-            op_cur->first == NULL;
+            if (constant->num_str) {
+              constant->num_str[0] = '-';
+              
+              // Replace
+              op_cur->code = SPerl_OP_C_CODE_CONSTANT;
+              op_cur->uv.constant = constant;
+              op_cur->first == NULL;
+            }
           }
           break;
         }
@@ -802,6 +804,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
                   char* ends;
                   double num = strtod(constant->num_str, &ends);
+                  
                   constant->uv.double_value = num;
                   constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
                 }
