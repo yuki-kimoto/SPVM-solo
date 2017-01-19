@@ -322,6 +322,7 @@ class_block
 expression
   : LAST
   | NEXT
+  | RETURN
   | RETURN term
     {
       $$ = $1;

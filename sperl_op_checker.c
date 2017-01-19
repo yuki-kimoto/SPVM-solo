@@ -1157,7 +1157,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     sub->args_size = sub_args_size;
     
     // Return type size
-    if (sub->op_return_type != SPerl_OP_C_CODE_VOID) {
+    if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
       SPerl_RESOLVED_TYPE* return_resolved_type = sub->op_return_type->uv.type->resolved_type;
       if (return_resolved_type) {
         if (return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {

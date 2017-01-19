@@ -387,7 +387,6 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
      resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
       break;
     }
-    case SPerl_OP_C_CODE_RETURN:
     case SPerl_OP_C_CODE_ADD:
     case SPerl_OP_C_CODE_SUBTRACT:
     case SPerl_OP_C_CODE_MULTIPLY:
@@ -409,6 +408,12 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_ASSIGN:
     {
       resolved_type = SPerl_OP_get_resolved_type(sperl, op->first);
+      break;
+    }
+    case SPerl_OP_C_CODE_RETURN: {
+      if (op->first) {
+        resolved_type = SPerl_OP_get_resolved_type(sperl, op->first);
+      }
       break;
     }
     case SPerl_OP_C_CODE_CONVERT: {

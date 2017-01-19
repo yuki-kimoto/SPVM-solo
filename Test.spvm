@@ -12,7 +12,7 @@ package Test {
   sub sum0($num1 : int, $num2 : int) : int {
     return $num1 + $num2;
   }
-  sub main() : int {
+  sub main() : void {
 
     sum0(1, 1);
     sum1(1, 2);
@@ -269,8 +269,6 @@ package Test {
     sum1(1, 2);
     
     test1();
-    
-    return 0;
   }
   
   sub test1 () : int {
@@ -322,7 +320,5 @@ package Test {
     else {
       
     }
-    
-    return 0;
   }
 }

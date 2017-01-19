@@ -435,9 +435,13 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     }
     printf("    id => %" PRId32 "\n", sub->id);
     printf("    anon => %d\n", sub->anon);
-
-    printf("    resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
-
+    
+    if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
+      printf("    resolved_type => void");
+    }
+    else {
+      printf("    resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
+    }
     printf("    args\n");
     SPerl_ARRAY* op_args = sub->op_args;
     for (int32_t i = 0; i < op_args->length; i++) {

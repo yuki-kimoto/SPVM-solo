@@ -1030,13 +1030,16 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
-        assert(0);
-        
-        // Restore openrad stack top
+
+        // Resotre operand stack top
         operand_stack_top = operand_stack_bottom;
+        
+        // Resotre operand stack base
+        operand_stack_bottom = operand_stack[operand_stack_bottom];
         
         // Finish vm
         if (call_stack_base == 0) {
+          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
@@ -1050,6 +1053,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         call_stack_base = call_stack[call_stack_base - 1];
         
         pc = return_address;
+        
         continue;
       }
       case SPerl_BYTECODE_C_CODE_GETSTATIC:
