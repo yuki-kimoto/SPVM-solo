@@ -22,7 +22,7 @@ package Test {
     printf(0f);
     printf(1f);
     printf(2f);
-    printf(1.2);
+    printf(1.2f);
     
     # Constant double
     printd(1D);

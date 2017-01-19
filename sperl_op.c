@@ -445,6 +445,11 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
       resolved_type = var->op_my_var->uv.my_var->op_type->uv.type->resolved_type;
       break;
     }
+    case SPerl_OP_C_CODE_DECL_MY_VAR: {
+      SPerl_MY_VAR* my_var = op->uv.my_var;
+      resolved_type = my_var->op_type->uv.type->resolved_type;
+      break;
+    }
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
