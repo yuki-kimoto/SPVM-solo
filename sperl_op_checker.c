@@ -141,7 +141,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               if (cur_default_op) {
                 SPerl_yyerror_format(sperl, "multiple default is forbidden at %s line %d\n", op_cur->file, op_cur->line);
                 parser->fatal_error = 1;
-                return;
+                break;
               }
               else {
                 cur_default_op = op_cur;
@@ -689,6 +689,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 if (is_invalid) {
                   SPerl_yyerror_format(sperl, "Invalid return type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
                 }
               }
               
@@ -800,6 +801,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               // Only int or long
               if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
                 SPerl_yyerror_format(sperl, "must be int in increment at %s line %d\n", op_cur->file, op_cur->line);
+                break;
               }
               
               break;
@@ -945,6 +947,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               if (found) {
                 SPerl_yyerror_format(sperl, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
+                break;
               }
               else {
                 SPerl_ARRAY_push(op_my_vars, op_cur);
@@ -966,6 +969,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               if (!found_sub) {
                 SPerl_yyerror_format(sperl, "unknown sub \"%s\" at %s line %d\n",
                   sub_name, op_cur->file, op_cur->line);
+                break;
               }
               
               break;
@@ -985,6 +989,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_yyerror_format(sperl, "unknown field \"%s\" at %s line %d\n",
                   field_name, op_cur->file, op_cur->line);
                 parser->fatal_error = 1;
+                break;
               }
               
               break;
@@ -1001,6 +1006,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, op_term_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, op_type_resolved_type)) {
                 SPerl_yyerror_format(sperl, "can't convert type %s to %s at %s line %d\n",
                   op_term_resolved_type->name, op_type_resolved_type->name, op_cur->file, op_cur->line);
+                break;
               }
             }
             break;
@@ -1121,6 +1127,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     sub->constant_pool_length = sperl->constant_pool->length - sub->constant_pool_base;
     if (sub->constant_pool_length > 0xFFFF) {
       SPerl_yyerror_format(sperl, "Constant pool max size is 65,535\n", op_cur->file, op_cur->line);
+      break;
     }
     
     // 
