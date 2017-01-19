@@ -26,9 +26,6 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   // Operand stack
   vm->operand_stack = malloc(sizeof(int64_t) * vm->operand_stack_capacity);
   
-  // Operand stack top
-  vm->operand_stack_top = -1;
-  
   vm->current_frame = malloc(sizeof(SPerl_FRAME));
   
   vm->call_stack_capacity = 255;
@@ -62,8 +59,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   register int64_t pc = 0;
   
   // Top position of operand stack
-  register int32_t operand_stack_top = vm->operand_stack_top;
-  vm->operand_stack_top = -1;
+  register int32_t operand_stack_top = -1;
   
   // Bottom position of operand stack
   int32_t operand_stack_bottom = -1;
