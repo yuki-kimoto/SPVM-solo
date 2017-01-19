@@ -248,7 +248,7 @@ decl_field
     }
 
 decl_sub
- : SUB sub_base_name '(' opt_args ')' ':' opt_descriptors type block
+ : SUB sub_base_name '(' opt_args ')' ':' opt_descriptors type_or_void block
      {
        $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $7, $8, $9);
      }
@@ -609,12 +609,12 @@ type_name
     }
 
 type_sub
-  : SUB '(' ')' type_or_void
+  : SUB '(' ')' type
     {
       SPerl_OP* op_types = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
       $$ = SPerl_OP_build_type_sub(sperl, op_types, $4);
     }
-  | SUB '(' types ')' type_or_void
+  | SUB '(' types ')' type
     {
       $$ = SPerl_OP_build_type_sub(sperl, $3, $5);
     }

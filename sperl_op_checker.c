@@ -1063,37 +1063,39 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             
             if (!sub->is_native && op_statements->last->code != SPerl_OP_C_CODE_RETURN) {
               // Add return to the end of subroutine
-              SPerl_RESOLVED_TYPE* op_return_resolved_type = sub->op_return_type->uv.type->resolved_type;
               SPerl_OP* op_return = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_RETURN, op_cur->file, op_cur->line);
-              if (op_return_resolved_type) {
-                if (op_return_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                  SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
-                  if (op_return_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
-                    constant->code = SPerl_CONSTANT_C_CODE_INT;
-                    constant->uv.int_value = 0;
+              if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
+                SPerl_RESOLVED_TYPE* op_return_resolved_type = SPerl_OP_get_resolved_type(sperl, sub->op_return_type);
+                if (op_return_resolved_type) {
+                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, op_return_resolved_type)) {
+                    SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+                    if (op_return_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
+                      constant->code = SPerl_CONSTANT_C_CODE_INT;
+                      constant->uv.int_value = 0;
+                    }
+                    else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                      constant->code = SPerl_CONSTANT_C_CODE_LONG;
+                      constant->uv.long_value = 0;
+                    }
+                    else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
+                      constant->code = SPerl_CONSTANT_C_CODE_FLOAT;
+                      constant->uv.float_value = 0;
+                    }
+                    else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+                      constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
+                      constant->uv.double_value = 0;
+                    }
+                    SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_cur->file, op_cur->line);
+                    op_constant->uv.constant = constant;
+                    
+                    SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_constant);
                   }
-                  else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                    constant->code = SPerl_CONSTANT_C_CODE_LONG;
-                    constant->uv.long_value = 0;
+                  // Reference
+                  else {
+                    // Undef
+                    SPerl_OP* op_undef = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_UNDEF, op_cur->file, op_cur->line);
+                    SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_undef);
                   }
-                  else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                    constant->code = SPerl_CONSTANT_C_CODE_FLOAT;
-                    constant->uv.float_value = 0;
-                  }
-                  else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                    constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
-                    constant->uv.double_value = 0;
-                  }
-                  SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_cur->file, op_cur->line);
-                  op_constant->uv.constant = constant;
-                  
-                  SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_constant);
-                }
-                // Reference
-                else {
-                  // Undef
-                  SPerl_OP* op_undef = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_UNDEF, op_cur->file, op_cur->line);
-                  SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_undef);
                 }
               }
               
@@ -1155,13 +1157,15 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     sub->args_size = sub_args_size;
     
     // Return type size
-    SPerl_RESOLVED_TYPE* return_resolved_type = sub->op_return_type->uv.type->resolved_type;
-    if (return_resolved_type) {
-      if (return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        sub->return_size = 2;
-      }
-      else {
-        sub->return_size = 1;
+    if (sub->op_return_type != SPerl_OP_C_CODE_VOID) {
+      SPerl_RESOLVED_TYPE* return_resolved_type = sub->op_return_type->uv.type->resolved_type;
+      if (return_resolved_type) {
+        if (return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+          sub->return_size = 2;
+        }
+        else {
+          sub->return_size = 1;
+        }
       }
     }
     
