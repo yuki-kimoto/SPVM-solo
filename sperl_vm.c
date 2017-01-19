@@ -1165,7 +1165,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Extend call stack(lexical variable area + return address + before call_stack_base)
         while (call_stack_next + sub->my_vars_size > vm->call_stack_capacity) {
           vm->call_stack_capacity = vm->call_stack_capacity * 2;
-          call_stack = realloc(call_stack, sizeof(int64_t) * vm->call_stack_capacity);
+          vm->call_stack = realloc(call_stack, sizeof(int64_t) * vm->call_stack_capacity);
+          call_stack = vm->call_stack;
         }
         
         // Initialize my variables
