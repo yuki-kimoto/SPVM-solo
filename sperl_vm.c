@@ -26,13 +26,21 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   // Operand stack
   vm->operand_stack = malloc(sizeof(int64_t) * vm->operand_stack_capacity);
   
-  vm->current_frame = malloc(sizeof(SPerl_FRAME));
+  vm->frame = malloc(sizeof(SPerl_FRAME));
   
   vm->call_stack_capacity = 255;
   
   vm->call_stack = malloc(sizeof(int64_t) * vm->call_stack_capacity);
   
   return vm;
+}
+
+SPerl_FRAME* SPerl_VM_init_frame(SPerl* sperl, SPerl_VM* vm) {
+  
+  vm->frame->call_stack = vm->call_stack;
+  vm->frame->operand_stack = vm->operand_stack;
+  
+  return vm->frame;
 }
 
 void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
@@ -896,7 +904,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Finish vm
         if (call_stack_base == 0) {
-          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
+          vm->frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
@@ -927,7 +935,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Finish vm
         if (call_stack_base == 0) {
-          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
+          vm->frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
@@ -958,7 +966,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Finish vm
         if (call_stack_base == 0) {
-          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
+          vm->frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
@@ -989,7 +997,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Finish vm
         if (call_stack_base == 0) {
-          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
+          vm->frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
@@ -1020,7 +1028,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Finish vm
         if (call_stack_base == 0) {
-          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
+          vm->frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
@@ -1047,7 +1055,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Finish vm
         if (call_stack_base == 0) {
-          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
+          vm->frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
@@ -1187,10 +1195,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Call native subroutine
         if (sub->is_native) {
           // Set frame
-          vm->current_frame->operand_stack = &operand_stack[operand_stack_top + 1];
-          vm->current_frame->call_stack = &call_stack[call_stack_base];
+          vm->frame->operand_stack = &operand_stack[operand_stack_top + 1];
+          vm->frame->call_stack = &call_stack[call_stack_base];
           
-          (*sub->native_address)(vm->current_frame);
+          (*sub->native_address)(vm->frame);
           
           operand_stack_top++;
           

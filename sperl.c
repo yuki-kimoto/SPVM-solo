@@ -24,6 +24,9 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   // Create VM
   SPerl_VM* vm = SPerl_VM_new(sperl);
   
+  // Initialize frame
+  SPerl_FRAME* frame = SPerl_VM_init_frame(sperl, vm);
+  
   // Run
   SPerl_VM_call_sub(sperl, vm, entry_point);
 }
