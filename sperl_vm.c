@@ -50,7 +50,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   uint8_t* bytecodes = sperl->bytecode_array->values;
   
   // Operand stack
-  int32_t* operand_stack = vm->operand_stack;
+  int64_t* operand_stack = vm->operand_stack;
   
   // Call stack
   int32_t* call_stack = vm->call_stack;
@@ -1184,12 +1184,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           
           (*sub->native_address)(vm->current_frame);
           
-          if (sub->return_size == 2) {
-            operand_stack_top += 2;
-          }
-          else if (sub->return_size == 1) {
-            operand_stack_top++;
-          }
+          operand_stack_top++;
           
           // Return address
           int32_t return_address = call_stack[call_stack_base - 2];
@@ -1209,7 +1204,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           operand_stack[operand_stack_top] = operand_stack_bottom;
           
           operand_stack_bottom = operand_stack_top;
-
           
           // Set constant pool base
           constant_pool_base = sub->constant_pool_base;
