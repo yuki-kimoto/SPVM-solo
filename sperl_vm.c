@@ -919,19 +919,26 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_LRETURN: {
-        assert(0);
+        int64_t return_value = operand_stack[operand_stack_top];
         
-        // Save retrun value
-        memcpy(&operand_stack[operand_stack_bottom + 1], &operand_stack[operand_stack_top], 8);
+        // Resotre operand stack top
         operand_stack_top = operand_stack_bottom;
+        
+        // Resotre operand stack base
+        operand_stack_bottom = operand_stack[operand_stack_bottom];
+        
+        
+        // Restore openrad stack top
+        operand_stack[operand_stack_top] = return_value;
         
         // Finish vm
         if (call_stack_base == 0) {
+          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
         // Return address
-        int32_t return_address = call_stack[call_stack_base - 2];
+        int64_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
         call_stack_next = call_stack_base - 2;
@@ -944,19 +951,25 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_FRETURN: {
-        assert(0);
+        int32_t return_value = *(int32_t*)&operand_stack[operand_stack_top];
         
-        // Save retrun value
-        *((float*)&operand_stack[operand_stack_bottom + 1]) = *((float*)&operand_stack[operand_stack_top]);
+        // Resotre operand stack top
         operand_stack_top = operand_stack_bottom;
+        
+        // Resotre operand stack base
+        operand_stack_bottom = operand_stack[operand_stack_bottom];
+        
+        // Restore openrad stack top
+        *(int32_t*)&operand_stack[operand_stack_top] = return_value;
         
         // Finish vm
         if (call_stack_base == 0) {
+          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
         // Return address
-        int32_t return_address = call_stack[call_stack_base - 2];
+        int64_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
         call_stack_next = call_stack_base - 2;
@@ -969,19 +982,26 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_DRETURN: {
-        assert(0);
+        int64_t return_value = operand_stack[operand_stack_top];
         
-        // Save retrun value
-        memcpy(&operand_stack[operand_stack_bottom + 1], &operand_stack[operand_stack_top], 8);
+        // Resotre operand stack top
         operand_stack_top = operand_stack_bottom;
+        
+        // Resotre operand stack base
+        operand_stack_bottom = operand_stack[operand_stack_bottom];
+        
+        
+        // Restore openrad stack top
+        operand_stack[operand_stack_top] = return_value;
         
         // Finish vm
         if (call_stack_base == 0) {
+          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
         // Return address
-        int32_t return_address = call_stack[call_stack_base - 2];
+        int64_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
         call_stack_next = call_stack_base - 2;
@@ -994,19 +1014,26 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_ARETURN: {
-        assert(0);
+        int64_t return_value = operand_stack[operand_stack_top];
         
-        // Save retrun value
-        operand_stack[operand_stack_bottom + 1] = operand_stack[operand_stack_top];
+        // Resotre operand stack top
         operand_stack_top = operand_stack_bottom;
+        
+        // Resotre operand stack base
+        operand_stack_bottom = operand_stack[operand_stack_bottom];
+        
+        
+        // Restore openrad stack top
+        operand_stack[operand_stack_top] = return_value;
         
         // Finish vm
         if (call_stack_base == 0) {
+          vm->current_frame->operand_stack = &operand_stack[operand_stack_top];
           return;
         }
         
         // Return address
-        int32_t return_address = call_stack[call_stack_base - 2];
+        int64_t return_address = call_stack[call_stack_base - 2];
         
         // Resotre call stack top
         call_stack_next = call_stack_base - 2;
