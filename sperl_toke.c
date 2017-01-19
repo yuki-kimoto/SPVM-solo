@@ -653,6 +653,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_UNDEF);
               return UNDEF;
             }
+            else if (memcmp(keyword, "void", str_len) == 0) {
+              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_VOID);
+              return VOID;
+            }
             else if (memcmp(keyword, "while", str_len) == 0) {
               yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_WHILE);
               return WHILE;

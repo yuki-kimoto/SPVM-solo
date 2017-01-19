@@ -15,7 +15,7 @@
 
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE NEW
 %token <opval> LAST NEXT NAME VAR CONSTANT ENUM DESCRIPTOR CORETYPE UNDEF DIE
-%token <opval> SWITCH CASE DEFAULT
+%token <opval> SWITCH CASE DEFAULT VOID
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
 %type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub call_op
@@ -25,7 +25,7 @@
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar type_sub types not_type_sub opt_term throw_exception
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_name array_length logical_op decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement
-%type <opval> ';' opt_descriptors descriptors
+%type <opval> ';' opt_descriptors descriptors type_or_void
 
 %right <opval> ASSIGN
 %left <opval> OR
@@ -272,13 +272,13 @@ decl_my
     }
 
 decl_anon_sub
- : SUB '(' ')' ':' opt_descriptors type block
+ : SUB '(' ')' ':' opt_descriptors type_or_void block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
        SPerl_OP* op_args = SPerl_OP_newOP_LIST(sperl, $2->file, $2->line);
        $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), op_args, $5, $6, $7);
      }
- | SUB '(' args ')' ':' opt_descriptors type block
+ | SUB '(' args ')' ':' opt_descriptors type_or_void block
      {
        $1->code = SPerl_OP_C_CODE_DECL_ANON_SUB;
        $$ = SPerl_OP_build_decl_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $3, $6, $7, $8);
@@ -609,12 +609,12 @@ type_name
     }
 
 type_sub
-  : SUB '(' ')' type
+  : SUB '(' ')' type_or_void
     {
       SPerl_OP* op_types = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
       $$ = SPerl_OP_build_type_sub(sperl, op_types, $4);
     }
-  | SUB '(' types ')' type
+  | SUB '(' types ')' type_or_void
     {
       $$ = SPerl_OP_build_type_sub(sperl, $3, $5);
     }
@@ -638,6 +638,10 @@ type_array
     {
       $$ = SPerl_OP_build_type_array(sperl, $2, $5);
     }
+
+type_or_void
+  : type
+  | VOID
 
 field_base_name : NAME
 sub_base_name : NAME

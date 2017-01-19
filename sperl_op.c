@@ -115,6 +115,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "DEFAULT",
   "SWITCH_CONDITION",
   "DESCRIPTOR",   // UNKNOWN
+  "VOID",
 };
 
 void SPerl_CORE_printi(SPerl_FRAME* frame) {
@@ -429,7 +430,9 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     }
     case SPerl_OP_C_CODE_DECL_ANON_SUB: {
       SPerl_SUB* sub = op->uv.sub;
-      resolved_type = sub->op_return_type->uv.type->resolved_type;
+      if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
+        resolved_type = sub->op_return_type->uv.type->resolved_type;
+      }
       break;
     }
     case SPerl_OP_C_CODE_CONSTANT: {
@@ -446,7 +449,9 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
       SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, abs_name, strlen(abs_name));
-      resolved_type = sub->op_return_type->uv.type->resolved_type;
+      if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
+        resolved_type = sub->op_return_type->uv.type->resolved_type;
+      }
       break;
     }
     case SPerl_OP_C_CODE_FIELD: {
@@ -967,7 +972,7 @@ SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* 
   return op_field;
 }
 
-SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_base_name, SPerl_OP* op_args, SPerl_OP* op_descriptors, SPerl_OP* op_type, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_base_name, SPerl_OP* op_args, SPerl_OP* op_descriptors, SPerl_OP* op_type_or_void, SPerl_OP* op_block) {
   
   SPerl_PARSER* parser = sperl->parser;
   
@@ -975,8 +980,8 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   SPerl_OP_sibling_splice(sperl, op_sub, NULL, 0, op_sub_base_name);
   SPerl_OP_sibling_splice(sperl, op_sub, op_sub_base_name, 0, op_args);
   SPerl_OP_sibling_splice(sperl, op_sub, op_args, 0, op_descriptors);
-  SPerl_OP_sibling_splice(sperl, op_sub, op_descriptors, 0, op_type);
-  SPerl_OP_sibling_splice(sperl, op_sub, op_type, 0, op_block);
+  SPerl_OP_sibling_splice(sperl, op_sub, op_descriptors, 0, op_type_or_void);
+  SPerl_OP_sibling_splice(sperl, op_sub, op_type_or_void, 0, op_block);
   
   // Create sub information
   SPerl_SUB* sub = SPerl_SUB_new(sperl);
@@ -1005,7 +1010,7 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   }
   
   // return type
-  sub->op_return_type = op_type;
+  sub->op_return_type = op_type_or_void;
   
   // Save block
   sub->op_block = op_block;

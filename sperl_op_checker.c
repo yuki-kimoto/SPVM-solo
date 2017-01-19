@@ -659,21 +659,36 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             case SPerl_OP_C_CODE_RETURN: {
               if (op_cur->first) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-                SPerl_RESOLVED_TYPE* op_return_resolved_type = sub->op_return_type->uv.type->resolved_type;
+                SPerl_RESOLVED_TYPE* sub_return_resolved_type = SPerl_OP_get_resolved_type(sperl, sub->op_return_type);
                 
-                if (op_return_resolved_type) {
-                  // Can receive only core type
-                  if (first_resolved_type->id != op_return_resolved_type->id) {
-                    SPerl_yyerror_format(sperl, "Invalid return type at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
+                _Bool is_invalid = 0;
+                
+                // Undef
+                if (op_cur->first->code == SPerl_OP_C_CODE_UNDEF) {
+                  if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
+                    is_invalid = 1;
+                  }
+                  else {
+                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, sub_return_resolved_type)) {
+                      is_invalid;
+                    }
                   }
                 }
-                // void
-                else {
-                  if (first_resolved_type) {
-                    SPerl_yyerror_format(sperl, "Invalid return type at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
+                // Normal
+                else if (op_cur->first) {
+                  if (first_resolved_type->id != sub_return_resolved_type->id) {
+                    is_invalid = 1;
                   }
+                }
+                // Empty
+                else {
+                  if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
+                    is_invalid = 1;
+                  }
+                }
+                
+                if (is_invalid) {
+                  SPerl_yyerror_format(sperl, "Invalid return type at %s line %d\n", op_cur->file, op_cur->line);
                 }
               }
               

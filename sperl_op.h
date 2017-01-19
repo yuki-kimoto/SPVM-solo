@@ -124,6 +124,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_DEFAULT,
   SPerl_OP_C_CODE_SWITCH_CONDITION,
   SPerl_OP_C_CODE_DESCRIPTOR,   // UNKNOWN
+  SPerl_OP_C_CODE_VOID,
 };
 
 extern const char* const SPerl_OP_C_CODE_NAMES[];
