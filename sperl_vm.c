@@ -895,7 +895,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Resotre operand stack base
         operand_stack_bottom = operand_stack[operand_stack_bottom];
         
-        
         // Restore openrad stack top
         *(int32_t*)&operand_stack[operand_stack_top] = return_value;
         
@@ -926,7 +925,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Resotre operand stack base
         operand_stack_bottom = operand_stack[operand_stack_bottom];
-        
         
         // Restore openrad stack top
         operand_stack[operand_stack_top] = return_value;
@@ -990,7 +988,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Resotre operand stack base
         operand_stack_bottom = operand_stack[operand_stack_bottom];
         
-        
         // Restore openrad stack top
         operand_stack[operand_stack_top] = return_value;
         
@@ -1021,7 +1018,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Resotre operand stack base
         operand_stack_bottom = operand_stack[operand_stack_bottom];
-        
         
         // Restore openrad stack top
         operand_stack[operand_stack_top] = return_value;

@@ -12,10 +12,19 @@ package Test {
   sub sum0($num1 : int, $num2 : int) : int {
     return $num1 + $num2;
   }
+  
+  sub sum2 ($num1 : int, $num2 : int) : int {
+    
+    my $num3 = sum0($num1, $num2);
+    
+    return $num3 + 3;
+  }
   sub main() : void {
-
-    sum0(1, 1);
-    sum1(1, 2);
+    
+    printi(sum0(1, 1));
+    printi(sum1(1, 2));
+    
+    printi(sum2(1, 2));
 
     # Constant float
     printf(1F);
