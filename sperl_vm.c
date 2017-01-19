@@ -1168,8 +1168,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Update call stack base
         call_stack_base = call_stack_next;
         
+        operand_stack_top -= sub->op_args->length;
+        
         CALLSUB_COMMON:
-
+        
         // Extend call stack(lexical variable area + return address + before call_stack_base)
         while (call_stack_next + sub->my_vars_size > vm->call_stack_capacity) {
           vm->call_stack_capacity = vm->call_stack_capacity * 2;
@@ -1189,7 +1191,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
         
         // Prepare arguments
-        operand_stack_top -= sub->op_args->length;
         memcpy(&call_stack[call_stack_base], &vm->operand_stack[operand_stack_top + 1], sub->op_args->length * 8);
         
         // Call native subroutine

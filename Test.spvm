@@ -19,7 +19,7 @@ package Test {
     
     return $num3 + 3;
   }
-  sub main() : void {
+  sub main($mvar : int) : int {
     
     printi(sum0(1, 1));
     printi(sum1(1, 2));
@@ -278,6 +278,8 @@ package Test {
     sum1(1, 2);
     
     test1();
+    
+    return $mvar + 3;
   }
   
   sub test1 () : int {
@@ -329,5 +331,7 @@ package Test {
     else {
       
     }
+    
+    return 2;
   }
 }
