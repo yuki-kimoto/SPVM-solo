@@ -761,9 +761,20 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_LCMP:
+        // z = (x > y) + (x < y) * -1
+        *(int32_t*)&operand_stack[operand_stack_top - 1]
+          = (operand_stack[operand_stack_top - 1] > operand_stack[operand_stack_top])
+          + (operand_stack[operand_stack_top - 1] < operand_stack[operand_stack_top]) * -1;
+        
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FCMPL:
+        operand_stack[operand_stack_top - 1]
+          = (operand_stack[operand_stack_top - 1] > operand_stack[operand_stack_top])
+          + (operand_stack[operand_stack_top - 1] < operand_stack[operand_stack_top]) * -1;
+        
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FCMPG:
