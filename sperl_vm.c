@@ -966,10 +966,14 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ACMPEQ:
-        pc += 3;
+        condition = operand_stack[operand_stack_top - 1] == operand_stack[operand_stack_top];
+        pc = (pc + (bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ACMPNE:
-        pc += 3;
+        condition = operand_stack[operand_stack_top - 1] != operand_stack[operand_stack_top];
+        pc = (pc + (bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_GOTO:
         pc += 3;
