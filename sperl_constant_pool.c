@@ -7,15 +7,16 @@
 #include "sperl_constant_pool.h"
 #include "sperl_constant.h"
 #include "sperl_hash.h"
+#include "sperl_allocator.h"
 
 SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   (void)sperl;
   
-  SPerl_CONSTANT_POOL* constant_pool = malloc(sizeof(SPerl_CONSTANT_POOL));
+  SPerl_CONSTANT_POOL* constant_pool = SPerl_ALLOCATOR_safe_malloc(1, sizeof(SPerl_CONSTANT_POOL));
   constant_pool->capacity = 64;
   constant_pool->length = 0;
   
-  int32_t* values = calloc(constant_pool->capacity, sizeof(int32_t));
+  int32_t* values = SPerl_ALLOCATOR_safe_malloc_zero(constant_pool->capacity, sizeof(int32_t));
   constant_pool->values = values;
   
   return constant_pool;
@@ -28,8 +29,11 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
   int32_t capacity = constant_pool->capacity;
   
   if (length + extend >= capacity) {
+    if (capacity > INT32_MAX / 2) {
+      SPerl_ALLOCATOR_exit_with_malloc_failure();
+    }
     int32_t new_capacity = capacity * 2;
-    constant_pool->values = realloc(constant_pool->values, new_capacity * sizeof(int32_t));
+    constant_pool->values = (int32_t*) SPerl_ALLOCATOR_safe_realloc(constant_pool->values, new_capacity, sizeof(int32_t));
     memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(int32_t));
     constant_pool->capacity = new_capacity;
   }

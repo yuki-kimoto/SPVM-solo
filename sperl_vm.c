@@ -24,13 +24,13 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   vm->operand_stack_capacity = 255;
   
   // Operand stack
-  vm->operand_stack = malloc(sizeof(int64_t) * vm->operand_stack_capacity);
+  vm->operand_stack = (int64_t*) SPerl_ALLOCATOR_safe_malloc(vm->operand_stack_capacity, sizeof(int64_t));
   
-  vm->frame = malloc(sizeof(SPerl_FRAME));
+  vm->frame = (SPerl_FRAME*) SPerl_ALLOCATOR_safe_malloc(1, sizeof(SPerl_FRAME));
   
   vm->call_stack_capacity = 255;
   
-  vm->call_stack = malloc(sizeof(int64_t) * vm->call_stack_capacity);
+  vm->call_stack = (int64_t*) SPerl_ALLOCATOR_safe_malloc(vm->call_stack_capacity, sizeof(int64_t));
   
   return vm;
 }
@@ -1175,7 +1175,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Extend call stack(lexical variable area + return address + before call_stack_base)
         while (call_stack_next + sub->my_vars_size > vm->call_stack_capacity) {
           vm->call_stack_capacity = vm->call_stack_capacity * 2;
-          vm->call_stack = realloc(call_stack, sizeof(int64_t) * vm->call_stack_capacity);
+          vm->call_stack = (int64_t*) SPerl_ALLOCATOR_safe_realloc(call_stack, vm->call_stack_capacity, sizeof(int64_t));
           call_stack = vm->call_stack;
         }
         
@@ -1186,7 +1186,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Extend operand stack if need(operand stack max + before operand_stack_bottom)
         while (operand_stack_top + sub->operand_stack_max + 1 > vm->operand_stack_capacity) {
           vm->operand_stack_capacity = vm->operand_stack_capacity * 2;
-          vm->operand_stack = realloc(vm->operand_stack, sizeof(int64_t) * vm->operand_stack_capacity);
+          vm->operand_stack = (int64_t*) SPerl_ALLOCATOR_safe_realloc(vm->operand_stack, vm->operand_stack_capacity, sizeof(int64_t));
           operand_stack = vm->operand_stack;
         }
         

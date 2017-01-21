@@ -4,6 +4,7 @@
 #include "sperl_hash.h"
 #include "sperl_hash_entry.h"
 #include "sperl_hash_func.h"
+#include "sperl_allocator.h"
 
 SPerl_HASH* SPerl_HASH_new(int32_t capacity) {
   
@@ -11,15 +12,13 @@ SPerl_HASH* SPerl_HASH_new(int32_t capacity) {
     capacity = 101;
   }
   
-  SPerl_HASH* hash = (SPerl_HASH*)malloc(sizeof(SPerl_HASH) * capacity);
+  SPerl_HASH* hash = SPerl_ALLOCATOR_safe_malloc(capacity, sizeof(SPerl_HASH));
   memset(hash, 0, sizeof(SPerl_HASH));
   
   hash->count = 0;
   hash->capacity = capacity;
   
-  int32_t byte_size = sizeof(SPerl_HASH_ENTRY*) * hash->capacity;
-  SPerl_HASH_ENTRY** entries = (SPerl_HASH_ENTRY**)malloc(byte_size);
-  memset(entries, 0, byte_size);
+  SPerl_HASH_ENTRY** entries = SPerl_ALLOCATOR_safe_malloc_zero(hash->capacity, sizeof(SPerl_HASH_ENTRY*));
   hash->entries = entries;
   
   return hash;
@@ -27,10 +26,13 @@ SPerl_HASH* SPerl_HASH_new(int32_t capacity) {
 
 SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(const char* key, int32_t length, void* value) {
   
-  SPerl_HASH_ENTRY* new_entry = malloc(sizeof(SPerl_HASH_ENTRY));
+  SPerl_HASH_ENTRY* new_entry = SPerl_ALLOCATOR_safe_malloc(1, sizeof(SPerl_HASH_ENTRY));
   memset(new_entry, 0, sizeof(SPerl_HASH_ENTRY));
   
-  new_entry->key = (char*)malloc(sizeof(char) * (length + 1));
+  if (length >= SIZE_MAX) {
+    SPerl_ALLOCATOR_exit_with_malloc_failure();
+  }
+  new_entry->key = (char*) SPerl_ALLOCATOR_safe_malloc(length + 1, sizeof(char));
   strncpy(new_entry->key, key, length);
   new_entry->key[length] = '\0';
   new_entry->value = value;
