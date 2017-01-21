@@ -1180,7 +1180,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
         
         // Initialize my variables
-        memset(&call_stack[call_stack_next], 0, sub->op_my_vars->length * 8);
+        memset(&call_stack[call_stack_next], 0, sub->op_my_vars->length * sizeof(int64_t));
         call_stack_next += sub->my_vars_size;
 
         // Extend operand stack if need(operand stack max + before operand_stack_bottom)
@@ -1191,7 +1191,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
         
         // Prepare arguments
-        memcpy(&call_stack[call_stack_base], &vm->operand_stack[operand_stack_top + 1], sub->op_args->length * 8);
+        memcpy(&call_stack[call_stack_base], &vm->operand_stack[operand_stack_top + 1], sub->op_args->length * sizeof(int64_t));
         
         // Call native subroutine
         if (sub->is_native) {
