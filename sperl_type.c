@@ -39,7 +39,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
     SPerl_ARRAY* parts = SPerl_ALLOCATOR_new_array(sperl, 0);
     SPerl_TYPE_build_parts(sperl, type, parts);
     
-    for (int32_t i = 0; i < parts->length; i++) {
+    for (size_t i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
       if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
         name_length += 3;
@@ -63,10 +63,10 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
       }
     }
     char* resolved_type_name = SPerl_ALLOCATOR_new_string(sperl, name_length);
-    int32_t cur_pos = 0;
-    for (int32_t i = 0; i < resolved_type_part_names->length; i++) {
+    size_t cur_pos = 0;
+    for (size_t i = 0; i < resolved_type_part_names->length; i++) {
       const char* resolved_type_part_name = (const char*) SPerl_ARRAY_fetch(resolved_type_part_names, i);
-      int32_t resolved_type_part_name_length = strlen(resolved_type_part_name);
+      size_t resolved_type_part_name_length = strlen(resolved_type_part_name);
       memcpy(resolved_type_name + cur_pos, resolved_type_part_name, resolved_type_part_name_length);
       cur_pos += resolved_type_part_name_length;
     }
@@ -78,7 +78,8 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
     }
     else {
       SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-      resolved_type->id = parser->resolved_types->length;
+      // ToDo: discussion (akinomyoga): Is number of types guaranteed to be less than INT32_MAX?
+      resolved_type->id = (int32_t) parser->resolved_types->length;
       resolved_type->name = resolved_type_name;
       SPerl_ARRAY_push(parser->resolved_types, resolved_type);
       SPerl_HASH_insert(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
@@ -139,7 +140,7 @@ void SPerl_TYPE_build_parts(SPerl* sperl, SPerl_TYPE* type, SPerl_ARRAY* parts) 
     // Argument types
     SPerl_TYPE_COMPONENT_SUB* type_component_sub = type->uv.type_component_sub;
     SPerl_ARRAY* argument_types = type_component_sub->argument_types;
-    for (int32_t i = 0; i < argument_types->length; i++) {
+    for (size_t i = 0; i < argument_types->length; i++) {
       SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(argument_types, i);
       SPerl_TYPE_build_parts(sperl, argument_type, parts);
       if (i != argument_types->length - 1) {

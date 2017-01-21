@@ -1,5 +1,7 @@
 #include <string.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "sperl.h"
 #include "sperl_parser.h"
@@ -28,7 +30,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
   // Bytecode
   SPerl_BYTECODE_ARRAY* bytecode_array = sperl->bytecode_array;
   
-  for (int32_t sub_pos = 0; sub_pos < parser->op_subs->length; sub_pos++) {
+  for (size_t sub_pos = 0; sub_pos < parser->op_subs->length; sub_pos++) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_pos);
     SPerl_SUB* sub = op_sub->uv.sub;
     
@@ -121,7 +123,15 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LOOKUPSWITCH);
                 
-                int32_t length = switch_info->op_cases->length;
+                if (
+                  switch_info->op_cases->length > INT32_MAX ||
+                  switch_info->op_cases->length > SIZE_MAX / 8
+                ) {
+                  fprintf(stderr, "too many cases in switch statement"); // ToDo: discussion (akinomyoga)
+                  exit(1);
+                }
+                int32_t length = (int32_t) switch_info->op_cases->length;
+                size_t const size_of_match_offset_pairs = (size_t) length * 8u;
                 
                 // Machine address to culculate padding
                 cur_switch_address = bytecode_array->length - 1;
@@ -144,7 +154,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
                 
                 // Match-Offset pairs
-                for (int32_t i = 0; i < length * 8; i++) {
+                for (size_t i = 0; i < size_of_match_offset_pairs; i++) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                 }
               }
@@ -246,6 +256,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 bytecode_array->values[cur_switch_address + padding + 3] = (default_offset >> 8) & 0xFF;
                 bytecode_array->values[cur_switch_address + padding + 4] = default_offset & 0xFF;
                 
+                if (switch_info->op_cases->length > INT32_MAX) {
+                  fprintf(stderr, "too many cases in switch statement"); // ToDo: discussion (akinomyoga)
+                  exit(1);
+                }
                 int32_t length = switch_info->op_cases->length;
                 
                 SPerl_ARRAY* ordered_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
