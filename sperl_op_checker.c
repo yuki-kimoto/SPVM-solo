@@ -204,10 +204,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
               }
               
-              int32_t range = max - min;
+              double range = (double) max - (double) min;
               
               int32_t code;
-              if (4 + range <= (3 + 2 * length) * 1.5) {
+              if (4.0 + range <= (3.0 + 2.0 * (double) length) * 1.5) {
                 code = SPerl_SWITCH_INFO_C_CODE_TABLESWITCH;
               }
               else {
