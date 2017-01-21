@@ -23,12 +23,12 @@ void* SPerl_ALLOCATOR_safe_malloc(size_t count, size_t size) {
     exit_with_malloc_failure();
   }
 
-  size_t const allocationSize = count * size;
-  if (allocationSize == 0) {
+  size_t const allocation_size = count * size;
+  if (allocation_size == 0) {
     exit_with_malloc_failure();
   }
 
-  void* const block = malloc(allocationSize);
+  void* const block = malloc(allocation_size);
   if (!block) {
     exit_with_malloc_failure();
   }
@@ -41,8 +41,8 @@ void* SPerl_ALLOCATOR_safe_malloc_zero(size_t count, size_t size) {
     exit_with_malloc_failure();
   }
 
-  size_t const allocationSize = count * size;
-  if (allocationSize == 0) {
+  size_t const allocation_size = count * size;
+  if (allocation_size == 0) {
     exit_with_malloc_failure();
   }
 
@@ -59,12 +59,12 @@ void* SPerl_ALLOCATOR_safe_realloc(void* ptr, size_t count, size_t size) {
     exit_with_malloc_failure();
   }
 
-  size_t const allocationSize = count * size;
-  if (allocationSize == 0) {
+  size_t const allocation_size = count * size;
+  if (allocation_size == 0) {
     exit_with_malloc_failure();
   }
 
-  void* const block = realloc(ptr, allocationSize);
+  void* const block = realloc(ptr, allocation_size);
   if (!block) {
     free(ptr);
     exit_with_malloc_failure();
