@@ -904,10 +904,16 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_IFEQ:
-        pc += 3;
+        pc
+          = (pc + (bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * (*(int32_t*)&operand_stack[operand_stack_top] == 0)
+          + (pc + 3) * !(*(int32_t*)&operand_stack[operand_stack_top] == 0);
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFNE:
-        pc += 3;
+        pc
+          = (pc + (bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * (*(int32_t*)&operand_stack[operand_stack_top] != 0)
+          + (pc + 3) * !(*(int32_t*)&operand_stack[operand_stack_top] != 0);
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFLT:
         pc += 3;
@@ -1174,7 +1180,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
-
+        
         // Resotre operand stack top
         operand_stack_top = operand_stack_bottom;
         
