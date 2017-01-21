@@ -907,7 +907,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
               }
               
-              // Serach same name variable
+              // Search same name variable
               SPerl_OP* op_my_var = NULL;
               for (int32_t i = op_my_var_stack->length - 1 ; i >= 0; i--) {
                 SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(op_my_var_stack, i);
@@ -933,7 +933,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             case SPerl_OP_C_CODE_DECL_MY_VAR: {
               SPerl_MY_VAR* my_var = op_cur->uv.my_var;
               
-              // Serach same name variable
+              // Search same name variable
               int32_t found = 0;
               
               for (int32_t i = op_my_var_stack->length - 1 ; i >= block_base; i--) {
