@@ -608,8 +608,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_DUP2_X2:
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_SWAP:
         // Not used
         assert(0);
