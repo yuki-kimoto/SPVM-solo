@@ -321,25 +321,67 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_IALOAD:
         pc++;
         continue;
+        
+        // TODO
+        *(int32_t*)&operand_stack[operand_stack_top - 1] = *(int32_t*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_LALOAD:
+        pc++;
+        continue;
+
+        // TODO
+        operand_stack[operand_stack_top - 1] = *(int64_t*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FALOAD:
         pc++;
         continue;
+
+        // TODO
+        *(float*)&operand_stack[operand_stack_top - 1] = *(float*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_DALOAD:
+        pc++;
+        continue;
+
+        // TODO
+        *(double*)&operand_stack[operand_stack_top - 1] = *(double*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_AALOAD:
         pc++;
         continue;
+        
+        // TODO
+        operand_stack[operand_stack_top - 1] = *(int64_t*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_BALOAD:
+        pc++;
+        continue;
+        
+        // TODO
+        *(int8_t*)&operand_stack[operand_stack_top - 1] = *(int8_t*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_CALOAD:
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_SALOAD:
+        pc++;
+        continue;
+        
+        // TODO
+        *(int16_t*)&operand_stack[operand_stack_top - 1] = *(int16_t*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_ISTORE:
