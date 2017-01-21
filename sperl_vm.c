@@ -916,16 +916,28 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFLT:
-        pc += 3;
+        pc
+          = (pc + (bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * (*(int32_t*)&operand_stack[operand_stack_top] < 0)
+          + (pc + 3) * !(*(int32_t*)&operand_stack[operand_stack_top] < 0);
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFGE:
-        pc += 3;
+        pc
+          = (pc + (bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * (*(int32_t*)&operand_stack[operand_stack_top] >= 0)
+          + (pc + 3) * !(*(int32_t*)&operand_stack[operand_stack_top] >= 0);
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFGT:
-        pc += 3;
+        pc
+          = (pc + (bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * (*(int32_t*)&operand_stack[operand_stack_top] <= 0)
+          + (pc + 3) * !(*(int32_t*)&operand_stack[operand_stack_top] <= 0);
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFLE:
-        pc += 3;
+        pc
+          = (pc + (bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * (*(int32_t*)&operand_stack[operand_stack_top] != 0)
+          + (pc + 3) * !(*(int32_t*)&operand_stack[operand_stack_top] != 0);
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPEQ:
         pc += 3;
