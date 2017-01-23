@@ -7,6 +7,23 @@ use CORE;
 
 package Test {
   sub main($mvar : int) : int {
+
+    if (1) {
+      2;
+      if (3) {
+        4;
+      }
+      elsif (8) {
+        9;
+      }
+      else {
+        5;
+      }
+    }
+    else {
+      6;
+    }
+    7;
     
     printi(sum0(1, 1));
     printi(sum1(1, 2));

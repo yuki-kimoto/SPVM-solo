@@ -351,9 +351,12 @@ SPerl_OP* SPerl_OP_build_if_statement(SPerl* sperl, SPerl_OP* op_if, SPerl_OP* o
   
   op_term->condition = 1;
   
+  if (op_else_statement->code == SPerl_OP_C_CODE_BLOCK) {
+    op_block->flag |= SPerl_OP_C_FLAG_BLOCK_HAS_ELSE;
+  }
+  
   return op_if;
 }
-
 
 SPerl_OP* SPerl_OP_build_array_length(SPerl* sperl, SPerl_OP* op_array_length, SPerl_OP* op_term) {
   SPerl_OP_sibling_splice(sperl, op_array_length, NULL, 0, op_term);

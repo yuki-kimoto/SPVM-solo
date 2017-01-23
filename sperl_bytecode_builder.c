@@ -47,6 +47,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
     
     // GOTO Bytecode address for last
     SPerl_ARRAY* goto_last_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+
+    // GOTO Bytecode address for end of if block
+    SPerl_ARRAY* goto_if_block_end_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
     
     // Current switch
     SPerl_OP* cur_op_switch_info = NULL;
@@ -380,14 +383,53 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
             }
             case SPerl_OP_C_CODE_BLOCK: {
               if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_IF) {
-                int32_t* pos_ptr = SPerl_ARRAY_pop(if_address_stack);
                 
-                // Jump offset
-                int32_t jump_offset = bytecode_array->length - *pos_ptr;
+                // Has else block
+                if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_HAS_ELSE) {
+                  // Prepare to jump to end of else block
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
+                  int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(sperl);
+                  *pos_ptr = bytecode_array->length - 1;
+                  SPerl_ARRAY_push(goto_if_block_end_address_stack, pos_ptr);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                }
+                else {
+                  // Set if jump address
+                  int32_t* pos_ptr = SPerl_ARRAY_pop(if_address_stack);
+                  
+                  // Jump offset
+                  int32_t jump_offset = bytecode_array->length - *pos_ptr;
+                  
+                  // Set jump offset
+                  bytecode_array->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
+                }
+              }
+              else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_ELSE) {
                 
-                // Set jump offset
-                bytecode_array->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
-                bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
+                // Set if jump address
+                {
+                  int32_t* pos_ptr = SPerl_ARRAY_pop(if_address_stack);
+                  
+                  // Jump offset
+                  int32_t jump_offset = bytecode_array->length - *pos_ptr;
+                  
+                  // Set jump offset
+                  bytecode_array->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
+                }
+                
+                {
+                  int32_t* pos_ptr = SPerl_ARRAY_pop(goto_if_block_end_address_stack);
+                  
+                  // Jump offset
+                  int32_t jump_offset = bytecode_array->length - *pos_ptr;
+                  
+                  // Set jump offset
+                  bytecode_array->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
+                }
               }
               else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
                 int32_t* pos_ptr = SPerl_ARRAY_pop(if_loop_address_stack);

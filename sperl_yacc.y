@@ -227,10 +227,12 @@ else_statement
     };
   | ELSE block
     {
+      $2->flag |= SPerl_OP_C_FLAG_BLOCK_ELSE;
       $$ = $2;
     }
   | ELSIF '(' term ')' block else_statement
     {
+      $5->flag |= SPerl_OP_C_FLAG_BLOCK_ELSE;
       $$ = SPerl_OP_build_if_statement(sperl, $1, $3, $5, $6);
     }
 

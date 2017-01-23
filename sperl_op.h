@@ -132,8 +132,10 @@ extern const char* const SPerl_OP_C_CODE_NAMES[];
 enum {
   // Block flag
   SPerl_OP_C_FLAG_BLOCK_IF = 1,
-  SPerl_OP_C_FLAG_BLOCK_LOOP = 2,
-  SPerl_OP_C_FLAG_BLOCK_SWITCH = 4,
+  SPerl_OP_C_FLAG_BLOCK_ELSE = 2,
+  SPerl_OP_C_FLAG_BLOCK_LOOP = 4,
+  SPerl_OP_C_FLAG_BLOCK_SWITCH = 8,
+  SPerl_OP_C_FLAG_BLOCK_HAS_ELSE = 16,
 };
 
 enum {
