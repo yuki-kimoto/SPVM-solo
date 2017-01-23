@@ -977,11 +977,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         assert(0);
       case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
         
-        // Machine address to culculate padding
-        intptr_t pc_machine_address = (intptr_t)pc;
-        
         // Padding
-        int32_t padding = 3 - (pc_machine_address % 4);
+        int32_t padding = 3 - (pc & 3);
 
         // default offset
         int32_t default_offset
@@ -1012,11 +1009,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
         
-        // Machine address to culculate padding
-        intptr_t pc_machine_address = (intptr_t)pc;
-        
         // Padding
-        int32_t padding = 3 - (pc_machine_address % 4);
+        int32_t padding = 3 - (pc & 3);
 
         // default offset
         int32_t default_offset
