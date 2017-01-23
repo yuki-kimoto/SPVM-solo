@@ -223,7 +223,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               SPerl_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
               SPerl_ARRAY* op_cases = switch_info->op_cases;
-              size_t length = op_cases->length;
+              size_t const length = op_cases->length;
+              if (length > SPerl_OP_LIMIT_CASES) {
+                SPerl_yyerror_format(sperl, "too many case statements in switch at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+
               int32_t min = SPerl_BASE_C_INT_MAX;
               int32_t max = SPerl_BASE_C_INT_MIN;
               

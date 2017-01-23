@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "sperl.h"
 #include "sperl_parser.h"
@@ -131,16 +132,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LOOKUPSWITCH);
                 
-                if (
-                  switch_info->op_cases->length > INT32_MAX ||
-                  switch_info->op_cases->length > SIZE_MAX / 8
-                ) {
-                  fprintf(stderr, "too many cases in switch statement"); // ToDo: discussion (akinomyoga)
+                if (switch_info->op_cases->length > SPerl_OP_LIMIT_CASES) {
+                  fprintf(stderr, "Invalid AST: too many cases in switch statement\n");
                   exit(1);
                 }
-                int32_t length = (int32_t) switch_info->op_cases->length;
-                size_t const size_of_match_offset_pairs = (size_t) length * 8u;
-                
+                uint32_t const length = (uint32_t) switch_info->op_cases->length;
+
                 // Machine address to culculate padding
                 cur_switch_address = bytecode_array->length - 1;
                 
@@ -162,6 +159,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
                 
                 // Match-Offset pairs
+                if (SPerl_OP_LIMIT_CASES > SIZE_MAX / 8 && length > SIZE_MAX / 8) {
+                  SPerl_ALLOCATOR_exit_with_malloc_failure();
+                }
+                size_t const size_of_match_offset_pairs = (size_t) length * 8u;
                 for (size_t i = 0; i < size_of_match_offset_pairs; i++) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                 }
@@ -264,11 +265,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 bytecode_array->values[cur_switch_address + padding + 3] = (default_offset >> 8) & 0xFF;
                 bytecode_array->values[cur_switch_address + padding + 4] = default_offset & 0xFF;
                 
-                if (switch_info->op_cases->length > INT32_MAX) {
-                  fprintf(stderr, "too many cases in switch statement"); // ToDo: discussion (akinomyoga)
+                // Note: Here it's assumed that the number of cases can be expressed by a int32_t variable.
+                assert(SPerl_OP_LIMIT_CASES <= INT32_MAX);
+                if (switch_info->op_cases->length > SPerl_OP_LIMIT_CASES) {
+                  fprintf(stderr, "Invalid AST: too many cases in switch statement\n");
                   exit(1);
                 }
-                int32_t length = switch_info->op_cases->length;
+                int32_t const length = (int32_t) switch_info->op_cases->length;
                 
                 SPerl_ARRAY* ordered_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
                 for (int32_t i = 0; i < length; i++) {
