@@ -39,9 +39,14 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
     SPerl_OP* op_cur = op_base;
     _Bool finish = 0;
     
-    SPerl_ARRAY* if_condition_bytecode_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-    SPerl_ARRAY* condition_loop_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-    SPerl_ARRAY* last_bytecode_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+    // IFXXX Bytecode address(except loop)
+    SPerl_ARRAY* if_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+    
+    // IFXXX Bytecode address for loop
+    SPerl_ARRAY* if_loop_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+    
+    // GOTO Bytecode address for last
+    SPerl_ARRAY* goto_last_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
     
     // Current switch
     SPerl_OP* cur_op_switch_info = NULL;
@@ -353,14 +358,14 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(sperl);
               *pos_ptr = bytecode_array->length - 1;
-              SPerl_ARRAY_push(last_bytecode_address_stack, pos_ptr);
+              SPerl_ARRAY_push(goto_last_address_stack, pos_ptr);
               
               SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
               SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
               break;
             }
             case SPerl_OP_C_CODE_NEXT: {
-              int32_t* pos_ptr = SPerl_ARRAY_fetch(condition_loop_address_stack, condition_loop_address_stack->length - 1);
+              int32_t* pos_ptr = SPerl_ARRAY_fetch(if_loop_address_stack, if_loop_address_stack->length - 1);
               
               // Add "goto"
               SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
@@ -375,7 +380,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
             }
             case SPerl_OP_C_CODE_BLOCK: {
               if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_IF) {
-                int32_t* pos_ptr = SPerl_ARRAY_pop(if_condition_bytecode_address_stack);
+                int32_t* pos_ptr = SPerl_ARRAY_pop(if_address_stack);
                 
                 // Jump offset
                 int32_t jump_offset = bytecode_array->length - *pos_ptr;
@@ -385,7 +390,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
               }
               else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
-                int32_t* pos_ptr = SPerl_ARRAY_pop(condition_loop_address_stack);
+                int32_t* pos_ptr = SPerl_ARRAY_pop(if_loop_address_stack);
                 
                 // Add "goto" to end of block
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
@@ -404,7 +409,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 // Set last position
                 int32_t* last_pos_ptr;
-                while ((last_pos_ptr = SPerl_ARRAY_pop(last_bytecode_address_stack))) {
+                while ((last_pos_ptr = SPerl_ARRAY_pop(goto_last_address_stack))) {
                   // Last offset
                   int32_t last_offset = bytecode_array->length - *last_pos_ptr;
                   
@@ -590,10 +595,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               *pos_ptr = bytecode_array->length - 1;
               
               if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_IF) {
-                SPerl_ARRAY_push(if_condition_bytecode_address_stack, pos_ptr);
+                SPerl_ARRAY_push(if_address_stack, pos_ptr);
               }
               else if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_LOOP) {
-                SPerl_ARRAY_push(condition_loop_address_stack, pos_ptr);
+                SPerl_ARRAY_push(if_loop_address_stack, pos_ptr);
               }
               
               // Prepare for bytecode position of branch
