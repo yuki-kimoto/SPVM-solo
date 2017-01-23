@@ -342,6 +342,16 @@ SPerl_OP* SPerl_OP_build_if_statement(SPerl* sperl, SPerl_OP* op_if, SPerl_OP* o
   if (op_if->code == SPerl_OP_C_CODE_ELSIF) {
     op_if->code = SPerl_OP_C_CODE_IF;
   }
+
+  if (op_block_if->code != SPerl_OP_C_CODE_BLOCK) {
+    SPerl_OP* op_term = op_block_if;
+    op_block_if = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_BLOCK, op_term->file, op_term->line);
+
+    SPerl_OP* op_list = SPerl_OP_newOP_LIST(sperl, op_term->file, op_term->line);
+    SPerl_OP_sibling_splice(sperl, op_list, op_list->first, 0, op_term);
+
+    SPerl_OP_sibling_splice(sperl, op_block_if, NULL, 0, op_list);
+  }
   
   if (op_block_else->code == SPerl_OP_C_CODE_IF) {
     SPerl_OP* op_if = op_block_else;
@@ -352,7 +362,15 @@ SPerl_OP* SPerl_OP_build_if_statement(SPerl* sperl, SPerl_OP* op_if, SPerl_OP* o
     
     SPerl_OP_sibling_splice(sperl, op_block_else, NULL, 0, op_list);
   }
-  
+  else if (op_block_else->code != SPerl_OP_C_CODE_BLOCK && op_block_else->code != SPerl_OP_C_CODE_NULL) {
+    SPerl_OP* op_term = op_block_else;
+    op_block_else = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_BLOCK, op_term->file, op_term->line);
+    
+    SPerl_OP* op_list = SPerl_OP_newOP_LIST(sperl, op_term->file, op_term->line);
+    SPerl_OP_sibling_splice(sperl, op_list, op_list->first, 0, op_term);
+    
+    SPerl_OP_sibling_splice(sperl, op_block_else, NULL, 0, op_list);
+  }
   
   SPerl_OP* op_condition = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONDITION, op_term->file, op_term->line);
   SPerl_OP_sibling_splice(sperl, op_condition, NULL, 0, op_term);

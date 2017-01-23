@@ -255,7 +255,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             }
             
             case SPerl_OP_C_CODE_CONDITION: {
-              if ((op_cur->first && !op_cur->last) || op_cur->first == op_cur->last) {
+              if (op_cur->first->code != SPerl_OP_C_CODE_IF) {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 if (!resolved_type) {
                   SPerl_OP_convert_to_op_constant_false(sperl, op_cur->first);
