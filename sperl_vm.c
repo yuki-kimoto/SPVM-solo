@@ -1298,8 +1298,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_GOTO_W:
-        pc += 5;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_JSR_W:
         // Not used
         assert(0);
