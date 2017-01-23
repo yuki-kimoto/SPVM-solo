@@ -45,6 +45,7 @@ void SPerl_DUMPER_dump_ast(SPerl* sperl, SPerl_OP* op_base) {
       SPerl_CONSTANT* constant = op_cur->uv.constant;
       printf(" %s", SPerl_CONSTANT_C_CODE_NAMES[constant->code]);
       switch (constant->code) {
+        case SPerl_CONSTANT_C_CODE_BOOLEAN:
         case SPerl_CONSTANT_C_CODE_INT:
           printf(" %" PRId32, constant->uv.int_value);
           break;
@@ -116,10 +117,13 @@ void SPerl_DUMPER_dump_sperl(SPerl* sperl) {
   printf("\n[Resolved types]\n");
   SPerl_DUMPER_dump_resolved_types(sperl, parser->resolved_types);
   
-  printf("\n[Packages information]\n");
+  printf("\n[Packages]\n");
   SPerl_DUMPER_dump_packages(sperl, parser->op_packages);
 
-  printf("\n[Subroutine information]\n");
+  printf("\n[Constant pool]\n");
+  SPerl_DUMPER_dump_constant_pool(sperl, sperl->constant_pool);
+
+  printf("\n[Subroutine]\n");
   SPerl_ARRAY* op_subs = parser->op_subs;
   for (size_t i = 0, len = op_subs->length; i < len; i++) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
@@ -175,13 +179,11 @@ void SPerl_DUMPER_dump_resolved_types(SPerl* sperl, SPerl_ARRAY* resolved_types)
   }
 }
 
-void SPerl_DUMPER_dump_constant_pool(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t base, int32_t length) {
+void SPerl_DUMPER_dump_constant_pool(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool) {
   (void)sperl;
 
-  int32_t end_address = base + length - 1;
-
-  for (int32_t i = base; i <= end_address; i++) {
-    printf("      constant_pool[%" PRId32 "] %" PRId32 "\n", i, constant_pool->values[i]);
+  for (int32_t i = 0; i < constant_pool->length; i++) {
+    printf("      constant_pool[%" PRId32 "] %" PRId32 "\n", i, constant_pool[i]);
   }
 }
 
@@ -288,6 +290,8 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       }
       // Have four operand
       case SPerl_BYTECODE_C_CODE_CALLSUB:
+      case SPerl_BYTECODE_C_CODE_LOADCONST:
+      case SPerl_BYTECODE_C_CODE_LOADCONST2:
       {
         i++;
         bytecode = bytecode_array->values[i];
@@ -464,10 +468,6 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     
     
     printf("    my_vars_size => %d\n", sub->my_vars_size);
-
-  
-    printf("    constant_pool\n");
-    SPerl_DUMPER_dump_constant_pool(sperl, sperl->constant_pool, sub->constant_pool_base, sub->constant_pool_length);
 
     printf("    bytecode_array\n");
     SPerl_DUMPER_dump_bytecode_array(sperl, sperl->bytecode_array, sub->bytecode_base, sub->bytecode_length);

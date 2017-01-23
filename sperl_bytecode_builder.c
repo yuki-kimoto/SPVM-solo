@@ -41,9 +41,17 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
     SPerl_OP* op_cur = op_base;
     _Bool finish = 0;
     
-    SPerl_ARRAY* if_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-    SPerl_ARRAY* loop_condition_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-    SPerl_ARRAY* last_bytecode_pos_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+    // IFXXX Bytecode address(except loop)
+    SPerl_ARRAY* if_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+    
+    // IFXXX Bytecode address for loop
+    SPerl_ARRAY* if_loop_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+    
+    // GOTO Bytecode address for last
+    SPerl_ARRAY* goto_last_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+
+    // GOTO Bytecode address for end of if block
+    SPerl_ARRAY* goto_if_block_end_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
     
     // Current switch
     SPerl_OP* cur_op_switch_info = NULL;
@@ -367,14 +375,14 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(sperl);
               *pos_ptr = bytecode_array->length - 1;
-              SPerl_ARRAY_push(last_bytecode_pos_stack, pos_ptr);
+              SPerl_ARRAY_push(goto_last_address_stack, pos_ptr);
               
               SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
               SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
               break;
             }
             case SPerl_OP_C_CODE_NEXT: {
-              int32_t* pos_ptr = SPerl_ARRAY_fetch(loop_condition_bytecode_pos_stack, loop_condition_bytecode_pos_stack->length - 1);
+              int32_t* pos_ptr = SPerl_ARRAY_fetch(if_loop_address_stack, if_loop_address_stack->length - 1);
               
               // Add "goto"
               SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
@@ -389,17 +397,56 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
             }
             case SPerl_OP_C_CODE_BLOCK: {
               if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_IF) {
-                int32_t* pos_ptr = SPerl_ARRAY_pop(if_condition_bytecode_pos_stack);
                 
-                // Jump offset
-                int32_t jump_offset = bytecode_array->length - *pos_ptr;
+                // Has else block
+                if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_HAS_ELSE) {
+                  // Prepare to jump to end of else block
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
+                  int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(sperl);
+                  *pos_ptr = bytecode_array->length - 1;
+                  SPerl_ARRAY_push(goto_if_block_end_address_stack, pos_ptr);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                }
+                else {
+                  // Set if jump address
+                  int32_t* pos_ptr = SPerl_ARRAY_pop(if_address_stack);
+                  
+                  // Jump offset
+                  int32_t jump_offset = bytecode_array->length - *pos_ptr;
+                  
+                  // Set jump offset
+                  bytecode_array->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
+                }
+              }
+              else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_ELSE) {
                 
-                // Set jump offset
-                bytecode_array->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
-                bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
+                // Set if jump address
+                {
+                  int32_t* pos_ptr = SPerl_ARRAY_pop(if_address_stack);
+                  
+                  // Jump offset
+                  int32_t jump_offset = bytecode_array->length - *pos_ptr;
+                  
+                  // Set jump offset
+                  bytecode_array->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
+                }
+                
+                {
+                  int32_t* pos_ptr = SPerl_ARRAY_pop(goto_if_block_end_address_stack);
+                  
+                  // Jump offset
+                  int32_t jump_offset = bytecode_array->length - *pos_ptr;
+                  
+                  // Set jump offset
+                  bytecode_array->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
+                }
               }
               else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
-                int32_t* pos_ptr = SPerl_ARRAY_pop(loop_condition_bytecode_pos_stack);
+                int32_t* pos_ptr = SPerl_ARRAY_pop(if_loop_address_stack);
                 
                 // Add "goto" to end of block
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
@@ -418,7 +465,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 // Set last position
                 int32_t* last_pos_ptr;
-                while ((last_pos_ptr = SPerl_ARRAY_pop(last_bytecode_pos_stack))) {
+                while ((last_pos_ptr = SPerl_ARRAY_pop(goto_last_address_stack))) {
                   // Last offset
                   int32_t last_offset = bytecode_array->length - *last_pos_ptr;
                   
@@ -500,10 +547,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LCMP);
                   }
                   else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_FCMPG);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_FCMPL);
                   }
                   else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DCMPG);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DCMPL);
                   }
                   
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IFGT);
@@ -520,10 +567,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LCMP);
                   }
                   else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_FCMPG);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_FCMPL);
                   }
                   else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DCMPG);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DCMPL);
                   }
                   
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IFGE);
@@ -571,27 +618,32 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               }
               else if (op_condition_target) {
                 
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target);
-                
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IFNE);
-                }
-                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG && resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT && resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE)  {
-                  
-                  if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_L2I);
-                  }
-                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_F2I);
-                  }
-                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_D2I);
-                  }
-                  
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IFNE);
+                if (op_condition_target->code == SPerl_OP_C_CODE_IF) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IFEQ);
                 }
                 else {
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IFNONNULL);
+                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_condition_target);
+                
+                  if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IFEQ);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG && resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT && resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE)  {
+                    
+                    if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_L2I);
+                    }
+                    else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
+                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_F2I);
+                    }
+                    else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_D2I);
+                    }
+                    
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IFEQ);
+                  }
+                  else {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IFNONNULL);
+                  }
                 }
               }
               
@@ -599,10 +651,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               *pos_ptr = bytecode_array->length - 1;
               
               if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_IF) {
-                SPerl_ARRAY_push(if_condition_bytecode_pos_stack, pos_ptr);
+                SPerl_ARRAY_push(if_address_stack, pos_ptr);
               }
               else if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_LOOP) {
-                SPerl_ARRAY_push(loop_condition_bytecode_pos_stack, pos_ptr);
+                SPerl_ARRAY_push(if_loop_address_stack, pos_ptr);
               }
               
               // Prepare for bytecode position of branch
@@ -1281,7 +1333,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               }
               
               _Bool bytecode_set = 0;
-              if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
+              if (constant->code == SPerl_CONSTANT_C_CODE_BOOLEAN || constant->code == SPerl_CONSTANT_C_CODE_INT) {
                 if (constant->uv.int_value == -1) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ICONST_M1);
                   bytecode_set = 1;
@@ -1359,20 +1411,18 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               if (!bytecode_set) {
                 if (constant->code == SPerl_CONSTANT_C_CODE_LONG || constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LDC2_W);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LOADCONST2);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 24) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 16) & 0xFF);
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 8) & 0xFF);
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address & 0xFF);
                 }
                 else {
-                  if (constant->address > 0xFF) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LDC_W);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 8) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address & 0xFF);
-                  }
-                  else {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LDC);
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address & 0xFF);
-                  }
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LOADCONST);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 24) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 16) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->address >> 8) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->address & 0xFF);
                 }
               }
               

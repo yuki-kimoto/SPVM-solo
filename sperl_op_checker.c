@@ -62,9 +62,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // op count
     int32_t op_count = 0;
     
-    // Set constant pool start address
-    sub->constant_pool_base = sperl->constant_pool->length;
-    
     // Run OPs
     SPerl_OP* op_base = op_sub;
     SPerl_OP* op_cur = op_base;
@@ -76,6 +73,39 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       // [START]Preorder traversal position
       
       switch (op_cur->code) {
+        case SPerl_OP_C_CODE_AND: {
+          if (!op_cur->condition) {
+            SPerl_yyerror_format(sperl, "&& operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+            break;
+          }
+          
+          // Convert && to if statement
+          SPerl_OP_convert_and_to_if(sperl, op_cur);
+          
+          break;
+        }
+        case SPerl_OP_C_CODE_OR: {
+          if (!op_cur->condition) {
+            SPerl_yyerror_format(sperl, "|| operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+            break;
+          }
+
+          // Convert || to if statement
+          SPerl_OP_convert_or_to_if(sperl, op_cur);
+          
+          break;
+        }
+        case SPerl_OP_C_CODE_NOT: {
+          if (!op_cur->condition) {
+            SPerl_yyerror_format(sperl, "! operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+            break;
+          }
+          
+          // Convert ! to if statement
+          SPerl_OP_convert_not_to_if(sperl, op_cur);
+          
+          break;
+        }
         case SPerl_OP_C_CODE_NEGATE: {
           if (op_cur->first->code == SPerl_OP_C_CODE_CONSTANT) {
             
@@ -227,45 +257,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             }
             
             case SPerl_OP_C_CODE_CONDITION: {
-              if ((op_cur->first && !op_cur->last) || op_cur->first == op_cur->last) {
+              if (op_cur->first->code != SPerl_OP_C_CODE_IF) {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 if (!resolved_type) {
                   SPerl_OP_convert_to_op_constant_false(sperl, op_cur->first);
                 }
               }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_AND: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "&& operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Convert && to if statement
-              SPerl_OP_convert_and_to_if(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_OR: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "|| operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-
-              // Convert || to if statement
-              SPerl_OP_convert_or_to_if(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_NOT: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "! operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Convert ! to if statement
-              SPerl_OP_convert_not_to_if(sperl, op_cur);
               
               break;
             }
@@ -848,7 +845,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               // Constant pool adding condition
               _Bool isnt_add = 0;
               if (constant->code == SPerl_CONSTANT_C_CODE_BOOLEAN || constant->code == SPerl_CONSTANT_C_CODE_SHORT || constant->code == SPerl_CONSTANT_C_CODE_INT) {
-                if (constant->uv.int_value >= -1 && constant->uv.int_value <= 0xFF) {
+                if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
                   isnt_add = 1;
                 }
               }
@@ -869,6 +866,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               }
               
               if (!isnt_add) {
+                warn("AAAAAAAAAAAAA");
                 SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant);
               }
               
@@ -1173,14 +1171,5 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         }
       }
     }
-    
-    // Set constant pool length
-    sub->constant_pool_length = sperl->constant_pool->length - sub->constant_pool_base;
-    if (sub->constant_pool_length > 0xFFFF) {
-      SPerl_yyerror_format(sperl, "Constant pool max size is 65,535\n", op_cur->file, op_cur->line);
-      break;
-    }
-    
-    // 
   }
 }

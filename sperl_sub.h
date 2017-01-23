@@ -19,9 +19,6 @@ struct SPerl_sub {
   int32_t bytecode_base;
   int32_t bytecode_length;
   int32_t operand_stack_max;
-  int32_t constant_pool_base;
-  int32_t constant_pool_length;
-  int32_t constant_pool_address;
   _Bool anon;
   _Bool is_native;
 };

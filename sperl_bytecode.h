@@ -211,6 +211,8 @@ enum {
   SPerl_BYTECODE_C_CODE_JSR_W, // Not used
   SPerl_BYTECODE_C_CODE_BREAKPOINT, // Not used
   SPerl_BYTECODE_C_CODE_CALLSUB,
+  SPerl_BYTECODE_C_CODE_LOADCONST,
+  SPerl_BYTECODE_C_CODE_LOADCONST2,
 };
 
 extern const char* const SPerl_BYTECODE_C_CODE_NAMES[];

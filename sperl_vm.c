@@ -60,11 +60,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Call stack
   int64_t* call_stack = vm->call_stack;
   
-  // Constant pool base
-  int32_t constant_pool_base = 0;;
-  
   // Program counter
-  register int64_t pc = 0;
+  register int32_t pc = 0;
   
   // Top position of operand stack
   register int32_t operand_stack_top = -1;
@@ -85,6 +82,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   int64_t tmp_int64;
   
   double tmp_double;
+  
+  register _Bool condition;
   
   // Goto subroutine
   goto CALLSUB_COMMON;
@@ -175,24 +174,18 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_SIPUSH:
         operand_stack_top++;
-        *(int32_t*)&operand_stack[operand_stack_top] = (int16_t)((bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]);
+        *(int32_t*)&operand_stack[operand_stack_top] = (int16_t)((int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]);
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_LDC:
-        operand_stack_top++;
-        *(int32_t*)&operand_stack[operand_stack_top] = constant_pool[constant_pool_base + bytecodes[pc + 1]];
-        pc += 2;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_LDC_W:
-        operand_stack_top++;
-        *(int32_t*)&operand_stack[operand_stack_top] = constant_pool[constant_pool_base + (bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
-        pc += 3;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_LDC2_W:
-        operand_stack_top++;
-        operand_stack[operand_stack_top] = *(int64_t*)&constant_pool[constant_pool_base + (bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
-        pc += 3;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ILOAD:
         operand_stack_top++;
         *(int32_t*)&operand_stack[operand_stack_top] = *(int32_t*)&call_stack[call_stack_base + bytecodes[pc + 1]];
@@ -321,25 +314,67 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_IALOAD:
         pc++;
         continue;
+        
+        // TODO
+        *(int32_t*)&operand_stack[operand_stack_top - 1] = *(int32_t*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_LALOAD:
+        pc++;
+        continue;
+
+        // TODO
+        operand_stack[operand_stack_top - 1] = *(int64_t*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FALOAD:
         pc++;
         continue;
+
+        // TODO
+        *(float*)&operand_stack[operand_stack_top - 1] = *(float*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_DALOAD:
+        pc++;
+        continue;
+
+        // TODO
+        *(double*)&operand_stack[operand_stack_top - 1] = *(double*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_AALOAD:
         pc++;
         continue;
+        
+        // TODO
+        operand_stack[operand_stack_top - 1] = *(int64_t*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_BALOAD:
+        pc++;
+        continue;
+        
+        // TODO
+        *(int8_t*)&operand_stack[operand_stack_top - 1] = (int32_t)*(int8_t*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_CALOAD:
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_SALOAD:
+        pc++;
+        continue;
+        
+        // TODO
+        *(int16_t*)&operand_stack[operand_stack_top - 1] = (int32_t)*(int16_t*)(operand_stack[operand_stack_top - 1] + *(int32_t*)&operand_stack[operand_stack_top]);
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_ISTORE:
@@ -470,25 +505,74 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_BASTORE:
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_CASTORE:
+        
+        // TODO
+        *(int8_t*)(operand_stack[operand_stack_top - 2] + *(int32_t*)&operand_stack[operand_stack_top - 1])
+          = (int8_t)*(int32_t*)&operand_stack[operand_stack_top];
+        operand_stack_top -= 3;
         pc++;
         continue;
+      case SPerl_BYTECODE_C_CODE_CASTORE:
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_SASTORE:
+        pc++;
+        continue;
+        
+        // TODO
+        *(int16_t*)(operand_stack[operand_stack_top - 2] + *(int32_t*)&operand_stack[operand_stack_top - 1])
+          = (int16_t)*(int32_t*)&operand_stack[operand_stack_top];
+        operand_stack_top -= 3;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_IASTORE:
         pc++;
         continue;
+        
+        // TODO
+        *(int32_t*)(operand_stack[operand_stack_top - 2] + *(int32_t*)&operand_stack[operand_stack_top - 1])
+          = *(int32_t*)&operand_stack[operand_stack_top];
+        operand_stack_top -= 3;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_LASTORE:
+        pc++;
+        continue;
+
+        // TODO
+        *(int64_t*)(operand_stack[operand_stack_top - 2] + *(int32_t*)&operand_stack[operand_stack_top - 1])
+          = operand_stack[operand_stack_top];
+        operand_stack_top -= 3;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FASTORE:
         pc++;
         continue;
+
+        // TODO
+        *(float*)(operand_stack[operand_stack_top - 2] + *(int32_t*)&operand_stack[operand_stack_top - 1])
+          = *(float*)&operand_stack[operand_stack_top];
+        operand_stack_top -= 3;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_DASTORE:
         pc++;
         continue;
+
+        // TODO
+        *(double*)(operand_stack[operand_stack_top - 2] + *(int32_t*)&operand_stack[operand_stack_top - 1])
+          = *(double*)&operand_stack[operand_stack_top];
+        operand_stack_top -= 3;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_AASTORE:
+        pc++;
+        continue;
+
+        // TODO
+        *(int64_t*)(operand_stack[operand_stack_top - 2] + *(int32_t*)&operand_stack[operand_stack_top - 1])
+          = operand_stack[operand_stack_top];
+        operand_stack_top -= 3;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_POP:
@@ -500,26 +584,26 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_DUP:
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_DUP_X1:
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_DUP_X2:
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_DUP2:
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_DUP2_X1:
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_DUP2_X2:
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_SWAP:
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_IADD:
         *(int32_t*)&operand_stack[operand_stack_top - 1] += *(int32_t*)&operand_stack[operand_stack_top];
         operand_stack_top--;
@@ -761,64 +845,129 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_LCMP:
+        // z = (x > y) + (x < y) * -1
+        *(int32_t*)&operand_stack[operand_stack_top - 1]
+          = (operand_stack[operand_stack_top - 1] > operand_stack[operand_stack_top])
+          + (operand_stack[operand_stack_top - 1] < operand_stack[operand_stack_top]) * -1;
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FCMPL:
+        *(int32_t*)&operand_stack[operand_stack_top - 1]
+          = (*(float*)&operand_stack[operand_stack_top - 1] > *(float*)&operand_stack[operand_stack_top])
+          + (*(float*)&operand_stack[operand_stack_top - 1] < *(float*)&operand_stack[operand_stack_top]) * -1;
+          + -!!(
+            isnan(*(float*)&operand_stack[operand_stack_top - 1])
+            | isnan(*(float*)&operand_stack[operand_stack_top])
+          );
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FCMPG:
+        *(int32_t*)&operand_stack[operand_stack_top - 1]
+          = (*(float*)&operand_stack[operand_stack_top - 1] > *(float*)&operand_stack[operand_stack_top])
+          + (*(float*)&operand_stack[operand_stack_top - 1] < *(float*)&operand_stack[operand_stack_top]) * -1;
+          + !!(
+            isnan(*(float*)&operand_stack[operand_stack_top - 1])
+            | isnan(*(float*)&operand_stack[operand_stack_top])
+          );
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_DCMPL:
+        *(int32_t*)&operand_stack[operand_stack_top - 1]
+          = (*(double*)&operand_stack[operand_stack_top - 1] > *(double*)&operand_stack[operand_stack_top])
+          + (*(double*)&operand_stack[operand_stack_top - 1] < *(double*)&operand_stack[operand_stack_top]) * -1;
+          + -!!(
+            isnan(*(double*)&operand_stack[operand_stack_top - 1])
+            | isnan(*(double*)&operand_stack[operand_stack_top])
+          );
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_DCMPG:
+        *(int32_t*)&operand_stack[operand_stack_top - 1]
+          = (*(double*)&operand_stack[operand_stack_top - 1] > *(double*)&operand_stack[operand_stack_top])
+          + (*(double*)&operand_stack[operand_stack_top - 1] < *(double*)&operand_stack[operand_stack_top]) * -1;
+          + !!(
+            isnan(*(double*)&operand_stack[operand_stack_top - 1])
+            | isnan(*(double*)&operand_stack[operand_stack_top])
+          );
+        operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_IFEQ:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top] == 0;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFNE:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top] != 0;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFLT:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top] < 0;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFGE:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top] >= 0;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFGT:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top] > 0;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFLE:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top] <= 0;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPEQ:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top - 1] == *(int32_t*)&operand_stack[operand_stack_top];
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPNE:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top - 1] != *(int32_t*)&operand_stack[operand_stack_top];
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPLT:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top - 1] < *(int32_t*)&operand_stack[operand_stack_top];
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPGE:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top - 1] >= *(int32_t*)&operand_stack[operand_stack_top];
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPGT:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top - 1] > *(int32_t*)&operand_stack[operand_stack_top];
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPLE:
-        pc += 3;
+        condition = *(int32_t*)&operand_stack[operand_stack_top - 1] <= *(int32_t*)&operand_stack[operand_stack_top];
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ACMPEQ:
-        pc += 3;
+        condition = operand_stack[operand_stack_top - 1] == operand_stack[operand_stack_top];
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ACMPNE:
-        pc += 3;
+        condition = operand_stack[operand_stack_top - 1] != operand_stack[operand_stack_top];
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_GOTO:
-        pc += 3;
+        pc += (int16_t)((bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]);
         continue;
       case SPerl_BYTECODE_C_CODE_JSR:
         // Not used
@@ -1046,7 +1195,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
-
+        
         // Resotre operand stack top
         operand_stack_top = operand_stack_bottom;
         
@@ -1140,8 +1289,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_GOTO_W:
-        pc += 5;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_JSR_W:
         // Not used
         assert(0);
@@ -1222,13 +1371,22 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           
           operand_stack_bottom = operand_stack_top;
           
-          // Set constant pool base
-          constant_pool_base = sub->constant_pool_base;
-          
           pc = sub->bytecode_base;
         }
         continue;
       }
+      case SPerl_BYTECODE_C_CODE_LOADCONST:
+        operand_stack_top++;
+        *(int32_t*)&operand_stack[operand_stack_top]
+          = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LOADCONST2:
+        operand_stack_top++;
+        operand_stack[operand_stack_top]
+          = *(int64_t*)&constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        pc += 5;
+        continue;
     }
     
     assert(0);
