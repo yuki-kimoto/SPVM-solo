@@ -339,11 +339,29 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl* sperl, SPerl_OP* op_while, SPerl
 
 SPerl_OP* SPerl_OP_build_if_statement(SPerl* sperl, SPerl_OP* op_if, SPerl_OP* op_term, SPerl_OP* op_block_if, SPerl_OP* op_block_else) {
   
+  if (op_if->code == SPerl_OP_C_CODE_ELSIF) {
+    op_if->code = SPerl_OP_C_CODE_IF;
+  }
+  
+  if (op_block_else->code == SPerl_OP_C_CODE_IF) {
+    SPerl_OP* op_if = op_block_else;
+    op_block_else = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_BLOCK, op_term->file, op_term->line);
+    
+    SPerl_OP* op_list = SPerl_OP_newOP_LIST(sperl, op_term->file, op_term->line);
+    SPerl_OP_sibling_splice(sperl, op_list, op_list->first, 0, op_if);
+    
+    SPerl_OP_sibling_splice(sperl, op_block_else, NULL, 0, op_list);
+  }
+  
+  
   SPerl_OP* op_condition = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONDITION, op_term->file, op_term->line);
   SPerl_OP_sibling_splice(sperl, op_condition, NULL, 0, op_term);
   
   op_block_if->flag |= SPerl_OP_C_FLAG_BLOCK_IF;
   op_condition->flag |= SPerl_OP_C_FLAG_CONDITION_IF;
+  if (op_block_else->code == SPerl_OP_C_CODE_BLOCK) {
+    op_block_else->flag |= SPerl_OP_C_FLAG_BLOCK_ELSE;
+  }
   
   SPerl_OP_sibling_splice(sperl, op_if, NULL, 0, op_condition);
   SPerl_OP_sibling_splice(sperl, op_if, op_condition, 0, op_block_if);
@@ -489,8 +507,6 @@ void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op) {
   constant_true->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
   constant_true->uv.int_value = 1;
   op->uv.constant = constant_true;
-  
-  SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant_true);
 }
 
 void SPerl_OP_convert_to_op_constant_false(SPerl* sperl, SPerl_OP* op) {
@@ -503,8 +519,6 @@ void SPerl_OP_convert_to_op_constant_false(SPerl* sperl, SPerl_OP* op) {
   constant_false->uv.int_value = 0;
   constant_false->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
   op->uv.constant = constant_false;
-
-  SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant_false);
 }
 
 void SPerl_OP_convert_and_to_if(SPerl* sperl, SPerl_OP* op) {
@@ -701,7 +715,6 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
   // Add name information to constant_pool
   name_info->constant_pool_address = sperl->constant_pool->length;
   SPerl_CONSTANT_POOL_push_int(sperl, sperl->constant_pool, strlen(sub_name));
-  SPerl_CONSTANT_POOL_push_string(sperl, sperl->constant_pool, sub_name);
 }
 
 void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
@@ -718,7 +731,6 @@ void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
   // Add name information to constant_pool
   name_info->constant_pool_address = sperl->constant_pool->length;
   SPerl_CONSTANT_POOL_push_int(sperl, sperl->constant_pool, strlen(field_name));
-  SPerl_CONSTANT_POOL_push_string(sperl, sperl->constant_pool, field_name);
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_field_base_name) {
