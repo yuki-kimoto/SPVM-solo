@@ -76,6 +76,39 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       // [START]Preorder traversal position
       
       switch (op_cur->code) {
+        case SPerl_OP_C_CODE_AND: {
+          if (!op_cur->condition) {
+            SPerl_yyerror_format(sperl, "&& operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+            break;
+          }
+          
+          // Convert && to if statement
+          SPerl_OP_convert_and_to_if(sperl, op_cur);
+          
+          break;
+        }
+        case SPerl_OP_C_CODE_OR: {
+          if (!op_cur->condition) {
+            SPerl_yyerror_format(sperl, "|| operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+            break;
+          }
+
+          // Convert || to if statement
+          SPerl_OP_convert_or_to_if(sperl, op_cur);
+          
+          break;
+        }
+        case SPerl_OP_C_CODE_NOT: {
+          if (!op_cur->condition) {
+            SPerl_yyerror_format(sperl, "! operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
+            break;
+          }
+          
+          // Convert ! to if statement
+          SPerl_OP_convert_not_to_if(sperl, op_cur);
+          
+          break;
+        }
         case SPerl_OP_C_CODE_NEGATE: {
           if (op_cur->first->code == SPerl_OP_C_CODE_CONSTANT) {
             
@@ -228,39 +261,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_OP_convert_to_op_constant_false(sperl, op_cur->first);
                 }
               }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_AND: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "&& operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Convert && to if statement
-              SPerl_OP_convert_and_to_if(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_OR: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "|| operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-
-              // Convert || to if statement
-              SPerl_OP_convert_or_to_if(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_NOT: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "! operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Convert ! to if statement
-              SPerl_OP_convert_not_to_if(sperl, op_cur);
               
               break;
             }
