@@ -62,9 +62,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     // op count
     int32_t op_count = 0;
     
-    // Set constant pool start address
-    sub->constant_pool_base = sperl->constant_pool->length;
-    
     // Run OPs
     SPerl_OP* op_base = op_sub;
     SPerl_OP* op_cur = op_base;
@@ -864,6 +861,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               }
               
               if (!isnt_add) {
+                warn("AAAAAAAAAAAAA");
                 SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant);
               }
               
@@ -1168,14 +1166,5 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         }
       }
     }
-    
-    // Set constant pool length
-    sub->constant_pool_length = sperl->constant_pool->length - sub->constant_pool_base;
-    if (sub->constant_pool_length > 0xFFFF) {
-      SPerl_yyerror_format(sperl, "Constant pool max size is 65,535\n", op_cur->file, op_cur->line);
-      break;
-    }
-    
-    // 
   }
 }
