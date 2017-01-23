@@ -40,7 +40,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
     _Bool finish = 0;
     
     SPerl_ARRAY* if_condition_bytecode_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-    SPerl_ARRAY* loop_condition_bytecode_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+    SPerl_ARRAY* condition_loop_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
     SPerl_ARRAY* last_bytecode_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
     
     // Current switch
@@ -360,7 +360,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               break;
             }
             case SPerl_OP_C_CODE_NEXT: {
-              int32_t* pos_ptr = SPerl_ARRAY_fetch(loop_condition_bytecode_address_stack, loop_condition_bytecode_address_stack->length - 1);
+              int32_t* pos_ptr = SPerl_ARRAY_fetch(condition_loop_address_stack, condition_loop_address_stack->length - 1);
               
               // Add "goto"
               SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
@@ -385,7 +385,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
               }
               else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
-                int32_t* pos_ptr = SPerl_ARRAY_pop(loop_condition_bytecode_address_stack);
+                int32_t* pos_ptr = SPerl_ARRAY_pop(condition_loop_address_stack);
                 
                 // Add "goto" to end of block
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
@@ -588,7 +588,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_ARRAY_push(if_condition_bytecode_address_stack, pos_ptr);
               }
               else if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_LOOP) {
-                SPerl_ARRAY_push(loop_condition_bytecode_address_stack, pos_ptr);
+                SPerl_ARRAY_push(condition_loop_address_stack, pos_ptr);
               }
               
               // Prepare for bytecode position of branch
