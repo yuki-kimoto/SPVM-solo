@@ -60,9 +60,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Call stack
   int64_t* call_stack = vm->call_stack;
   
-  // Constant pool base
-  int32_t constant_pool_base = 0;;
-  
   // Program counter
   register int32_t pc = 0;
   
@@ -181,20 +178,14 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_LDC:
-        operand_stack_top++;
-        *(int32_t*)&operand_stack[operand_stack_top] = constant_pool[constant_pool_base + bytecodes[pc + 1]];
-        pc += 2;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_LDC_W:
-        operand_stack_top++;
-        *(int32_t*)&operand_stack[operand_stack_top] = constant_pool[constant_pool_base + (bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
-        pc += 3;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_LDC2_W:
-        operand_stack_top++;
-        operand_stack[operand_stack_top] = *(int64_t*)&constant_pool[constant_pool_base + (bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
-        pc += 3;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ILOAD:
         operand_stack_top++;
         *(int32_t*)&operand_stack[operand_stack_top] = *(int32_t*)&call_stack[call_stack_base + bytecodes[pc + 1]];
@@ -1380,13 +1371,22 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           
           operand_stack_bottom = operand_stack_top;
           
-          // Set constant pool base
-          constant_pool_base = sub->constant_pool_base;
-          
           pc = sub->bytecode_base;
         }
         continue;
       }
+      case SPerl_BYTECODE_C_CODE_LOADCONST:
+        operand_stack_top++;
+        *(int32_t*)&operand_stack[operand_stack_top]
+          = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LOADCONST2:
+        operand_stack_top++;
+        operand_stack[operand_stack_top]
+          = *(int64_t*)&constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        pc += 5;
+        continue;
     }
     
     assert(0);

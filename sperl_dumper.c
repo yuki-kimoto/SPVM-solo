@@ -289,6 +289,8 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       }
       // Have four operand
       case SPerl_BYTECODE_C_CODE_CALLSUB:
+      case SPerl_BYTECODE_C_CODE_LOADCONST:
+      case SPerl_BYTECODE_C_CODE_LOADCONST2:
       {
         i++;
         bytecode = bytecode_array->values[i];
