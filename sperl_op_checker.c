@@ -843,7 +843,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               // Constant pool adding condition
               _Bool isnt_add = 0;
               if (constant->code == SPerl_CONSTANT_C_CODE_BOOLEAN || constant->code == SPerl_CONSTANT_C_CODE_SHORT || constant->code == SPerl_CONSTANT_C_CODE_INT) {
-                if (constant->uv.int_value >= -1 && constant->uv.int_value <= 0xFF) {
+                if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
                   isnt_add = 1;
                 }
               }
