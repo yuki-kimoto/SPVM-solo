@@ -879,9 +879,11 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             }
             // End of scope
             case SPerl_OP_C_CODE_BLOCK: {
+              assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
+
               int32_t* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
               if (block_base_ptr) {
-                int32_t const pop_count = op_my_var_stack->length - *block_base_ptr;
+                int32_t const pop_count = (int32_t) op_my_var_stack->length - *block_base_ptr;
                 for (int32_t j = 0; j < pop_count; j++) {
                   SPerl_ARRAY_pop(op_my_var_stack);
                 }
@@ -943,8 +945,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               // Search same name variable
               int32_t found = 0;
-              
-              for (size_t i = op_my_var_stack->length; i-- > (size_t) block_base; ) {
+
+              assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
+              for (int32_t i = (int32_t) op_my_var_stack->length; i-- > block_base; ) {
                 SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(op_my_var_stack, i);
                 SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
                 if (strcmp(my_var->op_name->uv.name, bef_my_var->op_name->uv.name) == 0) {
@@ -955,6 +958,11 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               if (found) {
                 SPerl_yyerror_format(sperl, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
+                break;
+              }
+              else if (op_my_var_stack->length > SPerl_OP_LIMIT_LEXICAL_VARIABLES) {
+                SPerl_yyerror_format(sperl, "too many lexical variables, my \"%s\" ignored at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
+                parser->fatal_error = 1;
                 break;
               }
               else {
