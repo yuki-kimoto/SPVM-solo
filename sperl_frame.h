@@ -4,8 +4,10 @@
 #include "sperl.h"
 
 struct SPerl_frame {
-  int64_t* operand_stack;
-  int64_t* call_stack;
+  int32_t operand_stack_base;
+  int32_t vars_base;
+  int32_t operand_stack_top;
+  int64_t return_address;
 };
 
 SPerl_OP* SPerl_FRAME_newOP(SPerl* sperl);

@@ -6,7 +6,6 @@
 
 #include <inttypes.h>
 
-
 #include "sperl.h"
 #include "sperl_parser.h"
 #include "sperl_array.h"
@@ -35,6 +34,7 @@
 #include "sperl_op_checker.h"
 #include "sperl_switch_info.h"
 #include "sperl_descriptor.h"
+#include "sperl_vm.h"
 #include "sperl_frame.h"
 
 const char* const SPerl_OP_C_CODE_NAMES[] = {
@@ -118,30 +118,30 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "VOID",
 };
 
-void SPerl_CORE_printi(SPerl_FRAME* frame) {
+void SPerl_CORE_printi(SPerl_VM* vm) {
   
-  int32_t value = *(int32_t*)&frame->call_stack[0];
+  int32_t value = *(int32_t*)&vm->call_stack[vm->frame->vars_base];
   
   printf("TEST: %" PRId32 "\n", value);
 }
 
-void SPerl_CORE_printl(SPerl_FRAME* frame) {
+void SPerl_CORE_printl(SPerl_VM* vm) {
   
-  int64_t value = frame->call_stack[0];
+  int64_t value = vm->call_stack[vm->frame->vars_base];
   
   printf("TEST: %" PRId64 "\n", value);
 }
 
-void SPerl_CORE_printf(SPerl_FRAME* frame) {
+void SPerl_CORE_printf(SPerl_VM* vm) {
   
-  float value = *(float*)&frame->call_stack[0];;
+  float value = *(float*)&vm->call_stack[vm->frame->vars_base];
   
   printf("TEST: %f\n", value);
 }
 
-void SPerl_CORE_printd(SPerl_FRAME* frame) {
+void SPerl_CORE_printd(SPerl_VM* vm) {
   
-  double value = *(double*)&frame->call_stack[0];
+  double value = *(double*)&vm->call_stack[vm->frame->vars_base];
   
   printf("TEST: %f\n", value);
 }

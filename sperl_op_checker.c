@@ -871,7 +871,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               }
               
               if (!isnt_add) {
-                warn("AAAAAAAAAAAAA");
                 SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant);
               }
               

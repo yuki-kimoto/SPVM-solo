@@ -25,14 +25,14 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   // Create VM
   SPerl_VM* vm = SPerl_VM_new(sperl);
   
-  // Initialize frame
-  SPerl_FRAME* frame = SPerl_VM_init_frame(sperl, vm);
-  frame->operand_stack[0] = 4;
+  // Set argument
+  vm->call_stack[0] = 4;
   
   // Run
   SPerl_VM_call_sub(sperl, vm, entry_point);
   
-  int64_t return_value = frame->operand_stack[0];
+  // Get return value
+  int64_t return_value = vm->call_stack[0];
   
   printf("TEST return_value: %d\n", return_value);
 }
