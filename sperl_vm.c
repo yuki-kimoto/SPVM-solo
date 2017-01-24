@@ -22,6 +22,8 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   
   vm->call_stack_capacity = 255;
   vm->call_stack = malloc(sizeof(int64_t) * vm->call_stack_capacity);
+  vm->frame_capacity = 255;
+  vm->frame = malloc(sizeof(SPerl_FRAME) * vm->frame_capacity);
   
   return vm;
 }
@@ -38,7 +40,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   uint8_t* bytecodes = sperl->bytecode_array->values;
 
   // Operand stack
-  int64_t* operand_stack = NULL;
+  int64_t* operand_stack = vm->call_stack;
   
   // Variables
   int64_t* vars = NULL;
@@ -1191,7 +1193,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // create new frame
         frame_stack_top++;
         vm->frame = &frame_stack[frame_stack_top];
-        
+       
         // Return address
         vm->frame->return_address = pc + 5;
         
