@@ -582,6 +582,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_IADD:
+        
         *(int32_t*)&operand_stack[operand_stack_top - 1] += *(int32_t*)&operand_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
@@ -1012,7 +1013,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_IRETURN: {
         
         // Return value
-        int32_t return_value = *(int32_t*)&operand_stack[0];
+        int32_t return_value = *(int32_t*)&operand_stack[operand_stack_top];
         
         // Return address
         int32_t return_address = vm->frame->return_address;
@@ -1056,7 +1057,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         assert(0);
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
-        
+        assert(0);
         // Return address
         int32_t return_address = vm->frame->return_address;
         
@@ -1181,11 +1182,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         CALLSUB_COMMON:
         
-        next_vars_base = operand_stack_top + 1;
+        next_vars_base = vm->frame->operand_stack_base + operand_stack_top + 1;
         
         // Initialize my variables and prepare arguments
-        memset(&vm->call_stack[next_vars_base], 0, sub->op_my_vars->length * 8);
-        memcpy(&vm->call_stack[next_vars_base], &operand_stack[operand_stack_top + 1], sub->op_args->length * 8);
+        memset(&vm->call_stack[next_vars_base + sub->op_args->length], 0, (sub->op_my_vars->length - sub->op_args->length) * 8);
         
         // Save current operand stack top
         vm->frame->operand_stack_top = operand_stack_top;
