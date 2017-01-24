@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     OK(int_ptr8->b == 0);
   }
   
-  // Crete next memroy node
+  // Crete next memory node
   {
     SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sizeof(int32_t));
     

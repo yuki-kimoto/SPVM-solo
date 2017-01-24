@@ -95,7 +95,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 int32_t max = switch_info->max;
                 int32_t min = switch_info->min;
                 
-                // Machine address to culculate padding
+                // Machine address to calculate padding
                 cur_switch_address = bytecode_array->length - 1;
                 
                 // Padding
@@ -131,7 +131,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 int32_t length = switch_info->op_cases->length;
                 
-                // Machine address to culculate padding
+                // Machine address to calculate padding
                 cur_switch_address = bytecode_array->length - 1;
                 
                 // Padding
@@ -237,7 +237,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                 }
               }
-              // looupswitch
+              // lookupswitch
               else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
                 int32_t padding = 3 - (cur_switch_address & 3);
 
