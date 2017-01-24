@@ -155,7 +155,8 @@ enum {
   SPerl_OP_LIMIT_FIELDS            = UINT16_MAX, /* should be expressible by the type of SPerl_FIELD::id */
   SPerl_OP_LIMIT_SUBROUTINES       = INT32_MAX , /* should be expressible by the type of SPerl_SUB::id */
   SPerl_OP_LIMIT_LEXICAL_VARIABLES = UINT16_MAX, /* should be expressible by the type of block_base (sperl_op_checker.c) */
-  SPerl_OP_LIMIT_TYPES             = INT32_MAX , /* should be expressible by the type of SPerl_RESOLVED_TYPE::id */
+  SPerl_OP_LIMIT_TYPES             = INT32_MAX , /* should be expressible by the type of SPerl_RESOLVED_TYPE::id
+                                                    and greater than 2 * SPerl_RESOLVED_TYPE_C_CORE_LENGTH */
 };
 
 /* Binary operation */
