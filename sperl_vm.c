@@ -1045,16 +1045,136 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_LRETURN: {
-        assert(0);
+        // Return value
+        int64_t return_value = operand_stack[operand_stack_top];
+        
+        // Return address
+        int32_t return_address = vm->frame->return_address;
+        
+        // Restore frame
+        frame_stack_top--;
+        if (frame_stack_top == -1) {
+          *(int32_t*)&vm->call_stack[0] = return_value;
+          return;
+        }
+        
+        vm->frame = &frame_stack[frame_stack_top];
+        
+        // Resotre operand stack
+        operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
+        
+        // Resotre vars
+        vars = &vm->call_stack[vm->frame->vars_base];
+        
+        // Restore operand stack top
+        operand_stack_top = vm->frame->operand_stack_top;
+        
+        // Push return value
+        operand_stack_top++;
+        operand_stack[operand_stack_top] = return_value;
+        
+        pc = return_address;
+        
+        continue;
       }
       case SPerl_BYTECODE_C_CODE_FRETURN: {
-        assert(0);
+        // Return value
+        float return_value = *(float*)&operand_stack[operand_stack_top];
+        
+        // Return address
+        int32_t return_address = vm->frame->return_address;
+        
+        // Restore frame
+        frame_stack_top--;
+        if (frame_stack_top == -1) {
+          *(int32_t*)&vm->call_stack[0] = return_value;
+          return;
+        }
+        
+        vm->frame = &frame_stack[frame_stack_top];
+        
+        // Resotre operand stack
+        operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
+        
+        // Resotre vars
+        vars = &vm->call_stack[vm->frame->vars_base];
+        
+        // Restore operand stack top
+        operand_stack_top = vm->frame->operand_stack_top;
+        
+        // Push return value
+        operand_stack_top++;
+        *(float*)&operand_stack[operand_stack_top] = return_value;
+        
+        pc = return_address;
+        
+        continue;
       }
       case SPerl_BYTECODE_C_CODE_DRETURN: {
-        assert(0);
+        // Return value
+        double return_value = *(double*)&operand_stack[operand_stack_top];
+        
+        // Return address
+        int32_t return_address = vm->frame->return_address;
+        
+        // Restore frame
+        frame_stack_top--;
+        if (frame_stack_top == -1) {
+          *(int32_t*)&vm->call_stack[0] = return_value;
+          return;
+        }
+        
+        vm->frame = &frame_stack[frame_stack_top];
+        
+        // Resotre operand stack
+        operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
+        
+        // Resotre vars
+        vars = &vm->call_stack[vm->frame->vars_base];
+        
+        // Restore operand stack top
+        operand_stack_top = vm->frame->operand_stack_top;
+        
+        // Push return value
+        operand_stack_top++;
+        *(double*)&operand_stack[operand_stack_top] = return_value;
+        
+        pc = return_address;
+        
+        continue;
       }
       case SPerl_BYTECODE_C_CODE_ARETURN: {
-        assert(0);
+        // Return value
+        int64_t return_value = operand_stack[operand_stack_top];
+        
+        // Return address
+        int32_t return_address = vm->frame->return_address;
+        
+        // Restore frame
+        frame_stack_top--;
+        if (frame_stack_top == -1) {
+          *(int32_t*)&vm->call_stack[0] = return_value;
+          return;
+        }
+        
+        vm->frame = &frame_stack[frame_stack_top];
+        
+        // Resotre operand stack
+        operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
+        
+        // Resotre vars
+        vars = &vm->call_stack[vm->frame->vars_base];
+        
+        // Restore operand stack top
+        operand_stack_top = vm->frame->operand_stack_top;
+        
+        // Push return value
+        operand_stack_top++;
+        operand_stack[operand_stack_top] = return_value;
+        
+        pc = return_address;
+        
+        continue;
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
         
