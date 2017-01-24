@@ -37,7 +37,7 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
 
 SPerl_FRAME* SPerl_VM_init_frame(SPerl* sperl, SPerl_VM* vm) {
   
-  vm->frame->call_stack = vm->call_stack;
+  vm->frame->vars = vm->call_stack;
   vm->frame->operand_stack = vm->operand_stack;
   
   return vm->frame;
@@ -1335,7 +1335,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         if (sub->is_native) {
           // Set frame
           vm->frame->operand_stack = &operand_stack[operand_stack_top + 1];
-          vm->frame->call_stack = &call_stack[call_stack_base];
+          vm->frame->vars = &call_stack[call_stack_base];
           
           (*sub->native_address)(vm->frame);
           

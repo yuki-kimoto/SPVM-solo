@@ -5,7 +5,7 @@
 
 struct SPerl_frame {
   int64_t* operand_stack;
-  int64_t* call_stack;
+  int64_t* vars;
 };
 
 SPerl_OP* SPerl_FRAME_newOP(SPerl* sperl);
