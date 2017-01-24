@@ -78,11 +78,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Get subroutine
   SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
   
-  // Temparary value
-  int64_t tmp_int64;
-  
-  double tmp_double;
-  
   register _Bool condition;
   
   // Goto subroutine
