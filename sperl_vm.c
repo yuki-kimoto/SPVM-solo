@@ -66,7 +66,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   goto CALLSUB_COMMON;
   
   while (1) {
-    warn("CCCCCCCCCCC %d", pc);
     
     switch (bytecodes[pc]) {
       case SPerl_BYTECODE_C_CODE_NOP:
@@ -1058,7 +1057,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         assert(0);
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
-        assert(0);
+        
         // Return address
         int32_t return_address = vm->frame->return_address;
         
@@ -1071,7 +1070,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         vm->frame = &frame_stack[frame_stack_top];
         
         // Resotre operand stack
-        operand_stack = &vm->call_stack[vm->frame->operand_stack_top];
+        operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
         
         // Resotre vars
         vars = &vm->call_stack[vm->frame->vars_base];
