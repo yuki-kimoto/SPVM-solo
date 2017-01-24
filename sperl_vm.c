@@ -1215,6 +1215,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Call native subroutine
         if (sub->is_native) {
           (*sub->native_address)(vm);
+          pc += 5;
         }
         // Call normal subroutine
         else {
