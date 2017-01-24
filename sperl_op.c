@@ -865,12 +865,11 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         if (found_field) {
           SPerl_yyerror_format(sperl, "redeclaration of has \"%s\" at %s line %d\n", field_base_name, op_field->file, op_field->line);
         }
+        else if (op_fields->length >= SPerl_OP_LIMIT_FIELDS) {
+          SPerl_yyerror_format(sperl, "too many fields, field \"%s\" ignored at %s line %d\n", field_base_name, op_field->file, op_field->line);
+        }
         else {
           // Set ID
-          if (op_fields->length > INT32_MAX) {
-            SPerl_yyerror_format(sperl, "too many fields at %s line %d\n", op_field->file, op_field->line);
-            // ToDo: discussion (akinomyoga)
-          }
           field->id = (uint32_t) op_fields->length;
           SPerl_ARRAY_push(op_fields, op_field);
           SPerl_HASH_insert(field_symtable, field_base_name, strlen(field_base_name), field);
