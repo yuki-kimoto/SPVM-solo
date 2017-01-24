@@ -66,6 +66,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   goto CALLSUB_COMMON;
   
   while (1) {
+    warn("CCCCCCCCCCC %d", pc);
     
     switch (bytecodes[pc]) {
       case SPerl_BYTECODE_C_CODE_NOP:
@@ -1190,7 +1191,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Save current operand stack top
         vm->frame->operand_stack_top = operand_stack_top;
         
-        // create new frame
         frame_stack_top++;
         vm->frame = &frame_stack[frame_stack_top];
        
@@ -1214,7 +1214,31 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Call native subroutine
         if (sub->is_native) {
+          vm->frame->operand_stack_top++;
+          operand_stack_top = vm->frame->operand_stack_top;
+          
           (*sub->native_address)(vm);
+          
+          // Return value
+          int64_t return_value = operand_stack[operand_stack_top];
+          
+          // Restore frame
+          frame_stack_top--;
+          vm->frame = &frame_stack[frame_stack_top];
+          
+          // Resotre operand stack
+          operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
+          
+          // Resotre vars
+          vars = &vm->call_stack[vm->frame->vars_base];
+          
+          // Restore operand stack top
+          operand_stack_top = vm->frame->operand_stack_top;
+          
+          // Push return value
+          operand_stack_top++;
+          operand_stack[operand_stack_top] = return_value;
+          
           pc += 5;
         }
         // Call normal subroutine
