@@ -1052,17 +1052,19 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   sub->op_block = op_block;
   
   // ID
-  if (parser->op_subs->length > INT32_MAX) {
+  if (parser->op_subs->length >= SPerl_OP_LIMIT_SUBROUTINES) {
     SPerl_yyerror_format(sperl, "too many subroutines at %s line %d\n", op_block->file, op_block->line);
-    // ToDo: discussion (akinomyoga)
+    sub->id = -1;
   }
-  sub->id = (int32_t) parser->op_subs->length;
-  
-  // Add sub information
-  SPerl_ARRAY_push(parser->op_subs, op_sub);
-  
+  else {
+    sub->id = (int32_t) parser->op_subs->length;
+
+    // Add sub information
+    SPerl_ARRAY_push(parser->op_subs, op_sub);
+  }
+
   op_sub->uv.sub = sub;
-  
+
   return op_sub;
 }
 
