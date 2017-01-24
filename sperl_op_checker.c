@@ -881,8 +881,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             case SPerl_OP_C_CODE_BLOCK: {
               int32_t* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
               if (block_base_ptr) {
-                int32_t block_base = *block_base_ptr;
-                for (int32_t j = 0, remove_count = op_my_var_stack->length - block_base; j < remove_count; j++) {
+                int32_t const pop_count = op_my_var_stack->length - *block_base_ptr;
+                for (int32_t j = 0; j < pop_count; j++) {
                   SPerl_ARRAY_pop(op_my_var_stack);
                 }
               }
