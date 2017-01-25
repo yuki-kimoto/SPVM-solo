@@ -794,18 +794,20 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             case SPerl_OP_C_CODE_POST_INC:
             case SPerl_OP_C_CODE_PRE_DEC:
             case SPerl_OP_C_CODE_POST_DEC: {
-              SPerl_OP* first = op_cur->first;
-              if (first->code != SPerl_OP_C_CODE_VAR) {
+              SPerl_OP* op_first = op_cur->first;
+              if (op_first->code != SPerl_OP_C_CODE_VAR) {
                 SPerl_yyerror_format(sperl, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, first);
+              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_first);
               
               // Only int or long
               if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
                 SPerl_yyerror_format(sperl, "must be int in increment at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
+              
+              op_cur->first->lvalue = 1;
               
               break;
             }

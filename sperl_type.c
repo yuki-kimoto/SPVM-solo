@@ -70,6 +70,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
       memcpy(resolved_type_name + cur_pos, resolved_type_part_name, resolved_type_part_name_length);
       cur_pos += resolved_type_part_name_length;
     }
+    resolved_type_name[cur_pos] = '\0';
     
     // Create resolved type id
     SPerl_RESOLVED_TYPE* found_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name));
