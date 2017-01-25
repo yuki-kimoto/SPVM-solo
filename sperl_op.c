@@ -120,28 +120,28 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
 
 void SPerl_CORE_printi(SPerl_VM* vm) {
   
-  int32_t value = *(int32_t*)&vm->call_stack[vm->frame->vars_base];
+  int32_t value = *(int32_t*)&vm->frame->vars[0];
   
   printf("TEST: %" PRId32 "\n", value);
 }
 
 void SPerl_CORE_printl(SPerl_VM* vm) {
   
-  int64_t value = vm->call_stack[vm->frame->vars_base];
+  int64_t value = vm->frame->vars[0];
   
   printf("TEST: %" PRId64 "\n", value);
 }
 
 void SPerl_CORE_printf(SPerl_VM* vm) {
   
-  float value = *(float*)&vm->call_stack[vm->frame->vars_base];
+  float value = *(float*)&vm->frame->vars[0];
   
   printf("TEST: %f\n", value);
 }
 
 void SPerl_CORE_printd(SPerl_VM* vm) {
   
-  double value = *(double*)&vm->call_stack[vm->frame->vars_base];
+  double value = *(double*)&vm->frame->vars[0];
   
   printf("TEST: %f\n", value);
 }

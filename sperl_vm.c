@@ -1390,6 +1390,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         if (sub->is_native) {
           vm->frame->operand_stack_top++;
           operand_stack_top = vm->frame->operand_stack_top;
+          vm->frame->vars = &vm->call_stack[vm->frame->vars_base];
           
           (*sub->native_address)(vm);
           
