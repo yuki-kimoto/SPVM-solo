@@ -20,6 +20,19 @@
 #include "sperl_field.h"
 #include "sperl_switch_info.h"
 
+void SPerl_BYTECODE_BUILDER_push_iinc_bytecode(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecode_array, SPerl_OP* op_inc, int32_t value) {
+  
+  SPerl_VAR* var = op_inc->first->uv.var;
+  SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
+  
+  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_inc);
+  if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IINC);
+    SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
+    SPerl_BYTECODE_ARRAY_push(bytecode_array, 1);
+  }
+}
+
 void SPerl_BYTECODE_BUILDER_push_load_bytecode(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecode_array, SPerl_OP* op_var) {
 
   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_var);
@@ -831,67 +844,27 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               break;
             }
             case SPerl_OP_C_CODE_PRE_INC: {
-              SPerl_VAR* var = op_cur->first->uv.var;
-              SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
-              
-              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-              if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IINC);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, 1);
-              }
-              
+              SPerl_BYTECODE_BUILDER_push_iinc_bytecode(sperl, bytecode_array, op_cur, 1);
               SPerl_BYTECODE_BUILDER_push_load_bytecode(sperl, bytecode_array, op_cur->first);
-              
-              // TODO
               
               break;
             }
             case SPerl_OP_C_CODE_POST_INC: {
-              SPerl_VAR* var = op_cur->first->uv.var;
-              SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
-
               SPerl_BYTECODE_BUILDER_push_load_bytecode(sperl, bytecode_array, op_cur->first);
+              SPerl_BYTECODE_BUILDER_push_iinc_bytecode(sperl, bytecode_array, op_cur, 1);
               
-              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-              if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IINC);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, 1);
-              }
-
               break;
             }
             case SPerl_OP_C_CODE_PRE_DEC: {
-              SPerl_VAR* var = op_cur->first->uv.var;
-              SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
-              
-              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-              if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IINC);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, -1);
-              }
-
+              SPerl_BYTECODE_BUILDER_push_iinc_bytecode(sperl, bytecode_array, op_cur, -1);
               SPerl_BYTECODE_BUILDER_push_load_bytecode(sperl, bytecode_array, op_cur->first);
-              
-              // TODO
               
               break;
             }
             case SPerl_OP_C_CODE_POST_DEC: {
-              SPerl_VAR* var = op_cur->first->uv.var;
-              SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
-
               SPerl_BYTECODE_BUILDER_push_load_bytecode(sperl, bytecode_array, op_cur->first);
-
-              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-              if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IINC);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, -1);
-              }
-
+              SPerl_BYTECODE_BUILDER_push_iinc_bytecode(sperl, bytecode_array, op_cur, -1);
+              
               break;
             }
             case SPerl_OP_C_CODE_BIT_XOR: {
