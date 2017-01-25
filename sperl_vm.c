@@ -761,6 +761,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_IINC:
         vars[bytecodes[pc + 1]] += bytecodes[pc + 2];
+        
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_I2L:
@@ -1320,7 +1321,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         vm->frame->vars_base = next_vars_base;
         
         // Set new frame operand stack base
-        vm->frame->operand_stack_base = next_vars_base + sub->op_args->length;
+        vm->frame->operand_stack_base = next_vars_base + sub->op_my_vars->length;
         
         // Initialize new frame operand stack top
         vm->frame->operand_stack_top = -1;

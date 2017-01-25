@@ -841,6 +841,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, 1);
               }
               
+              SPerl_BYTECODE_BUILDER_push_load_bytecode(sperl, bytecode_array, op_cur->first);
+              
               // TODO
               
               break;
@@ -848,6 +850,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
             case SPerl_OP_C_CODE_POST_INC: {
               SPerl_VAR* var = op_cur->first->uv.var;
               SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
+
+              SPerl_BYTECODE_BUILDER_push_load_bytecode(sperl, bytecode_array, op_cur->first);
               
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
               if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
@@ -868,6 +872,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, -1);
               }
+
+              SPerl_BYTECODE_BUILDER_push_load_bytecode(sperl, bytecode_array, op_cur->first);
               
               // TODO
               
@@ -876,6 +882,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
             case SPerl_OP_C_CODE_POST_DEC: {
               SPerl_VAR* var = op_cur->first->uv.var;
               SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
+
+              SPerl_BYTECODE_BUILDER_push_load_bytecode(sperl, bytecode_array, op_cur->first);
 
               SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
               if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
