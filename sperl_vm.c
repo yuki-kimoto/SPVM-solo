@@ -834,7 +834,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_FCMPL:
         *(int32_t*)&operand_stack[operand_stack_top - 1]
           = (*(float*)&operand_stack[operand_stack_top - 1] > *(float*)&operand_stack[operand_stack_top])
-          + (*(float*)&operand_stack[operand_stack_top - 1] < *(float*)&operand_stack[operand_stack_top]) * -1;
+          + (*(float*)&operand_stack[operand_stack_top - 1] < *(float*)&operand_stack[operand_stack_top]) * -1
           + -!!(
             isnan(*(float*)&operand_stack[operand_stack_top - 1])
             | isnan(*(float*)&operand_stack[operand_stack_top])
@@ -845,7 +845,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_FCMPG:
         *(int32_t*)&operand_stack[operand_stack_top - 1]
           = (*(float*)&operand_stack[operand_stack_top - 1] > *(float*)&operand_stack[operand_stack_top])
-          + (*(float*)&operand_stack[operand_stack_top - 1] < *(float*)&operand_stack[operand_stack_top]) * -1;
+          + (*(float*)&operand_stack[operand_stack_top - 1] < *(float*)&operand_stack[operand_stack_top]) * -1
           + !!(
             isnan(*(float*)&operand_stack[operand_stack_top - 1])
             | isnan(*(float*)&operand_stack[operand_stack_top])
@@ -856,7 +856,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_DCMPL:
         *(int32_t*)&operand_stack[operand_stack_top - 1]
           = (*(double*)&operand_stack[operand_stack_top - 1] > *(double*)&operand_stack[operand_stack_top])
-          + (*(double*)&operand_stack[operand_stack_top - 1] < *(double*)&operand_stack[operand_stack_top]) * -1;
+          + (*(double*)&operand_stack[operand_stack_top - 1] < *(double*)&operand_stack[operand_stack_top]) * -1
           + -!!(
             isnan(*(double*)&operand_stack[operand_stack_top - 1])
             | isnan(*(double*)&operand_stack[operand_stack_top])
@@ -867,7 +867,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_DCMPG:
         *(int32_t*)&operand_stack[operand_stack_top - 1]
           = (*(double*)&operand_stack[operand_stack_top - 1] > *(double*)&operand_stack[operand_stack_top])
-          + (*(double*)&operand_stack[operand_stack_top - 1] < *(double*)&operand_stack[operand_stack_top]) * -1;
+          + (*(double*)&operand_stack[operand_stack_top - 1] < *(double*)&operand_stack[operand_stack_top]) * -1
           + !!(
             isnan(*(double*)&operand_stack[operand_stack_top - 1])
             | isnan(*(double*)&operand_stack[operand_stack_top])
