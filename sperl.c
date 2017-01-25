@@ -26,13 +26,13 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   SPerl_VM* vm = SPerl_VM_new(sperl);
   
   // Set argument
-  vm->call_stack[0] = 4;
+  *(int32_t*)&vm->call_stack[0] = 2;
   
   // Run
   SPerl_VM_call_sub(sperl, vm, entry_point);
   
   // Get return value
-  int64_t return_value = vm->call_stack[0];
+  int32_t return_value = *(int32_t*)&vm->call_stack[0];
   
   printf("TEST return_value: %d\n", return_value);
 }
