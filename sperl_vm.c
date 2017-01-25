@@ -1028,10 +1028,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         vm->frame = &frame_stack[frame_stack_top];
         
-        // Resotre operand stack
+        // Restore operand stack
         operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
         
-        // Resotre vars
+        // Restore vars
         vars = &vm->call_stack[vm->frame->vars_base];
         
         // Restore operand stack top
@@ -1061,10 +1061,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         vm->frame = &frame_stack[frame_stack_top];
         
-        // Resotre operand stack
+        // Restore operand stack
         operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
         
-        // Resotre vars
+        // Restore vars
         vars = &vm->call_stack[vm->frame->vars_base];
         
         // Restore operand stack top
@@ -1094,10 +1094,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         vm->frame = &frame_stack[frame_stack_top];
         
-        // Resotre operand stack
+        // Restore operand stack
         operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
         
-        // Resotre vars
+        // Restore vars
         vars = &vm->call_stack[vm->frame->vars_base];
         
         // Restore operand stack top
@@ -1127,10 +1127,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         vm->frame = &frame_stack[frame_stack_top];
         
-        // Resotre operand stack
+        // Restore operand stack
         operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
         
-        // Resotre vars
+        // Restore vars
         vars = &vm->call_stack[vm->frame->vars_base];
         
         // Restore operand stack top
@@ -1160,10 +1160,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         vm->frame = &frame_stack[frame_stack_top];
         
-        // Resotre operand stack
+        // Restore operand stack
         operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
         
-        // Resotre vars
+        // Restore vars
         vars = &vm->call_stack[vm->frame->vars_base];
         
         // Restore operand stack top
@@ -1190,10 +1190,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         vm->frame = &frame_stack[frame_stack_top];
         
-        // Resotre operand stack
+        // Restore operand stack
         operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
         
-        // Resotre vars
+        // Restore vars
         vars = &vm->call_stack[vm->frame->vars_base];
         
         // Restore operand stack top
@@ -1346,10 +1346,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           frame_stack_top--;
           vm->frame = &frame_stack[frame_stack_top];
           
-          // Resotre operand stack
+          // Restore operand stack
           operand_stack = &vm->call_stack[vm->frame->operand_stack_base];
           
-          // Resotre vars
+          // Restore vars
           vars = &vm->call_stack[vm->frame->vars_base];
           
           // Restore operand stack top
