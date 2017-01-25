@@ -1009,8 +1009,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Return value
         int32_t return_value = *(int32_t*)&call_stack[operand_stack_top];
         
-        warn("IRETURN: return_value %d, vars_base %d, operand_stack_top %d", return_value, vars_base, operand_stack_top);
-        
         // Finish call sub
         if (vars_base == 0) {
           *(int32_t*)&call_stack[0] = return_value;
@@ -1022,12 +1020,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Return address
         int64_t return_address = call_stack[vars_base - 2];
-        warn("BBBBBBBBBBBB %d", return_address);
         
         // Resotre vars base
         vars_base = call_stack[vars_base - 1];
-        
-        warn("AAAAAAAAAAAAAA %d", vars_base);
         
         // Restore vars
         vars = &call_stack[vars_base];
@@ -1053,12 +1048,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         assert(0);
       }
       case SPerl_BYTECODE_C_CODE_RETURN: {
-        
         // Finish call sub
         if (vars_base == 0) {
           return;
         }
-        
+
         // Restore operand stack top
         operand_stack_top = vars_base - 3;
         
@@ -1072,7 +1066,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         vars = &call_stack[vars_base];
         
         pc = return_address;
-
+        
         continue;
       }
       case SPerl_BYTECODE_C_CODE_GETSTATIC:
@@ -1225,6 +1219,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         operand_stack_top -= sub->op_args->length;
 
+        // Prepare arguments
+        memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], sub->op_args->length * sizeof(int64_t));
+
         // Save return address
         operand_stack_top++;
         call_stack[operand_stack_top] = pc + 5;
@@ -1235,9 +1232,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Set vars base
         vars_base = operand_stack_top + 1;
-        
-        // Prepare arguments
-        memmove(&call_stack[vars_base], &call_stack[vars_base - 2], sub->op_args->length * sizeof(int64_t));
         
         CALLSUB_COMMON:
         
@@ -1259,11 +1253,33 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           // Call native sub
           operand_stack_top++;
           (*sub->native_address)(vm);
-          
+
           // Return value
           int64_t return_value = call_stack[operand_stack_top];
           
-          pc += 5;
+          // Finish call sub
+          if (vars_base == 0) {
+            call_stack[0] = return_value;
+            return;
+          }
+          
+          // Restore operand stack top
+          operand_stack_top = vars_base - 3;
+          
+          // Return address
+          int64_t return_address = call_stack[vars_base - 2];
+          
+          // Resotre vars base
+          vars_base = call_stack[vars_base - 1];
+          
+          // Restore vars
+          vars = &call_stack[vars_base];
+          
+          // Push return value
+          operand_stack_top++;
+          call_stack[operand_stack_top] = return_value;
+          
+          pc = return_address;
         }
         // Call normal sub
         else {
