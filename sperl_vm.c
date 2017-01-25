@@ -225,7 +225,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_LLOAD_3:
         operand_stack_top++;
-        memcpy(&operand_stack[operand_stack_top], &vars[3], 8);
+        operand_stack[operand_stack_top] = vars[3];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FLOAD_0:
@@ -1262,7 +1262,58 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_WIDE:
-        pc++;
+        // iload, fload, aload, lload, dload, istore, fstore, astore, lstore, dstore, or iinc
+        
+        if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_ILOAD) {
+          operand_stack_top++;
+          *(int32_t*)&operand_stack[operand_stack_top] = *(int32_t*)&vars[bytecodes[pc + 2] << 8 + bytecodes[pc + 3]];
+          pc +=4;
+        }
+        else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_LLOAD) {
+          operand_stack_top++;
+          operand_stack[operand_stack_top] = vars[bytecodes[pc + 2] << 8 + bytecodes[pc + 3]];
+          pc +=4;
+        }
+        else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_FLOAD) {
+          operand_stack_top++;
+          *(int32_t*)&operand_stack[operand_stack_top] = *(int32_t*)&vars[bytecodes[pc + 2] << 8 + bytecodes[pc + 3]];
+          pc +=4;
+        }
+        else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_DLOAD) {
+          operand_stack_top++;
+          operand_stack[operand_stack_top] = vars[bytecodes[pc + 2] << 8 + bytecodes[pc + 3]];
+          pc +=4;
+        }
+        else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_ALOAD) {
+          operand_stack_top++;
+          operand_stack[operand_stack_top] = vars[bytecodes[pc + 2] << 8 + bytecodes[pc + 3]];
+          pc +=4;
+        }
+        else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_ISTORE) {
+          *(int32_t*)&vars[bytecodes[pc + 2] << 8 + bytecodes[pc + 3]] = *(int32_t*)&operand_stack[operand_stack_top];
+          operand_stack_top--;
+          pc +=4;
+        }
+        else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_LSTORE) {
+          vars[bytecodes[pc + 2] << 8 + bytecodes[pc + 3]] = operand_stack[operand_stack_top];
+          operand_stack_top--;
+          pc +=4;
+        }
+        else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_FSTORE) {
+          *(int32_t*)&vars[bytecodes[pc + 2] << 8 + bytecodes[pc + 3]] = *(int32_t*)&operand_stack[operand_stack_top];
+          operand_stack_top--;
+          pc +=4;
+        }
+        else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_DSTORE) {
+          vars[bytecodes[pc + 2] << 8 + bytecodes[pc + 3]] = operand_stack[operand_stack_top];
+          operand_stack_top--;
+          pc +=4;
+        }
+        else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_ASTORE) {
+          vars[bytecodes[pc + 2] << 8 + bytecodes[pc + 3]] = operand_stack[operand_stack_top];
+          operand_stack_top--;
+          pc +=4;
+        }
         continue;
       case SPerl_BYTECODE_C_CODE_IFNULL:
         pc += 3;
