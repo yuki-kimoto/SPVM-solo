@@ -78,7 +78,6 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
       type->resolved_type = found_resolved_type;
     }
     else if (parser->resolved_types->length >= SPerl_OP_LIMIT_TYPES) {
-      // ToDo discussion (akinomyoga): resolved_type_name should be null-terminated here
       SPerl_yyerror_format(sperl, "too many resolved types, the type \"%s\" ignored at %s line %d\n", resolved_type_name, op_type->file, op_type->line);
       return 0;
     }
@@ -86,7 +85,6 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
       SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
       resolved_type->id = (int32_t) parser->resolved_types->length;
       resolved_type->name = resolved_type_name;
-      // ToDo discussion (akinomyoga): resolved_type_name should be null-terminated here
       SPerl_ARRAY_push(parser->resolved_types, resolved_type);
       SPerl_HASH_insert(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
       type->resolved_type = resolved_type;
