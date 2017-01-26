@@ -767,6 +767,7 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
   if (parser->error_count > 0) {
     return NULL;
   }
+  
   SPerl_BYTECODE_BUILDER_build_bytecode_array(sperl);
   
   return op_grammar;
