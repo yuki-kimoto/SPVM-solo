@@ -173,7 +173,6 @@ struct SPerl_op {
   int32_t line;
   _Bool moresib;
   _Bool lvalue;
-  _Bool condition;
 };
 
 void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op);

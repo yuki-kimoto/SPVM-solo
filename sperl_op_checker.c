@@ -73,10 +73,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       
       switch (op_cur->code) {
         case SPerl_OP_C_CODE_AND: {
-          if (!op_cur->condition) {
-            SPerl_yyerror_format(sperl, "&& operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-            break;
-          }
           
           // Convert && to if statement
           SPerl_OP_convert_and_to_if(sperl, op_cur);
@@ -84,22 +80,13 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           break;
         }
         case SPerl_OP_C_CODE_OR: {
-          if (!op_cur->condition) {
-            SPerl_yyerror_format(sperl, "|| operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-            break;
-          }
-
+          
           // Convert || to if statement
           SPerl_OP_convert_or_to_if(sperl, op_cur);
           
           break;
         }
         case SPerl_OP_C_CODE_NOT: {
-          if (!op_cur->condition) {
-            SPerl_yyerror_format(sperl, "! operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-            break;
-          }
-          
           // Convert ! to if statement
           SPerl_OP_convert_not_to_if(sperl, op_cur);
           
@@ -261,10 +248,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               break;
             }
             case SPerl_OP_C_CODE_EQ: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
               
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
@@ -308,10 +291,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               break;
             }
             case SPerl_OP_C_CODE_NE: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "== operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
 
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
@@ -355,10 +334,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               break;
             }
             case SPerl_OP_C_CODE_LT: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "< operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
 
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
@@ -379,10 +354,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               break;
             }
             case SPerl_OP_C_CODE_LE: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "<= operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
 
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
@@ -403,10 +374,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               break;
             }
             case SPerl_OP_C_CODE_GT: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, "> operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
 
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
@@ -427,10 +394,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               break;
             }
             case SPerl_OP_C_CODE_GE: {
-              if (!op_cur->condition) {
-                SPerl_yyerror_format(sperl, ">= operator can use only condition context at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
 
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);

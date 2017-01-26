@@ -248,8 +248,6 @@ SPerl_OP* SPerl_OP_build_for_statement(SPerl* sperl, SPerl_OP* op_for, SPerl_OP*
   SPerl_OP_sibling_splice(sperl, op_loop, op_term_loop_var, 0, op_condition);
   SPerl_OP_sibling_splice(sperl, op_loop, op_condition, 0, op_block);
   
-  op_term_condition->condition = 1;
-  
   return op_loop;
 }
 
@@ -302,8 +300,6 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl* sperl, SPerl_OP* op_while, SPerl
   SPerl_OP_sibling_splice(sperl, op_loop, op_null, 0, op_condition);
   SPerl_OP_sibling_splice(sperl, op_loop, op_condition, 0, op_block);
   
-  op_term->condition = 1;
-  
   return op_loop;
 }
 
@@ -354,8 +350,6 @@ SPerl_OP* SPerl_OP_build_if_statement(SPerl* sperl, SPerl_OP* op_if, SPerl_OP* o
   SPerl_OP_sibling_splice(sperl, op_if, NULL, 0, op_condition);
   SPerl_OP_sibling_splice(sperl, op_if, op_condition, 0, op_block_if);
   SPerl_OP_sibling_splice(sperl, op_if, op_block_if, 0, op_block_else);
-  
-  op_term->condition = 1;
   
   if (op_block_else->code == SPerl_OP_C_CODE_BLOCK) {
     op_block_if->flag |= SPerl_OP_C_FLAG_BLOCK_HAS_ELSE;
@@ -1157,11 +1151,6 @@ SPerl_OP* SPerl_OP_build_unary(SPerl* sperl, SPerl_OP* op_unary, SPerl_OP* op_fi
   // Build op
   SPerl_OP_sibling_splice(sperl, op_unary, NULL, 0, op_first);
   
-  // Logical op
-  if (op_unary->code == SPerl_OP_C_CODE_NOT) {
-    op_first->condition = 1;
-  }
-  
   return op_unary;
 }
 
@@ -1171,12 +1160,6 @@ SPerl_OP* SPerl_OP_build_bin(SPerl* sperl, SPerl_OP* op_bin, SPerl_OP* op_first,
   SPerl_OP_sibling_splice(sperl, op_bin, NULL, 0, op_first);
   if (op_last) {
     SPerl_OP_sibling_splice(sperl, op_bin, op_first, 0, op_last);
-  }
-  
-  // Logical op
-  if (op_bin->code == SPerl_OP_C_CODE_AND || op_bin->code == SPerl_OP_C_CODE_OR) {
-    op_first->condition = 1;
-    op_last->condition = 1;
   }
   
   return op_bin;
