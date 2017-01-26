@@ -461,6 +461,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
+      warn("BBBBBBBBBBB %s", abs_name);
       SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, abs_name, strlen(abs_name));
       if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
         resolved_type = sub->op_return_type->uv.type->resolved_type;
@@ -922,27 +923,42 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_p
   return op_use;
 }
 
-SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_type) {
+SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op_var, SPerl_OP* op_type, SPerl_OP* op_term) {
   
-  SPerl_OP_sibling_splice(sperl, op_var, NULL, 0, op_my);
-  SPerl_OP_sibling_splice(sperl, op_my, NULL, 0, op_type);
+  // Stab
+  SPerl_OP* op_stab = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, op_my_var->file, op_my_var->line);
   
   // Create my var information
   SPerl_MY_VAR* my_var = SPerl_MY_VAR_new(sperl);
-  SPerl_VAR* var = op_var->uv.var;
+  my_var->op_type = op_type;
   
   // Name OP
   SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_var->file, op_var->line);
-  op_name->uv.name = var->op_name->uv.name;
+  op_name->uv.name = op_var->uv.var->op_name->uv.name;
   my_var->op_name = op_name;
-  
-  // type
-  my_var->op_type = op_type;
-  
+
   // Add my_var information to op
-  op_my->uv.my_var = my_var;
+  op_my_var->uv.my_var = my_var;
   
-  return op_var;
+  // Add my_var op
+  SPerl_OP_sibling_splice(sperl, op_stab, NULL, 0, op_my_var);
+  
+  // Assign
+  if (op_term) {
+    SPerl_OP* op_assign = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ASSIGN, op_my_var->file, op_my_var->line);
+    
+    op_var->uv.var->op_my_var = op_my_var;
+    
+    SPerl_OP_sibling_splice(sperl, op_assign, NULL, 0, op_var);
+    SPerl_OP_sibling_splice(sperl, op_assign, op_var, 0, op_term);
+    
+    SPerl_OP_sibling_splice(sperl, op_stab, op_my_var, 0, op_assign);
+    
+    // Type assumption
+    my_var->op_term_assumption = op_term;
+  }
+  
+  return op_stab;
 }
 
 SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* op_field_base_name, SPerl_OP* op_type) {

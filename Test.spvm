@@ -133,7 +133,7 @@ package Test {
       1;
     }
 
-    my $simple3 = new Test::Simple;
+    my $simple3 : Test::Simple = new Test::Simple;
     
     $simple3->y = 2;
     $simple3->x;
@@ -347,7 +347,7 @@ package Test {
   
   sub sum2 ($num1 : int, $num2 : int) : int {
     
-    my $num3 = sum0($num1, $num2);
+    my $num3 : int = sum0($num1, $num2);
     
     return $num3 + 3;
   }

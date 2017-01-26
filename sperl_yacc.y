@@ -263,13 +263,19 @@ decl_enum
 decl_my
   : MY VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, $4);
+      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, $4, NULL);
     }
   | MY VAR
     {
-      SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $2->file, $2->line);
-      
-      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, op_type);
+      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, NULL, NULL);
+    }
+  | MY VAR ':' type ASSIGN term
+    {
+      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, $4, $6);
+    }
+  | MY VAR ASSIGN term
+    {
+      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, NULL, $4);
     }
 
 decl_anon_sub
@@ -330,6 +336,7 @@ expression
       SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
   | throw_exception
+  | decl_my
 
 opt_terms
   :	/* Empty */
@@ -366,10 +373,10 @@ opt_term
       $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
   | term
+
 term
   : VAR
   | CONSTANT
-  | decl_my
   | decl_anon_sub
   | call_sub
   | unop
@@ -564,7 +571,7 @@ args
 arg
   : VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, $1->file, $1->line), $1, $3);
+      $$ = SPerl_OP_build_decl_my(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, $1->file, $1->line), $1, $3, NULL);
     }
 types
   : types ',' type

@@ -7,6 +7,7 @@ struct SPerl_my_var {
   SPerl_OP* op_type;
   SPerl_OP* op_name;
   int32_t address;
+  SPerl_OP* op_term_assumption;
 };
 
 SPerl_MY_VAR* SPerl_MY_VAR_new();

@@ -559,19 +559,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               break;
             }
             case SPerl_OP_C_CODE_ASSIGN: {
-              // Type assumption
-              if (op_cur->first->first && op_cur->first->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
-                SPerl_OP* op_my_var = op_cur->first->first;
-                if (op_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL) {
-                  SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_my_var->file, op_my_var->line);
-                  SPerl_TYPE* type = SPerl_TYPE_new(sperl);
-                  type->resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-                  
-                  op_type->uv.type = type;
-                  
-                  op_my_var->uv.my_var->op_type = op_type;
-                }
-              }
               
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
@@ -853,21 +840,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             case SPerl_OP_C_CODE_VAR: {
               SPerl_VAR* var = op_cur->uv.var;
               
-              if (op_cur->first && op_cur->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
-                op_cur->lvalue = 1;
-              }
-              
-              // First child is my_var, but my_var don't have type and don't sibling to detect type
-              if (op_cur->first && op_cur->first->code == SPerl_OP_C_CODE_DECL_MY_VAR) {
-                SPerl_OP* op_my_var = op_cur->first;
-                if (op_my_var->uv.my_var->op_type->code == SPerl_OP_C_CODE_NULL && !op_cur->moresib) {
-                  // Error
-                  SPerl_yyerror_format(sperl, "\"my %s\" can't detect type at %s line %d\n", var->op_name->uv.name, op_cur->file, op_cur->line);
-                  parser->fatal_error = 1;
-                  return;
-                }
-              }
-              
               // Serach same name variable
               SPerl_OP* op_my_var = NULL;
               for (int32_t i = op_my_var_stack->length - 1 ; i >= 0; i--) {
@@ -894,7 +866,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             case SPerl_OP_C_CODE_DECL_MY_VAR: {
               SPerl_MY_VAR* my_var = op_cur->uv.my_var;
               
-              // Serach same name variable
+              // Search same name variable
               int32_t found = 0;
               
               for (int32_t i = op_my_var_stack->length - 1 ; i >= block_base; i--) {
@@ -904,6 +876,23 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   found = 1;
                   break;
                 }
+              }
+              
+              // Type assumption
+              if (!my_var->op_type && my_var->op_term_assumption) {
+                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, my_var->op_term_assumption);
+                SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_cur->file, op_cur->line);
+                SPerl_TYPE* type = SPerl_TYPE_new(sperl);
+                type->resolved_type = resolved_type;
+                op_type->uv.type = type;
+                my_var->op_type = op_type;
+              }
+
+              // Type is none
+              if (!my_var->op_type->uv.type->resolved_type) {
+                SPerl_yyerror_format(sperl, "\"my %s\" can't detect type at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
+                parser->fatal_error = 1;
+                break;
               }
               
               if (found) {
