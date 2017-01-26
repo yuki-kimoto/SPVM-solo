@@ -951,7 +951,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Padding
         int32_t padding = 3 - (pc & 3);
-
+        
         // default offset
         int32_t default_offset
           = (bytecodes[pc + padding + 1] << 24)
@@ -959,7 +959,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           + (bytecodes[pc + padding + 3] << 8)
           + bytecodes[pc + padding + 4];
         
-        /*
         // min
         int32_t min
           = (bytecodes[pc + padding + 5] << 24)
@@ -973,9 +972,15 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           + (bytecodes[pc + padding + 10] << 16)
           + (bytecodes[pc + padding + 11] << 8)
           + bytecodes[pc + padding + 12];
-        */
         
-        pc += default_offset;
+        
+        if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
+          int32_t branch_base = (pc + padding + 13) + (call_stack[operand_stack_top] - min) * sizeof(int32_t);
+          pc += (bytecodes[branch_base] << 24) + (bytecodes[branch_base + 1] << 16) + (bytecodes[branch_base + 2] << 8) + bytecodes[branch_base + 3];
+        }
+        else {
+          pc += default_offset;
+        }
         
         continue;
       }
