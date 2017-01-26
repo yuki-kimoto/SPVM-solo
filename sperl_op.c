@@ -1146,7 +1146,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
   return op_call_sub;
 }
 
-SPerl_OP* SPerl_OP_build_unary(SPerl* sperl, SPerl_OP* op_unary, SPerl_OP* op_first) {
+SPerl_OP* SPerl_OP_build_unop(SPerl* sperl, SPerl_OP* op_unary, SPerl_OP* op_first) {
   
   // Build op
   SPerl_OP_sibling_splice(sperl, op_unary, NULL, 0, op_first);
@@ -1154,7 +1154,7 @@ SPerl_OP* SPerl_OP_build_unary(SPerl* sperl, SPerl_OP* op_unary, SPerl_OP* op_fi
   return op_unary;
 }
 
-SPerl_OP* SPerl_OP_build_bin(SPerl* sperl, SPerl_OP* op_bin, SPerl_OP* op_first, SPerl_OP* op_last) {
+SPerl_OP* SPerl_OP_build_binop(SPerl* sperl, SPerl_OP* op_bin, SPerl_OP* op_first, SPerl_OP* op_last) {
   
   // Build op
   SPerl_OP_sibling_splice(sperl, op_bin, NULL, 0, op_first);
