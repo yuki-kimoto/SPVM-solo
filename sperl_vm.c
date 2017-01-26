@@ -973,7 +973,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           + (bytecodes[pc + padding + 11] << 8)
           + bytecodes[pc + padding + 12];
         
-        
         if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
           int32_t branch_base = (pc + padding + 13) + (call_stack[operand_stack_top] - min) * sizeof(int32_t);
           pc += (bytecodes[branch_base] << 24) + (bytecodes[branch_base + 1] << 16) + (bytecodes[branch_base + 2] << 8) + bytecodes[branch_base + 3];
@@ -985,10 +984,18 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
-        
+
         // Padding
         int32_t padding = 3 - (pc & 3);
 
+        /*
+        1  default
+        5  npare
+        9  match  13 branch // min
+        17 match 21 branch
+        25 match 29 branch // max
+        */
+        
         // default offset
         int32_t default_offset
           = (bytecodes[pc + padding + 1] << 24)
@@ -996,16 +1003,61 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           + (bytecodes[pc + padding + 3] << 8)
           + bytecodes[pc + padding + 4];
         
-        /*
         // npare
         int32_t pair_count
           = (bytecodes[pc + padding + 5] << 24)
           + (bytecodes[pc + padding + 6] << 16)
           + (bytecodes[pc + padding + 7] << 8)
           + bytecodes[pc + padding + 8];
-        */
         
-        pc += default_offset;
+        // min
+        int32_t min
+          = (bytecodes[pc + padding + 9] << 24)
+          + (bytecodes[pc + padding + 10] << 16)
+          + (bytecodes[pc + padding + 11] << 8)
+          + bytecodes[pc + padding + 12];
+        
+        // max
+        int32_t max
+          = (bytecodes[pc + padding + 9 + ((pair_count - 1) * sizeof(int32_t) * 2)] << 24)
+          + (bytecodes[pc + padding + 10 + ((pair_count - 1) * sizeof(int32_t) * 2)] << 16)
+          + (bytecodes[pc + padding + 11 + ((pair_count - 1) * sizeof(int32_t) * 2)] << 8)
+          + bytecodes[pc + padding + 12 + ((pair_count - 1) * sizeof(int32_t) * 2)];
+        
+        if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
+          // 2 branch searching
+          int32_t cur_min_pos = 0;
+          int32_t cur_max_pos = pair_count - 1;
+          
+          assert(0);
+          while (1) {
+            int32_t cur_half_pos = (cur_max_pos - cur_min_pos) / 2;
+            int32_t cur_half
+              = (bytecodes[pc + padding + 9 + (cur_half_pos * sizeof(int32_t) * 2)] << 24)
+              + (bytecodes[pc + padding + 10 + (cur_half_pos * sizeof(int32_t) * 2)] << 16)
+              + (bytecodes[pc + padding + 11 + (cur_half_pos * sizeof(int32_t) * 2)] << 8)
+              + bytecodes[pc + padding + 12 + (cur_half_pos * sizeof(int32_t) * 2)];
+            
+            if (call_stack[operand_stack_top] > cur_half) {
+              cur_min_pos = cur_half_pos;
+            }
+            else if (call_stack[operand_stack_top] < cur_half) {
+              cur_max_pos = cur_half_pos;
+            }
+            else {
+              int32_t branch
+                = (bytecodes[pc + padding + 9 + (cur_half_pos * sizeof(int32_t) * 2) + sizeof(int32_t)] << 24)
+                + (bytecodes[pc + padding + 10 + (cur_half_pos * sizeof(int32_t) * 2) + sizeof(int32_t)] << 16)
+                + (bytecodes[pc + padding + 11 + (cur_half_pos * sizeof(int32_t) * 2) + sizeof(int32_t)] << 8)
+                + bytecodes[pc + padding + 12 + (cur_half_pos * sizeof(int32_t) * 2) + sizeof(int32_t)];
+              
+              pc += branch;
+            }
+          }
+        }
+        else {
+          pc += default_offset;
+        }
         
         continue;
       }
