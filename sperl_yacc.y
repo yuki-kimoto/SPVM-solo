@@ -25,7 +25,7 @@
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar type_sub types not_type_sub opt_term throw_exception
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_name array_length logical_op decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement
-%type <opval> ';' opt_descriptors descriptors type_or_void
+%type <opval> ';' opt_descriptors descriptors type_or_void normal_statement
 
 %right <opval> ASSIGN
 %left <opval> OR
@@ -166,26 +166,30 @@ statements
   | statement
 
 statement
-  : if_statement
+  : normal_statement
+  | if_statement
   | for_statement
   | while_statement
   | block
-  | term ';'
+    {
+      $$ = $1;
+    }
+  | switch_statement
+  | case_statement
+  | default_statement
+
+normal_statement
+  : term ';'
     {
       $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_POP, $1->file, $1->line);
       SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $1);
     }
   | expression ';'
-    {
-      $$ = $1;
-    }
   | ';'
     {
       $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line);
     }
-  | switch_statement
-  | case_statement
-  | default_statement
+  
 
 for_statement
   : FOR '(' opt_term ';' term ';' opt_term ')' block
