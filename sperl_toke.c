@@ -118,6 +118,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
                   parser->cur_module_path = cur_module_path;
                   break;
                 }
+                errno = 0;
               }
               if (!fh) {
                 if (op_use) {
