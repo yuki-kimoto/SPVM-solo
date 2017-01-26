@@ -448,48 +448,48 @@ call_op
   | term '+' term
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ADD, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, op, $1, $3);
     }
   | term '-' term
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_SUBTRACT, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, op, $1, $3);
     }
   | term MULTIPLY term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | term DIVIDE term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | term REMAINDER term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | term BIT_XOR term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | term BIT_AND term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | term BIT_OR term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | term SHIFT term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | term REL term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | term ASSIGN term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | '(' term ')'
     {
@@ -499,11 +499,11 @@ call_op
 logical_op
   : term AND term
     {
-      $$ = SPerl_OP_build_logical_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | term OR term
     {
-      $$ = SPerl_OP_build_logical_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_bin(sperl, $2, $1, $3);
     }
   | NOT term
     {

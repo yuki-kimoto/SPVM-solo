@@ -206,7 +206,7 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
 void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name);
 
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op);
-SPerl_OP* SPerl_OP_build_call_op(SPerl* sperl, SPerl_OP* op_call_op, SPerl_OP* op_first, SPerl_OP* op_last);
+SPerl_OP* SPerl_OP_build_bin(SPerl* sperl, SPerl_OP* op_call_op, SPerl_OP* op_first, SPerl_OP* op_last);
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op);
 
 SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_type_name);

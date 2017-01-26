@@ -1154,9 +1154,10 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
 
 SPerl_OP* SPerl_OP_build_unary(SPerl* sperl, SPerl_OP* op_unary, SPerl_OP* op_first) {
   
-  // Build OP_SUB
+  // Build op
   SPerl_OP_sibling_splice(sperl, op_unary, NULL, 0, op_first);
   
+  // Logical op
   if (op_unary->code == SPerl_OP_C_CODE_NOT) {
     op_first->condition = 1;
   }
@@ -1164,31 +1165,21 @@ SPerl_OP* SPerl_OP_build_unary(SPerl* sperl, SPerl_OP* op_unary, SPerl_OP* op_fi
   return op_unary;
 }
 
-SPerl_OP* SPerl_OP_build_call_op(SPerl* sperl, SPerl_OP* op_call_op, SPerl_OP* op_first, SPerl_OP* op_last) {
+SPerl_OP* SPerl_OP_build_bin(SPerl* sperl, SPerl_OP* op_bin, SPerl_OP* op_first, SPerl_OP* op_last) {
   
-  // Build OP_SUB
-  SPerl_OP_sibling_splice(sperl, op_call_op, NULL, 0, op_first);
+  // Build op
+  SPerl_OP_sibling_splice(sperl, op_bin, NULL, 0, op_first);
   if (op_last) {
-    SPerl_OP_sibling_splice(sperl, op_call_op, op_first, 0, op_last);
+    SPerl_OP_sibling_splice(sperl, op_bin, op_first, 0, op_last);
   }
   
-  return op_call_op;
-}
-
-SPerl_OP* SPerl_OP_build_logical_op(SPerl* sperl, SPerl_OP* op_logical_op, SPerl_OP* op_first, SPerl_OP* op_last) {
-  
-  // Build OP_SUB
-  SPerl_OP_sibling_splice(sperl, op_logical_op, NULL, 0, op_first);
-  if (op_last) {
-    SPerl_OP_sibling_splice(sperl, op_logical_op, op_first, 0, op_last);
-  }
-  
-  op_first->condition = 1;
-  if (op_last) {
+  // Logical op
+  if (op_bin->code == SPerl_OP_C_CODE_AND || op_bin->code == SPerl_OP_C_CODE_OR) {
+    op_first->condition = 1;
     op_last->condition = 1;
   }
   
-  return op_logical_op;
+  return op_bin;
 }
 
 SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_name) {
