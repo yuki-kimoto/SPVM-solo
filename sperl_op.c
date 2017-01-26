@@ -450,7 +450,9 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     }
     case SPerl_OP_C_CODE_VAR: {
       SPerl_VAR* var = op->uv.var;
-      resolved_type = var->op_my_var->uv.my_var->op_type->uv.type->resolved_type;
+      if (var->op_my_var->uv.my_var->op_type) {
+        resolved_type = var->op_my_var->uv.my_var->op_type->uv.type->resolved_type;
+      }
       break;
     }
     case SPerl_OP_C_CODE_DECL_MY_VAR: {
@@ -461,7 +463,6 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
-      warn("BBBBBBBBBBB %s", abs_name);
       SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, abs_name, strlen(abs_name));
       if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
         resolved_type = sub->op_return_type->uv.type->resolved_type;

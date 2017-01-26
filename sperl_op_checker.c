@@ -563,10 +563,24 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
               
+              // Type assumption
               if (!first_resolved_type) {
-                SPerl_yyerror_format(sperl, "Type can't be detected at %s line %d\n", op_cur->first->file, op_cur->first->line);
-                parser->fatal_error = 1;
-                return;
+                SPerl_OP* op_var = op_cur->first;
+                SPerl_MY_VAR* my_var = op_var->uv.var->op_my_var->uv.my_var;
+                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, my_var->op_term_assumption);
+                
+                if (resolved_type) {
+                  SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_cur->file, op_cur->line);
+                  SPerl_TYPE* type = SPerl_TYPE_new(sperl);
+                  type->resolved_type = resolved_type;
+                  op_type->uv.type = type;
+                  my_var->op_type = op_type;
+                }
+                else {
+                  SPerl_yyerror_format(sperl, "Type can't be detected at %s line %d\n", op_cur->first->file, op_cur->first->line);
+                  parser->fatal_error = 1;
+                  return;
+                }
               }
               
               // Convert type
@@ -876,23 +890,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   found = 1;
                   break;
                 }
-              }
-              
-              // Type assumption
-              if (!my_var->op_type && my_var->op_term_assumption) {
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, my_var->op_term_assumption);
-                SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_cur->file, op_cur->line);
-                SPerl_TYPE* type = SPerl_TYPE_new(sperl);
-                type->resolved_type = resolved_type;
-                op_type->uv.type = type;
-                my_var->op_type = op_type;
-              }
-
-              // Type is none
-              if (!my_var->op_type->uv.type->resolved_type) {
-                SPerl_yyerror_format(sperl, "\"my %s\" can't detect type at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
-                parser->fatal_error = 1;
-                break;
               }
               
               if (found) {
