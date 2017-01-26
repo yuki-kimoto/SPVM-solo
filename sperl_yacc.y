@@ -171,9 +171,6 @@ statement
   | for_statement
   | while_statement
   | block
-    {
-      $$ = $1;
-    }
   | switch_statement
   | case_statement
   | default_statement
