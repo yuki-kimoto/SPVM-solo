@@ -25,11 +25,15 @@ package Main {
     my $num1 = 2;
     my $num2 = 5;
     
-    my $num3 = sum($num1, $num3);
+    my $num3 = sum($num1, $num2);
+    
+    printi($num3);
+    
+    return 0;
   }
 
   sub sum ($num1 : int, $num2 : int) : int {
-    my $num3 = $num1 + $num1;
+    my $num3 = $num1 + $num2;
     
     return $num3;
   }
@@ -50,12 +54,83 @@ GRAMMAR
  LIST
   PUSHMARK
   DECL_PACKAGE
+   NAME "CORE"
+   CLASS_BLOCK
+    LIST
+     PUSHMARK
+     DECL_SUB
+      NAME "printi"
+      LIST
+       PUSHMARK
+       VAR "$value"
+        DECL_MY_VAR
+         TYPE
+          NAME "int"
+      LIST
+       PUSHMARK
+       IF
+      TYPE
+       NAME "int"
+      BLOCK
+       LIST
+        PUSHMARK
+     DECL_SUB
+      NAME "printl"
+      LIST
+       PUSHMARK
+       VAR "$value"
+        DECL_MY_VAR
+         TYPE
+          NAME "long"
+      LIST
+       PUSHMARK
+       IF
+      TYPE
+       NAME "int"
+      BLOCK
+       LIST
+        PUSHMARK
+     DECL_SUB
+      NAME "printf"
+      LIST
+       PUSHMARK
+       VAR "$value"
+        DECL_MY_VAR
+         TYPE
+          NAME "float"
+      LIST
+       PUSHMARK
+       IF
+      TYPE
+       NAME "int"
+      BLOCK
+       LIST
+        PUSHMARK
+     DECL_SUB
+      NAME "printd"
+      LIST
+       PUSHMARK
+       VAR "$value"
+        DECL_MY_VAR
+         TYPE
+          NAME "double"
+      LIST
+       PUSHMARK
+       IF
+      TYPE
+       NAME "int"
+      BLOCK
+       LIST
+        PUSHMARK
+  DECL_PACKAGE
    NAME "Main"
    CLASS_BLOCK
     LIST
      PUSHMARK
      DECL_SUB
       NAME "main"
+      LIST
+       PUSHMARK
       LIST
        PUSHMARK
       TYPE
@@ -68,24 +143,32 @@ GRAMMAR
           VAR "$num1"
            DECL_MY_VAR
             NULL
-          CONSTANT INT 2
+          CONSTANT INT 2 (address 0)
         POP
          ASSIGN
           VAR "$num2"
            DECL_MY_VAR
             NULL
-          CONSTANT INT 5
+          CONSTANT INT 5 (address 0)
         POP
          ASSIGN
           VAR "$num3"
            DECL_MY_VAR
             NULL
           CALL_SUB
-           NAME "Main::sum"
+           NAME "sum"
            LIST
             PUSHMARK
             VAR "$num1"
-            VAR "$num3"
+            VAR "$num2"
+        POP
+         CALL_SUB
+          NAME "printi"
+          LIST
+           PUSHMARK
+           VAR "$num3"
+        RETURN
+         CONSTANT INT 0 (address 0)
      DECL_SUB
       NAME "sum"
       LIST
@@ -98,6 +181,8 @@ GRAMMAR
         DECL_MY_VAR
          TYPE
           NAME "int"
+      LIST
+       PUSHMARK
       TYPE
        NAME "int"
       BLOCK
@@ -110,7 +195,7 @@ GRAMMAR
             NULL
           ADD
            VAR "$num1"
-           VAR "$num1"
+           VAR "$num2"
         RETURN
          VAR "$num3"
 
@@ -158,136 +243,205 @@ resolved_type[13]
     name => "double[]"
     id => "13"
 resolved_type[14]
-    name => "Main"
+    name => "CORE"
     id => "14"
+resolved_type[15]
+    name => "Main"
+    id => "15"
 
-[Packages information]
+[Packages]
 package[0]
   name => "boolean"
   resolved_type => "boolean"
   size => 1
   fields
-  constant_values
-  constant_pool
-  subs
 package[1]
   name => "byte"
   resolved_type => "byte"
   size => 1
   fields
-  constant_values
-  constant_pool
-  subs
 package[2]
   name => "short"
   resolved_type => "short"
   size => 1
   fields
-  constant_values
-  constant_pool
-  subs
 package[3]
   name => "int"
   resolved_type => "int"
   size => 1
   fields
-  constant_values
-  constant_pool
-  subs
 package[4]
   name => "long"
   resolved_type => "long"
   size => 2
   fields
-  constant_values
-  constant_pool
-  subs
 package[5]
   name => "float"
   resolved_type => "float"
   size => 1
   fields
-  constant_values
-  constant_pool
-  subs
 package[6]
   name => "double"
   resolved_type => "double"
   size => 2
   fields
-  constant_values
-  constant_pool
-  subs
 package[7]
+  name => "CORE"
+  resolved_type => "CORE"
+  size => 0
+  fields
+package[8]
   name => "Main"
   resolved_type => "Main"
   size => 0
   fields
-  constant_values
-    constant[0]
-      int 2
-      pool_pos => 0
-    constant[1]
-      int 5
-      pool_pos => 1
-  constant_pool
-    constant_pool[0] 2
-    constant_pool[1] 5
-  subs
-    sub[0]
-      package_name => "Main"
-      name => "main"
-      id => 0
-      anon => 0
-      resolved_type => "int"
-      argument_count => 0
-      my_vars
-        my_var[0]
+
+[Constant pool]
+
+[Subroutine]
+  sub[0]
+    package_name => "CORE"
+    name => "printi"
+    id => 0
+    anon => 0
+    resolved_type => "int"
+    args
+      arg[0]
+          name => "$value"
+          resolved_type => "int"
+    my_vars
+      my_var[0]
+          name => "$value"
+          resolved_type => "int"
+    operand_stack_max => 32
+    my_vars_size => 1
+    bytecode_array
+  sub[1]
+    package_name => "CORE"
+    name => "printl"
+    id => 1
+    anon => 0
+    resolved_type => "int"
+    args
+      arg[0]
+          name => "$value"
+          resolved_type => "long"
+    my_vars
+      my_var[0]
+          name => "$value"
+          resolved_type => "long"
+    operand_stack_max => 32
+    my_vars_size => 2
+    bytecode_array
+  sub[2]
+    package_name => "CORE"
+    name => "printf"
+    id => 2
+    anon => 0
+    resolved_type => "int"
+    args
+      arg[0]
+          name => "$value"
+          resolved_type => "float"
+    my_vars
+      my_var[0]
+          name => "$value"
+          resolved_type => "float"
+    operand_stack_max => 32
+    my_vars_size => 1
+    bytecode_array
+  sub[3]
+    package_name => "CORE"
+    name => "printd"
+    id => 3
+    anon => 0
+    resolved_type => "int"
+    args
+      arg[0]
+          name => "$value"
+          resolved_type => "double"
+    my_vars
+      my_var[0]
+          name => "$value"
+          resolved_type => "double"
+    operand_stack_max => 32
+    my_vars_size => 2
+    bytecode_array
+  sub[4]
+    package_name => "Main"
+    name => "main"
+    id => 4
+    anon => 0
+    resolved_type => "int"
+    args
+    my_vars
+      my_var[0]
           name => "$num1"
           resolved_type => "int"
-        my_var[1]
+      my_var[1]
           name => "$num2"
           resolved_type => "int"
-        my_var[2]
+      my_var[2]
           name => "$num3"
           resolved_type => "int"
-      op_block => 970a58
-      bytecodes
-        [0] ICONST_2
-        [1] ISTORE_0
-        [2] ICONST_5
-        [3] ISTORE_1
-        [4] ILOAD_0
-        [5] ILOAD_2
-        [6] INVOKESTATIC
-        [7] 0
-        [8] 1
-        [9] ISTORE_2
-    sub[1]
-      package_name => "Main"
-      name => "sum"
-      id => 1
-      anon => 0
-      resolved_type => "int"
-      argument_count => 2
-      my_vars
-        my_var[0]
+    operand_stack_max => 84
+    my_vars_size => 3
+    bytecode_array
+      [0] ICONST_2
+      [1] ISTORE_0
+      [2] ICONST_5
+      [3] ISTORE_1
+      [4] ILOAD_0
+      [5] ILOAD_1
+      [6] CALLSUB
+      [7] 0
+      [8] 0
+      [9] 0
+      [10] 5
+      [11] ISTORE_2
+      [12] ILOAD_2
+      [13] CALLSUB
+      [14] 0
+      [15] 0
+      [16] 0
+      [17] 0
+      [18] POP
+      [19] ICONST_0
+      [20] IRETURN
+  sub[5]
+    package_name => "Main"
+    name => "sum"
+    id => 5
+    anon => 0
+    resolved_type => "int"
+    args
+      arg[0]
           name => "$num1"
           resolved_type => "int"
-        my_var[1]
+      arg[1]
           name => "$num2"
           resolved_type => "int"
-        my_var[2]
+    my_vars
+      my_var[0]
+          name => "$num1"
+          resolved_type => "int"
+      my_var[1]
+          name => "$num2"
+          resolved_type => "int"
+      my_var[2]
           name => "$num3"
           resolved_type => "int"
-      op_block => 971970
-      bytecodes
-        [0] ILOAD_0
-        [1] ILOAD_0
-        [2] IADD
-        [3] ISTORE_2
-        [4] ILOAD_2
-        [5] IRETURN
+    operand_stack_max => 58
+    my_vars_size => 3
+    bytecode_array
+      [21] ILOAD_0
+      [22] ILOAD_1
+      [23] IADD
+      [24] ISTORE_2
+      [25] ILOAD_2
+      [26] IRETURN
+TEST: 7
+TEST return_value: 0
 ```
 
 # Development
