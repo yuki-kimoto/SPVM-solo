@@ -414,36 +414,36 @@ call_op
   : '+' term %prec UMINUS
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_PLUS, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
+      $$ = SPerl_OP_build_unary(sperl, op, $2);
     }
   | '-' term %prec UMINUS
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NEGATE, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
+      $$ = SPerl_OP_build_unary(sperl, op, $2);
     }
   | INC term
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_PRE_INC, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
+      $$ = SPerl_OP_build_unary(sperl, op, $2);
     }
   | term INC
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_POST_INC, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $1, NULL);
+      $$ = SPerl_OP_build_unary(sperl, op, $1);
     }
   | DEC term
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_PRE_DEC, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
+      $$ = SPerl_OP_build_unary(sperl, op, $2);
     }
   | term DEC
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_POST_DEC, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $1, NULL);
+      $$ = SPerl_OP_build_unary(sperl, op, $1);
     }
   | '~' term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $1, $2, NULL);
+      $$ = SPerl_OP_build_unary(sperl, $1, $2);
     }
   | term '+' term
     {
