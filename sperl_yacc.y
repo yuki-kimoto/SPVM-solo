@@ -186,12 +186,11 @@ normal_statement
     {
       $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line);
     }
-  
 
 for_statement
-  : FOR '(' opt_term ';' term ';' opt_term ')' block
+  : FOR '(' normal_statement term ';' opt_term ')' block
     {
-      $$ = SPerl_OP_build_for_statement(sperl, $1, $3, $5, $7, $9);
+      $$ = SPerl_OP_build_for_statement(sperl, $1, $3, $4, $6, $8);
     }
 
 while_statement
