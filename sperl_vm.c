@@ -1028,10 +1028,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           // 2 branch searching
           int32_t cur_min_pos = 0;
           int32_t cur_max_pos = pair_count - 1;
-          
-          assert(0);
+
           while (1) {
-            int32_t cur_half_pos = (cur_max_pos - cur_min_pos) / 2;
+            if (cur_max_pos < cur_min_pos) {
+              pc += default_offset;
+              break;
+            }
+            int32_t cur_half_pos = cur_min_pos + (cur_max_pos - cur_min_pos) / 2;
             int32_t cur_half
               = (bytecodes[pc + padding + 9 + (cur_half_pos * sizeof(int32_t) * 2)] << 24)
               + (bytecodes[pc + padding + 10 + (cur_half_pos * sizeof(int32_t) * 2)] << 16)
@@ -1039,10 +1042,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
               + bytecodes[pc + padding + 12 + (cur_half_pos * sizeof(int32_t) * 2)];
             
             if (call_stack[operand_stack_top] > cur_half) {
-              cur_min_pos = cur_half_pos;
+              cur_min_pos = cur_half_pos + 1;
             }
             else if (call_stack[operand_stack_top] < cur_half) {
-              cur_max_pos = cur_half_pos;
+              cur_max_pos = cur_half_pos - 1;
             }
             else {
               int32_t branch
@@ -1052,6 +1055,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
                 + bytecodes[pc + padding + 12 + (cur_half_pos * sizeof(int32_t) * 2) + sizeof(int32_t)];
               
               pc += branch;
+              break;
             }
           }
         }
