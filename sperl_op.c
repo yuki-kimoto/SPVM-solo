@@ -1157,6 +1157,10 @@ SPerl_OP* SPerl_OP_build_unary(SPerl* sperl, SPerl_OP* op_unary, SPerl_OP* op_fi
   // Build OP_SUB
   SPerl_OP_sibling_splice(sperl, op_unary, NULL, 0, op_first);
   
+  if (op_unary->code == SPerl_OP_C_CODE_NOT) {
+    op_first->condition = 1;
+  }
+  
   return op_unary;
 }
 

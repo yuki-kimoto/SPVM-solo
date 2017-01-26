@@ -507,7 +507,7 @@ logical_op
     }
   | NOT term
     {
-      $$ = SPerl_OP_build_logical_op(sperl, $1, $2, NULL);
+      $$ = SPerl_OP_build_unary(sperl, $1, $2);
     }
 
 array_elem
