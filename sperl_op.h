@@ -162,7 +162,6 @@ struct SPerl_op {
     SPerl_CONSTANT* constant;
     SPerl_NAME_INFO* name_info;
     SPerl_TYPE* type;
-    SPerl_USE* use;
     SPerl_VAR* var;
     SPerl_FIELD* field;
     SPerl_PACKAGE* package;

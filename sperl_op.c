@@ -19,7 +19,6 @@
 #include "sperl_my_var.h"
 #include "sperl_var.h"
 #include "sperl_memory_pool.h"
-#include "sperl_use.h"
 #include "sperl_enumeration_value.h"
 #include "sperl_type.h"
 #include "sperl_type_component_name.h"
@@ -915,15 +914,10 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
 SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_package_name) {
 
   SPerl_PARSER* parser = sperl->parser;
-
+  
   SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);
   
-  SPerl_USE* use = SPerl_USE_new(sperl);
-  use->op_package_name = op_package_name;
-  op_use->uv.use = use;
-
   const char* package_name = op_package_name->uv.name;
-  
   SPerl_USE* found_use = SPerl_HASH_search(parser->use_package_symtable, package_name, strlen(package_name));
   
   if (!found_use) {

@@ -17,7 +17,6 @@
 #include "sperl_my_var.h"
 #include "sperl_var.h"
 #include "sperl_memory_pool.h"
-#include "sperl_use.h"
 #include "sperl_enumeration_value.h"
 #include "sperl_type.h"
 #include "sperl_type_component_name.h"

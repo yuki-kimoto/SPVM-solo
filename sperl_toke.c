@@ -16,7 +16,6 @@
 #include "sperl_array.h"
 #include "sperl_hash.h"
 #include "sperl_descriptor.h"
-#include "sperl_use.h"
 #include "sperl_type.h"
 
 SPerl_OP* SPerl_TOKE_newOP(SPerl* sperl, uint8_t type) {
@@ -57,8 +56,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         while (1) {
           SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
           if (op_use) {
-            SPerl_USE* use = op_use->uv.use;
-            const char* package_name = use->op_package_name->uv.name;
+            SPerl_OP* op_package_name = op_use->first;
+            const char* package_name = op_package_name->uv.name;
             
             SPerl_PACKAGE* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
             if (found_package) {
@@ -111,7 +110,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               }
               if (!fh) {
                 if (op_use) {
-                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", use->op_package_name->uv.name, op_use->file, op_use->line);
+                  fprintf(stderr, "Can't find package \"%s\" at %s line %d\n", op_package_name->uv.name, op_use->file, op_use->line);
                 }
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_module_path);

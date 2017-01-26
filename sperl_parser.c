@@ -14,7 +14,6 @@
 #include "sperl_allocator.h"
 #include "sperl_yacc_util.h"
 #include "sperl_array.h"
-#include "sperl_use.h"
 #include "sperl_bytecode_array.h"
 #include "sperl_sub.h"
 
@@ -120,14 +119,12 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   SPerl_PARSER* parser = sperl->parser;
   
   /* Build use information */
-  SPerl_USE* use = SPerl_USE_new(sperl);
   SPerl_OP* op_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, package_name, 1);
   op_package_name->uv.name = package_name;
-  use->op_package_name = op_package_name;
   
   // Use OP
   SPerl_OP* op_use = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_USE, package_name, 1);
-  op_use->uv.use = use;
+  SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);
   
   /* Push package use information stack */
   SPerl_ARRAY_push(parser->op_use_stack, op_use);
