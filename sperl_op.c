@@ -36,6 +36,7 @@
 #include "sperl_descriptor.h"
 #include "sperl_vm.h"
 #include "sperl_frame.h"
+#include "sperl_std_func.h"
 
 const char* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
@@ -117,34 +118,6 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "DESCRIPTOR",   // UNKNOWN
   "VOID",
 };
-
-void SPerl_CORE_printi(SPerl_VM* vm) {
-  
-  int32_t value = *(int32_t*)&vm->frame->vars[0];
-  
-  printf("TEST: %" PRId32 "\n", value);
-}
-
-void SPerl_CORE_printl(SPerl_VM* vm) {
-  
-  int64_t value = vm->frame->vars[0];
-  
-  printf("TEST: %" PRId64 "\n", value);
-}
-
-void SPerl_CORE_printf(SPerl_VM* vm) {
-  
-  float value = *(float*)&vm->frame->vars[0];
-  
-  printf("TEST: %f\n", value);
-}
-
-void SPerl_CORE_printd(SPerl_VM* vm) {
-  
-  double value = *(double*)&vm->frame->vars[0];
-  
-  printf("TEST: %f\n", value);
-}
 
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {
   
@@ -906,19 +879,19 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         else {
           SPerl_HASH_insert(sub_name_symtable, sub_name, strlen(sub_name), sub);
           
-          // Bind CORE subroutine
+          // Bind standard functions
           if (sub->is_native) {
             if (strcmp(sub_name, "CORE::printi") == 0) {
-              sub->native_address = SPerl_CORE_printi;
+              sub->native_address = SPerl_STD_FUNC_printi;
             }
             else if (strcmp(sub_name, "CORE::printl") == 0) {
-              sub->native_address = SPerl_CORE_printl;
+              sub->native_address = SPerl_STD_FUNC_printl;
             }
             else if (strcmp(sub_name, "CORE::printf") == 0) {
-              sub->native_address = SPerl_CORE_printf;
+              sub->native_address = SPerl_STD_FUNC_printf;
             }
             else if (strcmp(sub_name, "CORE::printd") == 0) {
-              sub->native_address = SPerl_CORE_printd;
+              sub->native_address = SPerl_STD_FUNC_printd;
             }
           }
         }
