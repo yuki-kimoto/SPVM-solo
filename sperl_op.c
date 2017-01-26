@@ -958,6 +958,11 @@ SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op
     my_var->op_term_assumption = op_term;
   }
   
+  // Type is none
+  if (!op_type && (!op_term || op_term->code == SPerl_OP_C_CODE_UNDEF)) {
+    SPerl_yyerror_format(sperl, "\"my %s\" can't detect type at %s line %d\n", my_var->op_name->uv.name, op_my_var->file, op_my_var->line);
+  }
+  
   return op_stab;
 }
 
