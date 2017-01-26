@@ -3,7 +3,6 @@ use Test::EnumB;
 use Test::EnumC;
 use Test::Foo;
 use Test::Simple;
-use CORE;
 
 package Test {
   sub main($mvar : int) : int {

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#include <assert.h>
 
 #include "sperl.h"
 #include "sperl_parser.h"
@@ -40,6 +41,14 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
   // Save buf pointer
   parser->befbufptr = parser->bufptr;
   
+  // use CORE module
+  SPerl_OP* op_use_core = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_USE, "CORE", 0);
+  SPerl_OP* op_core_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "CORE", 0);
+  op_core_package_name->uv.name = "CORE";
+  SPerl_OP_sibling_splice(sperl, op_use_core, NULL, 0, op_core_package_name);
+  SPerl_ARRAY_push(parser->op_use_stack, op_use_core);
+  SPerl_HASH_insert(parser->use_package_symtable, op_core_package_name->uv.name, strlen(op_core_package_name->uv.name), op_use_core);
+  
   while(1) {
     // Get current character
     char c = *parser->bufptr;
@@ -55,6 +64,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         
         while (1) {
           SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
+          
+          
           if (op_use) {
             SPerl_OP* op_package_name = op_use->first;
             const char* package_name = op_package_name->uv.name;
