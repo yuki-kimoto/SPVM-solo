@@ -584,7 +584,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
               }
               else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
-                int32_t* goto_loop_start_address_ptr = SPerl_ARRAY_pop(goto_loop_start_address_stack);
+                
+                int32_t* goto_loop_start_address_ptr = SPerl_ARRAY_fetch(goto_loop_start_address_stack, goto_loop_start_address_stack->length - 1);
                 
                 // Jump offset
                 int32_t goto_loop_start_offset = bytecode_array->length - *goto_loop_start_address_ptr;
@@ -796,8 +797,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
               }
               else if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_LOOP) {
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, 3);
+                int32_t* goto_loop_start_address_ptr = SPerl_ARRAY_pop(goto_loop_start_address_stack);
+                
+                // Jump offset
+                int32_t goto_loop_start_offset = *goto_loop_start_address_ptr - (bytecode_array->length - 1) + 3;
+                
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (goto_loop_start_offset >> 8) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, goto_loop_start_offset & 0xFF);
               }
               
               break;
