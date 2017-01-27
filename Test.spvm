@@ -131,7 +131,6 @@ package Test {
 
     while (1) {
       1;
-      last;
     }
 
     my $simple3 : Test::Simple = new Test::Simple;
@@ -265,7 +264,6 @@ package Test {
 
     while (1) {
       1;
-      last;
     }
     "abcde";
     "";
