@@ -870,72 +870,72 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_IFEQ:
         condition = *(int32_t*)&call_stack[operand_stack_top] == 0;
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFNE:
         condition = *(int32_t*)&call_stack[operand_stack_top] != 0;
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFLT:
         condition = *(int32_t*)&call_stack[operand_stack_top] < 0;
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFGE:
         condition = *(int32_t*)&call_stack[operand_stack_top] >= 0;
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFGT:
         condition = *(int32_t*)&call_stack[operand_stack_top] > 0;
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFLE:
         condition = *(int32_t*)&call_stack[operand_stack_top] <= 0;
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPEQ:
         condition = *(int32_t*)&call_stack[operand_stack_top - 1] == *(int32_t*)&call_stack[operand_stack_top];
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPNE:
         condition = *(int32_t*)&call_stack[operand_stack_top - 1] != *(int32_t*)&call_stack[operand_stack_top];
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPLT:
         condition = *(int32_t*)&call_stack[operand_stack_top - 1] < *(int32_t*)&call_stack[operand_stack_top];
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPGE:
         condition = *(int32_t*)&call_stack[operand_stack_top - 1] >= *(int32_t*)&call_stack[operand_stack_top];
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPGT:
         condition = *(int32_t*)&call_stack[operand_stack_top - 1] > *(int32_t*)&call_stack[operand_stack_top];
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ICMPLE:
         condition = *(int32_t*)&call_stack[operand_stack_top - 1] <= *(int32_t*)&call_stack[operand_stack_top];
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ACMPEQ:
         condition = call_stack[operand_stack_top - 1] == call_stack[operand_stack_top];
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_IF_ACMPNE:
         condition = call_stack[operand_stack_top - 1] != call_stack[operand_stack_top];
-        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * !condition;
+        pc = (pc + (int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) * condition + (pc + 3) * (~condition & 1);
         operand_stack_top -= 2;
         continue;
       case SPerl_BYTECODE_C_CODE_GOTO:
