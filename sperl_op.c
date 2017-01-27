@@ -222,35 +222,6 @@ void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {
   }
 }
 
-SPerl_OP* SPerl_OP_build_for_statement(SPerl* sperl, SPerl_OP* op_for, SPerl_OP* op_term_loop_var, SPerl_OP* op_term_condition, SPerl_OP* op_term_next_value, SPerl_OP* op_block) {
-
-  SPerl_OP* op_condition = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONDITION, op_term_condition->file, op_term_condition->line);
-  SPerl_OP_sibling_splice(sperl, op_condition, NULL, 0, op_term_condition);
-
-  SPerl_OP* op_loop = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_LOOP, op_for->file, op_for->line);
-  
-  SPerl_OP* op_statements = op_block->first;
-  
-  op_block->flag |= SPerl_OP_C_FLAG_BLOCK_LOOP;
-  op_condition->flag |= SPerl_OP_C_FLAG_CONDITION_LOOP;
-  
-  // Convert to while loop
-  if (op_term_next_value->code != SPerl_OP_C_CODE_NULL) {
-    if (op_statements->last) {
-      SPerl_OP_sibling_splice(sperl, op_statements, op_statements->last, 0, op_term_next_value);
-    }
-    else {
-      SPerl_OP_sibling_splice(sperl, op_statements, op_statements->first, 0, op_term_next_value);
-    }
-  }
-  
-  SPerl_OP_sibling_splice(sperl, op_loop, NULL, 0, op_term_loop_var);
-  SPerl_OP_sibling_splice(sperl, op_loop, op_term_loop_var, 0, op_condition);
-  SPerl_OP_sibling_splice(sperl, op_loop, op_condition, 0, op_block);
-  
-  return op_loop;
-}
-
 SPerl_OP* SPerl_OP_build_switch_statement(SPerl* sperl, SPerl_OP* op_switch, SPerl_OP* op_term, SPerl_OP* op_block) {
   
   SPerl_PARSER* parser = sperl->parser;
@@ -284,6 +255,35 @@ SPerl_OP* SPerl_OP_build_case_statement(SPerl* sperl, SPerl_OP* op_case, SPerl_O
   return op_case;
 }
 
+SPerl_OP* SPerl_OP_build_for_statement(SPerl* sperl, SPerl_OP* op_for, SPerl_OP* op_statement_init, SPerl_OP* op_term_condition, SPerl_OP* op_term_next_value, SPerl_OP* op_block) {
+
+  SPerl_OP* op_condition = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONDITION, op_term_condition->file, op_term_condition->line);
+  SPerl_OP_sibling_splice(sperl, op_condition, NULL, 0, op_term_condition);
+
+  SPerl_OP* op_loop = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_LOOP, op_for->file, op_for->line);
+  
+  SPerl_OP* op_statements = op_block->first;
+  
+  op_block->flag |= SPerl_OP_C_FLAG_BLOCK_LOOP;
+  op_condition->flag |= SPerl_OP_C_FLAG_CONDITION_LOOP;
+  
+  // Convert to while loop
+  if (op_term_next_value->code != SPerl_OP_C_CODE_NULL) {
+    if (op_statements->last) {
+      SPerl_OP_sibling_splice(sperl, op_statements, op_statements->last, 0, op_term_next_value);
+    }
+    else {
+      SPerl_OP_sibling_splice(sperl, op_statements, op_statements->first, 0, op_term_next_value);
+    }
+  }
+  
+  SPerl_OP_sibling_splice(sperl, op_loop, NULL, 0, op_statement_init);
+  SPerl_OP_sibling_splice(sperl, op_loop, op_statement_init, 0, op_block);
+  SPerl_OP_sibling_splice(sperl, op_loop, op_block, 0, op_condition);
+  
+  return op_loop;
+}
+
 SPerl_OP* SPerl_OP_build_while_statement(SPerl* sperl, SPerl_OP* op_while, SPerl_OP* op_term, SPerl_OP* op_block) {
 
   SPerl_OP* op_condition = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONDITION, op_term->file, op_term->line);
@@ -297,8 +297,8 @@ SPerl_OP* SPerl_OP_build_while_statement(SPerl* sperl, SPerl_OP* op_while, SPerl
   SPerl_OP* op_null = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, op_while->file, op_while->line);
   
   SPerl_OP_sibling_splice(sperl, op_loop, NULL, 0, op_null);
-  SPerl_OP_sibling_splice(sperl, op_loop, op_null, 0, op_condition);
-  SPerl_OP_sibling_splice(sperl, op_loop, op_condition, 0, op_block);
+  SPerl_OP_sibling_splice(sperl, op_loop, op_null, 0, op_block);
+  SPerl_OP_sibling_splice(sperl, op_loop, op_block, 0, op_condition);
   
   return op_loop;
 }

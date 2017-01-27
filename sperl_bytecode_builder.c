@@ -179,15 +179,15 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
     
     // IFXXX Bytecode address(except loop)
     SPerl_ARRAY* if_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-    
-    // IFXXX Bytecode address for loop
-    SPerl_ARRAY* if_loop_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-    
+
     // GOTO Bytecode address for last
     SPerl_ARRAY* goto_last_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
 
     // GOTO Bytecode address for end of if block
     SPerl_ARRAY* goto_if_block_end_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+    
+    // GOTO bytecode address for loop start
+    SPerl_ARRAY* goto_loop_start_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
     
     // Current switch
     SPerl_OP* cur_op_switch_info = NULL;
@@ -208,6 +208,19 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
           cur_case_addresses = SPerl_ALLOCATOR_new_array(sperl, 0);
           cur_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
           break;
+        }
+        case SPerl_OP_C_CODE_BLOCK: {
+          if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
+            // Add goto
+            SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
+            
+            int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(sperl);
+            *pos_ptr = bytecode_array->length - 1;
+            SPerl_ARRAY_push(goto_loop_start_address_stack, pos_ptr);
+            
+            SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+            SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+          }
         }
       }
       
@@ -506,14 +519,14 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               break;
             }
             case SPerl_OP_C_CODE_NEXT: {
-              int32_t* pos_ptr = SPerl_ARRAY_fetch(if_loop_address_stack, if_loop_address_stack->length - 1);
+              int32_t* pos_ptr = SPerl_ARRAY_fetch(goto_loop_start_address_stack, goto_loop_start_address_stack->length - 1);
               
               // Add "goto"
               SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
-
+              
               // Jump offset
-              int32_t jump_offset = *pos_ptr - (bytecode_array->length - 1);
-
+              int32_t jump_offset = *pos_ptr - (bytecode_array->length - 1) + 3;
+              
               SPerl_BYTECODE_ARRAY_push(bytecode_array, (jump_offset >> 8) & 0xFF);
               SPerl_BYTECODE_ARRAY_push(bytecode_array, jump_offset & 0xFF);
               
@@ -569,34 +582,24 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
                 }
               }
-              else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
-                int32_t* pos_ptr = SPerl_ARRAY_pop(if_loop_address_stack);
+              break;
+            }
+            case SPerl_OP_C_CODE_IF: {
+              
+              break;
+            }
+            case SPerl_OP_C_CODE_LOOP: {
+              
+              // Set last position
+              int32_t* goto_last_address_ptr;
+              while ((goto_last_address_ptr = SPerl_ARRAY_pop(goto_last_address_stack))) {
+                // Last offset
+                int32_t goto_last_offset = bytecode_array->length - *goto_last_address_ptr;
                 
-                // Add "goto" to end of block
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
-                
-                // Goto offset
-                int32_t block_end_goto_offset = *pos_ptr - (bytecode_array->length - 1);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, (block_end_goto_offset >> 8) & 0xFF);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, block_end_goto_offset & 0xFF);
-                
-                // If offset
-                int32_t if_offset = bytecode_array->length - *pos_ptr;
-                
-                // Set condition jump position
-                bytecode_array->values[*pos_ptr + 1] = (if_offset >> 8) & 0xFF;
-                bytecode_array->values[*pos_ptr + 2] = if_offset & 0xFF;
-                
-                // Set last position
-                int32_t* last_pos_ptr;
-                while ((last_pos_ptr = SPerl_ARRAY_pop(goto_last_address_stack))) {
-                  // Last offset
-                  int32_t last_offset = bytecode_array->length - *last_pos_ptr;
-                  
-                  bytecode_array->values[*last_pos_ptr + 1] = (last_offset >> 8) & 0xFF;
-                  bytecode_array->values[*last_pos_ptr + 2] = last_offset & 0xFF;
-                }
+                bytecode_array->values[*goto_last_address_ptr + 1] = (goto_last_offset >> 8) & 0xFF;
+                bytecode_array->values[*goto_last_address_ptr + 2] = goto_last_offset & 0xFF;
               }
+              
               break;
             }
             case SPerl_OP_C_CODE_CONDITION: {
@@ -776,14 +779,19 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_IF) {
                 SPerl_ARRAY_push(if_address_stack, pos_ptr);
+                // Prepare for bytecode position of branch
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
               }
               else if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_LOOP) {
-                SPerl_ARRAY_push(if_loop_address_stack, pos_ptr);
+                int32_t* goto_loop_start_address_ptr = SPerl_ARRAY_pop(goto_loop_start_address_stack);
+                
+                // Jump offset
+                int32_t goto_loop_start_offset = *pos_ptr - (bytecode_array->length - 1) + 3;
+                
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (goto_loop_start_offset >> 8) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, goto_loop_start_offset & 0xFF);
               }
-              
-              // Prepare for bytecode position of branch
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
               
               break;
             }
