@@ -1277,9 +1277,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_INVOKEDYNAMIC:
         // Not used
         assert(0);
-      case SPerl_BYTECODE_C_CODE_NEW:
+      case SPerl_BYTECODE_C_CODE_NEW: {
+        
         pc += 5;
         continue;
+      }
       case SPerl_BYTECODE_C_CODE_NEWARRAY:
         pc += 5;
         continue;
@@ -1390,17 +1392,17 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
         
         // Extend call stack(current size + 2(return address + call stack base before) + lexical variable area + operand_stack area)
-        int32_t call_stack_max = operand_stack_top + 2 + constant_pool_sub->my_vars_size + constant_pool_sub->operand_stack_max;
+        int32_t call_stack_max = operand_stack_top + 2 + constant_pool_sub->my_vars_length + constant_pool_sub->operand_stack_max;
         
         while (call_stack_max > vm->call_stack_capacity) {
           vm->call_stack_capacity = vm->call_stack_capacity * 2;
           vm->call_stack = call_stack = realloc(call_stack, sizeof(int64_t) * vm->call_stack_capacity);
         }
         
-        operand_stack_top -= constant_pool_sub->args_size;
+        operand_stack_top -= constant_pool_sub->args_length;
 
         // Prepare arguments
-        memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_size * sizeof(int64_t));
+        memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(int64_t));
 
         // Save return address
         operand_stack_top++;
@@ -1416,13 +1418,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         CALLSUB_COMMON:
         
         // Initialize my variables
-        memset(&call_stack[call_stack_base + constant_pool_sub->args_size], 0, (constant_pool_sub->my_vars_size - constant_pool_sub->args_size) * sizeof(int64_t));
+        memset(&call_stack[call_stack_base + constant_pool_sub->args_length], 0, (constant_pool_sub->my_vars_length - constant_pool_sub->args_length) * sizeof(int64_t));
         
         // Set variables to local variable
         vars = &call_stack[call_stack_base];
         
         // Set operant stack top
-        operand_stack_top += constant_pool_sub->my_vars_size;
+        operand_stack_top += constant_pool_sub->my_vars_length;
 
         // Call native sub
         if (constant_pool_sub->is_native) {

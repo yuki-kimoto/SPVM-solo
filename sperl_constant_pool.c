@@ -136,8 +136,8 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   // Constant pool sub information
   SPerl_CONSTANT_POOL_SUB* constant_pool_sub = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_SUB));
   constant_pool_sub->native_address = sub->native_address;
-  constant_pool_sub->args_size = sub->op_args->length;
-  constant_pool_sub->my_vars_size = sub->op_my_vars->length;
+  constant_pool_sub->args_length = sub->op_args->length;
+  constant_pool_sub->my_vars_length = sub->op_my_vars->length;
   constant_pool_sub->bytecode_base = sub->bytecode_base;
   constant_pool_sub->operand_stack_max = sub->operand_stack_max;
   constant_pool_sub->is_native = sub->is_native;
