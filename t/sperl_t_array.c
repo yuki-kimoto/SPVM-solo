@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     
     // push pointer value
     const char* value3 = "foo";
-    SPerl_ARRAY_push(array, (void*) value3);
+    SPerl_ARRAY_push(array, value3);
     OK(array->values[2] == value3);
   }
 
