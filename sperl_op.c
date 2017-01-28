@@ -671,6 +671,24 @@ void SPerl_OP_check(SPerl* sperl) {
         alignment = field_byte_size;
       }
     }
+    
+    // Calculate package byte size
+    int32_t package_byte_size = 0;
+    for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
+      SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, field_pos);
+      SPerl_FIELD* field = op_field->uv.field;
+      SPerl_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
+      
+      // Current byte size
+      
+      int32_t field_byte_size = SPerl_FIELD_get_byte_size(sperl, field);
+      if (package_byte_size % alignment != 0 && package_byte_size + field_byte_size > alignment) {
+        int32_t padding = alignment - (package_byte_size % alignment);
+        package_byte_size += padding;
+      }
+      package_byte_size += field_byte_size;
+    }
+    package->byte_size = package_byte_size;
   }
   
   // Check types
