@@ -1385,7 +1385,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         sub = op_sub->uv.sub;
         
         // Extend call stack(current size + 2(return address + call stack base before) + lexical variable area + operand_stack area)
-        int32_t call_stack_max = operand_stack_top + 2 + sub->my_vars_size + sub->operand_stack_max;
+        int32_t call_stack_max = operand_stack_top + 2 + sub->op_my_vars->length + sub->operand_stack_max;
         
         while (call_stack_max > vm->call_stack_capacity) {
           vm->call_stack_capacity = vm->call_stack_capacity * 2;
