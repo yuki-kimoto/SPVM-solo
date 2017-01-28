@@ -10,6 +10,7 @@ struct SPerl_constant_pool_sub {
   int32_t my_vars_size;
   int32_t bytecode_base;
   int32_t operand_stack_max;
+  _Bool has_return_value;
   _Bool is_native;
 };
 

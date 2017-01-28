@@ -1421,40 +1421,70 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
 
         // Call native sub
         if (sub->is_native) {
-          // Set frame
-          vm->frame->vars = vars;
-          vm->frame->operand_stack = &call_stack[operand_stack_top];
           
-          // Call native sub
-          operand_stack_top++;
-          (*sub->native_address)(vm);
-          
-          // Return value
-          int64_t return_value = call_stack[operand_stack_top];
-          
-          // Finish call sub
-          if (call_stack_base == 0) {
-            call_stack[0] = return_value;
-            return;
+          if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
+            // Set frame
+            vm->frame->vars = vars;
+            vm->frame->operand_stack = &call_stack[operand_stack_top];
+            
+            // Call native sub
+            (*sub->native_address)(vm);
+            
+            // Finish call sub
+            if (call_stack_base == 0) {
+              return;
+            }
+            
+            // Restore operand stack top
+            operand_stack_top = call_stack_base - 3;
+            
+            // Return address
+            int64_t return_address = call_stack[call_stack_base - 2];
+            
+            // Resotre vars base
+            call_stack_base = call_stack[call_stack_base - 1];
+            
+            // Restore vars
+            vars = &call_stack[call_stack_base];
+            
+            pc = return_address;
           }
-          
-          // Restore operand stack top
-          operand_stack_top = call_stack_base - 3;
-          
-          // Return address
-          int64_t return_address = call_stack[call_stack_base - 2];
-          
-          // Resotre vars base
-          call_stack_base = call_stack[call_stack_base - 1];
-          
-          // Restore vars
-          vars = &call_stack[call_stack_base];
-          
-          // Push return value
-          operand_stack_top++;
-          call_stack[operand_stack_top] = return_value;
-          
-          pc = return_address;
+          else {
+            // Set frame
+            vm->frame->vars = vars;
+            vm->frame->operand_stack = &call_stack[operand_stack_top];
+            
+            // Call native sub
+            operand_stack_top++;
+            (*sub->native_address)(vm);
+            
+            // Return value
+            int64_t return_value = call_stack[operand_stack_top];
+            
+            // Finish call sub
+            if (call_stack_base == 0) {
+              call_stack[0] = return_value;
+              return;
+            }
+            
+            // Restore operand stack top
+            operand_stack_top = call_stack_base - 3;
+            
+            // Return address
+            int64_t return_address = call_stack[call_stack_base - 2];
+            
+            // Resotre vars base
+            call_stack_base = call_stack[call_stack_base - 1];
+            
+            // Restore vars
+            vars = &call_stack[call_stack_base];
+            
+            // Push return value
+            operand_stack_top++;
+            call_stack[operand_stack_top] = return_value;
+            
+            pc = return_address;
+          }
         }
         // Call normal sub
         else {
