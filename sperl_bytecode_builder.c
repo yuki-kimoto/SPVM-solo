@@ -851,6 +851,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               else {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NEW);
               }
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 24) & 0xFF);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 16) & 0xFF);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 8) & 0xFF);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, resolved_type->id & 0xFF);
               
               break;
             }

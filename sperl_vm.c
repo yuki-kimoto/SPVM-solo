@@ -1278,19 +1278,19 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_NEW:
-        pc++;
+        pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_NEWARRAY:
-        pc++;
+        pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_ANEWARRAY:
-        pc++;
+        pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
-        pc++;
+        pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_ATHROW:
         pc++;
