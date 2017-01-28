@@ -682,7 +682,15 @@ void SPerl_OP_check(SPerl* sperl) {
       // Current byte size
       
       int32_t field_byte_size = SPerl_FIELD_get_byte_size(sperl, field);
-      if (package_byte_size % alignment != 0 && package_byte_size + field_byte_size > alignment) {
+      int32_t next_alignment_base;
+      if (package_byte_size % alignment == 0) {
+        next_alignment_base = package_byte_size  + alignment;
+      }
+      else {
+        next_alignment_base = ((package_byte_size / alignment) + 1) * alignment;
+      }
+      
+      if (package_byte_size + field_byte_size > next_alignment_base) {
         int32_t padding = alignment - (package_byte_size % alignment);
         package_byte_size += padding;
       }

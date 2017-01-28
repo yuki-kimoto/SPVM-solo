@@ -484,6 +484,7 @@ void SPerl_DUMPER_dump_field(SPerl* sperl, SPerl_FIELD* field) {
     
     SPerl_TYPE* type = field->op_type->uv.type;
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
+    printf("      byte_size => \"%" PRId32 "\"\n", SPerl_FIELD_get_byte_size(sperl, field));
     
     printf("      id => \"%" PRId32 "\"\n", field->id);
   }
