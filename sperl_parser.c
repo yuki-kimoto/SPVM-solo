@@ -74,7 +74,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     
     // Package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(sperl);
-    package->size = SPerl_RESOLVED_TYPE_C_CORE_SIZES[i];
+    package->byte_size = SPerl_RESOLVED_TYPE_C_CORE_SIZES[i];
     SPerl_OP* op_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
     op_package_name->uv.name = name;
     package->op_name = op_package_name;

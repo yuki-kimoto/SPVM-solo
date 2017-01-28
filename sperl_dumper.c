@@ -154,7 +154,7 @@ void SPerl_DUMPER_dump_packages(SPerl* sperl, SPerl_ARRAY* op_packages) {
       printf("  resolved_type => \"%s\"\n", type->resolved_type->name);
     }
     
-    printf("  size => %d\n", package->size);
+    printf("  byte_size => %d\n", package->byte_size);
     
     // Field information
     printf("  fields\n");

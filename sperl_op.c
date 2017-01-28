@@ -651,6 +651,44 @@ void SPerl_OP_check(SPerl* sperl) {
     return;
   }
   
+  // Resolve package
+  SPerl_ARRAY* op_packages = sperl->parser->op_packages;
+  for (int32_t package_pos = 0; package_pos < op_packages->length; package_pos++) {
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(op_packages, package_pos);
+    SPerl_PACKAGE* package = op_package->uv.package;
+    SPerl_ARRAY* op_fields = package->op_fields;
+    
+    // Alignment is max size of field
+    int32_t alignment = 0;
+    for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
+      SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, field_pos);
+      SPerl_FIELD* field = op_field->uv.field;
+      SPerl_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
+      
+      // Alignment
+      if (field_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BOOLEAN || field_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+        if (1 > alignment) {
+          alignment = 1;
+        }
+      }
+      else if (field_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+        if (2 > alignment) {
+          alignment = 2;
+        }
+      }
+      else if (field_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT || field_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
+        if (4 > alignment) {
+          alignment = 4;
+        }
+      }
+      else {
+        if (8 > alignment) {
+          alignment = 8;
+        }
+      }
+    }
+  }
+  
   // Check types
   SPerl_OP_CHECKER_check(sperl);
   if (parser->fatal_error) {
