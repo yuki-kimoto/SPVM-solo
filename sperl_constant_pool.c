@@ -7,6 +7,11 @@
 #include "sperl_constant_pool.h"
 #include "sperl_constant.h"
 #include "sperl_hash.h"
+#include "sperl_sub.h"
+#include "sperl_constant_pool_sub.h"
+#include "sperl_allocator.h"
+#include "sperl_array.h"
+#include "sperl_op.h"
 
 SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   (void)sperl;
@@ -113,6 +118,37 @@ void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);
   memcpy(&constant_pool->values[length], &value, 8);
   constant_pool->length += 2;
+}
+
+void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_SUB* sub) {
+  (void)sperl;
+  
+  int32_t length = constant_pool->length;
+
+  // Adjust alignment
+  if ((length & 1) != 0) {
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
+  }
+  assert((constant_pool->length & 1) == 0);
+
+  // Constant pool sub information
+  sub->constant_pool_address = constant_pool->length;
+  // Constant pool sub information
+  SPerl_CONSTANT_POOL_SUB* constant_pool_sub = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_SUB));
+  constant_pool_sub->native_address = sub->native_address;
+  constant_pool_sub->args_size = sub->op_args->length;
+  constant_pool_sub->my_vars_size = sub->op_my_vars->length;
+  constant_pool_sub->bytecode_base = sub->bytecode_base;
+  constant_pool_sub->operand_stack_max = sub->operand_stack_max;
+  constant_pool_sub->is_native = sub->is_native;
+  if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
+    constant_pool_sub->has_return_value = 1;
+  }
+  
+  // Add sub information
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, sizeof(SPerl_CONSTANT_POOL_SUB) / sizeof(int32_t));
+  *(SPerl_CONSTANT_POOL_SUB*)&constant_pool->values[length] = *constant_pool_sub;
+  constant_pool->length += sizeof(SPerl_CONSTANT_POOL_SUB) / sizeof(int32_t);
 }
 
 void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, const char* utf8) {
