@@ -1428,7 +1428,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           // Call native sub
           operand_stack_top++;
           (*sub->native_address)(vm);
-
+          
           // Return value
           int64_t return_value = call_stack[operand_stack_top];
           
