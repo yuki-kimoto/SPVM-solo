@@ -16,6 +16,7 @@
 #include "sperl_op.h"
 #include "sperl_constant_pool.h"
 #include "sperl_frame.h"
+#include "sperl_constant_pool_sub.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
@@ -41,9 +42,14 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Variables
   int64_t* vars = NULL;
 
-  // Get subroutine
-  SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
-
+  // Constant pool sub
+  SPerl_CONSTANT_POOL_SUB* constant_pool_sub;
+  {
+    SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
+    constant_pool_sub
+      = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub->constant_pool_address];
+  }
+  
   int64_t* call_stack = vm->call_stack;
   
   // Program counter
@@ -1378,24 +1384,23 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_CALLSUB:
       {
         // Get subroutine ID
-        int32_t sub_id = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        int32_t sub_constant_pool_address
+          = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
         
-        // Subroutine
-        SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_id);
-        sub = op_sub->uv.sub;
+        constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
         
         // Extend call stack(current size + 2(return address + call stack base before) + lexical variable area + operand_stack area)
-        int32_t call_stack_max = operand_stack_top + 2 + sub->op_my_vars->length + sub->operand_stack_max;
+        int32_t call_stack_max = operand_stack_top + 2 + constant_pool_sub->my_vars_size + constant_pool_sub->operand_stack_max;
         
         while (call_stack_max > vm->call_stack_capacity) {
           vm->call_stack_capacity = vm->call_stack_capacity * 2;
           vm->call_stack = call_stack = realloc(call_stack, sizeof(int64_t) * vm->call_stack_capacity);
         }
         
-        operand_stack_top -= sub->op_args->length;
+        operand_stack_top -= constant_pool_sub->args_size;
 
         // Prepare arguments
-        memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], sub->op_args->length * sizeof(int64_t));
+        memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_size * sizeof(int64_t));
 
         // Save return address
         operand_stack_top++;
@@ -1411,24 +1416,24 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         CALLSUB_COMMON:
         
         // Initialize my variables
-        memset(&call_stack[call_stack_base + sub->op_args->length], 0, (sub->op_my_vars->length - sub->op_args->length) * sizeof(int64_t));
+        memset(&call_stack[call_stack_base + constant_pool_sub->args_size], 0, (constant_pool_sub->my_vars_size - constant_pool_sub->args_size) * sizeof(int64_t));
         
         // Set variables to local variable
         vars = &call_stack[call_stack_base];
         
         // Set operant stack top
-        operand_stack_top += sub->op_my_vars->length;
+        operand_stack_top += constant_pool_sub->my_vars_size;
 
         // Call native sub
-        if (sub->is_native) {
+        if (constant_pool_sub->is_native) {
           
-          if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
+          if (!constant_pool_sub->has_return_value) {
             // Set frame
             vm->frame->vars = vars;
             vm->frame->operand_stack = &call_stack[operand_stack_top];
             
             // Call native sub
-            (*sub->native_address)(vm);
+            (*constant_pool_sub->native_address)(vm);
             
             // Finish call sub
             if (call_stack_base == 0) {
@@ -1456,7 +1461,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
             
             // Call native sub
             operand_stack_top++;
-            (*sub->native_address)(vm);
+            (*constant_pool_sub->native_address)(vm);
             
             // Return value
             int64_t return_value = call_stack[operand_stack_top];
@@ -1488,7 +1493,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
         // Call normal sub
         else {
-          pc = sub->bytecode_base;
+          pc = constant_pool_sub->bytecode_base;
         }
         continue;
       }

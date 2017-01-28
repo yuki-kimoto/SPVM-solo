@@ -1082,5 +1082,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         next_my_var_address++;
       }
     }
+    
+    // Push sub information to constant pool
+    SPerl_CONSTANT_POOL_push_sub(sperl, sperl->constant_pool, sub);
   }
 }
