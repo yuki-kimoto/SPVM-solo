@@ -686,6 +686,7 @@ void SPerl_OP_check(SPerl* sperl) {
         int32_t padding = alignment - (package_byte_size % alignment);
         package_byte_size += padding;
       }
+      field->package_byte_offset = package_byte_size;
       package_byte_size += field_byte_size;
     }
     package->byte_size = package_byte_size;

@@ -480,12 +480,12 @@ void SPerl_DUMPER_dump_field(SPerl* sperl, SPerl_FIELD* field) {
   if (field) {
     printf("      name => \"%s\"\n", field->op_name->uv.name);
     
+    printf("      package_byte_offset => \"%" PRId32 "\"\n", field->package_byte_offset);
+    
     SPerl_TYPE* type = field->op_type->uv.type;
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
     
     printf("      id => \"%" PRId32 "\"\n", field->id);
-    
-
   }
   else {
     printf("        None\n");
