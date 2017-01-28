@@ -105,7 +105,6 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "NEW_ARRAY",
   "UNDEF",
   "NEW",
-  "NEW_TYPE",
   "NEW_ARRAY_CONSTANT",
   "ARRAY_LENGTH",
   "CONDITION",
@@ -368,12 +367,11 @@ SPerl_OP* SPerl_OP_build_new_object(SPerl* sperl, SPerl_OP* op_new, SPerl_OP* op
   
   SPerl_PARSER* parser = sperl->parser;
   
-  SPerl_OP* op_new_object = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NEW_TYPE, op_new->file, op_new->line);
-  SPerl_OP_sibling_splice(sperl, op_new_object, NULL, 0, op_type);
+  SPerl_OP_sibling_splice(sperl, op_new, NULL, 0, op_type);
   
   SPerl_ARRAY_push(parser->op_types, op_type);
   
-  return op_new_object;
+  return op_new;
 }
 
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
@@ -402,13 +400,13 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_LEFT_SHIFT:
     case SPerl_OP_C_CODE_RIGHT_SHIFT:
     case SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED:
-    case SPerl_OP_C_CODE_NEW_TYPE:
     case SPerl_OP_C_CODE_BIT_XOR:
     case SPerl_OP_C_CODE_BIT_OR:
     case SPerl_OP_C_CODE_BIT_AND:
     case SPerl_OP_C_CODE_PLUS:
     case SPerl_OP_C_CODE_NEGATE:
     case SPerl_OP_C_CODE_ASSIGN:
+    case SPerl_OP_C_CODE_NEW:
     {
       resolved_type = SPerl_OP_get_resolved_type(sperl, op->first);
       break;

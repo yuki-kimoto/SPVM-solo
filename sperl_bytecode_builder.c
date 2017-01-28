@@ -836,8 +836,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               break;
             }
-            case SPerl_OP_C_CODE_NEW_TYPE: {
-              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
+            case SPerl_OP_C_CODE_NEW: {
+              SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               
               if (SPerl_RESOLVED_TYPE_is_core_type_array(sperl, resolved_type)) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NEWARRAY);
@@ -854,7 +854,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               break;
             }
-
+            
             case SPerl_OP_C_CODE_UNDEF: {
               
               SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ACONST_NULL);

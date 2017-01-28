@@ -451,7 +451,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               break;
             }
-            case SPerl_OP_C_CODE_NEW_TYPE: {
+            case SPerl_OP_C_CODE_NEW: {
               SPerl_OP* op_type = op_cur->first;
               SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
               
@@ -552,6 +552,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+              
+              warn("AAAAAAAAAA %p %p", first_resolved_type, last_resolved_type);
               
               // Type assumption
               if (!first_resolved_type) {
