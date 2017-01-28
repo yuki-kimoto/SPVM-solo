@@ -1068,7 +1068,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     
     // Calculate my var total size and address
     int32_t next_my_var_address = 0;
-    int32_t sub_args_size = 0;
     for (int32_t i = 0; i < op_my_vars->length; i++) {
       SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
       SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
@@ -1078,31 +1077,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       
       if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
         next_my_var_address += 2;
-        if (i < sub->op_args->length) {
-          sub_args_size += 2;
-        }
       }
       else {
         next_my_var_address++;
-        if (i < sub->op_args->length) {
-          sub_args_size++;
-        }
-      }
-    }
-    
-    sub->my_vars_size = next_my_var_address;
-    sub->args_size = sub_args_size;
-    
-    // Return type size
-    if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
-      SPerl_RESOLVED_TYPE* return_resolved_type = sub->op_return_type->uv.type->resolved_type;
-      if (return_resolved_type) {
-        if (return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-          sub->return_size = 2;
-        }
-        else {
-          sub->return_size = 1;
-        }
       }
     }
   }
