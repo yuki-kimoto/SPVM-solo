@@ -12,5 +12,6 @@ struct SPerl_field {
 };
 
 SPerl_FIELD* SPerl_FIELD_new(SPerl* sperl);
+int32_t SPerl_FIELD_get_byte_size(SPerl* sperl, SPerl_FIELD* field);
 
 #endif

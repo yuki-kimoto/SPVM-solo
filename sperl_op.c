@@ -666,25 +666,9 @@ void SPerl_OP_check(SPerl* sperl) {
       SPerl_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
       
       // Alignment
-      if (field_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BOOLEAN || field_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
-        if (1 > alignment) {
-          alignment = 1;
-        }
-      }
-      else if (field_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
-        if (2 > alignment) {
-          alignment = 2;
-        }
-      }
-      else if (field_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT || field_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-        if (4 > alignment) {
-          alignment = 4;
-        }
-      }
-      else {
-        if (8 > alignment) {
-          alignment = 8;
-        }
+      int32_t field_byte_size = SPerl_FIELD_get_byte_size(sperl, field);
+      if (field_byte_size > alignment) {
+        alignment = field_byte_size;
       }
     }
   }
