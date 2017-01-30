@@ -553,8 +553,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
               SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
               
-              warn("AAAAAAAAAA %p %p", first_resolved_type, last_resolved_type);
-              
               // Type assumption
               if (!first_resolved_type) {
                 SPerl_OP* op_var = op_cur->first;
