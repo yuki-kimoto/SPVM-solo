@@ -66,7 +66,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   goto CALLSUB_COMMON;
   
   while (1) {
-    
     switch (bytecodes[pc]) {
       case SPerl_BYTECODE_C_CODE_NOP:
         // Not used
