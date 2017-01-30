@@ -653,14 +653,14 @@ void SPerl_OP_check(SPerl* sperl) {
   
   // Resolve package
   SPerl_ARRAY* op_packages = sperl->parser->op_packages;
-  for (int32_t package_pos = 0; package_pos < op_packages->length; package_pos++) {
+  for (size_t package_pos = 0; package_pos < op_packages->length; package_pos++) {
     SPerl_OP* op_package = SPerl_ARRAY_fetch(op_packages, package_pos);
     SPerl_PACKAGE* package = op_package->uv.package;
     SPerl_ARRAY* op_fields = package->op_fields;
     
     // Alignment is max size of field
     int32_t alignment = 0;
-    for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
+    for (size_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
       SPerl_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
@@ -674,7 +674,7 @@ void SPerl_OP_check(SPerl* sperl) {
     
     // Calculate package byte size
     int32_t package_byte_size = 0;
-    for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
+    for (size_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
       SPerl_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
