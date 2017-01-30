@@ -154,7 +154,7 @@ void SPerl_DUMPER_dump_packages(SPerl* sperl, SPerl_ARRAY* op_packages) {
       printf("  resolved_type => \"%s\"\n", type->resolved_type->name);
     }
     
-    printf("  size => %d\n", package->size);
+    printf("  byte_size => %d\n", package->byte_size);
     
     // Field information
     printf("  fields\n");
@@ -289,9 +289,9 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         break;
       }
       // Have four operand
-      case SPerl_BYTECODE_C_CODE_CALLSUB:
-      case SPerl_BYTECODE_C_CODE_LOADCONST:
-      case SPerl_BYTECODE_C_CODE_LOADCONST2:
+      case SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
+      case SPerl_BYTECODE_C_CODE_LDC_WW:
+      case SPerl_BYTECODE_C_CODE_LDC2_WW:
       {
         i++;
         bytecode = bytecode_array->values[i];
@@ -465,9 +465,6 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     }
     
     printf("    operand_stack_max => %d\n", sub->operand_stack_max);
-    
-    
-    printf("    my_vars_size => %d\n", sub->my_vars_size);
 
     printf("    bytecode_array\n");
     SPerl_DUMPER_dump_bytecode_array(sperl, sperl->bytecode_array, sub->bytecode_base, sub->bytecode_length);
@@ -483,12 +480,13 @@ void SPerl_DUMPER_dump_field(SPerl* sperl, SPerl_FIELD* field) {
   if (field) {
     printf("      name => \"%s\"\n", field->op_name->uv.name);
     
+    printf("      package_byte_offset => \"%" PRId32 "\"\n", field->package_byte_offset);
+    
     SPerl_TYPE* type = field->op_type->uv.type;
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
+    printf("      byte_size => \"%" PRId32 "\"\n", SPerl_FIELD_get_byte_size(sperl, field));
     
     printf("      id => \"%" PRId32 "\"\n", field->id);
-    
-
   }
   else {
     printf("        None\n");

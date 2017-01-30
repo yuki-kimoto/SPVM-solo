@@ -18,14 +18,14 @@
 %token <opval> SWITCH CASE DEFAULT VOID
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
-%type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub call_op
+%type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub unop binop
 %type <opval> opt_terms terms term args arg opt_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> decl_enumeration_values decl_enumeration_value decl_anon_sub
 %type <opval> type package_name field_base_name sub_base_name decl_package decl_things_in_grammar opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar type_sub types not_type_sub opt_term throw_exception
-%type <opval> field array_elem convert_type decl_enum new_object array_init type_name array_length logical_op decl_thing_in_grammar
+%type <opval> field array_elem convert_type decl_enum new_object array_init type_name array_length decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement
-%type <opval> ';' opt_descriptors descriptors type_or_void
+%type <opval> ';' opt_descriptors descriptors type_or_void normal_statement
 
 %right <opval> ASSIGN
 %left <opval> OR
@@ -166,31 +166,31 @@ statements
   | statement
 
 statement
-  : if_statement
+  : normal_statement
+  | if_statement
   | for_statement
   | while_statement
   | block
-  | term ';'
+  | switch_statement
+  | case_statement
+  | default_statement
+
+normal_statement
+  : term ';'
     {
       $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_POP, $1->file, $1->line);
       SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $1);
     }
   | expression ';'
-    {
-      $$ = $1;
-    }
   | ';'
     {
       $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line);
     }
-  | switch_statement
-  | case_statement
-  | default_statement
 
 for_statement
-  : FOR '(' opt_term ';' term ';' opt_term ')' block
+  : FOR '(' normal_statement term ';' opt_term ')' block
     {
-      $$ = SPerl_OP_build_for_statement(sperl, $1, $3, $5, $7, $9);
+      $$ = SPerl_OP_build_for_statement(sperl, $1, $3, $4, $6, $8);
     }
 
 while_statement
@@ -263,13 +263,19 @@ decl_enum
 decl_my
   : MY VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, $4);
+      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, $4, NULL);
     }
   | MY VAR
     {
-      SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $2->file, $2->line);
-      
-      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, op_type);
+      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, NULL, NULL);
+    }
+  | MY VAR ':' type ASSIGN term
+    {
+      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, $4, $6);
+    }
+  | MY VAR ASSIGN term
+    {
+      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, NULL, $4);
     }
 
 decl_anon_sub
@@ -330,6 +336,7 @@ expression
       SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
   | throw_exception
+  | decl_my
 
 opt_terms
   :	/* Empty */
@@ -366,13 +373,14 @@ opt_term
       $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
   | term
+
 term
   : VAR
   | CONSTANT
-  | decl_my
   | decl_anon_sub
   | call_sub
-  | call_op
+  | unop
+  | binop
   | field
   | array_elem
   | convert_type
@@ -380,7 +388,6 @@ term
   | new_object
   | array_init
   | array_length
-  | logical_op
 
 array_init
   : '[' opt_terms ']'
@@ -406,104 +413,104 @@ field
       $$ = SPerl_OP_build_field(sperl, $1, $3);
     }
 
-call_op
+unop
   : '+' term %prec UMINUS
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_PLUS, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
+      $$ = SPerl_OP_build_unop(sperl, op, $2);
     }
   | '-' term %prec UMINUS
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NEGATE, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
+      $$ = SPerl_OP_build_unop(sperl, op, $2);
     }
   | INC term
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_PRE_INC, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
+      $$ = SPerl_OP_build_unop(sperl, op, $2);
     }
   | term INC
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_POST_INC, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $1, NULL);
+      $$ = SPerl_OP_build_unop(sperl, op, $1);
     }
   | DEC term
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_PRE_DEC, $1->file, $1->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $2, NULL);
+      $$ = SPerl_OP_build_unop(sperl, op, $2);
     }
   | term DEC
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_POST_DEC, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $1, NULL);
+      $$ = SPerl_OP_build_unop(sperl, op, $1);
     }
   | '~' term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $1, $2, NULL);
+      $$ = SPerl_OP_build_unop(sperl, $1, $2);
     }
-  | term '+' term
+  | NOT term
+    {
+      $$ = SPerl_OP_build_unop(sperl, $1, $2);
+    }
+
+binop
+  : term '+' term
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ADD, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, op, $1, $3);
     }
   | term '-' term
     {
       SPerl_OP* op = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_SUBTRACT, $2->file, $2->line);
-      $$ = SPerl_OP_build_call_op(sperl, op, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, op, $1, $3);
     }
   | term MULTIPLY term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
   | term DIVIDE term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
   | term REMAINDER term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
   | term BIT_XOR term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
   | term BIT_AND term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
   | term BIT_OR term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
   | term SHIFT term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
   | term REL term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
   | term ASSIGN term
     {
-      $$ = SPerl_OP_build_call_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
   | '(' term ')'
     {
       $$ = $2;
     }
-
-logical_op
-  : term AND term
-    {
-      $$ = SPerl_OP_build_logical_op(sperl, $2, $1, $3);
-    }
   | term OR term
     {
-      $$ = SPerl_OP_build_logical_op(sperl, $2, $1, $3);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
-  | NOT term
+  | term AND term
     {
-      $$ = SPerl_OP_build_logical_op(sperl, $1, $2, NULL);
+      $$ = SPerl_OP_build_binop(sperl, $2, $1, $3);
     }
 
 array_elem
@@ -564,7 +571,7 @@ args
 arg
   : VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, $1->file, $1->line), $1, $3);
+      $$ = SPerl_OP_build_decl_my(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, $1->file, $1->line), $1, $3, NULL);
     }
 types
   : types ',' type

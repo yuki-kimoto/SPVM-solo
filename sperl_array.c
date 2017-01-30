@@ -22,7 +22,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(size_t capacity) {
   return array;
 }
 
-void SPerl_ARRAY_push(SPerl_ARRAY* array, void* value) {
+void SPerl_ARRAY_push(SPerl_ARRAY* array, const void* value) {
   size_t length = array->length;
   size_t capacity = array->capacity;
   
@@ -36,7 +36,8 @@ void SPerl_ARRAY_push(SPerl_ARRAY* array, void* value) {
     array->capacity = new_capacity;
   }
   
-  array->values[length] = value;
+  /* Casting away a const qualification, I know what I'm doing. */
+  array->values[length] = (void*) value;
   array->length++;
 }
 

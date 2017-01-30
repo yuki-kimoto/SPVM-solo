@@ -114,7 +114,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NEW_ARRAY,
   SPerl_OP_C_CODE_UNDEF,
   SPerl_OP_C_CODE_NEW,
-  SPerl_OP_C_CODE_NEW_TYPE,
   SPerl_OP_C_CODE_NEW_ARRAY_CONSTANT,
   SPerl_OP_C_CODE_ARRAY_LENGTH,
   SPerl_OP_C_CODE_CONDITION,
@@ -172,7 +171,6 @@ struct SPerl_op {
     SPerl_CONSTANT* constant;
     SPerl_NAME_INFO* name_info;
     SPerl_TYPE* type;
-    SPerl_USE* use;
     SPerl_VAR* var;
     SPerl_FIELD* field;
     SPerl_PACKAGE* package;
@@ -184,7 +182,6 @@ struct SPerl_op {
   int32_t line;
   _Bool moresib;
   _Bool lvalue;
-  _Bool condition;
 };
 
 void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op);
@@ -217,7 +214,7 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
 void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name);
 
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op);
-SPerl_OP* SPerl_OP_build_call_op(SPerl* sperl, SPerl_OP* op_call_op, SPerl_OP* op_first, SPerl_OP* op_last);
+SPerl_OP* SPerl_OP_build_binop(SPerl* sperl, SPerl_OP* op_call_op, SPerl_OP* op_first, SPerl_OP* op_last);
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op);
 
 SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_type_name);
@@ -229,7 +226,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
 SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* op_descriptors, SPerl_OP* type, SPerl_OP* op_block);
 SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl* sperl, SPerl_OP* op_const);
 SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_has, SPerl_OP* op_field_base_name, SPerl_OP* type);
-SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_type);
+SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_type, SPerl_OP* op_term);
 SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages);
 SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_package_name);
 SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_subname, SPerl_OP* op_terms, _Bool anon);
@@ -251,5 +248,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op
 SPerl_OP* SPerl_OP_newOP(SPerl* sperl, int32_t code, const char* file, uint32_t line);
 
 SPerl_OP* SPerl_OP_append_elem(SPerl* sperl, SPerl_OP *first, SPerl_OP *last, const char* file, uint32_t line);
+
+SPerl_OP* SPerl_OP_build_unop(SPerl* sperl, SPerl_OP* op_unary, SPerl_OP* op_first);
 
 #endif

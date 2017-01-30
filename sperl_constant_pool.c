@@ -7,7 +7,15 @@
 #include "sperl_constant_pool.h"
 #include "sperl_constant.h"
 #include "sperl_hash.h"
+#include "sperl_sub.h"
+#include "sperl_field.h"
+#include "sperl_package.h"
+#include "sperl_constant_pool_sub.h"
+#include "sperl_constant_pool_package.h"
+#include "sperl_constant_pool_field.h"
 #include "sperl_allocator.h"
+#include "sperl_array.h"
+#include "sperl_op.h"
 
 SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   (void)sperl;
@@ -25,10 +33,9 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
 void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t extend) {
   (void)sperl;
   
-  int32_t length = constant_pool->length;
   int32_t capacity = constant_pool->capacity;
   
-  if (length + extend >= capacity) {
+  if (constant_pool->length + extend >= capacity) {
     if (capacity > INT32_MAX / 2) {
       SPerl_ALLOCATOR_exit_with_malloc_failure();
     }
@@ -66,57 +73,126 @@ void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* consta
 void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
   (void)sperl;
   
-  int32_t length = constant_pool->length;
-  
   // Add int value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
-  constant_pool->values[length] = value;
+  constant_pool->values[constant_pool->length] = value;
   constant_pool->length++;
 }
 
 void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int64_t value) {
   (void)sperl;
   
-  int32_t length = constant_pool->length;
-
   // Adjust alignment
-  if ((length & 1) != 0) {
+  if ((constant_pool->length & 1) != 0) {
     SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
   }
   assert((constant_pool->length & 1) == 0);
 
   // Add long value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);
-  memcpy(&constant_pool->values[length], &value, 8);
+  memcpy(&constant_pool->values[constant_pool->length], &value, 8);
   constant_pool->length += 2;
 }
 
 void SPerl_CONSTANT_POOL_push_float(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, float value) {
   (void)sperl;
   
-  int32_t length = constant_pool->length;
-  
   // Add float value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
-  *(float*)&constant_pool->values[length] = value;
+  *(float*)&constant_pool->values[constant_pool->length] = value;
   constant_pool->length++;
 }
 
 void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, double value) {
   (void)sperl;
   
-  int32_t length = constant_pool->length;
-
   // Adjust alignment
-  if ((length & 1) != 0) {
+  if ((constant_pool->length & 1) != 0) {
     SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
   }
   assert((constant_pool->length & 1) == 0);
 
   // Add double value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);
-  memcpy(&constant_pool->values[length], &value, 8);
+  memcpy(&constant_pool->values[constant_pool->length], &value, 8);
   constant_pool->length += 2;
+}
+
+void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_SUB* sub) {
+  (void)sperl;
+  
+  // Adjust alignment
+  if ((constant_pool->length & 1) != 0) {
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
+  }
+  assert((constant_pool->length & 1) == 0);
+
+  // Constant pool sub information
+  sub->constant_pool_address = constant_pool->length;
+  // Constant pool sub information
+  SPerl_CONSTANT_POOL_SUB* constant_pool_sub = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_SUB));
+  constant_pool_sub->native_address = sub->native_address;
+  constant_pool_sub->args_length = sub->op_args->length;
+  constant_pool_sub->my_vars_length = sub->op_my_vars->length;
+  constant_pool_sub->bytecode_base = sub->bytecode_base;
+  constant_pool_sub->operand_stack_max = sub->operand_stack_max;
+  constant_pool_sub->is_native = sub->is_native;
+  if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
+    constant_pool_sub->has_return_value = 1;
+  }
+  
+  // Add sub information
+  int32_t extend_length = (sizeof(SPerl_CONSTANT_POOL_SUB) + (sizeof(int32_t) - 1)) / sizeof(int32_t);
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
+  *(SPerl_CONSTANT_POOL_SUB*)&constant_pool->values[constant_pool->length] = *constant_pool_sub;
+  constant_pool->length += extend_length;
+}
+
+void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_FIELD* field) {
+  (void)sperl;
+  
+  // Adjust alignment
+  if ((constant_pool->length & 1) != 0) {
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
+  }
+  assert((constant_pool->length & 1) == 0);
+
+  // Constant pool field information
+  field->constant_pool_address = constant_pool->length;
+  
+  // Constant pool field information
+  SPerl_CONSTANT_POOL_FIELD* constant_pool_field = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_FIELD));
+  constant_pool_field->package_byte_offset = field->package_byte_offset;
+  
+  // Add field information
+  int32_t extend_length = (sizeof(SPerl_CONSTANT_POOL_FIELD) + (sizeof(int32_t) - 1)) / sizeof(int32_t);
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
+  *(SPerl_CONSTANT_POOL_FIELD*)&constant_pool->values[constant_pool->length] = *constant_pool_field;
+  constant_pool->length += extend_length;
+  
+}
+
+void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
+  (void)sperl;
+  
+  // Adjust alignment
+  if ((constant_pool->length & 1) != 0) {
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
+  }
+  assert((constant_pool->length & 1) == 0);
+
+  // Constant pool package information
+  package->constant_pool_address = constant_pool->length;
+  
+  // Constant pool package information
+  SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_PACKAGE));
+  constant_pool_package->byte_size = package->byte_size;
+
+  // Add package information
+  int32_t extend_length = (sizeof(SPerl_CONSTANT_POOL_PACKAGE) + (sizeof(int32_t) - 1)) / sizeof(int32_t);
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
+  *(SPerl_CONSTANT_POOL_PACKAGE*)&constant_pool->values[constant_pool->length] = *constant_pool_package;
+  constant_pool->length += extend_length;
 }
 
 void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, const char* utf8) {
@@ -131,12 +207,10 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, found_constant_utf8->address);
   }
   else {
-    int32_t length = constant_pool->length;
-    
     // Create constant utf8
     SPerl_CONSTANT* new_constant_utf8 = SPerl_CONSTANT_new(sperl);
     new_constant_utf8->code = SPerl_CONSTANT_C_CODE_UTF8;
-    new_constant_utf8->address = length;
+    new_constant_utf8->address = constant_pool->length;
     SPerl_HASH_insert(constant_utf8_symtable, utf8, strlen(utf8), new_constant_utf8);
     
     int32_t utf8_length = strlen(utf8);
@@ -152,7 +226,7 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     }
     
     SPerl_CONSTANT_POOL_extend(sperl, constant_pool, constant_pool_size);
-    memcpy(&constant_pool->values[length], utf8, utf8_length + 1);
+    memcpy(&constant_pool->values[constant_pool->length], utf8, utf8_length + 1);
     constant_pool->length += constant_pool_size;
     
     // Add string

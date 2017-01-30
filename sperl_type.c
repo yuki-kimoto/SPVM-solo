@@ -47,14 +47,14 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
       }
       else if (part->code == SPerl_TYPE_PART_C_CODE_BYTE) {
         name_length++;
-        SPerl_ARRAY_push(resolved_type_part_names, (void*) part->uv.char_name);
+        SPerl_ARRAY_push(resolved_type_part_names, part->uv.char_name);
       }
       else {
         const char* part_name = part->uv.op_name->uv.name;
         
         SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
         if (found_package) {
-          SPerl_ARRAY_push(resolved_type_part_names, (void*) part_name);
+          SPerl_ARRAY_push(resolved_type_part_names, part_name);
         }
         else {
           SPerl_yyerror_format(sperl, "unknown package \"%s\" at %s line %d\n", part_name, op_type->file, op_type->line);
