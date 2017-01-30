@@ -8,7 +8,11 @@
 #include "sperl_constant.h"
 #include "sperl_hash.h"
 #include "sperl_sub.h"
+#include "sperl_field.h"
+#include "sperl_package.h"
 #include "sperl_constant_pool_sub.h"
+#include "sperl_constant_pool_package.h"
+#include "sperl_constant_pool_field.h"
 #include "sperl_allocator.h"
 #include "sperl_array.h"
 #include "sperl_op.h"
@@ -149,6 +153,54 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, sizeof(SPerl_CONSTANT_POOL_SUB) / sizeof(int32_t));
   *(SPerl_CONSTANT_POOL_SUB*)&constant_pool->values[length] = *constant_pool_sub;
   constant_pool->length += sizeof(SPerl_CONSTANT_POOL_SUB) / sizeof(int32_t);
+}
+
+void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_FIELD* field) {
+  (void)sperl;
+  
+  int32_t length = constant_pool->length;
+
+  // Adjust alignment
+  if ((length & 1) != 0) {
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
+  }
+  assert((constant_pool->length & 1) == 0);
+
+  // Constant pool field information
+  field->constant_pool_address = constant_pool->length;
+  
+  // Constant pool field information
+  SPerl_CONSTANT_POOL_FIELD* constant_pool_field = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_FIELD));
+  constant_pool_field->package_byte_offset = field->package_byte_offset;
+  
+  // Add field information
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, sizeof(SPerl_CONSTANT_POOL_FIELD) / sizeof(int32_t));
+  *(SPerl_CONSTANT_POOL_FIELD*)&constant_pool->values[length] = *constant_pool_field;
+  constant_pool->length += sizeof(SPerl_CONSTANT_POOL_FIELD) / sizeof(int32_t);
+}
+
+void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
+  (void)sperl;
+  
+  int32_t length = constant_pool->length;
+
+  // Adjust alignment
+  if ((length & 1) != 0) {
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
+  }
+  assert((constant_pool->length & 1) == 0);
+
+  // Constant pool package information
+  package->constant_pool_address = constant_pool->length;
+  
+  // Constant pool package information
+  SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_PACKAGE));
+  constant_pool_package->byte_size = package->byte_size;
+  
+  // Add package information
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, sizeof(SPerl_CONSTANT_POOL_PACKAGE) / sizeof(int32_t));
+  *(SPerl_CONSTANT_POOL_PACKAGE*)&constant_pool->values[length] = *constant_pool_package;
+  constant_pool->length += sizeof(SPerl_CONSTANT_POOL_PACKAGE) / sizeof(int32_t);
 }
 
 void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, const char* utf8) {
