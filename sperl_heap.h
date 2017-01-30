@@ -1,8 +1,8 @@
-#include <stdlib.h>
+#ifndef SPERL_HEAP_H
+#define SPERL_HEAP_H
 
-#include "sperl.h"
-#include "sperl_heap.h"
+#include "sperl_base.h"
 
-void* SPerl_HEAP_alloc(SPerl* sperl, int32_t size) {
-  return malloc(size);
-}
+void* SPerl_HEAP_alloc(SPerl* sperl, int32_t size);
+
+#endif
