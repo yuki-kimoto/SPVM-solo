@@ -22,6 +22,7 @@
 #include "sperl_switch_info.h"
 #include "sperl_constant_pool.h"
 #include "sperl_constant_pool_sub.h"
+#include "sperl_type.h"
 
 void SPerl_BYTECODE_BUILDER_push_iinc_bytecode(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecode_array, SPerl_OP* op_inc, int32_t value) {
   
@@ -841,20 +842,38 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               if (SPerl_RESOLVED_TYPE_is_core_type_array(sperl, resolved_type)) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NEWARRAY);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 16) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 8) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, resolved_type->id & 0xFF);
               }
               else if (SPerl_RESOLVED_TYPE_is_multi_array(sperl, resolved_type)) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_MULTIANEWARRAY);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 16) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 8) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, resolved_type->id & 0xFF);
               }
               else if (SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ANEWARRAY);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 16) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 8) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, resolved_type->id & 0xFF);
               }
               else {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NEW);
+                
+                const char* package_name = op_cur->first->uv.type->resolved_type->name;
+                SPerl_PACKAGE* package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
+                
+                int32_t constant_pool_address = package->constant_pool_address;
+                
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 16) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 8) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, constant_pool_address & 0xFF);
               }
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 24) & 0xFF);
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 16) & 0xFF);
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 8) & 0xFF);
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, resolved_type->id & 0xFF);
               
               break;
             }
