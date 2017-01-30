@@ -299,7 +299,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
         
         // TODO
-        *(int32_t*)&call_stack[operand_stack_top - 1] = *(int32_t*)(call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
+        *(int32_t*)&call_stack[operand_stack_top - 1] = *(int32_t*)((int32_t*)call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
@@ -308,7 +308,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
 
         // TODO
-        call_stack[operand_stack_top - 1] = *(int64_t*)(call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
+        call_stack[operand_stack_top - 1] = *(int64_t*)((int64_t*)call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
@@ -317,7 +317,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
 
         // TODO
-        *(float*)&call_stack[operand_stack_top - 1] = *(float*)(call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
+        *(float*)&call_stack[operand_stack_top - 1] = *(float*)((float*)call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
@@ -326,7 +326,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
 
         // TODO
-        *(double*)&call_stack[operand_stack_top - 1] = *(double*)(call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
+        *(double*)&call_stack[operand_stack_top - 1] = *(double*)((double*)call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
@@ -335,7 +335,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
         
         // TODO
-        call_stack[operand_stack_top - 1] = *(int64_t*)(call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
+        *(intptr_t*)&call_stack[operand_stack_top - 1] = *(intptr_t*)((intptr_t*)call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
@@ -344,7 +344,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
         
         // TODO
-        *(int8_t*)&call_stack[operand_stack_top - 1] = (int32_t)*(int8_t*)(call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
+        *(int8_t*)&call_stack[operand_stack_top - 1] = (int32_t)*(int8_t*)((int8_t*)call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
@@ -356,7 +356,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
         
         // TODO
-        *(int16_t*)&call_stack[operand_stack_top - 1] = (int32_t)*(int16_t*)(call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
+        *(int16_t*)&call_stack[operand_stack_top - 1] = (int32_t)*(int16_t*)((int16_t*)call_stack[operand_stack_top - 1] + *(int32_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
@@ -490,7 +490,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
         
         // TODO
-        *(int8_t*)(call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
+        *(int8_t*)((int8_t*)call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
           = (int8_t)*(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
@@ -503,7 +503,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
         
         // TODO
-        *(int16_t*)(call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
+        *(int16_t*)((int16_t*)call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
           = (int16_t)*(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
@@ -513,7 +513,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
         
         // TODO
-        *(int32_t*)(call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
+        *(int32_t*)((int32_t*)call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
           = *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
@@ -523,7 +523,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
 
         // TODO
-        *(int64_t*)(call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
+        *(int64_t*)((int64_t*)call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
           = call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
@@ -533,7 +533,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
 
         // TODO
-        *(float*)(call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
+        *(float*)((float*)call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
           = *(float*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
@@ -541,9 +541,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_DASTORE:
         pc++;
         continue;
-
+        
         // TODO
-        *(double*)(call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
+        *(double*)((double*)call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
           = *(double*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
@@ -551,10 +551,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_AASTORE:
         pc++;
         continue;
-
+        
         // TODO
-        *(int64_t*)(call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
-          = call_stack[operand_stack_top];
+        *(intptr_t*)((intptr_t*)call_stack[operand_stack_top - 2] + *(int32_t*)&call_stack[operand_stack_top - 1])
+          = *(intptr_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         continue;
