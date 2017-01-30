@@ -1383,7 +1383,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_BREAKPOINT:
         // Not used
         assert(0);
-      case SPerl_BYTECODE_C_CODE_CALLSUB:
+      case SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
       {
         // Get subroutine ID
         int32_t sub_constant_pool_address

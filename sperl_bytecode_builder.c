@@ -490,7 +490,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
             case SPerl_OP_C_CODE_CALL_SUB: {
               
               // Call subroutine
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_CALLSUB);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW);
               SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
               const char* sub_name = name_info->resolved_name;
               

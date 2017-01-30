@@ -289,7 +289,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         break;
       }
       // Have four operand
-      case SPerl_BYTECODE_C_CODE_CALLSUB:
+      case SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
       case SPerl_BYTECODE_C_CODE_LDC_WW:
       case SPerl_BYTECODE_C_CODE_LDC2_WW:
       {
