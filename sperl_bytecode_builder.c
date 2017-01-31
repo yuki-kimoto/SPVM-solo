@@ -474,13 +474,15 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
             case SPerl_OP_C_CODE_FIELD: {
               
               if (!op_cur->lvalue) {
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GETFIELD);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GETFIELD_WW);
                 
                 SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                 const char* field_name = name_info->resolved_name;
                 SPerl_FIELD* field = SPerl_HASH_search(parser->field_name_symtable, field_name, strlen(field_name));
                 int32_t id = field->id;
                 
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 16) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 8) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, id & 0xFF);
               }
@@ -1108,7 +1110,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
               }
               else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_PUTFIELD);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_PUTFIELD_WW);
                 
                 // Call subroutine
                 SPerl_NAME_INFO* name_info = op_cur->first->uv.name_info;
@@ -1116,6 +1118,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_FIELD* field = SPerl_HASH_search(parser->field_name_symtable, field_name, strlen(field_name));
                 int32_t id = field->id;
                 
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 16) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 8) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, id & 0xFF);
               }

@@ -1252,12 +1252,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_GETFIELD:
-
-        pc += 3;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_PUTFIELD:
-        pc += 3;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_INVOKEVIRTUAL:
         // Not used
         assert(0);
@@ -1515,6 +1514,12 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         operand_stack_top++;
         call_stack[operand_stack_top]
           = *(int64_t*)&constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_GETFIELD_WW:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_PUTFIELD_WW:
         pc += 5;
         continue;
     }
