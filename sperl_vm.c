@@ -16,6 +16,8 @@
 #include "sperl_op.h"
 #include "sperl_constant_pool.h"
 #include "sperl_frame.h"
+#include "sperl_package.h"
+#include "sperl_heap.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
@@ -1271,6 +1273,16 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_NEW: {
+        // Get subroutine ID
+        int32_t package_id = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        
+        SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_id);
+        SPerl_PACKAGE* package = op_package->uv.package;
+        
+        intptr_t reference = (intptr_t)SPerl_HEAP_alloc(sperl, package->byte_size);
+        
+        operand_stack_top++;
+        *(intptr_t*)&call_stack[operand_stack_top] = (intptr_t)reference;
         
         pc += 5;
         continue;
