@@ -948,6 +948,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     
     // Add package
     op_package->uv.package = package;
+    package->id = parser->op_packages->length;
     SPerl_ARRAY_push(parser->op_packages, op_package);
     SPerl_HASH_insert(parser->package_symtable, package_name, strlen(package_name), type);
   }

@@ -866,12 +866,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 const char* package_name = op_cur->first->uv.type->resolved_type->name;
                 SPerl_PACKAGE* package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
                 
-                int32_t constant_pool_address = package->constant_pool_address;
+                int32_t id = package->id;
                 
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 24) & 0xFF);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 16) & 0xFF);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 8) & 0xFF);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, constant_pool_address & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 16) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 8) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, id & 0xFF);
               }
               
               break;
