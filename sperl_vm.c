@@ -1279,8 +1279,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_id);
         SPerl_PACKAGE* package = op_package->uv.package;
         
-        intptr_t address = (intptr_t)SPerl_HEAP_alloc(sperl, package->byte_size);
-        memset(address, 0, package->byte_size);
+        size_t allocation_size = package->byte_size;
+        if (allocation_size == 0) allocation_size = 1;
+        intptr_t address = (intptr_t)SPerl_HEAP_alloc(sperl, allocation_size);
+        memset((void*) address, 0, allocation_size);
         
         operand_stack_top++;
         *(intptr_t*)&call_stack[operand_stack_top] = (intptr_t)address;
