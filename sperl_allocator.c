@@ -8,7 +8,7 @@
 #include "sperl_allocator.h"
 
 static void exit_with_malloc_failure() {
-  fprintf(stderr, "Failed to allocate memory. Sperl will exit.");
+  fprintf(stderr, "Failed to allocate memory. Sperl will exit.\n");
   exit(EXIT_FAILURE);
   /*NOTREACHED*/
 }
