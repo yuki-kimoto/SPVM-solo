@@ -23,7 +23,6 @@
 #include "sperl_field.h"
 #include "sperl_switch_info.h"
 #include "sperl_constant_pool.h"
-#include "sperl_constant_pool_sub.h"
 #include "sperl_type.h"
 
 void SPerl_BYTECODE_BUILDER_push_iinc_bytecode(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecode_array, SPerl_OP* op_inc, int32_t value) {
@@ -491,13 +490,15 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
             case SPerl_OP_C_CODE_FIELD: {
               
               if (!op_cur->lvalue) {
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GETFIELD);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GETFIELD_WW);
                 
                 SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                 const char* field_name = name_info->resolved_name;
                 SPerl_FIELD* field = SPerl_HASH_search(parser->field_name_symtable, field_name, strlen(field_name));
                 int32_t id = field->id;
                 
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 16) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 8) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, id & 0xFF);
               }
@@ -513,12 +514,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               
               SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_name, strlen(sub_name));
               
-              int32_t constant_pool_address = sub->constant_pool_address;
+              int32_t id = sub->id;
               
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 24) & 0xFF);
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 16) & 0xFF);
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 8) & 0xFF);
-              SPerl_BYTECODE_ARRAY_push(bytecode_array, constant_pool_address & 0xFF);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 16) & 0xFF);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 8) & 0xFF);
+              SPerl_BYTECODE_ARRAY_push(bytecode_array, id & 0xFF);
               
               break;
             }
@@ -883,12 +884,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 const char* package_name = op_cur->first->uv.type->resolved_type->name;
                 SPerl_PACKAGE* package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
                 
-                int32_t constant_pool_address = package->constant_pool_address;
+                int32_t id = package->id;
                 
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 24) & 0xFF);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 16) & 0xFF);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 8) & 0xFF);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, constant_pool_address & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 16) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 8) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, id & 0xFF);
               }
               
               break;
@@ -1125,7 +1126,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
               }
               else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_PUTFIELD);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_PUTFIELD_WW);
                 
                 // Call subroutine
                 SPerl_NAME_INFO* name_info = op_cur->first->uv.name_info;
@@ -1133,6 +1134,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_FIELD* field = SPerl_HASH_search(parser->field_name_symtable, field_name, strlen(field_name));
                 int32_t id = field->id;
                 
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 16) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 8) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, id & 0xFF);
               }
@@ -1500,7 +1503,5 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
       }
     }
     sub->bytecode_length = bytecode_array->length - sub->bytecode_base;
-    SPerl_CONSTANT_POOL_SUB* constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&sperl->constant_pool->values[sub->constant_pool_address];
-    constant_pool_sub->bytecode_base = sub->bytecode_base;
   }
 }

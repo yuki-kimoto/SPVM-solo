@@ -40,10 +40,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name
     const char* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
-    
-    // Name
     SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
-    
     op_name->uv.name = name;
     
     // Resolved type
@@ -54,38 +51,6 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     resolved_type->id = i;
     SPerl_ARRAY_push(parser->resolved_types, resolved_type);
     SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
-    
-    // Type name
-    SPerl_TYPE_COMPONENT_NAME* type_component_name = SPerl_TYPE_COMPONENT_NAME_new(sperl);
-    type_component_name->op_name = op_name;
-    
-    // Type
-    SPerl_TYPE* type = SPerl_TYPE_new(sperl);
-    type->code = SPerl_TYPE_C_CODE_NAME;
-    type->uv.type_component_name = type_component_name;
-    type->resolved_type = resolved_type;
-    
-    // Type OP
-    SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, "CORE", 1);
-    op_type->uv.type = type;
-    
-    // Add type
-    SPerl_ARRAY_push(parser->op_types, op_type);
-    
-    // Package
-    SPerl_PACKAGE* package = SPerl_PACKAGE_new(sperl);
-    package->byte_size = SPerl_RESOLVED_TYPE_C_CORE_SIZES[i];
-    SPerl_OP* op_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
-    op_package_name->uv.name = name;
-    package->op_name = op_package_name;
-    package->op_type = op_type;
-    
-    // Package OP
-    SPerl_OP* op_package = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_PACKAGE, "CORE", 1);
-    op_package->uv.package = package;
-    
-    SPerl_ARRAY_push(parser->op_packages, op_package);
-    SPerl_HASH_insert(parser->package_symtable, name, strlen(name), type);
   }
   
   // Core array types

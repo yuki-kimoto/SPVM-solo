@@ -52,18 +52,6 @@ typedef struct SPerl_bytecode SPerl_BYTECODE;
 struct SPerl_vmcodes;
 typedef struct SPerl_vmcodes SPerl_VMCODES;
 
-/* sperl_constant_pool_sub.h */
-struct SPerl_constant_pool_package;
-typedef struct SPerl_constant_pool_package SPerl_CONSTANT_POOL_PACKAGE;
-
-/* sperl_constant_pool_sub.h */
-struct SPerl_constant_pool_field;
-typedef struct SPerl_constant_pool_field SPerl_CONSTANT_POOL_FIELD;
-
-/* sperl_constant_pool_sub.h */
-struct SPerl_constant_pool_sub;
-typedef struct SPerl_constant_pool_sub SPerl_CONSTANT_POOL_SUB;
-
 /* sperl_constant_pool.h */
 struct SPerl_constant_pool;
 typedef struct SPerl_constant_pool SPerl_CONSTANT_POOL;

@@ -696,12 +696,8 @@ void SPerl_OP_check(SPerl* sperl) {
       }
       field->package_byte_offset = package_byte_size;
       package_byte_size += field_byte_size;
-      
-      SPerl_CONSTANT_POOL_push_field(sperl, sperl->constant_pool, field);
     }
     package->byte_size = package_byte_size;
-    
-    SPerl_CONSTANT_POOL_push_package(sperl, sperl->constant_pool, package);
   }
   
   // Check types
@@ -955,6 +951,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     
     // Add package
     op_package->uv.package = package;
+    package->id = parser->op_packages->length;
     SPerl_ARRAY_push(parser->op_packages, op_package);
     SPerl_HASH_insert(parser->package_symtable, package_name, strlen(package_name), type);
   }

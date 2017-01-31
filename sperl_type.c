@@ -52,13 +52,22 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
       else {
         const char* part_name = part->uv.op_name->uv.name;
         
-        SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
-        if (found_package) {
+        // Core type
+        if (strcmp(part_name, "boolean") == 0 || strcmp(part_name, "byte") == 0 || strcmp(part_name, "short") == 0 || strcmp(part_name, "int") == 0
+          || strcmp(part_name, "long") == 0 || strcmp(part_name, "float") == 0 || strcmp(part_name, "double") == 0)
+        {
           SPerl_ARRAY_push(resolved_type_part_names, part_name);
         }
         else {
-          SPerl_yyerror_format(sperl, "unknown package \"%s\" at %s line %d\n", part_name, op_type->file, op_type->line);
-          return 0;
+          // Package
+          SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
+          if (found_package) {
+            SPerl_ARRAY_push(resolved_type_part_names, part_name);
+          }
+          else {
+            SPerl_yyerror_format(sperl, "unknown package \"%s\" at %s line %d\n", part_name, op_type->file, op_type->line);
+            return 0;
+          }
         }
       }
     }

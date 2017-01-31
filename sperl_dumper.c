@@ -183,7 +183,7 @@ void SPerl_DUMPER_dump_constant_pool(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   (void)sperl;
 
   for (int32_t i = 0; i < constant_pool->length; i++) {
-    printf("      constant_pool[%" PRId32 "] %" PRId32 "\n", i, constant_pool[i]);
+    printf("      constant_pool[%" PRId32 "] %" PRId32 "\n", i, constant_pool->values[i]);
   }
 }
 
@@ -289,9 +289,15 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         break;
       }
       // Have four operand
+      case SPerl_BYTECODE_C_CODE_PUTFIELD_WW:
+      case SPerl_BYTECODE_C_CODE_GETFIELD_WW:
       case SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
       case SPerl_BYTECODE_C_CODE_LDC_WW:
       case SPerl_BYTECODE_C_CODE_LDC2_WW:
+      case SPerl_BYTECODE_C_CODE_NEWARRAY:
+      case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
+      case SPerl_BYTECODE_C_CODE_ANEWARRAY:
+      case SPerl_BYTECODE_C_CODE_NEW:
       {
         i++;
         bytecode = bytecode_array->values[i];
