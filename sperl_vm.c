@@ -1252,6 +1252,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_GETFIELD:
+
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_PUTFIELD:
@@ -1279,10 +1280,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_id);
         SPerl_PACKAGE* package = op_package->uv.package;
         
-        intptr_t reference = (intptr_t)SPerl_HEAP_alloc(sperl, package->byte_size);
+        intptr_t address = (intptr_t)SPerl_HEAP_alloc(sperl, package->byte_size);
         
         operand_stack_top++;
-        *(intptr_t*)&call_stack[operand_stack_top] = (intptr_t)reference;
+        *(intptr_t*)&call_stack[operand_stack_top] = (intptr_t)address;
         
         pc += 5;
         continue;
