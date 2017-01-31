@@ -34,7 +34,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
   
   SPerl_PARSER* parser = sperl->parser;
   
-  for (int32_t sub_pos = 0; sub_pos < parser->op_subs->length; sub_pos++) {
+  for (size_t sub_pos = 0; sub_pos < parser->op_subs->length; sub_pos++) {
     SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_pos);
     SPerl_SUB* sub = op_sub->uv.sub;
     
@@ -124,8 +124,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         // Start scope
         case SPerl_OP_C_CODE_BLOCK: {
           if (block_start) {
+            assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
             int32_t* block_base_ptr = SPerl_MEMORY_POOL_alloc(sperl->memory_pool, sizeof(int32_t));
-            *block_base_ptr = op_my_var_stack->length;
+            *block_base_ptr = (int32_t) op_my_var_stack->length;
             SPerl_ARRAY_push(block_base_stack, block_base_ptr);
             block_base = *block_base_ptr;
           }
@@ -204,11 +205,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               SPerl_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
               SPerl_ARRAY* op_cases = switch_info->op_cases;
-              int32_t length = op_cases->length;
+              size_t const length = op_cases->length;
+              if (length > SPerl_OP_LIMIT_CASES) {
+                SPerl_yyerror_format(sperl, "too many case statements in switch at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+
               int32_t min = SPerl_BASE_C_INT_MAX;
               int32_t max = SPerl_BASE_C_INT_MIN;
               
-              for (int32_t i = 0; i < op_cases->length; i++) {
+              for (size_t i = 0; i < length; i++) {
                 SPerl_OP* op_case = SPerl_ARRAY_fetch(op_cases, i);
                 SPerl_OP* op_constant = op_case->first;
                 int32_t value = op_constant->uv.constant->uv.int_value;
@@ -220,10 +226,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
               }
               
-              int32_t range = max - min;
+              double range = (double) max - (double) min;
               
               int32_t code;
-              if (4 + range <= (3 + 2 * length) * 1.5) {
+              if (4.0 + range <= (3.0 + 2.0 * (double) length) * 1.5) {
                 code = SPerl_SWITCH_INFO_C_CODE_TABLESWITCH;
               }
               else {
@@ -823,10 +829,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             }
             // End of scope
             case SPerl_OP_C_CODE_BLOCK: {
+              assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
+
               int32_t* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
               if (block_base_ptr) {
-                int32_t block_base = *block_base_ptr;
-                for (int32_t j = 0; j < op_my_var_stack->length - block_base; j++) {
+                int32_t const pop_count = (int32_t) op_my_var_stack->length - *block_base_ptr;
+                for (int32_t j = 0; j < pop_count; j++) {
                   SPerl_ARRAY_pop(op_my_var_stack);
                 }
               }
@@ -844,9 +852,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             case SPerl_OP_C_CODE_VAR: {
               SPerl_VAR* var = op_cur->uv.var;
               
-              // Serach same name variable
+              // Search same name variable
               SPerl_OP* op_my_var = NULL;
-              for (int32_t i = op_my_var_stack->length - 1 ; i >= 0; i--) {
+              for (size_t i = op_my_var_stack->length; i-- > 0; ) {
                 SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(op_my_var_stack, i);
                 SPerl_MY_VAR* my_var_tmp = op_my_var_tmp->uv.my_var;
                 if (strcmp(var->op_name->uv.name, my_var_tmp->op_name->uv.name) == 0) {
@@ -872,8 +880,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               // Search same name variable
               int32_t found = 0;
-              
-              for (int32_t i = op_my_var_stack->length - 1 ; i >= block_base; i--) {
+
+              assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
+              for (int32_t i = (int32_t) op_my_var_stack->length; i-- > block_base; ) {
                 SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(op_my_var_stack, i);
                 SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
                 if (strcmp(my_var->op_name->uv.name, bef_my_var->op_name->uv.name) == 0) {
@@ -884,6 +893,11 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               if (found) {
                 SPerl_yyerror_format(sperl, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
+                break;
+              }
+              else if (op_my_var_stack->length > SPerl_OP_LIMIT_LEXICAL_VARIABLES) {
+                SPerl_yyerror_format(sperl, "too many lexical variables, my \"%s\" ignored at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
+                parser->fatal_error = 1;
                 break;
               }
               else {
@@ -909,10 +923,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 break;
               }
               
-              int32_t sub_args_count = found_sub->op_args->length;
+              size_t sub_args_count = found_sub->op_args->length;
               SPerl_OP* op_list_args = op_cur->last;
               SPerl_OP* op_term = op_list_args->first;
-              int32_t call_sub_args_count = 0;
+              size_t call_sub_args_count = 0;
               while ((op_term = SPerl_OP_sibling(sperl, op_term))) {
                 call_sub_args_count++;
                 if (call_sub_args_count > sub_args_count) {
@@ -941,7 +955,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   }
                 }
                 if (is_invalid) {
-                  SPerl_yyerror_format(sperl, "Argument %d type is invalid. sub \"%s\" at %s line %d\n", call_sub_args_count, sub_name, op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(sperl, "Argument %d type is invalid. sub \"%s\" at %s line %d\n", (int) call_sub_args_count, sub_name, op_cur->file, op_cur->line);
                   return;
                 }
               }
@@ -1068,7 +1082,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     
     // Calculate my var total size and address
     int32_t next_my_var_address = 0;
-    for (int32_t i = 0; i < op_my_vars->length; i++) {
+    for (size_t i = 0; i < op_my_vars->length; i++) {
       SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
       SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
       SPerl_RESOLVED_TYPE* resolved_type = my_var->op_type->uv.type->resolved_type;

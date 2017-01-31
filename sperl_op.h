@@ -148,6 +148,16 @@ enum {
   SPerl_OP_C_FLAG_CONSTANT_CASE = 1,
 };
 
+enum {
+  // Miscellaneous limits for syntactic contraints
+  SPerl_OP_LIMIT_CASES             = INT32_MAX , /* should be expressible by the type of SPerl_BYTECODE_C_CODE_LOOKUPSWITCH operands */
+  SPerl_OP_LIMIT_FIELDS            = UINT16_MAX, /* should be expressible by the type of SPerl_FIELD::id */
+  SPerl_OP_LIMIT_SUBROUTINES       = INT32_MAX , /* should be expressible by the type of SPerl_SUB::id */
+  SPerl_OP_LIMIT_LEXICAL_VARIABLES = UINT16_MAX, /* should be expressible by the type of block_base (sperl_op_checker.c) */
+  SPerl_OP_LIMIT_TYPES             = INT32_MAX , /* should be expressible by the type of SPerl_RESOLVED_TYPE::id
+                                                    and greater than 2 * SPerl_RESOLVED_TYPE_C_CORE_LENGTH */
+};
+
 /* Binary operation */
 struct SPerl_op {
   SPerl_OP* first;

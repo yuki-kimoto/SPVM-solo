@@ -81,8 +81,8 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
   // Syntax structure error
   else {
     // Current token
-    int32_t length = 0;
-    int32_t empty_count = 0;
+    size_t length = 0;
+    size_t empty_count = 0;
     const char* ptr = parser->befbufptr;
     while (ptr != parser->bufptr) {
       if (*ptr == ' ' || *ptr == '\t' || *ptr == '\n') {
@@ -93,7 +93,10 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
       }
       ptr++;
     }
-    char* token = (char*) calloc(length + 1, sizeof(char));
+    if (length >= SIZE_MAX) {
+      SPerl_ALLOCATOR_exit_with_malloc_failure();
+    }
+    char* token = (char*) SPerl_ALLOCATOR_safe_malloc_zero(length + 1, sizeof(char));
     memcpy(token, parser->befbufptr + empty_count, length);
     token[length] = '\0';
 

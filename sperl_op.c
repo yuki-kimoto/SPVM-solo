@@ -631,7 +631,7 @@ void SPerl_OP_resolve_types(SPerl* sperl) {
   
   SPerl_ARRAY* op_types = parser->op_types;
   
-  for (int32_t i = 0; i < op_types->length; i++) {
+  for (size_t i = 0, len = op_types->length; i < len; i++) {
     SPerl_OP* op_type = SPerl_ARRAY_fetch(op_types, i);
     _Bool success = SPerl_TYPE_resolve_type(sperl, op_type, 0);
     if (!success) {
@@ -653,14 +653,14 @@ void SPerl_OP_check(SPerl* sperl) {
   
   // Resolve package
   SPerl_ARRAY* op_packages = sperl->parser->op_packages;
-  for (int32_t package_pos = 0; package_pos < op_packages->length; package_pos++) {
+  for (size_t package_pos = 0; package_pos < op_packages->length; package_pos++) {
     SPerl_OP* op_package = SPerl_ARRAY_fetch(op_packages, package_pos);
     SPerl_PACKAGE* package = op_package->uv.package;
     SPerl_ARRAY* op_fields = package->op_fields;
     
     // Alignment is max size of field
     int32_t alignment = 0;
-    for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
+    for (size_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
       SPerl_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
@@ -674,7 +674,7 @@ void SPerl_OP_check(SPerl* sperl) {
     
     // Calculate package byte size
     int32_t package_byte_size = 0;
-    for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
+    for (size_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
       SPerl_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
@@ -881,9 +881,12 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         if (found_field) {
           SPerl_yyerror_format(sperl, "redeclaration of has \"%s\" at %s line %d\n", field_base_name, op_field->file, op_field->line);
         }
+        else if (op_fields->length >= SPerl_OP_LIMIT_FIELDS) {
+          SPerl_yyerror_format(sperl, "too many fields, field \"%s\" ignored at %s line %d\n", field_base_name, op_field->file, op_field->line);
+        }
         else {
           // Set ID
-          field->id = op_fields->length;
+          field->id = (uint32_t) op_fields->length;
           SPerl_ARRAY_push(op_fields, op_field);
           SPerl_HASH_insert(field_symtable, field_base_name, strlen(field_base_name), field);
           
@@ -896,12 +899,12 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     
     // Subroutine information
     SPerl_HASH* sub_name_symtable = parser->sub_name_symtable;
-    int32_t i = parser->op_subs->length - 1;
+    size_t i = parser->op_subs->length;
     while (1) {
-      if (i < 0) {
+      if (i == 0) {
         break;
       }
-      SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i);
+      SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i - 1);
       SPerl_SUB* sub = op_sub->uv.sub;
       if (sub->op_package) {
         break;
@@ -1081,13 +1084,19 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   sub->op_block = op_block;
   
   // ID
-  sub->id = parser->op_subs->length;
-  
-  // Add sub information
-  SPerl_ARRAY_push(parser->op_subs, op_sub);
-  
+  if (parser->op_subs->length >= SPerl_OP_LIMIT_SUBROUTINES) {
+    SPerl_yyerror_format(sperl, "too many subroutines at %s line %d\n", op_block->file, op_block->line);
+    sub->id = -1;
+  }
+  else {
+    sub->id = (int32_t) parser->op_subs->length;
+
+    // Add sub information
+    SPerl_ARRAY_push(parser->op_subs, op_sub);
+  }
+
   op_sub->uv.sub = sub;
-  
+
   return op_sub;
 }
 

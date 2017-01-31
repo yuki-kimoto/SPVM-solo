@@ -105,7 +105,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               // Search module file
               char* cur_module_path = NULL;
               FILE* fh = NULL;
-              for (int32_t i = 0; i < parser->include_pathes->length; i++) {
+              for (size_t i = 0, len = parser->include_pathes->length; i < len; i++) {
                 const char* include_path = (const char*) SPerl_ARRAY_fetch(parser->include_pathes, i);
                 
                 // File name
@@ -507,7 +507,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
 
           // Number literal(first is space for sign)
           size_t str_len = parser->bufptr - cur_token_ptr;
-          char* num_str = (char*) malloc(str_len + 2);
+          if (str_len > SIZE_MAX - 2) {
+            SPerl_ALLOCATOR_exit_with_malloc_failure();
+          }
+          char* num_str = (char*) SPerl_ALLOCATOR_safe_malloc(str_len + 2, sizeof(char));
           num_str[0] = ' ';
           memcpy(num_str + 1, cur_token_ptr, str_len);
           num_str[str_len + 1] = '\0';

@@ -43,7 +43,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
 }
 
 SPerl* SPerl_new() {
-  SPerl* sperl = calloc(1, sizeof(SPerl));
+  SPerl* sperl = SPerl_ALLOCATOR_safe_malloc_zero(1, sizeof(SPerl));
   
   // Manipulate memory. This is freed last.
   sperl->array_ptrs = SPerl_ARRAY_new(0);
@@ -66,21 +66,21 @@ SPerl* SPerl_new() {
 void SPerl_free(SPerl* sperl) {
 
   // Free all array pointers
-  for (int32_t i = 0; i < sperl->array_ptrs->length; i++) {
+  for (size_t i = 0, len = sperl->array_ptrs->length; i < len; i++) {
     SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl->array_ptrs, i);
     SPerl_ARRAY_free(array);
   }
   SPerl_ARRAY_free(sperl->array_ptrs);
   
   // Free all hash pointers
-  for (int32_t i = 0; i < sperl->hash_ptrs->length; i++) {
+  for (size_t i = 0, len = sperl->hash_ptrs->length; i < len; i++) {
     SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl->hash_ptrs, i);
     SPerl_HASH_free(hash);
   }
   SPerl_ARRAY_free(sperl->hash_ptrs);
   
   // Free all string pointers;
-  for (int32_t i = 0; i < sperl->long_str_ptrs->length; i++) {
+  for (size_t i = 0, len = sperl->long_str_ptrs->length; i < len; i++) {
     void* str = SPerl_ARRAY_fetch(sperl->long_str_ptrs, i);
     free(str);
   }

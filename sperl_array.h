@@ -6,14 +6,14 @@
 // Array
 struct SPerl_array {
   void** values;
-  int32_t length;
-  int32_t capacity;
+  size_t length;
+  size_t capacity;
 };
 
 // Array function
-SPerl_ARRAY* SPerl_ARRAY_new(int32_t capacity);
+SPerl_ARRAY* SPerl_ARRAY_new(size_t capacity);
 void SPerl_ARRAY_push(SPerl_ARRAY* array, const void* value);
-void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, int32_t index);
+void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, size_t index);
 void* SPerl_ARRAY_pop(SPerl_ARRAY* array);
 void SPerl_ARRAY_free(SPerl_ARRAY* array);
 

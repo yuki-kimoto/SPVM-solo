@@ -2,10 +2,11 @@
 #include <stdlib.h>
 
 #include "sperl_array.h"
+#include "sperl_allocator.h"
 
-SPerl_ARRAY* SPerl_ARRAY_new(int32_t capacity) {
+SPerl_ARRAY* SPerl_ARRAY_new(size_t capacity) {
   
-  SPerl_ARRAY* array = malloc(sizeof(SPerl_ARRAY));
+  SPerl_ARRAY* array = SPerl_ALLOCATOR_safe_malloc(1, sizeof(SPerl_ARRAY));
   array->length = 0;
   
   if (capacity == 0) {
@@ -15,19 +16,22 @@ SPerl_ARRAY* SPerl_ARRAY_new(int32_t capacity) {
     array->capacity = capacity;
   }
   
-  void** values = calloc(array->capacity, sizeof(void*));
+  void** values = SPerl_ALLOCATOR_safe_malloc_zero(array->capacity, sizeof(void*));
   array->values = values;
   
   return array;
 }
 
 void SPerl_ARRAY_push(SPerl_ARRAY* array, const void* value) {
-  int32_t length = array->length;
-  int32_t capacity = array->capacity;
+  size_t length = array->length;
+  size_t capacity = array->capacity;
   
   if (length >= capacity) {
-    int32_t new_capacity = capacity * 2;
-    array->values = realloc(array->values, new_capacity * sizeof(void*));
+    if (capacity > SIZE_MAX / 2) {
+      SPerl_ALLOCATOR_exit_with_malloc_failure();
+    }
+    size_t new_capacity = capacity * 2;
+    array->values = (void**) SPerl_ALLOCATOR_safe_realloc(array->values, new_capacity, sizeof(void*));
     memset(array->values + capacity, 0, (new_capacity - capacity) * sizeof(void*));
     array->capacity = new_capacity;
   }
@@ -37,8 +41,8 @@ void SPerl_ARRAY_push(SPerl_ARRAY* array, const void* value) {
   array->length++;
 }
 
-void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, int32_t index) {
-  if (array == NULL || index < 0 || index >= array->length) {
+void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, size_t index) {
+  if (array == NULL || index >= array->length) {
     return NULL;
   }
   else {
@@ -47,11 +51,11 @@ void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, int32_t index) {
 }
 
 void* SPerl_ARRAY_pop(SPerl_ARRAY* array) {
-  array->length--;
-  
-  if (array->length < 0) {
+  if (array->length == 0) {
     return NULL;
   }
+
+  array->length--;
   
   return array->values[array->length];
 }
