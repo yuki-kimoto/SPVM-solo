@@ -24,6 +24,7 @@
 #include "sperl_switch_info.h"
 #include "sperl_constant_pool.h"
 #include "sperl_type.h"
+#include "sperl_constant_pool_sub.h"
 
 void SPerl_BYTECODE_BUILDER_push_iinc_bytecode(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecode_array, SPerl_OP* op_inc, int32_t value) {
   
@@ -178,8 +179,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
     for (size_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
       SPerl_OP* op_sub = SPerl_ARRAY_fetch(package->op_subs, sub_pos);
       SPerl_SUB* sub = op_sub->uv.sub;
-      
-      warn("CCCCCCCCCCC %d", sub->op_args->length);
       
       sub->bytecode_base = bytecode_array->length;
       
@@ -520,12 +519,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_name, strlen(sub_name));
                 
-                int32_t id = sub->id;
+                int32_t constant_pool_address = sub->constant_pool_address;
                 
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 16) & 0xFF);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 8) & 0xFF);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, id & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 24) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 16) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 8) & 0xFF);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, constant_pool_address & 0xFF);
                 
                 break;
               }
@@ -1509,6 +1508,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
         }
       }
       sub->bytecode_length = bytecode_array->length - sub->bytecode_base;
+      
+      // Set bytecode base to sub
+      SPerl_CONSTANT_POOL_SUB* constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&sperl->constant_pool->values[sub->constant_pool_address];
+      constant_pool_sub->bytecode_base = sub->bytecode_base;
     }
   }
 }

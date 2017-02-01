@@ -443,7 +443,6 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     else {
       printf("      name => \"%s\"\n", sub->op_base_name->uv.name);
     }
-    printf("      id => %" PRId32 "\n", sub->id);
     printf("      anon => %d\n", sub->anon);
     
     if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {

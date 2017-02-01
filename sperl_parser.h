@@ -31,9 +31,6 @@ struct SPerl_parser {
 
   // Current op subs
   SPerl_ARRAY* current_op_subs;
-
-  // Current subs(named sub + anon sub) in class 
-  int32_t next_sub_id;
   
   // Include pathes
   SPerl_ARRAY* include_pathes;

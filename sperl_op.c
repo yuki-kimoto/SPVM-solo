@@ -1078,14 +1078,11 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   // Save block
   sub->op_block = op_block;
 
-  sub->id = (int32_t)parser->next_sub_id++;
-
   op_sub->uv.sub = sub;
   
   // ID
   if (parser->current_op_subs->length >= SPerl_OP_LIMIT_SUBROUTINES) {
     SPerl_yyerror_format(sperl, "too many subroutines at %s line %d\n", op_block->file, op_block->line);
-    sub->id = -1;
   }
   else {
     // Add sub information
