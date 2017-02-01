@@ -33,11 +33,14 @@
 void SPerl_OP_CHECKER_check(SPerl* sperl) {
   
   SPerl_PARSER* parser = sperl->parser;
-
+  
   for (size_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
     SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_pos);
     SPerl_PACKAGE* package = op_package->uv.package;
-
+    
+    // Push package information to constant pool
+    SPerl_CONSTANT_POOL_push_package(sperl, sperl->constant_pool, package);
+    
     for (size_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
       
       SPerl_OP* op_sub = SPerl_ARRAY_fetch(package->op_subs, sub_pos);

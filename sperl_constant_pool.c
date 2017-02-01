@@ -70,6 +70,29 @@ void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* consta
   }
 }
 
+void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
+  (void)sperl;
+  
+  // Adjust alignment
+  if ((constant_pool->length & 1) != 0) {
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
+  }
+  assert((constant_pool->length & 1) == 0);
+
+  // Constant pool package information
+  package->constant_pool_address = constant_pool->length;
+  
+  // Constant pool package information
+  SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_PACKAGE));
+  constant_pool_package->byte_size = package->byte_size;
+
+  // Add package information
+  int32_t extend_length = (sizeof(SPerl_CONSTANT_POOL_PACKAGE) + (sizeof(int32_t) - 1)) / sizeof(int32_t);
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
+  *(SPerl_CONSTANT_POOL_PACKAGE*)&constant_pool->values[constant_pool->length] = *constant_pool_package;
+  constant_pool->length += extend_length;
+}
+
 void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_SUB* sub) {
   (void)sperl;
   

@@ -946,7 +946,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     
     // Add package
     op_package->uv.package = package;
-    package->id = parser->op_packages->length;
     SPerl_ARRAY_push(parser->op_packages, op_package);
     SPerl_HASH_insert(parser->package_symtable, package_name, strlen(package_name), type);
   }
@@ -955,7 +954,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
 }
 
 SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_package_name) {
-
+  
   SPerl_PARSER* parser = sperl->parser;
   
   SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);

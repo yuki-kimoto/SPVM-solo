@@ -19,6 +19,7 @@
 #include "sperl_package.h"
 #include "sperl_heap.h"
 #include "sperl_constant_pool_sub.h"
+#include "sperl_constant_pool_package.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
@@ -1280,12 +1281,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         assert(0);
       case SPerl_BYTECODE_C_CODE_NEW: {
         // Get subroutine ID
-        int32_t package_id = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        int32_t package_constant_pool_address
+          = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[package_constant_pool_address];
         
-        SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_id);
-        SPerl_PACKAGE* package = op_package->uv.package;
-        
-        size_t allocation_size = package->byte_size;
+        size_t allocation_size = constant_pool_package;
         if (allocation_size == 0) allocation_size = 1;
         intptr_t address = (intptr_t)SPerl_HEAP_alloc(sperl, allocation_size);
         memset((void*) address, 0, allocation_size);
