@@ -939,7 +939,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           }
         }
       }
-      sub->op_package = op_package;
       SPerl_ARRAY_push(op_subs, op_sub);
     }
     package->op_subs = op_subs;
