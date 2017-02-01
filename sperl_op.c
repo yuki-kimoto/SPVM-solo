@@ -866,9 +866,10 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     SPerl_ARRAY_push(parser->op_types, op_type);
     
     SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_new_array(sperl, 0);
+    SPerl_ARRAY* op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
     SPerl_HASH* field_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
     
-    // Collect field and use information
+    // Fields
     SPerl_OP* op_decls = op_block->first;
     SPerl_OP* op_decl = op_decls->first;
     while ((op_decl = SPerl_OP_sibling(sperl, op_decl))) {
@@ -896,19 +897,15 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         }
       }
     }
+    package->op_fields = op_fields;
     
-    // Subroutine information
+    // Subs
     SPerl_HASH* sub_name_symtable = parser->sub_name_symtable;
-    size_t i = parser->op_subs->length;
-    while (1) {
-      if (i == 0) {
-        break;
-      }
-      SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, i - 1);
+    for (size_t sub_pos = 0; sub_pos < parser->current_op_subs->length; sub_pos++) {
+      parser->current_op_subs;
+      
+      SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->current_op_subs, sub_pos);
       SPerl_SUB* sub = op_sub->uv.sub;
-      if (sub->op_package) {
-        break;
-      }
       
       if (!sub->anon) {
         SPerl_OP* op_sub_base_name = sub->op_base_name;
@@ -941,13 +938,12 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
             }
           }
         }
-        i--;
       }
       sub->op_package = op_package;
+      SPerl_ARRAY_push(op_subs, op_sub);
     }
-    
-    // Set package
-    package->op_fields = op_fields;
+    package->op_subs = op_subs;
+    parser->current_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
     
     // Add package
     op_package->uv.package = package;
@@ -1082,20 +1078,20 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   
   // Save block
   sub->op_block = op_block;
+
+  sub->id = (int32_t)parser->next_sub_id++;
+
+  op_sub->uv.sub = sub;
   
   // ID
-  if (parser->op_subs->length >= SPerl_OP_LIMIT_SUBROUTINES) {
+  if (parser->current_op_subs->length >= SPerl_OP_LIMIT_SUBROUTINES) {
     SPerl_yyerror_format(sperl, "too many subroutines at %s line %d\n", op_block->file, op_block->line);
     sub->id = -1;
   }
   else {
-    sub->id = (int32_t) parser->op_subs->length;
-
     // Add sub information
-    SPerl_ARRAY_push(parser->op_subs, op_sub);
+    SPerl_ARRAY_push(parser->current_op_subs, op_sub);
   }
-
-  op_sub->uv.sub = sub;
 
   return op_sub;
 }

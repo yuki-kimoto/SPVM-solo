@@ -33,1067 +33,1073 @@
 void SPerl_OP_CHECKER_check(SPerl* sperl) {
   
   SPerl_PARSER* parser = sperl->parser;
-  
-  for (size_t sub_pos = 0; sub_pos < parser->op_subs->length; sub_pos++) {
-    SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_pos);
-    SPerl_SUB* sub = op_sub->uv.sub;
-    
-    // my var informations
-    SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_new_array(sperl, 0);
-    
-    // my variable stack
-    SPerl_ARRAY* op_my_var_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-    
-    // block base position stack
-    SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-    int32_t block_base = 0;
-    _Bool block_start = 0;
-    
-    // In switch statement
-    _Bool in_switch = 0;
-    
-    // Current case statements
-    SPerl_ARRAY* cur_case_ops = NULL;
-    
-    // Current default statement
-    SPerl_OP* cur_default_op = NULL;
-    
-    // op count
-    int32_t op_count = 0;
-    
-    // Run OPs
-    SPerl_OP* op_base = op_sub;
-    SPerl_OP* op_cur = op_base;
-    _Bool finish = 0;
-    while (op_cur) {
+
+  for (size_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_pos);
+    SPerl_PACKAGE* package = op_package->uv.package;
+
+    for (size_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
       
-      op_count++;
+      SPerl_OP* op_sub = SPerl_ARRAY_fetch(package->op_subs, sub_pos);
+      SPerl_SUB* sub = op_sub->uv.sub;
       
-      // [START]Preorder traversal position
+      // my var informations
+      SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_new_array(sperl, 0);
       
-      switch (op_cur->code) {
-        case SPerl_OP_C_CODE_AND: {
-          
-          // Convert && to if statement
-          SPerl_OP_convert_and_to_if(sperl, op_cur);
-          
-          break;
-        }
-        case SPerl_OP_C_CODE_OR: {
-          
-          // Convert || to if statement
-          SPerl_OP_convert_or_to_if(sperl, op_cur);
-          
-          break;
-        }
-        case SPerl_OP_C_CODE_NOT: {
-          // Convert ! to if statement
-          SPerl_OP_convert_not_to_if(sperl, op_cur);
-          
-          break;
-        }
-        case SPerl_OP_C_CODE_NEGATE: {
-          if (op_cur->first->code == SPerl_OP_C_CODE_CONSTANT) {
+      // my variable stack
+      SPerl_ARRAY* op_my_var_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+      
+      // block base position stack
+      SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+      int32_t block_base = 0;
+      _Bool block_start = 0;
+      
+      // In switch statement
+      _Bool in_switch = 0;
+      
+      // Current case statements
+      SPerl_ARRAY* cur_case_ops = NULL;
+      
+      // Current default statement
+      SPerl_OP* cur_default_op = NULL;
+      
+      // op count
+      int32_t op_count = 0;
+      
+      // Run OPs
+      SPerl_OP* op_base = op_sub;
+      SPerl_OP* op_cur = op_base;
+      _Bool finish = 0;
+      while (op_cur) {
+        
+        op_count++;
+        
+        // [START]Preorder traversal position
+        
+        switch (op_cur->code) {
+          case SPerl_OP_C_CODE_AND: {
             
-            // Constant negate
-            SPerl_OP* op_constant = op_cur->first;
-            SPerl_CONSTANT* constant = op_constant->uv.constant;
-            if (constant->num_str) {
-              constant->num_str[0] = '-';
+            // Convert && to if statement
+            SPerl_OP_convert_and_to_if(sperl, op_cur);
+            
+            break;
+          }
+          case SPerl_OP_C_CODE_OR: {
+            
+            // Convert || to if statement
+            SPerl_OP_convert_or_to_if(sperl, op_cur);
+            
+            break;
+          }
+          case SPerl_OP_C_CODE_NOT: {
+            // Convert ! to if statement
+            SPerl_OP_convert_not_to_if(sperl, op_cur);
+            
+            break;
+          }
+          case SPerl_OP_C_CODE_NEGATE: {
+            if (op_cur->first->code == SPerl_OP_C_CODE_CONSTANT) {
               
-              // Replace
-              op_cur->code = SPerl_OP_C_CODE_CONSTANT;
-              op_cur->uv.constant = constant;
-              op_cur->first = NULL;
+              // Constant negate
+              SPerl_OP* op_constant = op_cur->first;
+              SPerl_CONSTANT* constant = op_constant->uv.constant;
+              if (constant->num_str) {
+                constant->num_str[0] = '-';
+                
+                // Replace
+                op_cur->code = SPerl_OP_C_CODE_CONSTANT;
+                op_cur->uv.constant = constant;
+                op_cur->first = NULL;
+              }
             }
+            break;
           }
-          break;
-        }
-        case SPerl_OP_C_CODE_SWITCH: {
-          if (in_switch) {
-            SPerl_yyerror_format(sperl, "duplicate switch is forbidden at %s line %d\n", op_cur->file, op_cur->line);
-            parser->fatal_error = 1;
-            return;
+          case SPerl_OP_C_CODE_SWITCH: {
+            if (in_switch) {
+              SPerl_yyerror_format(sperl, "duplicate switch is forbidden at %s line %d\n", op_cur->file, op_cur->line);
+              parser->fatal_error = 1;
+              return;
+            }
+            else {
+              in_switch = 1;
+            }
+            
+            break;
           }
-          else {
-            in_switch = 1;
+          // Start scope
+          case SPerl_OP_C_CODE_BLOCK: {
+            if (block_start) {
+              assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
+              int32_t* block_base_ptr = SPerl_MEMORY_POOL_alloc(sperl->memory_pool, sizeof(int32_t));
+              *block_base_ptr = (int32_t) op_my_var_stack->length;
+              SPerl_ARRAY_push(block_base_stack, block_base_ptr);
+              block_base = *block_base_ptr;
+            }
+            else {
+              block_start = 1;
+            }
+            break;
+          }
+          case SPerl_OP_C_CODE_ASSIGN: {
+            op_cur->first->lvalue = 1;
+            break;
+          }
+          case SPerl_OP_C_CODE_FIELD: {
+            op_cur->first->lvalue = 1;
+            break;
           }
           
-          break;
-        }
-        // Start scope
-        case SPerl_OP_C_CODE_BLOCK: {
-          if (block_start) {
-            assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
-            int32_t* block_base_ptr = SPerl_MEMORY_POOL_alloc(sperl->memory_pool, sizeof(int32_t));
-            *block_base_ptr = (int32_t) op_my_var_stack->length;
-            SPerl_ARRAY_push(block_base_stack, block_base_ptr);
-            block_base = *block_base_ptr;
-          }
-          else {
-            block_start = 1;
-          }
-          break;
-        }
-        case SPerl_OP_C_CODE_ASSIGN: {
-          op_cur->first->lvalue = 1;
-          break;
-        }
-        case SPerl_OP_C_CODE_FIELD: {
-          op_cur->first->lvalue = 1;
-          break;
         }
         
-      }
-      
-      // [END]Preorder traversal position
-      if (op_cur->first) {
-        op_cur = op_cur->first;
-      }
-      else {
-        while (1) {
-         // [START]Postorder traversal position
-          switch (op_cur->code) {
-            case SPerl_OP_C_CODE_DEFAULT: {
-              if (cur_default_op) {
-                SPerl_yyerror_format(sperl, "multiple default is forbidden at %s line %d\n", op_cur->file, op_cur->line);
-                parser->fatal_error = 1;
-                break;
-              }
-              else {
-                cur_default_op = op_cur;
-              }
-              break;
-            }
-            case SPerl_OP_C_CODE_CASE: {
-              
-              SPerl_OP* op_term = op_cur->first;
-              
-              if (op_term->code != SPerl_OP_C_CODE_CONSTANT) {
-                SPerl_yyerror_format(sperl, "case need constant at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term);
-              if (op_term_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_yyerror_format(sperl, "case need int at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              if (!cur_case_ops) {
-                cur_case_ops = SPerl_ALLOCATOR_new_array(sperl, 0);
-              }
-              SPerl_ARRAY_push(cur_case_ops, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_SWITCH: {
-              
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              
-              if (first_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_yyerror_format(sperl, "switch need int at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              in_switch = 0;
-              cur_default_op = NULL;
-              cur_case_ops = NULL;
-              
-              // tableswitch if the following. SWITCHRTIO is 1.5 by default
-              // 4 + range <= (3 + 2 * length) * SWITCHRTIO
-              
-              SPerl_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
-              SPerl_ARRAY* op_cases = switch_info->op_cases;
-              size_t const length = op_cases->length;
-              if (length > SPerl_OP_LIMIT_CASES) {
-                SPerl_yyerror_format(sperl, "too many case statements in switch at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-
-              int32_t min = SPerl_BASE_C_INT_MAX;
-              int32_t max = SPerl_BASE_C_INT_MIN;
-              
-              for (size_t i = 0; i < length; i++) {
-                SPerl_OP* op_case = SPerl_ARRAY_fetch(op_cases, i);
-                SPerl_OP* op_constant = op_case->first;
-                int32_t value = op_constant->uv.constant->uv.int_value;
-                if (value < min) {
-                  min = value;
-                }
-                if (value > max) {
-                  max = value;
-                }
-              }
-              
-              double range = (double) max - (double) min;
-              
-              int32_t code;
-              if (4.0 + range <= (3.0 + 2.0 * (double) length) * 1.5) {
-                code = SPerl_SWITCH_INFO_C_CODE_TABLESWITCH;
-              }
-              else {
-                code = SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH;
-              }
-              
-              switch_info->code = code;
-              switch_info->min = min;
-              switch_info->max = max;
-              
-              break;
-            }
-            
-            case SPerl_OP_C_CODE_EQ: {
-              
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              if (!first_resolved_type && !last_resolved_type) {
-                // Convert to constant true
-                SPerl_OP_convert_to_op_constant_true(sperl, op_cur);
-                op_cur->first = NULL;
-                op_cur->last = NULL;
-              }
-              else {
-                // undef
-                if (!first_resolved_type) {
-                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                    SPerl_yyerror_format(sperl, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }
-                }
-                else if (!last_resolved_type) {
-                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                    SPerl_yyerror_format(sperl, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }
+        // [END]Preorder traversal position
+        if (op_cur->first) {
+          op_cur = op_cur->first;
+        }
+        else {
+          while (1) {
+           // [START]Postorder traversal position
+            switch (op_cur->code) {
+              case SPerl_OP_C_CODE_DEFAULT: {
+                if (cur_default_op) {
+                  SPerl_yyerror_format(sperl, "multiple default is forbidden at %s line %d\n", op_cur->file, op_cur->line);
+                  parser->fatal_error = 1;
+                  break;
                 }
                 else {
-                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                    // Insert type converting op
-                    SPerl_OP_insert_op_convert(sperl, op_cur);
-                  }
-                  else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                    SPerl_yyerror_format(sperl, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }
-                  else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                    SPerl_yyerror_format(sperl, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }
+                  cur_default_op = op_cur;
                 }
-              }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_NE: {
-
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-
-              if (!first_resolved_type && !last_resolved_type) {
-                // Convert to constant true
-                SPerl_OP_convert_to_op_constant_false(sperl, op_cur);
-                op_cur->first = NULL;
-                op_cur->last = NULL;
-              }
-              else {
-                // undef
-                if (!first_resolved_type && last_resolved_type) {
-                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                    SPerl_yyerror_format(sperl, "!= right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }                
-                }
-                else if (first_resolved_type && !last_resolved_type) {
-                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                    SPerl_yyerror_format(sperl, "!= left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }
-                }
-                else {
-                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                    // Insert type converting op
-                    SPerl_OP_insert_op_convert(sperl, op_cur);
-                  }
-                  else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                    SPerl_yyerror_format(sperl, "!= right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }
-                  else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                    SPerl_yyerror_format(sperl, "!= left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }
-                }
-              }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_LT: {
-
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                SPerl_yyerror_format(sperl, "< left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                 break;
               }
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_yyerror_format(sperl, "< right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_LE: {
-
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                SPerl_yyerror_format(sperl, "<= left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_yyerror_format(sperl, "<= right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_GT: {
-
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                SPerl_yyerror_format(sperl, "> left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_yyerror_format(sperl, "> right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_GE: {
-
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_yyerror_format(sperl, ">= left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_yyerror_format(sperl, ">= right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_LEFT_SHIFT: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_integral(sperl, first_resolved_type)) {
-                SPerl_yyerror_format(sperl, "<< operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_yyerror_format(sperl, "<< operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_RIGHT_SHIFT: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_integral(sperl, first_resolved_type)) {
-                SPerl_yyerror_format(sperl, ">> operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_yyerror_format(sperl, ">> operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_integral(sperl, first_resolved_type)) {
-                SPerl_yyerror_format(sperl, ">>> operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_yyerror_format(sperl, ">>> operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_NEW: {
-              SPerl_OP* op_type = op_cur->first;
-              SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
-              
-              if (SPerl_RESOLVED_TYPE_contain_sub(sperl, resolved_type) && !SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
-                SPerl_yyerror_format(sperl,
-                  "new operator can't receive sub type %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                SPerl_yyerror_format(sperl,
-                  "new operator can't receive core type %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_BIT_XOR: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (first_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT || last_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                SPerl_yyerror_format(sperl,
-                  "& operator can receive only boolean, char, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_BIT_OR: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (first_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT || last_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                SPerl_yyerror_format(sperl,
-                  "& operator can receive only boolean, char, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_BIT_AND: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (first_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT || last_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                SPerl_yyerror_format(sperl,
-                  "& operator can receive only boolean, char, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_ARRAY_LENGTH: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              
-              // First value must be array
-              _Bool first_resolved_type_is_array = SPerl_RESOLVED_TYPE_is_array(sperl, first_resolved_type);
-              if (!first_resolved_type_is_array) {
-                SPerl_yyerror_format(sperl, "right of @ must be array at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_ARRAY_ELEM: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // First value must be array
-              _Bool first_resolved_type_is_array = SPerl_RESOLVED_TYPE_is_array(sperl, first_resolved_type);
-              if (!first_resolved_type_is_array) {
-                SPerl_yyerror_format(sperl, "left value must be array at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              // Last value must be integer
-              if (last_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_yyerror_format(sperl, "array index must be integer at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_ASSIGN: {
-              
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Type assumption
-              if (!first_resolved_type) {
-                SPerl_OP* op_var = op_cur->first;
-                SPerl_MY_VAR* my_var = op_var->uv.var->op_my_var->uv.my_var;
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, my_var->op_term_assumption);
+              case SPerl_OP_C_CODE_CASE: {
                 
-                if (resolved_type) {
-                  SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_cur->file, op_cur->line);
-                  SPerl_TYPE* type = SPerl_TYPE_new(sperl);
-                  type->resolved_type = resolved_type;
-                  op_type->uv.type = type;
-                  my_var->op_type = op_type;
+                SPerl_OP* op_term = op_cur->first;
+                
+                if (op_term->code != SPerl_OP_C_CODE_CONSTANT) {
+                  SPerl_yyerror_format(sperl, "case need constant at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term);
+                if (op_term_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  SPerl_yyerror_format(sperl, "case need int at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                if (!cur_case_ops) {
+                  cur_case_ops = SPerl_ALLOCATOR_new_array(sperl, 0);
+                }
+                SPerl_ARRAY_push(cur_case_ops, op_cur);
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_SWITCH: {
+                
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                
+                if (first_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  SPerl_yyerror_format(sperl, "switch need int at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                in_switch = 0;
+                cur_default_op = NULL;
+                cur_case_ops = NULL;
+                
+                // tableswitch if the following. SWITCHRTIO is 1.5 by default
+                // 4 + range <= (3 + 2 * length) * SWITCHRTIO
+                
+                SPerl_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
+                SPerl_ARRAY* op_cases = switch_info->op_cases;
+                size_t const length = op_cases->length;
+                if (length > SPerl_OP_LIMIT_CASES) {
+                  SPerl_yyerror_format(sperl, "too many case statements in switch at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+
+                int32_t min = SPerl_BASE_C_INT_MAX;
+                int32_t max = SPerl_BASE_C_INT_MIN;
+                
+                for (size_t i = 0; i < length; i++) {
+                  SPerl_OP* op_case = SPerl_ARRAY_fetch(op_cases, i);
+                  SPerl_OP* op_constant = op_case->first;
+                  int32_t value = op_constant->uv.constant->uv.int_value;
+                  if (value < min) {
+                    min = value;
+                  }
+                  if (value > max) {
+                    max = value;
+                  }
+                }
+                
+                double range = (double) max - (double) min;
+                
+                int32_t code;
+                if (4.0 + range <= (3.0 + 2.0 * (double) length) * 1.5) {
+                  code = SPerl_SWITCH_INFO_C_CODE_TABLESWITCH;
                 }
                 else {
-                  SPerl_yyerror_format(sperl, "Type can't be detected at %s line %d\n", op_cur->first->file, op_cur->first->line);
+                  code = SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH;
+                }
+                
+                switch_info->code = code;
+                switch_info->min = min;
+                switch_info->max = max;
+                
+                break;
+              }
+              
+              case SPerl_OP_C_CODE_EQ: {
+                
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                if (!first_resolved_type && !last_resolved_type) {
+                  // Convert to constant true
+                  SPerl_OP_convert_to_op_constant_true(sperl, op_cur);
+                  op_cur->first = NULL;
+                  op_cur->last = NULL;
+                }
+                else {
+                  // undef
+                  if (!first_resolved_type) {
+                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                      SPerl_yyerror_format(sperl, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }
+                  }
+                  else if (!last_resolved_type) {
+                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                      SPerl_yyerror_format(sperl, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }
+                  }
+                  else {
+                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                      // Insert type converting op
+                      SPerl_OP_insert_op_convert(sperl, op_cur);
+                    }
+                    else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                      SPerl_yyerror_format(sperl, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }
+                    else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                      SPerl_yyerror_format(sperl, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }
+                  }
+                }
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_NE: {
+
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+
+                if (!first_resolved_type && !last_resolved_type) {
+                  // Convert to constant true
+                  SPerl_OP_convert_to_op_constant_false(sperl, op_cur);
+                  op_cur->first = NULL;
+                  op_cur->last = NULL;
+                }
+                else {
+                  // undef
+                  if (!first_resolved_type && last_resolved_type) {
+                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                      SPerl_yyerror_format(sperl, "!= right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }                
+                  }
+                  else if (first_resolved_type && !last_resolved_type) {
+                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                      SPerl_yyerror_format(sperl, "!= left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }
+                  }
+                  else {
+                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                      // Insert type converting op
+                      SPerl_OP_insert_op_convert(sperl, op_cur);
+                    }
+                    else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                      SPerl_yyerror_format(sperl, "!= right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }
+                    else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                      SPerl_yyerror_format(sperl, "!= left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }
+                  }
+                }
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_LT: {
+
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "< left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "< right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_LE: {
+
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "<= left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "<= right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_GT: {
+
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "> left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "> right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_GE: {
+
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_yyerror_format(sperl, ">= left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_yyerror_format(sperl, ">= right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_LEFT_SHIFT: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_integral(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "<< operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  SPerl_yyerror_format(sperl, "<< operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_RIGHT_SHIFT: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_integral(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, ">> operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  SPerl_yyerror_format(sperl, ">> operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_integral(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, ">>> operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  SPerl_yyerror_format(sperl, ">>> operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_NEW: {
+                SPerl_OP* op_type = op_cur->first;
+                SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
+                
+                if (SPerl_RESOLVED_TYPE_contain_sub(sperl, resolved_type) && !SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
+                  SPerl_yyerror_format(sperl,
+                    "new operator can't receive sub type %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+                  SPerl_yyerror_format(sperl,
+                    "new operator can't receive core type %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_BIT_XOR: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (first_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT || last_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
+                  SPerl_yyerror_format(sperl,
+                    "& operator can receive only boolean, char, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_BIT_OR: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (first_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT || last_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
+                  SPerl_yyerror_format(sperl,
+                    "& operator can receive only boolean, char, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_BIT_AND: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (first_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT || last_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
+                  SPerl_yyerror_format(sperl,
+                    "& operator can receive only boolean, char, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_ARRAY_LENGTH: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                
+                // First value must be array
+                _Bool first_resolved_type_is_array = SPerl_RESOLVED_TYPE_is_array(sperl, first_resolved_type);
+                if (!first_resolved_type_is_array) {
+                  SPerl_yyerror_format(sperl, "right of @ must be array at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_ARRAY_ELEM: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // First value must be array
+                _Bool first_resolved_type_is_array = SPerl_RESOLVED_TYPE_is_array(sperl, first_resolved_type);
+                if (!first_resolved_type_is_array) {
+                  SPerl_yyerror_format(sperl, "left value must be array at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Last value must be integer
+                if (last_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  SPerl_yyerror_format(sperl, "array index must be integer at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_ASSIGN: {
+                
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Type assumption
+                if (!first_resolved_type) {
+                  SPerl_OP* op_var = op_cur->first;
+                  SPerl_MY_VAR* my_var = op_var->uv.var->op_my_var->uv.my_var;
+                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, my_var->op_term_assumption);
+                  
+                  if (resolved_type) {
+                    SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_cur->file, op_cur->line);
+                    SPerl_TYPE* type = SPerl_TYPE_new(sperl);
+                    type->resolved_type = resolved_type;
+                    op_type->uv.type = type;
+                    my_var->op_type = op_type;
+                  }
+                  else {
+                    SPerl_yyerror_format(sperl, "Type can't be detected at %s line %d\n", op_cur->first->file, op_cur->first->line);
+                    parser->fatal_error = 1;
+                    return;
+                  }
+                }
+                
+                // Convert type
+                if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_OP_insert_op_convert(sperl, op_cur);
+                }
+                
+                first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                if (first_resolved_type->id != last_resolved_type->id) {
+                  SPerl_yyerror_format(sperl, "Invalid type at %s line %d\n", op_cur->file, op_cur->line);
                   parser->fatal_error = 1;
                   return;
                 }
+                
+                // Insert var op
+                if (op_cur->last->code == SPerl_OP_C_CODE_ASSIGN) {
+                  SPerl_OP* op_var = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_VAR, op_cur->file, op_cur->line);
+                  op_var->uv.var = op_cur->last->first->uv.var;
+                  
+                  SPerl_OP* op_last_old = op_cur->last;
+                  
+                  op_last_old->sibparent = op_var;
+                  
+                  op_var->first = op_last_old;
+                  op_var->sibparent = op_cur;
+                  
+                  op_cur->last = op_var;
+                  
+                  op_cur->first->sibparent = op_var;
+                }
+                
+                break;
               }
-              
-              // Convert type
-              if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_OP_insert_op_convert(sperl, op_cur);
-              }
-              
-              first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              if (first_resolved_type->id != last_resolved_type->id) {
-                SPerl_yyerror_format(sperl, "Invalid type at %s line %d\n", op_cur->file, op_cur->line);
-                parser->fatal_error = 1;
-                return;
-              }
-              
-              // Insert var op
-              if (op_cur->last->code == SPerl_OP_C_CODE_ASSIGN) {
-                SPerl_OP* op_var = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_VAR, op_cur->file, op_cur->line);
-                op_var->uv.var = op_cur->last->first->uv.var;
-                
-                SPerl_OP* op_last_old = op_cur->last;
-                
-                op_last_old->sibparent = op_var;
-                
-                op_var->first = op_last_old;
-                op_var->sibparent = op_cur;
-                
-                op_cur->last = op_var;
-                
-                op_cur->first->sibparent = op_var;
-              }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_RETURN: {
-              if (op_cur->first) {
-                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-                SPerl_RESOLVED_TYPE* sub_return_resolved_type = SPerl_OP_get_resolved_type(sperl, sub->op_return_type);
-                
-                _Bool is_invalid = 0;
-                
-                // Undef
-                if (op_cur->first->code == SPerl_OP_C_CODE_UNDEF) {
-                  if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
-                    is_invalid = 1;
+              case SPerl_OP_C_CODE_RETURN: {
+                if (op_cur->first) {
+                  SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                  SPerl_RESOLVED_TYPE* sub_return_resolved_type = SPerl_OP_get_resolved_type(sperl, sub->op_return_type);
+                  
+                  _Bool is_invalid = 0;
+                  
+                  // Undef
+                  if (op_cur->first->code == SPerl_OP_C_CODE_UNDEF) {
+                    if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
+                      is_invalid = 1;
+                    }
+                    else {
+                      if (SPerl_RESOLVED_TYPE_is_core_type(sperl, sub_return_resolved_type)) {
+                        is_invalid = 1;
+                      }
+                    }
                   }
-                  else {
-                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, sub_return_resolved_type)) {
+                  // Normal
+                  else if (op_cur->first) {
+                    if (first_resolved_type->id != sub_return_resolved_type->id) {
                       is_invalid = 1;
                     }
                   }
-                }
-                // Normal
-                else if (op_cur->first) {
-                  if (first_resolved_type->id != sub_return_resolved_type->id) {
-                    is_invalid = 1;
+                  // Empty
+                  else {
+                    if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
+                      is_invalid = 1;
+                    }
                   }
-                }
-                // Empty
-                else {
-                  if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
-                    is_invalid = 1;
+                  
+                  if (is_invalid) {
+                    SPerl_yyerror_format(sperl, "Invalid return type at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
                   }
                 }
                 
-                if (is_invalid) {
-                  SPerl_yyerror_format(sperl, "Invalid return type at %s line %d\n", op_cur->file, op_cur->line);
+                break;
+              }
+              case SPerl_OP_C_CODE_NEGATE: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "- operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
+                
+                break;              
               }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_NEGATE: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                SPerl_yyerror_format(sperl, "- operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+              case SPerl_OP_C_CODE_PLUS: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "+ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
                 break;
               }
-              
-              break;              
-            }
-            case SPerl_OP_C_CODE_PLUS: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                SPerl_yyerror_format(sperl, "+ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+              case SPerl_OP_C_CODE_ADD: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "+ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
                 break;
               }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_ADD: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_yyerror_format(sperl, "+ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+              case SPerl_OP_C_CODE_SUBTRACT: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "- operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
                 break;
               }
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_SUBTRACT: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_yyerror_format(sperl, "- operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+              case SPerl_OP_C_CODE_MULTIPLY: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "* operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
                 break;
               }
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_MULTIPLY: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_yyerror_format(sperl, "* operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+              case SPerl_OP_C_CODE_DIVIDE: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "/ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
                 break;
               }
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_DIVIDE: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_yyerror_format(sperl, "/ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+              case SPerl_OP_C_CODE_REMAINDER: {
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "% operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                // Insert type converting op
+                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
                 break;
               }
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_REMAINDER: {
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-              SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                SPerl_yyerror_format(sperl, "% operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+              case SPerl_OP_C_CODE_PRE_INC:
+              case SPerl_OP_C_CODE_POST_INC:
+              case SPerl_OP_C_CODE_PRE_DEC:
+              case SPerl_OP_C_CODE_POST_DEC: {
+                SPerl_OP* op_first = op_cur->first;
+                if (op_first->code != SPerl_OP_C_CODE_VAR) {
+                  SPerl_yyerror_format(sperl, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_first);
+                
+                // Only int or long
+                if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  SPerl_yyerror_format(sperl, "must be int in increment at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                op_cur->first->lvalue = 1;
+                
                 break;
               }
-              // Insert type converting op
-              SPerl_OP_insert_op_convert(sperl, op_cur);
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_PRE_INC:
-            case SPerl_OP_C_CODE_POST_INC:
-            case SPerl_OP_C_CODE_PRE_DEC:
-            case SPerl_OP_C_CODE_POST_DEC: {
-              SPerl_OP* op_first = op_cur->first;
-              if (op_first->code != SPerl_OP_C_CODE_VAR) {
-                SPerl_yyerror_format(sperl, "invalid lvalue in increment at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_first);
-              
-              // Only int or long
-              if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
-                SPerl_yyerror_format(sperl, "must be int in increment at %s line %d\n", op_cur->file, op_cur->line);
-                break;
-              }
-              
-              op_cur->first->lvalue = 1;
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_CONSTANT: {
-              
-              // Add constant to constant pool
-              SPerl_CONSTANT* constant = op_cur->uv.constant;
-              
-              if (constant->num_str) {
-                // Convert to double
-                if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
-                  char* ends;
-                  float num = strtof(constant->num_str, &ends);
-                  constant->uv.float_value = num;
-                  constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+              case SPerl_OP_C_CODE_CONSTANT: {
+                
+                // Add constant to constant pool
+                SPerl_CONSTANT* constant = op_cur->uv.constant;
+                
+                if (constant->num_str) {
+                  // Convert to double
+                  if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
+                    char* ends;
+                    float num = strtof(constant->num_str, &ends);
+                    constant->uv.float_value = num;
+                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+                  }
+                  else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
+                    char* ends;
+                    double num = strtod(constant->num_str, &ends);
+                    
+                    constant->uv.double_value = num;
+                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+                  }
+                  // int
+                  else if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
+                    int32_t num = atoi(constant->num_str);
+                    constant->uv.int_value = num;
+                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+                  }
+                  // long
+                  else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
+                    int64_t num = strtol(constant->num_str, NULL, 0);
+                    constant->uv.long_value = num;
+                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+                  }
+                }
+                
+                // Constant pool adding condition
+                _Bool isnt_add = 0;
+                if (constant->code == SPerl_CONSTANT_C_CODE_BOOLEAN || constant->code == SPerl_CONSTANT_C_CODE_SHORT || constant->code == SPerl_CONSTANT_C_CODE_INT) {
+                  if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
+                    isnt_add = 1;
+                  }
+                }
+                else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
+                  if (constant->uv.long_value == 0 || constant->uv.long_value == 1) {
+                    isnt_add = 1;
+                  }
+                }
+                else if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
+                  if (constant->uv.float_value == 0 || constant->uv.float_value == 1 || constant->uv.float_value == 2) {
+                    isnt_add = 1;
+                  }
                 }
                 else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
-                  char* ends;
-                  double num = strtod(constant->num_str, &ends);
-                  
-                  constant->uv.double_value = num;
-                  constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
-                }
-                // int
-                else if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
-                  int32_t num = atoi(constant->num_str);
-                  constant->uv.int_value = num;
-                  constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-                }
-                // long
-                else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
-                  int64_t num = strtol(constant->num_str, NULL, 0);
-                  constant->uv.long_value = num;
-                  constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
-                }
-              }
-              
-              // Constant pool adding condition
-              _Bool isnt_add = 0;
-              if (constant->code == SPerl_CONSTANT_C_CODE_BOOLEAN || constant->code == SPerl_CONSTANT_C_CODE_SHORT || constant->code == SPerl_CONSTANT_C_CODE_INT) {
-                if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
-                  isnt_add = 1;
-                }
-              }
-              else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
-                if (constant->uv.long_value == 0 || constant->uv.long_value == 1) {
-                  isnt_add = 1;
-                }
-              }
-              else if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
-                if (constant->uv.float_value == 0 || constant->uv.float_value == 1 || constant->uv.float_value == 2) {
-                  isnt_add = 1;
-                }
-              }
-              else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
-                if (constant->uv.double_value == 0 || constant->uv.double_value == 1) {
-                  isnt_add = 1;
-                }
-              }
-              
-              if (!isnt_add) {
-                SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant);
-              }
-              
-              break;
-            }
-            // End of scope
-            case SPerl_OP_C_CODE_BLOCK: {
-              assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
-
-              int32_t* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
-              if (block_base_ptr) {
-                int32_t const pop_count = (int32_t) op_my_var_stack->length - *block_base_ptr;
-                for (int32_t j = 0; j < pop_count; j++) {
-                  SPerl_ARRAY_pop(op_my_var_stack);
-                }
-              }
-              int32_t* before_block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
-              if (before_block_base_ptr) {
-                block_base = *before_block_base_ptr;
-              }
-              else {
-                block_base = 0;
-              }
-              
-              break;
-            }
-            // Add my var
-            case SPerl_OP_C_CODE_VAR: {
-              SPerl_VAR* var = op_cur->uv.var;
-              
-              // Search same name variable
-              SPerl_OP* op_my_var = NULL;
-              for (size_t i = op_my_var_stack->length; i-- > 0; ) {
-                SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(op_my_var_stack, i);
-                SPerl_MY_VAR* my_var_tmp = op_my_var_tmp->uv.my_var;
-                if (strcmp(var->op_name->uv.name, my_var_tmp->op_name->uv.name) == 0) {
-                  op_my_var = op_my_var_tmp;
-                  break;
-                }
-              }
-              
-              if (op_my_var) {
-                // Add my var information to var
-                var->op_my_var = op_my_var;
-              }
-              else {
-                // Error
-                SPerl_yyerror_format(sperl, "\"my %s\" undeclared at %s line %d\n", var->op_name->uv.name, op_cur->file, op_cur->line);
-                parser->fatal_error = 1;
-                return;
-              }
-              break;
-            }
-            case SPerl_OP_C_CODE_DECL_MY_VAR: {
-              SPerl_MY_VAR* my_var = op_cur->uv.my_var;
-              
-              // Search same name variable
-              int32_t found = 0;
-
-              assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
-              for (int32_t i = (int32_t) op_my_var_stack->length; i-- > block_base; ) {
-                SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(op_my_var_stack, i);
-                SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
-                if (strcmp(my_var->op_name->uv.name, bef_my_var->op_name->uv.name) == 0) {
-                  found = 1;
-                  break;
-                }
-              }
-              
-              if (found) {
-                SPerl_yyerror_format(sperl, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
-                break;
-              }
-              else if (op_my_var_stack->length > SPerl_OP_LIMIT_LEXICAL_VARIABLES) {
-                SPerl_yyerror_format(sperl, "too many lexical variables, my \"%s\" ignored at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
-                parser->fatal_error = 1;
-                break;
-              }
-              else {
-                SPerl_ARRAY_push(op_my_vars, op_cur);
-                SPerl_ARRAY_push(op_my_var_stack, op_cur);
-              }
-              break;
-            }
-            case SPerl_OP_C_CODE_CALL_SUB: {
-              // Check sub name
-              SPerl_OP_resolve_sub_name(sperl, sub->op_package, op_cur);
-              
-              const char* sub_name = op_cur->uv.name_info->resolved_name;
-              
-              SPerl_SUB* found_sub= SPerl_HASH_search(
-                parser->sub_name_symtable,
-                sub_name,
-                strlen(sub_name)
-              );
-              if (!found_sub) {
-                SPerl_yyerror_format(sperl, "unknown sub \"%s\" at %s line %d\n",
-                  sub_name, op_cur->file, op_cur->line);
-                break;
-              }
-              
-              size_t sub_args_count = found_sub->op_args->length;
-              SPerl_OP* op_list_args = op_cur->last;
-              SPerl_OP* op_term = op_list_args->first;
-              size_t call_sub_args_count = 0;
-              while ((op_term = SPerl_OP_sibling(sperl, op_term))) {
-                call_sub_args_count++;
-                if (call_sub_args_count > sub_args_count) {
-                  SPerl_yyerror_format(sperl, "Too may arguments. sub \"%s\" at %s line %d\n", sub_name, op_cur->file, op_cur->line);
-                  return;
-                }
-                
-                _Bool is_invalid = 0;
-                
-                SPerl_OP* op_sub_arg_my_var = SPerl_ARRAY_fetch(found_sub->op_args, call_sub_args_count - 1);
-                
-                SPerl_RESOLVED_TYPE* sub_arg_resolved_type = SPerl_OP_get_resolved_type(sperl, op_sub_arg_my_var);
-                
-                // Undef
-                if (op_term->code == SPerl_OP_C_CODE_UNDEF) {
-                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, sub_arg_resolved_type)) {
-                    is_invalid = 1;
+                  if (constant->uv.double_value == 0 || constant->uv.double_value == 1) {
+                    isnt_add = 1;
                   }
                 }
-                // Normal
-                else if (op_term) {
-                  SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term);
-                  
-                  if (op_term_resolved_type->id !=  sub_arg_resolved_type->id) {
-                    is_invalid = 1;
+                
+                if (!isnt_add) {
+                  SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant);
+                }
+                
+                break;
+              }
+              // End of scope
+              case SPerl_OP_C_CODE_BLOCK: {
+                assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
+
+                int32_t* block_base_ptr = SPerl_ARRAY_pop(block_base_stack);
+                if (block_base_ptr) {
+                  int32_t const pop_count = (int32_t) op_my_var_stack->length - *block_base_ptr;
+                  for (int32_t j = 0; j < pop_count; j++) {
+                    SPerl_ARRAY_pop(op_my_var_stack);
                   }
                 }
-                if (is_invalid) {
-                  SPerl_yyerror_format(sperl, "Argument %d type is invalid. sub \"%s\" at %s line %d\n", (int) call_sub_args_count, sub_name, op_cur->file, op_cur->line);
+                int32_t* before_block_base_ptr = SPerl_ARRAY_fetch(block_base_stack, block_base_stack->length - 1);
+                if (before_block_base_ptr) {
+                  block_base = *before_block_base_ptr;
+                }
+                else {
+                  block_base = 0;
+                }
+                
+                break;
+              }
+              // Add my var
+              case SPerl_OP_C_CODE_VAR: {
+                SPerl_VAR* var = op_cur->uv.var;
+                
+                // Search same name variable
+                SPerl_OP* op_my_var = NULL;
+                for (size_t i = op_my_var_stack->length; i-- > 0; ) {
+                  SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(op_my_var_stack, i);
+                  SPerl_MY_VAR* my_var_tmp = op_my_var_tmp->uv.my_var;
+                  if (strcmp(var->op_name->uv.name, my_var_tmp->op_name->uv.name) == 0) {
+                    op_my_var = op_my_var_tmp;
+                    break;
+                  }
+                }
+                
+                if (op_my_var) {
+                  // Add my var information to var
+                  var->op_my_var = op_my_var;
+                }
+                else {
+                  // Error
+                  SPerl_yyerror_format(sperl, "\"my %s\" undeclared at %s line %d\n", var->op_name->uv.name, op_cur->file, op_cur->line);
+                  parser->fatal_error = 1;
                   return;
                 }
-              }
-              
-              if (call_sub_args_count < sub_args_count) {
-                SPerl_yyerror_format(sperl, "Too few argument. sub \"%s\" at %s line %d\n", sub_name, op_cur->file, op_cur->line);
-                return;
-              }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_FIELD: {
-              // Check field name
-              SPerl_OP_resolve_field_name(sperl, op_cur);
-              
-              const char* field_name = op_cur->uv.name_info->resolved_name;
-              
-              SPerl_FIELD* found_field= SPerl_HASH_search(
-                parser->field_name_symtable,
-                field_name,
-                strlen(field_name)
-              );
-              if (!found_field) {
-                SPerl_yyerror_format(sperl, "unknown field \"%s\" at %s line %d\n",
-                  field_name, op_cur->file, op_cur->line);
-                parser->fatal_error = 1;
                 break;
               }
-              
-              break;
-            }
-            case SPerl_OP_C_CODE_CONVERT: {
-              
-              SPerl_OP* op_term = op_cur->first;
-              SPerl_OP* op_type = op_cur->last;
-              
-              SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term);
-              SPerl_RESOLVED_TYPE* op_type_resolved_type = SPerl_OP_get_resolved_type(sperl, op_type);;
-              
-              // Can receive only core type
-              if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, op_term_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, op_type_resolved_type)) {
-                SPerl_yyerror_format(sperl, "can't convert type %s to %s at %s line %d\n",
-                  op_term_resolved_type->name, op_type_resolved_type->name, op_cur->file, op_cur->line);
+              case SPerl_OP_C_CODE_DECL_MY_VAR: {
+                SPerl_MY_VAR* my_var = op_cur->uv.my_var;
+                
+                // Search same name variable
+                int32_t found = 0;
+
+                assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
+                for (int32_t i = (int32_t) op_my_var_stack->length; i-- > block_base; ) {
+                  SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(op_my_var_stack, i);
+                  SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
+                  if (strcmp(my_var->op_name->uv.name, bef_my_var->op_name->uv.name) == 0) {
+                    found = 1;
+                    break;
+                  }
+                }
+                
+                if (found) {
+                  SPerl_yyerror_format(sperl, "redeclaration of my \"%s\" at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
+                  break;
+                }
+                else if (op_my_var_stack->length > SPerl_OP_LIMIT_LEXICAL_VARIABLES) {
+                  SPerl_yyerror_format(sperl, "too many lexical variables, my \"%s\" ignored at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
+                  parser->fatal_error = 1;
+                  break;
+                }
+                else {
+                  SPerl_ARRAY_push(op_my_vars, op_cur);
+                  SPerl_ARRAY_push(op_my_var_stack, op_cur);
+                }
                 break;
               }
-            }
-            break;
-          }
-          
-          // [END]Postorder traversal position
-          
-          if (op_cur == op_base) {
-            
-            SPerl_OP* op_block = op_cur->last;
-            SPerl_OP* op_statements = op_block->first;
-            
-            if (!sub->is_native && op_statements->last->code != SPerl_OP_C_CODE_RETURN) {
-              // Add return to the end of subroutine
-              SPerl_OP* op_return = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_RETURN, op_cur->file, op_cur->line);
-              if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
-                SPerl_RESOLVED_TYPE* op_return_resolved_type = SPerl_OP_get_resolved_type(sperl, sub->op_return_type);
-                if (op_return_resolved_type) {
-                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, op_return_resolved_type)) {
-                    SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
-                    if (op_return_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
-                      constant->code = SPerl_CONSTANT_C_CODE_INT;
-                      constant->uv.int_value = 0;
+              case SPerl_OP_C_CODE_CALL_SUB: {
+                // Check sub name
+                SPerl_OP_resolve_sub_name(sperl, sub->op_package, op_cur);
+                
+                const char* sub_name = op_cur->uv.name_info->resolved_name;
+                
+                SPerl_SUB* found_sub= SPerl_HASH_search(
+                  parser->sub_name_symtable,
+                  sub_name,
+                  strlen(sub_name)
+                );
+                if (!found_sub) {
+                  SPerl_yyerror_format(sperl, "unknown sub \"%s\" at %s line %d\n",
+                    sub_name, op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                size_t sub_args_count = found_sub->op_args->length;
+                SPerl_OP* op_list_args = op_cur->last;
+                SPerl_OP* op_term = op_list_args->first;
+                size_t call_sub_args_count = 0;
+                while ((op_term = SPerl_OP_sibling(sperl, op_term))) {
+                  call_sub_args_count++;
+                  if (call_sub_args_count > sub_args_count) {
+                    SPerl_yyerror_format(sperl, "Too may arguments. sub \"%s\" at %s line %d\n", sub_name, op_cur->file, op_cur->line);
+                    return;
+                  }
+                  
+                  _Bool is_invalid = 0;
+                  
+                  SPerl_OP* op_sub_arg_my_var = SPerl_ARRAY_fetch(found_sub->op_args, call_sub_args_count - 1);
+                  
+                  SPerl_RESOLVED_TYPE* sub_arg_resolved_type = SPerl_OP_get_resolved_type(sperl, op_sub_arg_my_var);
+                  
+                  // Undef
+                  if (op_term->code == SPerl_OP_C_CODE_UNDEF) {
+                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, sub_arg_resolved_type)) {
+                      is_invalid = 1;
                     }
-                    else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                      constant->code = SPerl_CONSTANT_C_CODE_LONG;
-                      constant->uv.long_value = 0;
-                    }
-                    else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                      constant->code = SPerl_CONSTANT_C_CODE_FLOAT;
-                      constant->uv.float_value = 0;
-                    }
-                    else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                      constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
-                      constant->uv.double_value = 0;
-                    }
-                    SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_cur->file, op_cur->line);
-                    op_constant->uv.constant = constant;
+                  }
+                  // Normal
+                  else if (op_term) {
+                    SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term);
                     
-                    SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_constant);
+                    if (op_term_resolved_type->id !=  sub_arg_resolved_type->id) {
+                      is_invalid = 1;
+                    }
                   }
-                  // Reference
-                  else {
-                    // Undef
-                    SPerl_OP* op_undef = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_UNDEF, op_cur->file, op_cur->line);
-                    SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_undef);
+                  if (is_invalid) {
+                    SPerl_yyerror_format(sperl, "Argument %d type is invalid. sub \"%s\" at %s line %d\n", (int) call_sub_args_count, sub_name, op_cur->file, op_cur->line);
+                    return;
                   }
                 }
+                
+                if (call_sub_args_count < sub_args_count) {
+                  SPerl_yyerror_format(sperl, "Too few argument. sub \"%s\" at %s line %d\n", sub_name, op_cur->file, op_cur->line);
+                  return;
+                }
+                
+                break;
               }
-              
-              SPerl_OP_sibling_splice(sperl, op_statements, op_statements->last, 0, op_return);
+              case SPerl_OP_C_CODE_FIELD: {
+                // Check field name
+                SPerl_OP_resolve_field_name(sperl, op_cur);
+                
+                const char* field_name = op_cur->uv.name_info->resolved_name;
+                
+                SPerl_FIELD* found_field= SPerl_HASH_search(
+                  parser->field_name_symtable,
+                  field_name,
+                  strlen(field_name)
+                );
+                if (!found_field) {
+                  SPerl_yyerror_format(sperl, "unknown field \"%s\" at %s line %d\n",
+                    field_name, op_cur->file, op_cur->line);
+                  parser->fatal_error = 1;
+                  break;
+                }
+                
+                break;
+              }
+              case SPerl_OP_C_CODE_CONVERT: {
+                
+                SPerl_OP* op_term = op_cur->first;
+                SPerl_OP* op_type = op_cur->last;
+                
+                SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term);
+                SPerl_RESOLVED_TYPE* op_type_resolved_type = SPerl_OP_get_resolved_type(sperl, op_type);;
+                
+                // Can receive only core type
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, op_term_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, op_type_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "can't convert type %s to %s at %s line %d\n",
+                    op_term_resolved_type->name, op_type_resolved_type->name, op_cur->file, op_cur->line);
+                  break;
+                }
+              }
+              break;
             }
             
-            // Finish
-            finish = 1;
+            // [END]Postorder traversal position
             
+            if (op_cur == op_base) {
+              
+              SPerl_OP* op_block = op_cur->last;
+              SPerl_OP* op_statements = op_block->first;
+              
+              if (!sub->is_native && op_statements->last->code != SPerl_OP_C_CODE_RETURN) {
+                // Add return to the end of subroutine
+                SPerl_OP* op_return = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_RETURN, op_cur->file, op_cur->line);
+                if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
+                  SPerl_RESOLVED_TYPE* op_return_resolved_type = SPerl_OP_get_resolved_type(sperl, sub->op_return_type);
+                  if (op_return_resolved_type) {
+                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, op_return_resolved_type)) {
+                      SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+                      if (op_return_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
+                        constant->code = SPerl_CONSTANT_C_CODE_INT;
+                        constant->uv.int_value = 0;
+                      }
+                      else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                        constant->code = SPerl_CONSTANT_C_CODE_LONG;
+                        constant->uv.long_value = 0;
+                      }
+                      else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
+                        constant->code = SPerl_CONSTANT_C_CODE_FLOAT;
+                        constant->uv.float_value = 0;
+                      }
+                      else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+                        constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
+                        constant->uv.double_value = 0;
+                      }
+                      SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_cur->file, op_cur->line);
+                      op_constant->uv.constant = constant;
+                      
+                      SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_constant);
+                    }
+                    // Reference
+                    else {
+                      // Undef
+                      SPerl_OP* op_undef = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_UNDEF, op_cur->file, op_cur->line);
+                      SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_undef);
+                    }
+                  }
+                }
+                
+                SPerl_OP_sibling_splice(sperl, op_statements, op_statements->last, 0, op_return);
+              }
+              
+              // Finish
+              finish = 1;
+              
+              break;
+            }
+            
+            // Next sibling
+            if (op_cur->moresib) {
+              op_cur = SPerl_OP_sibling(sperl, op_cur);
+              break;
+            }
+            // Next is parent
+            else {
+              op_cur = op_cur->sibparent;
+            }
+          }
+          if (finish) {
             break;
           }
-          
-          // Next sibling
-          if (op_cur->moresib) {
-            op_cur = SPerl_OP_sibling(sperl, op_cur);
-            break;
-          }
-          // Next is parent
-          else {
-            op_cur = op_cur->sibparent;
-          }
-        }
-        if (finish) {
-          break;
         }
       }
-    }
-    // Set my var information
-    sub->op_my_vars = op_my_vars;
-    
-    // Operand stack max
-    sub->operand_stack_max = op_count * 2;
-    
-    // Calculate my var total size and address
-    int32_t next_my_var_address = 0;
-    for (size_t i = 0; i < op_my_vars->length; i++) {
-      SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
-      SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
-      SPerl_RESOLVED_TYPE* resolved_type = my_var->op_type->uv.type->resolved_type;
+      // Set my var information
+      sub->op_my_vars = op_my_vars;
       
-      my_var->address = next_my_var_address;
+      // Operand stack max
+      sub->operand_stack_max = op_count * 2;
       
-      if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-        next_my_var_address += 2;
-      }
-      else {
-        next_my_var_address++;
+      // Calculate my var total size and address
+      int32_t next_my_var_address = 0;
+      for (size_t i = 0; i < op_my_vars->length; i++) {
+        SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
+        SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
+        SPerl_RESOLVED_TYPE* resolved_type = my_var->op_type->uv.type->resolved_type;
+        
+        my_var->address = next_my_var_address;
+        
+        if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+          next_my_var_address += 2;
+        }
+        else {
+          next_my_var_address++;
+        }
       }
     }
   }

@@ -1395,9 +1395,22 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       {
         // Get subroutine ID
         int32_t sub_id = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+
+        for (size_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
+          SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_pos);
+          SPerl_PACKAGE* package = op_package->uv.package;
+          
+          for (size_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
+            SPerl_OP* op_sub = SPerl_ARRAY_fetch(package->op_subs, sub_pos);
+            SPerl_SUB* sub_match = op_sub->uv.sub;
+            if (sub_id == sub_match->id) {
+              sub = sub_match;
+              break;
+            }
+          }
+        }
         
-        SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->op_subs, sub_id);
-        sub = op_sub->uv.sub;
+        assert(sub);
         
         // Extend call stack(current size + 2(return address + call stack base before) + lexical variable area + operand_stack area)
         int32_t call_stack_max = operand_stack_top + 2 + sub->op_my_vars->length + sub->operand_stack_max;
