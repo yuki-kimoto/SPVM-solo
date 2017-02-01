@@ -10,8 +10,8 @@ struct SPerl_constant_pool_sub {
   uint16_t operand_stack_max;
   uint16_t my_vars_length;
   uint8_t args_length;
-  uint8_t has_return_value;
   uint8_t is_native;
+  uint8_t has_return_value;
 };
 
 #endif
