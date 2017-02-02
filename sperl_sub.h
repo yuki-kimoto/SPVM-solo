@@ -5,7 +5,6 @@
 
 // Method information
 struct SPerl_sub {
-  SPerl_OP* op_package;
   SPerl_OP* op_name;
   SPerl_OP* op_return_type;
   SPerl_OP* op_block;

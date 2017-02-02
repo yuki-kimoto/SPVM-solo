@@ -5,9 +5,8 @@
 
 // Field information
 struct SPerl_field {
-  SPerl_OP* op_package;
-  SPerl_OP* op_name;
   SPerl_OP* op_type;
+  SPerl_OP* op_name;
   int32_t id;
   int32_t constant_pool_address;
   int32_t package_byte_offset;
