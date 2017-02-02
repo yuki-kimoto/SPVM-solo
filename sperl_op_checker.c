@@ -68,6 +68,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       
       // op count
       int32_t op_count = 0;
+
+      int32_t next_my_var_address = 0;
       
       // Run OPs
       SPerl_OP* op_base = op_sub;
@@ -909,6 +911,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   break;
                 }
                 else {
+                  my_var->address = next_my_var_address++;
                   SPerl_ARRAY_push(op_my_vars, op_cur);
                   SPerl_ARRAY_push(op_my_var_stack, op_cur);
                 }
@@ -1087,23 +1090,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       
       // Operand stack max
       sub->operand_stack_max = op_count * 2;
-      
-      // Calculate my var total size and address
-      int32_t next_my_var_address = 0;
-      for (size_t i = 0; i < op_my_vars->length; i++) {
-        SPerl_OP* op_my_var = SPerl_ARRAY_fetch(op_my_vars, i);
-        SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
-        SPerl_RESOLVED_TYPE* resolved_type = my_var->op_type->uv.type->resolved_type;
-        
-        my_var->address = next_my_var_address;
-        
-        if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-          next_my_var_address += 2;
-        }
-        else {
-          next_my_var_address++;
-        }
-      }
       
       // Push sub information to constant pool
       SPerl_CONSTANT_POOL_push_sub(sperl, sperl->constant_pool, sub);
