@@ -213,8 +213,6 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "INVOKESTATIC_WW",
   "LDC_WW",
   "LDC2_WW",
-  "GETFIELD_WW",
-  "PUTFIELD_WW",
   "IALOAD_L",
   "LALOAD_L",
   "FALOAD_L",
