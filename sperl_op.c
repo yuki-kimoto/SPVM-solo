@@ -895,6 +895,8 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           const char* field_name = SPerl_OP_create_abs_name(sperl, package_name, field_base_name);
           SPerl_HASH_insert(parser->field_symtable, field_name, strlen(field_name), field);
         }
+        
+        op_field->uv.field->op_package = op_package;
       }
     }
     package->op_fields = op_fields;
@@ -940,6 +942,8 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         }
       }
       SPerl_ARRAY_push(op_subs, op_sub);
+      
+      op_sub->uv.sub->op_package = op_package;
     }
     package->op_subs = op_subs;
     parser->current_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
