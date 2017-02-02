@@ -48,7 +48,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   // Constant pool sub
   SPerl_CONSTANT_POOL_SUB* constant_pool_sub;
   {
-    SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, sub_base_name, strlen(sub_base_name));
+    SPerl_SUB* sub = SPerl_HASH_search(parser->sub_symtable, sub_base_name, strlen(sub_base_name));
     constant_pool_sub
       = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub->constant_pool_address];
   }

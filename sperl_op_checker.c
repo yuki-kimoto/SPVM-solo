@@ -921,7 +921,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 const char* sub_name = op_cur->uv.name_info->resolved_name;
                 
                 SPerl_SUB* found_sub= SPerl_HASH_search(
-                  parser->sub_name_symtable,
+                  parser->sub_symtable,
                   sub_name,
                   strlen(sub_name)
                 );
@@ -982,7 +982,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 const char* field_name = op_cur->uv.name_info->resolved_name;
                 
                 SPerl_FIELD* found_field= SPerl_HASH_search(
-                  parser->field_name_symtable,
+                  parser->field_symtable,
                   field_name,
                   strlen(field_name)
                 );

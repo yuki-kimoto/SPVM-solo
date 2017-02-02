@@ -461,7 +461,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
-      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_name_symtable, abs_name, strlen(abs_name));
+      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_symtable, abs_name, strlen(abs_name));
       if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
         resolved_type = sub->op_return_type->uv.type->resolved_type;
       }
@@ -470,7 +470,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_FIELD: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
-      SPerl_FIELD* field = SPerl_HASH_search(parser->field_name_symtable, abs_name, strlen(abs_name));
+      SPerl_FIELD* field = SPerl_HASH_search(parser->field_symtable, abs_name, strlen(abs_name));
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
     }
@@ -731,7 +731,7 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
     sub_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
     
     SPerl_SUB* found_sub= SPerl_HASH_search(
-      parser->sub_name_symtable,
+      parser->sub_symtable,
       sub_name,
       strlen(sub_name)
     );
@@ -893,14 +893,14 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           
           // Field absolute name
           const char* field_name = SPerl_OP_create_abs_name(sperl, package_name, field_base_name);
-          SPerl_HASH_insert(parser->field_name_symtable, field_name, strlen(field_name), field);
+          SPerl_HASH_insert(parser->field_symtable, field_name, strlen(field_name), field);
         }
       }
     }
     package->op_fields = op_fields;
     
     // Subs
-    SPerl_HASH* sub_name_symtable = parser->sub_name_symtable;
+    SPerl_HASH* sub_symtable = parser->sub_symtable;
     for (size_t sub_pos = 0; sub_pos < parser->current_op_subs->length; sub_pos++) {
       parser->current_op_subs;
       
@@ -913,14 +913,14 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         const char* sub_name = SPerl_OP_create_abs_name(sperl, package_name, sub_base_name);
         
         SPerl_SUB* found_sub = NULL;
-        found_sub = SPerl_HASH_search(sub_name_symtable, sub_name, strlen(sub_name));
+        found_sub = SPerl_HASH_search(sub_symtable, sub_name, strlen(sub_name));
         
         if (found_sub) {
           SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_name, op_sub->file, op_sub->line);
         }
         // Unknown sub
         else {
-          SPerl_HASH_insert(sub_name_symtable, sub_name, strlen(sub_name), sub);
+          SPerl_HASH_insert(sub_symtable, sub_name, strlen(sub_name), sub);
           
           // Bind standard functions
           if (sub->is_native) {

@@ -22,12 +22,12 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   
   // Parser information
   parser->current_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
-  parser->sub_name_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
+  parser->sub_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
   parser->op_packages = SPerl_ALLOCATOR_new_array(sperl, 0);
   parser->package_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
   parser->op_types = SPerl_ALLOCATOR_new_array(sperl, 0);
   parser->op_use_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
-  parser->field_name_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
+  parser->field_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
   parser->include_pathes = SPerl_ALLOCATOR_new_array(sperl, 0);
   parser->bufptr = "";
   parser->resolved_types = SPerl_ALLOCATOR_new_array(sperl, 0);
