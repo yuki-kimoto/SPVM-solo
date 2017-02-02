@@ -20,6 +20,7 @@
 #include "sperl_heap.h"
 #include "sperl_constant_pool_sub.h"
 #include "sperl_constant_pool_package.h"
+#include "sperl_constant_pool_field.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
@@ -1678,6 +1679,27 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_PUTFIELD_WW:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_BGETFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_SGETFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_IGETFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LGETFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_FGETFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_DGETFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_AGETFIELD:
         pc += 5;
         continue;
     }

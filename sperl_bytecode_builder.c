@@ -510,17 +510,39 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_FIELD: {
                 
                 if (!op_cur->lvalue) {
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GETFIELD_WW);
+                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
+                  
+                  if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BOOLEAN || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE)
+                  {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BGETFIELD);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SGETFIELD);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IGETFIELD);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LGETFIELD);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_FGETFIELD);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DGETFIELD);
+                  }
+                  else {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_AGETFIELD);
+                  }
                   
                   SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                   const char* field_name = name_info->resolved_name;
                   SPerl_FIELD* field = SPerl_HASH_search(parser->field_symtable, field_name, strlen(field_name));
-                  int32_t id = field->id;
                   
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 16) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 8) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, id & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (field->constant_pool_address >> 24) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (field->constant_pool_address >> 16) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (field->constant_pool_address >> 8) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, field->constant_pool_address & 0xFF);
                 }
                 
                 break;
@@ -1213,12 +1235,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   SPerl_NAME_INFO* name_info = op_cur->first->uv.name_info;
                   const char* field_name = name_info->resolved_name;
                   SPerl_FIELD* field = SPerl_HASH_search(parser->field_symtable, field_name, strlen(field_name));
-                  int32_t id = field->id;
                   
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 24) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 16) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (id >> 8) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, id & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (field->constant_pool_address >> 24) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (field->constant_pool_address >> 16) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (field->constant_pool_address >> 8) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, field->constant_pool_address & 0xFF);
                 }
                 
                 break;

@@ -886,8 +886,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           SPerl_yyerror_format(sperl, "too many fields, field \"%s\" ignored at %s line %d\n", field_base_name, op_field->file, op_field->line);
         }
         else {
-          // Set ID
-          field->id = (uint32_t) op_fields->length;
           SPerl_ARRAY_push(op_fields, op_field);
           SPerl_HASH_insert(field_symtable, field_base_name, strlen(field_base_name), field);
           
