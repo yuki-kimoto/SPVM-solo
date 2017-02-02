@@ -123,6 +123,30 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   constant_pool->length += extend_length;
 }
 
+void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_FIELD* field) {
+  (void)sperl;
+  
+  // Adjust alignment
+  if ((constant_pool->length & 1) != 0) {
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
+  }
+  assert((constant_pool->length & 1) == 0);
+
+  // Constant pool field information
+  field->constant_pool_address = constant_pool->length;
+  
+  // Constant pool field information
+  SPerl_CONSTANT_POOL_FIELD* constant_pool_field = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_FIELD));
+  constant_pool_field->package_byte_offset = field->package_byte_offset;
+  
+  // Add field information
+  int32_t extend_length = (sizeof(SPerl_CONSTANT_POOL_FIELD) + (sizeof(int32_t) - 1)) / sizeof(int32_t);
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
+  *(SPerl_CONSTANT_POOL_FIELD*)&constant_pool->values[constant_pool->length] = *constant_pool_field;
+  constant_pool->length += extend_length;
+  
+}
+
 void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
   (void)sperl;
   
