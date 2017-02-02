@@ -7,9 +7,12 @@ use Test::Simple;
 package Test {
   sub main($mvar : int) : int {
     
-    # get field
+    # get and set field
     {
       my $m = new Test::Minimal;
+      
+      $m->x = 2;
+      $m->y = 3;
       
       printi($m->x);
       printi($m->y);
