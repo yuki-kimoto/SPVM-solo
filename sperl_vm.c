@@ -698,9 +698,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         operand_stack_top -= 3;
         pc++;
         continue;
-
-
-
       case SPerl_BYTECODE_C_CODE_POP:
         operand_stack_top--;
         pc++;
@@ -1700,6 +1697,27 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_AGETFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_BPUTFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_SPUTFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_IPUTFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LPUTFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_FPUTFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_DPUTFIELD:
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_APUTFIELD:
         pc += 5;
         continue;
     }
