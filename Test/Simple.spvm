@@ -39,17 +39,6 @@ package Test::Simple {
     # $title->();
     # $title->(1);
     # $title->(1, 2);
-    
-    my $test : int = 0;
-    ++$test;
-    $test++;
-
-    --$test;
-    $test--;
-
-    +$test;
-    -$test;
-    # +$test - -$test;
         
     1 + 2;
 

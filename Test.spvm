@@ -7,6 +7,18 @@ use Test::Simple;
 package Test {
   sub main($mvar : int) : int {
 
+    my $test : int = 0;
+    
+    ++$test;
+    $test++;
+    --$test;
+    $test--;
+
+    +$test;
+    -$test;
+
+    # +$test - -$test;
+
     if (1) {
       2;
       if (3) {

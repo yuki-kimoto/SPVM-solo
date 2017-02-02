@@ -765,8 +765,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_first);
                 
                 // Only int or long
-                if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_yyerror_format(sperl, "must be int in increment at %s line %d\n", op_cur->file, op_cur->line);
+                if (first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT && first_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                  SPerl_yyerror_format(sperl, "must be int or longin increment at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 

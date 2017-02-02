@@ -908,6 +908,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_IINC:
+        *(int32_t*)&vars[bytecodes[pc + 1]] += bytecodes[pc + 2];
+        pc += 3;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LINC:
         vars[bytecodes[pc + 1]] += bytecodes[pc + 2];
         pc += 3;
         continue;
@@ -1503,12 +1507,12 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           pc +=4;
         }
         else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_FSTORE) {
-          *(int32_t*)&vars[(bytecodes[pc + 2] << 8) + bytecodes[pc + 3]] = *(int32_t*)&call_stack[operand_stack_top];
+          *(float*)&vars[(bytecodes[pc + 2] << 8) + bytecodes[pc + 3]] = *(float*)&call_stack[operand_stack_top];
           operand_stack_top--;
           pc +=4;
         }
         else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_DSTORE) {
-          vars[(bytecodes[pc + 2] << 8) + bytecodes[pc + 3]] = call_stack[operand_stack_top];
+          *(double*)&vars[(bytecodes[pc + 2] << 8) + bytecodes[pc + 3]] = *(double*)&call_stack[operand_stack_top];
           operand_stack_top--;
           pc +=4;
         }
@@ -1518,6 +1522,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           pc +=4;
         }
         else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_IINC) {
+          *(int32_t*)&vars[(bytecodes[pc + 2] << 8) + bytecodes[pc + 3]] += (bytecodes[pc + 4] << 8) + bytecodes[pc + 5];
+          pc += 6;
+        }
+        else if (bytecodes[pc + 1] == SPerl_BYTECODE_C_CODE_LINC) {
           vars[(bytecodes[pc + 2] << 8) + bytecodes[pc + 3]] += (bytecodes[pc + 4] << 8) + bytecodes[pc + 5];
           pc += 6;
         }
