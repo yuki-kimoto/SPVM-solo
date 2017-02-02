@@ -73,11 +73,7 @@ void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* consta
 void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
   (void)sperl;
   
-  // Adjust alignment
-  if ((constant_pool->length & 1) != 0) {
-    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
-  }
-  assert((constant_pool->length & 1) == 0);
+  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= 4);
 
   // Constant pool package information
   package->constant_pool_address = constant_pool->length;
@@ -97,10 +93,10 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   (void)sperl;
   
   // Adjust alignment
-  if ((constant_pool->length & 1) != 0) {
+  if ((constant_pool->length % 2) != 0) {
     SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
   }
-  assert((constant_pool->length & 1) == 0);
+  assert((constant_pool->length % 2) == 0);
 
   // Constant pool sub information
   sub->constant_pool_address = constant_pool->length;
@@ -126,12 +122,8 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
 void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_FIELD* field) {
   (void)sperl;
   
-  // Adjust alignment
-  if ((constant_pool->length & 1) != 0) {
-    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
-  }
-  assert((constant_pool->length & 1) == 0);
-
+  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= 4);
+  
   // Constant pool field information
   field->constant_pool_address = constant_pool->length;
   
@@ -144,7 +136,6 @@ void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
   *(SPerl_CONSTANT_POOL_FIELD*)&constant_pool->values[constant_pool->length] = *constant_pool_field;
   constant_pool->length += extend_length;
-  
 }
 
 void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
@@ -160,10 +151,10 @@ void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_p
   (void)sperl;
   
   // Adjust alignment
-  if ((constant_pool->length & 1) != 0) {
+  if ((constant_pool->length % 2) != 0) {
     SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
   }
-  assert((constant_pool->length & 1) == 0);
+  assert((constant_pool->length % 2) == 0);
 
   // Add long value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);
@@ -184,10 +175,10 @@ void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   (void)sperl;
   
   // Adjust alignment
-  if ((constant_pool->length & 1) != 0) {
+  if ((constant_pool->length % 2) != 0) {
     SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
   }
-  assert((constant_pool->length & 1) == 0);
+  assert((constant_pool->length % 2) == 0);
 
   // Add double value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);

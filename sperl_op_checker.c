@@ -478,16 +478,32 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_OP* op_type = op_cur->first;
                 SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
                 
-                if (SPerl_RESOLVED_TYPE_contain_sub(sperl, resolved_type) && !SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
-                  SPerl_yyerror_format(sperl,
-                    "new operator can't receive sub type %s line %d\n", op_cur->file, op_cur->line);
-                  break;
+                if (SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
+                  // OK
                 }
-                
-                if (resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                  SPerl_yyerror_format(sperl,
-                    "new operator can't receive core type %s line %d\n", op_cur->file, op_cur->line);
-                  break;
+                else {
+                  if (SPerl_RESOLVED_TYPE_contain_sub(sperl, resolved_type)) {
+                    SPerl_yyerror_format(sperl,
+                      "new operator can't receive sub type %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
+                  
+                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type)) {
+                    SPerl_yyerror_format(sperl,
+                      "new operator can't receive core type %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
+                  
+                  SPerl_PACKAGE* package = SPerl_HASH_search(parser->package_symtable, resolved_type->name, strlen(resolved_type->name));
+                  if (!package) {
+                    SPerl_yyerror_format(sperl, "new operator can't receive non package name \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
+                    break;
+                  }
+                  
+                  if (!package->op_fields->length) {
+                    SPerl_yyerror_format(sperl, "new operator can't receive package which don't have fields \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
+                    break;
+                  }
                 }
                 
                 break;

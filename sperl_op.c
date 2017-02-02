@@ -841,7 +841,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
   SPerl_HASH* package_symtable = parser->package_symtable;
   
   // Redeclaration package error
-  SPerl_TYPE* found_package = SPerl_HASH_search(package_symtable, package_name, strlen(package_name));
+  SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, package_name, strlen(package_name));
   if (found_package) {
     SPerl_yyerror_format(sperl, "redeclaration of package \"%s\" at %s line %d\n", package_name, op_package->file, op_package->line);
   }
@@ -945,7 +945,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     // Add package
     op_package->uv.package = package;
     SPerl_ARRAY_push(parser->op_packages, op_package);
-    SPerl_HASH_insert(parser->package_symtable, package_name, strlen(package_name), type);
+    SPerl_HASH_insert(parser->package_symtable, package_name, strlen(package_name), package);
   }
   
   return op_package;

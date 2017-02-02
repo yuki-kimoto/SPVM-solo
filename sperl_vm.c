@@ -1684,9 +1684,18 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_SGETFIELD:
         pc += 5;
         continue;
-      case SPerl_BYTECODE_C_CODE_IGETFIELD:
+      case SPerl_BYTECODE_C_CODE_IGETFIELD: {
+        int32_t field_constant_pool_address
+          = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+        
+        int32_t tmp = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top] + constant_pool_field->package_byte_offset);
+        
+        *(int32_t*)&call_stack[operand_stack_top] = 4;
+        
         pc += 5;
         continue;
+      }
       case SPerl_BYTECODE_C_CODE_LGETFIELD:
         pc += 5;
         continue;
