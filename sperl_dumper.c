@@ -255,6 +255,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       
       // Have tow operand
       case SPerl_BYTECODE_C_CODE_IINC:
+      case SPerl_BYTECODE_C_CODE_LINC:
       case SPerl_BYTECODE_C_CODE_SIPUSH:
       case SPerl_BYTECODE_C_CODE_LDC2_W:
       case SPerl_BYTECODE_C_CODE_LDC_W:
