@@ -441,7 +441,7 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
       printf("      name => (NONE)\n");
     }
     else {
-      printf("      name => \"%s\"\n", sub->op_base_name->uv.name);
+      printf("      name => \"%s\"\n", sub->op_name->uv.name);
     }
     printf("      anon => %d\n", sub->anon);
     

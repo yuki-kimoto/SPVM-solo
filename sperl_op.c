@@ -713,35 +713,35 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
   
   SPerl_NAME_INFO* name_info = op_name->uv.name_info;
   
-  const char* sub_name = NULL;
+  const char* sub_abs_name = NULL;
   if (name_info->code == SPerl_NAME_INFO_C_CODE_ANON) {
     return;
   }
   else if (name_info->code == SPerl_NAME_INFO_C_CODE_VARBASENAME) {
     const char* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
     const char* base_name = name_info->op_name->uv.name;
-    sub_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
+    sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
   }
   else if (name_info->code == SPerl_NAME_INFO_C_CODE_ABSNAME) {
-    sub_name = name_info->op_name->uv.name;
+    sub_abs_name = name_info->op_name->uv.name;
   }
   else if (name_info->code == SPerl_NAME_INFO_C_CODE_BASENAME) {
     const char* package_name = op_package->uv.package->op_name->uv.name;
     const char* base_name = name_info->op_name->uv.name;
-    sub_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
+    sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
     
     SPerl_SUB* found_sub= SPerl_HASH_search(
       parser->sub_symtable,
-      sub_name,
-      strlen(sub_name)
+      sub_abs_name,
+      strlen(sub_abs_name)
     );
     
     if (!found_sub) {
-      sub_name = SPerl_OP_create_abs_name(sperl, "CORE", base_name);
+      sub_abs_name = SPerl_OP_create_abs_name(sperl, "CORE", base_name);
     }
   }
   
-  name_info->resolved_name = sub_name;
+  name_info->resolved_name = sub_abs_name;
 }
 
 void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
@@ -908,32 +908,32 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
       SPerl_SUB* sub = op_sub->uv.sub;
       
       if (!sub->anon) {
-        SPerl_OP* op_sub_base_name = sub->op_base_name;
-        const char* sub_base_name = op_sub_base_name->uv.name;
-        const char* sub_name = SPerl_OP_create_abs_name(sperl, package_name, sub_base_name);
+        SPerl_OP* op_sub_name = sub->op_name;
+        const char* sub_name = op_sub_name->uv.name;
+        const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, sub_name);
         
         SPerl_SUB* found_sub = NULL;
-        found_sub = SPerl_HASH_search(sub_symtable, sub_name, strlen(sub_name));
+        found_sub = SPerl_HASH_search(sub_symtable, sub_abs_name, strlen(sub_abs_name));
         
         if (found_sub) {
-          SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_name, op_sub->file, op_sub->line);
+          SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
         }
         // Unknown sub
         else {
-          SPerl_HASH_insert(sub_symtable, sub_name, strlen(sub_name), sub);
+          SPerl_HASH_insert(sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
           
           // Bind standard functions
           if (sub->is_native) {
-            if (strcmp(sub_name, "CORE::printi") == 0) {
+            if (strcmp(sub_abs_name, "CORE::printi") == 0) {
               sub->native_address = SPerl_STD_FUNC_printi;
             }
-            else if (strcmp(sub_name, "CORE::printl") == 0) {
+            else if (strcmp(sub_abs_name, "CORE::printl") == 0) {
               sub->native_address = SPerl_STD_FUNC_printl;
             }
-            else if (strcmp(sub_name, "CORE::printf") == 0) {
+            else if (strcmp(sub_abs_name, "CORE::printf") == 0) {
               sub->native_address = SPerl_STD_FUNC_printf;
             }
-            else if (strcmp(sub_name, "CORE::printd") == 0) {
+            else if (strcmp(sub_abs_name, "CORE::printd") == 0) {
               sub->native_address = SPerl_STD_FUNC_printd;
             }
           }
@@ -1051,7 +1051,7 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
     sub->anon = 1;
   }
   else {
-    sub->op_base_name = op_sub_base_name;
+    sub->op_name = op_sub_base_name;
   }
   
   // Descriptors
