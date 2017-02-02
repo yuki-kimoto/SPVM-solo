@@ -7,6 +7,14 @@ use Test::Simple;
 package Test {
   sub main($mvar : int) : int {
     
+    # get field
+    {
+      my $m = new Test::Minimal;
+      
+      printi($m->x);
+      printi($m->y);
+    }
+    
     # increment long value
     {
       my $var : long = 4;

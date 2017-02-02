@@ -1427,13 +1427,12 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
         SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[package_constant_pool_address];
         
-        size_t allocation_size = constant_pool_package;
-        if (allocation_size == 0) allocation_size = 1;
-        intptr_t address = (intptr_t)SPerl_HEAP_alloc(sperl, allocation_size);
-        memset((void*) address, 0, allocation_size);
+        size_t byte_size = constant_pool_package->byte_size;
+        intptr_t address = (intptr_t)SPerl_HEAP_alloc(sperl, byte_size);
+        memset((void*)address, 0, byte_size);
         
         operand_stack_top++;
-        *(intptr_t*)&call_stack[operand_stack_top] = (intptr_t)address;
+        *(intptr_t*)&call_stack[operand_stack_top] = address;
         
         pc += 5;
         continue;
@@ -1689,9 +1688,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         
-        int32_t tmp = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top] + constant_pool_field->package_byte_offset);
-        
-        *(int32_t*)&call_stack[operand_stack_top] = 4;
+        *(int32_t*)&call_stack[operand_stack_top] = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top] + constant_pool_field->package_byte_offset);
         
         pc += 5;
         continue;

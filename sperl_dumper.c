@@ -291,6 +291,20 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         break;
       }
       // Have four operand
+      case SPerl_BYTECODE_C_CODE_BGETFIELD:
+      case SPerl_BYTECODE_C_CODE_SGETFIELD:
+      case SPerl_BYTECODE_C_CODE_IGETFIELD:
+      case SPerl_BYTECODE_C_CODE_LGETFIELD:
+      case SPerl_BYTECODE_C_CODE_FGETFIELD:
+      case SPerl_BYTECODE_C_CODE_DGETFIELD:
+      case SPerl_BYTECODE_C_CODE_AGETFIELD:
+      case SPerl_BYTECODE_C_CODE_BPUTFIELD:
+      case SPerl_BYTECODE_C_CODE_SPUTFIELD:
+      case SPerl_BYTECODE_C_CODE_IPUTFIELD:
+      case SPerl_BYTECODE_C_CODE_LPUTFIELD:
+      case SPerl_BYTECODE_C_CODE_FPUTFIELD:
+      case SPerl_BYTECODE_C_CODE_DPUTFIELD:
+      case SPerl_BYTECODE_C_CODE_APUTFIELD:
       case SPerl_BYTECODE_C_CODE_PUTFIELD_WW:
       case SPerl_BYTECODE_C_CODE_GETFIELD_WW:
       case SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:

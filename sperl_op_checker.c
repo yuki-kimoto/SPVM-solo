@@ -156,11 +156,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             op_cur->first->lvalue = 1;
             break;
           }
-          case SPerl_OP_C_CODE_FIELD: {
-            op_cur->first->lvalue = 1;
-            break;
-          }
-          
         }
         
         // [END]Preorder traversal position
@@ -883,6 +878,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               }
               // Add my var
               case SPerl_OP_C_CODE_VAR: {
+                
                 SPerl_VAR* var = op_cur->uv.var;
                 
                 // Search same name variable
