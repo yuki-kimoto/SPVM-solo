@@ -1727,35 +1727,69 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 5;
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_BPUTFIELD:
+      case SPerl_BYTECODE_C_CODE_BPUTFIELD: {
+        int32_t field_constant_pool_address
+          = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+        *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset) = *(int8_t*)&call_stack[operand_stack_top];
+        operand_stack_top -= 2;
         pc += 5;
         continue;
-      case SPerl_BYTECODE_C_CODE_SPUTFIELD:
+      }
+      case SPerl_BYTECODE_C_CODE_SPUTFIELD: {
+        int32_t field_constant_pool_address
+          = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+        *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset) = *(int16_t*)&call_stack[operand_stack_top];
+        operand_stack_top -= 2;
         pc += 5;
         continue;
+      }
       case SPerl_BYTECODE_C_CODE_IPUTFIELD: {
         int32_t field_constant_pool_address
           = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-        
         *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset) = *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 2;
-        
         pc += 5;
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_LPUTFIELD:
+      case SPerl_BYTECODE_C_CODE_LPUTFIELD: {
+        int32_t field_constant_pool_address
+          = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+        *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset) = *(int64_t*)&call_stack[operand_stack_top];
+        operand_stack_top -= 2;
         pc += 5;
         continue;
-      case SPerl_BYTECODE_C_CODE_FPUTFIELD:
+      }
+      case SPerl_BYTECODE_C_CODE_FPUTFIELD: {
+        int32_t field_constant_pool_address
+          = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+        *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset) = *(float*)&call_stack[operand_stack_top];
+        operand_stack_top -= 2;
         pc += 5;
         continue;
-      case SPerl_BYTECODE_C_CODE_DPUTFIELD:
+      }
+      case SPerl_BYTECODE_C_CODE_DPUTFIELD: {
+        int32_t field_constant_pool_address
+          = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+        *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset) = *(double*)&call_stack[operand_stack_top];
+        operand_stack_top -= 2;
         pc += 5;
         continue;
-      case SPerl_BYTECODE_C_CODE_APUTFIELD:
+      }
+      case SPerl_BYTECODE_C_CODE_APUTFIELD: {
+        int32_t field_constant_pool_address
+          = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
+        SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+        *(intptr_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset) = *(intptr_t*)&call_stack[operand_stack_top];
+        operand_stack_top -= 2;
         pc += 5;
         continue;
+      }
     }
     
     assert(0);
