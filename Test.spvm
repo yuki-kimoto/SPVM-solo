@@ -6,7 +6,16 @@ use Test::Simple;
 
 package Test {
   sub main($mvar : int) : int {
-
+    
+    # increment long value
+    {
+      my $var : long = 4;
+      $var++;
+      $var--;
+      --$var;
+      ++$var;
+    }
+    
     if (1) {
       2;
       if (3) {
