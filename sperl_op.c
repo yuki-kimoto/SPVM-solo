@@ -1276,6 +1276,7 @@ SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* o
   // Type OP
   SPerl_OP* op_type_array = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_type->file, op_type->line);
   SPerl_OP_sibling_splice(sperl, op_type_array, NULL, 0, op_type);
+  SPerl_OP_sibling_splice(sperl, op_type_array, op_type, 0, op_term);
   
   op_type_array->uv.type = type;
   op_type_array->file = op_type->file;

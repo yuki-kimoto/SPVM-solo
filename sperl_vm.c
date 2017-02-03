@@ -1276,6 +1276,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           memset((void*)address, 0, allocate_size);
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+          
           int32_t allocate_size = sizeof(int32_t) * *(int32_t*)&call_stack[operand_stack_top];
           address = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
           memset((void*)address, 0, allocate_size);
