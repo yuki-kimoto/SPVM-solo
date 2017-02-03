@@ -1303,15 +1303,19 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       }
       case SPerl_BYTECODE_C_CODE_ANEWARRAY:
+        // TODO
         pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
+        // TODO
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
+        // TODO
         pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_ATHROW:
+        // TODO
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_WIDE:
