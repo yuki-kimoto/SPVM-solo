@@ -1201,11 +1201,14 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
                 else if (op_cur->first->code == SPerl_OP_C_CODE_ARRAY_ELEM) {
                   
-                  warn("PPPPPPPPPPPP");
+                  SPerl_OP* op_array_elem = op_cur->first;
+                  SPerl_OP* op_type = op_array_elem->first;
+                  SPerl_OP* op_term_index = op_array_elem->last;
                   
-                  SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first->last);
+                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_array_elem);
+                  SPerl_RESOLVED_TYPE* index_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term_index);
                   
-                  if (last_resolved_type == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  if (index_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                     if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BOOLEAN || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
                       SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BASTORE);
                     }
@@ -1228,7 +1231,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                       SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_AASTORE);
                     }
                   }
-                  else if (last_resolved_type == SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                  else if (index_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
                     if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BOOLEAN || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
                       SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BASTORE_L);
                     }
@@ -1250,6 +1253,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     else {
                       SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_AASTORE_L);
                     }
+                  }
+                  else {
+                    assert(0);
                   }
                 }
                 else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
