@@ -75,7 +75,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_ACONST_NULL:
-        // TODO
+        operand_stack_top++;
+        *(intptr_t*)&call_stack[operand_stack_top] = NULL;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_ICONST_M1:

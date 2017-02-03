@@ -377,6 +377,7 @@ opt_term
 term
   : VAR
   | CONSTANT
+  | UNDEF
   | decl_anon_sub
   | call_sub
   | unop
@@ -384,7 +385,6 @@ term
   | field
   | array_elem
   | convert_type
-  | UNDEF
   | new_object
   | array_init
   | array_length
