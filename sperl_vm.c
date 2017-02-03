@@ -1314,9 +1314,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_ATHROW:
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_MONITOREXIT:
-        // Not used
-        assert(0);
       case SPerl_BYTECODE_C_CODE_WIDE:
         // iload, fload, aload, lload, dload, istore, fstore, astore, lstore, dstore, or iinc
         
@@ -1716,6 +1713,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_MONITORENTER:
+        // Not used
+        assert(0);
+      case SPerl_BYTECODE_C_CODE_MONITOREXIT:
         // Not used
         assert(0);
     }
