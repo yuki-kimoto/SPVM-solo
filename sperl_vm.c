@@ -1341,12 +1341,14 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
         continue;
       case SPerl_BYTECODE_C_CODE_IFNULL:
-        // TODO
-        pc += 3;
+        success = *(intptr_t*)&call_stack[operand_stack_top] == NULL;
+        pc += success * (int16_t)((bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) + (~success & 1) * 3;
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_IFNONNULL:
-        // TODO
-        pc += 3;
+        success = *(intptr_t*)&call_stack[operand_stack_top] != NULL;
+        pc += success * (int16_t)((bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]) + (~success & 1) * 3;
+        operand_stack_top--;
         continue;
       case SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
       {
