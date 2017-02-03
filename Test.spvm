@@ -241,8 +241,8 @@ package Test {
     1 & 2;
     1 | 2;
     my $foo2 : int[];
-    $foo2->[1] = 5;
-    $foo2->[2];
+    # $foo2->[1] = 5;
+    # $foo2->[2];
     my $foo : int;
     $foo = 1;
     4 % 6;
