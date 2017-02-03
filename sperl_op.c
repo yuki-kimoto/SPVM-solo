@@ -756,6 +756,15 @@ void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
   name_info->resolved_name = field_name;
 }
 
+SPerl_OP* SPerl_OP_build_array_elem(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_term) {
+  
+  SPerl_OP* op_array_elem = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ARRAY_ELEM, op_var->file, op_var->line);
+  SPerl_OP_sibling_splice(sperl, op_array_elem, NULL, 0, op_var);
+  SPerl_OP_sibling_splice(sperl, op_array_elem, op_var, 0, op_term);
+  
+  return op_array_elem;
+}
+
 SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_field_base_name) {
   SPerl_OP* op_field = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_FIELD, op_var->file, op_var->line);
   SPerl_OP_sibling_splice(sperl, op_field, NULL, 0, op_var);

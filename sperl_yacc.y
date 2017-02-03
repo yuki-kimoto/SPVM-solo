@@ -516,12 +516,7 @@ binop
 array_elem
   : VAR ARROW '[' term ']'
     {
-      $$ = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ARRAY_ELEM, $1->file, $1->line);
-      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $1);
-      SPerl_OP_sibling_splice(sperl, $$, $1, 0, $4);
-      
-      $$->file = $1->file;
-      $$->line = $1->line;
+      $$ = SPerl_OP_build_array_elem(sperl, $1, $4);
     }
 
 call_sub

@@ -1200,7 +1200,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                 }
                 else if (op_cur->first->code == SPerl_OP_C_CODE_ARRAY_ELEM) {
-
+                  
+                  warn("PPPPPPPPPPPP");
+                  
                   SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first->last);
                   
                   if (last_resolved_type == SPerl_RESOLVED_TYPE_C_ID_INT) {
