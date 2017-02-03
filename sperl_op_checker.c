@@ -260,39 +260,36 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
                 
-                if (!first_resolved_type && !last_resolved_type) {
-                  // Convert to constant true
-                  SPerl_OP_convert_to_op_constant_true(sperl, op_cur);
-                  op_cur->first = NULL;
-                  op_cur->last = NULL;
+                // TERM == TERM
+                if (first_resolved_type && last_resolved_type) {
+                  // core == core
+                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                    // Insert type converting op
+                    SPerl_OP_insert_op_convert(sperl, op_cur);
+                  }
+                  // core == OBJ
+                  else if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                    SPerl_yyerror_format(sperl, "== left value must be object at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
+                  // OBJ == core
+                  else if (SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                    SPerl_yyerror_format(sperl, "== right value must be object at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
                 }
-                else {
-                  // undef
-                  if (!first_resolved_type) {
-                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                      SPerl_yyerror_format(sperl, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                      break;
-                    }
+                // undef == TERM
+                else if (!first_resolved_type) {
+                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                    SPerl_yyerror_format(sperl, "== right value must be object at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
                   }
-                  else if (!last_resolved_type) {
-                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                      SPerl_yyerror_format(sperl, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                      break;
-                    }
-                  }
-                  else {
-                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                      // Insert type converting op
-                      SPerl_OP_insert_op_convert(sperl, op_cur);
-                    }
-                    else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                      SPerl_yyerror_format(sperl, "== right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                      break;
-                    }
-                    else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                      SPerl_yyerror_format(sperl, "== left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                      break;
-                    }
+                }
+                // TERM == undef
+                else if (!last_resolved_type) {
+                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                    SPerl_yyerror_format(sperl, "== left value must be object at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
                   }
                 }
                 
@@ -303,39 +300,36 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
 
-                if (!first_resolved_type && !last_resolved_type) {
-                  // Convert to constant true
-                  SPerl_OP_convert_to_op_constant_false(sperl, op_cur);
-                  op_cur->first = NULL;
-                  op_cur->last = NULL;
+                // TERM == TERM
+                if (first_resolved_type && last_resolved_type) {
+                  // core == core
+                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                    // Insert type converting op
+                    SPerl_OP_insert_op_convert(sperl, op_cur);
+                  }
+                  // core == OBJ
+                  else if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                    SPerl_yyerror_format(sperl, "!= left value must be object at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
+                  // OBJ == core
+                  else if (SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                    SPerl_yyerror_format(sperl, "!= right value must be object at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
+                  }
                 }
-                else {
-                  // undef
-                  if (!first_resolved_type && last_resolved_type) {
-                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                      SPerl_yyerror_format(sperl, "!= right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                      break;
-                    }                
+                // undef == TERM
+                else if (!first_resolved_type) {
+                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
+                    SPerl_yyerror_format(sperl, "!= right value must be object at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
                   }
-                  else if (first_resolved_type && !last_resolved_type) {
-                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                      SPerl_yyerror_format(sperl, "!= left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                      break;
-                    }
-                  }
-                  else {
-                    if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                      // Insert type converting op
-                      SPerl_OP_insert_op_convert(sperl, op_cur);
-                    }
-                    else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                      SPerl_yyerror_format(sperl, "!= right value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                      break;
-                    }
-                    else if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                      SPerl_yyerror_format(sperl, "!= left value must be reference at %s line %d\n", op_cur->file, op_cur->line);
-                      break;
-                    }
+                }
+                // TERM == undef
+                else if (!last_resolved_type) {
+                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                    SPerl_yyerror_format(sperl, "!= left value must be object at %s line %d\n", op_cur->file, op_cur->line);
+                    break;
                   }
                 }
                 
