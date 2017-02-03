@@ -21,6 +21,7 @@
 #include "sperl_constant_pool_sub.h"
 #include "sperl_constant_pool_package.h"
 #include "sperl_constant_pool_field.h"
+#include "sperl_resolved_type.h"
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
@@ -1260,9 +1261,46 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 5;
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_NEWARRAY:
-        pc += 5;
+      case SPerl_BYTECODE_C_CODE_NEWARRAY: {
+        int32_t resolved_type_id = bytecodes[pc + 1];
+        
+        intptr_t address;
+        if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_BOOLEAN || resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+          int32_t allocate_size = sizeof(int8_t) * *(int32_t*)&call_stack[operand_stack_top];
+          address = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+          memset((void*)address, 0, allocate_size);
+        }
+        else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+          int32_t allocate_size = sizeof(int16_t) * *(int32_t*)&call_stack[operand_stack_top];
+          address = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+          memset((void*)address, 0, allocate_size);
+        }
+        else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+          int32_t allocate_size = sizeof(int32_t) * *(int32_t*)&call_stack[operand_stack_top];
+          address = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+          memset((void*)address, 0, allocate_size);
+        }
+        else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
+          int32_t allocate_size = sizeof(int64_t) * *(int32_t*)&call_stack[operand_stack_top];
+          address = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+          memset((void*)address, 0, allocate_size);
+        }
+        else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
+          int32_t allocate_size = sizeof(float) * *(int32_t*)&call_stack[operand_stack_top];
+          address = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+          memset((void*)address, 0, allocate_size);
+        }
+        else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+          int32_t allocate_size = sizeof(double) * *(int32_t*)&call_stack[operand_stack_top];
+          address = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+          memset((void*)address, 0, allocate_size);
+        }
+        
+        *(intptr_t*)&call_stack[operand_stack_top] = address;
+        
+        pc += 2;
         continue;
+      }
       case SPerl_BYTECODE_C_CODE_ANEWARRAY:
         pc += 5;
         continue;

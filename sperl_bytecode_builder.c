@@ -902,10 +902,31 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 if (SPerl_RESOLVED_TYPE_is_core_type_array(sperl, resolved_type)) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NEWARRAY);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 24) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 16) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, (resolved_type->id >> 8) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, resolved_type->id & 0xFF);
+                  
+                  if (strcmp(resolved_type->name, "boolean[]") == 0) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_RESOLVED_TYPE_C_ID_BOOLEAN);
+                  }
+                  else if (strcmp(resolved_type->name, "byte[]") == 0) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_RESOLVED_TYPE_C_ID_BYTE);
+                  }
+                  else if (strcmp(resolved_type->name, "short[]") == 0) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_RESOLVED_TYPE_C_ID_SHORT);
+                  }
+                  else if (strcmp(resolved_type->name, "int[]") == 0) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_RESOLVED_TYPE_C_ID_INT);
+                  }
+                  else if (strcmp(resolved_type->name, "long[]") == 0) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_RESOLVED_TYPE_C_ID_LONG);
+                  }
+                  else if (strcmp(resolved_type->name, "float[]") == 0) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_RESOLVED_TYPE_C_ID_FLOAT);
+                  }
+                  else if (strcmp(resolved_type->name, "double[]") == 0) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_RESOLVED_TYPE_C_ID_DOUBLE);
+                  }
+                  else {
+                    assert(0);
+                  }
                 }
                 else if (SPerl_RESOLVED_TYPE_is_multi_array(sperl, resolved_type)) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_MULTIANEWARRAY);
