@@ -1310,10 +1310,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // TODO
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
-        // TODO
-        pc += 5;
-        continue;
       case SPerl_BYTECODE_C_CODE_ATHROW:
         // TODO
         pc++;
@@ -1720,6 +1716,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_MONITOREXIT:
+        // Not used
+        assert(0);
+      case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
         // Not used
         assert(0);
     }
