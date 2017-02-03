@@ -346,6 +346,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
                 
+                // undef check
+                if (!first_resolved_type) {
+                  SPerl_yyerror_format(sperl, "< left value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (!last_resolved_type) {
+                  SPerl_yyerror_format(sperl, "< right value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
                 // Can receive only core type
                 if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
                   SPerl_yyerror_format(sperl, "< left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
@@ -365,7 +375,17 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
 
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
-                
+
+                // undef check
+                if (!first_resolved_type) {
+                  SPerl_yyerror_format(sperl, "<= left value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (!last_resolved_type) {
+                  SPerl_yyerror_format(sperl, "<= right value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                                
                 // Can receive only core type
                 if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
                   SPerl_yyerror_format(sperl, "<= left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
@@ -385,6 +405,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
 
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+
+                // undef check
+                if (!first_resolved_type) {
+                  SPerl_yyerror_format(sperl, "> left value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (!last_resolved_type) {
+                  SPerl_yyerror_format(sperl, "> right value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 
                 // Can receive only core type
                 if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
@@ -405,6 +435,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
 
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
+
+                // undef check
+                if (!first_resolved_type) {
+                  SPerl_yyerror_format(sperl, "<= left value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                if (!last_resolved_type) {
+                  SPerl_yyerror_format(sperl, "<= right value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 
                 // Can receive only core type
                 if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
