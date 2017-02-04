@@ -618,7 +618,7 @@ type_sub
       SPerl_OP* op_types = SPerl_OP_newOP_LIST(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
       $$ = SPerl_OP_build_type_sub(sperl, op_types, $4);
     }
-  | SUB '(' types ')' type
+  | SUB '(' types ')' type_or_void
     {
       $$ = SPerl_OP_build_type_sub(sperl, $3, $5);
     }
