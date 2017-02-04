@@ -35,7 +35,6 @@ _Bool SPerl_RESOLVED_TYPE_is_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_t
 _Bool SPerl_RESOLVED_TYPE_contain_sub(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type);
 _Bool SPerl_RESOLVED_TYPE_is_integral(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type);
 _Bool SPerl_RESOLVED_TYPE_is_core_type_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type);
-_Bool SPerl_RESOLVED_TYPE_is_multi_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type);
 _Bool SPerl_RESOLVED_TYPE_is_core_type(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type);
 
 #endif
