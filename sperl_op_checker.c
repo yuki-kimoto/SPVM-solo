@@ -1066,6 +1066,20 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 break;
               }
               case SPerl_OP_C_CODE_FIELD: {
+                SPerl_OP* op_term = op_cur->first;
+                SPerl_OP* op_name = op_cur->last;
+                
+                if (op_term->code != SPerl_OP_C_CODE_VAR
+                  && op_term->code != SPerl_OP_C_CODE_ARRAY_ELEM
+                  && op_term->code != SPerl_OP_C_CODE_FIELD
+                  && op_term->code != SPerl_OP_C_CODE_CALL_SUB)
+                {
+                  SPerl_yyerror_format(sperl, "field invoker is invalid \"%s\" at %s line %d\n",
+                    op_name->uv.name, op_cur->file, op_cur->line);
+                  parser->fatal_error = 1;
+                  break;
+                }
+                
                 // Check field name
                 SPerl_OP_resolve_field_name(sperl, op_cur);
                 
