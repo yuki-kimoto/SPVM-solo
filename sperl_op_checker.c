@@ -1069,16 +1069,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 // Check field name
                 SPerl_OP_resolve_field_name(sperl, op_cur);
                 
-                const char* field_name = op_cur->uv.name_info->resolved_name;
+                const char* field_abs_name = op_cur->uv.name_info->resolved_name;
                 
                 SPerl_FIELD* found_field= SPerl_HASH_search(
                   parser->field_symtable,
-                  field_name,
-                  strlen(field_name)
+                  field_abs_name,
+                  strlen(field_abs_name)
                 );
                 if (!found_field) {
                   SPerl_yyerror_format(sperl, "unknown field \"%s\" at %s line %d\n",
-                    field_name, op_cur->file, op_cur->line);
+                    field_abs_name, op_cur->file, op_cur->line);
                   parser->fatal_error = 1;
                   break;
                 }
