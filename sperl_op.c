@@ -742,16 +742,17 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
   name_info->resolved_name = sub_abs_name;
 }
 
-void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_name_info) {
+void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_field) {
   
-  SPerl_NAME_INFO* name_info = op_name_info->uv.name_info;
+  SPerl_OP* op_term_invoker = op_field->first;
+  SPerl_OP* op_name = op_field->last;
   
-  const char* field_name;
-  const char* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
-  const char* base_name = name_info->op_name->uv.name;
-  field_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
+  SPerl_RESOLVED_TYPE* invoker_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term_invoker);
+  const char* package_name = invoker_resolved_type->name;
+  const char* base_name = op_name->uv.name;
+  const char* field_abs_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
   
-  name_info->resolved_name = field_name;
+  op_field->uv.name_info->resolved_name = field_abs_name;
 }
 
 SPerl_OP* SPerl_OP_build_array_elem(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_term) {
