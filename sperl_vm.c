@@ -306,13 +306,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_IALOAD:
         *(int32_t*)&call_stack[operand_stack_top - 1]
-          = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * *(int32_t*)&call_stack[operand_stack_top]);
+          = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_LALOAD:
         call_stack[operand_stack_top - 1]
-          = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * *(int32_t*)&call_stack[operand_stack_top]);
+          = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
@@ -1283,38 +1283,37 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         int32_t resolved_type_id = bytecodes[pc + 1];
         
         // Array length
-        int64_t length = *(int32_t*)&call_stack[operand_stack_top];
+        int64_t length = call_stack[operand_stack_top];
         
         // Allocate array
         intptr_t array;
         if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_BOOLEAN || resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
-          int32_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * length;
+          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * length;
           array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
           memset((void*)array, 0, allocate_size);
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
-          int32_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * length;
+          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * length;
           array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
           memset((void*)array, 0, allocate_size);
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-          
-          int32_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * length;
+          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * length;
           array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
           memset((void*)array, 0, allocate_size);
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-          int32_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * length;
+          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * length;
           array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
           memset((void*)array, 0, allocate_size);
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-          int32_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(float) * length;
+          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(float) * length;
           array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
           memset((void*)array, 0, allocate_size);
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-          int32_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(double) * length;
+          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(double) * length;
           array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
           memset((void*)array, 0, allocate_size);
         }

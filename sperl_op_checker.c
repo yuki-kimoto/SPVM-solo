@@ -508,7 +508,41 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
                 
                 if (SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
-                  // OK
+                  SPerl_OP* op_term_index = op_type->last;
+                  SPerl_RESOLVED_TYPE* index_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term_index);
+                  
+                  if (!index_resolved_type) {
+                    SPerl_yyerror_format(sperl, "new operator can't create array which don't have length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
+                    break;
+                  }
+                  else if (index_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                    
+                    // Convert to long op
+                    SPerl_OP* op_convert = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONVERT, op_term_index->file, op_term_index->line);
+                    
+                    // Type op
+                    SPerl_OP* op_dist_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_term_index->file, op_term_index->line);
+                    SPerl_RESOLVED_TYPE* dist_type_resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
+                    SPerl_TYPE* type = SPerl_TYPE_new(sperl);
+                    type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+                    op_dist_type->uv.type = type;
+                    
+                    // Convert op children
+                    SPerl_OP_sibling_splice(sperl, op_convert, NULL, 0, op_term_index);
+                    SPerl_OP_sibling_splice(sperl, op_convert, op_term_index, 0, op_dist_type);
+                    
+                    op_type->last = op_convert;
+                    op_convert->sibparent = op_type;
+                    
+                    op_type->first->sibparent = op_convert;
+                  }
+                  else if (index_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                    // OK
+                  }
+                  else {
+                    SPerl_yyerror_format(sperl, "new operator can't create array which don't have length of int or long type \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
+                    break;
+                  }
                 }
                 else {
                   if (SPerl_RESOLVED_TYPE_contain_sub(sperl, resolved_type)) {

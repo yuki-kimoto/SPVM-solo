@@ -71,6 +71,9 @@ void SPerl_DUMPER_dump_ast(SPerl* sperl, SPerl_OP* op_base) {
     else if (code == SPerl_OP_C_CODE_NAME) {
       printf(" \"%s\"", op_cur->uv.name);
     }
+    else if (code == SPerl_OP_C_CODE_TYPE) {
+      printf(" \"%s\"", op_cur->uv.type->resolved_type->name);
+    }
     printf("\n");
     
     // [END]Preorder traversal position
