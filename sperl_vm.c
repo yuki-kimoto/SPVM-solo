@@ -1333,11 +1333,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
-        // TODO
+        call_stack[operand_stack_top] = *(int64_t*)*(intptr_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_ATHROW:
-        // TODO
+        
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_WIDE:

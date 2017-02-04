@@ -214,6 +214,7 @@ package Test {
     $nums->[1] = 5;
     printi($nums->[0]);
     printi($nums->[1]);
+    printi(@$nums);
    
     my $simple : Test::Simple = new Test::Simple;
     my $simples : Test::Simple[] = new Test::Simple[3];
