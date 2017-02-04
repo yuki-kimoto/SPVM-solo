@@ -6,6 +6,14 @@ use Test::Simple;
 
 package Test {
   sub main($mvar : int) : int {
+    {
+      my $ms = new Test::Minimal[3];
+      
+      $ms->[1] = new Test::Minimal;
+      
+      $ms->[1]->x = 3;
+      printi($ms->[1]->x);
+    }
     
     # get and set field
     {
