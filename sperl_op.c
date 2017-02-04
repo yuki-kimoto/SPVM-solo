@@ -369,8 +369,6 @@ SPerl_OP* SPerl_OP_build_new_object(SPerl* sperl, SPerl_OP* op_new, SPerl_OP* op
   
   SPerl_OP_sibling_splice(sperl, op_new, NULL, 0, op_type);
   
-  SPerl_ARRAY_push(parser->op_types, op_type);
-  
   return op_new;
 }
 
