@@ -412,7 +412,7 @@ convert_type
     }
 
 field
-  : VAR ARROW field_name
+  : term ARROW field_name
     {
       $$ = SPerl_OP_build_field(sperl, $1, $3);
     }
@@ -518,7 +518,7 @@ binop
     }
 
 array_elem
-  : VAR ARROW '[' term ']'
+  : term ARROW '[' term ']'
     {
       $$ = SPerl_OP_build_array_elem(sperl, $1, $4);
     }
@@ -528,11 +528,11 @@ call_sub
     {
       $$ = SPerl_OP_build_call_sub(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $1, $3, 0);
     }
-  | VAR ARROW sub_name '(' opt_terms ')'
+  | term ARROW sub_name '(' opt_terms ')'
     {
       $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5, 0);
     }
-  | VAR ARROW '(' opt_terms ')'
+  | term ARROW '(' opt_terms ')'
     {
       $$ = SPerl_OP_build_call_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $4, 1);
     }

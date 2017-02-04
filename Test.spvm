@@ -1,8 +1,8 @@
 use Test::EnumA;
 use Test::EnumB;
 use Test::EnumC;
-use Test::Simple;
 use Test::Minimal;
+use Test::Simple;
 
 package Test {
   sub main($mvar : int) : int {
