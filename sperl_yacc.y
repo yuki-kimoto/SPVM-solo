@@ -11,6 +11,7 @@
   #include "sperl_toke.h"
   #include "sperl_op.h"
   #include "sperl_dumper.h"
+  #include "sperl_constant.h"
 %}
 
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE NEW
@@ -662,8 +663,13 @@ type_array_with_length
 type_array_with_length_last_omit
   : type_array_with_length '[' ']'
     {
-      SPerl_OP* op_null = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line);
-      $$ = SPerl_OP_build_type_array(sperl, $1, op_null);
+      SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, $1->file, $1->line);
+      SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+      constant->code = SPerl_CONSTANT_C_CODE_LONG;
+      constant->uv.long_value = 0;
+      op_constant->uv.constant = constant;
+      
+      $$ = SPerl_OP_build_type_array(sperl, $1, op_constant);
     }
 
 type_or_void

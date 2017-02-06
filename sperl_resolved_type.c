@@ -82,7 +82,6 @@ int32_t SPerl_RESOLVED_TYPE_get_array_dimention(SPerl* sperl, SPerl_RESOLVED_TYP
       start_ptr = sub_end_ptr + 1;
     }
     
-    
     while (1) {
       char* array_start_ptr = strchr(start_ptr, '[');
       if (array_start_ptr == NULL) {
