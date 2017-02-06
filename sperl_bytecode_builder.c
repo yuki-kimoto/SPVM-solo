@@ -929,10 +929,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                 }
                 else if (SPerl_RESOLVED_TYPE_is_multi_array(sperl, resolved_type)) {
-                  warn("CCCCCCCCCC");
-                  
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_MULTIANEWARRAY);
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                  
+                  int32_t dimention = SPerl_RESOLVED_TYPE_get_array_dimention(sperl, resolved_type);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, dimention);
                 }
                 else if (SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ANEWARRAY);

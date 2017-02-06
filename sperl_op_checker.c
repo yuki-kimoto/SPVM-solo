@@ -508,7 +508,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
                 
                 if (SPerl_RESOLVED_TYPE_is_multi_array(sperl, resolved_type)) {
-                  warn("BBBBBBBBBBBBB");
                   // TODO
                 }
                 else if (SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {

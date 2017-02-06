@@ -7,7 +7,7 @@ use Test::Simple;
 package Test {
   sub main($mvar : int) : int {
     {
-      my $ms = new Test::Minimal[3][3];
+      my $ms = new Test::Minimal[3][4][7];
     }
     
     {
