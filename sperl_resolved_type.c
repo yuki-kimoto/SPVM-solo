@@ -57,6 +57,44 @@ _Bool SPerl_RESOLVED_TYPE_is_multi_array(SPerl* sperl, SPerl_RESOLVED_TYPE* reso
   }
 }
 
+int32_t SPerl_RESOLVED_TYPE_get_array_dimention(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)sperl;
+  
+  if (!SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
+    return 0;
+  }
+  else {
+    int32_t dimention = 0;
+    
+    const char* resolved_type_name = resolved_type->name;
+    const char* sub_end_ptr = strrchr(resolved_type_name, ')');
+    
+    int32_t start_ptr;
+    
+    // Sub type
+    if (sub_end_ptr == NULL) {
+      start_ptr = resolved_type_name;
+    }
+    // Not sub type
+    else {
+      start_ptr = sub_end_ptr + 1;
+    }
+    
+    while (1) {
+      char* array_start_ptr = strchr(start_ptr, '[');
+      if (array_start_ptr == NULL) {
+        break;
+      }
+      else {
+        dimention++;
+        start_ptr = array_start_ptr + 1;
+      }
+    }
+    
+    return dimention;
+  }
+}
+
 SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl* sperl) {
   SPerl_RESOLVED_TYPE* resolved_type = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_RESOLVED_TYPE));
   
