@@ -929,6 +929,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                 }
                 else if (SPerl_RESOLVED_TYPE_is_multi_array(sperl, resolved_type)) {
+                  warn("CCCCCCCCCC");
+                  
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_MULTIANEWARRAY);
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                 }
@@ -948,7 +950,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 8) & 0xFF);
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, constant_pool_address & 0xFF);
                 }
-                
                 break;
               }
               
