@@ -1345,6 +1345,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 1;
         continue;
       }
+      case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
+        // TODO
+        pc += 6;
+        continue;
       case SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
         call_stack[operand_stack_top] = *(int64_t*)*(intptr_t*)&call_stack[operand_stack_top];
         pc++;
@@ -1755,9 +1759,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Not used
         assert(0);
       case SPerl_BYTECODE_C_CODE_MONITOREXIT:
-        // Not used
-        assert(0);
-      case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
         // Not used
         assert(0);
     }

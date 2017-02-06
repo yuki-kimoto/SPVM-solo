@@ -257,7 +257,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         break;
       }
       
-      // Have tow operand
+      // Have tow operands
       case SPerl_BYTECODE_C_CODE_IINC:
       case SPerl_BYTECODE_C_CODE_LINC:
       case SPerl_BYTECODE_C_CODE_SIPUSH:
@@ -294,7 +294,8 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         
         break;
       }
-      // Have four operand
+      
+      // Have four operands
       case SPerl_BYTECODE_C_CODE_BGETFIELD:
       case SPerl_BYTECODE_C_CODE_SGETFIELD:
       case SPerl_BYTECODE_C_CODE_IGETFIELD:
@@ -312,10 +313,35 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       case SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
       case SPerl_BYTECODE_C_CODE_LDC_WW:
       case SPerl_BYTECODE_C_CODE_LDC2_WW:
-      case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
       case SPerl_BYTECODE_C_CODE_ANEWARRAY:
       case SPerl_BYTECODE_C_CODE_NEW:
       {
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        break;
+      }
+
+      // Have five operands
+      case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
+      {
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
         i++;
         bytecode = bytecode_array->values[i];
         printf("        [%" PRId32 "] %d\n", i, bytecode);

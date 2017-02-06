@@ -34,6 +34,29 @@ int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
   2
 };
 
+_Bool SPerl_RESOLVED_TYPE_is_multi_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)sperl;
+  
+  int32_t length = strlen(resolved_type->name);
+  
+  if (strlen(resolved_type->name) >= 4) {
+    char char1 = resolved_type->name[length - 4];
+    char char2 = resolved_type->name[length - 3];
+    char char3 = resolved_type->name[length - 2];
+    char char4 = resolved_type->name[length - 1];
+    
+    if (char1 == '[' && char2 == ']' && char3 == '[' && char4 == ']' ) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+  else {
+    return 0;
+  }
+}
+
 SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl* sperl) {
   SPerl_RESOLVED_TYPE* resolved_type = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_RESOLVED_TYPE));
   
