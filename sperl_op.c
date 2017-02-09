@@ -757,9 +757,23 @@ void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_field) {
 
 SPerl_OP* SPerl_OP_build_array_elem(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_term) {
   
+  SPerl_PARSER* parser = sperl->parser;
+  
   SPerl_OP* op_array_elem = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ARRAY_ELEM, op_var->file, op_var->line);
   SPerl_OP_sibling_splice(sperl, op_array_elem, NULL, 0, op_var);
-  SPerl_OP_sibling_splice(sperl, op_array_elem, op_var, 0, op_term);
+  
+  // Convert to long
+  SPerl_OP* op_index_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_term->file, op_term->line);
+  SPerl_TYPE* index_type = SPerl_TYPE_new(sperl);
+  index_type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+  op_index_type->uv.type = index_type;
+  
+  SPerl_OP* op_convert = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONVERT, op_term->file, op_term->line);
+  
+  SPerl_OP_sibling_splice(sperl, op_convert, NULL, 0, op_term);
+  SPerl_OP_sibling_splice(sperl, op_convert, op_term, 0, op_index_type);
+  
+  SPerl_OP_sibling_splice(sperl, op_array_elem, op_var, 0, op_convert);
   
   return op_array_elem;
 }
