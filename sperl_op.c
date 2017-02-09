@@ -1267,7 +1267,7 @@ SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_name) {
   return op_type_name;
 }
 
-SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term, _Bool has_index) {
+SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term) {
   
   SPerl_PARSER* parser = sperl->parser;
   
@@ -1285,17 +1285,7 @@ SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* o
   SPerl_OP* op_type_array = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_type->file, op_type->line);
   SPerl_OP_sibling_splice(sperl, op_type_array, NULL, 0, op_type);
   
-  if (has_index) {
-    if (!op_term) {
-      SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_type->file, op_type->line);
-      SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
-      constant->code = SPerl_CONSTANT_C_CODE_LONG;
-      constant->uv.long_value = 0;
-      op_constant->uv.constant = constant;
-      
-      op_term = op_constant;
-    }
-
+  if (op_term) {
     // Convert to long
     SPerl_OP* op_index_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_type->file, op_type->line);
     SPerl_TYPE* index_type = SPerl_TYPE_new(sperl);

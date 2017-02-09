@@ -630,17 +630,17 @@ type_sub
 type_array
   : type_name '[' ']'
     {
-      $$ = SPerl_OP_build_type_array(sperl, $1, NULL, 0);
+      $$ = SPerl_OP_build_type_array(sperl, $1, NULL);
     }
   | '(' type_sub ')' '[' ']'
     {
-      $$ = SPerl_OP_build_type_array(sperl, $2, NULL, 0);
+      $$ = SPerl_OP_build_type_array(sperl, $2, NULL);
     }
 
 type_array_with_length
   : type_name '[' term ']'
     {
-      $$ = SPerl_OP_build_type_array(sperl, $1, $3, 1);
+      $$ = SPerl_OP_build_type_array(sperl, $1, $3);
     }
 
 type_or_void
