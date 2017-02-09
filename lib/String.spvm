@@ -1,0 +1,5 @@
+package String {
+  has capacity : long;
+  has byte_length : long;
+  has message : byte[];
+}

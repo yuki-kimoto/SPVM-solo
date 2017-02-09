@@ -3,10 +3,14 @@ use Test::EnumB;
 use Test::EnumC;
 use Test::Simple;
 use Test::Minimal;
+use String;
 
 package Test {
   sub main($mvar : int) : int {
-    
+    # String
+    {
+      my $str = new String;
+    }
     # get and set field
     {
       my $m = new Test::Minimal;
