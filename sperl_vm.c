@@ -1237,7 +1237,35 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_ATHROW:
         
+        /*
+        intptr_t exception = *(intptr_t*)&call_stack[operand_stack_top];
+        
+        // Finish call sub
+        if (call_stack_base == 0) {
+          return;
+        }
+
+        // Restore operand stack top
+        operand_stack_top = call_stack_base - 3;
+        
+        // Return address
+        int64_t return_address = call_stack[call_stack_base - 2];
+        
+        // Resotre vars base
+        call_stack_base = call_stack[call_stack_base - 1];
+        
+        // Restore vars
+        vars = &call_stack[call_stack_base];
+
+        // Push return value
+        operand_stack_top++;
+        *(intptr_t*)&call_stack[operand_stack_top] = exception;
+        
+        pc = return_address;
+        
+        */
         pc++;
+        
         continue;
       case SPerl_BYTECODE_C_CODE_WIDE:
         // iload, fload, aload, lload, dload, istore, fstore, astore, lstore, dstore, or iinc
