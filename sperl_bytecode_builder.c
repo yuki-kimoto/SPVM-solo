@@ -532,7 +532,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DGETFIELD);
                   }
                   else {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_AGETFIELD);
+                    assert(0);
                   }
                   
                   SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
@@ -1040,7 +1040,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DALOAD);
                   }
                   else {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_AALOAD);
+                    assert(0);
                   }
                 }
                 else {
@@ -1192,11 +1192,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                       SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DASTORE);
                     }
                     else {
-                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_AASTORE);
+                      assert(0);
                     }
                   }
                   else {
-                    warn("AAAAA %s", index_resolved_type->name);
                     assert(0);
                   }
                 }
@@ -1223,7 +1222,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DPUTFIELD);
                   }
                   else {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_APUTFIELD);
+                    assert(0);
                   }
                   
                   // Call subroutine
