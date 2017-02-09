@@ -128,7 +128,7 @@ package Test {
         5;
     }
     
-    die "aaaaa";
+    die String::new("aaaaa");
     
     # my $num;
     # my $num1 = undef;

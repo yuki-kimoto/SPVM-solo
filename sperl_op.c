@@ -115,7 +115,6 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "SWITCH_CONDITION",
   "DESCRIPTOR",   // UNKNOWN
   "VOID",
-  "THROW_EXCEPTION",
 };
 
 void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op) {

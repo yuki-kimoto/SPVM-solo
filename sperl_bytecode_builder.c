@@ -532,7 +532,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DGETFIELD);
                   }
                   else {
-                    assert(0);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_AGETFIELD);
                   }
                   
                   SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
@@ -1222,7 +1222,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DPUTFIELD);
                   }
                   else {
-                    assert(0);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_APUTFIELD);
                   }
                   
                   // Call subroutine
