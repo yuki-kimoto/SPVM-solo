@@ -928,12 +928,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     assert(0);
                   }
                 }
-                else if (SPerl_RESOLVED_TYPE_is_multi_array(sperl, resolved_type)) {
-                  assert(0);
-                }
-                else if (SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
-                  assert(0);
-                }
                 else {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NEW);
                   
