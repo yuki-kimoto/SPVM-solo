@@ -1327,24 +1327,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 2;
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_ANEWARRAY: {
-        // Array length
-        int64_t length = call_stack[operand_stack_top];
-        
-        // Allocate array
-        size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(intptr_t) * length;
-        intptr_t array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
-        memset((void*)array, 0, allocate_size);
-        
-        // Set array length
-        *(int64_t*)array = length;
-        
-        // Set array
-        *(intptr_t*)&call_stack[operand_stack_top] = array;
-        
-        pc += 1;
-        continue;
-      }
       case SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
         call_stack[operand_stack_top] = *(int64_t*)*(intptr_t*)&call_stack[operand_stack_top];
         pc++;
@@ -1760,6 +1742,10 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_MULTIANEWARRAY:
         // Not used
         assert(0);
+      case SPerl_BYTECODE_C_CODE_ANEWARRAY: {
+        // Not used
+        assert(0);
+      }
     }
     
     assert(0);

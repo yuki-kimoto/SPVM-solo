@@ -26,7 +26,7 @@
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar type_sub types opt_term throw_exception
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_name array_length decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement type_array_with_length
-%type <opval> ';' opt_descriptors descriptors type_or_void normal_statement not_type_sub type_array_with_length_last_omit
+%type <opval> ';' opt_descriptors descriptors type_or_void normal_statement
 
 
 %right <opval> ASSIGN
@@ -406,10 +406,6 @@ new_object
     {
       $$ = SPerl_OP_build_new_object(sperl, $1, $2);
     }
-  | NEW type_array_with_length_last_omit
-    {
-      $$ = SPerl_OP_build_new_object(sperl, $1, $2);
-    }
 
 convert_type
   : '(' type ')' term
@@ -609,12 +605,9 @@ descriptors
   | DESCRIPTOR
 
 type
-  : not_type_sub
-  | type_sub
-
-not_type_sub
   : type_name
   | type_array
+  | type_sub
 
 
 type_name
@@ -635,7 +628,7 @@ type_sub
     }
 
 type_array
-  : not_type_sub '[' ']'
+  : type_name '[' ']'
     {
       $$ = SPerl_OP_build_type_array(sperl, $1, NULL, 0);
     }
@@ -648,20 +641,6 @@ type_array_with_length
   : type_name '[' term ']'
     {
       $$ = SPerl_OP_build_type_array(sperl, $1, $3, 1);
-    }
-  | '(' type_sub ')' '[' term ']'
-    {
-      $$ = SPerl_OP_build_type_array(sperl, $2, $5, 1);
-    }
-  | type_array_with_length '[' term ']'
-    {
-      $$ = SPerl_OP_build_type_array(sperl, $1, $3, 1);
-    }
-
-type_array_with_length_last_omit
-  : type_array_with_length '[' ']'
-    {
-      $$ = SPerl_OP_build_type_array(sperl, $1, NULL, 1);
     }
 
 type_or_void

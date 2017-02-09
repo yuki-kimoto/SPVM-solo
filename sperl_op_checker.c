@@ -507,10 +507,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_OP* op_type = op_cur->first;
                 SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
                 
-                if (SPerl_RESOLVED_TYPE_is_multi_array(sperl, resolved_type)) {
-                  // TODO
-                }
-                else if (SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
+                if (SPerl_RESOLVED_TYPE_is_core_type_array(sperl, resolved_type)) {
                   SPerl_OP* op_term_index = op_type->last;
                   SPerl_RESOLVED_TYPE* index_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term_index);
                   
@@ -526,16 +523,21 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     break;
                   }
                 }
+                else if (SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
+                  SPerl_yyerror_format(sperl,
+                    "new operator can't receive object array at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 else {
                   if (SPerl_RESOLVED_TYPE_contain_sub(sperl, resolved_type)) {
                     SPerl_yyerror_format(sperl,
-                      "new operator can't receive sub type %s line %d\n", op_cur->file, op_cur->line);
+                      "new operator can't receive sub type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
                   
                   if (SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type)) {
                     SPerl_yyerror_format(sperl,
-                      "new operator can't receive core type %s line %d\n", op_cur->file, op_cur->line);
+                      "new operator can't receive core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
                   
