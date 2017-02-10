@@ -34,10 +34,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
   // Parser
   SPerl_PARSER* parser = sperl->parser;
 
-  // Get expected and retrun back to normal
-  uint8_t expect = parser->expect;
-  parser->expect = SPerl_TOKE_C_EXPECT_NORMAL;
-  
   // Save buf pointer
   parser->befbufptr = parser->bufptr;
   
@@ -203,7 +199,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         
         if (*parser->bufptr == '>') {
           parser->bufptr++;
-          parser->expect = SPerl_TOKE_C_EXPECT_NAME;
           yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NULL);
           return ARROW;
         }
@@ -590,151 +585,137 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           keyword[str_len] = '\0';
           
           // Keyname
-          if (expect != SPerl_TOKE_C_EXPECT_NAME) {
-            if (memcmp(keyword, "my", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR);
-              return MY;
+          if (memcmp(keyword, "my", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR);
+            return MY;
+          }
+          else if (memcmp(keyword, "has", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_FIELD);
+            return HAS;
+          }
+          else if (memcmp(keyword, "sub", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_SUB);
+            return SUB;
+          }
+          else if (memcmp(keyword, "package", str_len) == 0) {
+            // File can contains only one package
+            if (parser->current_package_count) {
+              fprintf(stderr, "Can't write second package declaration in file at %s line %d\n", parser->cur_module_path, parser->cur_line);
+              exit(1);
             }
-            else if (memcmp(keyword, "has", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_FIELD);
-              parser->expect = SPerl_TOKE_C_EXPECT_NAME;
-              return HAS;
-            }
-            else if (memcmp(keyword, "sub", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_SUB);
-              parser->expect = SPerl_TOKE_C_EXPECT_NAME;
-              return SUB;
-            }
-            else if (memcmp(keyword, "package", str_len) == 0) {
-              // File can contains only one package
-              if (parser->current_package_count) {
-                fprintf(stderr, "Can't write second package declaration in file at %s line %d\n", parser->cur_module_path, parser->cur_line);
-                exit(1);
-              }
-              parser->current_package_count++;
-              
-              // Next is package name
-              parser->expect = SPerl_TOKE_C_EXPECT_PACKAGENAME;
-              
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_PACKAGE);
-              return PACKAGE;
-            }
-            else if (memcmp(keyword, "switch", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_SWITCH);
-              return SWITCH;
-            }
-            else if (memcmp(keyword, "case", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CASE);
-              return CASE;
-            }
-            else if (memcmp(keyword, "default", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DEFAULT);
-              return DEFAULT;
-            }
-            else if (memcmp(keyword, "if", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_IF);
-              return IF;
-            }
-            else if (memcmp(keyword, "elsif", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_ELSIF);
-              return ELSIF;
-            }
-            else if (memcmp(keyword, "else", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_ELSE);
-              return ELSE;
-            }
-            else if (memcmp(keyword, "return", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_RETURN);
-              return RETURN;
-            }
-            else if (memcmp(keyword, "for", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_FOR);
-              return FOR;
-            }
-            else if (memcmp(keyword, "last", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_LAST);
-              return LAST;
-            }
-            else if (memcmp(keyword, "next", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NEXT);
-              return NEXT;
-            }
-            else if (memcmp(keyword, "use", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_USE);
-              return USE;
-            }
-            else if (memcmp(keyword, "undef", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_UNDEF);
-              return UNDEF;
-            }
-            else if (memcmp(keyword, "void", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_VOID);
-              return VOID;
-            }
-            else if (memcmp(keyword, "while", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_WHILE);
-              return WHILE;
-            }
-            else if (memcmp(keyword, "new", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NEW);
-              return NEW;
-            }
-            else if (memcmp(keyword, "enum", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_ENUM);
-              return ENUM;
-            }
-            else if (memcmp(keyword, "die", str_len) == 0) {
-              yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DIE);
-              return DIE;
-            }
-            else if (memcmp(keyword, "true", str_len) == 0) {
-              SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
-              SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
-              constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
-              constant->uv.int_value = 1;
-              constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
-              op->uv.constant = constant;
-              yylvalp->opval = op;
+            parser->current_package_count++;
+            
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_PACKAGE);
+            return PACKAGE;
+          }
+          else if (memcmp(keyword, "switch", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_SWITCH);
+            return SWITCH;
+          }
+          else if (memcmp(keyword, "case", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CASE);
+            return CASE;
+          }
+          else if (memcmp(keyword, "default", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DEFAULT);
+            return DEFAULT;
+          }
+          else if (memcmp(keyword, "if", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_IF);
+            return IF;
+          }
+          else if (memcmp(keyword, "elsif", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_ELSIF);
+            return ELSIF;
+          }
+          else if (memcmp(keyword, "else", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_ELSE);
+            return ELSE;
+          }
+          else if (memcmp(keyword, "return", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_RETURN);
+            return RETURN;
+          }
+          else if (memcmp(keyword, "for", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_FOR);
+            return FOR;
+          }
+          else if (memcmp(keyword, "last", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_LAST);
+            return LAST;
+          }
+          else if (memcmp(keyword, "next", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NEXT);
+            return NEXT;
+          }
+          else if (memcmp(keyword, "use", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_USE);
+            return USE;
+          }
+          else if (memcmp(keyword, "undef", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_UNDEF);
+            return UNDEF;
+          }
+          else if (memcmp(keyword, "void", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_VOID);
+            return VOID;
+          }
+          else if (memcmp(keyword, "while", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_WHILE);
+            return WHILE;
+          }
+          else if (memcmp(keyword, "new", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NEW);
+            return NEW;
+          }
+          else if (memcmp(keyword, "enum", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_ENUM);
+            return ENUM;
+          }
+          else if (memcmp(keyword, "die", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DIE);
+            return DIE;
+          }
+          else if (memcmp(keyword, "true", str_len) == 0) {
+            SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
+            SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+            constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
+            constant->uv.int_value = 1;
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
+            op->uv.constant = constant;
+            yylvalp->opval = op;
 
-              return CONSTANT;
-            }
-            else if (memcmp(keyword, "false", str_len) == 0) {
-              SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
-              SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
-              constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
-              constant->uv.int_value = 0;
-              constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
-              op->uv.constant = constant;
-              yylvalp->opval = op;
+            return CONSTANT;
+          }
+          else if (memcmp(keyword, "false", str_len) == 0) {
+            SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
+            SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+            constant->code = SPerl_CONSTANT_C_CODE_BOOLEAN;
+            constant->uv.int_value = 0;
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "boolean", strlen("boolean"));
+            op->uv.constant = constant;
+            yylvalp->opval = op;
 
-              return CONSTANT;
-            }
-            else if (memcmp(keyword, "native", str_len) == 0) {
-              SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DESCRIPTOR);
-              op->code = SPerl_DESCRIPTOR_C_CODE_NATIVE;
-              yylvalp->opval = op;
-              
-              return DESCRIPTOR;
-            }
-            else if (memcmp(keyword, "const", str_len) == 0) {
-              SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DESCRIPTOR);
-              op->code = SPerl_DESCRIPTOR_C_CODE_CONST;
-              yylvalp->opval = op;
-              
-              return DESCRIPTOR;
-            }
+            return CONSTANT;
+          }
+          else if (memcmp(keyword, "native", str_len) == 0) {
+            SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DESCRIPTOR);
+            op->code = SPerl_DESCRIPTOR_C_CODE_NATIVE;
+            yylvalp->opval = op;
+            
+            return DESCRIPTOR;
+          }
+          else if (memcmp(keyword, "const", str_len) == 0) {
+            SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DESCRIPTOR);
+            op->code = SPerl_DESCRIPTOR_C_CODE_CONST;
+            yylvalp->opval = op;
+            
+            return DESCRIPTOR;
           }
           
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NAME);
           op->uv.name = keyword;
           yylvalp->opval = op;
-
-          if (expect == SPerl_TOKE_C_EXPECT_PACKAGENAME) {
-            // Template class
-            if (strchr(keyword, '_')) {
-              // akinomyoga: not yet implemented?
-            }
-          }
           
           return NAME;
         }

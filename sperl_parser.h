@@ -62,9 +62,6 @@ struct SPerl_parser {
   // Entry point subroutine
   const char* entry_point;
 
-  // Expect next token type
-  int32_t expect;
-  
   // Current line number
   int32_t cur_line;
   

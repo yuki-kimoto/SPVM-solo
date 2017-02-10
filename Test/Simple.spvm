@@ -3,15 +3,10 @@ use Test::EnumA;
 package Test::Simple {
   has x : int;
   has y : int;
-
   has z : sub (int, int) int;
-
-  has last : int;
-
+  
   has title : int;
-
-  sub last ($foo : int) : int { return 0; }
-
+  
   sub get2 () : int {
     1;
     my $var1 : int;
@@ -32,13 +27,12 @@ package Test::Simple {
     # $title->(1);
     # $title->(1, 2);
 
-    $self->x;
+    $self{x};
     $self->sum5();
 
     Test::Simple::sum5($self);
 
-    $self->x = 3;
-    $self->last;
+    $self{x} = 3;
 
     my $title8 : boolean = true;
     my $title9 : boolean = false;
@@ -49,7 +43,7 @@ package Test::Simple {
   }
   
   sub sum5($self : Test::Simple) : int {
-    $self->x;
+    $self{x};
     
     return 0;
   }

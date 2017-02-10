@@ -15,11 +15,11 @@ package Test {
     {
       my $m = new Test::Minimal;
       
-      $m->x = 2;
-      $m->y = 3;
+      $m{x} = 2;
+      $m{y} = 3;
       
-      printi($m->x);
-      printi($m->y);
+      printi($m{x});
+      printi($m{y});
     }
     
     # increment long value
@@ -149,9 +149,9 @@ package Test {
 
     my $simple3 : Test::Simple = new Test::Simple;
     
-    $simple3->y = 2;
-    $simple3->x;
-    $simple3->y;
+    $simple3{y} = 2;
+    $simple3{x};
+    $simple3{y};
 
     my $simple2 : Test::Simple = new Test::Simple;
     
@@ -363,7 +363,7 @@ package Test {
     
     return 2;
   }
-
+  
   sub sum1 ($num1 : int, $num2 : int) : int {
     return $num1 + $num2;
   }

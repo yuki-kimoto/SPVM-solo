@@ -417,7 +417,7 @@ convert_type
     }
 
 field
-  : term ARROW field_name
+  : term '{' field_name '}'
     {
       $$ = SPerl_OP_build_field(sperl, $1, $3);
     }
