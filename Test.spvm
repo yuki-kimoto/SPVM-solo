@@ -214,10 +214,10 @@ package Test {
     [1, 2, 3];
     [[1, 2, 3], [1, 2, 3]];
     my $nums : int[] = new int[3];
-    $nums->[0] = 3;
-    $nums->[1] = 5;
-    printi($nums->[0]);
-    printi($nums->[1]);
+    $nums[0] = 3;
+    $nums[1] = 5;
+    printi($nums[0]);
+    printi($nums[1]);
     printi(@$nums);
    
     my $simple : Test::Simple = new Test::Simple;
@@ -249,8 +249,8 @@ package Test {
     1 & 2;
     1 | 2;
     my $foo2 : int[];
-    # $foo2->[1] = 5;
-    # $foo2->[2];
+    # $foo2[1] = 5;
+    # $foo2[2];
     my $foo : int;
     $foo = 1;
     4 % 6;
@@ -286,8 +286,8 @@ package Test {
     # _sum();
     # sum_foo();
     
-    # $title->[3];
-    # $title->[3] = 4;
+    # $title[3];
+    # $title[3] = 4;
 
     my $bar : double = (double)1;
     undef;

@@ -523,9 +523,9 @@ binop
     }
 
 array_elem
-  : term ARROW '[' term ']'
+  : term '[' term ']'
     {
-      $$ = SPerl_OP_build_array_elem(sperl, $1, $4);
+      $$ = SPerl_OP_build_array_elem(sperl, $1, $3);
     }
 
 call_sub
