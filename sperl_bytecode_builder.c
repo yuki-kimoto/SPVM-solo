@@ -377,10 +377,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   else {
                     default_offset = cur_default_address - cur_switch_address;
                   }
-                  bytecode_array->values[cur_switch_address + padding + 1] = (default_offset >> 24) & 0xFF;
-                  bytecode_array->values[cur_switch_address + padding + 2] = (default_offset >> 16) & 0xFF;
-                  bytecode_array->values[cur_switch_address + padding + 3] = (default_offset >> 8) & 0xFF;
-                  bytecode_array->values[cur_switch_address + padding + 4] = default_offset & 0xFF;
+                  bytecode_array->values[cur_switch_address + padding + 1] = *(int32_t*)&default_offset;
                   
                   // min
                   int32_t min = *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 5];
@@ -399,19 +396,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                       int32_t* case_address_ptr = SPerl_ARRAY_fetch(cur_case_addresses, case_pos);
                       int32_t case_offset = *case_address_ptr - cur_switch_address;
                       
-                      bytecode_array->values[cur_switch_address + padding + 13 + (4 * i)] = (case_offset >> 24) & 0xFF;
-                      bytecode_array->values[cur_switch_address + padding + 14 + (4 * i)] = (case_offset >> 16) & 0xFF;
-                      bytecode_array->values[cur_switch_address + padding + 15 + (4 * i)] = (case_offset >> 8) & 0xFF;
-                      bytecode_array->values[cur_switch_address + padding + 16 + (4 * i)] = case_offset & 0xFF;
+                      *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 13 + (4 * i)] = case_offset;
                       
                       case_pos++;
                     }
                     else {
                       // Default
-                      bytecode_array->values[cur_switch_address + padding + 13 + (4 * i)] = (default_offset >> 24) & 0xFF;
-                      bytecode_array->values[cur_switch_address + padding + 14 + (4 * i)] = (default_offset >> 16) & 0xFF;
-                      bytecode_array->values[cur_switch_address + padding + 15 + (4 * i)] = (default_offset >> 8) & 0xFF;
-                      bytecode_array->values[cur_switch_address + padding + 16 + (4 * i)] = default_offset & 0xFF;
+                      *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 13 + (4 * i)] = default_offset;
                     }
                   }
                 }
