@@ -7,6 +7,10 @@ package Test::Simple {
   
   has title : int;
   
+  sub get_x ($self : Test::Simple) : int {
+    return $self{x};
+  }
+  
   sub get2 () : int {
     1;
     my $var1 : int;

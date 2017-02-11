@@ -149,6 +149,8 @@ package Test {
 
     my $simple3 : Test::Simple = new Test::Simple;
     
+    printi($simple3->get_x());
+    
     $simple3{y} = 2;
     $simple3{x};
     $simple3{y};
