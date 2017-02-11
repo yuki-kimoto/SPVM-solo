@@ -514,7 +514,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 break;
               }
-              case SPerl_OP_C_CODE_NEW: {
+              case SPerl_OP_C_CODE_MALLOC: {
                 SPerl_OP* op_type = op_cur->first;
                 SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
                 

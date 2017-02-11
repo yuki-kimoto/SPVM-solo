@@ -104,7 +104,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "POP",
   "NEW_ARRAY",
   "UNDEF",
-  "NEW",
+  "MALLOC",
   "NEW_ARRAY_CONSTANT",
   "ARRAY_LENGTH",
   "CONDITION",
@@ -404,7 +404,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_PLUS:
     case SPerl_OP_C_CODE_NEGATE:
     case SPerl_OP_C_CODE_ASSIGN:
-    case SPerl_OP_C_CODE_NEW:
+    case SPerl_OP_C_CODE_MALLOC:
     {
       resolved_type = SPerl_OP_get_resolved_type(sperl, op->first);
       break;

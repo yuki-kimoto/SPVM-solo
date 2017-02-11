@@ -664,9 +664,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_WHILE);
             return WHILE;
           }
-          else if (memcmp(keyword, "new", str_len) == 0) {
-            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NEW);
-            return NEW;
+          else if (memcmp(keyword, "malloc", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_MALLOC);
+            return MALLOC;
           }
           else if (memcmp(keyword, "enum", str_len) == 0) {
             yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_ENUM);

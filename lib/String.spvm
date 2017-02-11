@@ -3,12 +3,12 @@ package String {
   has byte_length : long;
   has message : byte[];
   
-  sub new_string ($byte_string : byte[]) : String {
+  sub new ($byte_string : byte[]) : String {
     
-    my $string = new String;
+    my $string = malloc String;
     $string{capacity} = @$byte_string;
     $string{byte_length} = $string{capacity};
-    $string{message} = new byte[$string{byte_length}];
+    $string{message} = malloc byte[$string{byte_length}];
     for (my $i = 0; $i < $string{byte_length}; $i++) {
       $string{message}[$i] = $byte_string[$i];
     }

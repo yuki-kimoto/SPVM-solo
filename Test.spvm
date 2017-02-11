@@ -9,11 +9,11 @@ package Test {
   sub main($mvar : int) : int {
     # String
     {
-      my $str = new String;
+      my $str = malloc String;
     }
     # get and set field
     {
-      my $m = new Test::Minimal;
+      my $m = malloc Test::Minimal;
       
       $m{x} = 2;
       $m{y} = 3;
@@ -128,7 +128,7 @@ package Test {
         5;
     }
     
-    die String::new("aaaaa");
+    die String->new("aaaaa");
     
     # my $num;
     # my $num1 = undef;
@@ -147,7 +147,7 @@ package Test {
     }
     6;
 
-    my $simple3 : Test::Simple = new Test::Simple;
+    my $simple3 : Test::Simple = malloc Test::Simple;
     
     printi($simple3->get_x());
     $simple3->get_x;
@@ -156,7 +156,7 @@ package Test {
     $simple3{x};
     $simple3{y};
 
-    my $simple2 : Test::Simple = new Test::Simple;
+    my $simple2 : Test::Simple = malloc Test::Simple;
     
     if (1) { }
     if (1.5) { }
@@ -216,14 +216,14 @@ package Test {
 
     [1, 2, 3];
     [[1, 2, 3], [1, 2, 3]];
-    my $nums : int[] = new int[3];
+    my $nums : int[] = malloc int[3];
     $nums[0] = 3;
     $nums[1] = 5;
     printi($nums[0]);
     printi($nums[1]);
     printi(@$nums);
    
-    my $simple : Test::Simple = new Test::Simple;
+    my $simple : Test::Simple = malloc Test::Simple;
     
     my $nums_length : int = @$nums;
     

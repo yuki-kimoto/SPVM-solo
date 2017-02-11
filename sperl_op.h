@@ -113,7 +113,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_POP,          // UNKNOWN
   SPerl_OP_C_CODE_NEW_ARRAY,
   SPerl_OP_C_CODE_UNDEF,
-  SPerl_OP_C_CODE_NEW,
+  SPerl_OP_C_CODE_MALLOC,
   SPerl_OP_C_CODE_NEW_ARRAY_CONSTANT,
   SPerl_OP_C_CODE_ARRAY_LENGTH,
   SPerl_OP_C_CODE_CONDITION,

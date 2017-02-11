@@ -14,7 +14,7 @@
   #include "sperl_constant.h"
 %}
 
-%token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE NEW
+%token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE MALLOC
 %token <opval> LAST NEXT NAME VAR CONSTANT ENUM DESCRIPTOR CORETYPE UNDEF DIE
 %token <opval> SWITCH CASE DEFAULT VOID
 
@@ -401,11 +401,11 @@ array_init
     }
 
 new_object
-  : NEW type_name
+  : MALLOC type_name
     {
       $$ = SPerl_OP_build_new_object(sperl, $1, $2);
     }
-  | NEW type_array_with_length
+  | MALLOC type_array_with_length
     {
       $$ = SPerl_OP_build_new_object(sperl, $1, $2);
     }
