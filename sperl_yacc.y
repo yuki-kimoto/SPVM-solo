@@ -537,9 +537,19 @@ call_sub
     {
       $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5, 0);
     }
+  | term ARROW sub_name
+    {
+      SPerl_OP* op_terms = SPerl_OP_newOP_LIST(sperl, $1->file, $2->line);
+      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, op_terms, 0);
+    }
   | package_name ARROW sub_name '(' opt_terms  ')'
     {
       $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5, 0);
+    }
+  | package_name ARROW sub_name
+    {
+      SPerl_OP* op_terms = SPerl_OP_newOP_LIST(sperl, $1->file, $2->line);
+      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, op_terms, 0);
     }
 
 block 

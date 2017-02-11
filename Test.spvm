@@ -150,6 +150,7 @@ package Test {
     my $simple3 : Test::Simple = new Test::Simple;
     
     printi($simple3->get_x());
+    $simple3->get_x;
     
     $simple3{y} = 2;
     $simple3{x};
@@ -242,6 +243,7 @@ package Test {
     Test::EnumA::TWO();
     
     Test::EnumA->ONE();
+    Test::EnumA->ONE;
     
     my $var : int = 4;
     $var++;
