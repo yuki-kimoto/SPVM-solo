@@ -903,7 +903,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
 
         // Padding
-        int32_t padding = (sizeof(int32_t) - 1) - (pc % sizeof(int32_t));;
+        int32_t padding = (sizeof(int32_t) - 1) - (pc % sizeof(int32_t));
 
         /*
         1  default
@@ -917,13 +917,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         int32_t default_offset = *(int32_t*)&bytecodes[pc + padding + 1];
         
         // npare
-        int32_t pair_count = *(int32_t*)&bytecodes[pc + padding + 5];
+        int32_t pair_count = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) + 1];
         
         // min
-        int32_t min = *(int32_t*)&bytecodes[pc + padding + 9];
+        int32_t min = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) * 2 + 1];
         
         // max
-        int32_t max = *(int32_t*)&bytecodes[pc + padding + 9 + ((pair_count - 1) * sizeof(int32_t) * 2)];
+        int32_t max = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) * 2 + 1 + ((pair_count - 1) * sizeof(int32_t) * 2)];
         
         if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
           // 2 branch searching
@@ -936,7 +936,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
               break;
             }
             int32_t cur_half_pos = cur_min_pos + (cur_max_pos - cur_min_pos) / 2;
-            int32_t cur_half = *(int32_t*)&bytecodes[pc + padding + 9 + (cur_half_pos * sizeof(int32_t) * 2)];
+            int32_t cur_half = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) * 2 + 1 + (cur_half_pos * sizeof(int32_t) * 2)];
             
             if (call_stack[operand_stack_top] > cur_half) {
               cur_min_pos = cur_half_pos + 1;
@@ -945,7 +945,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
               cur_max_pos = cur_half_pos - 1;
             }
             else {
-              int32_t branch = *(int32_t*)&bytecodes[pc + padding + 9 + (cur_half_pos * sizeof(int32_t) * 2) + sizeof(int32_t)];
+              int32_t branch = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) * 2 + 1 + (cur_half_pos * sizeof(int32_t) * 2) + sizeof(int32_t)];
               pc += branch;
               break;
             }
