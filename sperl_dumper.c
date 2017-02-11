@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
+#include <assert.h>
 
 #include "sperl.h"
 #include "sperl_parser.h"
@@ -357,20 +358,18 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         }
         
         // Low
-        int32_t min = 0;
+        int32_t min = *(int32_t*)&bytecode_array->values[i + 1];
         for (int32_t j = 0; j < 4; j++) {
           i++;
           bytecode = bytecode_array->values[i];
-          min += bytecode << (24 - (8 * j));
           printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         // High
-        int32_t max = 0;
+        int32_t max = *(int32_t*)&bytecode_array->values[i + 1];
         for (int32_t j = 0; j < 4; j++) {
           i++;
           bytecode = bytecode_array->values[i];
-          max += bytecode << (24 - (8 * j));
           printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         

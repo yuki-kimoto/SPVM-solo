@@ -292,10 +292,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   *(int32_t*)&bytecode_array->values[bytecode_array->length - 4] = min;
                   
-                  // High
+                  // Low
                   for (int32_t i = 0; i < 4; i++) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (max >> (24 - (8 * i))) & 0xFF);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
+                  *(int32_t*)&bytecode_array->values[bytecode_array->length - 4] = max;
                   
                   // Offsets
                   for (int32_t i = 0; i < (max - min + 1) * 4; i++) {
@@ -384,14 +385,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   // min
                   int32_t min = *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 5];
                   
-                  warn("AAAAAAAAAAAA %d", min);
-                  
                   // max
-                  int32_t max
-                    = (bytecode_array->values[cur_switch_address + padding + 9] << 24)
-                    + (bytecode_array->values[cur_switch_address + padding + 10] << 16)
-                    + (bytecode_array->values[cur_switch_address + padding + 11] << 8)
-                    + bytecode_array->values[cur_switch_address + padding + 12];
+                  int32_t max = *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 9];
                   
                   int32_t length = max - min + 1;
                   

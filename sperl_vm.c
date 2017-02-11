@@ -892,11 +892,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         int32_t min = *(int32_t*)&bytecodes[pc + padding + 5];
         
         // max
-        int32_t max
-          = (bytecodes[pc + padding + 9] << 24)
-          + (bytecodes[pc + padding + 10] << 16)
-          + (bytecodes[pc + padding + 11] << 8)
-          + bytecodes[pc + padding + 12];
+        int32_t max = *(int32_t*)&bytecodes[pc + padding + 9];
         
         if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
           int32_t branch_base = (pc + padding + 13) + (call_stack[operand_stack_top] - min) * sizeof(int32_t);
