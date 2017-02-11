@@ -241,6 +241,8 @@ package Test {
     Test::EnumA::ONE();
     Test::EnumA::TWO();
     
+    Test::EnumA->ONE();
+    
     my $var : int = 4;
     $var++;
     $var--;

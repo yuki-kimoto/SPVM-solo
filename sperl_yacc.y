@@ -537,6 +537,10 @@ call_sub
     {
       $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5, 0);
     }
+  | package_name ARROW sub_name '(' opt_terms  ')'
+    {
+      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5, 0);
+    }
 
 block 
   : '{' opt_statements '}'

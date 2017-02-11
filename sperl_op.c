@@ -1207,15 +1207,17 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
     const char* sub_base_name = op_sub_base_name->uv.name;
     SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->line);
     
-    // Sub call
+    // Normal call
     if (op_invocant->code == SPerl_OP_C_CODE_NULL) {
       // Absolute
+      // P::m();
       if (strstr(sub_base_name, ":")) {
         name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
         op_name->uv.name = sub_base_name;
         name_info->op_name = op_name;
       }
       // Base name
+      // m();
       else {
         name_info->code = SPerl_NAME_INFO_C_CODE_BASENAME;
         op_name->uv.name = sub_base_name;
@@ -1225,18 +1227,44 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
     // Method call
     else if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
       // Absolute
+      // $var->P::m();
       if (strstr(sub_base_name, ":")) {
         name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
         op_name->uv.name = sub_base_name;
         name_info->op_name = op_name;
       }
       // Base name
+      // $var->m();
       else {
         name_info->code = SPerl_NAME_INFO_C_CODE_VARBASENAME;
         name_info->op_var = op_invocant;
         name_info->op_name = op_sub_base_name;
       }
       SPerl_OP_sibling_splice(sperl, op_terms, op_terms->first, 0, op_invocant);
+    }
+    // Method call
+    else if (op_invocant->code == SPerl_OP_C_CODE_NAME) {
+      // Absolute
+      // P->Q::m;
+      if (strstr(sub_base_name, ":")) {
+        SPerl_yyerror_format(sperl, "package name is ambiguas %s line %d\n", op_invocant->file, op_invocant->line);
+      }
+      // Base name
+      else {
+        const char* package_name = op_invocant->uv.name;
+        const char* name = op_sub_base_name->uv.name;
+        
+        // Create abs name
+        char* abs_name = SPerl_OP_create_abs_name(sperl, package_name, name);
+        
+        // Create op abs name
+        SPerl_OP* op_abs_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->file);
+        op_abs_name->uv.name = abs_name;
+        
+        // Set abs name
+        name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
+        name_info->op_name = op_abs_name;
+      }
     }
   }
   
