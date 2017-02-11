@@ -330,8 +330,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   
                   // Case count
                   for (int32_t i = 0; i < 4; i++) {
-                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (length >> (24 - (8 * i))) & 0xFF);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
+                  *(int32_t*)&bytecode_array->values[bytecode_array->length - 4] = length;
                   
                   // Match-Offset pairs
                   if (SPerl_OP_LIMIT_CASES > SIZE_MAX / 8 && length > SIZE_MAX / 8) {
@@ -418,10 +419,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   else {
                     default_offset = cur_default_address - cur_switch_address;
                   }
-                  bytecode_array->values[cur_switch_address + padding + 1] = (default_offset >> 24) & 0xFF;
-                  bytecode_array->values[cur_switch_address + padding + 2] = (default_offset >> 16) & 0xFF;
-                  bytecode_array->values[cur_switch_address + padding + 3] = (default_offset >> 8) & 0xFF;
-                  bytecode_array->values[cur_switch_address + padding + 4] = default_offset & 0xFF;
+                  *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 1] = default_offset;
                   
                   // Note: Here it's assumed that the number of cases can be expressed by a int32_t variable.
                   assert(SPerl_OP_LIMIT_CASES <= INT32_MAX);
@@ -473,16 +471,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     int32_t case_offset = *case_address_ptr - cur_switch_address;
                     
                     // Match
-                    bytecode_array->values[cur_switch_address + padding + 9 + (8 * i)] = (match >> 24) & 0xFF;
-                    bytecode_array->values[cur_switch_address + padding + 10 + (8 * i)] = (match >> 16) & 0xFF;
-                    bytecode_array->values[cur_switch_address + padding + 11 + (8 * i)] = (match >> 8) & 0xFF;
-                    bytecode_array->values[cur_switch_address + padding + 12 + (8 * i)] = match & 0xFF;
+                    *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 9 + (8 * i)] = match;
 
                     // Offset
-                    bytecode_array->values[cur_switch_address + padding + 13 + (8 * i)] = (case_offset >> 24) & 0xFF;
-                    bytecode_array->values[cur_switch_address + padding + 14 + (8 * i)] = (case_offset >> 16) & 0xFF;
-                    bytecode_array->values[cur_switch_address + padding + 15 + (8 * i)] = (case_offset >> 8) & 0xFF;
-                    bytecode_array->values[cur_switch_address + padding + 16 + (8 * i)] = case_offset & 0xFF;
+                    *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 13 + (8 * i)] = case_offset;
                   }
                 }
                 

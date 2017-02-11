@@ -339,10 +339,10 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
         
         // Machine address to calculate padding
-        uintptr_t pc_machine_address = (uintptr_t)&bytecode_array->values[i];
+        int32_t pc = i;
         
         // Padding
-        int32_t padding = 3 - (pc_machine_address % 4);
+        int32_t padding = (sizeof(int32_t) - 1) - (pc % sizeof(int32_t));
         
         for (int32_t j = 0; j < padding; j++) {
           i++;
@@ -386,10 +386,10 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
         
         // Machine address to calculate padding
-        uintptr_t pc_machine_address = (uintptr_t)&bytecode_array->values[i];
+        int32_t pc = i;
         
         // Padding
-        int32_t padding = 3 - (pc_machine_address % 4);
+        int32_t padding = (sizeof(int32_t) - 1) - (pc % sizeof(int32_t));
         
         for (int32_t j = 0; j < padding; j++) {
           i++;
@@ -405,11 +405,10 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         }
         
         // Count
-        int32_t length = 0;
+        int32_t length = *(int32_t*)&bytecode_array->values[i + 1];
         for (int32_t j = 0; j < 4; j++) {
           i++;
           bytecode = bytecode_array->values[i];
-          length += bytecode << (24 - (8 * j));
           printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
