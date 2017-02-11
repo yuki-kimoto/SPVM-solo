@@ -1207,29 +1207,37 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
     const char* sub_base_name = op_sub_base_name->uv.name;
     SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->line);
     
-    // Absolute
-    if (strstr(sub_base_name, ":")) {
-      name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
-      op_name->uv.name = sub_base_name;
-      name_info->op_name = op_name;
-    }
-    else {
-      if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
-        name_info->code = SPerl_NAME_INFO_C_CODE_VARBASENAME;
-        name_info->op_var = op_invocant;
-        name_info->op_name = op_sub_base_name;
+    // Sub call
+    if (op_invocant->code == SPerl_OP_C_CODE_NULL) {
+      // Absolute
+      if (strstr(sub_base_name, ":")) {
+        name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
+        op_name->uv.name = sub_base_name;
+        name_info->op_name = op_name;
       }
+      // Base name
       else {
         name_info->code = SPerl_NAME_INFO_C_CODE_BASENAME;
         op_name->uv.name = sub_base_name;
         name_info->op_name = op_name;
       }
     }
-  }
-  
-  // Add invocant to arguments
-  if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
-    SPerl_OP_sibling_splice(sperl, op_terms, op_terms->first, 0, op_invocant);
+    // Method call
+    else if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
+      // Absolute
+      if (strstr(sub_base_name, ":")) {
+        name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
+        op_name->uv.name = sub_base_name;
+        name_info->op_name = op_name;
+      }
+      // Base name
+      else {
+        name_info->code = SPerl_NAME_INFO_C_CODE_VARBASENAME;
+        name_info->op_var = op_invocant;
+        name_info->op_name = op_sub_base_name;
+      }
+      SPerl_OP_sibling_splice(sperl, op_terms, op_terms->first, 0, op_invocant);
+    }
   }
   
   op_call_sub->uv.name_info = name_info;
