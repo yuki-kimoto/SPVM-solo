@@ -889,11 +889,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           + bytecodes[pc + padding + 4];
         
         // min
-        int32_t min
-          = (bytecodes[pc + padding + 5] << 24)
-          + (bytecodes[pc + padding + 6] << 16)
-          + (bytecodes[pc + padding + 7] << 8)
-          + bytecodes[pc + padding + 8];
+        int32_t min = *(int32_t*)&bytecodes[pc + padding + 5];
         
         // max
         int32_t max
