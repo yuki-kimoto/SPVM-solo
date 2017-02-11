@@ -537,10 +537,6 @@ call_sub
     {
       $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5, 0);
     }
-  | term ARROW '(' opt_terms ')'
-    {
-      $$ = SPerl_OP_build_call_sub(sperl, $1, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $4, 1);
-    }
 
 block 
   : '{' opt_statements '}'
