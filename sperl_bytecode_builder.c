@@ -275,7 +275,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   cur_switch_address = bytecode_array->length - 1;
                   
                   // Padding
-                  int32_t padding = 3 - (cur_switch_address & 3);
+                  int32_t padding = (sizeof(int32_t) - 1) - (cur_switch_address % sizeof(int32_t));
                   
                   for (int32_t i = 0; i < padding; i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
@@ -317,7 +317,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   cur_switch_address = bytecode_array->length - 1;
                   
                   // Padding
-                  int32_t padding = 3 - (cur_switch_address & 3);
+                  int32_t padding = (sizeof(int32_t) - 1) - (cur_switch_address % sizeof(int32_t));;
                   
                   for (int32_t i = 0; i < padding; i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
@@ -367,7 +367,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 // tableswitch
                 if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_TABLESWITCH) {
-                  int32_t padding = 3 - (cur_switch_address & 3);
+                  int32_t padding = (sizeof(int32_t) - 1) - (cur_switch_address % sizeof(int32_t));
 
                   // Default offset
                   int32_t default_offset;
@@ -380,10 +380,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   bytecode_array->values[cur_switch_address + padding + 1] = *(int32_t*)&default_offset;
                   
                   // min
-                  int32_t min = *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 5];
+                  int32_t min = *(int32_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int32_t) + 1];
                   
                   // max
-                  int32_t max = *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 9];
+                  int32_t max = *(int32_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int32_t) * 2 + 1];
                   
                   int32_t length = max - min + 1;
                   
@@ -396,19 +396,19 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                       int32_t* case_address_ptr = SPerl_ARRAY_fetch(cur_case_addresses, case_pos);
                       int32_t case_offset = *case_address_ptr - cur_switch_address;
                       
-                      *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 13 + (4 * i)] = case_offset;
+                      *(int32_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int32_t) * 3 + 1 + (sizeof(int32_t) * i)] = case_offset;
                       
                       case_pos++;
                     }
                     else {
                       // Default
-                      *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 13 + (4 * i)] = default_offset;
+                      *(int32_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int32_t) * 3 + 1 + (sizeof(int32_t) * i)] = default_offset;
                     }
                   }
                 }
                 // lookupswitch
                 else if (switch_info->code == SPerl_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
-                  int32_t padding = 3 - (cur_switch_address & 3);
+                  int32_t padding = (sizeof(int32_t) - 1) - (cur_switch_address % sizeof(int32_t));;
 
                   // Default offset
                   int32_t default_offset;

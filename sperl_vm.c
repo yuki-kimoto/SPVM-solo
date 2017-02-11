@@ -879,7 +879,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
         
         // Padding
-        int32_t padding = 3 - (pc & 3);
+        int32_t padding = (sizeof(int32_t) - 1) - (pc % sizeof(int32_t));
         
         // default offset
         int32_t default_offset
@@ -907,7 +907,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
 
         // Padding
-        int32_t padding = 3 - (pc & 3);
+        int32_t padding = (sizeof(int32_t) - 1) - (pc % sizeof(int32_t));;
 
         /*
         1  default
