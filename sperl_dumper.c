@@ -458,6 +458,9 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     else {
       printf("      resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
     }
+    
+    printf("      is_constant %d\n", sub->is_constant);
+    
     printf("      args\n");
     SPerl_ARRAY* op_args = sub->op_args;
     for (size_t i = 0, len = op_args->length; i < len; i++) {

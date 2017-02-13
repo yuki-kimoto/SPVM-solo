@@ -52,6 +52,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       SPerl_OP* op_sub = SPerl_ARRAY_fetch(package->op_subs, sub_pos);
       SPerl_SUB* sub = op_sub->uv.sub;
       
+      if (sub->is_constant) {
+        continue;
+      }
+      
       // my var informations
       SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_new_array(sperl, 0);
       
@@ -174,7 +178,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         }
         else {
           while (1) {
-           // [START]Postorder traversal position
+            // [START]Postorder traversal position
             switch (op_cur->code) {
               case SPerl_OP_C_CODE_DEFAULT: {
                 if (cur_default_op) {
@@ -1008,6 +1012,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 break;
               }
               case SPerl_OP_C_CODE_CALL_SUB: {
+                
+                
                 // Check sub name
                 SPerl_OP_resolve_sub_name(sperl, op_package, op_cur);
                 
@@ -1024,6 +1030,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   break;
                 }
                 
+                // Constant
+
                 size_t sub_args_count = found_sub->op_args->length;
                 SPerl_OP* op_list_args = op_cur->last;
                 SPerl_OP* op_term = op_list_args->first;
@@ -1064,6 +1072,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 if (call_sub_args_count < sub_args_count) {
                   SPerl_yyerror_format(sperl, "Too few argument. sub \"%s\" at %s line %d\n", sub_name, op_cur->file, op_cur->line);
                   return;
+                }
+                
+                // Constant subroutine
+                if (found_sub->is_constant) {
+                  // Replace sub to constant
+                  op_cur->code = SPerl_OP_C_CODE_CONSTANT;
+                  op_cur->uv.constant = found_sub->op_block->uv.constant;
+                  
+                  op_cur->first = NULL;
+                  op_cur->last = NULL;
                 }
                 
                 break;

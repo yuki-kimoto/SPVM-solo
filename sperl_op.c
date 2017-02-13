@@ -900,11 +900,90 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           SPerl_HASH_insert(parser->field_symtable, field_name, strlen(field_name), field);
         }
       }
+      else if (op_decl->code == SPerl_OP_C_CODE_DECL_ENUM) {
+        SPerl_OP* op_enumeration = op_decl;
+        SPerl_OP* op_enumeration_block = op_enumeration->first;
+        
+        // Starting value
+        int64_t start_value = 0;
+        SPerl_OP* op_enumeration_values = op_enumeration_block->first;
+        SPerl_OP* op_enumeration_value = op_enumeration_values->first;
+        while ((op_enumeration_value = SPerl_OP_sibling(sperl, op_enumeration_value))) {
+          SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_ENUMERATION_VALUE_new(sperl);
+          enumeration_value->op_name = op_enumeration_value->first;
+          if (op_enumeration_value->first != op_enumeration_value->last) {
+            enumeration_value->op_constant = op_enumeration_value->last;
+          }
+          
+          SPerl_CONSTANT* constant;
+          if (enumeration_value->op_constant) {
+            SPerl_OP* op_constant = enumeration_value->op_constant;
+            start_value = op_constant->uv.constant->uv.int_value + 1;
+            constant = op_constant->uv.constant;
+          }
+          else {
+            constant = SPerl_CONSTANT_new(sperl);
+            constant->code = SPerl_CONSTANT_C_CODE_INT;
+            constant->uv.int_value = start_value;
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+            SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
+            op_constant->uv.constant = constant;
+            
+            enumeration_value->op_constant = op_constant;
+            start_value++;
+          }
+
+          // sub
+          SPerl_OP* op_sub = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_SUB, op_enumeration_value->file, op_enumeration_value->line);
+          op_sub->file = op_enumeration_value->file;
+          op_sub->line = op_enumeration_value->line;
+          
+          // Type
+          SPerl_OP* op_return_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_enumeration_value->file, op_enumeration_value->line);
+          SPerl_TYPE* return_type = SPerl_TYPE_new(sperl);
+          return_type->resolved_type = constant->resolved_type;
+          op_return_type->uv.type = return_type;
+
+          // Name
+          SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_enumeration_value->file, op_enumeration_value->line);
+          op_name->uv.name = enumeration_value->op_name->uv.name;
+          
+          // Constant
+          SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
+          op_constant->uv.constant = constant;
+          
+          // Return
+          SPerl_OP* op_return = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_RETURN, op_enumeration_value->file, op_enumeration_value->line);
+          SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_constant);
+          
+          // Create sub information
+          SPerl_SUB* sub = SPerl_SUB_new(sperl);
+          sub->op_name = op_name;
+          sub->op_return_type = op_return_type;
+          sub->op_block = op_constant;
+          sub->is_constant = 1;
+          
+          // Set sub
+          op_sub->uv.sub = sub;
+          
+          const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, op_name->uv.name);
+          SPerl_SUB* found_sub = NULL;
+          found_sub = SPerl_HASH_search(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name));
+          
+          if (found_sub) {
+            SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
+          }
+          // Unknown sub
+          else {
+            SPerl_HASH_insert(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
+            SPerl_ARRAY_push(op_subs, op_sub);
+          }
+        }
+      }
     }
     package->op_fields = op_fields;
     
     // Subs
-    SPerl_HASH* sub_symtable = parser->sub_symtable;
     for (size_t sub_pos = 0; sub_pos < parser->current_op_subs->length; sub_pos++) {
       parser->current_op_subs;
       
@@ -916,15 +995,13 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
       const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, sub_name);
       
       SPerl_SUB* found_sub = NULL;
-      found_sub = SPerl_HASH_search(sub_symtable, sub_abs_name, strlen(sub_abs_name));
+      found_sub = SPerl_HASH_search(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name));
       
       if (found_sub) {
         SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
       }
       // Unknown sub
       else {
-        SPerl_HASH_insert(sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
-        
         // Bind standard functions
         if (sub->is_native) {
           if (strcmp(sub_abs_name, "std::printi") == 0) {
@@ -941,6 +1018,8 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           }
         }
       }
+
+      SPerl_HASH_insert(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
       SPerl_ARRAY_push(op_subs, op_sub);
     }
     package->op_subs = op_subs;
@@ -1096,75 +1175,6 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enumeration, SPerl
   
   // Build OP_SUB
   SPerl_OP_sibling_splice(sperl, op_enumeration, NULL, 0, op_enumeration_block);
-  
-  // Starting value
-  int64_t start_value = 0;
-  SPerl_OP* op_enumeration_values = op_enumeration_block->first;
-  SPerl_OP* op_enumeration_value = op_enumeration_values->first;
-  while ((op_enumeration_value = SPerl_OP_sibling(sperl, op_enumeration_value))) {
-    SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_ENUMERATION_VALUE_new(sperl);
-    enumeration_value->op_name = op_enumeration_value->first;
-    if (op_enumeration_value->first != op_enumeration_value->last) {
-      enumeration_value->op_constant = op_enumeration_value->last;
-    }
-    
-    SPerl_CONSTANT* constant;
-    if (enumeration_value->op_constant) {
-      SPerl_OP* op_constant = enumeration_value->op_constant;
-      start_value = op_constant->uv.constant->uv.int_value + 1;
-      constant = op_constant->uv.constant;
-    }
-    else {
-      constant = SPerl_CONSTANT_new(sperl);
-      constant->code = SPerl_CONSTANT_C_CODE_INT;
-      constant->uv.int_value = start_value;
-      constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-      SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
-      op_constant->uv.constant = constant;
-      
-      enumeration_value->op_constant = op_constant;
-      start_value++;
-    }
-
-    // sub
-    SPerl_OP* op_sub = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_SUB, op_enumeration_value->file, op_enumeration_value->line);
-    op_sub->file = op_enumeration_value->file;
-    op_sub->line = op_enumeration_value->line;
-    
-    // sub name
-    SPerl_OP* op_sub_base_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_enumeration_value->file, op_enumeration_value->line);
-    op_sub_base_name->uv.name = enumeration_value->op_name->uv.name;
-    
-    // sub args
-    SPerl_OP* op_args = SPerl_OP_newOP_LIST(sperl, op_enumeration_value->file, op_enumeration_value->line);
-    
-    // Descriptors
-    SPerl_OP* op_descriptors = SPerl_OP_newOP_LIST(sperl, op_enumeration_value->file, op_enumeration_value->line);
-    
-    // Type
-    SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_enumeration_value->file, op_enumeration_value->line);
-    SPerl_TYPE* type = SPerl_TYPE_new(sperl);
-    type->resolved_type = constant->resolved_type;
-    op_type->uv.type = type;
-
-    // Constant
-    SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
-    op_constant->uv.constant = constant;
-    
-    // Return
-    SPerl_OP* op_return = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_RETURN, op_enumeration_value->file, op_enumeration_value->line);
-    SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_constant);
-    
-    // Statement
-    SPerl_OP* op_statements = SPerl_OP_newOP_LIST(sperl, op_enumeration_value->file, op_enumeration_value->line);
-    SPerl_OP_sibling_splice(sperl, op_statements, op_statements->first, 0, op_return);
-    
-    // Block
-    SPerl_OP* op_block = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_BLOCK, op_enumeration_value->file, op_enumeration_value->line);
-    SPerl_OP_sibling_splice(sperl, op_block, NULL, 0, op_statements);
-    
-    SPerl_OP_build_decl_sub(sperl, op_sub, op_sub_base_name, op_args, op_descriptors, op_type, op_block);
-  }
   
   return op_enumeration;
 }
