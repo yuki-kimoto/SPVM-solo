@@ -28,13 +28,10 @@ struct SPerl_parser {
   
   // Class loading stack
   SPerl_ARRAY* op_use_stack;
-
-  // Current op subs
-  SPerl_ARRAY* current_op_subs;
   
   // Include pathes
   SPerl_ARRAY* include_pathes;
-
+  
   // Method absolute name symbol table
   SPerl_HASH* sub_symtable;
   

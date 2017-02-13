@@ -900,6 +900,42 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           SPerl_HASH_insert(parser->field_symtable, field_name, strlen(field_name), field);
         }
       }
+      else if (op_decl->code == SPerl_OP_C_CODE_DECL_SUB) {
+        SPerl_OP* op_sub = op_decl;
+        SPerl_SUB* sub = op_sub->uv.sub;
+        
+        SPerl_OP* op_sub_name = sub->op_name;
+        const char* sub_name = op_sub_name->uv.name;
+        const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, sub_name);
+        
+        SPerl_SUB* found_sub = NULL;
+        found_sub = SPerl_HASH_search(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name));
+        
+        if (found_sub) {
+          SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
+        }
+        // Unknown sub
+        else {
+          // Bind standard functions
+          if (sub->is_native) {
+            if (strcmp(sub_abs_name, "std::printi") == 0) {
+              sub->native_address = SPerl_STD_FUNC_printi;
+            }
+            else if (strcmp(sub_abs_name, "std::printl") == 0) {
+              sub->native_address = SPerl_STD_FUNC_printl;
+            }
+            else if (strcmp(sub_abs_name, "std::printf") == 0) {
+              sub->native_address = SPerl_STD_FUNC_printf;
+            }
+            else if (strcmp(sub_abs_name, "std::printd") == 0) {
+              sub->native_address = SPerl_STD_FUNC_printd;
+            }
+          }
+        }
+        
+        SPerl_HASH_insert(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
+        SPerl_ARRAY_push(op_subs, op_sub);
+      }
       else if (op_decl->code == SPerl_OP_C_CODE_DECL_ENUM) {
         SPerl_OP* op_enumeration = op_decl;
         SPerl_OP* op_enumeration_block = op_enumeration->first;
@@ -982,48 +1018,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
       }
     }
     package->op_fields = op_fields;
-    
-    // Subs
-    for (size_t sub_pos = 0; sub_pos < parser->current_op_subs->length; sub_pos++) {
-      parser->current_op_subs;
-      
-      SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->current_op_subs, sub_pos);
-      SPerl_SUB* sub = op_sub->uv.sub;
-      
-      SPerl_OP* op_sub_name = sub->op_name;
-      const char* sub_name = op_sub_name->uv.name;
-      const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, sub_name);
-      
-      SPerl_SUB* found_sub = NULL;
-      found_sub = SPerl_HASH_search(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name));
-      
-      if (found_sub) {
-        SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
-      }
-      // Unknown sub
-      else {
-        // Bind standard functions
-        if (sub->is_native) {
-          if (strcmp(sub_abs_name, "std::printi") == 0) {
-            sub->native_address = SPerl_STD_FUNC_printi;
-          }
-          else if (strcmp(sub_abs_name, "std::printl") == 0) {
-            sub->native_address = SPerl_STD_FUNC_printl;
-          }
-          else if (strcmp(sub_abs_name, "std::printf") == 0) {
-            sub->native_address = SPerl_STD_FUNC_printf;
-          }
-          else if (strcmp(sub_abs_name, "std::printd") == 0) {
-            sub->native_address = SPerl_STD_FUNC_printd;
-          }
-        }
-      }
-
-      SPerl_HASH_insert(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
-      SPerl_ARRAY_push(op_subs, op_sub);
-    }
     package->op_subs = op_subs;
-    parser->current_op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
     
     // Add package
     op_package->uv.package = package;
@@ -1157,15 +1152,6 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
 
   op_sub->uv.sub = sub;
   
-  // ID
-  if (parser->current_op_subs->length >= SPerl_OP_LIMIT_SUBROUTINES) {
-    SPerl_yyerror_format(sperl, "too many subroutines at %s line %d\n", op_block->file, op_block->line);
-  }
-  else {
-    // Add sub information
-    SPerl_ARRAY_push(parser->current_op_subs, op_sub);
-  }
-
   return op_sub;
 }
 
