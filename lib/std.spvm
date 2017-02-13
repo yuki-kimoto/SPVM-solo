@@ -1,4 +1,4 @@
-package CORE {
+package std {
   sub printi ($value : int) : native int {}
   sub printl ($value : long) : native int {}
   sub printf ($value : float) : native int {}

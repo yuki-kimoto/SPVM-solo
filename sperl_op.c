@@ -721,10 +721,6 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
       sub_abs_name,
       strlen(sub_abs_name)
     );
-    
-    if (!found_sub) {
-      sub_abs_name = SPerl_OP_create_abs_name(sperl, "CORE", base_name);
-    }
   }
   
   name_info->resolved_name = sub_abs_name;
@@ -932,16 +928,16 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           
           // Bind standard functions
           if (sub->is_native) {
-            if (strcmp(sub_abs_name, "CORE::printi") == 0) {
+            if (strcmp(sub_abs_name, "std::printi") == 0) {
               sub->native_address = SPerl_STD_FUNC_printi;
             }
-            else if (strcmp(sub_abs_name, "CORE::printl") == 0) {
+            else if (strcmp(sub_abs_name, "std::printl") == 0) {
               sub->native_address = SPerl_STD_FUNC_printl;
             }
-            else if (strcmp(sub_abs_name, "CORE::printf") == 0) {
+            else if (strcmp(sub_abs_name, "std::printf") == 0) {
               sub->native_address = SPerl_STD_FUNC_printf;
             }
-            else if (strcmp(sub_abs_name, "CORE::printd") == 0) {
+            else if (strcmp(sub_abs_name, "std::printd") == 0) {
               sub->native_address = SPerl_STD_FUNC_printd;
             }
           }

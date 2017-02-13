@@ -18,8 +18,8 @@ package Test {
       $m{x} = 2;
       $m{y} = 3;
       
-      printi($m{x});
-      printi($m{y});
+      std::printi($m{x});
+      std::printi($m{y});
     }
     
     # increment long value
@@ -48,60 +48,60 @@ package Test {
     }
     7;
     
-    printi(sum0(1, 1));
-    printi(sum1(1, 2));
+    std::printi(sum0(1, 1));
+    std::printi(sum1(1, 2));
     
-    printi(sum2(1, 2));
+    std::printi(sum2(1, 2));
 
     # Constant float
-    printf(1F);
-    printf(0f);
-    printf(1f);
-    printf(2f);
-    printf(1.2f);
+    std::printf(1F);
+    std::printf(0f);
+    std::printf(1f);
+    std::printf(2f);
+    std::printf(1.2f);
     
     # Constant double
-    printd(1D);
-    printd(0d);
-    printd(1d);
-    printd(1.2);
+    std::printd(1D);
+    std::printd(0d);
+    std::printd(1d);
+    std::printd(1.2);
     
     # Constant long
-    printl(0l);
-    printl(-1L);
-    printl(0L);
-    printl(1L);
-    printl(2L);
-    printl(9223372036854775807L);
-    printl(-9223372036854775808L);
+    std::printl(0l);
+    std::printl(-1L);
+    std::printl(0L);
+    std::printl(1L);
+    std::printl(2L);
+    std::printl(9223372036854775807L);
+    std::printl(-9223372036854775808L);
     
     # Constant int
-    printi(-2147483648);
-    printi(-32769);
-    printi(-32768);
-    printi(-129);
-    printi(-128);
-    printi(-2);
-    printi(-1);
-    printi(0);
-    printi(1);
-    printi(2);
-    printi(3);
-    printi(4);
-    printi(5);
-    printi(6);
-    printi(127);
-    printi(128);
-    printi(255);
-    printi(256);
-    printi(32767);
-    printi(32768);
-    printi(65535);
-    printi(65536);
-    printi(2147483647);
+    std::printi(-2147483648);
+    std::printi(-32769);
+    std::printi(-32768);
+    std::printi(-129);
+    std::printi(-128);
+    std::printi(-2);
+    std::printi(-1);
+    std::printi(0);
+    std::printi(1);
+    std::printi(2);
+    std::printi(3);
+    std::printi(4);
+    std::printi(5);
+    std::printi(6);
+    std::printi(127);
+    std::printi(128);
+    std::printi(255);
+    std::printi(256);
+    std::printi(32767);
+    std::printi(32768);
+    std::printi(65535);
+    std::printi(65536);
+    std::printi(2147483647);
     
-    printi(sum1(1, 2));
-    printi(sum1(1, 5));
+    std::printi(sum1(1, 2));
+    std::printi(sum1(1, 5));
     
     "abc";
     my $num2 = 5;
@@ -149,7 +149,7 @@ package Test {
 
     my $simple3 : Test::Simple = malloc Test::Simple;
     
-    printi($simple3->get_x());
+    std::printi($simple3->get_x());
     $simple3->get_x;
     
     $simple3{y} = 2;
@@ -219,9 +219,9 @@ package Test {
     my $nums : int[] = malloc int[3];
     $nums[0] = 3;
     $nums[1] = 5;
-    printi($nums[0]);
-    printi($nums[1]);
-    printi(@$nums);
+    std::printi($nums[0]);
+    std::printi($nums[1]);
+    std::printi(@$nums);
    
     my $simple : Test::Simple = malloc Test::Simple;
     
