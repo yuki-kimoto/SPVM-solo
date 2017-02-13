@@ -1090,16 +1090,16 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   return op_sub;
 }
 
-SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op_enum_block) {
+SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enumeration, SPerl_OP* op_enumeration_block) {
   
   SPerl_PARSER* parser = sperl->parser;
   
   // Build OP_SUB
-  SPerl_OP_sibling_splice(sperl, op_enum, NULL, 0, op_enum_block);
+  SPerl_OP_sibling_splice(sperl, op_enumeration, NULL, 0, op_enumeration_block);
   
   // Starting value
   int64_t start_value = 0;
-  SPerl_OP* op_enumeration_values = op_enum_block->first;
+  SPerl_OP* op_enumeration_values = op_enumeration_block->first;
   SPerl_OP* op_enumeration_value = op_enumeration_values->first;
   while ((op_enumeration_value = SPerl_OP_sibling(sperl, op_enumeration_value))) {
     SPerl_ENUMERATION_VALUE* enumeration_value = SPerl_ENUMERATION_VALUE_new(sperl);
@@ -1166,7 +1166,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op
     SPerl_OP_build_decl_sub(sperl, op_sub, op_sub_base_name, op_args, op_descriptors, op_type, op_block);
   }
   
-  return op_enum;
+  return op_enumeration;
 }
 
 SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_sub_base_name, SPerl_OP* op_terms) {
