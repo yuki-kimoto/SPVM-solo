@@ -641,9 +641,33 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                 
                 // Last value must be integer
-                if (last_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_INT && last_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                  SPerl_yyerror_format(sperl, "array index must be integer or long at %s line %d\n", op_cur->file, op_cur->line);
+                if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                  SPerl_yyerror_format(sperl, "array index must be integegral at %s line %d\n", op_cur->file, op_cur->line);
                   break;
+                }
+                
+                // Convert to long
+                if (last_resolved_type->id < SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                  
+                  // OP index term
+                  SPerl_OP* op_index_term = op_cur->last;
+                  
+                  // OP convert
+                  SPerl_OP* op_index_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_index_term->file, op_index_term->line);
+                  SPerl_TYPE* index_type = SPerl_TYPE_new(sperl);
+                  index_type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+                  op_index_type->uv.type = index_type;
+                  SPerl_OP* op_convert = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONVERT, op_index_term->file, op_index_term->line);
+                  
+                  op_cur->last = op_convert;
+                  op_convert->moresib = 0;
+                  op_convert->sibparent = op_cur;
+                  
+                  op_convert->first = op_index_term;
+                  op_convert->last = op_index_type;
+                  
+                  op_index_term->moresib = 0;
+                  op_index_term->sibparent = op_convert;
                 }
                 
                 break;
