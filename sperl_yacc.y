@@ -258,7 +258,10 @@ decl_sub
      {
        $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $7, $8, $9);
      }
-
+ | SUB sub_name '(' opt_args ')' ':' opt_descriptors type_or_void ';'
+     {
+       $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $7, $8, NULL);
+     }
 decl_enum
   : ENUM enum_block
     {

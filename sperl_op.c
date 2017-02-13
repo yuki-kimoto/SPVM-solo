@@ -1047,7 +1047,9 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   SPerl_OP_sibling_splice(sperl, op_sub, op_sub_base_name, 0, op_args);
   SPerl_OP_sibling_splice(sperl, op_sub, op_args, 0, op_descriptors);
   SPerl_OP_sibling_splice(sperl, op_sub, op_descriptors, 0, op_type_or_void);
-  SPerl_OP_sibling_splice(sperl, op_sub, op_type_or_void, 0, op_block);
+  if (op_block) {
+    SPerl_OP_sibling_splice(sperl, op_sub, op_type_or_void, 0, op_block);
+  }
   
   // Create sub information
   SPerl_SUB* sub = SPerl_SUB_new(sperl);
