@@ -1098,13 +1098,13 @@ SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* 
   return op_field;
 }
 
-SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_base_name, SPerl_OP* op_args, SPerl_OP* op_descriptors, SPerl_OP* op_type_or_void, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_args, SPerl_OP* op_descriptors, SPerl_OP* op_type_or_void, SPerl_OP* op_block) {
   
   SPerl_PARSER* parser = sperl->parser;
   
   // Build OP_SUB
-  SPerl_OP_sibling_splice(sperl, op_sub, NULL, 0, op_sub_base_name);
-  SPerl_OP_sibling_splice(sperl, op_sub, op_sub_base_name, 0, op_args);
+  SPerl_OP_sibling_splice(sperl, op_sub, NULL, 0, op_sub_name);
+  SPerl_OP_sibling_splice(sperl, op_sub, op_sub_name, 0, op_args);
   SPerl_OP_sibling_splice(sperl, op_sub, op_args, 0, op_descriptors);
   SPerl_OP_sibling_splice(sperl, op_sub, op_descriptors, 0, op_type_or_void);
   if (op_block) {
@@ -1113,7 +1113,7 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   
   // Create sub information
   SPerl_SUB* sub = SPerl_SUB_new(sperl);
-  sub->op_name = op_sub_base_name;
+  sub->op_name = op_sub_name;
   
   // Descriptors
   SPerl_OP* op_descriptor = op_descriptors->first;
@@ -1153,32 +1153,32 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enumeration, SPerl
   return op_enumeration;
 }
 
-SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_sub_base_name, SPerl_OP* op_terms) {
+SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_sub_name, SPerl_OP* op_terms) {
   
   // Build OP_SUB
-  SPerl_OP* op_call_sub = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CALL_SUB, op_sub_base_name->file, op_sub_base_name->line);
-  SPerl_OP_sibling_splice(sperl, op_call_sub, NULL, 0, op_sub_base_name);
-  SPerl_OP_sibling_splice(sperl, op_call_sub, op_sub_base_name, 0, op_terms);
+  SPerl_OP* op_call_sub = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CALL_SUB, op_sub_name->file, op_sub_name->line);
+  SPerl_OP_sibling_splice(sperl, op_call_sub, NULL, 0, op_sub_name);
+  SPerl_OP_sibling_splice(sperl, op_call_sub, op_sub_name, 0, op_terms);
   
   SPerl_NAME_INFO* name_info = SPerl_NAME_INFO_new(sperl);
   
-  const char* sub_base_name = op_sub_base_name->uv.name;
+  const char* sub_name = op_sub_name->uv.name;
   SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->line);
   
   // Normal call
   if (op_invocant->code == SPerl_OP_C_CODE_NULL) {
     // Absolute
     // P::m();
-    if (strstr(sub_base_name, ":")) {
+    if (strstr(sub_name, ":")) {
       name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
-      op_name->uv.name = sub_base_name;
+      op_name->uv.name = sub_name;
       name_info->op_name = op_name;
     }
     // Base name
     // m();
     else {
       name_info->code = SPerl_NAME_INFO_C_CODE_BASENAME;
-      op_name->uv.name = sub_base_name;
+      op_name->uv.name = sub_name;
       name_info->op_name = op_name;
     }
   }
@@ -1186,9 +1186,9 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
   else if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
     // Absolute
     // $var->P::m();
-    if (strstr(sub_base_name, ":")) {
+    if (strstr(sub_name, ":")) {
       name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
-      op_name->uv.name = sub_base_name;
+      op_name->uv.name = sub_name;
       name_info->op_name = op_name;
     }
     // Base name
@@ -1196,7 +1196,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
     else {
       name_info->code = SPerl_NAME_INFO_C_CODE_VARBASENAME;
       name_info->op_var = op_invocant;
-      name_info->op_name = op_sub_base_name;
+      name_info->op_name = op_sub_name;
     }
     SPerl_OP_sibling_splice(sperl, op_terms, op_terms->first, 0, op_invocant);
   }
@@ -1204,13 +1204,13 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
   else if (op_invocant->code == SPerl_OP_C_CODE_NAME) {
     // Absolute
     // P->Q::m;
-    if (strstr(sub_base_name, ":")) {
+    if (strstr(sub_name, ":")) {
       SPerl_yyerror_format(sperl, "package name is ambiguas %s line %d\n", op_invocant->file, op_invocant->line);
     }
     // Base name
     else {
       const char* package_name = op_invocant->uv.name;
-      const char* name = op_sub_base_name->uv.name;
+      const char* name = op_sub_name->uv.name;
       
       // Create abs name
       char* abs_name = SPerl_OP_create_abs_name(sperl, package_name, name);
