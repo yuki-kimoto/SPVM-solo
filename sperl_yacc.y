@@ -392,11 +392,11 @@ array_init
 new_object
   : MALLOC type_name
     {
-      $$ = SPerl_OP_build_new_object(sperl, $1, $2);
+      $$ = SPerl_OP_build_malloc_object(sperl, $1, $2);
     }
   | MALLOC type_array_with_length
     {
-      $$ = SPerl_OP_build_new_object(sperl, $1, $2);
+      $$ = SPerl_OP_build_malloc_object(sperl, $1, $2);
     }
 
 convert_type

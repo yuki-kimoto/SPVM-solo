@@ -204,7 +204,7 @@ SPerl_OP* SPerl_OP_build_if_statement(SPerl* sperl, SPerl_OP* op_if, SPerl_OP* o
 
 SPerl_OP* SPerl_OP_build_array_length(SPerl* sperl, SPerl_OP* op_array_length, SPerl_OP* op_term);
 
-SPerl_OP* SPerl_OP_build_new_object(SPerl* sperl, SPerl_OP* op_new, SPerl_OP* op_type);
+SPerl_OP* SPerl_OP_build_malloc_object(SPerl* sperl, SPerl_OP* op_malloc, SPerl_OP* op_type);
 
 SPerl_OP* SPerl_OP_build_array_init(SPerl* sperl, SPerl_OP* op_opt_terms);
 void SPerl_OP_resolve_type(SPerl* sperl, SPerl_TYPE* type, int32_t name_length);

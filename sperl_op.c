@@ -361,13 +361,13 @@ SPerl_OP* SPerl_OP_build_array_length(SPerl* sperl, SPerl_OP* op_array_length, S
   return op_array_length;
 }
 
-SPerl_OP* SPerl_OP_build_new_object(SPerl* sperl, SPerl_OP* op_new, SPerl_OP* op_type) {
+SPerl_OP* SPerl_OP_build_malloc_object(SPerl* sperl, SPerl_OP* op_malloc, SPerl_OP* op_type) {
   
   SPerl_PARSER* parser = sperl->parser;
   
-  SPerl_OP_sibling_splice(sperl, op_new, NULL, 0, op_type);
+  SPerl_OP_sibling_splice(sperl, op_malloc, NULL, 0, op_type);
   
-  return op_new;
+  return op_malloc;
 }
 
 SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
