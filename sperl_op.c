@@ -224,10 +224,10 @@ SPerl_OP* SPerl_OP_build_switch_statement(SPerl* sperl, SPerl_OP* op_switch, SPe
   SPerl_PARSER* parser = sperl->parser;
   
   SPerl_OP* op_switch_condition = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_SWITCH_CONDITION, op_term->file, op_term->line);
-  SPerl_OP_sibling_splice(sperl, op_switch_condition, NULL, 0, op_term);
+  SPerl_OP_sibling_splice(sperl, op_switch_condition, op_switch_condition->last, 0, op_term);
   
-  SPerl_OP_sibling_splice(sperl, op_switch, NULL, 0, op_switch_condition);
-  SPerl_OP_sibling_splice(sperl, op_switch, op_switch_condition, 0, op_block);
+  SPerl_OP_sibling_splice(sperl, op_switch, op_switch->last, 0, op_switch_condition);
+  SPerl_OP_sibling_splice(sperl, op_switch, op_switch->last, 0, op_block);
   
   op_block->flag |= SPerl_OP_C_FLAG_BLOCK_SWITCH;
   

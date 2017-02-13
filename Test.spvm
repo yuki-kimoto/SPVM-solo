@@ -108,24 +108,24 @@ package Test {
     
     switch($num2) {
       case 1:
-        1;
+        std::printi(1);
       case 3:
-        2;
+        std::printi(2);
       case 5:
-        3;
+        std::printi(3);
       default:
-        5;
+        std::printi(5);
     }
     
     switch($num2) {
       case 1:
-        1;
+        std::printi(1);
       case 3:
-        2;
+        std::printi(2);
       case 10000:
-        2;
+        std::printi(2);
       default:
-        5;
+        std::printi(5);
     }
     
     die String->new("aaaaa");
