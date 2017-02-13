@@ -450,13 +450,7 @@ void SPerl_DUMPER_dump_constant(SPerl* sperl, SPerl_CONSTANT* constant) {
 void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
   if (sub) {
     
-    if (sub->anon) {
-      printf("      name => (NONE)\n");
-    }
-    else {
-      printf("      name => \"%s\"\n", sub->op_name->uv.name);
-    }
-    printf("      anon => %d\n", sub->anon);
+    printf("      name => \"%s\"\n", sub->op_name->uv.name);
     
     if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
       printf("      resolved_type => void");

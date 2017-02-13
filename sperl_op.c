@@ -911,35 +911,33 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
       SPerl_OP* op_sub = SPerl_ARRAY_fetch(parser->current_op_subs, sub_pos);
       SPerl_SUB* sub = op_sub->uv.sub;
       
-      if (!sub->anon) {
-        SPerl_OP* op_sub_name = sub->op_name;
-        const char* sub_name = op_sub_name->uv.name;
-        const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, sub_name);
+      SPerl_OP* op_sub_name = sub->op_name;
+      const char* sub_name = op_sub_name->uv.name;
+      const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, sub_name);
+      
+      SPerl_SUB* found_sub = NULL;
+      found_sub = SPerl_HASH_search(sub_symtable, sub_abs_name, strlen(sub_abs_name));
+      
+      if (found_sub) {
+        SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
+      }
+      // Unknown sub
+      else {
+        SPerl_HASH_insert(sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
         
-        SPerl_SUB* found_sub = NULL;
-        found_sub = SPerl_HASH_search(sub_symtable, sub_abs_name, strlen(sub_abs_name));
-        
-        if (found_sub) {
-          SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
-        }
-        // Unknown sub
-        else {
-          SPerl_HASH_insert(sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
-          
-          // Bind standard functions
-          if (sub->is_native) {
-            if (strcmp(sub_abs_name, "std::printi") == 0) {
-              sub->native_address = SPerl_STD_FUNC_printi;
-            }
-            else if (strcmp(sub_abs_name, "std::printl") == 0) {
-              sub->native_address = SPerl_STD_FUNC_printl;
-            }
-            else if (strcmp(sub_abs_name, "std::printf") == 0) {
-              sub->native_address = SPerl_STD_FUNC_printf;
-            }
-            else if (strcmp(sub_abs_name, "std::printd") == 0) {
-              sub->native_address = SPerl_STD_FUNC_printd;
-            }
+        // Bind standard functions
+        if (sub->is_native) {
+          if (strcmp(sub_abs_name, "std::printi") == 0) {
+            sub->native_address = SPerl_STD_FUNC_printi;
+          }
+          else if (strcmp(sub_abs_name, "std::printl") == 0) {
+            sub->native_address = SPerl_STD_FUNC_printl;
+          }
+          else if (strcmp(sub_abs_name, "std::printf") == 0) {
+            sub->native_address = SPerl_STD_FUNC_printf;
+          }
+          else if (strcmp(sub_abs_name, "std::printd") == 0) {
+            sub->native_address = SPerl_STD_FUNC_printd;
           }
         }
       }
@@ -1053,12 +1051,7 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   
   // Create sub information
   SPerl_SUB* sub = SPerl_SUB_new(sperl);
-  if (op_sub_base_name->code == SPerl_OP_C_CODE_NULL) {
-    sub->anon = 1;
-  }
-  else {
-    sub->op_name = op_sub_base_name;
-  }
+  sub->op_name = op_sub_base_name;
   
   // Descriptors
   SPerl_OP* op_descriptor = op_descriptors->first;
@@ -1176,7 +1169,7 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op
   return op_enum;
 }
 
-SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_sub_base_name, SPerl_OP* op_terms, _Bool anon) {
+SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_sub_base_name, SPerl_OP* op_terms) {
   
   // Build OP_SUB
   SPerl_OP* op_call_sub = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CALL_SUB, op_sub_base_name->file, op_sub_base_name->line);

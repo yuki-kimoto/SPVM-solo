@@ -520,25 +520,25 @@ array_elem
 call_sub
   : sub_name '(' opt_terms  ')'
     {
-      $$ = SPerl_OP_build_call_sub(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $1, $3, 0);
+      $$ = SPerl_OP_build_call_sub(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, $1->file, $1->line), $1, $3);
     }
   | term ARROW sub_name '(' opt_terms ')'
     {
-      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5, 0);
+      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5);
     }
   | term ARROW sub_name
     {
       SPerl_OP* op_terms = SPerl_OP_newOP_LIST(sperl, $1->file, $2->line);
-      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, op_terms, 0);
+      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, op_terms);
     }
   | package_name ARROW sub_name '(' opt_terms  ')'
     {
-      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5, 0);
+      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, $5);
     }
   | package_name ARROW sub_name
     {
       SPerl_OP* op_terms = SPerl_OP_newOP_LIST(sperl, $1->file, $2->line);
-      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, op_terms, 0);
+      $$ = SPerl_OP_build_call_sub(sperl, $1, $3, op_terms);
     }
 
 block 
