@@ -522,18 +522,35 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
                 
                 if (SPerl_RESOLVED_TYPE_is_core_type_array(sperl, resolved_type)) {
-                  SPerl_OP* op_term_index = op_type->last;
-                  SPerl_RESOLVED_TYPE* index_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term_index);
+                  SPerl_OP* op_index_term = op_type->last;
+                  SPerl_RESOLVED_TYPE* index_resolved_type = SPerl_OP_get_resolved_type(sperl, op_index_term);
                   
                   if (!index_resolved_type) {
                     SPerl_yyerror_format(sperl, "new operator can't create array which don't have length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
                     break;
                   }
-                  else if (index_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                    // OK
+                  else if (index_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                    if (index_resolved_type->id < SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                      // Convert to long
+                      SPerl_OP* op_index_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_index_term->file, op_index_term->line);
+                      SPerl_TYPE* index_type = SPerl_TYPE_new(sperl);
+                      index_type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+                      op_index_type->uv.type = index_type;
+                      SPerl_OP* op_convert = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONVERT, op_index_term->file, op_index_term->line);
+                      
+                      op_type->last = op_convert;
+                      op_convert->moresib = 0;
+                      op_convert->sibparent = op_type;
+                      
+                      op_convert->first = op_index_term;
+                      op_convert->last = op_index_type;
+                      
+                      op_index_term->moresib = 0;
+                      op_index_term->sibparent = op_convert;
+                    }
                   }
                   else {
-                    SPerl_yyerror_format(sperl, "new operator can't create array which don't have length of int or long type \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
+                    SPerl_yyerror_format(sperl, "new operator can't create array which don't have integral length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
                     break;
                   }
                 }
