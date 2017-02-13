@@ -6,7 +6,6 @@
 #include "sperl_type.h"
 #include "sperl_type_component_name.h"
 #include "sperl_type_component_array.h"
-#include "sperl_type_component_sub.h"
 #include "sperl_array.h"
 #include "sperl_type_part.h"
 #include "sperl_op.h"
@@ -19,7 +18,6 @@
 const char* const SPerl_TYPE_C_CODE_NAMES[] = {
   "name",
   "array",
-  "sub",
 };
 
 // Resolve type and index type
@@ -131,54 +129,6 @@ void SPerl_TYPE_build_parts(SPerl* sperl, SPerl_TYPE* type, SPerl_ARRAY* parts) 
     type_part_closebracket->code = SPerl_TYPE_PART_C_CODE_BYTE;
     type_part_closebracket->uv.char_name = "]";
     SPerl_ARRAY_push(parts, type_part_closebracket);
-  }
-  else if (type->code == SPerl_TYPE_C_CODE_SUB) {
-    // (
-    SPerl_TYPE_PART* type_part_openparen1 = SPerl_TYPE_PART_new(sperl);
-    type_part_openparen1->code = SPerl_TYPE_PART_C_CODE_BYTE;
-    type_part_openparen1->uv.char_name = "(";
-    SPerl_ARRAY_push(parts, type_part_openparen1);
-    
-    // sub
-    SPerl_TYPE_PART* type_part_sub = SPerl_TYPE_PART_new(sperl);
-    type_part_sub->code = SPerl_TYPE_PART_C_CODE_SUB;
-    SPerl_ARRAY_push(parts, type_part_sub);
-    
-    // (
-    SPerl_TYPE_PART* type_part_openparen2 = SPerl_TYPE_PART_new(sperl);
-    type_part_openparen2->code = SPerl_TYPE_PART_C_CODE_BYTE;
-    type_part_openparen2->uv.char_name = "(";
-    SPerl_ARRAY_push(parts, type_part_openparen2);
-    
-    // Argument types
-    SPerl_TYPE_COMPONENT_SUB* type_component_sub = type->uv.type_component_sub;
-    SPerl_ARRAY* argument_types = type_component_sub->argument_types;
-    for (size_t i = 0; i < argument_types->length; i++) {
-      SPerl_TYPE* argument_type = SPerl_ARRAY_fetch(argument_types, i);
-      SPerl_TYPE_build_parts(sperl, argument_type, parts);
-      if (i != argument_types->length - 1) {
-        SPerl_TYPE_PART* type_part_comma = SPerl_TYPE_PART_new(sperl);
-        type_part_comma->code = SPerl_TYPE_PART_C_CODE_BYTE;
-        type_part_comma->uv.char_name = ",";
-        SPerl_ARRAY_push(parts, type_part_comma);
-      }
-    }
-    
-    // )
-    SPerl_TYPE_PART* type_part_closeparen1 = SPerl_TYPE_PART_new(sperl);
-    type_part_closeparen1->code = SPerl_TYPE_PART_C_CODE_BYTE;
-    type_part_closeparen1->uv.char_name = ")";
-    SPerl_ARRAY_push(parts, type_part_closeparen1);
-    
-    // Return type
-    SPerl_TYPE* return_type = type_component_sub->return_type;
-    SPerl_TYPE_build_parts(sperl, return_type, parts);
-    
-    // )
-    SPerl_TYPE_PART* type_part_closeparen2 = SPerl_TYPE_PART_new(sperl);
-    type_part_closeparen2->code = SPerl_TYPE_PART_C_CODE_BYTE;
-    type_part_closeparen2->uv.char_name = ")";
-    SPerl_ARRAY_push(parts, type_part_closeparen2);
   }
 }
 

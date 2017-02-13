@@ -8,7 +8,6 @@
 enum {
   SPerl_TYPE_C_CODE_NAME,
   SPerl_TYPE_C_CODE_ARRAY,
-  SPerl_TYPE_C_CODE_SUB,
 };
 
 extern const char* const SPerl_TYPE_C_CODE_NAMES[];
@@ -18,7 +17,6 @@ struct SPerl_type {
   union {
     SPerl_TYPE_COMPONENT_NAME* type_component_name;
     SPerl_TYPE_COMPONENT_ARRAY* type_component_array;
-    SPerl_TYPE_COMPONENT_SUB* type_component_sub;
   } uv;
   int32_t code;
 };

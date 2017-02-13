@@ -23,7 +23,6 @@
 #include "sperl_type.h"
 #include "sperl_type_component_name.h"
 #include "sperl_type_component_array.h"
-#include "sperl_type_component_sub.h"
 #include "sperl_enumeration.h"
 #include "sperl_package.h"
 #include "sperl_name_info.h"
@@ -54,7 +53,6 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "DECL_SUB",
   "DECL_ENUM",
   "DECL_DESCRIPTOR",
-  "DECL_ANON_SUB",
   "DECL_ENUMERATION_VALUE",
   "BLOCK",
   "ENUM_BLOCK",
@@ -432,13 +430,6 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
       resolved_type = NULL;
       break;
     }
-    case SPerl_OP_C_CODE_DECL_ANON_SUB: {
-      SPerl_SUB* sub = op->uv.sub;
-      if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
-        resolved_type = sub->op_return_type->uv.type->resolved_type;
-      }
-      break;
-    }
     case SPerl_OP_C_CODE_CONSTANT: {
       SPerl_CONSTANT* constant = op->uv.constant;
       resolved_type = constant->resolved_type;
@@ -712,10 +703,7 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
   SPerl_NAME_INFO* name_info = op_name->uv.name_info;
   
   const char* sub_abs_name = NULL;
-  if (name_info->code == SPerl_NAME_INFO_C_CODE_ANON) {
-    return;
-  }
-  else if (name_info->code == SPerl_NAME_INFO_C_CODE_VARBASENAME) {
+  if (name_info->code == SPerl_NAME_INFO_C_CODE_VARBASENAME) {
     const char* package_name = name_info->op_var->uv.var->op_my_var->uv.my_var->op_type->uv.type->resolved_type->name;
     const char* base_name = name_info->op_name->uv.name;
     sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, base_name);
@@ -1199,72 +1187,66 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
   
   SPerl_NAME_INFO* name_info = SPerl_NAME_INFO_new(sperl);
   
-  // Anon
-  if (anon) {
-    name_info->code = SPerl_NAME_INFO_C_CODE_ANON;
+  const char* sub_base_name = op_sub_base_name->uv.name;
+  SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->line);
+  
+  // Normal call
+  if (op_invocant->code == SPerl_OP_C_CODE_NULL) {
+    // Absolute
+    // P::m();
+    if (strstr(sub_base_name, ":")) {
+      name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
+      op_name->uv.name = sub_base_name;
+      name_info->op_name = op_name;
+    }
+    // Base name
+    // m();
+    else {
+      name_info->code = SPerl_NAME_INFO_C_CODE_BASENAME;
+      op_name->uv.name = sub_base_name;
+      name_info->op_name = op_name;
+    }
   }
-  else {
-    const char* sub_base_name = op_sub_base_name->uv.name;
-    SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->line);
-    
-    // Normal call
-    if (op_invocant->code == SPerl_OP_C_CODE_NULL) {
-      // Absolute
-      // P::m();
-      if (strstr(sub_base_name, ":")) {
-        name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
-        op_name->uv.name = sub_base_name;
-        name_info->op_name = op_name;
-      }
-      // Base name
-      // m();
-      else {
-        name_info->code = SPerl_NAME_INFO_C_CODE_BASENAME;
-        op_name->uv.name = sub_base_name;
-        name_info->op_name = op_name;
-      }
+  // Method call
+  else if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
+    // Absolute
+    // $var->P::m();
+    if (strstr(sub_base_name, ":")) {
+      name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
+      op_name->uv.name = sub_base_name;
+      name_info->op_name = op_name;
     }
-    // Method call
-    else if (op_invocant->code == SPerl_OP_C_CODE_VAR) {
-      // Absolute
-      // $var->P::m();
-      if (strstr(sub_base_name, ":")) {
-        name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
-        op_name->uv.name = sub_base_name;
-        name_info->op_name = op_name;
-      }
-      // Base name
-      // $var->m();
-      else {
-        name_info->code = SPerl_NAME_INFO_C_CODE_VARBASENAME;
-        name_info->op_var = op_invocant;
-        name_info->op_name = op_sub_base_name;
-      }
-      SPerl_OP_sibling_splice(sperl, op_terms, op_terms->first, 0, op_invocant);
+    // Base name
+    // $var->m();
+    else {
+      name_info->code = SPerl_NAME_INFO_C_CODE_VARBASENAME;
+      name_info->op_var = op_invocant;
+      name_info->op_name = op_sub_base_name;
     }
-    // Method call
-    else if (op_invocant->code == SPerl_OP_C_CODE_NAME) {
-      // Absolute
-      // P->Q::m;
-      if (strstr(sub_base_name, ":")) {
-        SPerl_yyerror_format(sperl, "package name is ambiguas %s line %d\n", op_invocant->file, op_invocant->line);
-      }
-      // Base name
-      else {
-        const char* package_name = op_invocant->uv.name;
-        const char* name = op_sub_base_name->uv.name;
-        
-        // Create abs name
-        char* abs_name = SPerl_OP_create_abs_name(sperl, package_name, name);
-        
-        // Create op abs name
-        SPerl_OP* op_abs_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->file);
-        op_abs_name->uv.name = abs_name;
-        
-        // Set abs name
-        name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
-        name_info->op_name = op_abs_name;
-      }
+    SPerl_OP_sibling_splice(sperl, op_terms, op_terms->first, 0, op_invocant);
+  }
+  // Method call
+  else if (op_invocant->code == SPerl_OP_C_CODE_NAME) {
+    // Absolute
+    // P->Q::m;
+    if (strstr(sub_base_name, ":")) {
+      SPerl_yyerror_format(sperl, "package name is ambiguas %s line %d\n", op_invocant->file, op_invocant->line);
+    }
+    // Base name
+    else {
+      const char* package_name = op_invocant->uv.name;
+      const char* name = op_sub_base_name->uv.name;
+      
+      // Create abs name
+      char* abs_name = SPerl_OP_create_abs_name(sperl, package_name, name);
+      
+      // Create op abs name
+      SPerl_OP* op_abs_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->file);
+      op_abs_name->uv.name = abs_name;
+      
+      // Set abs name
+      name_info->code = SPerl_NAME_INFO_C_CODE_ABSNAME;
+      name_info->op_name = op_abs_name;
     }
   }
   
@@ -1361,51 +1343,6 @@ SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* o
   SPerl_ARRAY_push(parser->op_types, op_type_array);
   
   return op_type_array;
-}
-
-SPerl_OP* SPerl_OP_build_type_sub(SPerl* sperl, SPerl_OP* op_argument_types, SPerl_OP* op_return_type) {
-
-  SPerl_PARSER* parser = sperl->parser;
-  
-  SPerl_TYPE* type = SPerl_TYPE_new(sperl);
-  type->code = SPerl_TYPE_C_CODE_SUB;
-  
-  const char* file = NULL;
-  int32_t line = -1;
-  
-  // sub type
-  SPerl_TYPE_COMPONENT_SUB* type_component_sub = SPerl_TYPE_COMPONENT_SUB_new(sperl);
-  SPerl_ARRAY* argument_types = SPerl_ALLOCATOR_new_array(sperl, 0);
-  {
-    SPerl_OP* op_argument_type = op_argument_types->first;
-    while ((op_argument_type = SPerl_OP_sibling(sperl, op_argument_type))) {
-      if (file == NULL) {
-        file = op_argument_type->file;
-        line = op_argument_type->line;
-      }
-      SPerl_ARRAY_push(argument_types, op_argument_type->uv.type);
-    }
-  }
-  type_component_sub->return_type = op_return_type->uv.type;
-  if (file == NULL) {
-    file = op_return_type->file;
-    line = op_return_type->line;
-  }
-  type_component_sub->argument_types = argument_types;
-  
-  type->uv.type_component_sub = type_component_sub;
-
-  SPerl_OP* op_type_sub = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_argument_types->file, op_argument_types->line);
-  SPerl_OP_sibling_splice(sperl, op_type_sub, NULL, 0, op_argument_types);
-  SPerl_OP_sibling_splice(sperl, op_type_sub, op_argument_types, 0, op_return_type);
-  
-  op_type_sub->uv.type = type;
-  op_type_sub->file = file;
-  op_type_sub->line = line;
-
-  SPerl_ARRAY_push(parser->op_types, op_type_sub);
-  
-  return op_type_sub;
 }
 
 SPerl_OP* SPerl_OP_append_elem(SPerl* sperl, SPerl_OP *first, SPerl_OP *last, const char* file, uint32_t line) {

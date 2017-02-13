@@ -3,7 +3,6 @@ use Test::EnumA;
 package Test::Simple {
   has x : int;
   has y : int;
-  has z : sub (int, int) int;
   
   has title : int;
   

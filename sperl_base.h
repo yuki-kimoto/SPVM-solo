@@ -104,10 +104,6 @@ typedef struct SPerl_type_component_name SPerl_TYPE_COMPONENT_NAME;
 struct SPerl_type_component_array;
 typedef struct SPerl_type_component_array SPerl_TYPE_COMPONENT_ARRAY;
 
-/* sperl_type_component_sub.h */
-struct SPerl_type_component_sub;
-typedef struct SPerl_type_component_sub SPerl_TYPE_COMPONENT_SUB;
-
 /* sperl_enum.h */
 struct SPerl_enumeration;
 typedef struct SPerl_enumeration SPerl_ENUMERATION;

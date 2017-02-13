@@ -20,7 +20,6 @@
 #include "sperl_type.h"
 #include "sperl_type_component_name.h"
 #include "sperl_type_component_array.h"
-#include "sperl_type_component_sub.h"
 #include "sperl_enumeration.h"
 #include "sperl_package.h"
 #include "sperl_resolved_type.h"

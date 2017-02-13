@@ -63,7 +63,6 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_DECL_SUB,          // UNKNOWN
   SPerl_OP_C_CODE_DECL_ENUM,
   SPerl_OP_C_CODE_DECL_DESCRIPTOR,   // UNKNOWN
-  SPerl_OP_C_CODE_DECL_ANON_SUB,      // UNKNOWN
   SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE,    // UNKNOWN
   SPerl_OP_C_CODE_BLOCK,        // UNKNOWN
   SPerl_OP_C_CODE_ENUM_BLOCK,    // UNKNOWN
@@ -219,7 +218,6 @@ void SPerl_OP_insert_op_convert(SPerl* sperl, SPerl_OP* op);
 
 SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_type_name);
 SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term);
-SPerl_OP* SPerl_OP_build_type_sub(SPerl* sperl, SPerl_OP* op_argument_types, SPerl_OP* op_return_type);
 
 SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_packagename, SPerl_OP* op_fieldname);
 SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block);
