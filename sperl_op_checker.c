@@ -215,11 +215,36 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               }
               case SPerl_OP_C_CODE_SWITCH: {
                 
-                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                SPerl_OP* op_switch_condition = op_cur->first;
                 
-                if (first_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
+                SPerl_RESOLVED_TYPE* term_resolved_type = SPerl_OP_get_resolved_type(sperl, op_switch_condition->first);
+                
+                if (term_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_yyerror_format(sperl, "switch need int at %s line %d\n", op_cur->file, op_cur->line);
                   break;
+                }
+                
+                // Convert to int
+                if (term_resolved_type->id < SPerl_RESOLVED_TYPE_C_ID_INT) {
+                  // OP index term
+                  SPerl_OP* op_term = op_switch_condition->first;
+                  
+                  // OP convert
+                  SPerl_OP* op_index_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_term->file, op_term->line);
+                  SPerl_TYPE* index_type = SPerl_TYPE_new(sperl);
+                  index_type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+                  op_index_type->uv.type = index_type;
+                  SPerl_OP* op_convert = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONVERT, op_term->file, op_term->line);
+                  
+                  op_switch_condition->last = op_convert;
+                  op_convert->moresib = 0;
+                  op_convert->sibparent = op_switch_condition;
+                  
+                  op_convert->first = op_term;
+                  op_convert->last = op_index_type;
+                  
+                  op_term->moresib = 0;
+                  op_term->sibparent = op_convert;
                 }
                 
                 in_switch = 0;
