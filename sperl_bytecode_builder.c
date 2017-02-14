@@ -286,24 +286,24 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   
                   // Default
-                  for (int32_t i = 0; i < 4; i++) {
+                  for (int32_t i = 0; i < sizeof(int32_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
                   
                   // Low
-                  for (int32_t i = 0; i < 4; i++) {
+                  for (int32_t i = 0; i < sizeof(int32_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
-                  *(int32_t*)&bytecode_array->values[bytecode_array->length - 4] = min;
+                  *(int32_t*)&bytecode_array->values[bytecode_array->length - sizeof(int32_t)] = min;
                   
                   // Low
-                  for (int32_t i = 0; i < 4; i++) {
+                  for (int32_t i = 0; i < sizeof(int32_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
-                  *(int32_t*)&bytecode_array->values[bytecode_array->length - 4] = max;
+                  *(int32_t*)&bytecode_array->values[bytecode_array->length - sizeof(int32_t)] = max;
                   
                   // Offsets
-                  for (int32_t i = 0; i < (max - min + 1) * 4; i++) {
+                  for (int32_t i = 0; i < (max - min + 1) * sizeof(int32_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
                 }
@@ -328,15 +328,15 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   
                   // Default
-                  for (int32_t i = 0; i < 4; i++) {
+                  for (int32_t i = 0; i < sizeof(int32_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
                   
                   // Case count
-                  for (int32_t i = 0; i < 4; i++) {
+                  for (int32_t i = 0; i < sizeof(int32_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
-                  *(int32_t*)&bytecode_array->values[bytecode_array->length - 4] = length;
+                  *(int32_t*)&bytecode_array->values[bytecode_array->length - sizeof(int32_t)] = length;
                   
                   // Match-Offset pairs
                   if (SPerl_OP_LIMIT_CASES > SIZE_MAX / 8 && length > SIZE_MAX / 8) {
