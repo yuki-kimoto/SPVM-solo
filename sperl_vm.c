@@ -177,7 +177,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_LDC2_W:
         operand_stack_top++;
         call_stack[operand_stack_top] = *(int64_t*)&constant_pool[(bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
-        warn("BBBBBBBBBB %ld", call_stack[operand_stack_top]);
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_ILOAD:
@@ -890,8 +889,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // max
         int64_t max = *(int64_t*)&bytecodes[pc + padding + sizeof(int64_t) * 2 + 1];
-        
-        warn("AAAAAAAAAAAAA %d %d %d %d %ld", padding, default_offset, min, max, call_stack[operand_stack_top]);
         
         if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
           int64_t branch_base = (pc + padding + sizeof(int64_t) * 3 + 1) + (call_stack[operand_stack_top] - min) * sizeof(int64_t);

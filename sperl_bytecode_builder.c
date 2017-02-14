@@ -389,8 +389,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   
                   int64_t length = max - min + 1;
                   
-                  warn("AAAAAAAAAA %d %d %d %d", padding, length, max, min);
-                  
                   int64_t case_pos = 0;
                   for (int64_t i = 0; i < length; i++) {
                     SPerl_OP* op_case = SPerl_ARRAY_fetch(cur_op_cases, case_pos);
@@ -474,10 +472,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     int64_t case_offset = *case_address_ptr - cur_switch_address;
                     
                     // Match
-                    *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) * 2 + 1 + (8 * i)] = match;
+                    *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) * 2 + 1 + (sizeof(int64_t) * 2 * i)] = match;
 
                     // Offset
-                    *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) * 3 + 1 + (8 * i)] = case_offset;
+                    *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) * 3 + 1 + (sizeof(int64_t) * 2 * i)] = case_offset;
                   }
                 }
                 
