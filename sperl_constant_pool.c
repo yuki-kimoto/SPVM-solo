@@ -202,10 +202,10 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   }
   else {
     // Create constant utf8
-    SPerl_CONSTANT* new_constant_utf8 = SPerl_CONSTANT_new(sperl);
-    new_constant_utf8->code = SPerl_CONSTANT_C_CODE_UTF8;
-    new_constant_utf8->address = constant_pool->length;
-    SPerl_HASH_insert(constant_utf8_symtable, utf8, strlen(utf8), new_constant_utf8);
+    SPerl_CONSTANT* new_constant_string = SPerl_CONSTANT_new(sperl);
+    new_constant_string->code = SPerl_CONSTANT_C_CODE_STRING;
+    new_constant_string->address = constant_pool->length;
+    SPerl_HASH_insert(constant_utf8_symtable, utf8, strlen(utf8), new_constant_string);
     
     int32_t utf8_length = strlen(utf8);
     int32_t real_utf8_length = utf8_length + 1;
@@ -224,7 +224,7 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     constant_pool->length += constant_pool_size;
     
     // Add string
-    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, new_constant_utf8->address);
+    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, new_constant_string->address);
   }
 }
 

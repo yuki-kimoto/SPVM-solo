@@ -10,7 +10,6 @@ enum {
   SPerl_CONSTANT_C_CODE_FLOAT,
   SPerl_CONSTANT_C_CODE_DOUBLE,
   SPerl_CONSTANT_C_CODE_STRING,
-  SPerl_CONSTANT_C_CODE_UTF8,
 };
 
 extern const char* const SPerl_CONSTANT_C_CODE_NAMES[];
