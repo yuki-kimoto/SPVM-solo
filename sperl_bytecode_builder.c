@@ -315,13 +315,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     fprintf(stderr, "Invalid AST: too many cases in switch statement\n");
                     exit(1);
                   }
-                  uint32_t const length = (uint32_t) switch_info->op_cases->length;
+                  size_t const length = switch_info->op_cases->length;
 
                   // Machine address to calculate padding
                   cur_switch_address = bytecode_array->length - 1;
                   
                   // Padding
-                  int32_t padding = (sizeof(int32_t) - 1) - (cur_switch_address % sizeof(int32_t));;
+                  int32_t padding = (sizeof(int32_t) - 1) - (cur_switch_address % sizeof(int32_t));
                   
                   for (int32_t i = 0; i < padding; i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
@@ -338,11 +338,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   *(int32_t*)&bytecode_array->values[bytecode_array->length - sizeof(int32_t)] = length;
                   
-                  // Match-Offset pairs
-                  if (SPerl_OP_LIMIT_CASES > SIZE_MAX / 8 && length > SIZE_MAX / 8) {
-                    SPerl_ALLOCATOR_exit_with_malloc_failure();
-                  }
-                  size_t const size_of_match_offset_pairs = (size_t) length * 8u;
+                  int32_t size_of_match_offset_pairs = length * sizeof(int32_t) * 2;
                   for (size_t i = 0; i < size_of_match_offset_pairs; i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }

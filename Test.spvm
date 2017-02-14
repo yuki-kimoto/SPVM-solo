@@ -104,7 +104,7 @@ package Test {
     std::printi(sum1(1, 5));
     
     "abc";
-    my $num2 = 5;
+    my $num2 = 3;
     
     switch($num2) {
       case 1:
