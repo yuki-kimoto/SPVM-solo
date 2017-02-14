@@ -8,8 +8,6 @@
 
 const char* const SPerl_CONSTANT_C_CODE_NAMES[] = {
   "BOOLEAN",
-  "BYTE",
-  "SHORT",
   "INT",
   "LONG",
   "FLOAT",

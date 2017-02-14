@@ -50,7 +50,6 @@ void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* consta
   (void)sperl;
   switch (constant->code) {
     case SPerl_CONSTANT_C_CODE_BOOLEAN:
-    case SPerl_CONSTANT_C_CODE_SHORT:
     case SPerl_CONSTANT_C_CODE_INT:
       SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant->uv.int_value);
       constant->address = constant_pool->length - 1;
