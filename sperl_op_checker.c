@@ -201,8 +201,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                 
                 SPerl_RESOLVED_TYPE* op_term_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term);
-                if (op_term_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_yyerror_format(sperl, "case need int at %s line %d\n", op_cur->file, op_cur->line);
+                if (op_term_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                  SPerl_yyerror_format(sperl, "case need long at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -219,8 +219,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 SPerl_RESOLVED_TYPE* term_resolved_type = SPerl_OP_get_resolved_type(sperl, op_switch_condition->first);
                 
-                if (term_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_yyerror_format(sperl, "switch need int at %s line %d\n", op_cur->file, op_cur->line);
+                if (term_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                  SPerl_yyerror_format(sperl, "switch need long at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 

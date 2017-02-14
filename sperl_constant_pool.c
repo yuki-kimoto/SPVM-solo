@@ -48,23 +48,27 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
 
 void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
   (void)sperl;
-  constant->address = constant_pool->length;
   switch (constant->code) {
     case SPerl_CONSTANT_C_CODE_BOOLEAN:
     case SPerl_CONSTANT_C_CODE_SHORT:
     case SPerl_CONSTANT_C_CODE_INT:
       SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant->uv.int_value);
+      constant->address = constant_pool->length - 1;
       break;
     case SPerl_CONSTANT_C_CODE_LONG:
       SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, constant->uv.long_value);
+      constant->address = constant_pool->length - 2;
       break;
     case SPerl_CONSTANT_C_CODE_FLOAT:
       SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant->uv.float_value);
+      constant->address = constant_pool->length - 1;
       break;
     case SPerl_CONSTANT_C_CODE_DOUBLE:
       SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, constant->uv.double_value);
+      constant->address = constant_pool->length - 2;
       break;
     case SPerl_CONSTANT_C_CODE_STRING:
+      constant->address = constant_pool->length;
       SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, constant->uv.string_value);
       break;
   }
@@ -158,7 +162,7 @@ void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_p
 
   // Add long value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);
-  memcpy(&constant_pool->values[constant_pool->length], &value, 8);
+  *(int64_t*)&constant_pool->values[constant_pool->length] = value;
   constant_pool->length += 2;
 }
 
@@ -182,7 +186,7 @@ void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant
 
   // Add double value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);
-  memcpy(&constant_pool->values[constant_pool->length], &value, 8);
+  *(double*)&constant_pool->values[constant_pool->length] = value;
   constant_pool->length += 2;
 }
 

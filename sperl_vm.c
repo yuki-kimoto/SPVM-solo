@@ -177,6 +177,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_LDC2_W:
         operand_stack_top++;
         call_stack[operand_stack_top] = *(int64_t*)&constant_pool[(bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
+        warn("BBBBBBBBBB %ld", call_stack[operand_stack_top]);
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_ILOAD:
@@ -879,20 +880,22 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_TABLESWITCH: {
         
         // Padding
-        int32_t padding = (sizeof(int32_t) - 1) - (pc % sizeof(int32_t));
+        int64_t padding = (sizeof(int64_t) - 1) - (pc % sizeof(int64_t));
         
         // default offset
-        int32_t default_offset = *(int32_t*)&bytecodes[pc + padding + 1];
+        int64_t default_offset = *(int64_t*)&bytecodes[pc + padding + 1];
         
         // min
-        int32_t min = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) + 1];
+        int64_t min = *(int64_t*)&bytecodes[pc + padding + sizeof(int64_t) + 1];
         
         // max
-        int32_t max = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) * 2 + 1];
+        int64_t max = *(int64_t*)&bytecodes[pc + padding + sizeof(int64_t) * 2 + 1];
+        
+        warn("AAAAAAAAAAAAA %d %d %d %d %ld", padding, default_offset, min, max, call_stack[operand_stack_top]);
         
         if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
-          int32_t branch_base = (pc + padding + sizeof(int32_t) * 3 + 1) + (call_stack[operand_stack_top] - min) * sizeof(int32_t);
-          pc += *(int32_t*)&bytecodes[branch_base];
+          int64_t branch_base = (pc + padding + sizeof(int64_t) * 3 + 1) + (call_stack[operand_stack_top] - min) * sizeof(int64_t);
+          pc += *(int64_t*)&bytecodes[branch_base];
         }
         else {
           pc += default_offset;
@@ -903,7 +906,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
 
         // Padding
-        int32_t padding = (sizeof(int32_t) - 1) - (pc % sizeof(int32_t));
+        int64_t padding = (sizeof(int64_t) - 1) - (pc % sizeof(int64_t));
 
         /*
         1  default
@@ -914,29 +917,29 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         */
         
         // default offset
-        int32_t default_offset = *(int32_t*)&bytecodes[pc + padding + 1];
+        int64_t default_offset = *(int64_t*)&bytecodes[pc + padding + 1];
         
         // npare
-        int32_t pair_count = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) + 1];
+        int64_t pair_count = *(int64_t*)&bytecodes[pc + padding + sizeof(int64_t) + 1];
         
         // min
-        int32_t min = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) * 2 + 1];
+        int64_t min = *(int64_t*)&bytecodes[pc + padding + sizeof(int64_t) * 2 + 1];
         
         // max
-        int32_t max = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) * 2 + 1 + ((pair_count - 1) * sizeof(int32_t) * 2)];
+        int64_t max = *(int64_t*)&bytecodes[pc + padding + sizeof(int64_t) * 2 + 1 + ((pair_count - 1) * sizeof(int64_t) * 2)];
         
         if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
           // 2 branch searching
-          int32_t cur_min_pos = 0;
-          int32_t cur_max_pos = pair_count - 1;
+          int64_t cur_min_pos = 0;
+          int64_t cur_max_pos = pair_count - 1;
 
           while (1) {
             if (cur_max_pos < cur_min_pos) {
               pc += default_offset;
               break;
             }
-            int32_t cur_half_pos = cur_min_pos + (cur_max_pos - cur_min_pos) / 2;
-            int32_t cur_half = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) * 2 + 1 + (cur_half_pos * sizeof(int32_t) * 2)];
+            int64_t cur_half_pos = cur_min_pos + (cur_max_pos - cur_min_pos) / 2;
+            int64_t cur_half = *(int64_t*)&bytecodes[pc + padding + sizeof(int64_t) * 2 + 1 + (cur_half_pos * sizeof(int64_t) * 2)];
             
             if (call_stack[operand_stack_top] > cur_half) {
               cur_min_pos = cur_half_pos + 1;
@@ -945,7 +948,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
               cur_max_pos = cur_half_pos - 1;
             }
             else {
-              int32_t branch = *(int32_t*)&bytecodes[pc + padding + sizeof(int32_t) * 2 + 1 + (cur_half_pos * sizeof(int32_t) * 2) + sizeof(int32_t)];
+              int64_t branch = *(int64_t*)&bytecodes[pc + padding + sizeof(int64_t) * 2 + 1 + (cur_half_pos * sizeof(int64_t) * 2) + sizeof(int64_t)];
               pc += branch;
               break;
             }
