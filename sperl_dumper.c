@@ -350,7 +350,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         }
         
         // Default
-        for (int32_t j = 0; j < 4; j++) {
+        for (int32_t j = 0; j < sizeof(int32_t); j++) {
           i++;
           bytecode = bytecode_array->values[i];
           printf("        [%" PRId32 "] %d\n", i, bytecode);
@@ -358,7 +358,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         
         // Low
         int32_t min = *(int32_t*)&bytecode_array->values[i + 1];
-        for (int32_t j = 0; j < 4; j++) {
+        for (int32_t j = 0; j < sizeof(int32_t); j++) {
           i++;
           bytecode = bytecode_array->values[i];
           printf("        [%" PRId32 "] %d\n", i, bytecode);
@@ -366,7 +366,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         
         // High
         int32_t max = *(int32_t*)&bytecode_array->values[i + 1];
-        for (int32_t j = 0; j < 4; j++) {
+        for (int32_t j = 0; j < sizeof(int32_t); j++) {
           i++;
           bytecode = bytecode_array->values[i];
           printf("        [%" PRId32 "] %d\n", i, bytecode);
@@ -374,7 +374,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         
         // Addresses
         int32_t length = max - min + 1;
-        for (int32_t j = 0; j < length * 4; j++) {
+        for (int32_t j = 0; j < length * sizeof(int32_t); j++) {
           i++;
           bytecode = bytecode_array->values[i];
           printf("        [%" PRId32 "] %d\n", i, bytecode);
@@ -397,7 +397,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         }
         
         // Default
-        for (int32_t j = 0; j < 4; j++) {
+        for (int32_t j = 0; j < sizeof(int32_t); j++) {
           i++;
           bytecode = bytecode_array->values[i];
           printf("        [%" PRId32 "] %d\n", i, bytecode);
@@ -405,14 +405,14 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         
         // Count
         int32_t length = *(int32_t*)&bytecode_array->values[i + 1];
-        for (int32_t j = 0; j < 4; j++) {
+        for (int32_t j = 0; j < sizeof(int32_t); j++) {
           i++;
           bytecode = bytecode_array->values[i];
           printf("        [%" PRId32 "] %d\n", i, bytecode);
         }
         
         // Addresses
-        for (int32_t j = 0; j < length * 8; j++) {
+        for (int32_t j = 0; j < length * sizeof(int32_t) * 2; j++) {
           i++;
           bytecode = bytecode_array->values[i];
           printf("        [%" PRId32 "] %d\n", i, bytecode);
