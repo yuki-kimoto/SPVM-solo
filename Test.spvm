@@ -5,7 +5,7 @@ use Test::Simple;
 use Test::Minimal;
 
 package Test {
-  sub main($mvar : int) : int {
+  sub main($mvar : long) : long {
     # get and set field
     {
       my $m = malloc Test::Minimal;
@@ -13,8 +13,8 @@ package Test {
       $m{x} = 2;
       $m{y} = 3;
       
-      std::printi($m{x});
-      std::printi($m{y});
+      std::printl($m{x});
+      std::printl($m{y});
     }
     
     # increment long value
@@ -43,10 +43,10 @@ package Test {
     }
     7;
     
-    std::printi(sum0(1, 1));
-    std::printi(sum1(1, 2));
+    std::printl(sum0(1, 1));
+    std::printl(sum1(1, 2));
     
-    std::printi(sum2(1, 2));
+    std::printl(sum2(1, 2));
 
     # Constant float
     std::printf(1F);
@@ -69,58 +69,81 @@ package Test {
     std::printl(2L);
     std::printl(9223372036854775807L);
     std::printl(-9223372036854775808L);
+    std::printl(-2147483648);
+    std::printl(-32769);
+    std::printl(-32768);
+    std::printl(-129);
+    std::printl(-128);
+    std::printl(-2);
+    std::printl(-1);
+    std::printl(0);
+    std::printl(1);
+    std::printl(2);
+    std::printl(3);
+    std::printl(4);
+    std::printl(5);
+    std::printl(6);
+    std::printl(127);
+    std::printl(128);
+    std::printl(255);
+    std::printl(256);
+    std::printl(32767);
+    std::printl(32768);
+    std::printl(65535);
+    std::printl(65536);
+    std::printl(2147483647);
     
     # Constant int
-    std::printi(-2147483648);
-    std::printi(-32769);
-    std::printi(-32768);
-    std::printi(-129);
-    std::printi(-128);
-    std::printi(-2);
-    std::printi(-1);
-    std::printi(0);
-    std::printi(1);
-    std::printi(2);
-    std::printi(3);
-    std::printi(4);
-    std::printi(5);
-    std::printi(6);
-    std::printi(127);
-    std::printi(128);
-    std::printi(255);
-    std::printi(256);
-    std::printi(32767);
-    std::printi(32768);
-    std::printi(65535);
-    std::printi(65536);
-    std::printi(2147483647);
+    std::printi(-2147483648I);
+    std::printi(-32769I);
+    std::printi(-32768I);
+    std::printi(-129I);
+    std::printi(-128I);
+    std::printi(-2I);
+    std::printi(-1I);
+    std::printi(0I);
+    std::printi(1I);
+    std::printi(2I);
+    std::printi(3I);
+    std::printi(4I);
+    std::printi(5I);
+    std::printi(6I);
+    std::printi(127I);
+    std::printi(128I);
+    std::printi(255I);
+    std::printi(256I);
+    std::printi(32767I);
+    std::printi(32768I);
+    std::printi(65535I);
+    std::printi(65536I);
+    std::printi(2147483647I);
     
-    std::printi(sum1(1, 2));
-    std::printi(sum1(1, 5));
+    std::printl(sum1(1, 2));
+    std::printl(sum1(1, 5));
     
     "abc";
-    my $num2 = 3L;
+    my $num2 = 3;
     
     switch($num2) {
       case 1L:
-        std::printi(1);
+        std::printl(1);
       case 3L:
-        std::printi(2);
+        std::printl(2);
       case 5L:
-        std::printi(3);
+        std::printl(3);
       default:
-        std::printi(5);
+        std::printl(5);
     }
     
     switch($num2) {
       case 1L:
-        std::printi(1);
+        std::printl(1);
       case 3L:
-        std::printi(2);
+        std::printl(2);
       case 10000L:
-        std::printi(2);
+        std::printl(2);
       default:
-        std::printi(5);
+        std::printl(5);
     }
     
     die String->new("aaaaa");
@@ -129,7 +152,7 @@ package Test {
     # my $num1 = undef;
     
     my $num1 : int;
-    $num1 = 5;
+    $num1 = 5I;
     
     my $num = 5;
     
@@ -144,7 +167,7 @@ package Test {
 
     my $simple3 : Test::Simple = malloc Test::Simple;
     
-    std::printi($simple3->get_x());
+    std::printl($simple3->get_x());
     $simple3->get_x;
     
     $simple3{y} = 2;
@@ -211,28 +234,28 @@ package Test {
 
     [1, 2, 3];
     [[1, 2, 3], [1, 2, 3]];
-    my $nums : int[] = malloc int[3L];
-    $nums[0L] = 3;
-    $nums[1L] = 5;
-    std::printi($nums[0L]);
-    std::printi($nums[1L]);
-    std::printi(@$nums);
+    my $nums : long[] = malloc long[3];
+    $nums[0] = 3;
+    $nums[1] = 5;
+    std::printl($nums[0L]);
+    std::printl($nums[1L]);
+    std::printl(@$nums);
    
     my $simple : Test::Simple = malloc Test::Simple;
     
-    my $nums_length : int = @$nums;
+    my $nums_length : long = @$nums;
     
-    my $v1 : int;
-    my $v2 : int;
-    my $v3 : int;
+    my $v1 : long;
+    my $v2 : long;
+    my $v3 : long;
     
     $v3 = $v2 = $v1 = 5;
     
     100;
     1000;
-    1 << 2;
-    1 >> 2;
-    1 >>> 2;
+    1 << 2I;
+    1 >> 2I;
+    1 >>> 2I;
     
     Test::EnumA::ONE();
     Test::EnumA::TWO();
@@ -240,7 +263,7 @@ package Test {
     Test::EnumA->ONE();
     Test::EnumA->ONE;
     
-    my $var : int = 4;
+    my $var : long = 4;
     $var++;
     $var--;
     --$var;
@@ -252,7 +275,7 @@ package Test {
     my $foo2 : int[];
     # $foo2[1] = 5;
     # $foo2[2];
-    my $foo : int;
+    my $foo : long;
     $foo = 1;
     4 % 6;
     -3 + +2;
@@ -316,7 +339,7 @@ package Test {
     return $mvar + 3;
   }
   
-  sub test1 () : int {
+  sub test1 () : long {
     my $num0 = 1;
     my $num1 = 2;
     my $num2 = 3;
@@ -326,11 +349,11 @@ package Test {
     return 0;
   }
   
-  sub sum4($num1 : int, $num2 : int) : int {
+  sub sum4($num1 : long, $num2 : long) : long {
     return $num1 + $num2;
   }
   
-  sub sum3 ($simple : Test::Simple, $foo : int, $bar : float) : int {
+  sub sum3 ($simple : Test::Simple, $foo : long, $bar : float) : long {
     
     if (3) {
     
@@ -369,14 +392,14 @@ package Test {
     return 2;
   }
   
-  sub sum1 ($num1 : int, $num2 : int) : int {
+  sub sum1 ($num1 : long, $num2 : long) : long {
     return $num1 + $num2;
   }
-  sub sum0($num1 : int, $num2 : int) : int {
+  sub sum0($num1 : long, $num2 : long) : long {
     return $num1 + $num2;
   }
   
-  sub sum2 ($num1 : int, $num2 : int) : int {
+  sub sum2 ($num1 : long, $num2 : long) : long {
     
     my $num3 = sum0($num1, $num2);
     

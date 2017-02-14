@@ -1,4 +1,4 @@
 package Test::Minimal {
-  has x : int;
-  has y : int;
+  has x : long;
+  has y : long;
 }

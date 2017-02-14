@@ -1,28 +1,28 @@
 use Test::EnumA;
 
 package Test::Simple {
-  has x : int;
-  has y : int;
+  has x : long;
+  has y : long;
   
-  has title : int;
+  has title : long;
   
-  sub get_x ($self : Test::Simple) : int {
+  sub get_x ($self : Test::Simple) : long {
     return $self{x};
   }
   
-  sub get2 () : int {
+  sub get2 () : long {
     1;
-    my $var1 : int;
-    my $var2 : int;
+    my $var1 : long;
+    my $var2 : long;
     
     return 0;
   }
 
-  sub get3 () : int { return 0; }
-  sub get4 ($foo : int) : int { return 0; }
-  sub get7 ($foo : int, $bar : int) : int { return 0; }
+  sub get3 () : long { return 0; }
+  sub get4 ($foo : long) : long { return 0; }
+  sub get7 ($foo : long, $bar : long) : long { return 0; }
 
-  sub sum4 ($self : Test::Simple) : int {
+  sub sum4 ($self : Test::Simple) : long {
     
     my $title : int;
    
@@ -45,7 +45,7 @@ package Test::Simple {
     return 0;
   }
   
-  sub sum5($self : Test::Simple) : int {
+  sub sum5($self : Test::Simple) : long {
     $self{x};
     
     return 0;

@@ -541,7 +541,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
             }
             else {
-              constant_code = SPerl_CONSTANT_C_CODE_INT;
+              constant_code = SPerl_CONSTANT_C_CODE_LONG;
             }
           }
           
