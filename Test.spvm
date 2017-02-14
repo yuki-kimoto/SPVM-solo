@@ -6,6 +6,15 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : long) : long {
+    {
+      my $num = (byte)3;
+      std::printb($num);
+      
+      my $num2 = 1 + (long)$num;
+      
+      std::printl($num2);
+    }
+    
     # get and set field
     {
       my $m = malloc Test::Minimal;
