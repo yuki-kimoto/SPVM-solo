@@ -37,9 +37,6 @@ package Test::Simple {
 
     $self{x} = 3;
 
-    my $title8 : boolean = true;
-    my $title9 : boolean = false;
-
     my $char : byte = 'a';
     
     return 0;

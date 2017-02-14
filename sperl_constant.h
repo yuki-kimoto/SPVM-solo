@@ -4,7 +4,6 @@
 #include "sperl_base.h"
 
 enum {
-  SPerl_CONSTANT_C_CODE_BOOLEAN,
   SPerl_CONSTANT_C_CODE_INT,
   SPerl_CONSTANT_C_CODE_LONG,
   SPerl_CONSTANT_C_CODE_FLOAT,
