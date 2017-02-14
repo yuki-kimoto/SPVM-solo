@@ -744,11 +744,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_I2B:
-        *(int32_t*)&call_stack[operand_stack_top] = *(int32_t*)&call_stack[operand_stack_top] & 1;
+        *(int8_t*)&call_stack[operand_stack_top] = (int8_t)(*(int32_t*)&call_stack[operand_stack_top] & 0xFF);
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_I2S:
-        *(int32_t*)&call_stack[operand_stack_top] = *(int32_t*)&call_stack[operand_stack_top] & 0xF;
+        *(int16_t*)&call_stack[operand_stack_top] = (int16_t)(*(int32_t*)&call_stack[operand_stack_top] & 0xFFFF);
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_B2I:
