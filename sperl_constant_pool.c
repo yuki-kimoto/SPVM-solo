@@ -75,7 +75,7 @@ void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* consta
 void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
   (void)sperl;
   
-  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= 4);
+  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(int32_t));
 
   // Constant pool package information
   package->constant_pool_address = constant_pool->length;
@@ -124,7 +124,7 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
 void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_FIELD* field) {
   (void)sperl;
   
-  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= 4);
+  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(int32_t));
   
   // Constant pool field information
   field->constant_pool_address = constant_pool->length;
@@ -211,11 +211,11 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     
     // Calculate constant pool size
     int32_t constant_pool_size;
-    if (real_utf8_length % 4 == 0) {
-      constant_pool_size = real_utf8_length / 4;
+    if (real_utf8_length % sizeof(int32_t) == 0) {
+      constant_pool_size = real_utf8_length / sizeof(int32_t);
     }
     else {
-      constant_pool_size = (real_utf8_length / 4) + 1;
+      constant_pool_size = (real_utf8_length / sizeof(int32_t)) + 1;
     }
     
     SPerl_CONSTANT_POOL_extend(sperl, constant_pool, constant_pool_size);
