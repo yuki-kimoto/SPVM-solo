@@ -6,6 +6,20 @@
 #include "sperl_frame.h"
 #include "sperl_vm.h"
 
+void SPerl_STD_FUNC_printb(SPerl_VM* vm) {
+  
+  int8_t value = *(int8_t*)&vm->frame->vars[0];
+  
+  printf("TEST: %" PRId8 "\n", value);
+}
+
+void SPerl_STD_FUNC_prints(SPerl_VM* vm) {
+  
+  int16_t value = *(int16_t*)&vm->frame->vars[0];
+  
+  printf("TEST: %" PRId16 "\n", value);
+}
+
 void SPerl_STD_FUNC_printi(SPerl_VM* vm) {
   
   int32_t value = *(int32_t*)&vm->frame->vars[0];

@@ -802,7 +802,13 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         else {
           // Bind standard functions
           if (sub->is_native) {
-            if (strcmp(sub_abs_name, "std::printi") == 0) {
+            if (strcmp(sub_abs_name, "std::printb") == 0) {
+              sub->native_address = SPerl_STD_FUNC_printi;
+            }
+            else if (strcmp(sub_abs_name, "std::prints") == 0) {
+              sub->native_address = SPerl_STD_FUNC_printi;
+            }
+            else if (strcmp(sub_abs_name, "std::printi") == 0) {
               sub->native_address = SPerl_STD_FUNC_printi;
             }
             else if (strcmp(sub_abs_name, "std::printl") == 0) {

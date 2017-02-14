@@ -751,6 +751,54 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         *(int32_t*)&call_stack[operand_stack_top] = *(int32_t*)&call_stack[operand_stack_top] & 0xF;
         pc++;
         continue;
+      case SPerl_BYTECODE_C_CODE_B2I:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_S2I:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_B2L:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_B2F:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_B2D:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_S2B:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_S2L:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_S2F:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_S2D:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_L2B:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_L2S:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_F2B:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_F2S:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_D2B:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_D2S:
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_B2S:
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_LCMP:
         // z = (x > y) + (x < y) * -1
         *(int32_t*)&call_stack[operand_stack_top - 1]
