@@ -24,49 +24,45 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   constant_pool->capacity = 64;
   constant_pool->length = 0;
   
-  int32_t* values = SPerl_ALLOCATOR_safe_malloc_zero(constant_pool->capacity, sizeof(int32_t));
+  int64_t* values = SPerl_ALLOCATOR_safe_malloc_zero(constant_pool->capacity, sizeof(int64_t));
   constant_pool->values = values;
   
   return constant_pool;
 }
 
-void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t extend) {
+void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int64_t extend) {
   (void)sperl;
   
-  int32_t capacity = constant_pool->capacity;
+  int64_t capacity = constant_pool->capacity;
   
   if (constant_pool->length + extend >= capacity) {
     if (capacity > INT32_MAX / 2) {
       SPerl_ALLOCATOR_exit_with_malloc_failure();
     }
-    int32_t new_capacity = capacity * 2;
-    constant_pool->values = (int32_t*) SPerl_ALLOCATOR_safe_realloc(constant_pool->values, new_capacity, sizeof(int32_t));
-    memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(int32_t));
+    int64_t new_capacity = capacity * 2;
+    constant_pool->values = (int64_t*) SPerl_ALLOCATOR_safe_realloc(constant_pool->values, new_capacity, sizeof(int64_t));
+    memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(int64_t));
     constant_pool->capacity = new_capacity;
   }
 }
 
 void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
   (void)sperl;
+  constant->address = constant_pool->length;
   switch (constant->code) {
     case SPerl_CONSTANT_C_CODE_INT:
       SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant->uv.int_value);
-      constant->address = constant_pool->length - 1;
       break;
     case SPerl_CONSTANT_C_CODE_LONG:
       SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, constant->uv.long_value);
-      constant->address = constant_pool->length - 2;
       break;
     case SPerl_CONSTANT_C_CODE_FLOAT:
       SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant->uv.float_value);
-      constant->address = constant_pool->length - 1;
       break;
     case SPerl_CONSTANT_C_CODE_DOUBLE:
       SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, constant->uv.double_value);
-      constant->address = constant_pool->length - 2;
       break;
     case SPerl_CONSTANT_C_CODE_STRING:
-      constant->address = constant_pool->length;
       SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, constant->uv.string_value);
       break;
   }
@@ -75,7 +71,7 @@ void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* consta
 void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
   (void)sperl;
   
-  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(int32_t));
+  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(int64_t));
 
   // Constant pool package information
   package->constant_pool_address = constant_pool->length;
@@ -85,7 +81,7 @@ void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constan
   constant_pool_package->byte_size = package->byte_size;
 
   // Add package information
-  int32_t extend_length = (sizeof(SPerl_CONSTANT_POOL_PACKAGE) + (sizeof(int32_t) - 1)) / sizeof(int32_t);
+  int64_t extend_length = (sizeof(SPerl_CONSTANT_POOL_PACKAGE) + (sizeof(int64_t) - 1)) / sizeof(int64_t);
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
   *(SPerl_CONSTANT_POOL_PACKAGE*)&constant_pool->values[constant_pool->length] = *constant_pool_package;
   constant_pool->length += extend_length;
@@ -115,7 +111,7 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   }
   
   // Add sub information
-  int32_t extend_length = (sizeof(SPerl_CONSTANT_POOL_SUB) + (sizeof(int32_t) - 1)) / sizeof(int32_t);
+  int64_t extend_length = (sizeof(SPerl_CONSTANT_POOL_SUB) + (sizeof(int64_t) - 1)) / sizeof(int64_t);
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
   *(SPerl_CONSTANT_POOL_SUB*)&constant_pool->values[constant_pool->length] = *constant_pool_sub;
   constant_pool->length += extend_length;
@@ -124,7 +120,7 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
 void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_FIELD* field) {
   (void)sperl;
   
-  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(int32_t));
+  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(int64_t));
   
   // Constant pool field information
   field->constant_pool_address = constant_pool->length;
@@ -134,7 +130,7 @@ void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_
   constant_pool_field->package_byte_offset = field->package_byte_offset;
   
   // Add field information
-  int32_t extend_length = (sizeof(SPerl_CONSTANT_POOL_FIELD) + (sizeof(int32_t) - 1)) / sizeof(int32_t);
+  int64_t extend_length = (sizeof(SPerl_CONSTANT_POOL_FIELD) + (sizeof(int64_t) - 1)) / sizeof(int64_t);
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
   *(SPerl_CONSTANT_POOL_FIELD*)&constant_pool->values[constant_pool->length] = *constant_pool_field;
   constant_pool->length += extend_length;
@@ -145,23 +141,17 @@ void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   
   // Add int value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
-  constant_pool->values[constant_pool->length] = value;
+  *(int32_t*)&constant_pool->values[constant_pool->length] = value;
   constant_pool->length++;
 }
 
 void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int64_t value) {
   (void)sperl;
   
-  // Adjust alignment
-  if ((constant_pool->length % 2) != 0) {
-    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
-  }
-  assert((constant_pool->length % 2) == 0);
-
   // Add long value
-  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);
-  *(int64_t*)&constant_pool->values[constant_pool->length] = value;
-  constant_pool->length += 2;
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
+  constant_pool->values[constant_pool->length] = value;
+  constant_pool->length++;
 }
 
 void SPerl_CONSTANT_POOL_push_float(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, float value) {
@@ -176,16 +166,10 @@ void SPerl_CONSTANT_POOL_push_float(SPerl* sperl, SPerl_CONSTANT_POOL* constant_
 void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, double value) {
   (void)sperl;
   
-  // Adjust alignment
-  if ((constant_pool->length % 2) != 0) {
-    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
-  }
-  assert((constant_pool->length % 2) == 0);
-
   // Add double value
-  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 2);
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
   *(double*)&constant_pool->values[constant_pool->length] = value;
-  constant_pool->length += 2;
+  constant_pool->length++;
 }
 
 void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, const char* utf8) {
@@ -206,16 +190,16 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     new_constant_string->address = constant_pool->length;
     SPerl_HASH_insert(constant_utf8_symtable, utf8, strlen(utf8), new_constant_string);
     
-    int32_t utf8_length = strlen(utf8);
-    int32_t real_utf8_length = utf8_length + 1;
+    int64_t utf8_length = strlen(utf8);
+    int64_t real_utf8_length = utf8_length + 1;
     
     // Calculate constant pool size
-    int32_t constant_pool_size;
-    if (real_utf8_length % sizeof(int32_t) == 0) {
-      constant_pool_size = real_utf8_length / sizeof(int32_t);
+    int64_t constant_pool_size;
+    if (real_utf8_length % sizeof(int64_t) == 0) {
+      constant_pool_size = real_utf8_length / sizeof(int64_t);
     }
     else {
-      constant_pool_size = (real_utf8_length / sizeof(int32_t)) + 1;
+      constant_pool_size = (real_utf8_length / sizeof(int64_t)) + 1;
     }
     
     SPerl_CONSTANT_POOL_extend(sperl, constant_pool, constant_pool_size);

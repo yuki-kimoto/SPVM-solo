@@ -185,8 +185,8 @@ void SPerl_DUMPER_dump_resolved_types(SPerl* sperl, SPerl_ARRAY* resolved_types)
 void SPerl_DUMPER_dump_constant_pool(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool) {
   (void)sperl;
 
-  for (int32_t i = 0; i < constant_pool->length; i++) {
-    printf("      constant_pool[%" PRId32 "] %" PRId32 "\n", i, constant_pool->values[i]);
+  for (int64_t i = 0; i < constant_pool->length; i++) {
+    printf("      constant_pool[%" PRId32 "] %" PRId64 "\n", i, constant_pool->values[i]);
   }
 }
 

@@ -43,7 +43,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   SPerl_PARSER* parser = sperl->parser;
   
   // Constant pool
-  int32_t* constant_pool = sperl->constant_pool->values;
+  int64_t* constant_pool = sperl->constant_pool->values;
   
   // Bytecode
   uint8_t* bytecodes = sperl->bytecode_array->values;
@@ -166,19 +166,17 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_LDC:
         operand_stack_top++;
-        *(int32_t*)&call_stack[operand_stack_top] = constant_pool[bytecodes[pc + 1]];
+        call_stack[operand_stack_top] = constant_pool[bytecodes[pc + 1]];
         pc += 2;
         continue;
       case SPerl_BYTECODE_C_CODE_LDC_W:
         operand_stack_top++;
-        *(int32_t*)&call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
+        call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
         pc += 3;
         continue;
       case SPerl_BYTECODE_C_CODE_LDC2_W:
-        operand_stack_top++;
-        call_stack[operand_stack_top] = *(int64_t*)&constant_pool[(bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
-        pc += 3;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ILOAD:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = *(int32_t*)&vars[bytecodes[pc + 1]];
@@ -1489,16 +1487,12 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_LDC_WW:
         operand_stack_top++;
-        *(int32_t*)&call_stack[operand_stack_top]
-          = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
         pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_LDC2_WW:
-        operand_stack_top++;
-        call_stack[operand_stack_top]
-          = *(int64_t*)&constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
-        pc += 5;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_BGETFIELD: {
         int32_t field_constant_pool_address
           = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];

@@ -5,14 +5,14 @@
 
 // Array
 struct SPerl_constant_pool {
-  int32_t* values;
+  int64_t* values;
   int64_t length;
   int64_t capacity;
 };
 
 // Array function
 SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl);
-void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t extend);
+void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int64_t extend);
 void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t value);
 void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int64_t value);
 void SPerl_CONSTANT_POOL_push_float(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, float value);
