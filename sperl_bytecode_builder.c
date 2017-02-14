@@ -471,10 +471,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     int32_t case_offset = *case_address_ptr - cur_switch_address;
                     
                     // Match
-                    *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 9 + (8 * i)] = match;
+                    *(int32_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int32_t) * 2 + 1 + (8 * i)] = match;
 
                     // Offset
-                    *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 13 + (8 * i)] = case_offset;
+                    *(int32_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int32_t) * 3 + 1 + (8 * i)] = case_offset;
                   }
                 }
                 
