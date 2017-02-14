@@ -9,11 +9,13 @@
 const char* const SPerl_CONSTANT_C_CODE_NAMES[] = {
   "BOOLEAN",
   "BYTE",
+  "SHORT",
   "INT",
   "LONG",
   "FLOAT",
   "DOUBLE",
   "STRING",
+  "UTF8",
 };
 
 SPerl_CONSTANT* SPerl_CONSTANT_new(SPerl* sperl) {
