@@ -838,21 +838,21 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           SPerl_CONSTANT* constant;
           if (enumeration_value->op_constant) {
             SPerl_OP* op_constant = enumeration_value->op_constant;
-            start_value = op_constant->uv.constant->uv.int_value + 1;
+            start_value = op_constant->uv.constant->uv.long_value + 1;
             constant = op_constant->uv.constant;
           }
           else {
             constant = SPerl_CONSTANT_new(sperl);
-            constant->code = SPerl_CONSTANT_C_CODE_INT;
+            constant->code = SPerl_CONSTANT_C_CODE_LONG;
             constant->uv.int_value = start_value;
-            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
             SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
             op_constant->uv.constant = constant;
             
             enumeration_value->op_constant = op_constant;
             start_value++;
           }
-
+          
           // sub
           SPerl_OP* op_sub = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_SUB, op_enumeration_value->file, op_enumeration_value->line);
           op_sub->file = op_enumeration_value->file;

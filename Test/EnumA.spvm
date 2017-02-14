@@ -2,7 +2,7 @@ package Test::EnumA {
   enum {
     ONE,
     TWO,
-    THREE = 4,
-    FORE = 100000
+    THREE = 4L,
+    FORE = 100000L
   }
 }
