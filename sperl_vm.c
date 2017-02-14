@@ -752,51 +752,71 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_B2I:
+        *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_S2I:
+        *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_B2L:
+        call_stack[operand_stack_top] = (int64_t)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_B2F:
+        *(float*)&call_stack[operand_stack_top] = (float)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_B2D:
+        *(double*)&call_stack[operand_stack_top] = (double)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_S2B:
+        *(int8_t*)&call_stack[operand_stack_top] = *(int16_t*)&call_stack[operand_stack_top] & 0xFF;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_S2L:
+        call_stack[operand_stack_top] = (int64_t)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_S2F:
+        *(float*)&call_stack[operand_stack_top] = (float)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_S2D:
+        *(double*)&call_stack[operand_stack_top] = (double)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_L2B:
+        *(int8_t*)&call_stack[operand_stack_top] = call_stack[operand_stack_top] & 0xFF;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_L2S:
+        *(int16_t*)&call_stack[operand_stack_top] = call_stack[operand_stack_top] & 0xFFFF;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_F2B:
+        // TODO
+        *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*(float*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_F2S:
+        // TODO
+        *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(float*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_D2B:
+        // TODO
+        *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*(double*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_D2S:
+        // TODO
+        *(int8_t*)&call_stack[operand_stack_top] = (int16_t)*(double*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_B2S:
+        *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_LCMP:
