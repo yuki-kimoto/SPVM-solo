@@ -224,29 +224,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   break;
                 }
                 
-                // Convert to int
-                if (term_resolved_type->id < SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  // OP index term
-                  SPerl_OP* op_term = op_switch_condition->first;
-                  
-                  // OP convert
-                  SPerl_OP* op_index_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_term->file, op_term->line);
-                  SPerl_TYPE* index_type = SPerl_TYPE_new(sperl);
-                  index_type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-                  op_index_type->uv.type = index_type;
-                  SPerl_OP* op_convert = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONVERT, op_term->file, op_term->line);
-                  
-                  op_switch_condition->last = op_convert;
-                  op_convert->moresib = 0;
-                  op_convert->sibparent = op_switch_condition;
-                  
-                  op_convert->first = op_term;
-                  op_convert->last = op_index_type;
-                  
-                  op_term->moresib = 0;
-                  op_term->sibparent = op_convert;
-                }
-                
                 in_switch = 0;
                 cur_default_op = NULL;
                 cur_case_ops = NULL;
@@ -303,8 +280,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 if (first_resolved_type && last_resolved_type) {
                   // core == core
                   if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                    // Insert type converting op
-                    SPerl_OP_insert_op_convert(sperl, op_cur);
+                    if (first_resolved_type->id != last_resolved_type->id) {
+                      SPerl_yyerror_format(sperl, "== operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }
                   }
                   // core == OBJ
                   else if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
@@ -343,8 +322,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 if (first_resolved_type && last_resolved_type) {
                   // core == core
                   if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                    // Insert type converting op
-                    SPerl_OP_insert_op_convert(sperl, op_cur);
+                    if (first_resolved_type->id != last_resolved_type->id) {
+                      SPerl_yyerror_format(sperl, "!= operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }
                   }
                   // core == OBJ
                   else if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
@@ -398,10 +379,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, "< right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
-                
+
+                if (first_resolved_type->id != last_resolved_type->id) {
+                  SPerl_yyerror_format(sperl, "< operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+
                 break;
               }
               case SPerl_OP_C_CODE_LE: {
@@ -428,9 +411,11 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, "<= right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
+
+                if (first_resolved_type->id != last_resolved_type->id) {
+                  SPerl_yyerror_format(sperl, "<= operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 
                 break;
               }
@@ -458,9 +443,11 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, "> right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
+
+                if (first_resolved_type->id != last_resolved_type->id) {
+                  SPerl_yyerror_format(sperl, "> operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 
                 break;
               }
@@ -488,9 +475,11 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, ">= right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
+
+                if (first_resolved_type->id != last_resolved_type->id) {
+                  SPerl_yyerror_format(sperl, ">= operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 
                 break;
               }
@@ -554,28 +543,11 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     SPerl_yyerror_format(sperl, "new operator can't create array which don't have length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
                     break;
                   }
-                  else if (index_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                    if (index_resolved_type->id < SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                      // Convert to long
-                      SPerl_OP* op_index_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_index_term->file, op_index_term->line);
-                      SPerl_TYPE* index_type = SPerl_TYPE_new(sperl);
-                      index_type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
-                      op_index_type->uv.type = index_type;
-                      SPerl_OP* op_convert = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONVERT, op_index_term->file, op_index_term->line);
-                      
-                      op_type->last = op_convert;
-                      op_convert->moresib = 0;
-                      op_convert->sibparent = op_type;
-                      
-                      op_convert->first = op_index_term;
-                      op_convert->last = op_index_type;
-                      
-                      op_index_term->moresib = 0;
-                      op_index_term->sibparent = op_convert;
-                    }
+                  else if (index_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                    // OK
                   }
                   else {
-                    SPerl_yyerror_format(sperl, "new operator can't create array which don't have integral length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
+                    SPerl_yyerror_format(sperl, "new operator can't create array which don't have long length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
                     break;
                   }
                 }
@@ -622,9 +594,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   break;
                 }
                 
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
-                
                 break;
               }
               case SPerl_OP_C_CODE_BIT_OR: {
@@ -638,9 +607,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   break;
                 }
                 
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
-                
                 break;
               }
               case SPerl_OP_C_CODE_BIT_AND: {
@@ -653,9 +619,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     "& operator can receive only boolean, char, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
                 
                 break;
               }
@@ -683,33 +646,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                 
                 // Last value must be integer
-                if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                  SPerl_yyerror_format(sperl, "array index must be integegral at %s line %d\n", op_cur->file, op_cur->line);
+                if (last_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                  SPerl_yyerror_format(sperl, "array index must be long at %s line %d\n", op_cur->file, op_cur->line);
                   break;
-                }
-                
-                // Convert to long
-                if (last_resolved_type->id < SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                  
-                  // OP index term
-                  SPerl_OP* op_index_term = op_cur->last;
-                  
-                  // OP convert
-                  SPerl_OP* op_index_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_index_term->file, op_index_term->line);
-                  SPerl_TYPE* index_type = SPerl_TYPE_new(sperl);
-                  index_type->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
-                  op_index_type->uv.type = index_type;
-                  SPerl_OP* op_convert = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONVERT, op_index_term->file, op_index_term->line);
-                  
-                  op_cur->last = op_convert;
-                  op_convert->moresib = 0;
-                  op_convert->sibparent = op_cur;
-                  
-                  op_convert->first = op_index_term;
-                  op_convert->last = op_index_type;
-                  
-                  op_index_term->moresib = 0;
-                  op_index_term->sibparent = op_convert;
                 }
                 
                 break;
@@ -737,11 +676,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     parser->fatal_error = 1;
                     return;
                   }
-                }
-                
-                // Convert type
-                if (SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                  SPerl_OP_insert_op_convert(sperl, op_cur);
                 }
                 
                 first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
@@ -842,8 +776,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, "+ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
+                
+                // Can receive only core type
+                if (first_resolved_type->id != last_resolved_type->id) {
+                  SPerl_yyerror_format(sperl, "+ operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 
                 break;
               }
@@ -856,8 +794,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, "- operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
+
+                // Can receive only core type
+                if (first_resolved_type->id != last_resolved_type->id) {
+                  SPerl_yyerror_format(sperl, "- operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 
                 break;
               }
@@ -870,8 +812,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, "* operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
+
+                // Can receive only core type
+                if (first_resolved_type->id != last_resolved_type->id) {
+                  SPerl_yyerror_format(sperl, "* operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 
                 break;
               }
@@ -884,8 +830,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, "/ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
+
+                // Can receive only core type
+                if (first_resolved_type->id != last_resolved_type->id) {
+                  SPerl_yyerror_format(sperl, "/ operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 
                 break;
               }
@@ -898,8 +848,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, "% operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                // Insert type converting op
-                SPerl_OP_insert_op_convert(sperl, op_cur);
+
+                // Can receive only core type
+                if (first_resolved_type->id != last_resolved_type->id) {
+                  SPerl_yyerror_format(sperl, "% operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
                 
                 break;
               }
