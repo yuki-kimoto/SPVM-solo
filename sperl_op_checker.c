@@ -492,8 +492,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, "<< operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_yyerror_format(sperl, "<< operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
+                if (last_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                  SPerl_yyerror_format(sperl, "<< operator right value must be long at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -508,8 +508,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, ">> operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_yyerror_format(sperl, ">> operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
+                if (last_resolved_type->id != SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                  SPerl_yyerror_format(sperl, ">> operator right value must be long at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -524,8 +524,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_yyerror_format(sperl, ">>> operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-                if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_INT) {
-                  SPerl_yyerror_format(sperl, ">>> operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
+                if (last_resolved_type->id > SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                  SPerl_yyerror_format(sperl, ">>> operator right value must be long at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
