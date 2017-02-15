@@ -590,7 +590,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 // Can receive only core type
                 if (first_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT || last_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
                   SPerl_yyerror_format(sperl,
-                    "& operator can receive only boolean, char, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
+                    "& operator can receive only integral type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -603,7 +603,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 // Can receive only core type
                 if (first_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT || last_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
                   SPerl_yyerror_format(sperl,
-                    "& operator can receive only boolean, char, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
+                    "& operator can receive only integral type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -616,7 +616,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 // Can receive only core type
                 if (first_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT || last_resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
                   SPerl_yyerror_format(sperl,
-                    "& operator can receive only boolean, char, char, short, int, long type at %s line %d\n", op_cur->file, op_cur->line);
+                    "& operator can receive only integral type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -749,7 +749,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 
                 // Must be int, long, float, double
-                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
                   SPerl_yyerror_format(sperl, "Type of - operator right value must be int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
@@ -760,7 +760,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 
                 // Must be int, long, float, double
-                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
                   SPerl_yyerror_format(sperl, "Type of + operator right value must be int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
@@ -790,8 +790,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                                                 
                 // Value must be int, long, float, double
-                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "Type of + operator left and right value must be one of int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of + operator left and right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -820,8 +820,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                                                 
                 // Value must be int, long, float, double
-                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "Type of - operator left and right value must be one of int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of - operator left and right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -850,8 +850,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                                                 
                 // Value must be int, long, float, double
-                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "Type of * operator left and right value must be one of int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of * operator left and right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -880,8 +880,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                                                 
                 // Value must be int, long, float, double
-                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "Type of / operator left and right value must be one of int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of / operator left and right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -910,8 +910,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                                                 
                 // Value must be int, long, float, double
-                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "Type of % operator left and right value must be one of int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of % operator left and right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 

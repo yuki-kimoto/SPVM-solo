@@ -354,7 +354,21 @@ package Test {
     #   last;
     #   next;
     # }
-    
+
+    {
+      my $num1 = (byte)1;
+      my $num2 = (byte)2;
+      my $num3 = $num1 + $num2;
+      std::printb($num3);
+    }
+
+    {
+      my $num1 = (short)1;
+      my $num2 = (short)2;
+      my $num3 = $num1 + $num2;
+      std::prints($num3);
+    }
+        
     return $mvar + 3;
   }
   
