@@ -213,6 +213,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
           case SPerl_BYTECODE_C_CODE_FSTORE:
           case SPerl_BYTECODE_C_CODE_DSTORE:
           case SPerl_BYTECODE_C_CODE_ASTORE:
+          case SPerl_BYTECODE_C_CODE_LOAD:
           case SPerl_BYTECODE_C_CODE_ILOAD:
           case SPerl_BYTECODE_C_CODE_LLOAD:
           case SPerl_BYTECODE_C_CODE_FLOAD:
@@ -241,6 +242,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       case SPerl_BYTECODE_C_CODE_FSTORE:
       case SPerl_BYTECODE_C_CODE_DSTORE:
       case SPerl_BYTECODE_C_CODE_ASTORE:
+      case SPerl_BYTECODE_C_CODE_LOAD:
       case SPerl_BYTECODE_C_CODE_ILOAD:
       case SPerl_BYTECODE_C_CODE_LLOAD:
       case SPerl_BYTECODE_C_CODE_FLOAD:
@@ -479,7 +481,7 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     }
     
     printf("      operand_stack_max => %d\n", sub->operand_stack_max);
-
+    
     printf("      bytecode_array\n");
     SPerl_DUMPER_dump_bytecode_array(sperl, sperl->bytecode_array, sub->bytecode_base, sub->bytecode_length);
   }
