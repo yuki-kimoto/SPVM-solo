@@ -248,12 +248,12 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       case SPerl_BYTECODE_C_CODE_LDC_W:
       case SPerl_BYTECODE_C_CODE_IF_ACMPEQ:
       case SPerl_BYTECODE_C_CODE_IF_ACMPNE:
-      case SPerl_BYTECODE_C_CODE_IF_ICMPEQ:
-      case SPerl_BYTECODE_C_CODE_IF_ICMPNE:
-      case SPerl_BYTECODE_C_CODE_IF_ICMPLT:
-      case SPerl_BYTECODE_C_CODE_IF_ICMPGE:
-      case SPerl_BYTECODE_C_CODE_IF_ICMPGT:
-      case SPerl_BYTECODE_C_CODE_IF_ICMPLE:
+      case SPerl_BYTECODE_C_CODE_IF_LCMPEQ:
+      case SPerl_BYTECODE_C_CODE_IF_LCMPNE:
+      case SPerl_BYTECODE_C_CODE_IF_LCMPLT:
+      case SPerl_BYTECODE_C_CODE_IF_LCMPGE:
+      case SPerl_BYTECODE_C_CODE_IF_LCMPGT:
+      case SPerl_BYTECODE_C_CODE_IF_LCMPLE:
       case SPerl_BYTECODE_C_CODE_IFEQ:
       case SPerl_BYTECODE_C_CODE_IFNE:
       case SPerl_BYTECODE_C_CODE_IFLT:
