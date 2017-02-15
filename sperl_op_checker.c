@@ -801,15 +801,27 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
                 
-                // Can receive only core type
-                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "- operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                // Left value must not be undef
+                if (!first_resolved_type) {
+                  SPerl_yyerror_format(sperl, "- operator left value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-
-                // Can receive only core type
+                
+                // Right value Must not be undef
+                if (!last_resolved_type) {
+                  SPerl_yyerror_format(sperl, "- operator right value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Must be same type
                 if (first_resolved_type->id != last_resolved_type->id) {
-                  SPerl_yyerror_format(sperl, "- operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(sperl, "Type of - operator left and right value must be same at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                                                
+                // Value must be int, long, float, double
+                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of - operator left and right value must be one of int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -819,15 +831,27 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
                 
-                // Can receive only core type
-                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "* operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                // Left value must not be undef
+                if (!first_resolved_type) {
+                  SPerl_yyerror_format(sperl, "* operator left value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-
-                // Can receive only core type
+                
+                // Right value Must not be undef
+                if (!last_resolved_type) {
+                  SPerl_yyerror_format(sperl, "* operator right value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Must be same type
                 if (first_resolved_type->id != last_resolved_type->id) {
-                  SPerl_yyerror_format(sperl, "* operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(sperl, "Type of * operator left and right value must be same at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                                                
+                // Value must be int, long, float, double
+                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of * operator left and right value must be one of int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -837,15 +861,27 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
                 
-                // Can receive only core type
-                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "/ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                // Left value must not be undef
+                if (!first_resolved_type) {
+                  SPerl_yyerror_format(sperl, "/ operator left value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-
-                // Can receive only core type
+                
+                // Right value Must not be undef
+                if (!last_resolved_type) {
+                  SPerl_yyerror_format(sperl, "/ operator right value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Must be same type
                 if (first_resolved_type->id != last_resolved_type->id) {
-                  SPerl_yyerror_format(sperl, "/ operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(sperl, "Type of / operator left and right value must be same at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                                                
+                // Value must be int, long, float, double
+                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of / operator left and right value must be one of int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -855,15 +891,27 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 SPerl_RESOLVED_TYPE* last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
                 
-                // Can receive only core type
-                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) || !SPerl_RESOLVED_TYPE_is_core_type(sperl, last_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "% operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                // Left value must not be undef
+                if (!first_resolved_type) {
+                  SPerl_yyerror_format(sperl, "% operator left value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
-
-                // Can receive only core type
+                
+                // Right value Must not be undef
+                if (!last_resolved_type) {
+                  SPerl_yyerror_format(sperl, "% operator right value must be not undef at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                
+                // Must be same type
                 if (first_resolved_type->id != last_resolved_type->id) {
-                  SPerl_yyerror_format(sperl, "% operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(sperl, "Type of % operator left and right value must be same at %s line %d\n", op_cur->file, op_cur->line);
+                  break;
+                }
+                                                
+                // Value must be int, long, float, double
+                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of % operator left and right value must be one of int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
