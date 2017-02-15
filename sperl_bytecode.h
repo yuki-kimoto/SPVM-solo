@@ -33,31 +33,6 @@ enum {
   SPerl_BYTECODE_C_CODE_DALOAD,
   SPerl_BYTECODE_C_CODE_BALOAD,
   SPerl_BYTECODE_C_CODE_SALOAD,
-  SPerl_BYTECODE_C_CODE_ISTORE, // Not used
-  SPerl_BYTECODE_C_CODE_LSTORE, // Not used
-  SPerl_BYTECODE_C_CODE_FSTORE, // Not used
-  SPerl_BYTECODE_C_CODE_DSTORE, // Not used
-  SPerl_BYTECODE_C_CODE_ASTORE, // Not used
-  SPerl_BYTECODE_C_CODE_ISTORE_0, // Not used
-  SPerl_BYTECODE_C_CODE_ISTORE_1, // Not used
-  SPerl_BYTECODE_C_CODE_ISTORE_2, // Not used
-  SPerl_BYTECODE_C_CODE_ISTORE_3, // Not used
-  SPerl_BYTECODE_C_CODE_LSTORE_0, // Not used
-  SPerl_BYTECODE_C_CODE_LSTORE_1, // Not used
-  SPerl_BYTECODE_C_CODE_LSTORE_2, // Not used
-  SPerl_BYTECODE_C_CODE_LSTORE_3, // Not used
-  SPerl_BYTECODE_C_CODE_FSTORE_0, // Not used
-  SPerl_BYTECODE_C_CODE_FSTORE_1, // Not used
-  SPerl_BYTECODE_C_CODE_FSTORE_2, // Not used
-  SPerl_BYTECODE_C_CODE_FSTORE_3, // Not used
-  SPerl_BYTECODE_C_CODE_DSTORE_0, // Not used
-  SPerl_BYTECODE_C_CODE_DSTORE_1, // Not used
-  SPerl_BYTECODE_C_CODE_DSTORE_2, // Not used
-  SPerl_BYTECODE_C_CODE_DSTORE_3, // Not used
-  SPerl_BYTECODE_C_CODE_ASTORE_0, // Not used
-  SPerl_BYTECODE_C_CODE_ASTORE_1, // Not used
-  SPerl_BYTECODE_C_CODE_ASTORE_2, // Not used
-  SPerl_BYTECODE_C_CODE_ASTORE_3, // Not used
   SPerl_BYTECODE_C_CODE_BASTORE,
   SPerl_BYTECODE_C_CODE_CASTORE,
   SPerl_BYTECODE_C_CODE_SASTORE,
@@ -224,6 +199,31 @@ enum {
   SPerl_BYTECODE_C_CODE_DUP2_X1, // Not used
   SPerl_BYTECODE_C_CODE_DUP2_X2, // Not used
   SPerl_BYTECODE_C_CODE_SWAP, // Not used
+  SPerl_BYTECODE_C_CODE_ISTORE, // Not used
+  SPerl_BYTECODE_C_CODE_LSTORE, // Not used
+  SPerl_BYTECODE_C_CODE_FSTORE, // Not used
+  SPerl_BYTECODE_C_CODE_DSTORE, // Not used
+  SPerl_BYTECODE_C_CODE_ASTORE, // Not used
+  SPerl_BYTECODE_C_CODE_ISTORE_0, // Not used
+  SPerl_BYTECODE_C_CODE_ISTORE_1, // Not used
+  SPerl_BYTECODE_C_CODE_ISTORE_2, // Not used
+  SPerl_BYTECODE_C_CODE_ISTORE_3, // Not used
+  SPerl_BYTECODE_C_CODE_LSTORE_0, // Not used
+  SPerl_BYTECODE_C_CODE_LSTORE_1, // Not used
+  SPerl_BYTECODE_C_CODE_LSTORE_2, // Not used
+  SPerl_BYTECODE_C_CODE_LSTORE_3, // Not used
+  SPerl_BYTECODE_C_CODE_FSTORE_0, // Not used
+  SPerl_BYTECODE_C_CODE_FSTORE_1, // Not used
+  SPerl_BYTECODE_C_CODE_FSTORE_2, // Not used
+  SPerl_BYTECODE_C_CODE_FSTORE_3, // Not used
+  SPerl_BYTECODE_C_CODE_DSTORE_0, // Not used
+  SPerl_BYTECODE_C_CODE_DSTORE_1, // Not used
+  SPerl_BYTECODE_C_CODE_DSTORE_2, // Not used
+  SPerl_BYTECODE_C_CODE_DSTORE_3, // Not used
+  SPerl_BYTECODE_C_CODE_ASTORE_0, // Not used
+  SPerl_BYTECODE_C_CODE_ASTORE_1, // Not used
+  SPerl_BYTECODE_C_CODE_ASTORE_2, // Not used
+  SPerl_BYTECODE_C_CODE_ASTORE_3, // Not used
 };
 
 extern const char* const SPerl_BYTECODE_C_CODE_NAMES[];
