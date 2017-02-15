@@ -785,13 +785,13 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 // Must be same type
                 if (first_resolved_type->id != last_resolved_type->id) {
-                  SPerl_yyerror_format(sperl, "+ operator left and right value must have same type at %s line %d\n", op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(sperl, "Type of + operator left and right value must be same at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                                                 
                 // Value must be int, long, float, double
                 if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "+ operator left and right value must be int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(sperl, "Type of + operator left and right value must be one of int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
