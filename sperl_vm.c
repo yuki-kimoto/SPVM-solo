@@ -121,6 +121,11 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         *(int32_t*)&call_stack[operand_stack_top] = 5;
         pc++;
         continue;
+      case SPerl_BYTECODE_C_CODE_LCONST_M1:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = -1L;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_LCONST_0:
         operand_stack_top++;
         call_stack[operand_stack_top] = 0L;
@@ -129,6 +134,26 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_LCONST_1:
         operand_stack_top++;
         call_stack[operand_stack_top] = 1L;
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LCONST_2:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = 2L;
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LCONST_3:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = 3L;
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LCONST_4:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = 4L;
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LCONST_5:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = 5L;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_FCONST_0:
