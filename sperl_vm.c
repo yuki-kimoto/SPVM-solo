@@ -1181,7 +1181,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         if (call_stack_base == 0) {
           return;
         }
-
+        
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
         

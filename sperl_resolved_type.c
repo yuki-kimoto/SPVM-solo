@@ -151,3 +151,14 @@ _Bool SPerl_RESOLVED_TYPE_is_core_type(SPerl* sperl, SPerl_RESOLVED_TYPE* resolv
     return 0;
   }
 }
+
+_Bool SPerl_RESOLVED_TYPE_is_calculatable_type(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)sperl;
+  
+  if (resolved_type && resolved_type->id >= SPerl_RESOLVED_TYPE_C_ID_INT && resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
