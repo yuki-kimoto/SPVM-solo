@@ -66,14 +66,6 @@ enum {
   SPerl_BYTECODE_C_CODE_FASTORE,
   SPerl_BYTECODE_C_CODE_DASTORE,
   SPerl_BYTECODE_C_CODE_POP,
-  SPerl_BYTECODE_C_CODE_POP2,  // Not used
-  SPerl_BYTECODE_C_CODE_DUP, // Not used
-  SPerl_BYTECODE_C_CODE_DUP_X1, // Not used
-  SPerl_BYTECODE_C_CODE_DUP_X2, // Not used
-  SPerl_BYTECODE_C_CODE_DUP2, // Not used
-  SPerl_BYTECODE_C_CODE_DUP2_X1, // Not used
-  SPerl_BYTECODE_C_CODE_DUP2_X2, // Not used
-  SPerl_BYTECODE_C_CODE_SWAP, // Not used
   SPerl_BYTECODE_C_CODE_IADD,
   SPerl_BYTECODE_C_CODE_LADD,
   SPerl_BYTECODE_C_CODE_FADD,
@@ -224,6 +216,14 @@ enum {
   SPerl_BYTECODE_C_CODE_INSTANCEOF, // Not used
   SPerl_BYTECODE_C_CODE_MONITORENTER, // Not used
   SPerl_BYTECODE_C_CODE_MONITOREXIT, // Not used
+  SPerl_BYTECODE_C_CODE_POP2,  // Not used
+  SPerl_BYTECODE_C_CODE_DUP, // Not used
+  SPerl_BYTECODE_C_CODE_DUP_X1, // Not used
+  SPerl_BYTECODE_C_CODE_DUP_X2, // Not used
+  SPerl_BYTECODE_C_CODE_DUP2, // Not used
+  SPerl_BYTECODE_C_CODE_DUP2_X1, // Not used
+  SPerl_BYTECODE_C_CODE_DUP2_X2, // Not used
+  SPerl_BYTECODE_C_CODE_SWAP, // Not used
 };
 
 extern const char* const SPerl_BYTECODE_C_CODE_NAMES[];
