@@ -302,10 +302,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         operand_stack_top--;
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_POP2:
-        operand_stack_top -= 2;
-        pc++;
-        continue;
       case SPerl_BYTECODE_C_CODE_IADD:
         
         *(int32_t*)&call_stack[operand_stack_top - 1] += *(int32_t*)&call_stack[operand_stack_top];
