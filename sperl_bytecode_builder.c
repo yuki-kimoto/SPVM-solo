@@ -768,7 +768,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_LEFT_SHIFT: {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BSHL);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SSHL);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ISHL);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -780,7 +786,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_RIGHT_SHIFT: {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BSHR);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SSHR);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ISHR);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -792,7 +804,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_RIGHT_SHIFT_UNSIGNED: {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BUSHR);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SUSHR);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IUSHR);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -881,7 +899,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_BIT_XOR: {
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BXOR);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SXOR);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IXOR);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -893,7 +917,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_BIT_OR: {
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BOR);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SOR);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IOR);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -905,7 +935,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_BIT_AND: {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
                 
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BAND);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SAND);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IAND);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -1084,7 +1120,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_NEGATE: {
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BNEG);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SNEG);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_INEG);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -1265,8 +1307,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_ADD: {
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-                
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BADD);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SADD);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IADD);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -1284,7 +1331,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_SUBTRACT: {
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BSUB);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SSUB);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ISUB);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -1302,7 +1355,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_MULTIPLY: {
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BMUL);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SMUL);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IMUL);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -1320,7 +1379,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_DIVIDE: {
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BDIV);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SDIV);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IDIV);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
@@ -1338,7 +1403,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_REMAINDER: {
                 
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT || resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BREM);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SREM);
+                }
+                else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IREM);
                 }
                 else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
