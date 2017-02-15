@@ -29,6 +29,8 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "DCONST_1",
   "BIPUSH",
   "SIPUSH",
+  "BLPUSH",
+  "SLPUSH",
   "LDC",
   "LDC_W",
   "IALOAD",

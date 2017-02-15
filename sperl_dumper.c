@@ -228,6 +228,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       
       // Have one operand
       case SPerl_BYTECODE_C_CODE_BIPUSH:
+      case SPerl_BYTECODE_C_CODE_BLPUSH:
       case SPerl_BYTECODE_C_CODE_STORE:
       case SPerl_BYTECODE_C_CODE_LOAD:
       case SPerl_BYTECODE_C_CODE_LDC:
@@ -243,6 +244,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       case SPerl_BYTECODE_C_CODE_IINC:
       case SPerl_BYTECODE_C_CODE_LINC:
       case SPerl_BYTECODE_C_CODE_SIPUSH:
+      case SPerl_BYTECODE_C_CODE_SLPUSH:
       case SPerl_BYTECODE_C_CODE_LDC_W:
       case SPerl_BYTECODE_C_CODE_IF_ACMPEQ:
       case SPerl_BYTECODE_C_CODE_IF_ACMPNE:

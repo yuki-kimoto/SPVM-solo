@@ -186,12 +186,21 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         *(int32_t*)&call_stack[operand_stack_top] = (int8_t)bytecodes[pc + 1];
         pc += 2;
         continue;
+      case SPerl_BYTECODE_C_CODE_SLPUSH:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = (int16_t)((int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]);
+        pc += 3;
+        continue;
+      case SPerl_BYTECODE_C_CODE_BLPUSH:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = (int8_t)bytecodes[pc + 1];
+        pc += 2;
+        continue;
       case SPerl_BYTECODE_C_CODE_SIPUSH:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = (int16_t)((int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]);
         pc += 3;
-        continue;
-      case SPerl_BYTECODE_C_CODE_LDC:
+        continue;      case SPerl_BYTECODE_C_CODE_LDC:
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[bytecodes[pc + 1]];
         pc += 2;
