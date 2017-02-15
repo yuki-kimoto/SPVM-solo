@@ -7,6 +7,8 @@
 #include "sperl_hash.h"
 
 const char* const SPerl_CONSTANT_C_CODE_NAMES[] = {
+  "BYTE",
+  "SHORT",
   "INT",
   "LONG",
   "FLOAT",

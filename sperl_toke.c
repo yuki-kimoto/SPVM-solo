@@ -520,6 +520,14 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
             parser->bufptr++;
           }
+          else if (*parser->bufptr == 'b' || *parser->bufptr == 'B') {
+            constant_code = SPerl_CONSTANT_C_CODE_BYTE;
+            parser->bufptr++;
+          }
+          else if (*parser->bufptr == 's' || *parser->bufptr == 'S') {
+            constant_code = SPerl_CONSTANT_C_CODE_SHORT;
+            parser->bufptr++;
+          }
           else if (*parser->bufptr == 'i' || *parser->bufptr == 'I') {
             constant_code = SPerl_CONSTANT_C_CODE_INT;
             parser->bufptr++;
@@ -543,18 +551,22 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           constant->code = constant_code;
           constant->num_str = num_str;
           
-          // Convert to double
+          // Constant type
           if (constant_code == SPerl_CONSTANT_C_CODE_FLOAT) {
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
           }
           else if (constant_code == SPerl_CONSTANT_C_CODE_DOUBLE) {
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
           }
-          // int
+          else if (constant_code == SPerl_CONSTANT_C_CODE_BYTE) {
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte", strlen("byte"));
+          }
+          else if (constant_code == SPerl_CONSTANT_C_CODE_SHORT) {
+            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "short", strlen("short"));
+          }
           else if (constant_code == SPerl_CONSTANT_C_CODE_INT) {
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
           }
-          // long
           else if (constant_code == SPerl_CONSTANT_C_CODE_LONG) {
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
           }

@@ -967,6 +967,18 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     constant->uv.double_value = num;
                     constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
                   }
+                  // byte
+                  else if (constant->code == SPerl_CONSTANT_C_CODE_BYTE) {
+                    int32_t num = atoi(constant->num_str);
+                    constant->uv.byte_value = num;
+                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte", strlen("byte"));
+                  }
+                  // int
+                  else if (constant->code == SPerl_CONSTANT_C_CODE_SHORT) {
+                    int32_t num = atoi(constant->num_str);
+                    constant->uv.short_value = num;
+                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "short", strlen("short"));
+                  }
                   // int
                   else if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
                     int32_t num = atoi(constant->num_str);

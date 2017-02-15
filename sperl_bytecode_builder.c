@@ -1497,7 +1497,49 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
                 
                 _Bool bytecode_set = 0;
-                if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
+                if (constant->code == SPerl_CONSTANT_C_CODE_BYTE) {
+                  if (constant->uv.byte_value == 0) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BCONST_0);
+                    bytecode_set = 1;
+                  }
+                  else if (constant->uv.byte_value == 1) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BCONST_1);
+                    bytecode_set = 1;
+                  }
+                  else if (constant->uv.byte_value >= -128 && constant->uv.byte_value <= 127) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BBPUSH);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->uv.byte_value & 0xFF);
+                    bytecode_set = 1;
+                  }
+                  else {
+                    assert(0);
+                  }
+                }
+                else if (constant->code == SPerl_CONSTANT_C_CODE_SHORT) {
+                  if (constant->uv.short_value == 0) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SCONST_0);
+                    bytecode_set = 1;
+                  }
+                  else if (constant->uv.short_value == 1) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SCONST_1);
+                    bytecode_set = 1;
+                  }
+                  else if (constant->uv.short_value >= -128 && constant->uv.short_value <= 127) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BSPUSH);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->uv.short_value & 0xFF);
+                    bytecode_set = 1;
+                  }
+                  else if (constant->uv.short_value >= -32768 && constant->uv.short_value <= 32767) {
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SSPUSH);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->uv.short_value >> 8) & 0xFF);
+                    SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->uv.short_value & 0xFF);
+                    bytecode_set = 1;
+                  }
+                  else {
+                    assert(0);
+                  }
+                }
+                else if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
                   if (constant->uv.int_value == -1) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ICONST_M1);
                     bytecode_set = 1;

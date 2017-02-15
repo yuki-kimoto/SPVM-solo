@@ -356,16 +356,18 @@ package Test {
     # }
 
     {
-      my $num1 = (byte)1;
-      my $num2 = (byte)2;
-      my $num3 = $num1 + $num2;
+      my $num0 = 0B;
+      my $num1 = 1B;
+      my $num2 = 2B;
+      my $num3 = $num0 + $num1 + $num2;
       std::printb($num3);
     }
 
     {
-      my $num1 = (short)1;
-      my $num2 = (short)2;
-      my $num3 = $num1 + $num2;
+      my $num0 = 0S;
+      my $num1 = 1S;
+      my $num2 = 2S;
+      my $num3 = $num0 + $num1 + $num2;
       std::prints($num3);
     }
         
