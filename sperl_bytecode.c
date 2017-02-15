@@ -194,7 +194,6 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "LPUTFIELD",
   "FPUTFIELD",
   "DPUTFIELD",
-  "APUTFIELD",
   "LINC",
   "B2I",
   "S2I",
