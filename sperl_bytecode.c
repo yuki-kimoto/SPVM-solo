@@ -253,4 +253,9 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "LOAD_1",
   "LOAD_2",
   "LOAD_3",
+  "STORE",
+  "STORE_0",
+  "STORE_1",
+  "STORE_2",
+  "STORE_3",
 };

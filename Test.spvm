@@ -243,16 +243,26 @@ package Test {
 
     [1, 2, 3];
     [[1, 2, 3], [1, 2, 3]];
-    my $nums : long[] = malloc long[3];
-    $nums[0] = 3;
-    $nums[1] = 5;
-    std::printl($nums[0L]);
-    std::printl($nums[1L]);
-    std::printl(@$nums);
-   
+    {
+      my $nums : long[] = malloc long[3];
+      $nums[0] = 11;
+      $nums[1] = 12;
+      std::printl($nums[0]);
+      std::printl($nums[1]);
+      std::printl(@$nums);
+      my $nums_length : long = @$nums;
+    }
+
+    {
+      my $nums = malloc int[3];
+      $nums[0] = 13I;
+      $nums[1] = 14I;
+      std::printi($nums[0]);
+      std::printi($nums[1]);
+    }
+    
     my $simple : Test::Simple = malloc Test::Simple;
     
-    my $nums_length : long = @$nums;
     
     my $v1 : long;
     my $v2 : long;

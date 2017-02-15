@@ -323,131 +323,106 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         operand_stack_top--;
         pc++;
         continue;
+      case SPerl_BYTECODE_C_CODE_STORE:
+        vars[bytecodes[pc + 1]] = call_stack[operand_stack_top];
+        operand_stack_top--;
+        pc += 2;
+        continue;
+      case SPerl_BYTECODE_C_CODE_STORE_0:
+        vars[0] = call_stack[operand_stack_top];
+        operand_stack_top--;
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_STORE_1:
+        vars[1] = call_stack[operand_stack_top];
+        operand_stack_top--;
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_STORE_2:
+        vars[2] = call_stack[operand_stack_top];
+        operand_stack_top--;
+        pc++;
+        continue;
+      case SPerl_BYTECODE_C_CODE_STORE_3:
+        vars[3] = call_stack[operand_stack_top];
+        operand_stack_top--;
+        pc++;
+        continue;
       case SPerl_BYTECODE_C_CODE_ISTORE:
-        *(int32_t*)&vars[bytecodes[pc + 1]] = *(int32_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc += 2;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_LSTORE:
-        vars[bytecodes[pc + 1]] = call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc += 2;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_FSTORE:
-        *(int32_t*)&vars[bytecodes[pc + 1]] = *(int32_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc += 2;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_DSTORE:
-        vars[bytecodes[pc + 1]] = call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc += 2;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ASTORE:
-        *(intptr_t*)&vars[bytecodes[pc + 1]] = *(intptr_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc += 2;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ISTORE_0:
-        *(int32_t*)&vars[0] = *(int32_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ISTORE_1:
-        *(int32_t*)&vars[1] = *(int32_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ISTORE_2:
-        *(int32_t*)&vars[2] = *(int32_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ISTORE_3:
-        *(int32_t*)&vars[3] = *(int32_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_LSTORE_0:
-        vars[0] = call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_LSTORE_1:
-        vars[1] = call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_LSTORE_2:
-        vars[2] = call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_LSTORE_3:
-        vars[3] = call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_FSTORE_0:
-        *(int32_t*)&vars[0] = *(int32_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_FSTORE_1:
-        *(int32_t*)&vars[1] = *(int32_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_FSTORE_2:
-        *(int32_t*)&vars[2] = *(int32_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_FSTORE_3:
-        *(int32_t*)&vars[3] = *(int32_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_DSTORE_0:
-        vars[0] = call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_DSTORE_1:
-        vars[1] = call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_DSTORE_2:
-        vars[2] = call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_DSTORE_3:
-        vars[3] = call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ASTORE_0:
-        *(intptr_t*)&vars[0] = *(intptr_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ASTORE_1:
-        *(intptr_t*)&vars[1] = *(intptr_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ASTORE_2:
-        *(intptr_t*)&vars[2] = *(intptr_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_ASTORE_3:
-        *(intptr_t*)&vars[3] = *(intptr_t*)&call_stack[operand_stack_top];
-        operand_stack_top--;
-        pc++;
-        continue;
+        // Not used
+        assert(0);
       case SPerl_BYTECODE_C_CODE_BASTORE:
         *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * call_stack[operand_stack_top - 1])
           = (int8_t)*(int32_t*)&call_stack[operand_stack_top];

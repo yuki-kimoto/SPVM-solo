@@ -207,7 +207,8 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         bytecode = bytecode_array->values[i];
         
         switch (bytecode) {
-          // Have tow operand
+          // Have tow operand]
+          case SPerl_BYTECODE_C_CODE_STORE:
           case SPerl_BYTECODE_C_CODE_ISTORE:
           case SPerl_BYTECODE_C_CODE_LSTORE:
           case SPerl_BYTECODE_C_CODE_FSTORE:
@@ -237,6 +238,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       
       // Have one operand
       case SPerl_BYTECODE_C_CODE_BIPUSH:
+      case SPerl_BYTECODE_C_CODE_STORE:
       case SPerl_BYTECODE_C_CODE_ISTORE:
       case SPerl_BYTECODE_C_CODE_LSTORE:
       case SPerl_BYTECODE_C_CODE_FSTORE:
