@@ -69,6 +69,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
   register int32_t success;
   
+  register int32_t constant_pool_base = 0;
+  
   int32_t call_stack_base = 0;
   
   // Goto subroutine
@@ -1196,7 +1198,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_NEW: {
+      case SPerl_BYTECODE_C_CODE_MALLOC: {
         // Get subroutine ID
         int32_t package_constant_pool_address
           = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
@@ -1212,7 +1214,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         pc += 5;
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_NEWARRAY: {
+      case SPerl_BYTECODE_C_CODE_MALLOCARRAY: {
         int32_t resolved_type_id = bytecodes[pc + 1];
         
         // Array length

@@ -244,4 +244,6 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "D2B",
   "D2S",
   "B2S",
+  "MALLOC",
+  "MALLOCARRAY",
 };

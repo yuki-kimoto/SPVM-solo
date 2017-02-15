@@ -879,7 +879,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 
                 if (SPerl_RESOLVED_TYPE_is_core_type_array(sperl, resolved_type)) {
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NEWARRAY);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_MALLOCARRAY);
                   
                   if (strcmp(resolved_type->name, "boolean[]") == 0) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_RESOLVED_TYPE_C_ID_BOOLEAN);
@@ -907,7 +907,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                 }
                 else {
-                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_NEW);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_MALLOC);
                   
                   const char* package_name = op_cur->first->uv.type->resolved_type->name;
                   SPerl_PACKAGE* package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
