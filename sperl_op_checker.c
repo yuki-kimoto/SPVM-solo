@@ -748,20 +748,20 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               case SPerl_OP_C_CODE_NEGATE: {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 
-                // Can receive only core type
-                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "- operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                // Must be int, long, float, double
+                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of - operator right value must be int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 
-                break;              
+                break;
               }
               case SPerl_OP_C_CODE_PLUS: {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 
-                // Can receive only core type
-                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                  SPerl_yyerror_format(sperl, "+ operator can receive only core type at %s line %d\n", op_cur->file, op_cur->line);
+                // Must be int, long, float, double
+                if (!SPerl_RESOLVED_TYPE_is_calculatable_type(sperl, first_resolved_type)) {
+                  SPerl_yyerror_format(sperl, "Type of + operator right value must be int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 

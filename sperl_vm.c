@@ -1028,14 +1028,14 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_IRETURN: {
         
         // Return value
-        int32_t return_value = *(int32_t*)&call_stack[operand_stack_top];
+        int64_t return_value = call_stack[operand_stack_top];
         
         // Finish call sub
         if (call_stack_base == 0) {
           *(int32_t*)&call_stack[0] = return_value;
           return;
         }
-
+        
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
         
@@ -1050,13 +1050,43 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Push return value
         operand_stack_top++;
-        *(int32_t*)&call_stack[operand_stack_top] = return_value;
+        call_stack[operand_stack_top] = return_value;
         
         pc = return_address;
         
         continue;
       }
       case SPerl_BYTECODE_C_CODE_LRETURN: {
+        // Return value
+        int64_t return_value = call_stack[operand_stack_top];
+        
+        // Finish call sub
+        if (call_stack_base == 0) {
+          *(int32_t*)&call_stack[0] = return_value;
+          return;
+        }
+        
+        // Restore operand stack top
+        operand_stack_top = call_stack_base - 3;
+        
+        // Return address
+        int64_t return_address = call_stack[call_stack_base - 2];
+        
+        // Resotre vars base
+        call_stack_base = call_stack[call_stack_base - 1];
+        
+        // Restore vars
+        vars = &call_stack[call_stack_base];
+        
+        // Push return value
+        operand_stack_top++;
+        call_stack[operand_stack_top] = return_value;
+        
+        pc = return_address;
+        
+        continue;
+      }
+      case SPerl_BYTECODE_C_CODE_FRETURN: {
         // Return value
         int64_t return_value = call_stack[operand_stack_top];
         
@@ -1086,46 +1116,16 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_FRETURN: {
-        // Return value
-        float return_value = *(float*)&call_stack[operand_stack_top];
-        
-        // Finish call sub
-        if (call_stack_base == 0) {
-          *(int32_t*)&call_stack[0] = return_value;
-          return;
-        }
-
-        // Restore operand stack top
-        operand_stack_top = call_stack_base - 3;
-        
-        // Return address
-        int64_t return_address = call_stack[call_stack_base - 2];
-        
-        // Resotre vars base
-        call_stack_base = call_stack[call_stack_base - 1];
-        
-        // Restore vars
-        vars = &call_stack[call_stack_base];
-        
-        // Push return value
-        operand_stack_top++;
-        *(float*)&call_stack[operand_stack_top] = return_value;
-        
-        pc = return_address;
-        
-        continue;
-      }
       case SPerl_BYTECODE_C_CODE_DRETURN: {
         // Return value
-        double return_value = *(double*)&call_stack[operand_stack_top];
+        int64_t return_value = call_stack[operand_stack_top];
         
         // Finish call sub
         if (call_stack_base == 0) {
           *(int32_t*)&call_stack[0] = return_value;
           return;
         }
-
+        
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
         
@@ -1140,7 +1140,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Push return value
         operand_stack_top++;
-        *(double*)&call_stack[operand_stack_top] = return_value;
+        call_stack[operand_stack_top] = return_value;
         
         pc = return_address;
         
@@ -1148,14 +1148,14 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       }
       case SPerl_BYTECODE_C_CODE_ARETURN: {
         // Return value
-        intptr_t return_value = *(intptr_t*)&call_stack[operand_stack_top];
+        int64_t return_value = call_stack[operand_stack_top];
         
         // Finish call sub
         if (call_stack_base == 0) {
           *(int32_t*)&call_stack[0] = return_value;
           return;
         }
-
+        
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
         
@@ -1170,13 +1170,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Push return value
         operand_stack_top++;
-        *(intptr_t*)&call_stack[operand_stack_top] = return_value;
+        call_stack[operand_stack_top] = return_value;
         
         pc = return_address;
         
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_RETURN: {
+      case SPerl_BYTECODE_C_CODE_RETURN_VOID: {
         // Finish call sub
         if (call_stack_base == 0) {
           return;

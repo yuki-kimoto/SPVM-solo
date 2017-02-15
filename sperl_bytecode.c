@@ -184,7 +184,7 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "FRETURN",
   "DRETURN",
   "ARETURN",
-  "RETURN",
+  "RETURN_VOID",
   "GETSTATIC",
   "PUTSTATIC",
   "GETFIELD",
