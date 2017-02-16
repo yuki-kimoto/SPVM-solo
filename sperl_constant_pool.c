@@ -193,6 +193,9 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     int64_t utf8_length = strlen(utf8);
     int64_t real_utf8_length = utf8_length + 1;
     
+    // Add string length
+    SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, utf8_length);
+    
     // Calculate constant pool size
     int64_t constant_pool_size;
     if (real_utf8_length % sizeof(int64_t) == 0) {
@@ -205,9 +208,6 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     SPerl_CONSTANT_POOL_extend(sperl, constant_pool, constant_pool_size);
     memcpy(&constant_pool->values[constant_pool->length], utf8, utf8_length + 1);
     constant_pool->length += constant_pool_size;
-    
-    // Add string
-    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, new_constant_string->address);
   }
 }
 
