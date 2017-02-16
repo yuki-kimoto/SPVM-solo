@@ -251,11 +251,29 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
         pc += 5;
         continue;
-      case SPerl_BYTECODE_C_CODE_MALLOCSTRING:
+      case SPerl_BYTECODE_C_CODE_MALLOCSTRING: {
+        int64_t* string_info_ptr = &constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        
+        int64_t length = string_info_ptr[0];
+        int8_t* chars_ptr = (int8_t*)&string_info_ptr[1];
+        
+        // Allocate array
+        intptr_t array;
+        size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * length;
+        array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+        memset((void*)array, 0, allocate_size);
+        memcpy(array + SPerl_VM_C_ARRAY_HEADER_LENGTH, chars_ptr, length);
+        
+        // Set array length
+        *(int64_t*)array = length;
+        
+        // Set array
         operand_stack_top++;
-        call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        *(intptr_t*)&call_stack[operand_stack_top] = array;
+
         pc += 5;
         continue;
+      }
       case SPerl_BYTECODE_C_CODE_LOAD:
         operand_stack_top++;
         call_stack[operand_stack_top] = vars[bytecodes[pc + 1]];
@@ -307,13 +325,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_BALOAD:
         *(int8_t*)&call_stack[operand_stack_top - 1]
-          = (int32_t)*(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + call_stack[operand_stack_top]);
+          = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_SALOAD:
         *(int16_t*)&call_stack[operand_stack_top - 1]
-          = (int32_t)*(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * call_stack[operand_stack_top]);
+          = *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
