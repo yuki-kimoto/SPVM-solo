@@ -467,6 +467,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 8) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, constant_pool_address & 0xFF);
                 
+                // Rethrow exception or goto exception handler
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ATHROW);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                
                 break;
               }
               case SPerl_OP_C_CODE_DIE: {

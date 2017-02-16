@@ -1225,9 +1225,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Prepare arguments
         memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(int64_t));
 
-        // Save return address
+        // Save return address(operand + (throw or goto exception handler))
         operand_stack_top++;
-        call_stack[operand_stack_top] = pc + 5;
+        call_stack[operand_stack_top] = pc + 5 + 3;
         
         // Save vars base before
         operand_stack_top++;
