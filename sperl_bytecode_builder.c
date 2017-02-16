@@ -1057,6 +1057,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   _Bool has_operand = 0;
                   if (my_var_pos == 0) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_STORE_0);
+                  
                   }
                   else if (my_var_pos == 1) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_STORE_1);

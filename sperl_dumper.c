@@ -227,11 +227,14 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       }
       
       // Have one operand
+      case SPerl_BYTECODE_C_CODE_BBPUSH:
+      case SPerl_BYTECODE_C_CODE_BSPUSH:
       case SPerl_BYTECODE_C_CODE_BIPUSH:
       case SPerl_BYTECODE_C_CODE_BLPUSH:
       case SPerl_BYTECODE_C_CODE_STORE:
       case SPerl_BYTECODE_C_CODE_LOAD:
       case SPerl_BYTECODE_C_CODE_LDC:
+      case SPerl_BYTECODE_C_CODE_MALLOCARRAY:
       {
         i++;
         bytecode = bytecode_array->values[i];
@@ -243,6 +246,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       // Have tow operands
       case SPerl_BYTECODE_C_CODE_IINC:
       case SPerl_BYTECODE_C_CODE_LINC:
+      case SPerl_BYTECODE_C_CODE_SSPUSH:
       case SPerl_BYTECODE_C_CODE_SIPUSH:
       case SPerl_BYTECODE_C_CODE_SLPUSH:
       case SPerl_BYTECODE_C_CODE_LDC_W:
@@ -292,7 +296,6 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       case SPerl_BYTECODE_C_CODE_LDC_WW:
       case SPerl_BYTECODE_C_CODE_MALLOCSTRING:
       case SPerl_BYTECODE_C_CODE_MALLOC:
-      case SPerl_BYTECODE_C_CODE_MALLOCARRAY:
       {
         i++;
         bytecode = bytecode_array->values[i];

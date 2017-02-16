@@ -154,6 +154,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_LCONST_1:
         operand_stack_top++;
         call_stack[operand_stack_top] = 1L;
+        warn("CCCCCCCCCCCCC %ld", call_stack[operand_stack_top]);
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_LCONST_2:
@@ -270,7 +271,9 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Set array
         operand_stack_top++;
         *(intptr_t*)&call_stack[operand_stack_top] = array;
-
+        
+        warn("AAAAAAAA %d", *(int8_t*)(array + SPerl_VM_C_ARRAY_HEADER_LENGTH));
+        
         pc += 5;
         continue;
       }
@@ -327,8 +330,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         *(int8_t*)&call_stack[operand_stack_top - 1]
           = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * call_stack[operand_stack_top]);
         operand_stack_top--;
-        
-        warn("AAAAAAAAAAA %d", *(int8_t*)&call_stack[operand_stack_top - 1]);
+        warn("BBBBBBBBBBBBBBB %d", *(int8_t*)&call_stack[operand_stack_top]);
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_SALOAD:
