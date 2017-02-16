@@ -7,6 +7,12 @@ use Test::Minimal;
 package Test {
   sub main($mvar : long) : long {
     {
+      my $nums = "ace";
+      
+      std::printb($nums[2]);
+    }
+    
+    {
       my $num = (byte)3;
       std::printb($num);
       
