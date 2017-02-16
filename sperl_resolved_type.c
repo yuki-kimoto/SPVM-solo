@@ -5,7 +5,6 @@
 #include "sperl_package.h"
 
 const char* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
-  "boolean",
   "byte",
   "short",
   "int",
@@ -15,7 +14,6 @@ const char* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
 };
 
 const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[] = {
-  "boolean[]",
   "byte[]",
   "short[]",
   "int[]",
@@ -25,7 +23,6 @@ const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[] = {
 };
 
 int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
-  1,
   1,
   1,
   1,
@@ -131,7 +128,7 @@ _Bool SPerl_RESOLVED_TYPE_is_core_type_array(SPerl* sperl, SPerl_RESOLVED_TYPE* 
   
   const char* name = resolved_type->name;
   
-  if (strcmp(name, "boolean[]") == 0 || strcmp(name, "char[]") == 0 || strcmp(name, "byte[]") == 0 || strcmp(name, "short[]") == 0
+  if (strcmp(name, "char[]") == 0 || strcmp(name, "byte[]") == 0 || strcmp(name, "short[]") == 0
     || strcmp(name, "int[]") == 0 || strcmp(name, "long[]") == 0 || strcmp(name, "float[]") == 0 || strcmp(name, "double[]") == 0)
   {
     return 1;
