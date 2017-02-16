@@ -235,7 +235,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = (int16_t)((int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]);
         pc += 3;
-        continue;      case SPerl_BYTECODE_C_CODE_LDC:
+        continue;
+      case SPerl_BYTECODE_C_CODE_LDC:
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[bytecodes[pc + 1]];
         pc += 2;
@@ -244,6 +245,26 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
         pc += 3;
+        continue;
+      case SPerl_BYTECODE_C_CODE_LDC_WW:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_MALLOCSTRING:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = constant_pool[bytecodes[pc + 1]];
+        pc += 2;
+        continue;
+      case SPerl_BYTECODE_C_CODE_MALLOCSTRING_W:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
+        pc += 3;
+        continue;
+      case SPerl_BYTECODE_C_CODE_MALLOCSTRING_WW:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        pc += 5;
         continue;
       case SPerl_BYTECODE_C_CODE_LOAD:
         operand_stack_top++;
@@ -1322,11 +1343,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_LDC_WW:
-        operand_stack_top++;
-        call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
-        pc += 5;
-        continue;
       case SPerl_BYTECODE_C_CODE_BGETFIELD: {
         int32_t field_constant_pool_address
           = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
