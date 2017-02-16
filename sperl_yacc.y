@@ -16,17 +16,17 @@
 
 %token <opval> MY HAS SUB PACKAGE IF ELSIF ELSE RETURN FOR WHILE USE MALLOC
 %token <opval> LAST NEXT NAME VAR CONSTANT ENUM DESCRIPTOR CORETYPE UNDEF DIE
-%token <opval> SWITCH CASE DEFAULT VOID
+%token <opval> SWITCH CASE DEFAULT VOID TRY CATCH
 
 %type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
 %type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub unop binop
 %type <opval> opt_terms terms term args arg opt_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> decl_enumeration_values decl_enumeration_value
 %type <opval> type package_name field_name sub_name decl_package decl_things_in_grammar opt_decl_enumeration_values type_array
-%type <opval> for_statement while_statement expression opt_decl_things_in_grammar types opt_term throw_exception
+%type <opval> for_statement while_statement expression opt_decl_things_in_grammar opt_term throw_exception
 %type <opval> field array_elem convert_type decl_enum new_object array_init type_name array_length decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement type_array_with_length
-%type <opval> ';' opt_descriptors descriptors type_or_void normal_statement
+%type <opval> ';' opt_descriptors descriptors type_or_void normal_statement try_catch
 
 
 %right <opval> ASSIGN
@@ -179,6 +179,7 @@ statement
   | switch_statement
   | case_statement
   | default_statement
+  | try_catch
 
 normal_statement
   : term ';'
@@ -576,12 +577,6 @@ arg
     {
       $$ = SPerl_OP_build_decl_my(sperl, SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, $1->file, $1->line), $1, $3, NULL);
     }
-types
-  : types ',' type
-    {
-      $$ = SPerl_OP_append_elem(sperl, $1, $3, $1->file, $1->line);
-    }
-  | type
 
 opt_descriptors
   :	/* Empty */
@@ -615,6 +610,12 @@ type_name
   : NAME
     {
       $$ = SPerl_OP_build_type_name(sperl, $1);
+    }
+
+try_catch
+  : TRY block CATCH '(' arg ')' block
+    {
+      $$ = $1;
     }
 
 type_array

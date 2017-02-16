@@ -6,6 +6,13 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : long) : long {
+    
+    try {
+      
+    } catch ($error : byte[]) {
+      
+    }
+    
     {
       my $num = (byte)3;
       std::printb($num);

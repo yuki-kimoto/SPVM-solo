@@ -692,6 +692,14 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DIE);
             return DIE;
           }
+          else if (memcmp(keyword, "try", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_TRY);
+            return TRY;
+          }
+          else if (memcmp(keyword, "catch", str_len) == 0) {
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CATCH);
+            return CATCH;
+          }
           else if (memcmp(keyword, "native", str_len) == 0) {
             SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DESCRIPTOR);
             op->code = SPerl_DESCRIPTOR_C_CODE_NATIVE;

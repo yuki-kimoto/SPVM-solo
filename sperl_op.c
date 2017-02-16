@@ -113,6 +113,8 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "SWITCH_CONDITION",
   "DESCRIPTOR",   // UNKNOWN
   "VOID",
+  "TRY",
+  "CATCH",
 };
 
 SPerl_OP* SPerl_OP_build_switch_statement(SPerl* sperl, SPerl_OP* op_switch, SPerl_OP* op_term, SPerl_OP* op_block) {
