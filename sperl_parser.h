@@ -56,8 +56,8 @@ struct SPerl_parser {
   // Current case statements in switch statement
   SPerl_ARRAY* cur_op_cases;
   
-  // Entry point subroutine
-  const char* entry_point;
+  // Entry point subroutine name
+  const char* start_sub_name;
 
   // Current line number
   int32_t cur_line;

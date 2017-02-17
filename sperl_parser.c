@@ -95,10 +95,10 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   SPerl_ARRAY_push(parser->op_use_stack, op_use);
   
   // Entry point
-  char* entry_point = SPerl_ALLOCATOR_new_string(sperl, strlen(package_name) + 6);
-  strncpy(entry_point, package_name, strlen(package_name));
-  strncpy(entry_point + strlen(package_name), "::main", 6);
-  parser->entry_point = entry_point;
+  char* start_sub_name = SPerl_ALLOCATOR_new_string(sperl, strlen(package_name) + 6);
+  strncpy(start_sub_name, package_name, strlen(package_name));
+  strncpy(start_sub_name + strlen(package_name), "::main", 6);
+  parser->start_sub_name = start_sub_name;
   
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;

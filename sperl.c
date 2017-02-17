@@ -27,7 +27,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
     return;
   }
   // Entry point
-  const char* entry_point = parser->entry_point;
+  const char* start_sub_name = parser->start_sub_name;
   
   // Create VM
   SPerl_VM* vm = SPerl_VM_new(sperl);
@@ -36,7 +36,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   *(int32_t*)&vm->call_stack[0] = 2;
   
   // Run
-  int32_t error = SPerl_VM_call_sub(sperl, vm, entry_point);
+  int32_t error = SPerl_VM_call_sub(sperl, vm, start_sub_name);
   if (error) {
     intptr_t message = *(int32_t*)&vm->call_stack[0];
     
