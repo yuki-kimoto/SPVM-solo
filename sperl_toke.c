@@ -92,12 +92,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               bufptr_to += 5;
               *bufptr_to = '\0';
               
-              // module is template
-              char* underline_ptr;
-              if ((underline_ptr = strchr(module_path_base, '_'))) {
-                *(underline_ptr - 2) = '\0';
-              }
-              
               // Search module file
               char* cur_module_path = NULL;
               FILE* fh = NULL;
@@ -594,6 +588,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               parser->bufptr++;
             }
           }
+          
           
           size_t str_len = parser->bufptr - cur_token_ptr;
           char* keyword = SPerl_ALLOCATOR_new_string(sperl, str_len);

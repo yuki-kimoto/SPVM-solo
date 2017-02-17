@@ -37,6 +37,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     SPerl_OP* op_package = SPerl_ARRAY_fetch(parser->op_packages, package_pos);
     SPerl_PACKAGE* package = op_package->uv.package;
     
+    if (strchr(package->op_name->uv.name, '_') != NULL) {
+      SPerl_yyerror_format(sperl, "Package name can't contain _ at %s line %d\n", op_package->file, op_package->line);
+      parser->fatal_error = 1;
+      return;
+    }
+    
     // Push package information to constant pool
     SPerl_CONSTANT_POOL_push_package(sperl, sperl->constant_pool, package);
     

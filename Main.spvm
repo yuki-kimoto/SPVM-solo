@@ -1,17 +1,17 @@
 package Main {
 
-  sub main () : int {
+  sub main () : long {
     my $num1 = 2;
     my $num2 = 5;
     
     my $num3 = sum($num1, $num2);
     
-    std::printi($num3);
+    std::printl($num3);
     
     return 0;
   }
 
-  sub sum ($num1 : int, $num2 : int) : int {
+  sub sum ($num1 : long, $num2 : long) : long {
     my $num3 = $num1 + $num2;
     
     return $num3;
