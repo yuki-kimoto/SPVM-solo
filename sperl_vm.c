@@ -35,9 +35,6 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
 
 int32_t SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
-  // Subroutine
-  SPerl_PARSER* parser = sperl->parser;
-  
   // Constant pool
   int64_t* constant_pool = sperl->constant_pool->values;
   
@@ -50,7 +47,7 @@ int32_t SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name)
   // Constant pool sub
   SPerl_CONSTANT_POOL_SUB* constant_pool_sub;
   {
-    SPerl_SUB* sub = SPerl_HASH_search(parser->sub_symtable, sub_base_name, strlen(sub_base_name));
+    SPerl_SUB* sub = SPerl_HASH_search(sperl->parser->sub_symtable, sub_base_name, strlen(sub_base_name));
     constant_pool_sub
       = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub->constant_pool_address];
   }
