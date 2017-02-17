@@ -5,14 +5,15 @@
 
 #include "sperl_func.h"
 #include "sperl_env.h"
+#include "sperl_api.h"
 
 void SPerl_FUNC_std_suml(SPerl_ENV* env) {
   
   intptr_t long_array = *(intptr_t*)&env->vars[0];
   
-  int64_t length = SPerl_ENV_get_array_length(env, long_array);
+  int64_t length = SPerl_API_get_array_length(long_array);
   
-  int64_t* long_array_data = SPerl_ENV_get_long_array_data(env, long_array);
+  int64_t* long_array_data = SPerl_API_get_long_array_data(long_array);
   
   int64_t total = 0;
   for (int64_t i = 0; i < length; i++) {
@@ -26,9 +27,9 @@ void SPerl_FUNC_std_println(SPerl_ENV* env) {
   
   intptr_t byte_array = *(intptr_t*)&env->vars[0];
   
-  int64_t length = SPerl_ENV_get_array_length(env, byte_array);
+  int64_t length = SPerl_API_get_array_length(byte_array);
   
-  int8_t* byte_array_data = SPerl_ENV_get_byte_array_data(env, byte_array);
+  int8_t* byte_array_data = SPerl_API_get_byte_array_data(byte_array);
   
   for (size_t i = 0; i < length; i++) {
     putchar((int)byte_array_data[i]);
