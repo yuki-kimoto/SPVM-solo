@@ -33,7 +33,7 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   return vm;
 }
 
-int32_t SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
+void SPerl_VM_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_base_name) {
   
   // Constant pool
   int64_t* constant_pool = sperl->constant_pool->values;
@@ -52,7 +52,7 @@ int32_t SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name)
       = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub->constant_pool_address];
   }
   
-  int64_t* call_stack = vm->call_stack;
+  int64_t* call_stack = env->call_stack;
   
   // Program counter
   register int32_t pc = -1;
@@ -1224,9 +1224,9 @@ int32_t SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name)
         // Extend call stack(current size + 2(return address + call stack base before) + lexical variable area + operand_stack area)
         int32_t call_stack_max = operand_stack_top + 2 + constant_pool_sub->my_vars_length + constant_pool_sub->operand_stack_max;
         
-        while (call_stack_max > vm->call_stack_capacity) {
-          vm->call_stack_capacity = vm->call_stack_capacity * 2;
-          vm->call_stack = call_stack = realloc(call_stack, sizeof(int64_t) * vm->call_stack_capacity);
+        while (call_stack_max > env->call_stack_capacity) {
+          env->call_stack_capacity = env->call_stack_capacity * 2;
+          env->call_stack = call_stack = realloc(call_stack, sizeof(int64_t) * env->call_stack_capacity);
         }
         
         operand_stack_top -= constant_pool_sub->args_length;
@@ -1262,12 +1262,12 @@ int32_t SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name)
           
           if (!constant_pool_sub->has_return_value) {
             // Set environment
-            vm->env->vars = vars;
-            vm->env->ret = &call_stack[operand_stack_top];
+            env->vars = vars;
+            env->ret = &call_stack[operand_stack_top];
             
             // Call native sub
             void (*native_address)(SPerl* sperl, SPerl_ENV*) = constant_pool_sub->native_address;
-            (*native_address)(sperl, vm->env);
+            (*native_address)(sperl, env);
             
             // Finish call sub
             if (call_stack_base == 0) {
@@ -1292,12 +1292,12 @@ int32_t SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name)
             operand_stack_top++;
             
             // Set environment
-            vm->env->vars = vars;
-            vm->env->ret = &call_stack[operand_stack_top];
+            env->vars = vars;
+            env->ret = &call_stack[operand_stack_top];
             
             // Call native sub
             void (*native_address)(SPerl* sperl, SPerl_ENV*) = constant_pool_sub->native_address;
-            (*native_address)(sperl, vm->env);
+            (*native_address)(sperl, env);
             
             // Return value
             int64_t return_value = call_stack[operand_stack_top];

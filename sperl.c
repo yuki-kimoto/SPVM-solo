@@ -30,15 +30,15 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   const char* start_sub_name = parser->start_sub_name;
   
   // Create VM
-  SPerl_VM* vm = SPerl_VM_new(sperl);
+  SPerl_ENV* env = SPerl_ENV_new(sperl);
   
   // Set argument
-  *(int32_t*)&vm->call_stack[0] = 2;
+  *(int32_t*)&env->call_stack[0] = 2;
   
   // Run
-  int32_t error = SPerl_VM_call_sub(sperl, vm, start_sub_name);
-  if (error) {
-    intptr_t message = *(int32_t*)&vm->call_stack[0];
+  SPerl_VM_call_sub(sperl, env, start_sub_name);
+  if (env->abort) {
+    intptr_t message = *(int32_t*)&env->call_stack[0];
     
     int64_t length = SPerl_API_get_array_length(sperl, message);
     
@@ -52,7 +52,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   }
   else {
     // Get return value
-    int32_t return_value = *(int32_t*)&vm->call_stack[0];
+    int32_t return_value = *(int32_t*)&env->call_stack[0];
     
     printf("TEST return_value: %d\n", return_value);
   }
