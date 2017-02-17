@@ -33,7 +33,7 @@
 #include "sperl_switch_info.h"
 #include "sperl_descriptor.h"
 #include "sperl_vm.h"
-#include "sperl_std_func.h"
+#include "sperl_func.h"
 
 const char* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
@@ -804,28 +804,28 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           // Bind standard functions
           if (sub->is_native) {
             if (strcmp(sub_abs_name, "std::printb") == 0) {
-              sub->native_address = SPerl_STD_FUNC_printb;
+              sub->native_address = SPerl_FUNC_std_printb;
             }
             else if (strcmp(sub_abs_name, "std::prints") == 0) {
-              sub->native_address = SPerl_STD_FUNC_prints;
+              sub->native_address = SPerl_FUNC_std_prints;
             }
             else if (strcmp(sub_abs_name, "std::printi") == 0) {
-              sub->native_address = SPerl_STD_FUNC_printi;
+              sub->native_address = SPerl_FUNC_std_printi;
             }
             else if (strcmp(sub_abs_name, "std::printl") == 0) {
-              sub->native_address = SPerl_STD_FUNC_printl;
+              sub->native_address = SPerl_FUNC_std_printl;
             }
             else if (strcmp(sub_abs_name, "std::printf") == 0) {
-              sub->native_address = SPerl_STD_FUNC_printf;
+              sub->native_address = SPerl_FUNC_std_printf;
             }
             else if (strcmp(sub_abs_name, "std::printd") == 0) {
-              sub->native_address = SPerl_STD_FUNC_printd;
+              sub->native_address = SPerl_FUNC_std_printd;
             }
             else if (strcmp(sub_abs_name, "std::println") == 0) {
-              sub->native_address = SPerl_STD_FUNC_println;
+              sub->native_address = SPerl_FUNC_std_println;
             }
             else if (strcmp(sub_abs_name, "std::suml") == 0) {
-              sub->native_address = SPerl_STD_FUNC_suml;
+              sub->native_address = SPerl_FUNC_std_suml;
             }
           }
         }
