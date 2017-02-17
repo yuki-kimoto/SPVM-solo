@@ -33,7 +33,7 @@ SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   return vm;
 }
 
-void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
+int32_t SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
   
   // Subroutine
   SPerl_PARSER* parser = sperl->parser;
@@ -1051,7 +1051,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Finish call sub
         if (call_stack_base == 0) {
           call_stack[0] = return_value;
-          return;
+          return 0;
         }
         
         // Restore operand stack top
@@ -1077,7 +1077,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
       case SPerl_BYTECODE_C_CODE_RETURN_VOID: {
         // Finish call sub
         if (call_stack_base == 0) {
-          return;
+          return 0;
         }
         
         // Restore operand stack top
@@ -1154,16 +1154,17 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         call_stack[operand_stack_top] = *(int64_t*)*(intptr_t*)&call_stack[operand_stack_top];
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_ATHROW:
+      case SPerl_BYTECODE_C_CODE_ATHROW: {
         
-        /*
-        intptr_t exception = *(intptr_t*)&call_stack[operand_stack_top];
+        // Return value
+        int64_t return_value = call_stack[operand_stack_top];
         
-        // Finish call sub
+        // Finish call sub with exception
         if (call_stack_base == 0) {
-          return;
+          call_stack[0] = return_value;
+          return 1;
         }
-
+        
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
         
@@ -1175,17 +1176,15 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Restore vars
         vars = &call_stack[call_stack_base];
-
+        
         // Push return value
         operand_stack_top++;
-        *(intptr_t*)&call_stack[operand_stack_top] = exception;
+        call_stack[operand_stack_top] = return_value;
         
-        pc = return_address;
-        
-        */
-        pc++;
+        pc = return_address - 3;
         
         continue;
+      }
       case SPerl_BYTECODE_C_CODE_WIDE:
         // iload, fload, aload, lload, dload, istore, fstore, astore, lstore, dstore, or iinc
         

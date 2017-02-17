@@ -926,8 +926,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               case SPerl_OP_C_CODE_DIE: {
                 SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 
-                if (!first_resolved_type || strcmp(first_resolved_type->name, "String") != 0) {
-                  SPerl_yyerror_format(sperl, "die can only receive String object at %s line %d\n", op_cur->file, op_cur->line);
+                if (!first_resolved_type || strcmp(first_resolved_type->name, "byte[]") != 0) {
+                  SPerl_yyerror_format(sperl, "die can only receive byte array at %s line %d\n", op_cur->file, op_cur->line);
                   break;
                 }
                 break;

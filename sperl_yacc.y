@@ -144,7 +144,8 @@ decl_enumeration_value
 throw_exception
   : DIE term
     {
-      $$ = SPerl_OP_sibling_splice(sperl, $1, NULL, 0, $2);
+      SPerl_OP_sibling_splice(sperl, $1, NULL, 0, $2);
+      $$ = $1;
     }
 
 opt_statements

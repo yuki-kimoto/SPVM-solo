@@ -6,6 +6,14 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : long) : long {
+
+    try {
+      
+    } catch ($error : byte[]) {
+      
+    }
+    
+
     {
       my $nums = malloc long[3];
       $nums[0] = 1;
@@ -20,12 +28,6 @@ package Test {
       my $nums = "ace";
       
       std::println($nums);
-    }
-    
-    try {
-      
-    } catch ($error : byte[]) {
-      
     }
     
     {
@@ -182,8 +184,6 @@ package Test {
       default:
         std::printl(5);
     }
-    
-    die String->new("aaaaa");
     
     # my $num;
     # my $num1 = undef;
@@ -396,6 +396,9 @@ package Test {
       my $num3 = $num0 + $num1 + $num2;
       std::prints($num3);
     }
+
+
+    # die "ERROR";
         
     return $mvar + 3;
   }
@@ -449,7 +452,7 @@ package Test {
     else {
       
     }
-    
+
     return 2;
   }
   

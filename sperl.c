@@ -10,6 +10,8 @@
 #include "sperl_allocator.h"
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_array.h"
+#include "sperl_func.h"
+#include "sperl_env.h"
 
 void SPerl_run(SPerl* sperl, const char* package_name) {
 
@@ -33,12 +35,26 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   *(int32_t*)&vm->call_stack[0] = 2;
   
   // Run
-  SPerl_VM_call_sub(sperl, vm, entry_point);
-  
-  // Get return value
-  int32_t return_value = *(int32_t*)&vm->call_stack[0];
-  
-  printf("TEST return_value: %d\n", return_value);
+  int32_t error = SPerl_VM_call_sub(sperl, vm, entry_point);
+  if (error) {
+    intptr_t message = *(int32_t*)&vm->call_stack[0];
+    
+    int64_t length = SPerl_ENV_get_array_length(NULL, message);
+    
+    int8_t* byte_array_data = SPerl_ENV_get_byte_array_data(NULL, message);
+    
+    for (size_t i = 0; i < length; i++) {
+      putchar((int)byte_array_data[i]);
+    }
+    
+    printf("\n");
+  }
+  else {
+    // Get return value
+    int32_t return_value = *(int32_t*)&vm->call_stack[0];
+    
+    printf("TEST return_value: %d\n", return_value);
+  }
 }
 
 SPerl* SPerl_new() {
