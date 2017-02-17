@@ -23,10 +23,6 @@
 #include "sperl_resolved_type.h"
 #include "sperl_env.h"
 
-enum {
-  SPerl_VM_C_ARRAY_HEADER_LENGTH = sizeof(int64_t),
-};
-
 SPerl_VM* SPerl_VM_new(SPerl* sperl) {
   SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
   
