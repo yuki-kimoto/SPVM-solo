@@ -10,10 +10,6 @@ struct SPerl_vm {
   SPerl_ENV* env;
 };
 
-enum {
-  SPerl_VM_C_ARRAY_HEADER_LENGTH = sizeof(int64_t),
-};
-
 SPerl_VM* SPerl_VM_new(SPerl* sperl);
 void SPerl_VM_call_sub(SPerl* sperl, const char* sub_base_name, SPerl_ENV* env);
 

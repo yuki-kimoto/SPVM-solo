@@ -5,6 +5,10 @@
 
 #include "sperl_base.h"
 
+enum {
+  SPerl_C_ARRAY_HEADER_LENGTH = sizeof(int64_t),
+};
+
 // Parser information
 struct sperl_ {
   // Memory_pool
