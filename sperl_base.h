@@ -9,6 +9,10 @@ enum {
 };
 
 /* sperl_frame.h */
+struct SPerl_env;
+typedef struct SPerl_env SPerl_ENV;
+
+/* sperl_frame.h */
 struct SPerl_heap;
 typedef struct SPerl_heap SPerl_HEAP;
 
