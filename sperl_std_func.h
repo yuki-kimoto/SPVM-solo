@@ -10,5 +10,6 @@ void SPerl_STD_FUNC_printi(SPerl_ENV* env);
 void SPerl_STD_FUNC_printl(SPerl_ENV* env);
 void SPerl_STD_FUNC_printf(SPerl_ENV* env);
 void SPerl_STD_FUNC_printd(SPerl_ENV* env);
+void SPerl_STD_FUNC_suml(SPerl_ENV* env);
 
 #endif

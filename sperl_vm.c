@@ -1293,12 +1293,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
             pc = return_address;
           }
           else {
+            operand_stack_top++;
+            
             // Set environment
             vm->env->vars = vars;
             vm->env->operand_stack = &call_stack[operand_stack_top];
             
             // Call native sub
-            operand_stack_top++;
             void (*native_address)(SPerl_ENV*) = constant_pool_sub->native_address;
             (*native_address)(vm->env);
             

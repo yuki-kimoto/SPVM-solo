@@ -6,4 +6,5 @@ package std {
   sub printf ($value : float) : native int;
   sub printd ($value : double) : native int;
   sub println ($value : byte[]) : native int;
+  sub suml($values : long[]) : native long;
 }

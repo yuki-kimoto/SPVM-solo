@@ -6,6 +6,15 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : long) : long {
+    {
+      my $nums = malloc long[3];
+      $nums[0] = 1;
+      $nums[1] = 2;
+      $nums[2] = 3;
+      
+      my $total = std::suml($nums);
+      std::printl($total);
+    }
 
     {
       my $nums = "ace";

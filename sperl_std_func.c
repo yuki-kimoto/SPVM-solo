@@ -6,6 +6,22 @@
 #include "sperl_std_func.h"
 #include "sperl_env.h"
 
+void SPerl_STD_FUNC_suml(SPerl_ENV* env) {
+  
+  intptr_t long_array = *(intptr_t*)&env->vars[0];
+  
+  int64_t length = SPerl_ENV_get_array_length(env, long_array);
+  
+  int64_t* long_array_data = SPerl_ENV_get_long_array_data(env, long_array);
+  
+  int64_t total = 0;
+  for (int64_t i = 0; i < length; i++) {
+    total += long_array_data[i];
+  }
+  
+  *(int64_t*)env->operand_stack = total;
+}
+
 void SPerl_STD_FUNC_println(SPerl_ENV* env) {
   
   intptr_t byte_array = *(intptr_t*)&env->vars[0];

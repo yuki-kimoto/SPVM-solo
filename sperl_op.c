@@ -824,6 +824,9 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
             else if (strcmp(sub_abs_name, "std::println") == 0) {
               sub->native_address = SPerl_STD_FUNC_println;
             }
+            else if (strcmp(sub_abs_name, "std::suml") == 0) {
+              sub->native_address = SPerl_STD_FUNC_suml;
+            }
           }
         }
         
