@@ -204,4 +204,5 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "SOR ",
   "SXOR",
   "SCMP",
+  "MALLOCSTRING",
 };

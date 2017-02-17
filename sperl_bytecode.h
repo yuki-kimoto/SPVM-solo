@@ -204,6 +204,7 @@ enum {
   SPerl_BYTECODE_C_CODE_SOR ,
   SPerl_BYTECODE_C_CODE_SXOR,
   SPerl_BYTECODE_C_CODE_SCMP,
+  SPerl_BYTECODE_C_CODE_MALLOCSTRING,
 };
 
 extern const char* const SPerl_BYTECODE_C_CODE_NAMES[];

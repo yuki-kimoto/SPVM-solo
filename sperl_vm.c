@@ -235,7 +235,8 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = (int16_t)((int16_t)(bytecodes[pc + 1] << 8) +  bytecodes[pc + 2]);
         pc += 3;
-        continue;      case SPerl_BYTECODE_C_CODE_LDC:
+        continue;
+      case SPerl_BYTECODE_C_CODE_LDC:
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[bytecodes[pc + 1]];
         pc += 2;
@@ -245,6 +246,34 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 8) + bytecodes[pc + 2]];
         pc += 3;
         continue;
+      case SPerl_BYTECODE_C_CODE_LDC_WW:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        pc += 5;
+        continue;
+      case SPerl_BYTECODE_C_CODE_MALLOCSTRING: {
+        int64_t* string_info_ptr = &constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
+        
+        int64_t length = string_info_ptr[0];
+        int8_t* chars_ptr = (int8_t*)&string_info_ptr[1];
+        
+        // Allocate array
+        intptr_t array;
+        size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * length;
+        array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+        memset((void*)array, 0, allocate_size);
+        memcpy(array + SPerl_VM_C_ARRAY_HEADER_LENGTH, chars_ptr, length);
+        
+        // Set array length
+        *(int64_t*)array = length;
+        
+        // Set array
+        operand_stack_top++;
+        *(intptr_t*)&call_stack[operand_stack_top] = array;
+        
+        pc += 5;
+        continue;
+      }
       case SPerl_BYTECODE_C_CODE_LOAD:
         operand_stack_top++;
         call_stack[operand_stack_top] = vars[bytecodes[pc + 1]];
@@ -267,7 +296,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_LOAD_3:
         operand_stack_top++;
-        *(int32_t*)&call_stack[operand_stack_top] = *(int32_t*)&vars[3];
+        call_stack[operand_stack_top] = vars[3];
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_IALOAD:
@@ -296,13 +325,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_BALOAD:
         *(int8_t*)&call_stack[operand_stack_top - 1]
-          = (int32_t)*(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + call_stack[operand_stack_top]);
+          = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_SALOAD:
         *(int16_t*)&call_stack[operand_stack_top - 1]
-          = (int32_t)*(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * call_stack[operand_stack_top]);
+          = *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         continue;
@@ -333,13 +362,13 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         continue;
       case SPerl_BYTECODE_C_CODE_BASTORE:
         *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * call_stack[operand_stack_top - 1])
-          = (int8_t)*(int32_t*)&call_stack[operand_stack_top];
+          = *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         continue;
       case SPerl_BYTECODE_C_CODE_SASTORE:
         *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * call_stack[operand_stack_top - 1])
-          = (int16_t)*(int32_t*)&call_stack[operand_stack_top];
+          = *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         continue;
@@ -1027,7 +1056,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Finish call sub
         if (call_stack_base == 0) {
-          *(int32_t*)&call_stack[0] = return_value;
+          call_stack[0] = return_value;
           return;
         }
         
@@ -1097,36 +1126,26 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         
         // Allocate array
         intptr_t array;
-        if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_BOOLEAN || resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
-          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * length;
-          array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
-          memset((void*)array, 0, allocate_size);
+        size_t allocate_size;
+        if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+          allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * length;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
-          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * length;
-          array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
-          memset((void*)array, 0, allocate_size);
+          allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * length;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * length;
-          array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
-          memset((void*)array, 0, allocate_size);
+          allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * length;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * length;
-          array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
-          memset((void*)array, 0, allocate_size);
+          allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * length;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(float) * length;
-          array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
-          memset((void*)array, 0, allocate_size);
+          allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(float) * length;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-          size_t allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(double) * length;
-          array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
-          memset((void*)array, 0, allocate_size);
+          allocate_size = SPerl_VM_C_ARRAY_HEADER_LENGTH + sizeof(double) * length;
         }
+        array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
         
         // Set array length
         *(int64_t*)array = length;
@@ -1236,6 +1255,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         // Set vars base
         call_stack_base = operand_stack_top + 1;
         
+        
         CALLSUB_COMMON:
         
         // Initialize my variables
@@ -1254,6 +1274,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
             // Set frame
             vm->frame->vars = vars;
             vm->frame->operand_stack = &call_stack[operand_stack_top];
+            
             
             // Call native sub
             void (*native_address)(SPerl_VM* VM) = constant_pool_sub->native_address;
@@ -1322,11 +1343,6 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
         }
         continue;
       }
-      case SPerl_BYTECODE_C_CODE_LDC_WW:
-        operand_stack_top++;
-        call_stack[operand_stack_top] = constant_pool[(bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4]];
-        pc += 5;
-        continue;
       case SPerl_BYTECODE_C_CODE_BGETFIELD: {
         int32_t field_constant_pool_address
           = (bytecodes[pc + 1] << 24) + (bytecodes[pc + 2] << 16) + (bytecodes[pc + 3] << 8) + bytecodes[pc + 4];
