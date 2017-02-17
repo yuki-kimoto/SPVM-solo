@@ -6,6 +6,12 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : long) : long {
+
+    {
+      my $nums = "ace";
+      
+      std::println($nums);
+    }
     
     try {
       

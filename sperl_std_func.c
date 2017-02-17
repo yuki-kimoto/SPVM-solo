@@ -1,9 +1,25 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>
 
 #include "sperl_std_func.h"
 #include "sperl_env.h"
+
+void SPerl_STD_FUNC_println(SPerl_ENV* env) {
+  
+  intptr_t byte_array = *(intptr_t*)&env->vars[0];
+  
+  int64_t length = SPerl_ENV_get_array_length(env, byte_array);
+  
+  int8_t* byte_array_data = SPerl_ENV_get_byte_array_data(env, byte_array);
+  
+  for (size_t i = 0; i < length; i++) {
+    putchar((int)byte_array_data[i]);
+  }
+  
+  printf("\n");
+}
 
 void SPerl_STD_FUNC_printb(SPerl_ENV* env) {
   
