@@ -3,13 +3,13 @@
 
 #include "sperl_base.h"
 
-void SPerl_FUNC_std_println(SPerl_ENV* env);
-void SPerl_FUNC_std_printb(SPerl_ENV* env);
-void SPerl_FUNC_std_prints(SPerl_ENV* env);
-void SPerl_FUNC_std_printi(SPerl_ENV* env);
-void SPerl_FUNC_std_printl(SPerl_ENV* env);
-void SPerl_FUNC_std_printf(SPerl_ENV* env);
-void SPerl_FUNC_std_printd(SPerl_ENV* env);
-void SPerl_FUNC_std_suml(SPerl_ENV* env);
+void SPerl_FUNC_std_println(SPerl* sperl, SPerl_ENV* env);
+void SPerl_FUNC_std_printb(SPerl* sperl, SPerl_ENV* env);
+void SPerl_FUNC_std_prints(SPerl* sperl, SPerl_ENV* env);
+void SPerl_FUNC_std_printi(SPerl* sperl, SPerl_ENV* env);
+void SPerl_FUNC_std_printl(SPerl* sperl, SPerl_ENV* env);
+void SPerl_FUNC_std_printf(SPerl* sperl, SPerl_ENV* env);
+void SPerl_FUNC_std_printd(SPerl* sperl, SPerl_ENV* env);
+void SPerl_FUNC_std_suml(SPerl* sperl, SPerl_ENV* env);
 
 #endif

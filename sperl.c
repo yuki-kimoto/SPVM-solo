@@ -40,9 +40,9 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   if (error) {
     intptr_t message = *(int32_t*)&vm->call_stack[0];
     
-    int64_t length = SPerl_API_get_array_length(message);
+    int64_t length = SPerl_API_get_array_length(sperl, message);
     
-    int8_t* byte_array_data = SPerl_API_get_byte_array_data(message);
+    int8_t* byte_array_data = SPerl_API_get_byte_array_data(sperl, message);
     
     for (size_t i = 0; i < length; i++) {
       putchar((int)byte_array_data[i]);

@@ -1266,8 +1266,8 @@ int32_t SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name)
             vm->env->ret = &call_stack[operand_stack_top];
             
             // Call native sub
-            void (*native_address)(SPerl_ENV*) = constant_pool_sub->native_address;
-            (*native_address)(vm->env);
+            void (*native_address)(SPerl* sperl, SPerl_ENV*) = constant_pool_sub->native_address;
+            (*native_address)(sperl, vm->env);
             
             // Finish call sub
             if (call_stack_base == 0) {
@@ -1296,8 +1296,8 @@ int32_t SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name)
             vm->env->ret = &call_stack[operand_stack_top];
             
             // Call native sub
-            void (*native_address)(SPerl_ENV*) = constant_pool_sub->native_address;
-            (*native_address)(vm->env);
+            void (*native_address)(SPerl* sperl, SPerl_ENV*) = constant_pool_sub->native_address;
+            (*native_address)(sperl, vm->env);
             
             // Return value
             int64_t return_value = call_stack[operand_stack_top];
