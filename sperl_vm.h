@@ -15,6 +15,6 @@ enum {
 };
 
 SPerl_VM* SPerl_VM_new(SPerl* sperl);
-void SPerl_VM_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_base_name);
+void SPerl_VM_call_sub(SPerl* sperl, const char* sub_base_name, SPerl_ENV* env);
 
 #endif

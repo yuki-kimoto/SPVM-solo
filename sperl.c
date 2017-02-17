@@ -36,7 +36,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   *(int32_t*)&env->call_stack[0] = 2;
   
   // Run
-  SPerl_VM_call_sub(sperl, env, start_sub_name);
+  SPerl_VM_call_sub(sperl, start_sub_name, env);
   if (env->abort) {
     intptr_t message = *(int32_t*)&env->call_stack[0];
     

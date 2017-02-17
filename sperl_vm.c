@@ -23,17 +23,7 @@
 #include "sperl_resolved_type.h"
 #include "sperl_env.h"
 
-SPerl_VM* SPerl_VM_new(SPerl* sperl) {
-  SPerl_VM* vm = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_VM));
-  
-  vm->call_stack_capacity = 255;
-  vm->call_stack = (int64_t*) SPerl_ALLOCATOR_safe_malloc(vm->call_stack_capacity, sizeof(int64_t));
-  vm->env = SPerl_ALLOCATOR_safe_malloc(1, sizeof(SPerl_ENV));
-  
-  return vm;
-}
-
-void SPerl_VM_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_base_name) {
+void SPerl_VM_call_sub(SPerl* sperl, const char* sub_base_name, SPerl_ENV* env) {
   
   // Constant pool
   int64_t* constant_pool = sperl->constant_pool->values;
