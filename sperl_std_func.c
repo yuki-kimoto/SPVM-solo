@@ -3,47 +3,46 @@
 #include <inttypes.h>
 
 #include "sperl_std_func.h"
-#include "sperl_frame.h"
-#include "sperl_vm.h"
+#include "sperl_env.h"
 
-void SPerl_STD_FUNC_printb(SPerl_VM* vm) {
+void SPerl_STD_FUNC_printb(SPerl_ENV* env) {
   
-  int8_t value = *(int8_t*)&vm->frame->vars[0];
+  int8_t value = *(int8_t*)&env->vars[0];
   
   printf("TEST: %" PRId8 "\n", value);
 }
 
-void SPerl_STD_FUNC_prints(SPerl_VM* vm) {
+void SPerl_STD_FUNC_prints(SPerl_ENV* env) {
   
-  int16_t value = *(int16_t*)&vm->frame->vars[0];
+  int16_t value = *(int16_t*)&env->vars[0];
   
   printf("TEST: %" PRId16 "\n", value);
 }
 
-void SPerl_STD_FUNC_printi(SPerl_VM* vm) {
+void SPerl_STD_FUNC_printi(SPerl_ENV* env) {
   
-  int32_t value = *(int32_t*)&vm->frame->vars[0];
+  int32_t value = *(int32_t*)&env->vars[0];
   
   printf("TEST: %" PRId32 "\n", value);
 }
 
-void SPerl_STD_FUNC_printl(SPerl_VM* vm) {
+void SPerl_STD_FUNC_printl(SPerl_ENV* env) {
   
-  int64_t value = vm->frame->vars[0];
+  int64_t value = env->vars[0];
   
   printf("TEST: %" PRId64 "\n", value);
 }
 
-void SPerl_STD_FUNC_printf(SPerl_VM* vm) {
+void SPerl_STD_FUNC_printf(SPerl_ENV* env) {
   
-  float value = *(float*)&vm->frame->vars[0];
+  float value = *(float*)&env->vars[0];
   
   printf("TEST: %f\n", value);
 }
 
-void SPerl_STD_FUNC_printd(SPerl_VM* vm) {
+void SPerl_STD_FUNC_printd(SPerl_ENV* env) {
   
-  double value = *(double*)&vm->frame->vars[0];
+  double value = *(double*)&env->vars[0];
   
   printf("TEST: %f\n", value);
 }

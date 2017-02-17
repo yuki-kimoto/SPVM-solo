@@ -10,7 +10,6 @@
 #include "sperl_allocator.h"
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_array.h"
-#include "sperl_frame.h"
 
 void SPerl_run(SPerl* sperl, const char* package_name) {
 

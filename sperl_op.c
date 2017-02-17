@@ -33,7 +33,6 @@
 #include "sperl_switch_info.h"
 #include "sperl_descriptor.h"
 #include "sperl_vm.h"
-#include "sperl_frame.h"
 #include "sperl_std_func.h"
 
 const char* const SPerl_OP_C_CODE_NAMES[] = {

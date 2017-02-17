@@ -8,17 +8,13 @@ enum {
   SPerl_BASE_C_INT_MAX = 2147483647,
 };
 
-/* sperl_frame.h */
+/* sperl_env.h */
 struct SPerl_env;
 typedef struct SPerl_env SPerl_ENV;
 
-/* sperl_frame.h */
+/* sperl_heap.h */
 struct SPerl_heap;
 typedef struct SPerl_heap SPerl_HEAP;
-
-/* sperl_frame.h */
-struct SPerl_frame;
-typedef struct SPerl_frame SPerl_FRAME;
 
 /* sperl_parser.h */
 struct SPerl_parser;

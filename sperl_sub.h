@@ -10,7 +10,7 @@ struct SPerl_sub {
   SPerl_OP* op_block;
   SPerl_ARRAY* op_args;
   SPerl_ARRAY* op_my_vars;
-  void (*native_address)(SPerl_VM* VM);
+  void (*native_address)(SPerl_ENV* env);
   int32_t bytecode_base;
   int32_t bytecode_length;
   int32_t operand_stack_max;
