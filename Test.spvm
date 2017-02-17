@@ -269,8 +269,6 @@ package Test {
     if (1 == 1) { }
     if (1 != 2) { };
 
-    [1, 2, 3];
-    [[1, 2, 3], [1, 2, 3]];
     {
       my $nums : long[] = malloc long[3];
       $nums[0] = 11;

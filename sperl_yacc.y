@@ -24,7 +24,7 @@
 %type <opval> decl_enumeration_values decl_enumeration_value
 %type <opval> type package_name field_name sub_name decl_package decl_things_in_grammar opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar opt_term throw_exception
-%type <opval> field array_elem convert_type decl_enum new_object array_init type_name array_length decl_thing_in_grammar
+%type <opval> field array_elem convert_type decl_enum new_object type_name array_length decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement type_array_with_length
 %type <opval> ';' opt_descriptors descriptors type_or_void normal_statement try_catch
 
@@ -381,14 +381,7 @@ term
   | array_elem
   | convert_type
   | new_object
-  | array_init
   | array_length
-
-array_init
-  : '[' opt_terms ']'
-    {
-      $$ = SPerl_OP_build_array_init(sperl, $2);
-    }
 
 new_object
   : MALLOC type_name
