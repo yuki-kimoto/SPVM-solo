@@ -32,7 +32,6 @@
 #include "sperl_op_checker.h"
 #include "sperl_switch_info.h"
 #include "sperl_descriptor.h"
-#include "sperl_vm.h"
 #include "sperl_func.h"
 
 const char* const SPerl_OP_C_CODE_NAMES[] = {
@@ -259,8 +258,6 @@ SPerl_OP* SPerl_OP_build_array_length(SPerl* sperl, SPerl_OP* op_array_length, S
 }
 
 SPerl_OP* SPerl_OP_build_malloc_object(SPerl* sperl, SPerl_OP* op_malloc, SPerl_OP* op_type) {
-  
-  SPerl_PARSER* parser = sperl->parser;
   
   SPerl_OP_sibling_splice(sperl, op_malloc, NULL, 0, op_type);
   
@@ -549,7 +546,6 @@ void SPerl_OP_check(SPerl* sperl) {
     for (size_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
-      SPerl_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
       
       // Alignment
       int32_t field_byte_size = SPerl_FIELD_get_byte_size(sperl, field);
@@ -563,7 +559,6 @@ void SPerl_OP_check(SPerl* sperl) {
     for (size_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
-      SPerl_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
       
       // Current byte size
       
@@ -612,12 +607,6 @@ void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_
     const char* package_name = op_package->uv.package->op_name->uv.name;
     const char* sub_name = name_info->op_name->uv.name;
     sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, sub_name);
-    
-    SPerl_SUB* found_sub= SPerl_HASH_search(
-      parser->sub_symtable,
-      sub_abs_name,
-      strlen(sub_abs_name)
-    );
   }
   
   name_info->resolved_name = sub_abs_name;
@@ -637,8 +626,6 @@ void SPerl_OP_resolve_field_name(SPerl* sperl, SPerl_OP* op_field) {
 }
 
 SPerl_OP* SPerl_OP_build_array_elem(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_term) {
-  
-  SPerl_PARSER* parser = sperl->parser;
   
   SPerl_OP* op_array_elem = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ARRAY_ELEM, op_var->file, op_var->line);
   SPerl_OP_sibling_splice(sperl, op_array_elem, NULL, 0, op_var);
@@ -1009,8 +996,6 @@ SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* 
 
 SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_args, SPerl_OP* op_descriptors, SPerl_OP* op_type_or_void, SPerl_OP* op_block) {
   
-  SPerl_PARSER* parser = sperl->parser;
-  
   // Build OP_SUB
   SPerl_OP_sibling_splice(sperl, op_sub, NULL, 0, op_sub_name);
   SPerl_OP_sibling_splice(sperl, op_sub, op_sub_name, 0, op_args);
@@ -1053,8 +1038,6 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
 }
 
 SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enumeration, SPerl_OP* op_enumeration_block) {
-  
-  SPerl_PARSER* parser = sperl->parser;
   
   // Build OP_SUB
   SPerl_OP_sibling_splice(sperl, op_enumeration, NULL, 0, op_enumeration_block);

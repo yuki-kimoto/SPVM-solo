@@ -1,7 +1,6 @@
 #include <stdint.h>
 
 #include "sperl.h"
-#include "sperl_vm.h"
 
 int64_t SPerl_API_get_array_length(SPerl* sperl, intptr_t array) {
   (void)sperl;
