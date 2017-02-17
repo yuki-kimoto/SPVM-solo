@@ -1267,7 +1267,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
           if (!constant_pool_sub->has_return_value) {
             // Set environment
             vm->env->vars = vars;
-            vm->env->operand_stack = &call_stack[operand_stack_top];
+            vm->env->ret = &call_stack[operand_stack_top];
             
             // Call native sub
             void (*native_address)(SPerl_ENV*) = constant_pool_sub->native_address;
@@ -1297,7 +1297,7 @@ void SPerl_VM_call_sub(SPerl* sperl, SPerl_VM* vm, const char* sub_base_name) {
             
             // Set environment
             vm->env->vars = vars;
-            vm->env->operand_stack = &call_stack[operand_stack_top];
+            vm->env->ret = &call_stack[operand_stack_top];
             
             // Call native sub
             void (*native_address)(SPerl_ENV*) = constant_pool_sub->native_address;

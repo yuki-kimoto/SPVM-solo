@@ -19,7 +19,7 @@ void SPerl_STD_FUNC_suml(SPerl_ENV* env) {
     total += long_array_data[i];
   }
   
-  *(int64_t*)env->operand_stack = total;
+  *(int64_t*)env->ret = total;
 }
 
 void SPerl_STD_FUNC_println(SPerl_ENV* env) {

@@ -5,7 +5,7 @@
 
 struct SPerl_env {
   int64_t* vars;
-  int64_t* operand_stack;
+  int64_t* ret;
 };
 
 SPerl_ENV* SPerl_ENV_new(SPerl* sperl);
