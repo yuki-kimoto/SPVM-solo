@@ -8,6 +8,7 @@ struct SPerl_env {
   int64_t* ret;
   int64_t* call_stack;
   int32_t call_stack_capacity;
+  int32_t call_stack_capacity_default;
   _Bool abort;
 };
 
