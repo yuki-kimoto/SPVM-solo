@@ -6,7 +6,20 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : long) : long {
+    # byte increment
+    {
+      my $num = 1B;
+      $num++;
+      std::printb($num);
+    }
 
+    # short increment
+    {
+      my $num = 1S;
+      $num++;
+      std::prints($num);
+    }
+    
     try {
       
     } catch ($error : byte[]) {

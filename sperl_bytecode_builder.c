@@ -32,7 +32,37 @@ void SPerl_BYTECODE_BUILDER_push_inc_bytecode(SPerl* sperl, SPerl_BYTECODE_ARRAY
   SPerl_MY_VAR* my_var = var->op_my_var->uv.my_var;
   
   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_inc);
-  if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+  if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+    if (my_var->address > 0xFF || (value < -128 || value > 127)) {
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_WIDE);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BINC);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, (my_var->address >> 8) & 0xFF);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address & 0xFF);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, (value >> 8) & 0xFF);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, value & 0xFF);
+    }
+    else {
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BINC);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, value);
+    }
+  }
+  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+    if (my_var->address > 0xFF || (value < -128 || value > 127)) {
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_WIDE);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SINC);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, (my_var->address >> 8) & 0xFF);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address & 0xFF);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, (value >> 8) & 0xFF);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, value & 0xFF);
+    }
+    else {
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SINC);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, my_var->address);
+      SPerl_BYTECODE_ARRAY_push(bytecode_array, value);
+    }
+  }
+  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
     if (my_var->address > 0xFF || (value < -128 || value > 127)) {
       SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_WIDE);
       SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IINC);
