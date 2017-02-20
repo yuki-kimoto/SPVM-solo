@@ -4,12 +4,12 @@
 #include <inttypes.h>
 
 #include "sperl_func.h"
-#include "sperl_env.h"
 #include "sperl_api.h"
+#include "sperl.h"
 
-void SPerl_FUNC_std_suml(SPerl* sperl, SPerl_ENV* env) {
+void SPerl_FUNC_std_suml(SPerl* sperl) {
   
-  intptr_t long_array = *(intptr_t*)&env->vars[0];
+  intptr_t long_array = *(intptr_t*)&sperl->vars[0];
   
   int64_t length = SPerl_API_get_array_length(sperl, long_array);
   
@@ -20,12 +20,12 @@ void SPerl_FUNC_std_suml(SPerl* sperl, SPerl_ENV* env) {
     total += long_array_data[i];
   }
   
-  *(int64_t*)env->ret = total;
+  *(int64_t*)sperl->ret = total;
 }
 
-void SPerl_FUNC_std_println(SPerl* sperl, SPerl_ENV* env) {
+void SPerl_FUNC_std_println(SPerl* sperl) {
   
-  intptr_t byte_array = *(intptr_t*)&env->vars[0];
+  intptr_t byte_array = *(intptr_t*)&sperl->vars[0];
   
   int64_t length = SPerl_API_get_array_length(sperl, byte_array);
   
@@ -38,44 +38,44 @@ void SPerl_FUNC_std_println(SPerl* sperl, SPerl_ENV* env) {
   printf("\n");
 }
 
-void SPerl_FUNC_std_printb(SPerl* sperl, SPerl_ENV* env) {
+void SPerl_FUNC_std_printb(SPerl* sperl) {
   
-  int8_t value = *(int8_t*)&env->vars[0];
+  int8_t value = *(int8_t*)&sperl->vars[0];
   
   printf("TEST: %" PRId8 "\n", value);
 }
 
-void SPerl_FUNC_std_prints(SPerl* sperl, SPerl_ENV* env) {
+void SPerl_FUNC_std_prints(SPerl* sperl) {
   
-  int16_t value = *(int16_t*)&env->vars[0];
+  int16_t value = *(int16_t*)&sperl->vars[0];
   
   printf("TEST: %" PRId16 "\n", value);
 }
 
-void SPerl_FUNC_std_printi(SPerl* sperl, SPerl_ENV* env) {
+void SPerl_FUNC_std_printi(SPerl* sperl) {
   
-  int32_t value = *(int32_t*)&env->vars[0];
+  int32_t value = *(int32_t*)&sperl->vars[0];
   
   printf("TEST: %" PRId32 "\n", value);
 }
 
-void SPerl_FUNC_std_printl(SPerl* sperl, SPerl_ENV* env) {
+void SPerl_FUNC_std_printl(SPerl* sperl) {
   
-  int64_t value = env->vars[0];
+  int64_t value = sperl->vars[0];
   
   printf("TEST: %" PRId64 "\n", value);
 }
 
-void SPerl_FUNC_std_printf(SPerl* sperl, SPerl_ENV* env) {
+void SPerl_FUNC_std_printf(SPerl* sperl) {
   
-  float value = *(float*)&env->vars[0];
+  float value = *(float*)&sperl->vars[0];
   
   printf("TEST: %f\n", value);
 }
 
-void SPerl_FUNC_std_printd(SPerl* sperl, SPerl_ENV* env) {
+void SPerl_FUNC_std_printd(SPerl* sperl) {
   
-  double value = *(double*)&env->vars[0];
+  double value = *(double*)&sperl->vars[0];
   
   printf("TEST: %f\n", value);
 }
