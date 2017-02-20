@@ -9,7 +9,7 @@
 
 void SPerl_FUNC_std_suml(SPerl* sperl) {
   
-  intptr_t long_array = *(intptr_t*)&sperl->vars[0];
+  intptr_t long_array = SPerl_API_get_var_address(sperl, 0);
   
   int64_t length = SPerl_API_get_array_length(sperl, long_array);
   
@@ -25,7 +25,7 @@ void SPerl_FUNC_std_suml(SPerl* sperl) {
 
 void SPerl_FUNC_std_println(SPerl* sperl) {
   
-  intptr_t byte_array = *(intptr_t*)&sperl->vars[0];
+  intptr_t byte_array = SPerl_API_get_var_address(sperl, 0);
   
   int64_t length = SPerl_API_get_array_length(sperl, byte_array);
   
@@ -40,42 +40,42 @@ void SPerl_FUNC_std_println(SPerl* sperl) {
 
 void SPerl_FUNC_std_printb(SPerl* sperl) {
   
-  int8_t value = *(int8_t*)&sperl->vars[0];
+  int8_t value = SPerl_API_get_var_byte(sperl, 0);
   
   printf("TEST: %" PRId8 "\n", value);
 }
 
 void SPerl_FUNC_std_prints(SPerl* sperl) {
   
-  int16_t value = *(int16_t*)&sperl->vars[0];
+  int16_t value = SPerl_API_get_var_short(sperl, 0);
   
   printf("TEST: %" PRId16 "\n", value);
 }
 
 void SPerl_FUNC_std_printi(SPerl* sperl) {
   
-  int32_t value = *(int32_t*)&sperl->vars[0];
+  int32_t value = SPerl_API_get_var_int(sperl, 0);
   
   printf("TEST: %" PRId32 "\n", value);
 }
 
 void SPerl_FUNC_std_printl(SPerl* sperl) {
   
-  int64_t value = sperl->vars[0];
+  int64_t value = SPerl_API_get_var_long(sperl, 0);
   
   printf("TEST: %" PRId64 "\n", value);
 }
 
 void SPerl_FUNC_std_printf(SPerl* sperl) {
   
-  float value = *(float*)&sperl->vars[0];
+  float value = SPerl_API_get_var_float(sperl, 0);
   
   printf("TEST: %f\n", value);
 }
 
 void SPerl_FUNC_std_printd(SPerl* sperl) {
   
-  double value = *(double*)&sperl->vars[0];
+  double value = SPerl_API_get_var_double(sperl, 0);
   
   printf("TEST: %f\n", value);
 }
