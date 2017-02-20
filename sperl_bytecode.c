@@ -134,7 +134,6 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "IFNONNULL",
   "INVOKESTATIC_WW",
   "LDC_WW",
-  "LDC2_WW",
   "BGETFIELD",
   "SGETFIELD",
   "IGETFIELD",
