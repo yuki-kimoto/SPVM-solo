@@ -453,37 +453,37 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         operand_stack_top--;
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_BASTORE:
+      case SPerl_BYTECODE_C_CODE_BASTORE_LIDX:
         *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * call_stack[operand_stack_top - 1])
           = *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_SASTORE:
+      case SPerl_BYTECODE_C_CODE_SASTORE_LIDX:
         *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * call_stack[operand_stack_top - 1])
           = *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_IASTORE:
+      case SPerl_BYTECODE_C_CODE_IASTORE_LIDX:
         *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * call_stack[operand_stack_top - 1])
           = *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_LASTORE:
+      case SPerl_BYTECODE_C_CODE_LASTORE_LIDX:
         *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * call_stack[operand_stack_top - 1])
           = call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_FASTORE:
+      case SPerl_BYTECODE_C_CODE_FASTORE_LIDX:
         *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(float) * call_stack[operand_stack_top - 1])
           = *(float*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         continue;
-      case SPerl_BYTECODE_C_CODE_DASTORE:
+      case SPerl_BYTECODE_C_CODE_DASTORE_LIDX:
         *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(double) * call_stack[operand_stack_top - 1])
           = *(double*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;

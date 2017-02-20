@@ -1129,22 +1129,22 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   
                   if (index_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
                     if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
-                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BASTORE);
+                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BASTORE_LIDX);
                     }
                     else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
-                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SASTORE);
+                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SASTORE_LIDX);
                     }
                     else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IASTORE);
+                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_IASTORE_LIDX);
                     }
                     else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LASTORE);
+                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_LASTORE_LIDX);
                     }
                     else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_FASTORE);
+                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_FASTORE_LIDX);
                     }
                     else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DASTORE);
+                      SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_DASTORE_LIDX);
                     }
                     else {
                       assert(0);
