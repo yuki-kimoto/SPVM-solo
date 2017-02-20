@@ -28,11 +28,10 @@
 
 void SPerl_init_env(SPerl* sperl, SPerl_ENV* env) {
   
-  env->call_stack_capacity_default = 255;
   env->call_stack_capacity = -1;
   
   if (env->call_stack_capacity == -1) {
-    env->call_stack_capacity = env->call_stack_capacity_default;
+    env->call_stack_capacity = sperl->call_stack_capacity_default;
   }
   env->call_stack = (int64_t*) SPerl_ALLOCATOR_safe_malloc(env->call_stack_capacity, sizeof(int64_t));
   env->vars = env->call_stack;
@@ -106,6 +105,9 @@ SPerl* SPerl_new() {
   // Bytecodes
   sperl->bytecode_array = SPerl_BYTECODE_ARRAY_new(sperl, 0);
   
+  // Default call stack capacity
+  sperl->call_stack_capacity_default = 255;
+
   return sperl;
 }
 

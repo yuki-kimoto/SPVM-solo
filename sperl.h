@@ -31,6 +31,16 @@ struct sperl_ {
   
   // Bytecodes
   SPerl_BYTECODE_ARRAY* bytecode_array;
+  
+  // Call stack capacity default
+  int32_t call_stack_capacity_default;
+  
+  // Runtime environment
+  int64_t* vars;
+  int64_t* ret;
+  int64_t* call_stack;
+  int32_t call_stack_capacity;
+  _Bool abort;
 };
 
 SPerl* SPerl_new();
