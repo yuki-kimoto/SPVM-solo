@@ -55,7 +55,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   SPerl_init_env(sperl);
   
   // Set argument
-  sperl->vars[0] = 2;
+  SPerl_API_set_var_long(sperl, 0, 2);
   
   // Run
   SPerl_call_sub(sperl, start_sub_name);
