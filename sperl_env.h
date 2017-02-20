@@ -13,5 +13,6 @@ struct SPerl_env {
 };
 
 SPerl_ENV* SPerl_ENV_new(SPerl* sperl);
+void SPerl_init_env(SPerl* sperl, SPerl_ENV* env);
 
 #endif

@@ -26,6 +26,20 @@
 #include "sperl_resolved_type.h"
 #include "sperl_env.h"
 
+void SPerl_init_env(SPerl* sperl, SPerl_ENV* env) {
+  
+  env->call_stack_capacity_default = 255;
+  env->call_stack_capacity = -1;
+  
+  if (env->call_stack_capacity == -1) {
+    env->call_stack_capacity = env->call_stack_capacity_default;
+  }
+  env->call_stack = (int64_t*) SPerl_ALLOCATOR_safe_malloc(env->call_stack_capacity, sizeof(int64_t));
+  env->vars = env->call_stack;
+  env->ret = env->call_stack;
+  env->abort = 0;
+}
+
 void SPerl_run(SPerl* sperl, const char* package_name) {
 
   SPerl_PARSER* parser = sperl->parser;
@@ -41,8 +55,12 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   // Entry point
   const char* start_sub_name = parser->start_sub_name;
   
+  
   // Create VM
   SPerl_ENV* env = SPerl_ENV_new(sperl);
+  
+  // Initialize env
+  SPerl_init_env(sperl, env);
   
   // Set argument
   env->vars[0] = 2;
