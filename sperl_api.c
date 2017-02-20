@@ -2,6 +2,48 @@
 
 #include "sperl.h"
 
+int8_t SPerl_API_get_ret_byte(SPerl* sperl) {
+  (void)sperl;
+  
+  return *(int8_t*)sperl->ret;
+}
+
+int16_t SPerl_API_get_ret_short(SPerl* sperl) {
+  (void)sperl;
+  
+  return *(int16_t*)sperl->ret;
+}
+
+int32_t SPerl_API_get_ret_int(SPerl* sperl) {
+  (void)sperl;
+  
+  return *(int32_t*)sperl->ret;
+}
+
+int64_t SPerl_API_get_ret_long(SPerl* sperl) {
+  (void)sperl;
+  
+  return *(int64_t*)sperl->ret;
+}
+
+float SPerl_API_get_ret_float(SPerl* sperl) {
+  (void)sperl;
+  
+  return *(float*)sperl->ret;
+}
+
+double SPerl_API_get_ret_double(SPerl* sperl) {
+  (void)sperl;
+  
+  return *(double*)sperl->ret;
+}
+
+intptr_t SPerl_API_get_ret_address(SPerl* sperl) {
+  (void)sperl;
+  
+  return *(intptr_t*)sperl->ret;
+}
+
 int8_t SPerl_API_get_var_byte(SPerl* sperl, int64_t index) {
   (void)sperl;
   

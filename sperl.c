@@ -60,7 +60,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   // Run
   SPerl_call_sub(sperl, start_sub_name);
   if (sperl->abort) {
-    intptr_t message = *(intptr_t*)sperl->ret;
+    intptr_t message = SPerl_API_get_ret_address(sperl);
     
     int64_t length = SPerl_API_get_array_length(sperl, message);
     
@@ -74,7 +74,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   }
   else {
     // Get return value
-    int64_t return_value = *sperl->ret;
+    int64_t return_value = SPerl_API_get_ret_long(sperl);
     
     printf("TEST return_value: %d\n", return_value);
   }
