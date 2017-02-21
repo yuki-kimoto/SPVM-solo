@@ -174,6 +174,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
       // GOTO bytecode address for loop start
       SPerl_ARRAY* goto_loop_start_address_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
       
+      // GOTO exception handler address
+      SPerl_ARRAY* goto_exception_handler_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+
+      // try stack
+      SPerl_ARRAY* try_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+      
       // Current switch
       SPerl_OP* cur_op_switch_info = NULL;
       
@@ -188,6 +194,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
         // [START]Preorder traversal position
         
         switch (op_cur->code) {
+          case SPerl_OP_C_CODE_TRY: {
+            
+            SPerl_ARRAY_push(try_stack, op_cur);
+            
+            break;
+          }
           case SPerl_OP_C_CODE_SWITCH: {
             cur_op_switch_info = op_cur;
             cur_case_addresses = SPerl_ALLOCATOR_new_array(sperl, 0);
@@ -218,6 +230,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
           while (1) {
             // [START]Postorder traversal position
             switch (op_cur->code) {
+              case SPerl_OP_C_CODE_TRY: {
+                
+                SPerl_ARRAY_pop(try_stack);
+                
+                break;
+              }
               case SPerl_OP_C_CODE_SWITCH_CONDITION: {
                 
                 SPerl_SWITCH_INFO* switch_info = cur_op_switch_info->uv.switch_info;
