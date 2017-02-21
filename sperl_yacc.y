@@ -609,7 +609,7 @@ type_name
 try_catch
   : TRY block CATCH '(' arg ')' block
     {
-      $$ = $1;
+      $$ = SPerl_OP_build_try_catch(sperl, $1, $2, $5, $7);
     }
 
 type_array

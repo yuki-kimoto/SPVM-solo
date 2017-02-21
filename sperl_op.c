@@ -115,6 +115,18 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "CATCH",
 };
 
+SPerl_OP* SPerl_OP_build_try_catch(SPerl* sperl, SPerl_OP* op_try, SPerl_OP* op_try_block, SPerl_OP* op_my_var, SPerl_OP* op_catch_block) {
+  
+  // insert var declaration into catch block top
+  SPerl_OP_sibling_splice(sperl, op_catch_block->first, op_catch_block->first->first, 0, op_my_var);
+  
+  // Add block
+  SPerl_OP_sibling_splice(sperl, op_try, op_try->last, 0, op_try_block);
+  SPerl_OP_sibling_splice(sperl, op_try, op_try->last, 0, op_catch_block);
+  
+  return op_try;
+}
+
 SPerl_OP* SPerl_OP_build_switch_statement(SPerl* sperl, SPerl_OP* op_switch, SPerl_OP* op_term, SPerl_OP* op_block) {
   
   SPerl_PARSER* parser = sperl->parser;
