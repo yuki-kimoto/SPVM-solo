@@ -192,7 +192,7 @@ void SPerl_OP_convert_not_to_if(SPerl* sperl, SPerl_OP* op);
 void SPerl_OP_convert_and_to_if(SPerl* sperl, SPerl_OP* op);
 void SPerl_OP_convert_or_to_if(SPerl* sperl, SPerl_OP* op);
 
-SPerl_OP* SPerl_OP_build_try_catch(SPerl* sperl, SPerl_OP* op_try, SPerl_OP* op_try_block, SPerl_OP* op_my_var, SPerl_OP* op_catch_block);
+SPerl_OP* SPerl_OP_build_try_catch(SPerl* sperl, SPerl_OP* op_try, SPerl_OP* op_try_block, SPerl_OP* op_catch, SPerl_OP* op_my_var, SPerl_OP* op_catch_block);
 
 SPerl_OP* SPerl_OP_build_switch_statement(SPerl* sperl, SPerl_OP* op_switch, SPerl_OP* op_term, SPerl_OP* op_block);
 SPerl_OP* SPerl_OP_build_case_statement(SPerl* sperl, SPerl_OP* op_case, SPerl_OP* op_term);
