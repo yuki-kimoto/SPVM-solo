@@ -230,9 +230,18 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
           while (1) {
             // [START]Postorder traversal position
             switch (op_cur->code) {
-              case SPerl_OP_C_CODE_TRY: {
-                
+              case SPerl_OP_C_CODE_CATCH: {
                 SPerl_ARRAY_pop(try_stack);
+
+                int32_t pop_count = goto_exception_handler_stack->length;
+                for (int32_t i = 0; i < pop_count; i++) {
+                  int32_t* address_ptr = SPerl_ARRAY_pop(goto_exception_handler_stack);
+                  
+                  int32_t jump_offset = bytecode_array->length - *address_ptr;
+                  
+                  bytecode_array->values[*address_ptr + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[*address_ptr + 2] = jump_offset & 0xFF;
+                }
                 
                 break;
               }
@@ -515,10 +524,23 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant_pool_address >> 8) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push(bytecode_array, constant_pool_address & 0xFF);
                 
-                // Rethrow exception or goto exception handler
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ATHROW);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
-                SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                //  Goto exception handler
+                if (try_stack->length > 0) {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
+                  
+                  int32_t* pos_ptr = SPerl_ALLOCATOR_new_int(sperl);
+                  *pos_ptr = bytecode_array->length - 1;
+                  SPerl_ARRAY_push(goto_exception_handler_stack, pos_ptr);
+                  
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                }
+                // Rethrow exception
+                else {
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_ATHROW);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                  SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
+                }
                 
                 break;
               }

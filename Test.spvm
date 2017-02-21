@@ -21,12 +21,18 @@ package Test {
     }
     
     try {
+      sum1(1, 2);
       
+      3;
+      
+      sum1(3, 4);
+      
+      1;
     } catch ($error : byte[]) {
-      
+      sum1(5, 6);
+      2;
     }
     
-
     {
       my $nums = malloc long[3];
       $nums[0] = 1;
