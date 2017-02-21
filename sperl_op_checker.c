@@ -82,6 +82,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       // Current default statement
       SPerl_OP* cur_default_op = NULL;
       
+      // try stack
+      SPerl_ARRAY* try_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+      
       // op count
       int32_t op_count = 0;
       
@@ -186,6 +189,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           while (1) {
             // [START]Postorder traversal position
             switch (op_cur->code) {
+              case SPerl_OP_C_CODE_TRY: {
+                
+                SPerl_ARRAY_push(try_stack, op_cur);
+
+                break;
+              }
               case SPerl_OP_C_CODE_DEFAULT: {
                 if (cur_default_op) {
                   SPerl_yyerror_format(sperl, "multiple default is forbidden at %s line %d\n", op_cur->file, op_cur->line);
