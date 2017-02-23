@@ -167,388 +167,388 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
   int32_t call_stack_base = 0;
   
   // Jump table for direct threaded code
-  void* jump[] = {
-    &&jump_SPerl_BYTECODE_C_CODE_NOP,
-    &&jump_SPerl_BYTECODE_C_CODE_ACONST_NULL,
-    &&jump_SPerl_BYTECODE_C_CODE_BCONST_0,
-    &&jump_SPerl_BYTECODE_C_CODE_BCONST_1,
-    &&jump_SPerl_BYTECODE_C_CODE_SCONST_0,
-    &&jump_SPerl_BYTECODE_C_CODE_SCONST_1,
-    &&jump_SPerl_BYTECODE_C_CODE_ICONST_M1,
-    &&jump_SPerl_BYTECODE_C_CODE_ICONST_0,
-    &&jump_SPerl_BYTECODE_C_CODE_ICONST_1,
-    &&jump_SPerl_BYTECODE_C_CODE_ICONST_2,
-    &&jump_SPerl_BYTECODE_C_CODE_ICONST_3,
-    &&jump_SPerl_BYTECODE_C_CODE_ICONST_4,
-    &&jump_SPerl_BYTECODE_C_CODE_ICONST_5,
-    &&jump_SPerl_BYTECODE_C_CODE_LCONST_M1,
-    &&jump_SPerl_BYTECODE_C_CODE_LCONST_0,
-    &&jump_SPerl_BYTECODE_C_CODE_LCONST_1,
-    &&jump_SPerl_BYTECODE_C_CODE_LCONST_2,
-    &&jump_SPerl_BYTECODE_C_CODE_LCONST_3,
-    &&jump_SPerl_BYTECODE_C_CODE_LCONST_4,
-    &&jump_SPerl_BYTECODE_C_CODE_LCONST_5,
-    &&jump_SPerl_BYTECODE_C_CODE_FCONST_0,
-    &&jump_SPerl_BYTECODE_C_CODE_FCONST_1,
-    &&jump_SPerl_BYTECODE_C_CODE_FCONST_2,
-    &&jump_SPerl_BYTECODE_C_CODE_DCONST_0,
-    &&jump_SPerl_BYTECODE_C_CODE_DCONST_1,
-    &&jump_SPerl_BYTECODE_C_CODE_BBPUSH,
-    &&jump_SPerl_BYTECODE_C_CODE_BSPUSH,
-    &&jump_SPerl_BYTECODE_C_CODE_SSPUSH,
-    &&jump_SPerl_BYTECODE_C_CODE_BIPUSH,
-    &&jump_SPerl_BYTECODE_C_CODE_SIPUSH,
-    &&jump_SPerl_BYTECODE_C_CODE_BLPUSH,
-    &&jump_SPerl_BYTECODE_C_CODE_SLPUSH,
-    &&jump_SPerl_BYTECODE_C_CODE_LDC,
-    &&jump_SPerl_BYTECODE_C_CODE_LDC_W,
-    &&jump_SPerl_BYTECODE_C_CODE_IALOAD,
-    &&jump_SPerl_BYTECODE_C_CODE_LALOAD,
-    &&jump_SPerl_BYTECODE_C_CODE_FALOAD,
-    &&jump_SPerl_BYTECODE_C_CODE_DALOAD,
-    &&jump_SPerl_BYTECODE_C_CODE_BALOAD,
-    &&jump_SPerl_BYTECODE_C_CODE_SALOAD,
-    &&jump_SPerl_BYTECODE_C_CODE_BASTORE,
-    &&jump_SPerl_BYTECODE_C_CODE_SASTORE,
-    &&jump_SPerl_BYTECODE_C_CODE_IASTORE,
-    &&jump_SPerl_BYTECODE_C_CODE_LASTORE,
-    &&jump_SPerl_BYTECODE_C_CODE_FASTORE,
-    &&jump_SPerl_BYTECODE_C_CODE_DASTORE,
-    &&jump_SPerl_BYTECODE_C_CODE_POP,
-    &&jump_SPerl_BYTECODE_C_CODE_IADD,
-    &&jump_SPerl_BYTECODE_C_CODE_LADD,
-    &&jump_SPerl_BYTECODE_C_CODE_FADD,
-    &&jump_SPerl_BYTECODE_C_CODE_DADD,
-    &&jump_SPerl_BYTECODE_C_CODE_ISUB,
-    &&jump_SPerl_BYTECODE_C_CODE_LSUB,
-    &&jump_SPerl_BYTECODE_C_CODE_FSUB,
-    &&jump_SPerl_BYTECODE_C_CODE_DSUB,
-    &&jump_SPerl_BYTECODE_C_CODE_IMUL,
-    &&jump_SPerl_BYTECODE_C_CODE_LMUL,
-    &&jump_SPerl_BYTECODE_C_CODE_FMUL,
-    &&jump_SPerl_BYTECODE_C_CODE_DMUL,
-    &&jump_SPerl_BYTECODE_C_CODE_IDIV,
-    &&jump_SPerl_BYTECODE_C_CODE_LDIV,
-    &&jump_SPerl_BYTECODE_C_CODE_FDIV,
-    &&jump_SPerl_BYTECODE_C_CODE_DDIV,
-    &&jump_SPerl_BYTECODE_C_CODE_IREM,
-    &&jump_SPerl_BYTECODE_C_CODE_LREM,
-    &&jump_SPerl_BYTECODE_C_CODE_FREM,
-    &&jump_SPerl_BYTECODE_C_CODE_DREM,
-    &&jump_SPerl_BYTECODE_C_CODE_INEG,
-    &&jump_SPerl_BYTECODE_C_CODE_LNEG,
-    &&jump_SPerl_BYTECODE_C_CODE_FNEG,
-    &&jump_SPerl_BYTECODE_C_CODE_DNEG,
-    &&jump_SPerl_BYTECODE_C_CODE_ISHL,
-    &&jump_SPerl_BYTECODE_C_CODE_LSHL,
-    &&jump_SPerl_BYTECODE_C_CODE_ISHR,
-    &&jump_SPerl_BYTECODE_C_CODE_LSHR,
-    &&jump_SPerl_BYTECODE_C_CODE_IUSHR,
-    &&jump_SPerl_BYTECODE_C_CODE_LUSHR,
-    &&jump_SPerl_BYTECODE_C_CODE_IAND,
-    &&jump_SPerl_BYTECODE_C_CODE_LAND,
-    &&jump_SPerl_BYTECODE_C_CODE_IOR,
-    &&jump_SPerl_BYTECODE_C_CODE_LOR,
-    &&jump_SPerl_BYTECODE_C_CODE_IXOR,
-    &&jump_SPerl_BYTECODE_C_CODE_LXOR,
-    &&jump_SPerl_BYTECODE_C_CODE_IINC,
-    &&jump_SPerl_BYTECODE_C_CODE_I2L,
-    &&jump_SPerl_BYTECODE_C_CODE_I2F,
-    &&jump_SPerl_BYTECODE_C_CODE_I2D,
-    &&jump_SPerl_BYTECODE_C_CODE_L2I,
-    &&jump_SPerl_BYTECODE_C_CODE_L2F,
-    &&jump_SPerl_BYTECODE_C_CODE_L2D,
-    &&jump_SPerl_BYTECODE_C_CODE_F2I,
-    &&jump_SPerl_BYTECODE_C_CODE_F2L,
-    &&jump_SPerl_BYTECODE_C_CODE_F2D,
-    &&jump_SPerl_BYTECODE_C_CODE_D2I,
-    &&jump_SPerl_BYTECODE_C_CODE_D2L,
-    &&jump_SPerl_BYTECODE_C_CODE_D2F,
-    &&jump_SPerl_BYTECODE_C_CODE_I2B,
-    &&jump_SPerl_BYTECODE_C_CODE_I2S,
-    &&jump_SPerl_BYTECODE_C_CODE_ICMP,
-    &&jump_SPerl_BYTECODE_C_CODE_FCMPL,
-    &&jump_SPerl_BYTECODE_C_CODE_FCMPG,
-    &&jump_SPerl_BYTECODE_C_CODE_DCMPL,
-    &&jump_SPerl_BYTECODE_C_CODE_DCMPG,
-    &&jump_SPerl_BYTECODE_C_CODE_IFEQ,
-    &&jump_SPerl_BYTECODE_C_CODE_IFNE,
-    &&jump_SPerl_BYTECODE_C_CODE_IFLT,
-    &&jump_SPerl_BYTECODE_C_CODE_IFGE,
-    &&jump_SPerl_BYTECODE_C_CODE_IFGT,
-    &&jump_SPerl_BYTECODE_C_CODE_IFLE,
-    &&jump_SPerl_BYTECODE_C_CODE_IF_LCMPEQ,
-    &&jump_SPerl_BYTECODE_C_CODE_IF_LCMPNE,
-    &&jump_SPerl_BYTECODE_C_CODE_IF_LCMPLT,
-    &&jump_SPerl_BYTECODE_C_CODE_IF_LCMPGE,
-    &&jump_SPerl_BYTECODE_C_CODE_IF_LCMPGT,
-    &&jump_SPerl_BYTECODE_C_CODE_IF_LCMPLE,
-    &&jump_SPerl_BYTECODE_C_CODE_IF_ACMPEQ,
-    &&jump_SPerl_BYTECODE_C_CODE_IF_ACMPNE,
-    &&jump_SPerl_BYTECODE_C_CODE_GOTO,
-    &&jump_SPerl_BYTECODE_C_CODE_TABLESWITCH,
-    &&jump_SPerl_BYTECODE_C_CODE_LOOKUPSWITCH,
-    &&jump_SPerl_BYTECODE_C_CODE_ARRAYLENGTH,
-    &&jump_SPerl_BYTECODE_C_CODE_ATHROW,
-    &&jump_SPerl_BYTECODE_C_CODE_WIDE,
-    &&jump_SPerl_BYTECODE_C_CODE_IFNULL,
-    &&jump_SPerl_BYTECODE_C_CODE_IFNONNULL,
-    &&jump_SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW,
-    &&jump_SPerl_BYTECODE_C_CODE_LDC_WW,
-    &&jump_SPerl_BYTECODE_C_CODE_BGETFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_SGETFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_IGETFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_LGETFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_FGETFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_DGETFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_BPUTFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_SPUTFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_IPUTFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_LPUTFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_FPUTFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_DPUTFIELD,
-    &&jump_SPerl_BYTECODE_C_CODE_LINC,
-    &&jump_SPerl_BYTECODE_C_CODE_B2I,
-    &&jump_SPerl_BYTECODE_C_CODE_S2I,
-    &&jump_SPerl_BYTECODE_C_CODE_B2L,
-    &&jump_SPerl_BYTECODE_C_CODE_B2F,
-    &&jump_SPerl_BYTECODE_C_CODE_B2D,
-    &&jump_SPerl_BYTECODE_C_CODE_S2B,
-    &&jump_SPerl_BYTECODE_C_CODE_S2L,
-    &&jump_SPerl_BYTECODE_C_CODE_S2F,
-    &&jump_SPerl_BYTECODE_C_CODE_S2D,
-    &&jump_SPerl_BYTECODE_C_CODE_L2B,
-    &&jump_SPerl_BYTECODE_C_CODE_L2S,
-    &&jump_SPerl_BYTECODE_C_CODE_F2B,
-    &&jump_SPerl_BYTECODE_C_CODE_F2S,
-    &&jump_SPerl_BYTECODE_C_CODE_D2B,
-    &&jump_SPerl_BYTECODE_C_CODE_D2S,
-    &&jump_SPerl_BYTECODE_C_CODE_B2S,
-    &&jump_SPerl_BYTECODE_C_CODE_MALLOC,
-    &&jump_SPerl_BYTECODE_C_CODE_MALLOCARRAY,
-    &&jump_SPerl_BYTECODE_C_CODE_RETURN_VOID,
-    &&jump_SPerl_BYTECODE_C_CODE_RETURN_VALUE,
-    &&jump_SPerl_BYTECODE_C_CODE_LOAD,
-    &&jump_SPerl_BYTECODE_C_CODE_LOAD_0,
-    &&jump_SPerl_BYTECODE_C_CODE_LOAD_1,
-    &&jump_SPerl_BYTECODE_C_CODE_LOAD_2,
-    &&jump_SPerl_BYTECODE_C_CODE_LOAD_3,
-    &&jump_SPerl_BYTECODE_C_CODE_STORE,
-    &&jump_SPerl_BYTECODE_C_CODE_STORE_0,
-    &&jump_SPerl_BYTECODE_C_CODE_STORE_1,
-    &&jump_SPerl_BYTECODE_C_CODE_STORE_2,
-    &&jump_SPerl_BYTECODE_C_CODE_STORE_3,
-    &&jump_SPerl_BYTECODE_C_CODE_BADD,
-    &&jump_SPerl_BYTECODE_C_CODE_BSUB,
-    &&jump_SPerl_BYTECODE_C_CODE_BMUL,
-    &&jump_SPerl_BYTECODE_C_CODE_BDIV,
-    &&jump_SPerl_BYTECODE_C_CODE_BREM,
-    &&jump_SPerl_BYTECODE_C_CODE_BNEG,
-    &&jump_SPerl_BYTECODE_C_CODE_BSHL,
-    &&jump_SPerl_BYTECODE_C_CODE_BSHR,
-    &&jump_SPerl_BYTECODE_C_CODE_BUSHR,
-    &&jump_SPerl_BYTECODE_C_CODE_BAND,
-    &&jump_SPerl_BYTECODE_C_CODE_BOR ,
-    &&jump_SPerl_BYTECODE_C_CODE_BXOR,
-    &&jump_SPerl_BYTECODE_C_CODE_BCMP,
-    &&jump_SPerl_BYTECODE_C_CODE_SADD,
-    &&jump_SPerl_BYTECODE_C_CODE_SSUB,
-    &&jump_SPerl_BYTECODE_C_CODE_SMUL,
-    &&jump_SPerl_BYTECODE_C_CODE_SDIV,
-    &&jump_SPerl_BYTECODE_C_CODE_SREM,
-    &&jump_SPerl_BYTECODE_C_CODE_SNEG,
-    &&jump_SPerl_BYTECODE_C_CODE_SSHL,
-    &&jump_SPerl_BYTECODE_C_CODE_SSHR,
-    &&jump_SPerl_BYTECODE_C_CODE_SUSHR,
-    &&jump_SPerl_BYTECODE_C_CODE_SAND,
-    &&jump_SPerl_BYTECODE_C_CODE_SOR ,
-    &&jump_SPerl_BYTECODE_C_CODE_SXOR,
-    &&jump_SPerl_BYTECODE_C_CODE_SCMP,
-    &&jump_SPerl_BYTECODE_C_CODE_MALLOCSTRING,
-    &&jump_SPerl_BYTECODE_C_CODE_BINC,
-    &&jump_SPerl_BYTECODE_C_CODE_SINC,
+  static void* jump[] = {
+    &&case_SPerl_BYTECODE_C_CODE_NOP,
+    &&case_SPerl_BYTECODE_C_CODE_ACONST_NULL,
+    &&case_SPerl_BYTECODE_C_CODE_BCONST_0,
+    &&case_SPerl_BYTECODE_C_CODE_BCONST_1,
+    &&case_SPerl_BYTECODE_C_CODE_SCONST_0,
+    &&case_SPerl_BYTECODE_C_CODE_SCONST_1,
+    &&case_SPerl_BYTECODE_C_CODE_ICONST_M1,
+    &&case_SPerl_BYTECODE_C_CODE_ICONST_0,
+    &&case_SPerl_BYTECODE_C_CODE_ICONST_1,
+    &&case_SPerl_BYTECODE_C_CODE_ICONST_2,
+    &&case_SPerl_BYTECODE_C_CODE_ICONST_3,
+    &&case_SPerl_BYTECODE_C_CODE_ICONST_4,
+    &&case_SPerl_BYTECODE_C_CODE_ICONST_5,
+    &&case_SPerl_BYTECODE_C_CODE_LCONST_M1,
+    &&case_SPerl_BYTECODE_C_CODE_LCONST_0,
+    &&case_SPerl_BYTECODE_C_CODE_LCONST_1,
+    &&case_SPerl_BYTECODE_C_CODE_LCONST_2,
+    &&case_SPerl_BYTECODE_C_CODE_LCONST_3,
+    &&case_SPerl_BYTECODE_C_CODE_LCONST_4,
+    &&case_SPerl_BYTECODE_C_CODE_LCONST_5,
+    &&case_SPerl_BYTECODE_C_CODE_FCONST_0,
+    &&case_SPerl_BYTECODE_C_CODE_FCONST_1,
+    &&case_SPerl_BYTECODE_C_CODE_FCONST_2,
+    &&case_SPerl_BYTECODE_C_CODE_DCONST_0,
+    &&case_SPerl_BYTECODE_C_CODE_DCONST_1,
+    &&case_SPerl_BYTECODE_C_CODE_BBPUSH,
+    &&case_SPerl_BYTECODE_C_CODE_BSPUSH,
+    &&case_SPerl_BYTECODE_C_CODE_SSPUSH,
+    &&case_SPerl_BYTECODE_C_CODE_BIPUSH,
+    &&case_SPerl_BYTECODE_C_CODE_SIPUSH,
+    &&case_SPerl_BYTECODE_C_CODE_BLPUSH,
+    &&case_SPerl_BYTECODE_C_CODE_SLPUSH,
+    &&case_SPerl_BYTECODE_C_CODE_LDC,
+    &&case_SPerl_BYTECODE_C_CODE_LDC_W,
+    &&case_SPerl_BYTECODE_C_CODE_IALOAD,
+    &&case_SPerl_BYTECODE_C_CODE_LALOAD,
+    &&case_SPerl_BYTECODE_C_CODE_FALOAD,
+    &&case_SPerl_BYTECODE_C_CODE_DALOAD,
+    &&case_SPerl_BYTECODE_C_CODE_BALOAD,
+    &&case_SPerl_BYTECODE_C_CODE_SALOAD,
+    &&case_SPerl_BYTECODE_C_CODE_BASTORE,
+    &&case_SPerl_BYTECODE_C_CODE_SASTORE,
+    &&case_SPerl_BYTECODE_C_CODE_IASTORE,
+    &&case_SPerl_BYTECODE_C_CODE_LASTORE,
+    &&case_SPerl_BYTECODE_C_CODE_FASTORE,
+    &&case_SPerl_BYTECODE_C_CODE_DASTORE,
+    &&case_SPerl_BYTECODE_C_CODE_POP,
+    &&case_SPerl_BYTECODE_C_CODE_IADD,
+    &&case_SPerl_BYTECODE_C_CODE_LADD,
+    &&case_SPerl_BYTECODE_C_CODE_FADD,
+    &&case_SPerl_BYTECODE_C_CODE_DADD,
+    &&case_SPerl_BYTECODE_C_CODE_ISUB,
+    &&case_SPerl_BYTECODE_C_CODE_LSUB,
+    &&case_SPerl_BYTECODE_C_CODE_FSUB,
+    &&case_SPerl_BYTECODE_C_CODE_DSUB,
+    &&case_SPerl_BYTECODE_C_CODE_IMUL,
+    &&case_SPerl_BYTECODE_C_CODE_LMUL,
+    &&case_SPerl_BYTECODE_C_CODE_FMUL,
+    &&case_SPerl_BYTECODE_C_CODE_DMUL,
+    &&case_SPerl_BYTECODE_C_CODE_IDIV,
+    &&case_SPerl_BYTECODE_C_CODE_LDIV,
+    &&case_SPerl_BYTECODE_C_CODE_FDIV,
+    &&case_SPerl_BYTECODE_C_CODE_DDIV,
+    &&case_SPerl_BYTECODE_C_CODE_IREM,
+    &&case_SPerl_BYTECODE_C_CODE_LREM,
+    &&case_SPerl_BYTECODE_C_CODE_FREM,
+    &&case_SPerl_BYTECODE_C_CODE_DREM,
+    &&case_SPerl_BYTECODE_C_CODE_INEG,
+    &&case_SPerl_BYTECODE_C_CODE_LNEG,
+    &&case_SPerl_BYTECODE_C_CODE_FNEG,
+    &&case_SPerl_BYTECODE_C_CODE_DNEG,
+    &&case_SPerl_BYTECODE_C_CODE_ISHL,
+    &&case_SPerl_BYTECODE_C_CODE_LSHL,
+    &&case_SPerl_BYTECODE_C_CODE_ISHR,
+    &&case_SPerl_BYTECODE_C_CODE_LSHR,
+    &&case_SPerl_BYTECODE_C_CODE_IUSHR,
+    &&case_SPerl_BYTECODE_C_CODE_LUSHR,
+    &&case_SPerl_BYTECODE_C_CODE_IAND,
+    &&case_SPerl_BYTECODE_C_CODE_LAND,
+    &&case_SPerl_BYTECODE_C_CODE_IOR,
+    &&case_SPerl_BYTECODE_C_CODE_LOR,
+    &&case_SPerl_BYTECODE_C_CODE_IXOR,
+    &&case_SPerl_BYTECODE_C_CODE_LXOR,
+    &&case_SPerl_BYTECODE_C_CODE_IINC,
+    &&case_SPerl_BYTECODE_C_CODE_I2L,
+    &&case_SPerl_BYTECODE_C_CODE_I2F,
+    &&case_SPerl_BYTECODE_C_CODE_I2D,
+    &&case_SPerl_BYTECODE_C_CODE_L2I,
+    &&case_SPerl_BYTECODE_C_CODE_L2F,
+    &&case_SPerl_BYTECODE_C_CODE_L2D,
+    &&case_SPerl_BYTECODE_C_CODE_F2I,
+    &&case_SPerl_BYTECODE_C_CODE_F2L,
+    &&case_SPerl_BYTECODE_C_CODE_F2D,
+    &&case_SPerl_BYTECODE_C_CODE_D2I,
+    &&case_SPerl_BYTECODE_C_CODE_D2L,
+    &&case_SPerl_BYTECODE_C_CODE_D2F,
+    &&case_SPerl_BYTECODE_C_CODE_I2B,
+    &&case_SPerl_BYTECODE_C_CODE_I2S,
+    &&case_SPerl_BYTECODE_C_CODE_ICMP,
+    &&case_SPerl_BYTECODE_C_CODE_FCMPL,
+    &&case_SPerl_BYTECODE_C_CODE_FCMPG,
+    &&case_SPerl_BYTECODE_C_CODE_DCMPL,
+    &&case_SPerl_BYTECODE_C_CODE_DCMPG,
+    &&case_SPerl_BYTECODE_C_CODE_IFEQ,
+    &&case_SPerl_BYTECODE_C_CODE_IFNE,
+    &&case_SPerl_BYTECODE_C_CODE_IFLT,
+    &&case_SPerl_BYTECODE_C_CODE_IFGE,
+    &&case_SPerl_BYTECODE_C_CODE_IFGT,
+    &&case_SPerl_BYTECODE_C_CODE_IFLE,
+    &&case_SPerl_BYTECODE_C_CODE_IF_LCMPEQ,
+    &&case_SPerl_BYTECODE_C_CODE_IF_LCMPNE,
+    &&case_SPerl_BYTECODE_C_CODE_IF_LCMPLT,
+    &&case_SPerl_BYTECODE_C_CODE_IF_LCMPGE,
+    &&case_SPerl_BYTECODE_C_CODE_IF_LCMPGT,
+    &&case_SPerl_BYTECODE_C_CODE_IF_LCMPLE,
+    &&case_SPerl_BYTECODE_C_CODE_IF_ACMPEQ,
+    &&case_SPerl_BYTECODE_C_CODE_IF_ACMPNE,
+    &&case_SPerl_BYTECODE_C_CODE_GOTO,
+    &&case_SPerl_BYTECODE_C_CODE_TABLESWITCH,
+    &&case_SPerl_BYTECODE_C_CODE_LOOKUPSWITCH,
+    &&case_SPerl_BYTECODE_C_CODE_ARRAYLENGTH,
+    &&case_SPerl_BYTECODE_C_CODE_ATHROW,
+    &&case_SPerl_BYTECODE_C_CODE_WIDE,
+    &&case_SPerl_BYTECODE_C_CODE_IFNULL,
+    &&case_SPerl_BYTECODE_C_CODE_IFNONNULL,
+    &&case_SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW,
+    &&case_SPerl_BYTECODE_C_CODE_LDC_WW,
+    &&case_SPerl_BYTECODE_C_CODE_BGETFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_SGETFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_IGETFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_LGETFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_FGETFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_DGETFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_BPUTFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_SPUTFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_IPUTFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_LPUTFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_FPUTFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_DPUTFIELD,
+    &&case_SPerl_BYTECODE_C_CODE_LINC,
+    &&case_SPerl_BYTECODE_C_CODE_B2I,
+    &&case_SPerl_BYTECODE_C_CODE_S2I,
+    &&case_SPerl_BYTECODE_C_CODE_B2L,
+    &&case_SPerl_BYTECODE_C_CODE_B2F,
+    &&case_SPerl_BYTECODE_C_CODE_B2D,
+    &&case_SPerl_BYTECODE_C_CODE_S2B,
+    &&case_SPerl_BYTECODE_C_CODE_S2L,
+    &&case_SPerl_BYTECODE_C_CODE_S2F,
+    &&case_SPerl_BYTECODE_C_CODE_S2D,
+    &&case_SPerl_BYTECODE_C_CODE_L2B,
+    &&case_SPerl_BYTECODE_C_CODE_L2S,
+    &&case_SPerl_BYTECODE_C_CODE_F2B,
+    &&case_SPerl_BYTECODE_C_CODE_F2S,
+    &&case_SPerl_BYTECODE_C_CODE_D2B,
+    &&case_SPerl_BYTECODE_C_CODE_D2S,
+    &&case_SPerl_BYTECODE_C_CODE_B2S,
+    &&case_SPerl_BYTECODE_C_CODE_MALLOC,
+    &&case_SPerl_BYTECODE_C_CODE_MALLOCARRAY,
+    &&case_SPerl_BYTECODE_C_CODE_RETURN_VOID,
+    &&case_SPerl_BYTECODE_C_CODE_RETURN_VALUE,
+    &&case_SPerl_BYTECODE_C_CODE_LOAD,
+    &&case_SPerl_BYTECODE_C_CODE_LOAD_0,
+    &&case_SPerl_BYTECODE_C_CODE_LOAD_1,
+    &&case_SPerl_BYTECODE_C_CODE_LOAD_2,
+    &&case_SPerl_BYTECODE_C_CODE_LOAD_3,
+    &&case_SPerl_BYTECODE_C_CODE_STORE,
+    &&case_SPerl_BYTECODE_C_CODE_STORE_0,
+    &&case_SPerl_BYTECODE_C_CODE_STORE_1,
+    &&case_SPerl_BYTECODE_C_CODE_STORE_2,
+    &&case_SPerl_BYTECODE_C_CODE_STORE_3,
+    &&case_SPerl_BYTECODE_C_CODE_BADD,
+    &&case_SPerl_BYTECODE_C_CODE_BSUB,
+    &&case_SPerl_BYTECODE_C_CODE_BMUL,
+    &&case_SPerl_BYTECODE_C_CODE_BDIV,
+    &&case_SPerl_BYTECODE_C_CODE_BREM,
+    &&case_SPerl_BYTECODE_C_CODE_BNEG,
+    &&case_SPerl_BYTECODE_C_CODE_BSHL,
+    &&case_SPerl_BYTECODE_C_CODE_BSHR,
+    &&case_SPerl_BYTECODE_C_CODE_BUSHR,
+    &&case_SPerl_BYTECODE_C_CODE_BAND,
+    &&case_SPerl_BYTECODE_C_CODE_BOR ,
+    &&case_SPerl_BYTECODE_C_CODE_BXOR,
+    &&case_SPerl_BYTECODE_C_CODE_BCMP,
+    &&case_SPerl_BYTECODE_C_CODE_SADD,
+    &&case_SPerl_BYTECODE_C_CODE_SSUB,
+    &&case_SPerl_BYTECODE_C_CODE_SMUL,
+    &&case_SPerl_BYTECODE_C_CODE_SDIV,
+    &&case_SPerl_BYTECODE_C_CODE_SREM,
+    &&case_SPerl_BYTECODE_C_CODE_SNEG,
+    &&case_SPerl_BYTECODE_C_CODE_SSHL,
+    &&case_SPerl_BYTECODE_C_CODE_SSHR,
+    &&case_SPerl_BYTECODE_C_CODE_SUSHR,
+    &&case_SPerl_BYTECODE_C_CODE_SAND,
+    &&case_SPerl_BYTECODE_C_CODE_SOR ,
+    &&case_SPerl_BYTECODE_C_CODE_SXOR,
+    &&case_SPerl_BYTECODE_C_CODE_SCMP,
+    &&case_SPerl_BYTECODE_C_CODE_MALLOCSTRING,
+    &&case_SPerl_BYTECODE_C_CODE_BINC,
+    &&case_SPerl_BYTECODE_C_CODE_SINC,
   };
   
   // Goto subroutine
   goto CALLSUB_COMMON;
   
-  // while (1) {
-    // switch (*pc) {
-      /* case */ jump_SPerl_BYTECODE_C_CODE_NOP:
+  while (1) {
+    switch (*pc) {
+      case_SPerl_BYTECODE_C_CODE_NOP:
         // Not used
         assert(0);
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ACONST_NULL:
+      case_SPerl_BYTECODE_C_CODE_ACONST_NULL:
         operand_stack_top++;
         *(intptr_t*)&call_stack[operand_stack_top] = (intptr_t)NULL;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BCONST_0:
+      case_SPerl_BYTECODE_C_CODE_BCONST_0:
         operand_stack_top++;
         *(int8_t*)&call_stack[operand_stack_top] = 0;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BCONST_1:
+      case_SPerl_BYTECODE_C_CODE_BCONST_1:
         operand_stack_top++;
         *(int8_t*)&call_stack[operand_stack_top] = 1;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SCONST_0:
+      case_SPerl_BYTECODE_C_CODE_SCONST_0:
         operand_stack_top++;
         *(int16_t*)&call_stack[operand_stack_top] = 0;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SCONST_1:
+      case_SPerl_BYTECODE_C_CODE_SCONST_1:
         operand_stack_top++;
         *(int16_t*)&call_stack[operand_stack_top] = 1;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ICONST_M1:
+      case_SPerl_BYTECODE_C_CODE_ICONST_M1:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = -1;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ICONST_0:
+      case_SPerl_BYTECODE_C_CODE_ICONST_0:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 0;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ICONST_1:
+      case_SPerl_BYTECODE_C_CODE_ICONST_1:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 1;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ICONST_2:
+      case_SPerl_BYTECODE_C_CODE_ICONST_2:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 2;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ICONST_3:
+      case_SPerl_BYTECODE_C_CODE_ICONST_3:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 3;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ICONST_4:
+      case_SPerl_BYTECODE_C_CODE_ICONST_4:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 4;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ICONST_5:
+      case_SPerl_BYTECODE_C_CODE_ICONST_5:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 5;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LCONST_M1:
+      case_SPerl_BYTECODE_C_CODE_LCONST_M1:
         operand_stack_top++;
         call_stack[operand_stack_top] = -1L;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LCONST_0:
+      case_SPerl_BYTECODE_C_CODE_LCONST_0:
         operand_stack_top++;
         call_stack[operand_stack_top] = 0L;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LCONST_1:
+      case_SPerl_BYTECODE_C_CODE_LCONST_1:
         operand_stack_top++;
         call_stack[operand_stack_top] = 1L;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LCONST_2:
+      case_SPerl_BYTECODE_C_CODE_LCONST_2:
         
         operand_stack_top++;
         call_stack[operand_stack_top] = 2L;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LCONST_3:
+      case_SPerl_BYTECODE_C_CODE_LCONST_3:
         operand_stack_top++;
         call_stack[operand_stack_top] = 3L;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LCONST_4:
+      case_SPerl_BYTECODE_C_CODE_LCONST_4:
         operand_stack_top++;
         call_stack[operand_stack_top] = 4L;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LCONST_5:
+      case_SPerl_BYTECODE_C_CODE_LCONST_5:
         operand_stack_top++;
         call_stack[operand_stack_top] = 5L;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FCONST_0:
+      case_SPerl_BYTECODE_C_CODE_FCONST_0:
         operand_stack_top++;
         *((float*)&call_stack[operand_stack_top]) = 0.F;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FCONST_1:
+      case_SPerl_BYTECODE_C_CODE_FCONST_1:
         operand_stack_top++;
         *((float*)&call_stack[operand_stack_top]) = 1.F;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FCONST_2:
+      case_SPerl_BYTECODE_C_CODE_FCONST_2:
         operand_stack_top++;
         *((float*)&call_stack[operand_stack_top]) = 2.F;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DCONST_0:
+      case_SPerl_BYTECODE_C_CODE_DCONST_0:
         operand_stack_top++;
         *(double*)&call_stack[operand_stack_top] = 0.0;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DCONST_1:
+      case_SPerl_BYTECODE_C_CODE_DCONST_1:
         operand_stack_top++;
         *(double*)&call_stack[operand_stack_top] = 1.0;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BBPUSH:
+      case_SPerl_BYTECODE_C_CODE_BBPUSH:
         operand_stack_top++;
         *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*pc;
         pc += 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BSPUSH:
+      case_SPerl_BYTECODE_C_CODE_BSPUSH:
         operand_stack_top++;
         *(int16_t*)&call_stack[operand_stack_top] = (int8_t)*pc;
         pc += 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SSPUSH:
+      case_SPerl_BYTECODE_C_CODE_SSPUSH:
         operand_stack_top++;
         *(int16_t*)&call_stack[operand_stack_top] = (int16_t)((int16_t)(*(pc + 1) << 8) +  *(pc + 2));
         pc += 3;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BIPUSH:
+      case_SPerl_BYTECODE_C_CODE_BIPUSH:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = (int8_t)*(pc + 1);
         pc += 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SLPUSH:
+      case_SPerl_BYTECODE_C_CODE_SLPUSH:
         operand_stack_top++;
         call_stack[operand_stack_top] = (int16_t)((int16_t)(*(pc + 1) << 8) +  *(pc + 2));
         pc += 3;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BLPUSH:
+      case_SPerl_BYTECODE_C_CODE_BLPUSH:
         operand_stack_top++;
         call_stack[operand_stack_top] = (int8_t)*(pc + 1);
         pc += 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SIPUSH:
+      case_SPerl_BYTECODE_C_CODE_SIPUSH:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = (int16_t)((int16_t)(*(pc + 1) << 8) +  *(pc + 2));
         pc += 3;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LDC:
+      case_SPerl_BYTECODE_C_CODE_LDC:
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[*(pc + 1)];
         pc += 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LDC_W:
+      case_SPerl_BYTECODE_C_CODE_LDC_W:
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[(*(pc + 1) << 8) + *(pc + 2)];
         pc += 3;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LDC_WW:
+      case_SPerl_BYTECODE_C_CODE_LDC_WW:
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
         pc += 5;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_MALLOCSTRING: {
+      case_SPerl_BYTECODE_C_CODE_MALLOCSTRING: {
         int64_t* string_info_ptr = &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
         
         int64_t length = string_info_ptr[0];
@@ -571,568 +571,568 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LOAD:
+      case_SPerl_BYTECODE_C_CODE_LOAD:
         operand_stack_top++;
         call_stack[operand_stack_top] = vars[*(pc + 1)];
         pc += 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LOAD_0:
+      case_SPerl_BYTECODE_C_CODE_LOAD_0:
         operand_stack_top++;
         call_stack[operand_stack_top] = vars[0];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LOAD_1:
+      case_SPerl_BYTECODE_C_CODE_LOAD_1:
         operand_stack_top++;
         call_stack[operand_stack_top] = vars[1];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LOAD_2:
+      case_SPerl_BYTECODE_C_CODE_LOAD_2:
         operand_stack_top++;
         call_stack[operand_stack_top] = vars[2];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LOAD_3:
+      case_SPerl_BYTECODE_C_CODE_LOAD_3:
         operand_stack_top++;
         call_stack[operand_stack_top] = vars[3];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IALOAD:
+      case_SPerl_BYTECODE_C_CODE_IALOAD:
         *(int32_t*)&call_stack[operand_stack_top - 1]
           = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LALOAD:
+      case_SPerl_BYTECODE_C_CODE_LALOAD:
         call_stack[operand_stack_top - 1]
           = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FALOAD:
+      case_SPerl_BYTECODE_C_CODE_FALOAD:
         *(float*)&call_stack[operand_stack_top - 1]
           = *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(float) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DALOAD:
+      case_SPerl_BYTECODE_C_CODE_DALOAD:
         *(double*)&call_stack[operand_stack_top - 1]
           = *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(double) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BALOAD:
+      case_SPerl_BYTECODE_C_CODE_BALOAD:
         *(int8_t*)&call_stack[operand_stack_top - 1]
           = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SALOAD:
+      case_SPerl_BYTECODE_C_CODE_SALOAD:
         *(int16_t*)&call_stack[operand_stack_top - 1]
           = *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_STORE:
+      case_SPerl_BYTECODE_C_CODE_STORE:
         vars[*(pc + 1)] = call_stack[operand_stack_top];
         operand_stack_top--;
         pc += 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_STORE_0:
+      case_SPerl_BYTECODE_C_CODE_STORE_0:
         vars[0] = call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_STORE_1:
+      case_SPerl_BYTECODE_C_CODE_STORE_1:
         vars[1] = call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_STORE_2:
+      case_SPerl_BYTECODE_C_CODE_STORE_2:
         vars[2] = call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_STORE_3:
+      case_SPerl_BYTECODE_C_CODE_STORE_3:
         vars[3] = call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BASTORE:
+      case_SPerl_BYTECODE_C_CODE_BASTORE:
         *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * (intptr_t)call_stack[operand_stack_top - 1])
           = *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SASTORE:
+      case_SPerl_BYTECODE_C_CODE_SASTORE:
         *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * (intptr_t)call_stack[operand_stack_top - 1])
           = *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IASTORE:
+      case_SPerl_BYTECODE_C_CODE_IASTORE:
         *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * (intptr_t)call_stack[operand_stack_top - 1])
           = *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LASTORE:
+      case_SPerl_BYTECODE_C_CODE_LASTORE:
         *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * (intptr_t)call_stack[operand_stack_top - 1])
           = call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FASTORE:
+      case_SPerl_BYTECODE_C_CODE_FASTORE:
         *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(float) * (intptr_t)call_stack[operand_stack_top - 1])
           = *(float*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DASTORE:
+      case_SPerl_BYTECODE_C_CODE_DASTORE:
         *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(double) * (intptr_t)call_stack[operand_stack_top - 1])
           = *(double*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_POP:
+      case_SPerl_BYTECODE_C_CODE_POP:
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BADD:
+      case_SPerl_BYTECODE_C_CODE_BADD:
         *(int8_t*)&call_stack[operand_stack_top - 1] += *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SADD:
+      case_SPerl_BYTECODE_C_CODE_SADD:
         *(int16_t*)&call_stack[operand_stack_top - 1] += *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IADD:
+      case_SPerl_BYTECODE_C_CODE_IADD:
         *(int32_t*)&call_stack[operand_stack_top - 1] += *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LADD:
+      case_SPerl_BYTECODE_C_CODE_LADD:
         call_stack[operand_stack_top - 1] += call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FADD:
+      case_SPerl_BYTECODE_C_CODE_FADD:
         *((float*)&call_stack[operand_stack_top -1]) += *(float*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DADD:
+      case_SPerl_BYTECODE_C_CODE_DADD:
         *((double*)&call_stack[operand_stack_top - 1]) += *(double*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BSUB:
+      case_SPerl_BYTECODE_C_CODE_BSUB:
         *(int8_t*)&call_stack[operand_stack_top - 1] -= *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SSUB:
+      case_SPerl_BYTECODE_C_CODE_SSUB:
         *(int16_t*)&call_stack[operand_stack_top - 1] -= *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ISUB:
+      case_SPerl_BYTECODE_C_CODE_ISUB:
         *(int32_t*)&call_stack[operand_stack_top - 1] -= *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LSUB:
+      case_SPerl_BYTECODE_C_CODE_LSUB:
         call_stack[operand_stack_top - 1] -= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FSUB:
+      case_SPerl_BYTECODE_C_CODE_FSUB:
         *((float*)&call_stack[operand_stack_top - 1]) -= *(float*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DSUB:
+      case_SPerl_BYTECODE_C_CODE_DSUB:
         *((double*)&call_stack[operand_stack_top - 1]) -= *(double*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BMUL:
+      case_SPerl_BYTECODE_C_CODE_BMUL:
         *(int8_t*)&call_stack[operand_stack_top - 1] *= *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SMUL:
+      case_SPerl_BYTECODE_C_CODE_SMUL:
         *(int16_t*)&call_stack[operand_stack_top - 1] *= *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IMUL:
+      case_SPerl_BYTECODE_C_CODE_IMUL:
         *(int32_t*)&call_stack[operand_stack_top - 1] *= *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LMUL:
+      case_SPerl_BYTECODE_C_CODE_LMUL:
         call_stack[operand_stack_top - 1] *= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FMUL:
+      case_SPerl_BYTECODE_C_CODE_FMUL:
         *(float*)&call_stack[operand_stack_top - 1] *= *(float*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DMUL:
+      case_SPerl_BYTECODE_C_CODE_DMUL:
         *(double*)&call_stack[operand_stack_top - 1] *= *(double*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BDIV:
+      case_SPerl_BYTECODE_C_CODE_BDIV:
         *(int8_t*)&call_stack[operand_stack_top - 1] /= *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SDIV:
+      case_SPerl_BYTECODE_C_CODE_SDIV:
         *(int16_t*)&call_stack[operand_stack_top - 1] /= *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IDIV:
+      case_SPerl_BYTECODE_C_CODE_IDIV:
         *(int32_t*)&call_stack[operand_stack_top - 1] /= *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LDIV:
+      case_SPerl_BYTECODE_C_CODE_LDIV:
         call_stack[operand_stack_top - 1] /= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FDIV:
+      case_SPerl_BYTECODE_C_CODE_FDIV:
         *(float*)&call_stack[operand_stack_top - 1] /= *(float*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DDIV:
+      case_SPerl_BYTECODE_C_CODE_DDIV:
         *(double*)&call_stack[operand_stack_top - 1] /= *(double*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BREM:
+      case_SPerl_BYTECODE_C_CODE_BREM:
         *(int8_t*)&call_stack[operand_stack_top - 1] = *(int8_t*)&call_stack[operand_stack_top - 1] % *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SREM:
+      case_SPerl_BYTECODE_C_CODE_SREM:
         *(int16_t*)&call_stack[operand_stack_top - 1] = *(int16_t*)&call_stack[operand_stack_top - 1] % *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IREM:
+      case_SPerl_BYTECODE_C_CODE_IREM:
         *(int32_t*)&call_stack[operand_stack_top - 1] = *(int32_t*)&call_stack[operand_stack_top - 1] % *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LREM:
+      case_SPerl_BYTECODE_C_CODE_LREM:
         // z = a - (a/b) * b;
         call_stack[operand_stack_top - 1] = call_stack[operand_stack_top - 1] % call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FREM:
+      case_SPerl_BYTECODE_C_CODE_FREM:
         *((float*)&call_stack[operand_stack_top - 1]) = (float)fmod((double)*((float*)&call_stack[operand_stack_top - 1]), (double)*(float*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DREM:
+      case_SPerl_BYTECODE_C_CODE_DREM:
         *((double*)&call_stack[operand_stack_top - 1]) = fmod(*(double*)&call_stack[operand_stack_top - 1], *(double*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BNEG:
+      case_SPerl_BYTECODE_C_CODE_BNEG:
         *(int8_t*)&call_stack[operand_stack_top] = -*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SNEG:
+      case_SPerl_BYTECODE_C_CODE_SNEG:
         *(int16_t*)&call_stack[operand_stack_top] = -*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_INEG:
+      case_SPerl_BYTECODE_C_CODE_INEG:
         *(int32_t*)&call_stack[operand_stack_top] = -*(int32_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LNEG:
+      case_SPerl_BYTECODE_C_CODE_LNEG:
         call_stack[operand_stack_top] = -call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FNEG:
+      case_SPerl_BYTECODE_C_CODE_FNEG:
         *((float*)&call_stack[operand_stack_top]) = -*((float*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DNEG:
+      case_SPerl_BYTECODE_C_CODE_DNEG:
         *((double*)&call_stack[operand_stack_top]) = -*((double*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BSHL:
+      case_SPerl_BYTECODE_C_CODE_BSHL:
         *(int8_t*)&call_stack[operand_stack_top - 1] <<= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SSHL:
+      case_SPerl_BYTECODE_C_CODE_SSHL:
         *(int16_t*)&call_stack[operand_stack_top - 1] <<= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ISHL:
+      case_SPerl_BYTECODE_C_CODE_ISHL:
         *(int32_t*)&call_stack[operand_stack_top - 1] <<= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LSHL:
+      case_SPerl_BYTECODE_C_CODE_LSHL:
         call_stack[operand_stack_top - 1] <<= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BSHR:
+      case_SPerl_BYTECODE_C_CODE_BSHR:
         *(int8_t*)&call_stack[operand_stack_top - 1] >>= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SSHR:
+      case_SPerl_BYTECODE_C_CODE_SSHR:
         *(int16_t*)&call_stack[operand_stack_top - 1] >>= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ISHR:
+      case_SPerl_BYTECODE_C_CODE_ISHR:
         *(int32_t*)&call_stack[operand_stack_top - 1] >>= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LSHR:
+      case_SPerl_BYTECODE_C_CODE_LSHR:
         call_stack[operand_stack_top - 1] >>= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BUSHR:
+      case_SPerl_BYTECODE_C_CODE_BUSHR:
         *(int8_t*)&call_stack[operand_stack_top - 1] = (*(int8_t*)&call_stack[operand_stack_top - 1] >> call_stack[operand_stack_top]) & 0xFF;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SUSHR:
+      case_SPerl_BYTECODE_C_CODE_SUSHR:
         *(int8_t*)&call_stack[operand_stack_top - 1] = (*(int16_t*)&call_stack[operand_stack_top - 1] >> call_stack[operand_stack_top]) & 0xFFFF;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IUSHR:
+      case_SPerl_BYTECODE_C_CODE_IUSHR:
         *(int32_t*)&call_stack[operand_stack_top - 1] = (*(int32_t*)&call_stack[operand_stack_top - 1] >> call_stack[operand_stack_top]) & 0xFFFFFFFF;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LUSHR:
+      case_SPerl_BYTECODE_C_CODE_LUSHR:
         call_stack[operand_stack_top - 1] = (call_stack[operand_stack_top - 1] >> call_stack[operand_stack_top]) & 0xFFFFFFFFFFFFFFFF;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BAND:
+      case_SPerl_BYTECODE_C_CODE_BAND:
         *(int8_t*)&call_stack[operand_stack_top - 1] &= *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SAND:
+      case_SPerl_BYTECODE_C_CODE_SAND:
         *(int16_t*)&call_stack[operand_stack_top - 1] &= *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IAND:
+      case_SPerl_BYTECODE_C_CODE_IAND:
         *(int32_t*)&call_stack[operand_stack_top - 1] &= *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LAND:
+      case_SPerl_BYTECODE_C_CODE_LAND:
         call_stack[operand_stack_top - 1] &= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BOR:
+      case_SPerl_BYTECODE_C_CODE_BOR:
         *(int8_t*)&call_stack[operand_stack_top - 1] |= *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SOR:
+      case_SPerl_BYTECODE_C_CODE_SOR:
         *(int16_t*)&call_stack[operand_stack_top - 1] |= *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IOR:
+      case_SPerl_BYTECODE_C_CODE_IOR:
         *(int32_t*)&call_stack[operand_stack_top - 1] |= *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LOR:
+      case_SPerl_BYTECODE_C_CODE_LOR:
         call_stack[operand_stack_top - 1] |= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BXOR:
+      case_SPerl_BYTECODE_C_CODE_BXOR:
         *(int8_t*)&call_stack[operand_stack_top - 1] ^= *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SXOR:
+      case_SPerl_BYTECODE_C_CODE_SXOR:
         *(int16_t*)&call_stack[operand_stack_top - 1] ^= *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IXOR:
+      case_SPerl_BYTECODE_C_CODE_IXOR:
         *(int32_t*)&call_stack[operand_stack_top - 1] ^= *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LXOR:
+      case_SPerl_BYTECODE_C_CODE_LXOR:
         call_stack[operand_stack_top - 1] ^= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BINC:
+      case_SPerl_BYTECODE_C_CODE_BINC:
         *(int8_t*)&vars[*(pc + 1)] += (int8_t)*(pc + 2);
         pc += 3;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SINC:
+      case_SPerl_BYTECODE_C_CODE_SINC:
         *(int16_t*)&vars[*(pc + 1)] += (int8_t)*(pc + 2);
         pc += 3;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IINC:
+      case_SPerl_BYTECODE_C_CODE_IINC:
         *(int32_t*)&vars[*(pc + 1)] += (int8_t)*(pc + 2);
         pc += 3;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LINC:
+      case_SPerl_BYTECODE_C_CODE_LINC:
         vars[*(pc + 1)] += (int8_t)*(pc + 2);
         pc += 3;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_I2L:
+      case_SPerl_BYTECODE_C_CODE_I2L:
         call_stack[operand_stack_top] = (int64_t)*(int32_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_I2F:
+      case_SPerl_BYTECODE_C_CODE_I2F:
         *((float*)&call_stack[operand_stack_top]) = (float)*(int32_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_I2D:
+      case_SPerl_BYTECODE_C_CODE_I2D:
         *((double*)&call_stack[operand_stack_top]) = (double)*(int32_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_L2I:
+      case_SPerl_BYTECODE_C_CODE_L2I:
         call_stack[operand_stack_top] = (int32_t)call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_L2F:
+      case_SPerl_BYTECODE_C_CODE_L2F:
         *((float*)&call_stack[operand_stack_top]) = (float)*((int64_t*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_L2D:
+      case_SPerl_BYTECODE_C_CODE_L2D:
         *((double*)&call_stack[operand_stack_top]) = (double)*((int64_t*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_F2I:
+      case_SPerl_BYTECODE_C_CODE_F2I:
         *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*((float*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_F2L:
+      case_SPerl_BYTECODE_C_CODE_F2L:
         call_stack[operand_stack_top] = (int64_t)*((float*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_F2D:
+      case_SPerl_BYTECODE_C_CODE_F2D:
         *((double*)&call_stack[operand_stack_top]) = (double)*((float*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_D2I:
+      case_SPerl_BYTECODE_C_CODE_D2I:
         *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*((double*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_D2L:
+      case_SPerl_BYTECODE_C_CODE_D2L:
         call_stack[operand_stack_top] = (int64_t)*((double*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_D2F:
+      case_SPerl_BYTECODE_C_CODE_D2F:
         *((float*)&call_stack[operand_stack_top]) = (float)*((double*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_I2B:
+      case_SPerl_BYTECODE_C_CODE_I2B:
         *(int8_t*)&call_stack[operand_stack_top] = (int8_t)(*(int32_t*)&call_stack[operand_stack_top] & 0xFF);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_I2S:
+      case_SPerl_BYTECODE_C_CODE_I2S:
         *(int16_t*)&call_stack[operand_stack_top] = (int16_t)(*(int32_t*)&call_stack[operand_stack_top] & 0xFFFF);
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_B2I:
+      case_SPerl_BYTECODE_C_CODE_B2I:
         *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_S2I:
+      case_SPerl_BYTECODE_C_CODE_S2I:
         *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_B2L:
+      case_SPerl_BYTECODE_C_CODE_B2L:
         call_stack[operand_stack_top] = (int64_t)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_B2F:
+      case_SPerl_BYTECODE_C_CODE_B2F:
         *(float*)&call_stack[operand_stack_top] = (float)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_B2D:
+      case_SPerl_BYTECODE_C_CODE_B2D:
         *(double*)&call_stack[operand_stack_top] = (double)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_S2B:
+      case_SPerl_BYTECODE_C_CODE_S2B:
         *(int8_t*)&call_stack[operand_stack_top] = *(int16_t*)&call_stack[operand_stack_top] & 0xFF;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_S2L:
+      case_SPerl_BYTECODE_C_CODE_S2L:
         call_stack[operand_stack_top] = (int64_t)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_S2F:
+      case_SPerl_BYTECODE_C_CODE_S2F:
         *(float*)&call_stack[operand_stack_top] = (float)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_S2D:
+      case_SPerl_BYTECODE_C_CODE_S2D:
         *(double*)&call_stack[operand_stack_top] = (double)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_L2B:
+      case_SPerl_BYTECODE_C_CODE_L2B:
         *(int8_t*)&call_stack[operand_stack_top] = call_stack[operand_stack_top] & 0xFF;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_L2S:
+      case_SPerl_BYTECODE_C_CODE_L2S:
         *(int16_t*)&call_stack[operand_stack_top] = call_stack[operand_stack_top] & 0xFFFF;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_F2B:
+      case_SPerl_BYTECODE_C_CODE_F2B:
         // TODO
         *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*(float*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_F2S:
+      case_SPerl_BYTECODE_C_CODE_F2S:
         // TODO
         *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(float*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_D2B:
+      case_SPerl_BYTECODE_C_CODE_D2B:
         // TODO
         *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*(double*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_D2S:
+      case_SPerl_BYTECODE_C_CODE_D2S:
         // TODO
         *(int8_t*)&call_stack[operand_stack_top] = (int16_t)*(double*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_B2S:
+      case_SPerl_BYTECODE_C_CODE_B2S:
         *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BCMP:
+      case_SPerl_BYTECODE_C_CODE_BCMP:
         // z = (x > y) + (x < y) * -1
         call_stack[operand_stack_top - 1]
           = (*(int8_t*)&call_stack[operand_stack_top - 1] > *(int8_t*)&call_stack[operand_stack_top])
@@ -1140,7 +1140,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SCMP:
+      case_SPerl_BYTECODE_C_CODE_SCMP:
         // z = (x > y) + (x < y) * -1
         call_stack[operand_stack_top - 1]
           = (*(int16_t*)&call_stack[operand_stack_top - 1] > *(int16_t*)&call_stack[operand_stack_top])
@@ -1148,7 +1148,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ICMP:
+      case_SPerl_BYTECODE_C_CODE_ICMP:
         // z = (x > y) + (x < y) * -1
         call_stack[operand_stack_top - 1]
           = (*(int32_t*)&call_stack[operand_stack_top - 1] > *(int32_t*)&call_stack[operand_stack_top])
@@ -1156,7 +1156,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FCMPL:
+      case_SPerl_BYTECODE_C_CODE_FCMPL:
         call_stack[operand_stack_top - 1]
           = (*(float*)&call_stack[operand_stack_top - 1] > *(float*)&call_stack[operand_stack_top])
           + (*(float*)&call_stack[operand_stack_top - 1] < *(float*)&call_stack[operand_stack_top]) * -1
@@ -1167,7 +1167,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FCMPG:
+      case_SPerl_BYTECODE_C_CODE_FCMPG:
         call_stack[operand_stack_top - 1]
           = (*(float*)&call_stack[operand_stack_top - 1] > *(float*)&call_stack[operand_stack_top])
           + (*(float*)&call_stack[operand_stack_top - 1] < *(float*)&call_stack[operand_stack_top]) * -1
@@ -1178,7 +1178,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DCMPL:
+      case_SPerl_BYTECODE_C_CODE_DCMPL:
         call_stack[operand_stack_top - 1]
           = (*(double*)&call_stack[operand_stack_top - 1] > *(double*)&call_stack[operand_stack_top])
           + (*(double*)&call_stack[operand_stack_top - 1] < *(double*)&call_stack[operand_stack_top]) * -1
@@ -1189,7 +1189,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DCMPG:
+      case_SPerl_BYTECODE_C_CODE_DCMPG:
         call_stack[operand_stack_top - 1]
           = (*(double*)&call_stack[operand_stack_top - 1] > *(double*)&call_stack[operand_stack_top])
           + (*(double*)&call_stack[operand_stack_top - 1] < *(double*)&call_stack[operand_stack_top]) * -1
@@ -1200,80 +1200,80 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IFEQ:
+      case_SPerl_BYTECODE_C_CODE_IFEQ:
         success = call_stack[operand_stack_top] == 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IFNE:
+      case_SPerl_BYTECODE_C_CODE_IFNE:
         success = call_stack[operand_stack_top] != 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IFLT:
+      case_SPerl_BYTECODE_C_CODE_IFLT:
         success = call_stack[operand_stack_top] < 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IFGE:
+      case_SPerl_BYTECODE_C_CODE_IFGE:
         success = call_stack[operand_stack_top] >= 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IFGT:
+      case_SPerl_BYTECODE_C_CODE_IFGT:
         success = call_stack[operand_stack_top] > 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IFLE:
+      case_SPerl_BYTECODE_C_CODE_IFLE:
         success = call_stack[operand_stack_top] <= 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IF_LCMPEQ:
+      case_SPerl_BYTECODE_C_CODE_IF_LCMPEQ:
         success = call_stack[operand_stack_top - 1] == call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IF_LCMPNE:
+      case_SPerl_BYTECODE_C_CODE_IF_LCMPNE:
         success = call_stack[operand_stack_top - 1] != call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IF_LCMPLT:
+      case_SPerl_BYTECODE_C_CODE_IF_LCMPLT:
         success = call_stack[operand_stack_top - 1] < call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IF_LCMPGE:
+      case_SPerl_BYTECODE_C_CODE_IF_LCMPGE:
         success = call_stack[operand_stack_top - 1] >= call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IF_LCMPGT:
+      case_SPerl_BYTECODE_C_CODE_IF_LCMPGT:
         success = call_stack[operand_stack_top - 1] > call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IF_LCMPLE:
+      case_SPerl_BYTECODE_C_CODE_IF_LCMPLE:
         success = call_stack[operand_stack_top - 1] <= call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IF_ACMPEQ:
+      case_SPerl_BYTECODE_C_CODE_IF_ACMPEQ:
         success = *(intptr_t*)&call_stack[operand_stack_top - 1] == *(intptr_t*)&call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IF_ACMPNE:
+      case_SPerl_BYTECODE_C_CODE_IF_ACMPNE:
         success = *(intptr_t*)&call_stack[operand_stack_top - 1] != *(intptr_t*)&call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_GOTO:
+      case_SPerl_BYTECODE_C_CODE_GOTO:
         pc += (int16_t)((*(pc + 1) << 8) +  *(pc + 2));
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_TABLESWITCH: {
+      case_SPerl_BYTECODE_C_CODE_TABLESWITCH: {
         // Padding
         int64_t padding = (sizeof(int64_t) - 1) - ((intptr_t)pc % sizeof(int64_t));
         
@@ -1296,7 +1296,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
+      case_SPerl_BYTECODE_C_CODE_LOOKUPSWITCH: {
 
         // Padding
         int64_t padding = (sizeof(int64_t) - 1) - ((intptr_t)pc % sizeof(int64_t));
@@ -1353,7 +1353,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_RETURN_VALUE: {
+      case_SPerl_BYTECODE_C_CODE_RETURN_VALUE: {
         
         // Return value
         int64_t return_value = call_stack[operand_stack_top];
@@ -1386,7 +1386,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_RETURN_VOID: {
+      case_SPerl_BYTECODE_C_CODE_RETURN_VOID: {
         // Finish call sub
         if (call_stack_base == 0) {
           sperl->abort = 0;
@@ -1409,7 +1409,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_MALLOC: {
+      case_SPerl_BYTECODE_C_CODE_MALLOC: {
         // Get subroutine ID
         int32_t package_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
@@ -1425,7 +1425,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_MALLOCARRAY: {
+      case_SPerl_BYTECODE_C_CODE_MALLOCARRAY: {
         int32_t resolved_type_id = *(pc + 1);
         
         // Array length
@@ -1463,11 +1463,11 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 2;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
+      case_SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
         call_stack[operand_stack_top] = *(int64_t*)*(intptr_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_ATHROW: {
+      case_SPerl_BYTECODE_C_CODE_ATHROW: {
         
         // Return value
         int64_t return_value = call_stack[operand_stack_top];
@@ -1500,7 +1500,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_WIDE:
+      case_SPerl_BYTECODE_C_CODE_WIDE:
         // iload, fload, aload, lload, dload, istore, fstore, astore, lstore, dstore, or iinc
         
         if (*(pc + 1) == SPerl_BYTECODE_C_CODE_LOAD) {
@@ -1530,17 +1530,17 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
           pc += 6;
         }
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IFNULL:
+      case_SPerl_BYTECODE_C_CODE_IFNULL:
         success = *(intptr_t*)&call_stack[operand_stack_top] == (intptr_t)NULL;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IFNONNULL:
+      case_SPerl_BYTECODE_C_CODE_IFNONNULL:
         success = *(intptr_t*)&call_stack[operand_stack_top] != (intptr_t)NULL;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      /* case */ jump_SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
+      case_SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
       {
 
         // Get subroutine ID
@@ -1667,7 +1667,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         }
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BGETFIELD: {
+      case_SPerl_BYTECODE_C_CODE_BGETFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1675,7 +1675,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SGETFIELD: {
+      case_SPerl_BYTECODE_C_CODE_SGETFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1683,7 +1683,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IGETFIELD: {
+      case_SPerl_BYTECODE_C_CODE_IGETFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1691,7 +1691,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LGETFIELD: {
+      case_SPerl_BYTECODE_C_CODE_LGETFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1699,7 +1699,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FGETFIELD: {
+      case_SPerl_BYTECODE_C_CODE_FGETFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1707,7 +1707,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DGETFIELD: {
+      case_SPerl_BYTECODE_C_CODE_DGETFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1715,7 +1715,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_BPUTFIELD: {
+      case_SPerl_BYTECODE_C_CODE_BPUTFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1724,7 +1724,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_SPUTFIELD: {
+      case_SPerl_BYTECODE_C_CODE_SPUTFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1733,7 +1733,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_IPUTFIELD: {
+      case_SPerl_BYTECODE_C_CODE_IPUTFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1742,7 +1742,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_LPUTFIELD: {
+      case_SPerl_BYTECODE_C_CODE_LPUTFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1751,7 +1751,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_FPUTFIELD: {
+      case_SPerl_BYTECODE_C_CODE_FPUTFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1760,7 +1760,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      /* case */ jump_SPerl_BYTECODE_C_CODE_DPUTFIELD: {
+      case_SPerl_BYTECODE_C_CODE_DPUTFIELD: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1769,6 +1769,6 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-    // }
-  // }
+    }
+  }
 }
