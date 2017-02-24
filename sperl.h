@@ -41,6 +41,7 @@ struct sperl_ {
   int32_t call_stack_capacity;
   _Bool abort;
   int64_t call_stack_base;
+  int64_t operand_stack_top;
 };
 
 SPerl* SPerl_new();

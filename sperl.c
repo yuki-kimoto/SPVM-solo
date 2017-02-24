@@ -34,6 +34,7 @@ void SPerl_init_env(SPerl* sperl) {
   sperl->call_stack_base = 0;
   sperl->ret = sperl->call_stack;
   sperl->abort = 0;
+  sperl->operand_stack_top = -1;
 }
 
 void SPerl_run(SPerl* sperl, const char* package_name) {
@@ -104,6 +105,7 @@ SPerl* SPerl_new() {
   sperl->call_stack_capacity = -1;
   
   sperl->call_stack_base = 0;
+  sperl->operand_stack_top = -1;
   
   return sperl;
 }
@@ -162,7 +164,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
   register uint8_t* pc = NULL;
   
   // Top position of operand stack
-  register int32_t operand_stack_top = -1;
+  register int64_t operand_stack_top = sperl->operand_stack_top;
   
   register int32_t success;
   
