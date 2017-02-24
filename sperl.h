@@ -45,6 +45,5 @@ struct sperl_ {
 
 SPerl* SPerl_new();
 void SPerl_free(SPerl* sperl);
-void SPerl_call_sub(SPerl* sperl, const char* sub_base_name);
 
 #endif
