@@ -32,7 +32,6 @@ void SPerl_init_env(SPerl* sperl) {
   }
   sperl->call_stack = (int64_t*) SPerl_ALLOCATOR_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
   sperl->call_stack_base = 0;
-  sperl->vars = sperl->call_stack;
   sperl->ret = sperl->call_stack;
   sperl->abort = 0;
 }
@@ -147,7 +146,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
   uint8_t* bytecodes = sperl->bytecode_array->values;
   
   // Variables
-  int64_t* vars = sperl->vars;
+  int64_t* vars = &sperl->call_stack[sperl->call_stack_base];
 
   // Constant pool sub
   SPerl_CONSTANT_POOL_SUB* constant_pool_sub;
@@ -1559,10 +1558,9 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         while (call_stack_max > sperl->call_stack_capacity) {
           sperl->call_stack_capacity = sperl->call_stack_capacity * 2;
-          intptr_t vars_offset = sperl->vars - sperl->call_stack;
+          intptr_t vars_offset = &sperl->call_stack[call_stack_base] - sperl->call_stack;
           intptr_t ret_offset = sperl->ret - sperl->call_stack;
           sperl->call_stack = call_stack = realloc(call_stack, sizeof(int64_t) * sperl->call_stack_capacity);
-          sperl->vars = sperl->call_stack + vars_offset;
           sperl->ret = sperl->call_stack + ret_offset;
         }
         
@@ -1598,7 +1596,6 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         if (constant_pool_sub->is_native) {
           if (!constant_pool_sub->has_return_value) {
             // Set environment
-            sperl->vars = vars;
             sperl->ret = &call_stack[operand_stack_top];
             sperl->call_stack_base = call_stack_base;
             
@@ -1631,7 +1628,6 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
             operand_stack_top++;
             
             // Set sperlironment
-            sperl->vars = vars;
             sperl->ret = &call_stack[operand_stack_top];
             sperl->call_stack_base = call_stack_base;
             

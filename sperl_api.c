@@ -47,85 +47,85 @@ intptr_t SPerl_API_get_ret_address(SPerl* sperl) {
 int8_t SPerl_API_get_var_byte(SPerl* sperl, int64_t index) {
   (void)sperl;
   
-  return *(int8_t*)&sperl->vars[index];
+  return *(int8_t*)&sperl->call_stack[sperl->call_stack_base + index];
 }
 
 int16_t SPerl_API_get_var_short(SPerl* sperl, int64_t index) {
   (void)sperl;
   
-  return *(int16_t*)&sperl->vars[index];
+  return *(int16_t*)&sperl->call_stack[sperl->call_stack_base + index];
 }
 
 int32_t SPerl_API_get_var_int(SPerl* sperl, int64_t index) {
   (void)sperl;
   
-  return *(int32_t*)&sperl->vars[index];
+  return *(int32_t*)&sperl->call_stack[sperl->call_stack_base + index];
 }
 
 int64_t SPerl_API_get_var_long(SPerl* sperl, int64_t index) {
   (void)sperl;
   
-  return *(int64_t*)&sperl->vars[index];
+  return *(int64_t*)&sperl->call_stack[sperl->call_stack_base + index];
 }
 
 float SPerl_API_get_var_float(SPerl* sperl, int64_t index) {
   (void)sperl;
   
-  return *(float*)&sperl->vars[index];
+  return *(float*)&sperl->call_stack[sperl->call_stack_base + index];
 }
 
 double SPerl_API_get_var_double(SPerl* sperl, int64_t index) {
   (void)sperl;
   
-  return *(double*)&sperl->vars[index];
+  return *(double*)&sperl->call_stack[sperl->call_stack_base + index];
 }
 
 intptr_t SPerl_API_get_var_address(SPerl* sperl, int64_t index) {
   (void)sperl;
   
-  return *(intptr_t*)&sperl->vars[index];
+  return *(intptr_t*)&sperl->call_stack[sperl->call_stack_base + index];
 }
 
 void SPerl_API_set_var_byte(SPerl* sperl, int64_t index, int8_t value) {
   (void)sperl;
   
-  *(int8_t*)&sperl->vars[index] = value;
+  *(int8_t*)&sperl->call_stack[sperl->call_stack_base + index] = value;
 }
 
 void SPerl_API_set_var_short(SPerl* sperl, int64_t index, int16_t value) {
   (void)sperl;
   
-  *(int16_t*)&sperl->vars[index] = value;
+  *(int16_t*)&sperl->call_stack[sperl->call_stack_base + index] = value;
 }
 
 void SPerl_API_set_var_int(SPerl* sperl, int64_t index, int32_t value) {
   (void)sperl;
   
-  *(int32_t*)&sperl->vars[index] = value;
+  *(int32_t*)&sperl->call_stack[sperl->call_stack_base + index] = value;
 }
 
 void SPerl_API_set_var_long(SPerl* sperl, int64_t index, int64_t value) {
   (void)sperl;
   
-  *(int64_t*)&sperl->vars[index] = value;
+  *(int64_t*)&sperl->call_stack[sperl->call_stack_base + index] = value;
 }
 
 void SPerl_API_set_var_float(SPerl* sperl, int64_t index, float value) {
   (void)sperl;
   
-  *(float*)&sperl->vars[index] = value;
+  *(float*)&sperl->call_stack[sperl->call_stack_base + index] = value;
 }
 
 void SPerl_API_set_var_double(SPerl* sperl, int64_t index, double value) {
   (void)sperl;
   
-  *(double*)&sperl->vars[index] = value;
+  *(double*)&sperl->call_stack[sperl->call_stack_base + index] = value;
 }
 
 void SPerl_API_set_var_address(SPerl* sperl, int64_t index, intptr_t value) {
   (void)sperl;
   
-  *(intptr_t*)&sperl->vars[index] = value;
+  *(intptr_t*)&sperl->call_stack[sperl->call_stack_base + index] = value;
 }
 
 int64_t SPerl_API_get_array_length(SPerl* sperl, intptr_t array) {
