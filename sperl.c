@@ -31,6 +31,7 @@ void SPerl_init_env(SPerl* sperl) {
     sperl->call_stack_capacity = sperl->call_stack_capacity_default;
   }
   sperl->call_stack = (int64_t*) SPerl_ALLOCATOR_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
+  sperl->call_stack_base = 0;
   sperl->vars = sperl->call_stack;
   sperl->ret = sperl->call_stack;
   sperl->abort = 0;
@@ -103,6 +104,8 @@ SPerl* SPerl_new() {
   
   sperl->call_stack_capacity = -1;
   
+  sperl->call_stack_base = 0;
+  
   return sperl;
 }
 
@@ -164,7 +167,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
   
   register int32_t success;
   
-  int32_t call_stack_base = 0;
+  int32_t call_stack_base = sperl->call_stack_base;
   
   // Jump table for direct threaded code
   static void* jump[] = {
@@ -1363,6 +1366,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
           call_stack[0] = return_value;
           sperl->ret = call_stack;
           sperl->abort = 0;
+          sperl->call_stack_base = 0;
           return;
         }
         
@@ -1390,6 +1394,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         // Finish call sub
         if (call_stack_base == 0) {
           sperl->abort = 0;
+          sperl->call_stack_base = call_stack_base;
           return;
         }
         
@@ -1477,6 +1482,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
           call_stack[0] = return_value;
           sperl->ret = call_stack;
           sperl->abort = 1;
+          sperl->call_stack_base = call_stack_base;
           return;
         }
         
@@ -1591,9 +1597,10 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         // Call native sub
         if (constant_pool_sub->is_native) {
           if (!constant_pool_sub->has_return_value) {
-            // Set sperlironment
+            // Set environment
             sperl->vars = vars;
             sperl->ret = &call_stack[operand_stack_top];
+            sperl->call_stack_base = call_stack_base;
             
             // Call native sub
             void (*native_address)(SPerl* sperl, SPerl_ENV*) = constant_pool_sub->native_address;
@@ -1602,6 +1609,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
             // Finish call sub
             if (call_stack_base == 0) {
               sperl->abort = 0;
+              sperl->call_stack_base = call_stack_base;
               return;
             }
             
@@ -1625,6 +1633,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
             // Set sperlironment
             sperl->vars = vars;
             sperl->ret = &call_stack[operand_stack_top];
+            sperl->call_stack_base = call_stack_base;
             
             // Call native sub
             void (*native_address)(SPerl* sperl) = constant_pool_sub->native_address;
@@ -1638,6 +1647,7 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
               call_stack[0] = return_value;
               sperl->ret = call_stack;
               sperl->abort = 0;
+              sperl->call_stack_base = call_stack_base;
               
               return;
             }
