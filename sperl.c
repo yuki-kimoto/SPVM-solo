@@ -167,7 +167,8 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
   
   register int32_t success;
   
-  int32_t call_stack_base = sperl->call_stack_base;
+  int64_t call_stack_base = sperl->call_stack_base;
+  int64_t call_stack_base_start = call_stack_base;
   
   // Jump table for direct threaded code
   static void* jump[] = {
@@ -1362,9 +1363,9 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         int64_t return_value = call_stack[operand_stack_top];
         
         // Finish call sub
-        if (call_stack_base == 0) {
-          call_stack[0] = return_value;
-          sperl->call_stack_base = 0;
+        if (call_stack_base == call_stack_base_start) {
+          call_stack[call_stack_base] = return_value;
+          sperl->call_stack_base = call_stack_base;
           sperl->operand_stack_top = operand_stack_top;
           sperl->abort = 0;
           return;
@@ -1392,9 +1393,10 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
       }
       case_SPerl_BYTECODE_C_CODE_RETURN_VOID: {
         // Finish call sub
-        if (call_stack_base == 0) {
-          sperl->abort = 0;
+        if (call_stack_base == call_stack_base_start) {
           sperl->call_stack_base = call_stack_base;
+          sperl->operand_stack_top = operand_stack_top;
+          sperl->abort = 0;
           return;
         }
         
@@ -1478,8 +1480,8 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
         int64_t return_value = call_stack[operand_stack_top];
         
         // Finish call sub with exception
-        if (call_stack_base == 0) {
-          call_stack[0] = return_value;
+        if (call_stack_base == call_stack_base_start) {
+          call_stack[call_stack_base] = return_value;
           sperl->call_stack_base = call_stack_base;
           sperl->operand_stack_top = operand_stack_top;
           sperl->abort = 1;
@@ -1602,9 +1604,9 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
             (*native_address)(sperl, sperl);
             
             // Finish call sub
-            if (call_stack_base == 0) {
-              sperl->abort = 0;
+            if (call_stack_base == call_stack_base_start) {
               sperl->call_stack_base = call_stack_base;
+              sperl->abort = 0;
               return;
             }
             
@@ -1637,12 +1639,11 @@ void SPerl_call_sub(SPerl* sperl, const char* sub_base_name) {
             int64_t return_value = call_stack[operand_stack_top];
             
             // Finish call sub
-            if (call_stack_base == 0) {
-              call_stack[0] = return_value;
+            if (call_stack_base == call_stack_base_start) {
+              call_stack[call_stack_base] = return_value;
               sperl->call_stack_base = call_stack_base;
               sperl->operand_stack_top = operand_stack_top;
               sperl->abort = 0;
-              
               return;
             }
             
