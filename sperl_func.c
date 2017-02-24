@@ -20,7 +20,7 @@ void SPerl_FUNC_std_suml(SPerl* sperl) {
     total += long_array_data[i];
   }
   
-  *(int64_t*)sperl->ret = total;
+  SPerl_API_set_ret_long(sperl, total);
 }
 
 void SPerl_FUNC_std_println(SPerl* sperl) {
