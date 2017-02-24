@@ -1,6 +1,7 @@
 #ifndef SPERL_API_H
 #define SPERL_API_H
 
+void SPerl_API_init_env(SPerl* sperl);
 void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name);
 
 int64_t SPerl_API_get_array_length(SPerl* sperl, intptr_t array);

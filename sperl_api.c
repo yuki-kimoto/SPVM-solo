@@ -23,6 +23,17 @@
 #include "sperl_constant_pool_field.h"
 #include "sperl_resolved_type.h"
 
+void SPerl_API_init_env(SPerl* sperl) {
+  
+  if (sperl->call_stack_capacity == -1) {
+    sperl->call_stack_capacity = sperl->call_stack_capacity_default;
+  }
+  sperl->call_stack = (int64_t*) SPerl_ALLOCATOR_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
+  sperl->call_stack_base = 0;
+  sperl->operand_stack_top = -1;
+  sperl->abort = 0;
+}
+
 void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
 
   // Constant pool
