@@ -1497,7 +1497,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
             
             // Call native sub
             void (*native_address)(SPerl* sperl, SPerl_ENV*) = constant_pool_sub->native_address;
-            (*native_address)(sperl, sperl);
+            (*native_address)(sperl);
             
             // Finish call sub
             if (call_stack_base == call_stack_base_start) {
