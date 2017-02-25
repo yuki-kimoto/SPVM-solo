@@ -31,7 +31,7 @@ void SPerl_API_init_env(SPerl* sperl) {
     sperl->call_stack_capacity = sperl->call_stack_capacity_default;
   }
   sperl->call_stack = (int64_t*) SPerl_ALLOCATOR_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
-  sperl->call_stack_base = 0;
+  sperl->call_stack_base = -1;
   sperl->operand_stack_top = -1;
   sperl->abort = 0;
 }
@@ -265,6 +265,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   register int32_t success;
   
   int64_t call_stack_base = sperl->call_stack_base;
+  int64_t call_stack_base_start = call_stack_base;
 
   // Goto subroutine
   goto CALLSUB_COMMON;
@@ -368,7 +369,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         call_stack[operand_stack_top] = return_value;
 
         // Finish call sub
-        if (return_address == -1) {
+        if (call_stack_base == call_stack_base_start) {
           sperl->call_stack_base = call_stack_base;
           sperl->operand_stack_top = operand_stack_top;
           sperl->abort = 0;
@@ -394,7 +395,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         call_stack_base = call_stack[call_stack_base - 1];
         
         // Finish call sub
-        if (return_address == -1) {
+        if (call_stack_base == call_stack_base_start) {
           sperl->call_stack_base = call_stack_base;
           sperl->operand_stack_top = operand_stack_top;
           sperl->abort = 0;
@@ -427,7 +428,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         call_stack[operand_stack_top] = return_value;
 
         // Finish call sub with exception
-        if (return_address == -1) {
+        if (call_stack_base == call_stack_base_start) {
           sperl->call_stack_base = call_stack_base;
           sperl->operand_stack_top = operand_stack_top;
           sperl->abort = 1;
