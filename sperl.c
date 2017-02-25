@@ -24,11 +24,11 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   // Entry point
   const char* start_sub_name = parser->start_sub_name;
   
-  // Initialize sperl
+  // Initialize environment
   SPerl_API_init_env(sperl);
   
-  // Set argument
-  SPerl_API_set_var_long(sperl, 0, 2);
+  // Push argument
+  SPerl_API_push_var_long(sperl, 2);
   
   // Run
   SPerl_API_call_sub(sperl, start_sub_name);
