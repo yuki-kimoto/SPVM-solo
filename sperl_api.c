@@ -274,8 +274,8 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   // Goto subroutine
   goto CALLSUB_COMMON;
   
-  while (1) {
-    switch (*pc) {
+  // while (1) {
+    // switch (*pc) {
       case_SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
       {
         // Get subroutine ID
@@ -1669,8 +1669,8 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc += 5;
         goto *jump[*pc];
       }
-    }
-  }
+    // }
+  // }
 }
 
 void SPerl_API_push_ret_byte(SPerl* sperl, int8_t value) {
