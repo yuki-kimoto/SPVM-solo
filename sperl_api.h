@@ -36,12 +36,12 @@ void SPerl_API_push_ret_float(SPerl* sperl, float value);
 void SPerl_API_push_ret_double(SPerl* sperl, double value);
 void SPerl_API_push_ret_address(SPerl* sperl, intptr_t value);
 
-int8_t SPerl_API_get_ret_byte(SPerl* sperl);
-int16_t SPerl_API_get_ret_short(SPerl* sperl);
-int32_t SPerl_API_get_ret_int(SPerl* sperl);
-int64_t SPerl_API_get_ret_long(SPerl* sperl);
-float SPerl_API_get_ret_float(SPerl* sperl);
-double SPerl_API_get_ret_double(SPerl* sperl);
-intptr_t SPerl_API_get_ret_address(SPerl* sperl);
+int8_t SPerl_API_pop_ret_byte(SPerl* sperl);
+int16_t SPerl_API_pop_ret_short(SPerl* sperl);
+int32_t SPerl_API_pop_ret_int(SPerl* sperl);
+int64_t SPerl_API_pop_ret_long(SPerl* sperl);
+float SPerl_API_pop_ret_float(SPerl* sperl);
+double SPerl_API_pop_ret_double(SPerl* sperl);
+intptr_t SPerl_API_pop_ret_address(SPerl* sperl);
 
 #endif

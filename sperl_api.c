@@ -1723,46 +1723,60 @@ void SPerl_API_push_ret_address(SPerl* sperl, intptr_t value) {
   *(intptr_t*)&sperl->call_stack[sperl->operand_stack_top] = value;
 }
 
-int8_t SPerl_API_get_ret_byte(SPerl* sperl) {
+int8_t SPerl_API_pop_ret_byte(SPerl* sperl) {
   (void)sperl;
   
-  return *(int8_t*)&sperl->call_stack[sperl->operand_stack_top];
+  int8_t ret = *(int8_t*)&sperl->call_stack[sperl->operand_stack_top];
+  sperl->operand_stack_top--;
+  return ret;
 }
 
-int16_t SPerl_API_get_ret_short(SPerl* sperl) {
+int16_t SPerl_API_pop_ret_short(SPerl* sperl) {
   (void)sperl;
   
-  return *(int16_t*)&sperl->call_stack[sperl->operand_stack_top];
+  int16_t ret = *(int16_t*)&sperl->call_stack[sperl->operand_stack_top];
+  sperl->operand_stack_top--;
+  return ret;
 }
 
-int32_t SPerl_API_get_ret_int(SPerl* sperl) {
+int32_t SPerl_API_pop_ret_int(SPerl* sperl) {
   (void)sperl;
   
-  return *(int32_t*)&sperl->call_stack[sperl->operand_stack_top];
+  int32_t ret = *(int32_t*)&sperl->call_stack[sperl->operand_stack_top];
+  sperl->operand_stack_top--;
+  return ret;
 }
 
-int64_t SPerl_API_get_ret_long(SPerl* sperl) {
+int64_t SPerl_API_pop_ret_long(SPerl* sperl) {
   (void)sperl;
   
-  return *(int64_t*)&sperl->call_stack[sperl->operand_stack_top];
+  int64_t ret = *(int64_t*)&sperl->call_stack[sperl->operand_stack_top];
+  sperl->operand_stack_top--;
+  return ret;
 }
 
-float SPerl_API_get_ret_float(SPerl* sperl) {
+float SPerl_API_pop_ret_float(SPerl* sperl) {
   (void)sperl;
   
-  return *(float*)&sperl->call_stack[sperl->operand_stack_top];
+  float ret = *(float*)&sperl->call_stack[sperl->operand_stack_top];
+  sperl->operand_stack_top--;
+  return ret;
 }
 
-double SPerl_API_get_ret_double(SPerl* sperl) {
+double SPerl_API_pop_ret_double(SPerl* sperl) {
   (void)sperl;
   
-  return *(double*)&sperl->call_stack[sperl->operand_stack_top];
+  double ret = *(double*)&sperl->call_stack[sperl->operand_stack_top];
+  sperl->operand_stack_top--;
+  return ret;
 }
 
-intptr_t SPerl_API_get_ret_address(SPerl* sperl) {
+intptr_t SPerl_API_pop_ret_address(SPerl* sperl) {
   (void)sperl;
   
-  return *(intptr_t*)&sperl->call_stack[sperl->operand_stack_top];
+  intptr_t ret = *(intptr_t*)&sperl->call_stack[sperl->operand_stack_top];
+  sperl->operand_stack_top--;
+  return ret;
 }
 
 int8_t SPerl_API_get_var_byte(SPerl* sperl, int64_t index) {
