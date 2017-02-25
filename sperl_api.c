@@ -347,16 +347,16 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
       }
       case_SPerl_BYTECODE_C_CODE_RETURN_VALUE: {
         
-        // Return value
+        // Get return value
         int64_t return_value = call_stack[operand_stack_top];
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
         
-        // Return address
+        // Get return address
         int64_t return_address = call_stack[call_stack_base - 2];
         
-        // Resotre vars base
+        // Resotre call stack base
         call_stack_base = call_stack[call_stack_base - 1];
         
         // Push return value
