@@ -295,15 +295,13 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(int64_t));
 
           // Save return address(operand + (throw or goto exception handler))
-          operand_stack_top++;
-          call_stack[operand_stack_top] = pc + 5 + 3;
+          call_stack[operand_stack_top + 1] = pc + 5 + 3;
           
           // Save vars base before
-          operand_stack_top++;
-          call_stack[operand_stack_top] = call_stack_base;
+          call_stack[operand_stack_top + 2] = call_stack_base;
           
           // Set vars base
-          call_stack_base = operand_stack_top + 1;
+          call_stack_base = operand_stack_top + 3;
           
           // Initialize my variables
           memset(&call_stack[call_stack_base + constant_pool_sub->args_length], 0, (constant_pool_sub->my_vars_length - constant_pool_sub->args_length) * sizeof(int64_t));
@@ -312,7 +310,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           vars = &call_stack[call_stack_base];
           
           // Set operant stack top
-          operand_stack_top += constant_pool_sub->my_vars_length;
+          operand_stack_top = call_stack_base + constant_pool_sub->my_vars_length - 1;
 
           // Call native sub
           if (constant_pool_sub->is_native) {
@@ -324,6 +322,10 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
               // Call native sub
               void (*native_address)(SPerl* sperl) = constant_pool_sub->native_address;
               (*native_address)(sperl);
+
+              // Get enviromnet
+              operand_stack_top = sperl->operand_stack_top;
+              call_stack_base = sperl->call_stack_base;
               
               // Finish call sub
               if (call_stack_base - 2 == call_stack_base_start) {
@@ -354,6 +356,10 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
               // Call native sub
               void (*native_address)(SPerl* sperl) = constant_pool_sub->native_address;
               (*native_address)(sperl);
+              
+              // Get enviromnet
+              operand_stack_top = sperl->operand_stack_top;
+              call_stack_base = sperl->call_stack_base;
               
               // Return value
               int64_t return_value = call_stack[operand_stack_top];
