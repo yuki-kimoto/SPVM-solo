@@ -42,9 +42,9 @@ SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(const char* key, int32_t length, void* va
 
 void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, const char* key, int32_t length, void* value) {
 
-  int64_t hash_value = SPerl_HASH_FUNC_calc_hash(key, length);
+  uint32_t hash_value = SPerl_HASH_FUNC_calc_hash(key, length);
   int32_t index = hash_value % hash->capacity;
-  
+
   SPerl_HASH_ENTRY** next_entry_ptr = hash->entries + index;
   SPerl_HASH_ENTRY* next_entry = hash->entries[index];
 
@@ -133,7 +133,7 @@ void* SPerl_HASH_search(SPerl_HASH* hash, const char* key, int32_t length) {
   if (!hash) {
     return 0;
   }
-  int64_t hash_value = SPerl_HASH_FUNC_calc_hash(key, length);
+  uint32_t hash_value = SPerl_HASH_FUNC_calc_hash(key, length);
   int32_t index = hash_value % hash->capacity;
   SPerl_HASH_ENTRY* next_entry = hash->entries[index];
   while (1) {
