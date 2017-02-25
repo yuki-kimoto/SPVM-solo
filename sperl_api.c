@@ -359,9 +359,6 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1];
         
-        // Restore vars
-        vars = &call_stack[call_stack_base];
-        
         // Push return value
         operand_stack_top++;
         call_stack[operand_stack_top] = return_value;
@@ -374,6 +371,9 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           return;
         }
         else {
+          // Restore vars
+          vars = &call_stack[call_stack_base];
+          
           pc = return_address;
           goto *jump[*pc];
         }
@@ -389,9 +389,6 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1];
         
-        // Restore vars
-        vars = &call_stack[call_stack_base];
-
         // Finish call sub
         if (call_stack_base == call_stack_base_start) {
           sperl->call_stack_base = call_stack_base;
@@ -400,6 +397,9 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           return;
         }
         else {
+          // Restore vars
+          vars = &call_stack[call_stack_base];
+
           pc = return_address;
           goto *jump[*pc];
         }
@@ -418,9 +418,6 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1];
         
-        // Restore vars
-        vars = &call_stack[call_stack_base];
-        
         // Push return value
         operand_stack_top++;
         call_stack[operand_stack_top] = return_value;
@@ -433,6 +430,9 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           return;
         }
         else {
+          // Restore vars
+          vars = &call_stack[call_stack_base];
+
           pc = return_address - 3;
           goto *jump[*pc];
         }
