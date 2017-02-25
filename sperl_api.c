@@ -257,7 +257,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   int64_t* call_stack = sperl->call_stack;
   
   // Program counter
-  register uint8_t* pc = sub->constant_pool_address;
+  register uint8_t* pc = -1;
   
   // Top position of operand stack
   register int64_t operand_stack_top = sperl->operand_stack_top;
@@ -265,7 +265,6 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   register int32_t success;
   
   int64_t call_stack_base = sperl->call_stack_base;
-  int64_t call_stack_base_start = call_stack_base;
 
   // Goto subroutine
   goto CALLSUB_COMMON;
@@ -295,7 +294,12 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(int64_t));
 
           // Save return address(operand + (throw or goto exception handler))
-          call_stack[operand_stack_top + 1] = pc + 5 + 3;
+          if (pc == -1) {
+            call_stack[operand_stack_top + 1] = -1;
+          }
+          else {
+            call_stack[operand_stack_top + 1] = pc + 5 + 3;
+          }
           
           // Save vars base before
           call_stack[operand_stack_top + 2] = call_stack_base;
@@ -364,7 +368,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         call_stack[operand_stack_top] = return_value;
 
         // Finish call sub
-        if (call_stack_base == call_stack_base_start) {
+        if (return_address == -1) {
           sperl->call_stack_base = call_stack_base;
           sperl->operand_stack_top = operand_stack_top;
           sperl->abort = 0;
@@ -390,7 +394,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         call_stack_base = call_stack[call_stack_base - 1];
         
         // Finish call sub
-        if (call_stack_base == call_stack_base_start) {
+        if (return_address == -1) {
           sperl->call_stack_base = call_stack_base;
           sperl->operand_stack_top = operand_stack_top;
           sperl->abort = 0;
@@ -423,7 +427,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         call_stack[operand_stack_top] = return_value;
 
         // Finish call sub with exception
-        if (call_stack_base == call_stack_base_start) {
+        if (return_address == -1) {
           sperl->call_stack_base = call_stack_base;
           sperl->operand_stack_top = operand_stack_top;
           sperl->abort = 1;
