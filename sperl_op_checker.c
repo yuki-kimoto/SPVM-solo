@@ -98,6 +98,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         // [START]Preorder traversal position
         
         switch (op_cur->code) {
+
           case SPerl_OP_C_CODE_DECL_FIELD: {
             SPerl_FIELD* field = op_cur->uv.field;
             SPerl_RESOLVED_TYPE* resolved_type = field->op_type->uv.type;
@@ -186,6 +187,24 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           while (1) {
             // [START]Postorder traversal position
             switch (op_cur->code) {
+              case SPerl_OP_C_CODE_POP: {
+                if (op_cur->first->code == SPerl_OP_C_CODE_CALL_SUB) {
+                  SPerl_OP* op_call_sub = op_cur->first;
+                  
+                  const char* sub_name = op_call_sub->uv.name_info->resolved_name;
+                  
+                  SPerl_SUB* sub= SPerl_HASH_search(
+                    parser->sub_symtable,
+                    sub_name,
+                    strlen(sub_name)
+                  );
+                  
+                  if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
+                    op_cur->code = SPerl_OP_C_CODE_NULL;
+                  }
+                }
+                break;
+              }
               case SPerl_OP_C_CODE_DEFAULT: {
                 if (cur_default_op) {
                   SPerl_yyerror_format(sperl, "multiple default is forbidden at %s line %d\n", op_cur->file, op_cur->line);

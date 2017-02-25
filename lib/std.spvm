@@ -1,10 +1,10 @@
 package std {
-  sub printb ($value : byte) : native int;
-  sub prints ($value : short) : native int;
-  sub printi ($value : int) : native int;
-  sub printl ($value : long) : native int;
-  sub printf ($value : float) : native int;
-  sub printd ($value : double) : native int;
-  sub println ($value : byte[]) : native int;
+  sub printb ($value : byte) : native void;
+  sub prints ($value : short) : native void;
+  sub printi ($value : int) : native void;
+  sub printl ($value : long) : native void;
+  sub printf ($value : float) : native void;
+  sub printd ($value : double) : native void;
+  sub println ($value : byte[]) : native void;
   sub suml($values : long[]) : native long;
 }
