@@ -7,6 +7,28 @@
 #include "sperl_api.h"
 #include "sperl.h"
 
+void SPerl_FUNC_std_test_call1(SPerl* sperl) {
+  
+  int64_t value =  SPerl_API_get_var_long(sperl, 0);
+  
+  int64_t value2 = value * 2;
+  
+  SPerl_API_push_var_long(sperl, value2);
+  SPerl_API_call_sub(sperl, "std::test_call2");
+  int64_t value3 = SPerl_API_pop_ret_long(sperl);
+  
+  SPerl_API_push_ret_long(sperl, value3);
+}
+
+void SPerl_FUNC_std_test_call2(SPerl* sperl) {
+  
+  int64_t value =  SPerl_API_get_var_long(sperl, 0);
+  
+  int64_t value2 = value * 3;
+  
+  SPerl_API_push_ret_long(sperl, value2);
+}
+
 void SPerl_FUNC_std_suml(SPerl* sperl) {
   
   intptr_t long_array = SPerl_API_get_var_address(sperl, 0);

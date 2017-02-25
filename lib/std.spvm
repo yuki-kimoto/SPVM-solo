@@ -7,4 +7,6 @@ package std {
   sub printd ($value : double) : native void;
   sub println ($value : byte[]) : native void;
   sub suml($values : long[]) : native long;
+  sub test_call1 ($value : long) : native long;
+  sub test_call2 ($value : long) : native long;
 }

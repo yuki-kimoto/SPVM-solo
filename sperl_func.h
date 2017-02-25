@@ -3,6 +3,9 @@
 
 #include "sperl_base.h"
 
+void SPerl_FUNC_std_test_call1(SPerl* sperl);
+void SPerl_FUNC_std_test_call2(SPerl* sperl);
+
 void SPerl_FUNC_std_println(SPerl* sperl);
 void SPerl_FUNC_std_printb(SPerl* sperl);
 void SPerl_FUNC_std_prints(SPerl* sperl);

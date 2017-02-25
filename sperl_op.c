@@ -827,6 +827,12 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
             else if (strcmp(sub_abs_name, "std::suml") == 0) {
               sub->native_address = SPerl_FUNC_std_suml;
             }
+            else if (strcmp(sub_abs_name, "std::test_call1") == 0) {
+              sub->native_address = SPerl_FUNC_std_test_call1;
+            }
+            else if (strcmp(sub_abs_name, "std::test_call2") == 0) {
+              sub->native_address = SPerl_FUNC_std_test_call2;
+            }
           }
         }
         

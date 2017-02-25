@@ -6,6 +6,8 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : long) : long {
+    std::printl(std::test_call1(4));
+
     # byte increment
     {
       my $num = 1B;

@@ -286,7 +286,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           
           while (call_stack_max > sperl->call_stack_capacity) {
             sperl->call_stack_capacity = sperl->call_stack_capacity * 2;
-            call_stack = realloc(call_stack, sizeof(int64_t) * sperl->call_stack_capacity);
+            sperl->call_stack = call_stack = realloc(call_stack, sizeof(int64_t) * sperl->call_stack_capacity);
           }
 
           operand_stack_top -= constant_pool_sub->args_length;
@@ -568,12 +568,12 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_BBPUSH:
         operand_stack_top++;
-        *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*pc;
+        *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*(pc + 1);
         pc += 2;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_BSPUSH:
         operand_stack_top++;
-        *(int16_t*)&call_stack[operand_stack_top] = (int8_t)*pc;
+        *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(pc + 1);
         pc += 2;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_SSPUSH:
