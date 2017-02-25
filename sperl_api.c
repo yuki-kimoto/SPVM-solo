@@ -321,64 +321,20 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
             // Call native sub
             void (*native_address)(SPerl* sperl) = constant_pool_sub->native_address;
             (*native_address)(sperl);
-
+            
             // Get enviromnet
             operand_stack_top = sperl->operand_stack_top;
             call_stack_base = sperl->call_stack_base;
-
-            if (!constant_pool_sub->has_return_value) {
-              // Restore operand stack top
-              operand_stack_top = call_stack_base - 3;
-              
-              // Return address
-              int64_t return_address = call_stack[call_stack_base - 2];
-              
-              // Resotre vars base
-              call_stack_base = call_stack[call_stack_base - 1];
-              
-              // Restore vars
-              vars = &call_stack[call_stack_base];
-              
-              // Finish call sub
-              if (call_stack_base == call_stack_base_start) {
-                sperl->call_stack_base = call_stack_base;
-                sperl->operand_stack_top = operand_stack_top;
-                sperl->abort = 0;
-                return;
-              }
-              else {
-                pc = return_address;
-              }
+            
+            if (sperl->abort) {
+              goto case_SPerl_BYTECODE_C_CODE_ATHROW;
             }
             else {
-              // Return value
-              int64_t return_value = call_stack[operand_stack_top];
-              
-              // Restore operand stack top
-              operand_stack_top = call_stack_base - 3;
-              
-              // Return address
-              int64_t return_address = call_stack[call_stack_base - 2];
-              
-              // Resotre vars base
-              call_stack_base = call_stack[call_stack_base - 1];
-              
-              // Restore vars
-              vars = &call_stack[call_stack_base];
-              
-              // Push return value
-              operand_stack_top++;
-              call_stack[operand_stack_top] = return_value;
-              
-              // Finish call sub
-              if (call_stack_base == call_stack_base_start) {
-                sperl->call_stack_base = call_stack_base;
-                sperl->operand_stack_top = operand_stack_top;
-                sperl->abort = 0;
-                return;
+              if (constant_pool_sub->has_return_value) {
+                goto case_SPerl_BYTECODE_C_CODE_RETURN_VALUE;
               }
               else {
-                pc = return_address;
+                goto case_SPerl_BYTECODE_C_CODE_RETURN_VOID;
               }
             }
           }
@@ -445,6 +401,39 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         }
         else {
           pc = return_address;
+          goto *jump[*pc];
+        }
+      }
+      case_SPerl_BYTECODE_C_CODE_ATHROW: {
+        
+        // Return value
+        int64_t return_value = call_stack[operand_stack_top];
+        
+        // Restore operand stack top
+        operand_stack_top = call_stack_base - 3;
+        
+        // Return address
+        int64_t return_address = call_stack[call_stack_base - 2];
+        
+        // Resotre vars base
+        call_stack_base = call_stack[call_stack_base - 1];
+        
+        // Restore vars
+        vars = &call_stack[call_stack_base];
+        
+        // Push return value
+        operand_stack_top++;
+        call_stack[operand_stack_top] = return_value;
+
+        // Finish call sub with exception
+        if (call_stack_base == call_stack_base_start) {
+          sperl->call_stack_base = call_stack_base;
+          sperl->operand_stack_top = operand_stack_top;
+          sperl->abort = 1;
+          return;
+        }
+        else {
+          pc = return_address - 3;
           goto *jump[*pc];
         }
       }
@@ -1485,39 +1474,6 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         call_stack[operand_stack_top] = *(int64_t*)*(intptr_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPerl_BYTECODE_C_CODE_ATHROW: {
-        
-        // Return value
-        int64_t return_value = call_stack[operand_stack_top];
-        
-        // Restore operand stack top
-        operand_stack_top = call_stack_base - 3;
-        
-        // Return address
-        int64_t return_address = call_stack[call_stack_base - 2];
-        
-        // Resotre vars base
-        call_stack_base = call_stack[call_stack_base - 1];
-        
-        // Restore vars
-        vars = &call_stack[call_stack_base];
-        
-        // Push return value
-        operand_stack_top++;
-        call_stack[operand_stack_top] = return_value;
-
-        // Finish call sub with exception
-        if (call_stack_base == call_stack_base_start) {
-          sperl->call_stack_base = call_stack_base;
-          sperl->operand_stack_top = operand_stack_top;
-          sperl->abort = 1;
-          return;
-        }
-        else {
-          pc = return_address - 3;
-          goto *jump[*pc];
-        }
-      }
       case_SPerl_BYTECODE_C_CODE_WIDE:
         // iload, fload, aload, lload, dload, istore, fstore, astore, lstore, dstore, or iinc
         
