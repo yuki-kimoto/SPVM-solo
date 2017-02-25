@@ -314,19 +314,19 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
 
           // Call native sub
           if (constant_pool_sub->is_native) {
-            if (!constant_pool_sub->has_return_value) {
-              // Set environment
-              sperl->operand_stack_top = operand_stack_top;
-              sperl->call_stack_base = call_stack_base;
-              
-              // Call native sub
-              void (*native_address)(SPerl* sperl) = constant_pool_sub->native_address;
-              (*native_address)(sperl);
+            // Set environment
+            sperl->operand_stack_top = operand_stack_top;
+            sperl->call_stack_base = call_stack_base;
+            
+            // Call native sub
+            void (*native_address)(SPerl* sperl) = constant_pool_sub->native_address;
+            (*native_address)(sperl);
 
-              // Get enviromnet
-              operand_stack_top = sperl->operand_stack_top;
-              call_stack_base = sperl->call_stack_base;
-              
+            // Get enviromnet
+            operand_stack_top = sperl->operand_stack_top;
+            call_stack_base = sperl->call_stack_base;
+
+            if (!constant_pool_sub->has_return_value) {
               // Restore operand stack top
               operand_stack_top = call_stack_base - 3;
               
@@ -351,18 +351,6 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
               }
             }
             else {
-              // Set environment
-              sperl->operand_stack_top = operand_stack_top;
-              sperl->call_stack_base = call_stack_base;
-              
-              // Call native sub
-              void (*native_address)(SPerl* sperl) = constant_pool_sub->native_address;
-              (*native_address)(sperl);
-              
-              // Get enviromnet
-              operand_stack_top = sperl->operand_stack_top;
-              call_stack_base = sperl->call_stack_base;
-              
               // Return value
               int64_t return_value = call_stack[operand_stack_top];
               
