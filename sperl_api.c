@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include <assert.h>
+#include <string.h>
+#include <math.h>
 
 #include "sperl.h"
 #include "sperl.h"
@@ -1496,7 +1498,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
             sperl->call_stack_base = call_stack_base;
             
             // Call native sub
-            void (*native_address)(SPerl* sperl, SPerl_ENV*) = constant_pool_sub->native_address;
+            void (*native_address)(SPerl* sperl) = constant_pool_sub->native_address;
             (*native_address)(sperl);
             
             // Finish call sub
@@ -1521,9 +1523,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
             pc = return_address;
           }
           else {
-            operand_stack_top++;
-            
-            // Set sperlironment
+            // Set environment
             sperl->operand_stack_top = operand_stack_top;
             sperl->call_stack_base = call_stack_base;
             
@@ -1674,45 +1674,52 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   }
 }
 
-void SPerl_API_set_ret_byte(SPerl* sperl, int8_t value) {
+void SPerl_API_push_ret_byte(SPerl* sperl, int8_t value) {
   (void)sperl;
   
+  sperl->operand_stack_top++;
   *(int8_t*)&sperl->call_stack[sperl->operand_stack_top] = value;
 }
 
-void SPerl_API_set_ret_short(SPerl* sperl, int16_t value) {
+void SPerl_API_push_ret_short(SPerl* sperl, int16_t value) {
   (void)sperl;
   
+  sperl->operand_stack_top++;
   *(int16_t*)&sperl->call_stack[sperl->operand_stack_top] = value;
 }
 
-void SPerl_API_set_ret_int(SPerl* sperl, int32_t value) {
+void SPerl_API_push_ret_int(SPerl* sperl, int32_t value) {
   (void)sperl;
   
+  sperl->operand_stack_top++;
   *(int32_t*)&sperl->call_stack[sperl->operand_stack_top] = value;
 }
 
-void SPerl_API_set_ret_long(SPerl* sperl, int64_t value) {
+void SPerl_API_push_ret_long(SPerl* sperl, int64_t value) {
   (void)sperl;
   
+  sperl->operand_stack_top++;
   *(int64_t*)&sperl->call_stack[sperl->operand_stack_top] = value;
 }
 
-void SPerl_API_set_ret_float(SPerl* sperl, float value) {
+void SPerl_API_push_ret_float(SPerl* sperl, float value) {
   (void)sperl;
   
+  sperl->operand_stack_top++;
   *(float*)&sperl->call_stack[sperl->operand_stack_top] = value;
 }
 
-void SPerl_API_set_ret_double(SPerl* sperl, double value) {
+void SPerl_API_push_ret_double(SPerl* sperl, double value) {
   (void)sperl;
   
+  sperl->operand_stack_top++;
   *(double*)&sperl->call_stack[sperl->operand_stack_top] = value;
 }
 
-void SPerl_API_set_ret_address(SPerl* sperl, intptr_t value) {
+void SPerl_API_push_ret_address(SPerl* sperl, intptr_t value) {
   (void)sperl;
   
+  sperl->operand_stack_top++;
   *(intptr_t*)&sperl->call_stack[sperl->operand_stack_top] = value;
 }
 
