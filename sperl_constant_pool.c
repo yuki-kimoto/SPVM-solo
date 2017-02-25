@@ -63,7 +63,7 @@ void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* consta
       SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, constant->uv.double_value);
       break;
     case SPerl_CONSTANT_C_CODE_STRING:
-      SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, constant->uv.string_value);
+      SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, constant);
       break;
   }
 }
@@ -172,42 +172,43 @@ void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   constant_pool->length++;
 }
 
-void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, const char* utf8) {
+void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
   
   SPerl_HASH* constant_utf8_symtable = sperl->parser->constant_utf8_symtable;
   
-  SPerl_CONSTANT* found_constant_utf8 = SPerl_HASH_search(constant_utf8_symtable, utf8, strlen(utf8));
+
+  const char* utf8 = constant->uv.string_value;
+  int64_t utf8_length = strlen(utf8);
+  int32_t* address_ptr = SPerl_HASH_search(constant_utf8_symtable, utf8, strlen(utf8));
   
   // Already exists
-  if (found_constant_utf8) {
-    // Add string
-    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, found_constant_utf8->address);
+  if (address_ptr) {
+    constant->address = *address_ptr;
   }
   else {
-    // Create constant utf8
-    SPerl_CONSTANT* new_constant_string = SPerl_CONSTANT_new(sperl);
-    new_constant_string->code = SPerl_CONSTANT_C_CODE_STRING;
-    new_constant_string->address = constant_pool->length;
-    SPerl_HASH_insert(constant_utf8_symtable, utf8, strlen(utf8), new_constant_string);
     
-    int64_t utf8_length = strlen(utf8);
-    int64_t real_utf8_length = utf8_length + 1;
+    constant->address = constant_pool->length;
     
     // Add string length
     SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, utf8_length);
     
     // Calculate constant pool size
     int64_t constant_pool_size;
-    if (real_utf8_length % sizeof(int64_t) == 0) {
-      constant_pool_size = real_utf8_length / sizeof(int64_t);
+    if (utf8_length % sizeof(int64_t) == 0) {
+      constant_pool_size = utf8_length / sizeof(int64_t);
     }
     else {
-      constant_pool_size = (real_utf8_length / sizeof(int64_t)) + 1;
+      constant_pool_size = (utf8_length / sizeof(int64_t)) + 1;
     }
     
     SPerl_CONSTANT_POOL_extend(sperl, constant_pool, constant_pool_size);
-    memcpy(&constant_pool->values[constant_pool->length], utf8, utf8_length + 1);
+    memcpy(&constant_pool->values[constant_pool->length], utf8, utf8_length);
     constant_pool->length += constant_pool_size;
+    
+    int32_t* new_address_ptr = SPerl_ALLOCATOR_new_int(sperl);
+    *new_address_ptr = constant->address;
+
+    SPerl_HASH_insert(constant_utf8_symtable, utf8, utf8_length, new_address_ptr);
   }
 }
 
