@@ -327,13 +327,6 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
               operand_stack_top = sperl->operand_stack_top;
               call_stack_base = sperl->call_stack_base;
               
-              // Finish call sub
-              if (call_stack_base - 2 == call_stack_base_start) {
-                sperl->call_stack_base = call_stack_base;
-                sperl->abort = 0;
-                return;
-              }
-              
               // Restore operand stack top
               operand_stack_top = call_stack_base - 3;
               
@@ -346,7 +339,16 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
               // Restore vars
               vars = &call_stack[call_stack_base];
               
-              pc = return_address;
+              // Finish call sub
+              if (call_stack_base == call_stack_base_start) {
+                sperl->call_stack_base = call_stack_base;
+                sperl->operand_stack_top = operand_stack_top;
+                sperl->abort = 0;
+                return;
+              }
+              else {
+                pc = return_address;
+              }
             }
             else {
               // Set environment
@@ -364,15 +366,6 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
               // Return value
               int64_t return_value = call_stack[operand_stack_top];
               
-              // Finish call sub
-              if (call_stack_base - 2 == call_stack_base_start) {
-                call_stack[call_stack_base] = return_value;
-                sperl->call_stack_base = call_stack_base;
-                sperl->operand_stack_top = operand_stack_top;
-                sperl->abort = 0;
-                return;
-              }
-              
               // Restore operand stack top
               operand_stack_top = call_stack_base - 3;
               
@@ -389,7 +382,16 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
               operand_stack_top++;
               call_stack[operand_stack_top] = return_value;
               
-              pc = return_address;
+              // Finish call sub
+              if (call_stack_base == call_stack_base_start) {
+                sperl->call_stack_base = call_stack_base;
+                sperl->operand_stack_top = operand_stack_top;
+                sperl->abort = 0;
+                return;
+              }
+              else {
+                pc = return_address;
+              }
             }
           }
           // Call normal sub
@@ -403,15 +405,6 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         // Return value
         int64_t return_value = call_stack[operand_stack_top];
-        
-        // Finish call sub
-        if (call_stack_base - 2 == call_stack_base_start) {
-          call_stack[call_stack_base] = return_value;
-          sperl->call_stack_base = call_stack_base;
-          sperl->operand_stack_top = operand_stack_top;
-          sperl->abort = 0;
-          return;
-        }
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
@@ -428,19 +421,20 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         // Push return value
         operand_stack_top++;
         call_stack[operand_stack_top] = return_value;
-        
-        pc = return_address;
-        
-        goto *jump[*pc];
-      }
-      case_SPerl_BYTECODE_C_CODE_RETURN_VOID: {
+
         // Finish call sub
-        if (call_stack_base - 2 == call_stack_base_start) {
+        if (call_stack_base == call_stack_base_start) {
           sperl->call_stack_base = call_stack_base;
           sperl->operand_stack_top = operand_stack_top;
           sperl->abort = 0;
           return;
         }
+        else {
+          pc = return_address;
+          goto *jump[*pc];
+        }
+      }
+      case_SPerl_BYTECODE_C_CODE_RETURN_VOID: {
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
@@ -453,10 +447,18 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         // Restore vars
         vars = &call_stack[call_stack_base];
-        
-        pc = return_address;
-        
-        goto *jump[*pc];
+
+        // Finish call sub
+        if (call_stack_base == call_stack_base_start) {
+          sperl->call_stack_base = call_stack_base;
+          sperl->operand_stack_top = operand_stack_top;
+          sperl->abort = 0;
+          return;
+        }
+        else {
+          pc = return_address;
+          goto *jump[*pc];
+        }
       }
       case_SPerl_BYTECODE_C_CODE_NOP:
         // Not used
@@ -1500,15 +1502,6 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         // Return value
         int64_t return_value = call_stack[operand_stack_top];
         
-        // Finish call sub with exception
-        if (call_stack_base - 2 == call_stack_base_start) {
-          call_stack[call_stack_base] = return_value;
-          sperl->call_stack_base = call_stack_base;
-          sperl->operand_stack_top = operand_stack_top;
-          sperl->abort = 1;
-          return;
-        }
-        
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
         
@@ -1524,10 +1517,18 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         // Push return value
         operand_stack_top++;
         call_stack[operand_stack_top] = return_value;
-        
-        pc = return_address - 3;
-        
-        goto *jump[*pc];
+
+        // Finish call sub with exception
+        if (call_stack_base == call_stack_base_start) {
+          sperl->call_stack_base = call_stack_base;
+          sperl->operand_stack_top = operand_stack_top;
+          sperl->abort = 1;
+          return;
+        }
+        else {
+          pc = return_address - 3;
+          goto *jump[*pc];
+        }
       }
       case_SPerl_BYTECODE_C_CODE_WIDE:
         // iload, fload, aload, lload, dload, istore, fstore, astore, lstore, dstore, or iinc
