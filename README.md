@@ -550,12 +550,6 @@ Type of constant default floating-point value is `double`.
     
 Type of constant is specified by type specifier.
 
-    # int
-    3i
-    
-    # long
-    3l
-    
     # float
     3.2f
     

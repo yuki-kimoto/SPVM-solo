@@ -500,9 +500,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             SPerl_ALLOCATOR_exit_with_malloc_failure();
           }
           char* num_str = (char*) SPerl_ALLOCATOR_safe_malloc(str_len + 2, sizeof(char));
-          num_str[0] = ' ';
-          memcpy(num_str + 1, cur_token_ptr, str_len);
-          num_str[str_len + 1] = '\0';
+          memcpy(num_str, cur_token_ptr, str_len);
+          num_str[str_len] = '\0';
           
           // Constant type
           int32_t constant_code;
@@ -512,14 +511,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           }
           else if (*parser->bufptr == 'd')  {
             constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
-            parser->bufptr++;
-          }
-          else if (*parser->bufptr == 'i') {
-            constant_code = SPerl_CONSTANT_C_CODE_INT;
-            parser->bufptr++;
-          }
-          else if (*parser->bufptr == 'l') {
-            constant_code = SPerl_CONSTANT_C_CODE_LONG;
             parser->bufptr++;
           }
           else {
@@ -543,9 +534,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           }
           else if (constant_code == SPerl_CONSTANT_C_CODE_DOUBLE) {
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
-          }
-          else if (constant_code == SPerl_CONSTANT_C_CODE_INT) {
-            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
           }
           else if (constant_code == SPerl_CONSTANT_C_CODE_LONG) {
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));

@@ -120,12 +120,12 @@ package Test {
     std::printd(1.2);
     
     # Constant long
-    std::printl(-1l);
-    std::printl(0l);
-    std::printl(1l);
-    std::printl(2l);
-    std::printl(9223372036854775807l);
-    std::printl(-9223372036854775808l);
+    std::printl(-1);
+    std::printl(0);
+    std::printl(1);
+    std::printl(2);
+    std::printl(9223372036854775807);
+    std::printl(-9223372036854775808);
     std::printl(-2147483648);
     std::printl(-32769);
     std::printl(-32768);
@@ -151,29 +151,29 @@ package Test {
     std::printl(2147483647);
     
     # Constant int
-    std::printi(-2147483648i);
-    std::printi(-32769i);
-    std::printi(-32768i);
-    std::printi(-129i);
-    std::printi(-128i);
-    std::printi(-2i);
-    std::printi(-1i);
-    std::printi(0i);
-    std::printi(1i);
-    std::printi(2i);
-    std::printi(3i);
-    std::printi(4i);
-    std::printi(5i);
-    std::printi(6i);
-    std::printi(127i);
-    std::printi(128i);
-    std::printi(255i);
-    std::printi(256i);
-    std::printi(32767i);
-    std::printi(32768i);
-    std::printi(65535i);
-    std::printi(65536i);
-    std::printi(2147483647i);
+    std::printi((int)-2147483648);
+    std::printi((int)-32769);
+    std::printi((int)-32768);
+    std::printi((int)-129);
+    std::printi((int)-128);
+    std::printi((int)-2);
+    std::printi((int)-1);
+    std::printi((int)0);
+    std::printi((int)1);
+    std::printi((int)2);
+    std::printi((int)3);
+    std::printi((int)4);
+    std::printi((int)5);
+    std::printi((int)6);
+    std::printi((int)127);
+    std::printi((int)128);
+    std::printi((int)255);
+    std::printi((int)256);
+    std::printi((int)32767);
+    std::printi((int)32768);
+    std::printi((int)65535);
+    std::printi((int)65536);
+    std::printi((int)2147483647);
     
     std::printl(sum1(1, 2));
     std::printl(sum1(1, 5));
@@ -207,7 +207,7 @@ package Test {
     # my $num1 = undef;
     
     my $num1 : int;
-    $num1 = 5i;
+    $num1 = (int)5;
     
     my $num = 5;
     
@@ -299,8 +299,8 @@ package Test {
 
     {
       my $nums = malloc int[3];
-      $nums[0] = 13i;
-      $nums[1] = 14i;
+      $nums[0] = (int)13;
+      $nums[1] = (int)14;
       std::printi($nums[0]);
       std::printi($nums[1]);
     }

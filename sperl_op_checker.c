@@ -130,23 +130,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             
             break;
           }
-          case SPerl_OP_C_CODE_NEGATE: {
-            if (op_cur->first->code == SPerl_OP_C_CODE_CONSTANT) {
-              
-              // Constant negate
-              SPerl_OP* op_constant = op_cur->first;
-              SPerl_CONSTANT* constant = op_constant->uv.constant;
-              if (constant->num_str) {
-                constant->num_str[0] = '-';
-                
-                // Replace
-                op_cur->code = SPerl_OP_C_CODE_CONSTANT;
-                op_cur->uv.constant = constant;
-                op_cur->first = NULL;
-              }
-            }
-            break;
-          }
           case SPerl_OP_C_CODE_SWITCH: {
             if (in_switch) {
               SPerl_yyerror_format(sperl, "duplicate switch is forbidden at %s line %d\n", op_cur->file, op_cur->line);
@@ -993,13 +976,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     constant->uv.double_value = num;
                     constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
                   }
-                  // int
-                  else if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
-                    int32_t num = atoi(constant->num_str);
-                    constant->uv.int_value = num;
-                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
-                  }
-                  // long
                   else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
                     int64_t num = strtol(constant->num_str, NULL, 0);
                     constant->uv.long_value = num;
