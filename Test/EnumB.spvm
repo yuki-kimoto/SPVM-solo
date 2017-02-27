@@ -1,5 +1,5 @@
 package Test::EnumB {
   enum {
-    ONE = 5L
+    ONE = 5
   }
 }

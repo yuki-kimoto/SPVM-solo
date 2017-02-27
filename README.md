@@ -469,7 +469,9 @@ Use the following types in source codes. This is defined in the standard header 
 
 # SPVM specification
 
-## Core type
+## Type
+
+### Core type
 
 Core types are `byte`, `short`, `int`, `long`, `float`, `double`.
 
@@ -480,7 +482,91 @@ Core types are `byte`, `short`, `int`, `long`, `float`, `double`.
     float   floating-point number   4byte
     double  floating-point number   8byte
 
-Calculation and type convertion rules are same as Java.
+Declaration
+
+    my $value : byte;
+    my $value : short;
+    my $value : int;
+    my $value : long;
+    my $value : float;
+    my $value : double;
+
+### Core array type
+
+    byte[] byte array
+    short[] short array
+    int[] int array array
+    long[] long array
+    doube[] double array
+
+Declaration
+
+    my $values : byte[];
+    my $values : short[];
+    my $values : int[];
+    my $values : long[];
+    my $values : float[];
+    my $values : double[];
+    
+### Class type
+
+    ClassName
+
+Declaration
+
+    my $object : ClassName;
+
+## Type inference
+
+If the type of right value is known, the type of left value is automatically decided.
+    
+    # Type of $value2 is byte.
+    my $value1 : byte;
+    my $value2 = $value1;
+    
+    # Type of $values2 is int[]
+    my $values1 = new int[3];
+    my $values2 = $values1;
+    
+    # Type of $object2 is ClassName
+    my $object1 = new ClassName
+    my $object2 = $object1;
+
+## Constant
+
+### Constant type
+
+Type of constant default integral value is `long`.
+    
+    # long type
+    1;
+    3;
+
+Type of constant default floating-point value is `double`.
+
+    # double
+    1.2
+    5.3
+    
+Type of constant is specified by type specifier.
+
+    # byte
+    3b
+    
+    # short
+    3s
+    
+    # int
+    3i
+    
+    # long
+    3l
+    
+    # float
+    3.2f
+    
+    # double
+    3.2d
 
 ## Package name
 

@@ -10,14 +10,14 @@ package Test {
 
     # byte increment
     {
-      my $num = 1B;
+      my $num = 1b;
       $num++;
       std::printb($num);
     }
 
     # short increment
     {
-      my $num = 1S;
+      my $num = 1s;
       $num++;
       std::prints($num);
     }
@@ -79,7 +79,7 @@ package Test {
     
     # increment long value
     {
-      my $var : long = 4L;
+      my $var : long = 4;
       $var++;
       $var--;
       --$var;
@@ -109,26 +109,23 @@ package Test {
     std::printl(sum2(1, 2));
 
     # Constant float
-    std::printf(1F);
     std::printf(0f);
     std::printf(1f);
     std::printf(2f);
     std::printf(1.2f);
     
     # Constant double
-    std::printd(1D);
     std::printd(0d);
     std::printd(1d);
     std::printd(1.2);
     
     # Constant long
+    std::printl(-1l);
     std::printl(0l);
-    std::printl(-1L);
-    std::printl(0L);
-    std::printl(1L);
-    std::printl(2L);
-    std::printl(9223372036854775807L);
-    std::printl(-9223372036854775808L);
+    std::printl(1l);
+    std::printl(2l);
+    std::printl(9223372036854775807l);
+    std::printl(-9223372036854775808l);
     std::printl(-2147483648);
     std::printl(-32769);
     std::printl(-32768);
@@ -154,29 +151,29 @@ package Test {
     std::printl(2147483647);
     
     # Constant int
-    std::printi(-2147483648I);
-    std::printi(-32769I);
-    std::printi(-32768I);
-    std::printi(-129I);
-    std::printi(-128I);
-    std::printi(-2I);
-    std::printi(-1I);
-    std::printi(0I);
-    std::printi(1I);
-    std::printi(2I);
-    std::printi(3I);
-    std::printi(4I);
-    std::printi(5I);
-    std::printi(6I);
-    std::printi(127I);
-    std::printi(128I);
-    std::printi(255I);
-    std::printi(256I);
-    std::printi(32767I);
-    std::printi(32768I);
-    std::printi(65535I);
-    std::printi(65536I);
-    std::printi(2147483647I);
+    std::printi(-2147483648i);
+    std::printi(-32769i);
+    std::printi(-32768i);
+    std::printi(-129i);
+    std::printi(-128i);
+    std::printi(-2i);
+    std::printi(-1i);
+    std::printi(0i);
+    std::printi(1i);
+    std::printi(2i);
+    std::printi(3i);
+    std::printi(4i);
+    std::printi(5i);
+    std::printi(6i);
+    std::printi(127i);
+    std::printi(128i);
+    std::printi(255i);
+    std::printi(256i);
+    std::printi(32767i);
+    std::printi(32768i);
+    std::printi(65535i);
+    std::printi(65536i);
+    std::printi(2147483647i);
     
     std::printl(sum1(1, 2));
     std::printl(sum1(1, 5));
@@ -185,22 +182,22 @@ package Test {
     my $num2 = 3;
     
     switch($num2) {
-      case 1L:
+      case 1:
         std::printl(1);
-      case 3L:
+      case 3:
         std::printl(2);
-      case 5L:
+      case 5:
         std::printl(3);
       default:
         std::printl(5);
     }
     
     switch($num2) {
-      case 1L:
+      case 1:
         std::printl(1);
-      case 3L:
+      case 3:
         std::printl(2);
-      case 10000L:
+      case 10000:
         std::printl(2);
       default:
         std::printl(5);
@@ -210,7 +207,7 @@ package Test {
     # my $num1 = undef;
     
     my $num1 : int;
-    $num1 = 5I;
+    $num1 = 5i;
     
     my $num = 5;
     
@@ -302,8 +299,8 @@ package Test {
 
     {
       my $nums = malloc int[3];
-      $nums[0] = 13I;
-      $nums[1] = 14I;
+      $nums[0] = 13i;
+      $nums[1] = 14i;
       std::printi($nums[0]);
       std::printi($nums[1]);
     }
@@ -403,17 +400,17 @@ package Test {
     # }
 
     {
-      my $num0 = 0B;
-      my $num1 = 1B;
-      my $num2 = 2B;
+      my $num0 = 0b;
+      my $num1 = 1b;
+      my $num2 = 2b;
       my $num3 = $num0 + $num1 + $num2;
       std::printb($num3);
     }
 
     {
-      my $num0 = 0S;
-      my $num1 = 1S;
-      my $num2 = 2S;
+      my $num0 = 0s;
+      my $num1 = 1s;
+      my $num2 = 2s;
       my $num3 = $num0 + $num1 + $num2;
       std::prints($num3);
     }
