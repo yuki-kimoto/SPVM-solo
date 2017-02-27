@@ -510,23 +510,23 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             constant_code = SPerl_CONSTANT_C_CODE_FLOAT;
             parser->bufptr++;
           }
-          else if (*parser->bufptr == 'd' || *parser->bufptr == 'D')  {
+          else if (*parser->bufptr == 'D')  {
             constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
             parser->bufptr++;
           }
-          else if (*parser->bufptr == 'b' || *parser->bufptr == 'B') {
+          else if (*parser->bufptr == 'B') {
             constant_code = SPerl_CONSTANT_C_CODE_BYTE;
             parser->bufptr++;
           }
-          else if (*parser->bufptr == 's' || *parser->bufptr == 'S') {
+          else if (*parser->bufptr == 'S') {
             constant_code = SPerl_CONSTANT_C_CODE_SHORT;
             parser->bufptr++;
           }
-          else if (*parser->bufptr == 'i' || *parser->bufptr == 'I') {
+          else if (*parser->bufptr == 'I') {
             constant_code = SPerl_CONSTANT_C_CODE_INT;
             parser->bufptr++;
           }
-          else if (*parser->bufptr == 'l' || *parser->bufptr == 'L') {
+          else if (*parser->bufptr == 'L') {
             constant_code = SPerl_CONSTANT_C_CODE_LONG;
             parser->bufptr++;
           }
