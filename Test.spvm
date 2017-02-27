@@ -10,14 +10,14 @@ package Test {
 
     # byte increment
     {
-      my $num = 1b;
+      my $num = (byte)1;
       $num++;
       std::printb($num);
     }
 
     # short increment
     {
-      my $num = 1s;
+      my $num = (short)1;
       $num++;
       std::prints($num);
     }
@@ -400,17 +400,17 @@ package Test {
     # }
 
     {
-      my $num0 = 0b;
-      my $num1 = 1b;
-      my $num2 = 2b;
+      my $num0 = (byte)0;
+      my $num1 = (byte)1;
+      my $num2 = (byte)2;
       my $num3 = $num0 + $num1 + $num2;
       std::printb($num3);
     }
 
     {
-      my $num0 = 0s;
-      my $num1 = 1s;
-      my $num2 = 2s;
+      my $num0 = (short)0;
+      my $num1 = (short)1;
+      my $num2 = (short)2;
       my $num3 = $num0 + $num1 + $num2;
       std::prints($num3);
     }

@@ -493,11 +493,11 @@ Declaration
 
 ### Core array type
 
-    byte[] byte array
-    short[] short array
-    int[] int array array
-    long[] long array
-    doube[] double array
+    byte[]   byte array
+    short[]  short array
+    int[]    int array array
+    long[]   long array
+    doube[]  double array
 
 Declaration
 
@@ -550,12 +550,6 @@ Type of constant default floating-point value is `double`.
     
 Type of constant is specified by type specifier.
 
-    # byte
-    3b
-    
-    # short
-    3s
-    
     # int
     3i
     
@@ -568,9 +562,11 @@ Type of constant is specified by type specifier.
     # double
     3.2d
 
-## Package name
+## Name
 
-Package name is a conbination of alphabets, numbers, and "::". Numbers should not appear as the first character.
+### Package name
+
+Package name is a conbination of alphabets, numbers, and `::`. Numbers should not appear as the first character. `_` can't be used in class name.
     
     # OK
     Foo
@@ -580,6 +576,68 @@ Package name is a conbination of alphabets, numbers, and "::". Numbers should no
     # Not OK
     1Foo
     Foo::2Bar
+    Foo_Bar;
+
+### Subroutine name
+
+Subroutine name is a conbination of alphabets, numbers, and `_` separaters. continual `_`(For example `__`) can't be used in subroutine name.
+
+    # OK
+    foo
+    foo1
+    foo_bar
+    
+    # Not OK
+    1foo
+    foo__bar
+
+### Field name
+
+Field name is a conbination of alphabets, numbers, and `_` separaters. continual `_`(For example `__`) can't be used in field name.
+
+    # OK
+    foo
+    foo1
+    foo_bar
+    
+    # Not OK
+    1foo
+    foo__bar
+
+### Absolute name
+
+Absolute name is combination of package name and subroutine name, or package name and field name.
+
+    ClassName1::foo
+    ClassName1::ClassName2::foo_bar
+
+### Coresponding C name
+
+C name is corresponding to SPVM name, 1 by 1.
+
+    # SPVM name
+    ClassName1::foo
+    ClassName1::ClassName2::foo_bar
+    
+    # C name
+    ClassName1__foo
+    ClassName1__ClassName2__foo_bar
+
+Array type
+
+    # SPVM name
+    byte[]
+    short[]
+    int[]
+    long[]
+    doube[]
+    
+    # C name
+    byte__array
+    short__array
+    int__array
+    long__array
+    doube__array
 
 # Contributors
 

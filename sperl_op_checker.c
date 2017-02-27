@@ -978,31 +978,20 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_CONSTANT* constant = op_cur->uv.constant;
                 
                 if (constant->num_str) {
-                  // Convert to double
+                  // float
                   if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
                     char* ends;
                     float num = strtof(constant->num_str, &ends);
                     constant->uv.float_value = num;
                     constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
                   }
+                  // double
                   else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
                     char* ends;
                     double num = strtod(constant->num_str, &ends);
                     
                     constant->uv.double_value = num;
                     constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
-                  }
-                  // byte
-                  else if (constant->code == SPerl_CONSTANT_C_CODE_BYTE) {
-                    int32_t num = atoi(constant->num_str);
-                    constant->uv.byte_value = num;
-                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte", strlen("byte"));
-                  }
-                  // int
-                  else if (constant->code == SPerl_CONSTANT_C_CODE_SHORT) {
-                    int32_t num = atoi(constant->num_str);
-                    constant->uv.short_value = num;
-                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "short", strlen("short"));
                   }
                   // int
                   else if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
