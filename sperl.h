@@ -7,8 +7,8 @@
 
 enum {
   SPerl_C_ARRAY_HEADER_LENGTH = sizeof(int64_t) * 2,
-  SPerl_C_ARRAY_HEADER_REF_COUNT_OFFSET = 0,
-  SPerl_C_ARRAY_HEADER_LENGTH_OFFSET = sizeof(int64_t),
+  SPerl_C_ARRAY_HEADER_REF_COUNT_OFFSET = sizeof(int64_t) * 0,
+  SPerl_C_ARRAY_HEADER_LENGTH_OFFSET = sizeof(int64_t) * 1,
 };
 
 enum {
