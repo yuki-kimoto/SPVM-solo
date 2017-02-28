@@ -258,7 +258,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   int64_t* call_stack = sperl->call_stack;
   
   // Program counter
-  register uint8_t* pc;
+  register uint8_t* pc = NULL;
   
   // Top position of operand stack
   register int64_t operand_stack_top = sperl->operand_stack_top;
@@ -300,7 +300,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
             call_stack[operand_stack_top + 1] = -1;
           }
           else {
-            call_stack[operand_stack_top + 1] = pc + 5 + 3;
+            call_stack[operand_stack_top + 1] = (intptr_t)pc + 5 + 3;
           }
           
           // Save vars base before
@@ -380,7 +380,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           // Restore vars
           vars = &call_stack[call_stack_base];
           
-          pc = return_address;
+          pc = (uint8_t*)return_address;
           goto *jump[*pc];
         }
       }
@@ -406,7 +406,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           // Restore vars
           vars = &call_stack[call_stack_base];
 
-          pc = return_address;
+          pc = (uint8_t*)return_address;
           goto *jump[*pc];
         }
       }
@@ -439,7 +439,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           // Restore vars
           vars = &call_stack[call_stack_base];
 
-          pc = return_address - 3;
+          pc = (uint8_t*)(return_address - 3);
           goto *jump[*pc];
         }
       }
@@ -1464,6 +1464,9 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
           allocate_size = SPerl_C_ARRAY_HEADER_LENGTH + sizeof(double) * length;
+        }
+        else {
+          assert(0);
         }
         array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
         

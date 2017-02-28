@@ -5,7 +5,7 @@
 
 // Array
 struct SPerl_constant_pool_sub {
-  uintptr_t native_address;
+  void* native_address;
   uint32_t bytecode_base;
   uint16_t operand_stack_max;
   uint16_t my_vars_length;

@@ -95,8 +95,8 @@ void SPerl_BYTECODE_BUILDER_push_inc_bytecode(SPerl* sperl, SPerl_BYTECODE_ARRAY
 }
 
 void SPerl_BYTECODE_BUILDER_push_load_bytecode(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecode_array, SPerl_OP* op_var) {
-
-  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_var);
+  
+  (void)sperl;
   
   SPerl_VAR* var = op_var->uv.var;
 
@@ -269,24 +269,24 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   
                   // Default
-                  for (int64_t i = 0; i < sizeof(int64_t); i++) {
+                  for (uint64_t i = 0; i < sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
                   
                   // Low
-                  for (int64_t i = 0; i < sizeof(int64_t); i++) {
+                  for (uint64_t i = 0; i < sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
                   *(int64_t*)&bytecode_array->values[bytecode_array->length - sizeof(int64_t)] = min;
                   
                   // Low
-                  for (int64_t i = 0; i < sizeof(int64_t); i++) {
+                  for (uint64_t i = 0; i < sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
                   *(int64_t*)&bytecode_array->values[bytecode_array->length - sizeof(int64_t)] = max;
                   
                   // Offsets
-                  for (int64_t i = 0; i < (max - min + 1) * sizeof(int64_t); i++) {
+                  for (uint64_t i = 0; i < (max - min + 1) * sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
                 }
@@ -311,18 +311,18 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   
                   // Default
-                  for (int64_t i = 0; i < sizeof(int64_t); i++) {
+                  for (uint64_t i = 0; i < sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
                   
                   // Case count
-                  for (int64_t i = 0; i < sizeof(int64_t); i++) {
+                  for (uint64_t i = 0; i < sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
                   *(int64_t*)&bytecode_array->values[bytecode_array->length - sizeof(int64_t)] = length;
                   
-                  int64_t size_of_match_offset_pairs = length * sizeof(int64_t) * 2;
-                  for (size_t i = 0; i < size_of_match_offset_pairs; i++) {
+                  uint64_t size_of_match_offset_pairs = length * sizeof(int64_t) * 2;
+                  for (uint64_t i = 0; i < size_of_match_offset_pairs; i++) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, 0);
                   }
                 }
@@ -1119,8 +1119,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               }
               case SPerl_OP_C_CODE_ASSIGN: {
                 
-                SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-                
                 if (op_cur->first->code == SPerl_OP_C_CODE_VAR) {
                   SPerl_OP* op_var = op_cur->first;
                   int32_t my_var_pos = op_var->uv.var->op_my_var->uv.my_var->address;
@@ -1161,7 +1159,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 else if (op_cur->first->code == SPerl_OP_C_CODE_ARRAY_ELEM) {
                   
                   SPerl_OP* op_array_elem = op_cur->first;
-                  SPerl_OP* op_type = op_array_elem->first;
                   SPerl_OP* op_term_index = op_array_elem->last;
                   
                   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_array_elem);
@@ -1424,7 +1421,6 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_POP: {
                 
                 SPerl_OP* op_first = op_cur->first;
-                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_first);
                 
                 if (op_first->code != SPerl_OP_C_CODE_ASSIGN && op_first->code != SPerl_OP_C_CODE_RETURN && !op_first->lvalue) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_POP);
@@ -1578,13 +1574,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BCONST_1);
                     bytecode_set = 1;
                   }
-                  else if (constant->uv.byte_value >= -128 && constant->uv.byte_value <= 127) {
+                  else {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_BBPUSH);
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->uv.byte_value & 0xFF);
                     bytecode_set = 1;
-                  }
-                  else {
-                    assert(0);
                   }
                 }
                 else if (constant->code == SPerl_CONSTANT_C_CODE_SHORT) {
@@ -1601,14 +1594,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->uv.short_value & 0xFF);
                     bytecode_set = 1;
                   }
-                  else if (constant->uv.short_value >= -32768 && constant->uv.short_value <= 32767) {
+                  else {
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_SSPUSH);
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, (constant->uv.short_value >> 8) & 0xFF);
                     SPerl_BYTECODE_ARRAY_push(bytecode_array, constant->uv.short_value & 0xFF);
                     bytecode_set = 1;
-                  }
-                  else {
-                    assert(0);
                   }
                 }
                 else if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
