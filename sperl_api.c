@@ -258,7 +258,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   int64_t* call_stack = sperl->call_stack;
   
   // Program counter
-  register uint8_t* pc = -1;
+  register uint8_t* pc;
   
   // Top position of operand stack
   register int64_t operand_stack_top = sperl->operand_stack_top;
@@ -296,7 +296,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(int64_t));
 
           // Save return address(operand + (throw or goto exception handler))
-          if (pc == -1) {
+          if (call_stack_base == call_stack_base_start) {
             call_stack[operand_stack_top + 1] = -1;
           }
           else {
