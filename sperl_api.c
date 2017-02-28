@@ -1434,6 +1434,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         // Allocate memory
         size_t fields_byte_size = constant_pool_package->byte_size;
         size_t allocate_size = SPerl_C_OBJECT_HEADER_BYTE_SIZE + fields_byte_size;
+        
         intptr_t object = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
         
         // Set reference count
