@@ -482,18 +482,13 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           parser->bufptr++;
           
           // Scan number
-          while(isdigit(*parser->bufptr) || *parser->bufptr == '.') {
+          while(isdigit(*parser->bufptr) || isalpha(*parser->bufptr) || *parser->bufptr == '.') {
             if (*parser->bufptr == '.') {
               point_count++;
             }
             parser->bufptr++;
           }
-
-          if (point_count >= 2) {
-            fprintf(stderr, "Invalid number literal\n");
-            exit(1);
-          }
-
+          
           // Number literal(first is space for sign)
           size_t str_len = parser->bufptr - cur_token_ptr;
           if (str_len > SIZE_MAX - 2) {
@@ -505,13 +500,13 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           
           // Constant type
           int32_t constant_code;
-          if (*parser->bufptr == 'f')  {
+          if (num_str[str_len - 1] == 'f')  {
             constant_code = SPerl_CONSTANT_C_CODE_FLOAT;
-            parser->bufptr++;
+            num_str[str_len - 1] = '\0';
           }
-          else if (*parser->bufptr == 'd')  {
+          else if (num_str[str_len - 1] == 'd')  {
             constant_code = SPerl_CONSTANT_C_CODE_DOUBLE;
-            parser->bufptr++;
+            num_str[str_len - 1] = '\0';
           }
           else {
             if (point_count) {
@@ -528,22 +523,28 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           constant->code = constant_code;
           
           // float
+          char* ends = NULL;
           if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
-            char* ends;
             float num = strtof(num_str, &ends);
             constant->uv.float_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
           }
           // double
           else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
-            char* ends;
             double num = strtod(num_str, &ends);
             
             constant->uv.double_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
           }
+          // long
           else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
-            int64_t num = strtol(num_str, NULL, 0);
+            int64_t num;
+            if (num_str[0] == '0' && num_str[1] == 'x') {
+              num = strtol(num_str, ends, 16);
+            }
+            else {
+              num = strtol(num_str, ends, 10);
+            }
             constant->uv.long_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
           }
