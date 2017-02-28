@@ -125,7 +125,7 @@ package Test {
     std::printl(1);
     std::printl(2);
     std::printl(9223372036854775807);
-    std::printl(-9223372036854775808);
+    std::printl(-9223372036854775807);
     std::printl(-2147483648);
     std::printl(-32769);
     std::printl(-32768);

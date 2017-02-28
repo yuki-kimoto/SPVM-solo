@@ -527,32 +527,43 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           char *end;
           if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
             float num = strtof(num_str, &end);
+            if (*end != '\0') {
+              fprintf(stderr, "Invalid number literal %s at %s line %d\n", num_str, parser->cur_module_path, parser->cur_line);
+              exit(1);
+            }
             constant->uv.float_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
           }
           // double
           else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
             double num = strtod(num_str, &end);
-            
+            if (*end != '\0') {
+              fprintf(stderr, "Invalid number literal %s at %s line %d\n", num_str, parser->cur_module_path, parser->cur_line);
+              exit(1);
+            }
             constant->uv.double_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
           }
           // long
           else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
             int64_t num;
+            errno = 0;
             if (num_str[0] == '0' && num_str[1] == 'x') {
               num = strtol(num_str, &end, 16);
             }
             else {
               num = strtol(num_str, &end, 10);
             }
-            
+            if (*end != '\0') {
+              fprintf(stderr, "Invalid number literal %s at %s line %d\n", num_str, parser->cur_module_path, parser->cur_line);
+              exit(1);
+            }
+            else if (num == INT64_MAX && errno == ERANGE) {
+              fprintf(stderr, "Number literal out of range %s at %s line %d\n", num_str, parser->cur_module_path, parser->cur_line);
+              exit(1);
+            }
             constant->uv.long_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
-          }
-          if (*end != '\0') {
-            fprintf(stderr, "Invalid number literal %s at %s line %d\n", num_str, parser->cur_module_path, parser->cur_line);
-            exit(1);
           }
           
           // Constant pool adding condition
