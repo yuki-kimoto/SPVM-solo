@@ -70,8 +70,8 @@ package Test {
     {
       my $m = malloc Test::Minimal;
       
-      $m{x} = 2;
-      $m{y} = 3;
+      $m{x} = 20;
+      $m{y} = 107;
       
       std::printl($m{x});
       std::printl($m{y});
