@@ -630,6 +630,9 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         memset((void*)array, 0, allocate_size);
         memcpy((void*)(array + SPerl_C_ARRAY_HEADER_LENGTH), chars_ptr, length);
         
+        // Set reference count
+        *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_OFFSET) = 1;
+        
         // Set array length
         *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_OFFSET) = length;
         
@@ -1469,6 +1472,9 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           assert(0);
         }
         array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+
+        // Set reference count
+        *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_OFFSET) = 1;
         
         // Set array length
         *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_OFFSET) = length;
@@ -1829,6 +1835,12 @@ int64_t SPerl_API_get_array_length(SPerl* sperl, intptr_t array) {
   (void)sperl;
   
   return *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_OFFSET);
+}
+
+int64_t SPerl_API_get_array_ref_count(SPerl* sperl, intptr_t array) {
+  (void)sperl;
+  
+  return *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_OFFSET);
 }
 
 int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, intptr_t array) {

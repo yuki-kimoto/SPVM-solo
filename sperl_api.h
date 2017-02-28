@@ -4,6 +4,7 @@
 void SPerl_API_init_env(SPerl* sperl);
 void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name);
 
+int64_t SPerl_API_get_array_ref_count(SPerl* sperl, intptr_t array);
 int64_t SPerl_API_get_array_length(SPerl* sperl, intptr_t array);
 int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, intptr_t array);
 int16_t* SPerl_API_get_short_array_data(SPerl* sperl, intptr_t array);
