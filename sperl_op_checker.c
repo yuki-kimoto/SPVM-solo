@@ -955,63 +955,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 break;
               }
-              case SPerl_OP_C_CODE_CONSTANT: {
-                
-                // Add constant to constant pool
-                SPerl_CONSTANT* constant = op_cur->uv.constant;
-                
-                if (constant->num_str) {
-                  // float
-                  if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
-                    char* ends;
-                    float num = strtof(constant->num_str, &ends);
-                    constant->uv.float_value = num;
-                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
-                  }
-                  // double
-                  else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
-                    char* ends;
-                    double num = strtod(constant->num_str, &ends);
-                    
-                    constant->uv.double_value = num;
-                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
-                  }
-                  else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
-                    int64_t num = strtol(constant->num_str, NULL, 0);
-                    constant->uv.long_value = num;
-                    constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
-                  }
-                }
-                
-                // Constant pool adding condition
-                _Bool isnt_add = 0;
-                if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
-                  if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
-                    isnt_add = 1;
-                  }
-                }
-                else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
-                  if (constant->uv.long_value == 0 || constant->uv.long_value == 1) {
-                    isnt_add = 1;
-                  }
-                }
-                else if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
-                  if (constant->uv.float_value == 0 || constant->uv.float_value == 1 || constant->uv.float_value == 2) {
-                    isnt_add = 1;
-                  }
-                }
-                else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
-                  if (constant->uv.double_value == 0 || constant->uv.double_value == 1) {
-                    isnt_add = 1;
-                  }
-                }
-                
-                if (!isnt_add) {
-                  SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant);
-                }
-                
-                break;
-              }
               // End of scope
               case SPerl_OP_C_CODE_BLOCK: {
                 assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);

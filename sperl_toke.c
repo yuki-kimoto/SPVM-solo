@@ -526,17 +526,53 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_CONSTANT);
           SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
           constant->code = constant_code;
-          constant->num_str = num_str;
           
-          // Constant type
-          if (constant_code == SPerl_CONSTANT_C_CODE_FLOAT) {
+          // float
+          if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
+            char* ends;
+            float num = strtof(num_str, &ends);
+            constant->uv.float_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
           }
-          else if (constant_code == SPerl_CONSTANT_C_CODE_DOUBLE) {
+          // double
+          else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
+            char* ends;
+            double num = strtod(num_str, &ends);
+            
+            constant->uv.double_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
           }
-          else if (constant_code == SPerl_CONSTANT_C_CODE_LONG) {
+          else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
+            int64_t num = strtol(num_str, NULL, 0);
+            constant->uv.long_value = num;
             constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+          }
+          
+          // Constant pool adding condition
+          _Bool isnt_add = 0;
+          if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
+            if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
+              isnt_add = 1;
+            }
+          }
+          else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
+            if (constant->uv.long_value == 0 || constant->uv.long_value == 1) {
+              isnt_add = 1;
+            }
+          }
+          else if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
+            if (constant->uv.float_value == 0 || constant->uv.float_value == 1 || constant->uv.float_value == 2) {
+              isnt_add = 1;
+            }
+          }
+          else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
+            if (constant->uv.double_value == 0 || constant->uv.double_value == 1) {
+              isnt_add = 1;
+            }
+          }
+          
+          if (!isnt_add) {
+            SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant);
           }
           
           op->uv.constant = constant;
