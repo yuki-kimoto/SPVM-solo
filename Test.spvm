@@ -297,7 +297,7 @@ package Test {
       std::printl(@$nums);
       my $nums_length : long = @$nums;
     }
-
+    
     {
       my $nums = malloc int[3];
       $nums[0] = (int)13;

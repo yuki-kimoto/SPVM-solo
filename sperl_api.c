@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <string.h>
 #include <math.h>
+#include <stdlib.h>
 
 #include "sperl.h"
 #include "sperl.h"
@@ -630,7 +631,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         memcpy((void*)(array + SPerl_C_ARRAY_HEADER_LENGTH), chars_ptr, length);
         
         // Set array length
-        *(int64_t*)array = length;
+        *(int64_t*)(array + sizeof(int64_t)) = length;
         
         // Set array
         operand_stack_top++;
@@ -1467,7 +1468,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
         
         // Set array length
-        *(int64_t*)array = length;
+        *(int64_t*)(array + sizeof(int64_t)) = length;
         
         // Set array
         *(intptr_t*)&call_stack[operand_stack_top] = array;
@@ -1476,7 +1477,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
-        call_stack[operand_stack_top] = *(int64_t*)*(intptr_t*)&call_stack[operand_stack_top];
+        call_stack[operand_stack_top] = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top] + sizeof(int64_t));
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_WIDE:
@@ -1823,35 +1824,36 @@ void SPerl_API_push_var_address(SPerl* sperl, intptr_t value) {
 
 int64_t SPerl_API_get_array_length(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return *(int64_t*)array;
+  
+  return *(int64_t*)(array + sizeof(int64_t));
 }
 
 int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return array +  SPerl_C_ARRAY_HEADER_LENGTH;
+  return (int8_t*)(array +  SPerl_C_ARRAY_HEADER_LENGTH);
 }
 
 int16_t* SPerl_API_get_short_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return array +  SPerl_C_ARRAY_HEADER_LENGTH;
+  return (int16_t*)(array +  SPerl_C_ARRAY_HEADER_LENGTH);
 }
 
 int32_t* SPerl_API_get_int_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return array +  SPerl_C_ARRAY_HEADER_LENGTH;
+  return (int32_t*)(array +  SPerl_C_ARRAY_HEADER_LENGTH);
 }
 
 int64_t* SPerl_API_get_long_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return array +  SPerl_C_ARRAY_HEADER_LENGTH;
+  return (int64_t*)(array +  SPerl_C_ARRAY_HEADER_LENGTH);
 }
 
 float* SPerl_API_get_float_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return array +  SPerl_C_ARRAY_HEADER_LENGTH;
+  return (float*)(array +  SPerl_C_ARRAY_HEADER_LENGTH);
 }
 
 double* SPerl_API_get_double_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return array +  SPerl_C_ARRAY_HEADER_LENGTH;
+  return (double*)(array + SPerl_C_ARRAY_HEADER_LENGTH);
 }
