@@ -1431,12 +1431,16 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPerl_CONSTANT_POOL_PACKAGE*)&constant_pool[package_constant_pool_address];
         
+        // Allocate memory
         size_t byte_size = constant_pool_package->byte_size;
-        intptr_t address = (intptr_t)SPerl_HEAP_alloc(sperl, byte_size);
-        memset((void*)address, 0, byte_size);
+        intptr_t object = (intptr_t)SPerl_HEAP_alloc(sperl, byte_size);
         
+        // Initialize fields area by 0
+        memset((void*)object, 0, byte_size);
+        
+        // Push object
         operand_stack_top++;
-        *(intptr_t*)&call_stack[operand_stack_top] = address;
+        *(intptr_t*)&call_stack[operand_stack_top] = object;
         
         pc += 5;
         goto *jump[*pc];
