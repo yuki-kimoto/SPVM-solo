@@ -8,6 +8,7 @@
 #include "sperl_hash.h"
 #include "sperl_array.h"
 #include "sperl_api.h"
+#include "sperl_virtual_memory.h"
 
 void SPerl_run(SPerl* sperl, const char* package_name) {
 
@@ -79,6 +80,8 @@ SPerl* SPerl_new() {
   
   sperl->call_stack_base = 0;
   sperl->operand_stack_top = -1;
+  
+  sperl->virtual_memory = SPerl_VIRTUAL_MEMORY_new(sperl);
   
   return sperl;
 }

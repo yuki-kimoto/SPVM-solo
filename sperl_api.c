@@ -25,6 +25,7 @@
 #include "sperl_constant_pool_package.h"
 #include "sperl_constant_pool_field.h"
 #include "sperl_resolved_type.h"
+#include "sperl_virtual_memory.h"
 
 void SPerl_API_init_env(SPerl* sperl) {
   
