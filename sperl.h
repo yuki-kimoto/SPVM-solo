@@ -11,6 +11,11 @@ enum {
   SPerl_C_ARRAY_HEADER_LENGTH_OFFSET = sizeof(int64_t),
 };
 
+enum {
+  SPerl_C_OBJECT_HEADER_LENGTH = sizeof(int64_t),
+  SPerl_C_OBJECT_HEADER_REF_COUNT_OFFSET = 0,
+};
+
 // Parser information
 struct sperl_ {
   // Memory_pool
