@@ -109,7 +109,7 @@ package Test {
     std::printl(sum2(1, 2));
 
     # Constant float
-    std::printf(0f);
+    std::printf(0.3f);
     std::printf(1f);
     std::printf(2f);
     std::printf(1.2f);
