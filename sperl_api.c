@@ -625,16 +625,16 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         // Allocate array
         intptr_t array;
-        size_t allocate_size = SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * length;
+        size_t allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
         array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
         memset((void*)array, 0, allocate_size);
-        memcpy((void*)(array + SPerl_C_ARRAY_HEADER_LENGTH), chars_ptr, length);
+        memcpy((void*)(array + SPerl_C_ARRAY_HEADER_BYTE_SIZE), chars_ptr, length);
         
         // Set reference count
-        *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_OFFSET) = 1;
+        *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
         
         // Set array length
-        *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_OFFSET) = length;
+        *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_BYTE_OFFSET) = length;
         
         // Set array
         operand_stack_top++;
@@ -670,37 +670,37 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_IALOAD:
         *(int32_t*)&call_stack[operand_stack_top - 1]
-          = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * (intptr_t)call_stack[operand_stack_top]);
+          = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int32_t) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_LALOAD:
         call_stack[operand_stack_top - 1]
-          = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * (intptr_t)call_stack[operand_stack_top]);
+          = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int64_t) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_FALOAD:
         *(float*)&call_stack[operand_stack_top - 1]
-          = *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(float) * (intptr_t)call_stack[operand_stack_top]);
+          = *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(float) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_DALOAD:
         *(double*)&call_stack[operand_stack_top - 1]
-          = *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(double) * (intptr_t)call_stack[operand_stack_top]);
+          = *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(double) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_BALOAD:
         *(int8_t*)&call_stack[operand_stack_top - 1]
-          = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * (intptr_t)call_stack[operand_stack_top]);
+          = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_SALOAD:
         *(int16_t*)&call_stack[operand_stack_top - 1]
-          = *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * (intptr_t)call_stack[operand_stack_top]);
+          = *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int16_t) * (intptr_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -730,37 +730,37 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_BASTORE:
-        *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * (intptr_t)call_stack[operand_stack_top - 1])
+        *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * (intptr_t)call_stack[operand_stack_top - 1])
           = *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_SASTORE:
-        *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * (intptr_t)call_stack[operand_stack_top - 1])
+        *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int16_t) * (intptr_t)call_stack[operand_stack_top - 1])
           = *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_IASTORE:
-        *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * (intptr_t)call_stack[operand_stack_top - 1])
+        *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int32_t) * (intptr_t)call_stack[operand_stack_top - 1])
           = *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_LASTORE:
-        *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * (intptr_t)call_stack[operand_stack_top - 1])
+        *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int64_t) * (intptr_t)call_stack[operand_stack_top - 1])
           = call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_FASTORE:
-        *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(float) * (intptr_t)call_stack[operand_stack_top - 1])
+        *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(float) * (intptr_t)call_stack[operand_stack_top - 1])
           = *(float*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_DASTORE:
-        *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_LENGTH + sizeof(double) * (intptr_t)call_stack[operand_stack_top - 1])
+        *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(double) * (intptr_t)call_stack[operand_stack_top - 1])
           = *(double*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
@@ -1451,22 +1451,22 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         intptr_t array;
         size_t allocate_size;
         if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
-          allocate_size = SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int8_t) * length;
+          allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
-          allocate_size = SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int16_t) * length;
+          allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int16_t) * length;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-          allocate_size = SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int32_t) * length;
+          allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int32_t) * length;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-          allocate_size = SPerl_C_ARRAY_HEADER_LENGTH + sizeof(int64_t) * length;
+          allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int64_t) * length;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-          allocate_size = SPerl_C_ARRAY_HEADER_LENGTH + sizeof(float) * length;
+          allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(float) * length;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-          allocate_size = SPerl_C_ARRAY_HEADER_LENGTH + sizeof(double) * length;
+          allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(double) * length;
         }
         else {
           assert(0);
@@ -1474,10 +1474,10 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
 
         // Set reference count
-        *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_OFFSET) = 1;
+        *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
         
         // Set array length
-        *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_OFFSET) = length;
+        *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_BYTE_OFFSET) = length;
         
         // Set array
         *(intptr_t*)&call_stack[operand_stack_top] = array;
@@ -1486,7 +1486,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
-        call_stack[operand_stack_top] = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top] + SPerl_C_ARRAY_HEADER_LENGTH_OFFSET);
+        call_stack[operand_stack_top] = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top] + SPerl_C_ARRAY_HEADER_LENGTH_BYTE_OFFSET);
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_WIDE:
@@ -1834,41 +1834,41 @@ void SPerl_API_push_var_address(SPerl* sperl, intptr_t value) {
 int64_t SPerl_API_get_array_length(SPerl* sperl, intptr_t array) {
   (void)sperl;
   
-  return *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_OFFSET);
+  return *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_BYTE_OFFSET);
 }
 
 int64_t SPerl_API_get_array_ref_count(SPerl* sperl, intptr_t array) {
   (void)sperl;
   
-  return *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_OFFSET);
+  return *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_BYTE_OFFSET);
 }
 
 int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return (int8_t*)(array +  SPerl_C_ARRAY_HEADER_LENGTH);
+  return (int8_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
 int16_t* SPerl_API_get_short_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return (int16_t*)(array +  SPerl_C_ARRAY_HEADER_LENGTH);
+  return (int16_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
 int32_t* SPerl_API_get_int_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return (int32_t*)(array +  SPerl_C_ARRAY_HEADER_LENGTH);
+  return (int32_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
 int64_t* SPerl_API_get_long_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return (int64_t*)(array +  SPerl_C_ARRAY_HEADER_LENGTH);
+  return (int64_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
 float* SPerl_API_get_float_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return (float*)(array +  SPerl_C_ARRAY_HEADER_LENGTH);
+  return (float*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
 double* SPerl_API_get_double_array_data(SPerl* sperl, intptr_t array) {
   (void)sperl;
-  return (double*)(array + SPerl_C_ARRAY_HEADER_LENGTH);
+  return (double*)(array + SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }

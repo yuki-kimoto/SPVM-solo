@@ -6,14 +6,14 @@
 #include "sperl_base.h"
 
 enum {
-  SPerl_C_ARRAY_HEADER_LENGTH = sizeof(int64_t) * 2,
-  SPerl_C_ARRAY_HEADER_REF_COUNT_OFFSET = sizeof(int64_t) * 0,
-  SPerl_C_ARRAY_HEADER_LENGTH_OFFSET = sizeof(int64_t) * 1,
+  SPerl_C_ARRAY_HEADER_BYTE_SIZE = sizeof(int64_t) * 2,
+  SPerl_C_ARRAY_HEADER_REF_COUNT_BYTE_OFFSET = sizeof(int64_t) * 0,
+  SPerl_C_ARRAY_HEADER_LENGTH_BYTE_OFFSET = sizeof(int64_t) * 1,
 };
 
 enum {
-  SPerl_C_OBJECT_HEADER_LENGTH = sizeof(int64_t),
-  SPerl_C_OBJECT_HEADER_REF_COUNT_OFFSET = 0,
+  SPerl_C_OBJECT_HEADER_BYTE_SIZE = sizeof(int64_t),
+  SPerl_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET = 0,
 };
 
 // Parser information
