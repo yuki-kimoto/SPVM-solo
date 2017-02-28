@@ -149,6 +149,7 @@ package Test {
     std::printl(65535);
     std::printl(65536);
     std::printl(2147483647);
+    std::printl(0xFF);
     
     # Constant int
     std::printi((int)-2147483648);
