@@ -94,9 +94,9 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
       ptr++;
     }
     if (length >= SIZE_MAX) {
-      SPerl_ALLOCATOR_exit_with_malloc_failure();
+      SPerl_ALLOCATOR_exit_with_malloc_failure(sperl);
     }
-    char* token = (char*) SPerl_ALLOCATOR_safe_malloc_zero(length + 1, sizeof(char));
+    char* token = (char*) SPerl_ALLOCATOR_safe_malloc_zero(sperl, length + 1, sizeof(char));
     memcpy(token, parser->befbufptr + empty_count, length);
     token[length] = '\0';
 

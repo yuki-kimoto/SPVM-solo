@@ -8,7 +8,7 @@ struct SPerl_memory_pool_page {
   SPerl_MEMORY_POOL_PAGE* next;
 };
 
-SPerl_MEMORY_POOL_PAGE* SPerl_MEMORY_POOL_PAGE_new();
-void SPerl_MEMORY_POOL_PAGE_free (SPerl_MEMORY_POOL_PAGE* page);
+SPerl_MEMORY_POOL_PAGE* SPerl_MEMORY_POOL_PAGE_new(SPerl* sperl);
+void SPerl_MEMORY_POOL_PAGE_free (SPerl* sperl, SPerl_MEMORY_POOL_PAGE* page);
 
 #endif

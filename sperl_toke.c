@@ -492,9 +492,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           // Number literal(first is space for sign)
           size_t str_len = parser->bufptr - cur_token_ptr;
           if (str_len > SIZE_MAX - 2) {
-            SPerl_ALLOCATOR_exit_with_malloc_failure();
+            SPerl_ALLOCATOR_exit_with_malloc_failure(sperl);
           }
-          char* num_str = (char*) SPerl_ALLOCATOR_safe_malloc(str_len + 2, sizeof(char));
+          char* num_str = (char*) SPerl_ALLOCATOR_safe_malloc(sperl, str_len + 2, sizeof(char));
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
           

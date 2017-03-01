@@ -59,7 +59,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
 }
 
 SPerl* SPerl_new() {
-  SPerl* sperl = SPerl_ALLOCATOR_safe_malloc_zero(1, sizeof(SPerl));
+  SPerl* sperl = SPerl_ALLOCATOR_safe_malloc_zero(sperl, 1, sizeof(SPerl));
   
   // Manipulate memory. This is freed last.
   sperl->array_ptrs = SPerl_ARRAY_new(sperl, 0);

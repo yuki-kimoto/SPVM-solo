@@ -7,67 +7,67 @@
 #include "sperl_memory_pool.h"
 #include "sperl_allocator.h"
 
-static void exit_with_malloc_failure() {
+static void exit_with_malloc_failure(SPerl* sperl) {
   fprintf(stderr, "Failed to allocate memory. Sperl will exit.\n");
   exit(EXIT_FAILURE);
   /*NOTREACHED*/
 }
 
 // This function exports "exit_with_malloc_failure".
-void SPerl_ALLOCATOR_exit_with_malloc_failure() {
-  exit_with_malloc_failure();
+void SPerl_ALLOCATOR_exit_with_malloc_failure(SPerl* sperl) {
+  exit_with_malloc_failure(sperl);
 }
 
-void* SPerl_ALLOCATOR_safe_malloc(size_t count, size_t size) {
+void* SPerl_ALLOCATOR_safe_malloc(SPerl* sperl, size_t count, size_t size) {
   if (count > SIZE_MAX / size) {
-    exit_with_malloc_failure();
+    exit_with_malloc_failure(sperl);
   }
 
   size_t const allocation_size = count * size;
   if (allocation_size == 0) {
-    exit_with_malloc_failure();
+    exit_with_malloc_failure(sperl);
   }
 
   void* const block = malloc(allocation_size);
   if (!block) {
-    exit_with_malloc_failure();
+    exit_with_malloc_failure(sperl);
   }
 
   return block;
 }
 
-void* SPerl_ALLOCATOR_safe_malloc_zero(size_t count, size_t size) {
+void* SPerl_ALLOCATOR_safe_malloc_zero(SPerl* sperl, size_t count, size_t size) {
   if (count > SIZE_MAX / size) {
-    exit_with_malloc_failure();
+    exit_with_malloc_failure(sperl);
   }
 
   size_t const allocation_size = count * size;
   if (allocation_size == 0) {
-    exit_with_malloc_failure();
+    exit_with_malloc_failure(sperl);
   }
 
   void* const block = calloc(count, size);
   if (!block) {
-    exit_with_malloc_failure();
+    exit_with_malloc_failure(sperl);
   }
 
   return block;
 }
 
-void* SPerl_ALLOCATOR_safe_realloc(void* ptr, size_t count, size_t size) {
+void* SPerl_ALLOCATOR_safe_realloc(SPerl* sperl, void* ptr, size_t count, size_t size) {
   if (count > SIZE_MAX / size) {
-    exit_with_malloc_failure();
+    exit_with_malloc_failure(sperl);
   }
 
   size_t const allocation_size = count * size;
   if (allocation_size == 0) {
-    exit_with_malloc_failure();
+    exit_with_malloc_failure(sperl);
   }
 
   void* const block = realloc(ptr, allocation_size);
   if (!block) {
     free(ptr);
-    exit_with_malloc_failure();
+    exit_with_malloc_failure(sperl);
   }
 
   return block;
@@ -106,7 +106,7 @@ char* SPerl_ALLOCATOR_new_string(SPerl* sperl, size_t length) {
     str = (char*) SPerl_MEMORY_POOL_alloc(sperl, sperl->memory_pool, 40);
   }
   else {
-    str = (char*) SPerl_ALLOCATOR_safe_malloc(length + 1, sizeof(char));
+    str = (char*) SPerl_ALLOCATOR_safe_malloc(sperl, length + 1, sizeof(char));
     SPerl_ARRAY_push(sperl, sperl->long_str_ptrs, str);
   }
   
