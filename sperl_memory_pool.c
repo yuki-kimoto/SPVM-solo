@@ -1,11 +1,14 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "sperl.h"
 #include "sperl_memory_pool.h"
 #include "sperl_memory_pool_page.h"
 #include "sperl_allocator.h"
 
-SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(int32_t base_capacity) {
+SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, int32_t base_capacity) {
+  (void)sperl;
+  
   SPerl_MEMORY_POOL* memory_pool = (SPerl_MEMORY_POOL*) SPerl_ALLOCATOR_safe_malloc_zero(1, sizeof(SPerl_MEMORY_POOL));
   if (base_capacity == 0) {
     memory_pool->base_capacity = 4096;
@@ -26,7 +29,8 @@ SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(int32_t base_capacity) {
   return memory_pool;
 }
 
-void* SPerl_MEMORY_POOL_alloc(SPerl_MEMORY_POOL* memory_pool, int32_t block_size) {
+void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int32_t block_size) {
+  (void)sperl;
   
   int32_t page_depth = memory_pool->page_depth;
   int32_t current_pos = memory_pool->current_pos;
@@ -62,7 +66,8 @@ void* SPerl_MEMORY_POOL_alloc(SPerl_MEMORY_POOL* memory_pool, int32_t block_size
   return data_ptr;
 }
 
-void SPerl_MEMORY_POOL_free(SPerl_MEMORY_POOL* memory_pool) {
+void SPerl_MEMORY_POOL_free(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool) {
+  (void)sperl;
   
   SPerl_MEMORY_POOL_PAGE* next_page = memory_pool->page;
   

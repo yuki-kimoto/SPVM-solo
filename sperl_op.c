@@ -603,8 +603,6 @@ void SPerl_OP_check(SPerl* sperl) {
 
 void SPerl_OP_resolve_sub_name(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_name) {
   
-  SPerl_PARSER* parser = sperl->parser;
-  
   SPerl_NAME_INFO* name_info = op_name->uv.name_info;
   
   const char* sub_abs_name = NULL;
@@ -1124,10 +1122,10 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
       const char* name = op_sub_name->uv.name;
       
       // Create abs name
-      char* abs_name = SPerl_OP_create_abs_name(sperl, package_name, name);
+      const char* abs_name = SPerl_OP_create_abs_name(sperl, package_name, name);
       
       // Create op abs name
-      SPerl_OP* op_abs_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->file);
+      SPerl_OP* op_abs_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->line);
       op_abs_name->uv.name = abs_name;
       
       // Set abs name
@@ -1255,7 +1253,7 @@ SPerl_OP* SPerl_OP_newOP_LIST(SPerl* sperl, const char* file, uint32_t line) {
 
 SPerl_OP* SPerl_OP_newOP(SPerl* sperl, int32_t code, const char* file, uint32_t line) {
 
-  SPerl_OP *op = SPerl_MEMORY_POOL_alloc(sperl->memory_pool, sizeof(SPerl_OP));
+  SPerl_OP *op = SPerl_MEMORY_POOL_alloc(sperl, sperl->memory_pool, sizeof(SPerl_OP));
   
   memset(op, 0, sizeof(SPerl_OP));
   

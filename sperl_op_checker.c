@@ -101,7 +101,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
 
           case SPerl_OP_C_CODE_DECL_FIELD: {
             SPerl_FIELD* field = op_cur->uv.field;
-            SPerl_RESOLVED_TYPE* resolved_type = field->op_type->uv.type;
+            SPerl_RESOLVED_TYPE* resolved_type = field->op_type->uv.type->resolved_type;
             if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type_array(sperl, resolved_type)) {
               SPerl_yyerror_format(sperl, "filed type must be core type or core type array at %s line %d\n", op_cur->file, op_cur->line);
               parser->fatal_error = 1;
@@ -146,7 +146,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           case SPerl_OP_C_CODE_BLOCK: {
             if (block_start) {
               assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
-              int32_t* block_base_ptr = SPerl_MEMORY_POOL_alloc(sperl->memory_pool, sizeof(int32_t));
+              int32_t* block_base_ptr = SPerl_MEMORY_POOL_alloc(sperl, sperl->memory_pool, sizeof(int32_t));
               *block_base_ptr = (int32_t) op_my_var_stack->length;
               SPerl_ARRAY_push(block_base_stack, block_base_ptr);
               block_base = *block_base_ptr;

@@ -8,6 +8,7 @@
 #include "sperl_hash.h"
 #include "sperl_array.h"
 #include "sperl_api.h"
+#include "sperl_memory_pool.h"
 
 void SPerl_run(SPerl* sperl, const char* package_name) {
 
@@ -61,7 +62,7 @@ SPerl* SPerl_new() {
   sperl->array_ptrs = SPerl_ARRAY_new(0);
   sperl->hash_ptrs = SPerl_ARRAY_new(0);
   sperl->long_str_ptrs = SPerl_ARRAY_new(0);
-  sperl->memory_pool = SPerl_MEMORY_POOL_new(0);
+  sperl->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
 
   // Parser
   sperl->parser = SPerl_PARSER_new(sperl);
@@ -107,7 +108,7 @@ void SPerl_free(SPerl* sperl) {
   SPerl_ARRAY_free(sperl->long_str_ptrs);
   
   // Free memory pool */
-  SPerl_MEMORY_POOL_free(sperl->memory_pool);
+  SPerl_MEMORY_POOL_free(sperl, sperl->memory_pool);
   
   free(sperl);
 }

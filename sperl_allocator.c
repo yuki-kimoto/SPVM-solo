@@ -74,7 +74,7 @@ void* SPerl_ALLOCATOR_safe_realloc(void* ptr, size_t count, size_t size) {
 }
 
 void* SPerl_ALLOCATOR_alloc_memory_pool(SPerl* sperl, size_t size) {
-  return SPerl_MEMORY_POOL_alloc(sperl->memory_pool, size);
+  return SPerl_MEMORY_POOL_alloc(sperl, sperl->memory_pool, size);
 }
 
 SPerl_ARRAY* SPerl_ALLOCATOR_new_array(SPerl* sperl, size_t capacity) {
@@ -94,7 +94,7 @@ SPerl_HASH* SPerl_ALLOCATOR_new_hash(SPerl* sperl, size_t capacity) {
 }
 
 int32_t* SPerl_ALLOCATOR_new_int(SPerl* sperl) {
-  int32_t* value = SPerl_MEMORY_POOL_alloc(sperl->memory_pool, sizeof(int32_t));
+  int32_t* value = SPerl_MEMORY_POOL_alloc(sperl, sperl->memory_pool, sizeof(int32_t));
   
   return value;
 }
@@ -103,7 +103,7 @@ char* SPerl_ALLOCATOR_new_string(SPerl* sperl, size_t length) {
   char* str;
   
   if (length < 40) {
-    str = (char*) SPerl_MEMORY_POOL_alloc(sperl->memory_pool, 40);
+    str = (char*) SPerl_MEMORY_POOL_alloc(sperl, sperl->memory_pool, 40);
   }
   else {
     str = (char*) SPerl_ALLOCATOR_safe_malloc(length + 1, sizeof(char));
