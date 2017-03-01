@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "../sperl.h"
 #include "../sperl_memory_pool.h"
 #include "../sperl_memory_pool_page.h"
 
@@ -17,14 +18,16 @@ struct test {
   int64_t c;
 };
 
-int main(int argc, char *argv[])
+int main()
 {
+  SPerl* sperl = SPerl_new(sperl);
+  
   // new and free
   {
-    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(0);
+    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
     
-    int32_t* int_ptr1 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
-    int32_t* int_ptr2 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
+    int32_t* int_ptr1 = (int32_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int32_t));
+    int32_t* int_ptr2 = (int32_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int32_t));
     
     *int_ptr1 = 1;
     *int_ptr2 = 2;
@@ -32,21 +35,21 @@ int main(int argc, char *argv[])
     OK(*int_ptr1 == ((int32_t*)memory_pool->page->data)[0]);
     OK(*int_ptr2 == ((int32_t*)memory_pool->page->data)[1]);
     
-    SPerl_MEMORY_POOL_free(memory_pool);
+    SPerl_MEMORY_POOL_free(sperl, memory_pool);
   }
 
   // default values
   {
-    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sizeof(struct test));
+    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sperl, sizeof(struct test));
     
-    struct test* int_ptr1 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
-    struct test* int_ptr2 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
-    struct test* int_ptr3 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
-    struct test* int_ptr4 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
-    struct test* int_ptr5 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
-    struct test* int_ptr6 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
-    struct test* int_ptr7 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
-    struct test* int_ptr8 = (struct test*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(struct test));
+    struct test* int_ptr1 = (struct test*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(struct test));
+    struct test* int_ptr2 = (struct test*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(struct test));
+    struct test* int_ptr3 = (struct test*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(struct test));
+    struct test* int_ptr4 = (struct test*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(struct test));
+    struct test* int_ptr5 = (struct test*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(struct test));
+    struct test* int_ptr6 = (struct test*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(struct test));
+    struct test* int_ptr7 = (struct test*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(struct test));
+    struct test* int_ptr8 = (struct test*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(struct test));
 
     OK(int_ptr1->a == 0);
     OK(int_ptr2->a == 0);
@@ -76,16 +79,16 @@ int main(int argc, char *argv[])
   
   // Create next memory node
   {
-    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sizeof(int32_t));
+    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sperl, sizeof(int32_t));
     
-    int32_t* int_ptr1 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
-    int32_t* int_ptr2 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
-    int32_t* int_ptr3 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
-    int32_t* int_ptr4 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
-    int32_t* int_ptr5 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
-    int32_t* int_ptr6 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
-    int32_t* int_ptr7 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
-    int32_t* int_ptr8 = (int32_t*)SPerl_MEMORY_POOL_alloc(memory_pool, sizeof(int32_t));
+    int32_t* int_ptr1 = (int32_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int32_t));
+    int32_t* int_ptr2 = (int32_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int32_t));
+    int32_t* int_ptr3 = (int32_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int32_t));
+    int32_t* int_ptr4 = (int32_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int32_t));
+    int32_t* int_ptr5 = (int32_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int32_t));
+    int32_t* int_ptr6 = (int32_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int32_t));
+    int32_t* int_ptr7 = (int32_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int32_t));
+    int32_t* int_ptr8 = (int32_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int32_t));
 
     OK(*int_ptr1 == 0);
     OK(*int_ptr2 == 0);
@@ -114,7 +117,7 @@ int main(int argc, char *argv[])
     OK(*int_ptr7 == ((int32_t*)memory_pool->page->next->data)[3]);
     OK(*int_ptr8 == ((int32_t*)memory_pool->page->data)[0]);
     
-    SPerl_MEMORY_POOL_free(memory_pool);
+    SPerl_MEMORY_POOL_free(sperl, memory_pool);
   }
   
   return 0;
