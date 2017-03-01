@@ -9,6 +9,9 @@
 #include "sperl_array.h"
 #include "sperl_api.h"
 #include "sperl_memory_pool.h"
+#include "sperl_allocator.h"
+#include "sperl_constant_pool.h"
+#include "sperl_bytecode_array.h"
 
 void SPerl_run(SPerl* sperl, const char* package_name) {
 
@@ -41,7 +44,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
     
     int8_t* byte_array_data = SPerl_API_get_byte_array_data(sperl, message);
     
-    for (size_t i = 0; i < length; i++) {
+    for (int64_t i = 0; i < length; i++) {
       putchar((int)byte_array_data[i]);
     }
     
@@ -51,7 +54,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
     // Get return value
     int64_t return_value = SPerl_API_pop_ret_long(sperl);
     
-    printf("TEST return_value: %d\n", return_value);
+    printf("TEST return_value: %ld\n", return_value);
   }
 }
 
@@ -96,7 +99,7 @@ void SPerl_free(SPerl* sperl) {
   // Free all hash pointers
   for (size_t i = 0, len = sperl->hash_ptrs->length; i < len; i++) {
     SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, sperl->hash_ptrs, i);
-    SPerl_HASH_free(hash);
+    SPerl_HASH_free(sperl, hash);
   }
   SPerl_ARRAY_free(sperl, sperl->hash_ptrs);
   

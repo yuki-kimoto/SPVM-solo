@@ -498,7 +498,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   
                   SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                   const char* field_name = name_info->resolved_name;
-                  SPerl_FIELD* field = SPerl_HASH_search(parser->field_symtable, field_name, strlen(field_name));
+                  SPerl_FIELD* field = SPerl_HASH_search(sperl, parser->field_symtable, field_name, strlen(field_name));
                   
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, (field->constant_pool_address >> 24) & 0xFF);
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, (field->constant_pool_address >> 16) & 0xFF);
@@ -515,7 +515,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                 const char* sub_name = name_info->resolved_name;
                 
-                SPerl_SUB* sub = SPerl_HASH_search(parser->sub_symtable, sub_name, strlen(sub_name));
+                SPerl_SUB* sub = SPerl_HASH_search(sperl, parser->sub_symtable, sub_name, strlen(sub_name));
                 
                 int32_t constant_pool_address = sub->constant_pool_address;
                 
@@ -982,7 +982,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, SPerl_BYTECODE_C_CODE_MALLOC);
                   
                   const char* package_name = op_cur->first->uv.type->resolved_type->name;
-                  SPerl_PACKAGE* package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
+                  SPerl_PACKAGE* package = SPerl_HASH_search(sperl, parser->package_symtable, package_name, strlen(package_name));
                   
                   int32_t constant_pool_address = package->constant_pool_address;
                   
@@ -1219,7 +1219,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   // Call subroutine
                   SPerl_NAME_INFO* name_info = op_cur->first->uv.name_info;
                   const char* field_name = name_info->resolved_name;
-                  SPerl_FIELD* field = SPerl_HASH_search(parser->field_symtable, field_name, strlen(field_name));
+                  SPerl_FIELD* field = SPerl_HASH_search(sperl, parser->field_symtable, field_name, strlen(field_name));
                   
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, (field->constant_pool_address >> 24) & 0xFF);
                   SPerl_BYTECODE_ARRAY_push(bytecode_array, (field->constant_pool_address >> 16) & 0xFF);

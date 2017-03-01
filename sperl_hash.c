@@ -6,7 +6,8 @@
 #include "sperl_hash_func.h"
 #include "sperl_allocator.h"
 
-SPerl_HASH* SPerl_HASH_new(int32_t capacity) {
+SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int32_t capacity) {
+  (void)sperl;
   
   if (capacity == 0) {
     capacity = 101;
@@ -24,25 +25,9 @@ SPerl_HASH* SPerl_HASH_new(int32_t capacity) {
   return hash;
 }
 
-SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(const char* key, int32_t length, void* value) {
-  
-  SPerl_HASH_ENTRY* new_entry = SPerl_ALLOCATOR_safe_malloc(1, sizeof(SPerl_HASH_ENTRY));
-  memset(new_entry, 0, sizeof(SPerl_HASH_ENTRY));
-  
-  if (length >= SIZE_MAX) {
-    SPerl_ALLOCATOR_exit_with_malloc_failure();
-  }
-  new_entry->key = (char*) SPerl_ALLOCATOR_safe_malloc(length + 1, sizeof(char));
-  strncpy(new_entry->key, key, length);
-  new_entry->key[length] = '\0';
-  new_entry->value = value;
-  
-  return new_entry;
-}
+void* SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key, int32_t length, void* value) {
 
-void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, const char* key, int32_t length, void* value) {
-
-  int64_t hash_value = SPerl_HASH_FUNC_calc_hash(key, length);
+  int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
   int32_t index = hash_value % hash->capacity;
   
   SPerl_HASH_ENTRY** next_entry_ptr = hash->entries + index;
@@ -66,7 +51,7 @@ void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, const char* key, int32_t leng
       }
     }
     else {
-      SPerl_HASH_ENTRY* new_entry = SPerl_HASH_ENTRY_new(key, length, value);
+      SPerl_HASH_ENTRY* new_entry = SPerl_HASH_ENTRY_new(sperl, key, length, value);
       *next_entry_ptr = new_entry;
       if (countup) {
         hash->count++;
@@ -76,12 +61,12 @@ void* SPerl_HASH_insert_norehash(SPerl_HASH* hash, const char* key, int32_t leng
   }
 }
 
-void SPerl_HASH_rehash(SPerl_HASH* hash, int32_t new_capacity) {
+void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int32_t new_capacity) {
 
   SPerl_HASH_ENTRY** entries = hash->entries;
   
   // Create new hash
-  SPerl_HASH* new_hash = SPerl_HASH_new(new_capacity);
+  SPerl_HASH* new_hash = SPerl_HASH_new(sperl, new_capacity);
   
   // Rehash
   int32_t i;
@@ -91,8 +76,8 @@ void SPerl_HASH_rehash(SPerl_HASH* hash, int32_t new_capacity) {
     const char* key = entry->key;
     if (key) {
       int32_t length = strlen(key);
-      void* value = SPerl_HASH_search(hash, key, length);
-      SPerl_HASH_insert_norehash(new_hash, key, length, value);
+      void* value = SPerl_HASH_search(sperl, hash, key, length);
+      SPerl_HASH_insert_norehash(sperl, new_hash, key, length, value);
     }
     
     SPerl_HASH_ENTRY* next_entry = entry->next;
@@ -100,8 +85,8 @@ void SPerl_HASH_rehash(SPerl_HASH* hash, int32_t new_capacity) {
       const char* key = next_entry->key;
       if (key) {
         int32_t length = strlen(key);
-        void* value = SPerl_HASH_search(hash, key, length);
-        SPerl_HASH_insert_norehash(new_hash, key, length, value);
+        void* value = SPerl_HASH_search(sperl, hash, key, length);
+        SPerl_HASH_insert_norehash(sperl, new_hash, key, length, value);
       }
       
       next_entry = next_entry->next;
@@ -114,7 +99,7 @@ void SPerl_HASH_rehash(SPerl_HASH* hash, int32_t new_capacity) {
   hash->entries = new_hash->entries;
 }
 
-void* SPerl_HASH_insert(SPerl_HASH* hash, const char* key, int32_t length, void* value) {
+void* SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int32_t length, void* value) {
   if (hash == NULL) {
     return 0;
   }
@@ -123,17 +108,17 @@ void* SPerl_HASH_insert(SPerl_HASH* hash, const char* key, int32_t length, void*
   if (hash->count > hash->capacity * 0.75) {
     int32_t new_capacity = (hash->capacity * 2) + 1;
 
-    SPerl_HASH_rehash(hash, new_capacity);
+    SPerl_HASH_rehash(sperl, hash, new_capacity);
   }
   
-  return SPerl_HASH_insert_norehash(hash, key, length, value);
+  return SPerl_HASH_insert_norehash(sperl, hash, key, length, value);
 }
 
-void* SPerl_HASH_search(SPerl_HASH* hash, const char* key, int32_t length) {
+void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int32_t length) {
   if (!hash) {
     return 0;
   }
-  int64_t hash_value = SPerl_HASH_FUNC_calc_hash(key, length);
+  int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
   int32_t index = hash_value % hash->capacity;
   SPerl_HASH_ENTRY* next_entry = hash->entries[index];
   while (1) {
@@ -151,7 +136,7 @@ void* SPerl_HASH_search(SPerl_HASH* hash, const char* key, int32_t length) {
   }
 }
 
-void SPerl_HASH_free(SPerl_HASH* hash) {
+void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash) {
   int32_t capacity = hash->capacity;
   
   int32_t i;

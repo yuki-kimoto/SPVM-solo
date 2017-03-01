@@ -50,7 +50,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
     SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
-    SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
+    SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
   // Core array types
@@ -73,7 +73,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     resolved_type->name_length = strlen(name);
     resolved_type->id = SPerl_RESOLVED_TYPE_C_CORE_LENGTH + i;
     SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
-    SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
+    SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
   return parser;

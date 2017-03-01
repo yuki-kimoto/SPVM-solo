@@ -43,7 +43,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
   op_core_package_name->uv.name = "std";
   SPerl_OP_sibling_splice(sperl, op_use_core, NULL, 0, op_core_package_name);
   SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use_core);
-  SPerl_HASH_insert(parser->use_package_symtable, op_core_package_name->uv.name, strlen(op_core_package_name->uv.name), op_use_core);
+  SPerl_HASH_insert(sperl, parser->use_package_symtable, op_core_package_name->uv.name, strlen(op_core_package_name->uv.name), op_use_core);
   
   while(1) {
     // Get current character
@@ -66,7 +66,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             SPerl_OP* op_package_name = op_use->first;
             const char* package_name = op_package_name->uv.name;
             
-            SPerl_PACKAGE* found_package = SPerl_HASH_search(parser->package_symtable, package_name, strlen(package_name));
+            SPerl_PACKAGE* found_package = SPerl_HASH_search(sperl, parser->package_symtable, package_name, strlen(package_name));
             if (found_package) {
               continue;
             }
@@ -393,7 +393,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
         constant->code = SPerl_CONSTANT_C_CODE_INT;
         constant->uv.int_value = (int32_t) (uint8_t) ch;
-        constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte", strlen("byte"));
+        constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "byte", strlen("byte"));
         
         op->uv.constant = constant;
         yylvalp->opval = op;
@@ -434,7 +434,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
         constant->code = SPerl_CONSTANT_C_CODE_STRING;
         constant->uv.string_value = str;
-        constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
+        constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
         op->uv.constant = constant;
         yylvalp->opval = (SPerl_OP*)op;
         
@@ -532,7 +532,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               exit(1);
             }
             constant->uv.float_value = num;
-            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
+            constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "float", strlen("float"));
           }
           // double
           else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
@@ -542,7 +542,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               exit(1);
             }
             constant->uv.double_value = num;
-            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
+            constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "double", strlen("double"));
           }
           // long
           else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
@@ -563,7 +563,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               exit(1);
             }
             constant->uv.long_value = num;
-            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+            constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "long", strlen("long"));
           }
           
           // Constant pool adding condition

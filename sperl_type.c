@@ -58,7 +58,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
         }
         else {
           // Package
-          SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
+          SPerl_PACKAGE* found_package = SPerl_HASH_search(sperl, package_symtable, part_name, strlen(part_name));
           if (found_package) {
             SPerl_ARRAY_push(sperl, resolved_type_part_names, part_name);
           }
@@ -80,7 +80,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
     resolved_type_name[cur_pos] = '\0';
     
     // Create resolved type id
-    SPerl_RESOLVED_TYPE* found_resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name));
+    SPerl_RESOLVED_TYPE* found_resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name));
     if (found_resolved_type) {
       type->resolved_type = found_resolved_type;
     }
@@ -93,7 +93,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
       resolved_type->id = (int32_t) parser->resolved_types->length;
       resolved_type->name = resolved_type_name;
       SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
-      SPerl_HASH_insert(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
+      SPerl_HASH_insert(sperl, parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
       type->resolved_type = resolved_type;
     }
   }

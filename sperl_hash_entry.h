@@ -10,4 +10,6 @@ struct SPerl_hash_entry {
   SPerl_HASH_ENTRY* next;
 };
 
+SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl* sperl, const char* key, int32_t length, void* value);
+
 #endif

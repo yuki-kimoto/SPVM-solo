@@ -285,10 +285,10 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
   
   switch (op->code) {
     case SPerl_OP_C_CODE_ARRAY_LENGTH:
-      resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+      resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "long", strlen("long"));
     case SPerl_OP_C_CODE_ARRAY_ELEM: {
       SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op->first);
-     resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
+     resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
       break;
     }
     case SPerl_OP_C_CODE_ADD:
@@ -357,7 +357,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
-      SPerl_SUB* sub = SPerl_HASH_search(parser->sub_symtable, abs_name, strlen(abs_name));
+      SPerl_SUB* sub = SPerl_HASH_search(sperl, parser->sub_symtable, abs_name, strlen(abs_name));
       if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
         resolved_type = sub->op_return_type->uv.type->resolved_type;
       }
@@ -366,7 +366,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_FIELD: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
-      SPerl_FIELD* field = SPerl_HASH_search(parser->field_symtable, abs_name, strlen(abs_name));
+      SPerl_FIELD* field = SPerl_HASH_search(sperl, parser->field_symtable, abs_name, strlen(abs_name));
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
     }
@@ -382,7 +382,7 @@ void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op) {
   op->code = SPerl_OP_C_CODE_CONSTANT;
   SPerl_CONSTANT* constant_true = SPerl_CONSTANT_new(sperl);
   constant_true->code = SPerl_CONSTANT_C_CODE_LONG;
-  constant_true->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+  constant_true->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "long", strlen("long"));
   constant_true->uv.long_value = 1;
   op->uv.constant = constant_true;
 }
@@ -395,7 +395,7 @@ void SPerl_OP_convert_to_op_constant_false(SPerl* sperl, SPerl_OP* op) {
   SPerl_CONSTANT* constant_false = SPerl_CONSTANT_new(sperl);
   constant_false->code = SPerl_CONSTANT_C_CODE_LONG;
   constant_false->uv.long_value = 0;
-  constant_false->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+  constant_false->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "long", strlen("long"));
   op->uv.constant = constant_false;
 }
 
@@ -730,7 +730,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
   SPerl_HASH* package_symtable = parser->package_symtable;
   
   // Redeclaration package error
-  SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, package_name, strlen(package_name));
+  SPerl_PACKAGE* found_package = SPerl_HASH_search(sperl, package_symtable, package_name, strlen(package_name));
   if (found_package) {
     SPerl_yyerror_format(sperl, "redeclaration of package \"%s\" at %s line %d\n", package_name, op_package->file, op_package->line);
   }
@@ -767,7 +767,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         SPerl_FIELD* field = op_field->uv.field;
         const char* field_name = field->op_name->uv.name;
         SPerl_FIELD* found_field
-          = SPerl_HASH_search(field_symtable, field_name, strlen(field_name));
+          = SPerl_HASH_search(sperl, field_symtable, field_name, strlen(field_name));
         if (found_field) {
           SPerl_yyerror_format(sperl, "redeclaration of has \"%s\" at %s line %d\n", field_name, op_field->file, op_field->line);
         }
@@ -776,11 +776,11 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         }
         else {
           SPerl_ARRAY_push(sperl, op_fields, op_field);
-          SPerl_HASH_insert(field_symtable, field_name, strlen(field_name), field);
+          SPerl_HASH_insert(sperl, field_symtable, field_name, strlen(field_name), field);
           
           // Field absolute name
           const char* field_abs_name = SPerl_OP_create_abs_name(sperl, package_name, field_name);
-          SPerl_HASH_insert(parser->field_symtable, field_abs_name, strlen(field_abs_name), field);
+          SPerl_HASH_insert(sperl, parser->field_symtable, field_abs_name, strlen(field_abs_name), field);
         }
       }
       else if (op_decl->code == SPerl_OP_C_CODE_DECL_SUB) {
@@ -792,7 +792,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, sub_name);
         
         SPerl_SUB* found_sub = NULL;
-        found_sub = SPerl_HASH_search(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name));
+        found_sub = SPerl_HASH_search(sperl, parser->sub_symtable, sub_abs_name, strlen(sub_abs_name));
         
         if (found_sub) {
           SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
@@ -834,7 +834,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           }
         }
         
-        SPerl_HASH_insert(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
+        SPerl_HASH_insert(sperl, parser->sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
         SPerl_ARRAY_push(sperl, op_subs, op_sub);
       }
       else if (op_decl->code == SPerl_OP_C_CODE_DECL_ENUM) {
@@ -862,7 +862,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
             constant = SPerl_CONSTANT_new(sperl);
             constant->code = SPerl_CONSTANT_C_CODE_LONG;
             constant->uv.int_value = start_value;
-            constant->resolved_type = SPerl_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
+            constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "long", strlen("long"));
             SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
             op_constant->uv.constant = constant;
             
@@ -905,14 +905,14 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           
           const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, op_name->uv.name);
           SPerl_SUB* found_sub = NULL;
-          found_sub = SPerl_HASH_search(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name));
+          found_sub = SPerl_HASH_search(sperl, parser->sub_symtable, sub_abs_name, strlen(sub_abs_name));
           
           if (found_sub) {
             SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
           }
           // Unknown sub
           else {
-            SPerl_HASH_insert(parser->sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
+            SPerl_HASH_insert(sperl, parser->sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
             SPerl_ARRAY_push(sperl, op_subs, op_sub);
           }
         }
@@ -924,7 +924,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     // Add package
     op_package->uv.package = package;
     SPerl_ARRAY_push(sperl, parser->op_packages, op_package);
-    SPerl_HASH_insert(parser->package_symtable, package_name, strlen(package_name), package);
+    SPerl_HASH_insert(sperl, parser->package_symtable, package_name, strlen(package_name), package);
   }
   
   return op_package;
@@ -937,11 +937,11 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_p
   SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);
   
   const char* package_name = op_package_name->uv.name;
-  SPerl_USE* found_use = SPerl_HASH_search(parser->use_package_symtable, package_name, strlen(package_name));
+  SPerl_USE* found_use = SPerl_HASH_search(sperl, parser->use_package_symtable, package_name, strlen(package_name));
   
   if (!found_use) {
     SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use);
-    SPerl_HASH_insert(parser->use_package_symtable, package_name, strlen(package_name), op_use);
+    SPerl_HASH_insert(sperl, parser->use_package_symtable, package_name, strlen(package_name), op_use);
   }
   
   return op_use;

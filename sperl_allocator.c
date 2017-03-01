@@ -86,7 +86,7 @@ SPerl_ARRAY* SPerl_ALLOCATOR_new_array(SPerl* sperl, size_t capacity) {
 }
 
 SPerl_HASH* SPerl_ALLOCATOR_new_hash(SPerl* sperl, size_t capacity) {
-  SPerl_HASH* hash = SPerl_HASH_new(capacity);
+  SPerl_HASH* hash = SPerl_HASH_new(sperl, capacity);
   
   SPerl_ARRAY_push(sperl, sperl->hash_ptrs, hash);
   
