@@ -74,7 +74,7 @@ SPerl* SPerl_new() {
   sperl->constant_pool = SPerl_CONSTANT_POOL_new(sperl);
   
   // Bytecodes
-  sperl->bytecode_array = SPerl_BYTECODE_ARRAY_new(sperl, 0);
+  sperl->bytecode_array = SPerl_BYTECODE_ARRAY_new(sperl);
   
   // Default call stack capacity
   sperl->call_stack_capacity_default = 255;
