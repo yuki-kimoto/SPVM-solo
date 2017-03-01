@@ -8,6 +8,10 @@ enum {
   SPerl_BASE_C_INT_MAX = 2147483647,
 };
 
+#ifndef SPerl_CALL_STACK_T
+#define SPerl_CALL_STACK_T int64_t
+#endif
+
 /* sperl_env.h */
 struct SPerl_env;
 typedef struct SPerl_env SPerl_ENV;

@@ -44,9 +44,9 @@ struct sperl_ {
   
   // Runtime environment
   int32_t call_stack_capacity;
-  int64_t* call_stack;
-  int64_t call_stack_base;
-  int64_t operand_stack_top;
+  SPerl_CALL_STACK_T* call_stack;
+  int32_t call_stack_base;
+  int32_t operand_stack_top;
   _Bool abort;
 };
 

@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 #include "sperl.h"
-#include "sperl.h"
 #include "sperl_parser.h"
 #include "sperl_memory_pool.h"
 #include "sperl_hash.h"
@@ -31,7 +30,7 @@ void SPerl_API_init_env(SPerl* sperl) {
   if (sperl->call_stack_capacity == -1) {
     sperl->call_stack_capacity = sperl->call_stack_capacity_default;
   }
-  sperl->call_stack = (int64_t*) SPerl_ALLOCATOR_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
+  sperl->call_stack = (SPerl_CALL_STACK_T*) SPerl_ALLOCATOR_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
   sperl->call_stack_base = -1;
   sperl->operand_stack_top = -1;
   sperl->abort = 0;
@@ -255,19 +254,19 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   SPerl_SUB* sub = SPerl_HASH_search(sperl->parser->sub_symtable, sub_base_name, strlen(sub_base_name));
   SPerl_CONSTANT_POOL_SUB* constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub->constant_pool_address];
   
-  int64_t* call_stack = sperl->call_stack;
+  SPerl_CALL_STACK_T* call_stack = sperl->call_stack;
   
   // Program counter
   register uint8_t* pc = NULL;
   
   // Top position of operand stack
-  register int64_t operand_stack_top = sperl->operand_stack_top;
+  register int32_t operand_stack_top = sperl->operand_stack_top;
   
   register int32_t success;
   
-  int64_t call_stack_base = sperl->call_stack_base;
-  int64_t call_stack_base_start = call_stack_base;
-
+  int32_t call_stack_base = sperl->call_stack_base;
+  int32_t call_stack_base_start = call_stack_base;
+  
   // Goto subroutine
   goto CALLSUB_COMMON;
   
