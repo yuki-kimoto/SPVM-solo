@@ -14,8 +14,8 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
 
   SPerl_PARSER* parser = sperl->parser;
   
-  SPerl_ARRAY_push(parser->include_pathes, ".");
-  SPerl_ARRAY_push(parser->include_pathes, "lib");
+  SPerl_ARRAY_push(sperl, parser->include_pathes, ".");
+  SPerl_ARRAY_push(sperl, parser->include_pathes, "lib");
 
   SPerl_PARSER_parse(sperl, package_name);
 
@@ -59,9 +59,9 @@ SPerl* SPerl_new() {
   SPerl* sperl = SPerl_ALLOCATOR_safe_malloc_zero(1, sizeof(SPerl));
   
   // Manipulate memory. This is freed last.
-  sperl->array_ptrs = SPerl_ARRAY_new(0);
-  sperl->hash_ptrs = SPerl_ARRAY_new(0);
-  sperl->long_str_ptrs = SPerl_ARRAY_new(0);
+  sperl->array_ptrs = SPerl_ARRAY_new(sperl, 0);
+  sperl->hash_ptrs = SPerl_ARRAY_new(sperl, 0);
+  sperl->long_str_ptrs = SPerl_ARRAY_new(sperl, 0);
   sperl->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
 
   // Parser
@@ -88,24 +88,24 @@ void SPerl_free(SPerl* sperl) {
 
   // Free all array pointers
   for (size_t i = 0, len = sperl->array_ptrs->length; i < len; i++) {
-    SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl->array_ptrs, i);
-    SPerl_ARRAY_free(array);
+    SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, sperl->array_ptrs, i);
+    SPerl_ARRAY_free(sperl, array);
   }
-  SPerl_ARRAY_free(sperl->array_ptrs);
+  SPerl_ARRAY_free(sperl, sperl->array_ptrs);
   
   // Free all hash pointers
   for (size_t i = 0, len = sperl->hash_ptrs->length; i < len; i++) {
-    SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl->hash_ptrs, i);
+    SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, sperl->hash_ptrs, i);
     SPerl_HASH_free(hash);
   }
-  SPerl_ARRAY_free(sperl->hash_ptrs);
+  SPerl_ARRAY_free(sperl, sperl->hash_ptrs);
   
   // Free all string pointers;
   for (size_t i = 0, len = sperl->long_str_ptrs->length; i < len; i++) {
-    void* str = SPerl_ARRAY_fetch(sperl->long_str_ptrs, i);
+    void* str = SPerl_ARRAY_fetch(sperl, sperl->long_str_ptrs, i);
     free(str);
   }
-  SPerl_ARRAY_free(sperl->long_str_ptrs);
+  SPerl_ARRAY_free(sperl, sperl->long_str_ptrs);
   
   // Free memory pool */
   SPerl_MEMORY_POOL_free(sperl, sperl->memory_pool);

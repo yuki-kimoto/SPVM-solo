@@ -1,10 +1,12 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "sperl.h"
 #include "sperl_array.h"
 #include "sperl_allocator.h"
 
-SPerl_ARRAY* SPerl_ARRAY_new(size_t capacity) {
+SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, size_t capacity) {
+  (void)sperl;
   
   SPerl_ARRAY* array = SPerl_ALLOCATOR_safe_malloc(1, sizeof(SPerl_ARRAY));
   array->length = 0;
@@ -22,7 +24,9 @@ SPerl_ARRAY* SPerl_ARRAY_new(size_t capacity) {
   return array;
 }
 
-void SPerl_ARRAY_push(SPerl_ARRAY* array, const void* value) {
+void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
+  (void)sperl;
+  
   size_t length = array->length;
   size_t capacity = array->capacity;
   
@@ -41,7 +45,9 @@ void SPerl_ARRAY_push(SPerl_ARRAY* array, const void* value) {
   array->length++;
 }
 
-void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, size_t index) {
+void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, size_t index) {
+  (void)sperl;
+  
   if (array == NULL || index >= array->length) {
     return NULL;
   }
@@ -50,7 +56,9 @@ void* SPerl_ARRAY_fetch(SPerl_ARRAY* array, size_t index) {
   }
 }
 
-void* SPerl_ARRAY_pop(SPerl_ARRAY* array) {
+void* SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
+  (void)sperl;
+  
   if (array->length == 0) {
     return NULL;
   }
@@ -60,7 +68,7 @@ void* SPerl_ARRAY_pop(SPerl_ARRAY* array) {
   return array->values[array->length];
 }
 
-void SPerl_ARRAY_free(SPerl_ARRAY* array) {
+void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array) {
   free(array->values);
   free(array);
 }

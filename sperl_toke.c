@@ -42,7 +42,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
   SPerl_OP* op_core_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "std", 0);
   op_core_package_name->uv.name = "std";
   SPerl_OP_sibling_splice(sperl, op_use_core, NULL, 0, op_core_package_name);
-  SPerl_ARRAY_push(parser->op_use_stack, op_use_core);
+  SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use_core);
   SPerl_HASH_insert(parser->use_package_symtable, op_core_package_name->uv.name, strlen(op_core_package_name->uv.name), op_use_core);
   
   while(1) {
@@ -59,7 +59,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         SPerl_ARRAY* op_use_stack = parser->op_use_stack;
         
         while (1) {
-          SPerl_OP* op_use = SPerl_ARRAY_pop(op_use_stack);
+          SPerl_OP* op_use = SPerl_ARRAY_pop(sperl, op_use_stack);
           
           
           if (op_use) {
@@ -96,7 +96,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               char* cur_module_path = NULL;
               FILE* fh = NULL;
               for (size_t i = 0, len = parser->include_pathes->length; i < len; i++) {
-                const char* include_path = (const char*) SPerl_ARRAY_fetch(parser->include_pathes, i);
+                const char* include_path = (const char*) SPerl_ARRAY_fetch(sperl, parser->include_pathes, i);
                 
                 // File name
                 cur_module_path = SPerl_ALLOCATOR_new_string(sperl, strlen(include_path) + 1 + strlen(module_path_base));

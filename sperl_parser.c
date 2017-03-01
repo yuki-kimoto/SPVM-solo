@@ -45,11 +45,11 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-    SPerl_ARRAY_push(resolved_type->part_names, name);
+    SPerl_ARRAY_push(sperl, resolved_type->part_names, name);
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
-    SPerl_ARRAY_push(parser->resolved_types, resolved_type);
+    SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
     SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
@@ -65,14 +65,14 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-    SPerl_ARRAY_push(resolved_type->part_names, core_name);
-    SPerl_ARRAY_push(resolved_type->part_names, "[");
-    SPerl_ARRAY_push(resolved_type->part_names, "]");
+    SPerl_ARRAY_push(sperl, resolved_type->part_names, core_name);
+    SPerl_ARRAY_push(sperl, resolved_type->part_names, "[");
+    SPerl_ARRAY_push(sperl, resolved_type->part_names, "]");
     
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = SPerl_RESOLVED_TYPE_C_CORE_LENGTH + i;
-    SPerl_ARRAY_push(parser->resolved_types, resolved_type);
+    SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
     SPerl_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
@@ -92,7 +92,7 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);
   
   /* Push package use information stack */
-  SPerl_ARRAY_push(parser->op_use_stack, op_use);
+  SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use);
   
   // Entry point
   char* start_sub_name = SPerl_ALLOCATOR_new_string(sperl, strlen(package_name) + 6);

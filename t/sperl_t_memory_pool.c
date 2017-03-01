@@ -20,7 +20,7 @@ struct test {
 
 int main()
 {
-  SPerl* sperl = SPerl_new(sperl);
+  SPerl* sperl = SPerl_new();
   
   // new and free
   {

@@ -38,14 +38,14 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
     SPerl_TYPE_build_parts(sperl, type, parts);
     
     for (size_t i = 0; i < parts->length; i++) {
-      SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(parts, i);
+      SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(sperl, parts, i);
       if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
         name_length += 3;
-        SPerl_ARRAY_push(resolved_type_part_names, "sub");
+        SPerl_ARRAY_push(sperl, resolved_type_part_names, "sub");
       }
       else if (part->code == SPerl_TYPE_PART_C_CODE_BYTE) {
         name_length++;
-        SPerl_ARRAY_push(resolved_type_part_names, part->uv.char_name);
+        SPerl_ARRAY_push(sperl, resolved_type_part_names, part->uv.char_name);
       }
       else {
         const char* part_name = part->uv.op_name->uv.name;
@@ -54,13 +54,13 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
         if (strcmp(part_name, "boolean") == 0 || strcmp(part_name, "byte") == 0 || strcmp(part_name, "short") == 0 || strcmp(part_name, "int") == 0
           || strcmp(part_name, "long") == 0 || strcmp(part_name, "float") == 0 || strcmp(part_name, "double") == 0)
         {
-          SPerl_ARRAY_push(resolved_type_part_names, part_name);
+          SPerl_ARRAY_push(sperl, resolved_type_part_names, part_name);
         }
         else {
           // Package
           SPerl_PACKAGE* found_package = SPerl_HASH_search(package_symtable, part_name, strlen(part_name));
           if (found_package) {
-            SPerl_ARRAY_push(resolved_type_part_names, part_name);
+            SPerl_ARRAY_push(sperl, resolved_type_part_names, part_name);
           }
           else {
             SPerl_yyerror_format(sperl, "unknown package \"%s\" at %s line %d\n", part_name, op_type->file, op_type->line);
@@ -72,7 +72,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
     char* resolved_type_name = SPerl_ALLOCATOR_new_string(sperl, name_length);
     size_t cur_pos = 0;
     for (size_t i = 0; i < resolved_type_part_names->length; i++) {
-      const char* resolved_type_part_name = (const char*) SPerl_ARRAY_fetch(resolved_type_part_names, i);
+      const char* resolved_type_part_name = (const char*) SPerl_ARRAY_fetch(sperl, resolved_type_part_names, i);
       size_t resolved_type_part_name_length = strlen(resolved_type_part_name);
       memcpy(resolved_type_name + cur_pos, resolved_type_part_name, resolved_type_part_name_length);
       cur_pos += resolved_type_part_name_length;
@@ -92,7 +92,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
       SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
       resolved_type->id = (int32_t) parser->resolved_types->length;
       resolved_type->name = resolved_type_name;
-      SPerl_ARRAY_push(parser->resolved_types, resolved_type);
+      SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
       SPerl_HASH_insert(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
       type->resolved_type = resolved_type;
     }
@@ -113,7 +113,7 @@ void SPerl_TYPE_build_parts(SPerl* sperl, SPerl_TYPE* type, SPerl_ARRAY* parts) 
     SPerl_TYPE_PART* part = SPerl_TYPE_PART_new(sperl);
     part->code = SPerl_TYPE_PART_C_CODE_NAME;
     part->uv.op_name = type->uv.type_component_name->op_name;
-    SPerl_ARRAY_push(parts, part);
+    SPerl_ARRAY_push(sperl, parts, part);
   }
   else if (type->code == SPerl_TYPE_C_CODE_ARRAY) {
     SPerl_TYPE_COMPONENT_ARRAY* type_component_array = type->uv.type_component_array;
@@ -123,12 +123,12 @@ void SPerl_TYPE_build_parts(SPerl* sperl, SPerl_TYPE* type, SPerl_ARRAY* parts) 
     SPerl_TYPE_PART* type_part_openbracket = SPerl_TYPE_PART_new(sperl);
     type_part_openbracket->code = SPerl_TYPE_PART_C_CODE_BYTE;
     type_part_openbracket->uv.char_name = "[";
-    SPerl_ARRAY_push(parts, type_part_openbracket);
+    SPerl_ARRAY_push(sperl, parts, type_part_openbracket);
     
     SPerl_TYPE_PART* type_part_closebracket = SPerl_TYPE_PART_new(sperl);
     type_part_closebracket->code = SPerl_TYPE_PART_C_CODE_BYTE;
     type_part_closebracket->uv.char_name = "]";
-    SPerl_ARRAY_push(parts, type_part_closebracket);
+    SPerl_ARRAY_push(sperl, parts, type_part_closebracket);
   }
 }
 

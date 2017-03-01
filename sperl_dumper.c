@@ -128,7 +128,7 @@ void SPerl_DUMPER_dump_sperl(SPerl* sperl) {
 
 void SPerl_DUMPER_dump_constants(SPerl* sperl, SPerl_ARRAY* op_constants) {
   for (size_t i = 0, len = op_constants->length; i < len; i++) {
-    SPerl_OP* op_constant = SPerl_ARRAY_fetch(op_constants, i);
+    SPerl_OP* op_constant = SPerl_ARRAY_fetch(sperl, op_constants, i);
     SPerl_CONSTANT* constant = op_constant->uv.constant;
     printf("    constant[%zu]\n", i);
     SPerl_DUMPER_dump_constant(sperl, constant);
@@ -138,7 +138,7 @@ void SPerl_DUMPER_dump_constants(SPerl* sperl, SPerl_ARRAY* op_constants) {
 void SPerl_DUMPER_dump_packages(SPerl* sperl, SPerl_ARRAY* op_packages) {
   for (size_t i = 0, len = op_packages->length; i < len; i++) {
     printf("package[%zu]\n", i);
-    SPerl_OP* op_package = SPerl_ARRAY_fetch(op_packages, i);
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(sperl, op_packages, i);
     SPerl_PACKAGE* package = op_package->uv.package;
     printf("  name => \"%s\"\n", package->op_name->uv.name);
     
@@ -153,7 +153,7 @@ void SPerl_DUMPER_dump_packages(SPerl* sperl, SPerl_ARRAY* op_packages) {
     printf("  fields\n");
     SPerl_ARRAY* op_fields = package->op_fields;
     for (size_t j = 0, len2 = op_fields->length; j < len2; j++) {
-      SPerl_OP* op_field = SPerl_ARRAY_fetch(op_fields, j);
+      SPerl_OP* op_field = SPerl_ARRAY_fetch(sperl, op_fields, j);
       SPerl_FIELD* field = op_field->uv.field;
       printf("    field[%zu]\n", j);
       SPerl_DUMPER_dump_field(sperl, field);
@@ -163,7 +163,7 @@ void SPerl_DUMPER_dump_packages(SPerl* sperl, SPerl_ARRAY* op_packages) {
     printf("  subs\n");
     SPerl_ARRAY* op_subs = package->op_subs;
     for (size_t i = 0, len = op_subs->length; i < len; i++) {
-      SPerl_OP* op_sub = SPerl_ARRAY_fetch(op_subs, i);
+      SPerl_OP* op_sub = SPerl_ARRAY_fetch(sperl, op_subs, i);
       SPerl_SUB* sub = op_sub->uv.sub;
       printf("    sub[%zu]\n", i);
       SPerl_DUMPER_dump_sub(sperl, sub);
@@ -176,7 +176,7 @@ void SPerl_DUMPER_dump_resolved_types(SPerl* sperl, SPerl_ARRAY* resolved_types)
   
   for (size_t i = 0, len = resolved_types->length; i < len; i++) {
     printf("resolved_type[%zu]\n", i);
-    SPerl_RESOLVED_TYPE* resolved_type = SPerl_ARRAY_fetch(resolved_types, i);
+    SPerl_RESOLVED_TYPE* resolved_type = SPerl_ARRAY_fetch(sperl, resolved_types, i);
     printf("    name => \"%s\"\n", resolved_type->name);
     printf("    id => \"%" PRId32 "\"\n", resolved_type->id);
   }
@@ -445,7 +445,7 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     printf("      args\n");
     SPerl_ARRAY* op_args = sub->op_args;
     for (size_t i = 0, len = op_args->length; i < len; i++) {
-      SPerl_OP* op_arg = SPerl_ARRAY_fetch(sub->op_args, i);
+      SPerl_OP* op_arg = SPerl_ARRAY_fetch(sperl, sub->op_args, i);
       SPerl_MY_VAR* my_var = op_arg->uv.my_var;
       printf("        arg[%zu]\n", i);
       SPerl_DUMPER_dump_my_var(sperl, my_var);
@@ -454,7 +454,7 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     printf("      my_vars\n");
     SPerl_ARRAY* op_my_vars = sub->op_my_vars;
     for (size_t i = 0, len = op_my_vars->length; i < len; i++) {
-      SPerl_OP* op_my_var = SPerl_ARRAY_fetch(sub->op_my_vars, i);
+      SPerl_OP* op_my_var = SPerl_ARRAY_fetch(sperl, sub->op_my_vars, i);
       SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
       printf("      my_var[%zu]\n", i);
       SPerl_DUMPER_dump_my_var(sperl, my_var);
