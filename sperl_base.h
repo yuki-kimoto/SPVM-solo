@@ -9,10 +9,6 @@ enum {
 };
 
 /* sperl_env.h */
-struct SPerl_virtual_memory;
-typedef struct SPerl_virtual_memory SPerl_VIRTUAL_MEMORY;
-
-/* sperl_env.h */
 struct SPerl_env;
 typedef struct SPerl_env SPerl_ENV;
 
