@@ -48,8 +48,6 @@ struct sperl_ {
   int64_t call_stack_base;
   int64_t operand_stack_top;
   _Bool abort;
-  
-  SPerl_VIRTUAL_MEMORY* virtual_memory;
 };
 
 SPerl* SPerl_new();
