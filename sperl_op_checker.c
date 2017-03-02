@@ -146,7 +146,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           case SPerl_OP_C_CODE_BLOCK: {
             if (block_start) {
               assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
-              int32_t* block_base_ptr = SPerl_MEMORY_POOL_alloc(sperl, sperl->memory_pool, sizeof(int32_t));
+              int32_t* block_base_ptr = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(int32_t));
               *block_base_ptr = (int32_t) op_my_var_stack->length;
               SPerl_ARRAY_push(sperl, block_base_stack, block_base_ptr);
               block_base = *block_base_ptr;

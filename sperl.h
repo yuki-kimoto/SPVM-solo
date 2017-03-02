@@ -19,17 +19,17 @@ enum {
 // Parser information
 struct sperl_ {
   
-  // Memory_pool
-  SPerl_MEMORY_POOL* memory_pool;
+  // Memory_pool - This is compile time memory pool. This memory pool save short string and object except array, hash
+  SPerl_MEMORY_POOL* ct_memory_pool;
   
-  // All array pointers
-  SPerl_ARRAY* arrays;
+  // Compile time arrays
+  SPerl_ARRAY* ct_arrays;
   
-  // All hash pointers
-  SPerl_ARRAY* hashes;
+  // Compile time hashes
+  SPerl_ARRAY* ct_hashes;
   
-  // All long string pointers
-  SPerl_ARRAY* long_strings;
+  // Compile time long strings
+  SPerl_ARRAY* ct_long_strings;
   
   // Parser
   SPerl_PARSER* parser;

@@ -1254,7 +1254,7 @@ SPerl_OP* SPerl_OP_newOP_LIST(SPerl* sperl, const char* file, uint32_t line) {
 
 SPerl_OP* SPerl_OP_newOP(SPerl* sperl, int32_t code, const char* file, uint32_t line) {
 
-  SPerl_OP *op = SPerl_MEMORY_POOL_alloc(sperl, sperl->memory_pool, sizeof(SPerl_OP));
+  SPerl_OP *op = SPerl_MEMORY_POOL_alloc(sperl, sperl->ct_memory_pool, sizeof(SPerl_OP));
   
   memset(op, 0, sizeof(SPerl_OP));
   
