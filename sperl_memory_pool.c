@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 
 #include "sperl.h"
 #include "sperl_memory_pool.h"
@@ -23,21 +24,21 @@ SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl) {
 void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int32_t byte_size) {
   (void)sperl;
   
+  assert(byte_size > 0);
+  
   int32_t page_depth = memory_pool->page_depth;
   int32_t current_pos = memory_pool->current_pos;
   int32_t base_capacity = memory_pool->base_capacity;
   
-  int32_t byte_size_rem = byte_size % sperl->alignment;
-  if (byte_size_rem != 0) {
-    byte_size = byte_size - byte_size_rem + sperl->alignment;
-  }
+  // Adjust alignment
+  int32_t aligned_byte_size = (byte_size - 1) + (8 - ((byte_size - 1) % sperl->alignment));
   
   // Calculate capacity
   int32_t current_capacity = base_capacity * pow(2, page_depth - 1);
 
   // Create next memory page
   uint8_t* data_ptr;
-  if (current_pos + byte_size > current_capacity) {
+  if (current_pos + aligned_byte_size > current_capacity) {
     page_depth++;
     current_pos = 0;
     
@@ -52,7 +53,7 @@ void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int3
 
   data_ptr = memory_pool->page->data + current_pos;
   
-  memory_pool->current_pos = current_pos + byte_size;
+  memory_pool->current_pos = current_pos + aligned_byte_size;
   
   return data_ptr;
 }
