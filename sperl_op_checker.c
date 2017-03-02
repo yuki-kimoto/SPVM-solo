@@ -578,6 +578,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   }
                   
                   SPerl_PACKAGE* package = SPerl_HASH_search(sperl, parser->package_symtable, resolved_type->name, strlen(resolved_type->name));
+                  
                   if (!package) {
                     SPerl_yyerror_format(sperl, "new operator can't receive non package name \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
                     break;

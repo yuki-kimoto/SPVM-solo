@@ -102,8 +102,8 @@ int32_t* SPerl_ALLOCATOR_new_int(SPerl* sperl) {
 char* SPerl_ALLOCATOR_new_string(SPerl* sperl, size_t length) {
   char* str;
   
-  if (length < 40) {
-    str = (char*) SPerl_MEMORY_POOL_alloc(sperl, sperl->memory_pool, 40);
+  if (length < 0xFF) {
+    str = (char*) SPerl_MEMORY_POOL_alloc(sperl, sperl->memory_pool, length + 1);
   }
   else {
     str = (char*) SPerl_ALLOCATOR_safe_malloc(sperl, length + 1, sizeof(char));

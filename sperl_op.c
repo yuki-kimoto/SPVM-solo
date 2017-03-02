@@ -530,6 +530,7 @@ void SPerl_OP_resolve_types(SPerl* sperl) {
   for (size_t i = 0, len = op_types->length; i < len; i++) {
     SPerl_OP* op_type = SPerl_ARRAY_fetch(sperl, op_types, i);
     _Bool success = SPerl_TYPE_resolve_type(sperl, op_type, 0);
+    
     if (!success) {
       parser->fatal_error = 1;
       return;

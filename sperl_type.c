@@ -67,9 +67,11 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
             return 0;
           }
         }
+        name_length += strlen(part_name);
       }
     }
     char* resolved_type_name = SPerl_ALLOCATOR_new_string(sperl, name_length);
+    
     size_t cur_pos = 0;
     for (size_t i = 0; i < resolved_type_part_names->length; i++) {
       const char* resolved_type_part_name = (const char*) SPerl_ARRAY_fetch(sperl, resolved_type_part_names, i);
