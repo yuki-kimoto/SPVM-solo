@@ -96,21 +96,21 @@ SPerl* SPerl_new() {
 
 void SPerl_free(SPerl* sperl) {
 
-  // Free all array pointers
+  // Free all arrays
   for (size_t i = 0, len = sperl->arrays->length; i < len; i++) {
     SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, sperl->arrays, i);
     SPerl_ARRAY_free(sperl, array);
   }
   SPerl_ARRAY_free(sperl, sperl->arrays);
   
-  // Free all hash pointers
+  // Free all hashes
   for (size_t i = 0, len = sperl->hashes->length; i < len; i++) {
     SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, sperl->hashes, i);
     SPerl_HASH_free(sperl, hash);
   }
   SPerl_ARRAY_free(sperl, sperl->hashes);
   
-  // Free all string pointers;
+  // Free all long strings
   for (size_t i = 0, len = sperl->long_strings->length; i < len; i++) {
     void* str = SPerl_ARRAY_fetch(sperl, sperl->long_strings, i);
     free(str);
