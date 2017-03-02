@@ -14,7 +14,7 @@
 #include "sperl_bytecode_array.h"
 
 void SPerl_run(SPerl* sperl, const char* package_name) {
-
+  
   SPerl_PARSER* parser = sperl->parser;
   
   SPerl_ARRAY_push(sperl, parser->include_pathes, ".");
@@ -60,6 +60,14 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
 
 SPerl* SPerl_new() {
   SPerl* sperl = SPerl_ALLOCATOR_safe_malloc_zero(sperl, 1, sizeof(SPerl));
+
+  // Alignment size
+  if (sizeof(intptr_t) > sizeof(int64_t)) {
+    sperl->alignment = sizeof(intptr_t);
+  }
+  else {
+    sperl->alignment = sizeof(int64_t);
+  }
   
   // Memory pool - memory pool save short strings and object, except array and hash
   // These datas are created at compile time

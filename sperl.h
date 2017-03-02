@@ -18,6 +18,7 @@ enum {
 
 // Parser information
 struct sperl_ {
+  
   // Memory_pool
   SPerl_MEMORY_POOL* memory_pool;
   
@@ -39,14 +40,25 @@ struct sperl_ {
   // Bytecodes
   SPerl_BYTECODE_ARRAY* bytecode_array;
   
+  // Call stack
+  SPerl_CALL_STACK_T* call_stack;
+
   // Call stack capacity default
   int32_t call_stack_capacity_default;
   
-  // Runtime environment
+  // Call stack capacity
   int32_t call_stack_capacity;
-  SPerl_CALL_STACK_T* call_stack;
+  
+  // Operand stack base
   int32_t call_stack_base;
+  
+  // Operand stack top
   int32_t operand_stack_top;
+
+  // Alignment size
+  int32_t alignment;
+  
+  // Exception
   _Bool abort;
 };
 
