@@ -93,8 +93,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               bufptr_to += 5;
               *bufptr_to = '\0';
               
-              warn("GGGGGGGG %s", module_path_base);
-              
               // Search module file
               char* cur_module_path = NULL;
               FILE* fh = NULL;
@@ -106,8 +104,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
                 cur_module_path = SPerl_ALLOCATOR_new_string(sperl, file_name_length);
                 sprintf(cur_module_path, "%s/%s", include_path, module_path_base);
                 cur_module_path[file_name_length] = '\0';
-                
-                warn("FFFFFFFFFF %s", cur_module_path);
                 
                 // Open source file
                 fh = fopen(cur_module_path, "r");
@@ -150,7 +146,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               }
               fclose(fh);
               src[file_size] = '\0';
-              warn("EEEEEEEEEEEE %s", src);
               
               parser->cur_src = src;
               parser->bufptr = src;
@@ -419,7 +414,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         if (*(parser->bufptr + 1) == '"') {
           str = SPerl_ALLOCATOR_new_string(sperl, 0);
           str[0] = '\0';
-          warn("DDDDDDDDDD %s", str);
           parser->bufptr++;
           parser->bufptr++;
         }
@@ -436,8 +430,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           str = SPerl_ALLOCATOR_new_string(sperl, str_len);
           memcpy(str, cur_token_ptr, str_len);
           str[str_len] = '\0';
-          
-          warn("CCCCCCCCCCC %s", str);
           
           parser->bufptr++;
         }
@@ -470,8 +462,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
 
-          warn("BBBBBB %s", var_name);
-          
           // 
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_VAR);
           SPerl_VAR* var = SPerl_VAR_new(sperl);
@@ -638,8 +628,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
 
-          warn("AAAAAAA %s", keyword);
-          
           // Keyname
           if (memcmp(keyword, "my", str_len) == 0) {
             yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR);
