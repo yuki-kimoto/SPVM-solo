@@ -63,7 +63,7 @@ SPerl* SPerl_new() {
   
   // Memory pool - memory pool save short strings and object, except array and hash
   // These datas are created at compile time
-  sperl->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
+  sperl->memory_pool = SPerl_MEMORY_POOL_new(sperl);
   
   // Arrays - these arrays are created at compile time
   sperl->arrays = SPerl_ARRAY_new(sperl, 0);
