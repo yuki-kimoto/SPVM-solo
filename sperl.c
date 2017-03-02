@@ -61,7 +61,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
 SPerl* SPerl_new() {
   SPerl* sperl = SPerl_ALLOCATOR_safe_malloc_zero(sperl, 1, sizeof(SPerl));
   
-  // Memory pool - memory pool save short strings and object data, except array and hash
+  // Memory pool - memory pool save short strings and object, except array and hash
   // These datas are created at compile time
   sperl->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
   
@@ -95,7 +95,10 @@ SPerl* SPerl_new() {
 }
 
 void SPerl_free(SPerl* sperl) {
-
+  
+  // Free memory pool */
+  SPerl_MEMORY_POOL_free(sperl, sperl->memory_pool);
+  
   // Free all arrays
   for (size_t i = 0, len = sperl->arrays->length; i < len; i++) {
     SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, sperl->arrays, i);
@@ -116,9 +119,6 @@ void SPerl_free(SPerl* sperl) {
     free(str);
   }
   SPerl_ARRAY_free(sperl, sperl->long_strings);
-  
-  // Free memory pool */
-  SPerl_MEMORY_POOL_free(sperl, sperl->memory_pool);
   
   free(sperl);
 }
