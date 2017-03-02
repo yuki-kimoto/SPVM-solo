@@ -548,14 +548,14 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_RESOLVED_TYPE* index_resolved_type = SPerl_OP_get_resolved_type(sperl, op_index_term);
                   
                   if (!index_resolved_type) {
-                    SPerl_yyerror_format(sperl, "new operator can't create array which don't have length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
+                    SPerl_yyerror_format(sperl, "new operator can't create array which don't have length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
                     break;
                   }
                   else if (index_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
                     // OK
                   }
                   else {
-                    SPerl_yyerror_format(sperl, "new operator can't create array which don't have long length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
+                    SPerl_yyerror_format(sperl, "new operator can't create array which don't have long length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
                     break;
                   }
                 }
@@ -579,12 +579,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   
                   SPerl_PACKAGE* package = SPerl_HASH_search(sperl, parser->package_symtable, resolved_type->name, strlen(resolved_type->name));
                   if (!package) {
-                    SPerl_yyerror_format(sperl, "new operator can't receive non package name \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
+                    SPerl_yyerror_format(sperl, "new operator can't receive non package name \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
                     break;
                   }
                   
                   if (!package->op_fields->length) {
-                    SPerl_yyerror_format(sperl, "new operator can't receive package which don't have fields \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->file);
+                    SPerl_yyerror_format(sperl, "new operator can't receive package which don't have fields \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
                     break;
                   }
                 }
