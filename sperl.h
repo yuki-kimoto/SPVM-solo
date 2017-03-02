@@ -22,13 +22,13 @@ struct sperl_ {
   SPerl_MEMORY_POOL* memory_pool;
   
   // All array pointers
-  SPerl_ARRAY* array_ptrs;
+  SPerl_ARRAY* arrays;
   
   // All hash pointers
-  SPerl_ARRAY* hash_ptrs;
+  SPerl_ARRAY* hashes;
   
   // All long string pointers
-  SPerl_ARRAY* long_str_ptrs;
+  SPerl_ARRAY* long_strings;
   
   // Parser
   SPerl_PARSER* parser;

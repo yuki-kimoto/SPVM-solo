@@ -61,12 +61,19 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
 SPerl* SPerl_new() {
   SPerl* sperl = SPerl_ALLOCATOR_safe_malloc_zero(sperl, 1, sizeof(SPerl));
   
-  // Manipulate memory. This is freed last.
-  sperl->array_ptrs = SPerl_ARRAY_new(sperl, 0);
-  sperl->hash_ptrs = SPerl_ARRAY_new(sperl, 0);
-  sperl->long_str_ptrs = SPerl_ARRAY_new(sperl, 0);
+  // Memory pool - memory pool save short strings and object data, except array and hash
+  // These datas are created at compile time
   sperl->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
-
+  
+  // Arrays - these arrays are created at compile time
+  sperl->arrays = SPerl_ARRAY_new(sperl, 0);
+  
+  // Hashed - these hashes are created at compile time
+  sperl->hashes = SPerl_ARRAY_new(sperl, 0);
+  
+  // Long strings - these strings are created at compile time
+  sperl->long_strings = SPerl_ARRAY_new(sperl, 0);
+  
   // Parser
   sperl->parser = SPerl_PARSER_new(sperl);
   
@@ -90,25 +97,25 @@ SPerl* SPerl_new() {
 void SPerl_free(SPerl* sperl) {
 
   // Free all array pointers
-  for (size_t i = 0, len = sperl->array_ptrs->length; i < len; i++) {
-    SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, sperl->array_ptrs, i);
+  for (size_t i = 0, len = sperl->arrays->length; i < len; i++) {
+    SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, sperl->arrays, i);
     SPerl_ARRAY_free(sperl, array);
   }
-  SPerl_ARRAY_free(sperl, sperl->array_ptrs);
+  SPerl_ARRAY_free(sperl, sperl->arrays);
   
   // Free all hash pointers
-  for (size_t i = 0, len = sperl->hash_ptrs->length; i < len; i++) {
-    SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, sperl->hash_ptrs, i);
+  for (size_t i = 0, len = sperl->hashes->length; i < len; i++) {
+    SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, sperl->hashes, i);
     SPerl_HASH_free(sperl, hash);
   }
-  SPerl_ARRAY_free(sperl, sperl->hash_ptrs);
+  SPerl_ARRAY_free(sperl, sperl->hashes);
   
   // Free all string pointers;
-  for (size_t i = 0, len = sperl->long_str_ptrs->length; i < len; i++) {
-    void* str = SPerl_ARRAY_fetch(sperl, sperl->long_str_ptrs, i);
+  for (size_t i = 0, len = sperl->long_strings->length; i < len; i++) {
+    void* str = SPerl_ARRAY_fetch(sperl, sperl->long_strings, i);
     free(str);
   }
-  SPerl_ARRAY_free(sperl, sperl->long_str_ptrs);
+  SPerl_ARRAY_free(sperl, sperl->long_strings);
   
   // Free memory pool */
   SPerl_MEMORY_POOL_free(sperl, sperl->memory_pool);
