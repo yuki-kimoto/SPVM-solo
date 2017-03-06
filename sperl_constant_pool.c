@@ -178,7 +178,7 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   
   const char* string = constant->uv.string_value;
   int64_t string_length = strlen(string);
-  int32_t* address_ptr = SPerl_HASH_search(sperl, parser->string_symtable, string, strlen(string));
+  int32_t* address_ptr = SPerl_HASH_search(sperl, parser->string_literal_symtable, string, strlen(string));
   
   // Already exists
   if (address_ptr) {
@@ -207,7 +207,7 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     int32_t* new_address_ptr = SPerl_ALLOCATOR_new_int(sperl);
     *new_address_ptr = constant->address;
 
-    SPerl_HASH_insert(sperl, parser->string_symtable, string, string_length, new_address_ptr);
+    SPerl_HASH_insert(sperl, parser->string_literal_symtable, string, string_length, new_address_ptr);
   }
 }
 
