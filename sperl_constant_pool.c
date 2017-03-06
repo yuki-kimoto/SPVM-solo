@@ -174,12 +174,11 @@ void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant
 
 void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
   
-  SPerl_HASH* constant_utf8_symtable = sperl->parser->constant_utf8_symtable;
+  SPerl_PARSER* parser = sperl->parser;
   
-
-  const char* utf8 = constant->uv.string_value;
-  int64_t utf8_length = strlen(utf8);
-  int32_t* address_ptr = SPerl_HASH_search(sperl, constant_utf8_symtable, utf8, strlen(utf8));
+  const char* string = constant->uv.string_value;
+  int64_t string_length = strlen(string);
+  int32_t* address_ptr = SPerl_HASH_search(sperl, parser->string_symtable, string, strlen(string));
   
   // Already exists
   if (address_ptr) {
@@ -190,25 +189,25 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     constant->address = constant_pool->length;
     
     // Add string length
-    SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, utf8_length);
+    SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, string_length);
     
     // Calculate constant pool size
     int64_t constant_pool_size;
-    if (utf8_length % sizeof(int64_t) == 0) {
-      constant_pool_size = utf8_length / sizeof(int64_t);
+    if (string_length % sizeof(int64_t) == 0) {
+      constant_pool_size = string_length / sizeof(int64_t);
     }
     else {
-      constant_pool_size = (utf8_length / sizeof(int64_t)) + 1;
+      constant_pool_size = (string_length / sizeof(int64_t)) + 1;
     }
     
     SPerl_CONSTANT_POOL_extend(sperl, constant_pool, constant_pool_size);
-    memcpy(&constant_pool->values[constant_pool->length], utf8, utf8_length);
+    memcpy(&constant_pool->values[constant_pool->length], string, string_length);
     constant_pool->length += constant_pool_size;
     
     int32_t* new_address_ptr = SPerl_ALLOCATOR_new_int(sperl);
     *new_address_ptr = constant->address;
 
-    SPerl_HASH_insert(sperl, constant_utf8_symtable, utf8, utf8_length, new_address_ptr);
+    SPerl_HASH_insert(sperl, parser->string_symtable, string, string_length, new_address_ptr);
   }
 }
 

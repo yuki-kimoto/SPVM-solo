@@ -43,8 +43,13 @@ struct SPerl_parser {
   // use symbol table
   SPerl_HASH* op_use_symtable;
   
-  // Constant string table
-  SPerl_HASH* constant_utf8_symtable;
+  // String symbol table
+  /*
+    String symbol table contains string literals, package names,
+    sub absolute names, field absolute names.
+    Character set is UTF-8.
+  */
+  SPerl_HASH* string_symtable;
   
   // Types
   SPerl_ARRAY* op_types;
