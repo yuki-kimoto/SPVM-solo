@@ -25,7 +25,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
   
   SPerl_PARSER* parser = sperl->parser;
   
-  SPerl_HASH* package_symtable = parser->package_symtable;
+  SPerl_HASH* op_package_symtable = parser->op_package_symtable;
   SPerl_TYPE* type = op_type->uv.type;
   
   if (type->resolved_type) {
@@ -58,8 +58,8 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
         }
         else {
           // Package
-          SPerl_PACKAGE* found_package = SPerl_HASH_search(sperl, package_symtable, part_name, strlen(part_name));
-          if (found_package) {
+          SPerl_OP* op_found_package = SPerl_HASH_search(sperl, op_package_symtable, part_name, strlen(part_name));
+          if (op_found_package) {
             SPerl_ARRAY_push(sperl, resolved_type_part_names, part_name);
           }
           else {

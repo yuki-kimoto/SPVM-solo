@@ -577,16 +577,18 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     break;
                   }
                   
-                  SPerl_PACKAGE* package = SPerl_HASH_search(sperl, parser->package_symtable, resolved_type->name, strlen(resolved_type->name));
+                  SPerl_OP* op_package = SPerl_HASH_search(sperl, parser->op_package_symtable, resolved_type->name, strlen(resolved_type->name));
                   
-                  if (!package) {
+                  if (!op_package) {
                     SPerl_yyerror_format(sperl, "new operator can't receive non package name \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
                     break;
                   }
-                  
-                  if (!package->op_fields->length) {
-                    SPerl_yyerror_format(sperl, "new operator can't receive package which don't have fields \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
-                    break;
+                  else {
+                    SPerl_PACKAGE* package = op_package->uv.package;
+                    if (!package->op_fields->length) {
+                      SPerl_yyerror_format(sperl, "new operator can't receive package which don't have fields \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
+                      break;
+                    }
                   }
                 }
                 

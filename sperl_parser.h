@@ -24,7 +24,9 @@ struct SPerl_parser {
   
   // Packages
   SPerl_ARRAY* op_packages;
-  SPerl_HASH* package_symtable;
+  
+  // OP package symtable
+  SPerl_HASH* op_package_symtable;
   
   // Class loading stack
   SPerl_ARRAY* op_use_stack;
@@ -39,7 +41,7 @@ struct SPerl_parser {
   SPerl_HASH* field_symtable;
   
   // use symbol table
-  SPerl_HASH* use_package_symtable;
+  SPerl_HASH* op_use_symtable;
   
   // Constant string table
   SPerl_HASH* constant_utf8_symtable;

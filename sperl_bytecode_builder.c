@@ -982,7 +982,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_MALLOC);
                   
                   const char* package_name = op_cur->first->uv.type->resolved_type->name;
-                  SPerl_PACKAGE* package = SPerl_HASH_search(sperl, parser->package_symtable, package_name, strlen(package_name));
+                  
+                  SPerl_OP* op_package = SPerl_HASH_search(sperl, parser->op_package_symtable, package_name, strlen(package_name));
+                  SPerl_PACKAGE* package = op_package->uv.package;
                   
                   int32_t constant_pool_address = package->constant_pool_address;
                   

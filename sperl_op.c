@@ -728,11 +728,11 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
   SPerl_OP_sibling_splice(sperl, op_package, op_package_name, 0, op_block);
   
   const char* package_name = op_package_name->uv.name;
-  SPerl_HASH* package_symtable = parser->package_symtable;
+  SPerl_HASH* op_package_symtable = parser->op_package_symtable;
   
   // Redeclaration package error
-  SPerl_PACKAGE* found_package = SPerl_HASH_search(sperl, package_symtable, package_name, strlen(package_name));
-  if (found_package) {
+  SPerl_OP* found_op_package = SPerl_HASH_search(sperl, op_package_symtable, package_name, strlen(package_name));
+  if (found_op_package) {
     SPerl_yyerror_format(sperl, "redeclaration of package \"%s\" at %s line %d\n", package_name, op_package->file, op_package->line);
   }
   else {
@@ -925,7 +925,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     // Add package
     op_package->uv.package = package;
     SPerl_ARRAY_push(sperl, parser->op_packages, op_package);
-    SPerl_HASH_insert(sperl, parser->package_symtable, package_name, strlen(package_name), package);
+    SPerl_HASH_insert(sperl, parser->op_package_symtable, package_name, strlen(package_name), op_package);
   }
   
   return op_package;
@@ -938,11 +938,11 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_p
   SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);
   
   const char* package_name = op_package_name->uv.name;
-  SPerl_USE* found_use = SPerl_HASH_search(sperl, parser->use_package_symtable, package_name, strlen(package_name));
+  SPerl_OP* found_op_use = SPerl_HASH_search(sperl, parser->op_use_symtable, package_name, strlen(package_name));
   
-  if (!found_use) {
+  if (!found_op_use) {
     SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use);
-    SPerl_HASH_insert(sperl, parser->use_package_symtable, package_name, strlen(package_name), op_use);
+    SPerl_HASH_insert(sperl, parser->op_use_symtable, package_name, strlen(package_name), op_use);
   }
   
   return op_use;
