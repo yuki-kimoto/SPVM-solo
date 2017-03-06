@@ -515,7 +515,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                 const char* sub_name = name_info->resolved_name;
                 
-                SPerl_SUB* sub = SPerl_HASH_search(sperl, parser->sub_symtable, sub_name, strlen(sub_name));
+                SPerl_OP* op_sub = SPerl_HASH_search(sperl, parser->op_sub_symtable, sub_name, strlen(sub_name));
+                SPerl_SUB* sub = op_sub->uv.sub;
                 
                 int32_t constant_pool_address = sub->constant_pool_address;
                 

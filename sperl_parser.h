@@ -35,7 +35,7 @@ struct SPerl_parser {
   SPerl_ARRAY* include_pathes;
   
   // Method absolute name symbol table
-  SPerl_HASH* sub_symtable;
+  SPerl_HASH* op_sub_symtable;
   
   // Field absolute name symbol table
   SPerl_HASH* field_symtable;

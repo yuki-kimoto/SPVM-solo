@@ -61,7 +61,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         while (1) {
           SPerl_OP* op_use = SPerl_ARRAY_pop(sperl, op_use_stack);
           
-          
           if (op_use) {
             SPerl_OP* op_package_name = op_use->first;
             const char* package_name = op_package_name->uv.name;

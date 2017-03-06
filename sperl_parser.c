@@ -21,7 +21,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   SPerl_PARSER* parser = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_PARSER));
   
   // Parser information
-  parser->sub_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
+  parser->op_sub_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
   parser->op_packages = SPerl_ALLOCATOR_new_array(sperl, 0);
   parser->op_package_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
   parser->op_types = SPerl_ALLOCATOR_new_array(sperl, 0);

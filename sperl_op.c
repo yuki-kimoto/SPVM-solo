@@ -357,7 +357,8 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_CALL_SUB: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
-      SPerl_SUB* sub = SPerl_HASH_search(sperl, parser->sub_symtable, abs_name, strlen(abs_name));
+      SPerl_OP* op_sub = SPerl_HASH_search(sperl, parser->op_sub_symtable, abs_name, strlen(abs_name));
+      SPerl_SUB* sub = op_sub->uv.sub;
       if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
         resolved_type = sub->op_return_type->uv.type->resolved_type;
       }
@@ -792,10 +793,9 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         const char* sub_name = op_sub_name->uv.name;
         const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, sub_name);
         
-        SPerl_SUB* found_sub = NULL;
-        found_sub = SPerl_HASH_search(sperl, parser->sub_symtable, sub_abs_name, strlen(sub_abs_name));
+        SPerl_OP* found_op_sub = SPerl_HASH_search(sperl, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name));
         
-        if (found_sub) {
+        if (found_op_sub) {
           SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
         }
         // Unknown sub
@@ -835,7 +835,7 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           }
         }
         
-        SPerl_HASH_insert(sperl, parser->sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
+        SPerl_HASH_insert(sperl, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
         SPerl_ARRAY_push(sperl, op_subs, op_sub);
       }
       else if (op_decl->code == SPerl_OP_C_CODE_DECL_ENUM) {
@@ -905,15 +905,14 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           op_sub->uv.sub = sub;
           
           const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, op_name->uv.name);
-          SPerl_SUB* found_sub = NULL;
-          found_sub = SPerl_HASH_search(sperl, parser->sub_symtable, sub_abs_name, strlen(sub_abs_name));
+          SPerl_OP* found_op_sub = SPerl_HASH_search(sperl, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name));
           
-          if (found_sub) {
+          if (found_op_sub) {
             SPerl_yyerror_format(sperl, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
           }
           // Unknown sub
           else {
-            SPerl_HASH_insert(sperl, parser->sub_symtable, sub_abs_name, strlen(sub_abs_name), sub);
+            SPerl_HASH_insert(sperl, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
             SPerl_ARRAY_push(sperl, op_subs, op_sub);
           }
         }

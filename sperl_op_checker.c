@@ -176,11 +176,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   
                   const char* sub_name = op_call_sub->uv.name_info->resolved_name;
                   
-                  SPerl_SUB* sub= SPerl_HASH_search(sperl, 
-                    parser->sub_symtable,
+                  SPerl_OP* op_sub= SPerl_HASH_search(sperl, 
+                    parser->op_sub_symtable,
                     sub_name,
                     strlen(sub_name)
                   );
+                  SPerl_SUB* sub = op_sub->uv.sub;
                   
                   if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
                     op_cur->code = SPerl_OP_C_CODE_NULL;
@@ -1047,18 +1048,19 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 const char* sub_name = op_cur->uv.name_info->resolved_name;
                 
-                SPerl_SUB* found_sub= SPerl_HASH_search(sperl, 
-                  parser->sub_symtable,
+                SPerl_OP* found_op_sub= SPerl_HASH_search(sperl, 
+                  parser->op_sub_symtable,
                   sub_name,
                   strlen(sub_name)
                 );
-                if (!found_sub) {
+                if (!found_op_sub) {
                   SPerl_yyerror_format(sperl, "unknown sub \"%s\" at %s line %d\n",
                     sub_name, op_cur->file, op_cur->line);
                   break;
                 }
                 
                 // Constant
+                SPerl_SUB* found_sub = found_op_sub->uv.sub;
 
                 size_t sub_args_count = found_sub->op_args->length;
                 SPerl_OP* op_list_args = op_cur->last;
