@@ -498,7 +498,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   
                   SPerl_NAME_INFO* name_info = op_cur->uv.name_info;
                   const char* field_name = name_info->resolved_name;
-                  SPerl_FIELD* field = SPerl_HASH_search(sperl, parser->field_symtable, field_name, strlen(field_name));
+                  SPerl_OP* op_field = SPerl_HASH_search(sperl, parser->op_field_symtable, field_name, strlen(field_name));
+                  SPerl_FIELD* field = op_field->uv.field;
                   
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (field->constant_pool_address >> 24) & 0xFF);
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (field->constant_pool_address >> 16) & 0xFF);
@@ -1222,7 +1223,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   // Call subroutine
                   SPerl_NAME_INFO* name_info = op_cur->first->uv.name_info;
                   const char* field_name = name_info->resolved_name;
-                  SPerl_FIELD* field = SPerl_HASH_search(sperl, parser->field_symtable, field_name, strlen(field_name));
+                  SPerl_OP* op_field = SPerl_HASH_search(sperl, parser->op_field_symtable, field_name, strlen(field_name));
+                  SPerl_FIELD* field = op_field->uv.field;
                   
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (field->constant_pool_address >> 24) & 0xFF);
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (field->constant_pool_address >> 16) & 0xFF);

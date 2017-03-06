@@ -367,7 +367,8 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
     case SPerl_OP_C_CODE_FIELD: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
-      SPerl_FIELD* field = SPerl_HASH_search(sperl, parser->field_symtable, abs_name, strlen(abs_name));
+      SPerl_OP* op_field = SPerl_HASH_search(sperl, parser->op_field_symtable, abs_name, strlen(abs_name));
+      SPerl_FIELD* field = op_field->uv.field;
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
     }
@@ -758,7 +759,6 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     
     SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_new_array(sperl, 0);
     SPerl_ARRAY* op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
-    SPerl_HASH* field_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
     
     // Fields
     SPerl_OP* op_decls = op_block->first;
@@ -768,9 +768,9 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         SPerl_OP* op_field = op_decl;
         SPerl_FIELD* field = op_field->uv.field;
         const char* field_name = field->op_name->uv.name;
-        SPerl_FIELD* found_field
-          = SPerl_HASH_search(sperl, field_symtable, field_name, strlen(field_name));
-        if (found_field) {
+        SPerl_OP* found_op_field = SPerl_HASH_search(sperl, parser->op_field_symtable, field_name, strlen(field_name));
+        
+        if (found_op_field) {
           SPerl_yyerror_format(sperl, "redeclaration of has \"%s\" at %s line %d\n", field_name, op_field->file, op_field->line);
         }
         else if (op_fields->length >= SPerl_OP_LIMIT_FIELDS) {
@@ -778,11 +778,10 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         }
         else {
           SPerl_ARRAY_push(sperl, op_fields, op_field);
-          SPerl_HASH_insert(sperl, field_symtable, field_name, strlen(field_name), field);
           
-          // Field absolute name
+          // Add op field symtable
           const char* field_abs_name = SPerl_OP_create_abs_name(sperl, package_name, field_name);
-          SPerl_HASH_insert(sperl, parser->field_symtable, field_abs_name, strlen(field_abs_name), field);
+          SPerl_HASH_insert(sperl, parser->op_field_symtable, field_abs_name, strlen(field_abs_name), op_field);
         }
       }
       else if (op_decl->code == SPerl_OP_C_CODE_DECL_SUB) {

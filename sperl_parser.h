@@ -38,7 +38,7 @@ struct SPerl_parser {
   SPerl_HASH* op_sub_symtable;
   
   // Field absolute name symbol table
-  SPerl_HASH* field_symtable;
+  SPerl_HASH* op_field_symtable;
   
   // use symbol table
   SPerl_HASH* op_use_symtable;
