@@ -4,7 +4,9 @@
 #include "sperl_hash.h"
 #include "sperl_hash_entry.h"
 #include "sperl_hash_func.h"
-#include "sperl_allocator.h"
+#include "sperl_allocator_parser.h"
+#include "sperl_parser.h"
+#include "sperl.h"
 
 SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int32_t capacity) {
   (void)sperl;
@@ -13,13 +15,13 @@ SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int32_t capacity) {
     capacity = 101;
   }
   
-  SPerl_HASH* hash = SPerl_ALLOCATOR_safe_malloc(sperl, capacity, sizeof(SPerl_HASH));
+  SPerl_HASH* hash = SPerl_ALLOCATOR_PARSER_safe_malloc(sperl, sperl->parser, capacity, sizeof(SPerl_HASH));
   memset(hash, 0, sizeof(SPerl_HASH));
   
   hash->count = 0;
   hash->capacity = capacity;
   
-  SPerl_HASH_ENTRY** entries = SPerl_ALLOCATOR_safe_malloc_zero(sperl, hash->capacity, sizeof(SPerl_HASH_ENTRY*));
+  SPerl_HASH_ENTRY** entries = SPerl_ALLOCATOR_PARSER_safe_malloc_zero(sperl, sperl->parser, hash->capacity, sizeof(SPerl_HASH_ENTRY*));
   hash->entries = entries;
   
   return hash;

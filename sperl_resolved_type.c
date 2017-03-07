@@ -1,8 +1,9 @@
 #include <string.h>
 #include "sperl_resolved_type.h"
 #include "sperl.h"
-#include "sperl_allocator.h"
+#include "sperl_allocator_parser.h"
 #include "sperl_package.h"
+#include "sperl_parser.h"
 
 const char* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
   "byte",
@@ -70,9 +71,9 @@ int32_t SPerl_RESOLVED_TYPE_get_array_dimention(SPerl* sperl, SPerl_RESOLVED_TYP
 }
 
 SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl* sperl) {
-  SPerl_RESOLVED_TYPE* resolved_type = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_RESOLVED_TYPE));
+  SPerl_RESOLVED_TYPE* resolved_type = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_RESOLVED_TYPE));
   
-  resolved_type->part_names = SPerl_ALLOCATOR_new_array(sperl, 0);
+  resolved_type->part_names = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser, 0);
   
   return resolved_type;
 }

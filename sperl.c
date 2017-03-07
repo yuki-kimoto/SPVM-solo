@@ -9,7 +9,7 @@
 #include "sperl_array.h"
 #include "sperl_api.h"
 #include "sperl_memory_pool.h"
-#include "sperl_allocator.h"
+#include "sperl_allocator_parser.h"
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_array.h"
 
@@ -59,7 +59,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
 }
 
 SPerl* SPerl_new() {
-  SPerl* sperl = SPerl_ALLOCATOR_safe_malloc_zero(sperl, 1, sizeof(SPerl));
+  SPerl* sperl = SPerl_ALLOCATOR_PARSER_safe_malloc_zero(sperl, NULL, 1, sizeof(SPerl));
 
   // Alignment size
   if (sizeof(intptr_t) > sizeof(int64_t)) {

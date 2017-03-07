@@ -8,7 +8,7 @@
 #include "sperl_parser.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
-#include "sperl_allocator.h"
+#include "sperl_allocator_parser.h"
 #include "sperl_yacc_util.h"
 #include "sperl_op.h"
 #include "sperl_sub.h"
@@ -63,13 +63,13 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       }
       
       // my var informations
-      SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_new_array(sperl, 0);
+      SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
       
       // my variable stack
-      SPerl_ARRAY* op_my_var_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+      SPerl_ARRAY* op_my_var_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
       
       // block base position stack
-      SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_new_array(sperl, 0);
+      SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
       int32_t block_base = 0;
       _Bool block_start = 0;
       
@@ -146,7 +146,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           case SPerl_OP_C_CODE_BLOCK: {
             if (block_start) {
               assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
-              int32_t* block_base_ptr = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(int32_t));
+              int32_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, parser, sizeof(int32_t));
               *block_base_ptr = (int32_t) op_my_var_stack->length;
               SPerl_ARRAY_push(sperl, block_base_stack, block_base_ptr);
               block_base = *block_base_ptr;
@@ -216,7 +216,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                 
                 if (!cur_case_ops) {
-                  cur_case_ops = SPerl_ALLOCATOR_new_array(sperl, 0);
+                  cur_case_ops = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
                 }
                 SPerl_ARRAY_push(sperl, cur_case_ops, op_cur);
                 

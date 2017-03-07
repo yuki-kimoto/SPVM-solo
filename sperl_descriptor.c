@@ -1,6 +1,6 @@
 #include "sperl_descriptor.h"
 #include "sperl.h"
-#include "sperl_allocator.h"
+#include "sperl_allocator_parser.h"
 
 const char* const SPerl_DESCRIPTOR_C_CODE_NAMES[] = {
   "native",
@@ -8,5 +8,5 @@ const char* const SPerl_DESCRIPTOR_C_CODE_NAMES[] = {
 };
 
 SPerl_DESCRIPTOR* SPerl_DESCRIPTOR_new(SPerl* sperl) {
-  return SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_DESCRIPTOR));
+  return SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_DESCRIPTOR));
 }

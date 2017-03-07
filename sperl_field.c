@@ -2,13 +2,13 @@
 
 #include "sperl_field.h"
 #include "sperl.h"
-#include "sperl_allocator.h"
+#include "sperl_allocator_parser.h"
 #include "sperl_resolved_type.h"
 #include "sperl_type.h"
 #include "sperl_op.h"
 
 SPerl_FIELD* SPerl_FIELD_new(SPerl* sperl) {
-  return SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_FIELD));
+  return SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_FIELD));
 }
 
 int32_t SPerl_FIELD_get_byte_size(SPerl* sperl, SPerl_FIELD* field) {

@@ -11,7 +11,7 @@
 #include "sperl_yacc_util.h"
 #include "sperl_yacc.h"
 #include "sperl_op.h"
-#include "sperl_allocator.h"
+#include "sperl_allocator_parser.h"
 #include "sperl_constant.h"
 #include "sperl_var.h"
 #include "sperl_array.h"
@@ -74,7 +74,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               
               // Change :: to / and add ".spvm"
               size_t module_path_base_length = strlen(package_name) + 6;
-              char* module_path_base = SPerl_ALLOCATOR_new_string(sperl, module_path_base_length);
+              char* module_path_base = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, module_path_base_length);
               const char* bufptr_orig = package_name;
               char* bufptr_to = module_path_base;
               while (*bufptr_orig) {
@@ -101,7 +101,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
                 
                 // File name
                 size_t file_name_length = strlen(include_path) + 1 + strlen(module_path_base);
-                cur_module_path = SPerl_ALLOCATOR_new_string(sperl, file_name_length);
+                cur_module_path = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, file_name_length);
                 sprintf(cur_module_path, "%s/%s", include_path, module_path_base);
                 cur_module_path[file_name_length] = '\0';
                 
@@ -134,7 +134,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
                 exit(1);
               }
               fseek(fh, 0, SEEK_SET);
-              char* src = SPerl_ALLOCATOR_new_string(sperl, file_size);
+              char* src = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, file_size);
               if (fread(src, 1, file_size, fh) < (size_t) file_size) {
                 if (op_use) {
                   fprintf(stderr, "Can't read file %s at %s line %d\n", cur_module_path, op_use->file, op_use->line);
@@ -412,7 +412,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         
         char* str;
         if (*(parser->bufptr + 1) == '"') {
-          str = SPerl_ALLOCATOR_new_string(sperl, 0);
+          str = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, 0);
           str[0] = '\0';
           parser->bufptr++;
           parser->bufptr++;
@@ -427,7 +427,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          str = SPerl_ALLOCATOR_new_string(sperl, str_len);
+          str = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, str_len);
           memcpy(str, cur_token_ptr, str_len);
           str[str_len] = '\0';
           
@@ -458,7 +458,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           }
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          char* var_name = SPerl_ALLOCATOR_new_string(sperl, str_len);
+          char* var_name = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, str_len);
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
 
@@ -496,9 +496,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           // Number literal(first is space for sign)
           size_t str_len = parser->bufptr - cur_token_ptr;
           if (str_len > SIZE_MAX - 2) {
-            SPerl_ALLOCATOR_exit_with_malloc_failure(sperl);
+            SPerl_ALLOCATOR_PARSER_exit_with_malloc_failure(sperl, parser);
           }
-          char* num_str = (char*) SPerl_ALLOCATOR_safe_malloc(sperl, str_len + 2, sizeof(char));
+          char* num_str = (char*) SPerl_ALLOCATOR_PARSER_safe_malloc(sperl, parser, str_len + 2, sizeof(char));
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
           
@@ -623,7 +623,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           
           
           size_t str_len = parser->bufptr - cur_token_ptr;
-          char* keyword = SPerl_ALLOCATOR_new_string(sperl, str_len);
+          char* keyword = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, str_len);
           
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';

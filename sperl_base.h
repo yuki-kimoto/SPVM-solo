@@ -36,7 +36,7 @@ typedef struct SPerl_vm SPerl_VM;
 struct SPerl_switch_info;
 typedef struct SPerl_switch_info SPerl_SWITCH_INFO;
 
-/* sperl_allocator.h */
+/* sperl_allocator_parser.h */
 struct SPerl_allocator;
 typedef struct SPerl_allocator SPerl_ALLOCATOR;
 

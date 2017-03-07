@@ -6,7 +6,7 @@
 #include "sperl.h"
 #include "sperl_parser.h"
 #include "sperl_yacc_util.h"
-#include "sperl_allocator.h"
+#include "sperl_allocator_parser.h"
 #include "sperl_yacc.h"
 #include "sperl_constant.h"
 #include "sperl_var.h"
@@ -25,7 +25,7 @@ void SPerl_yyerror_format(SPerl* sperl, const char* message_template, ...) {
   
   // Messsage template with prefix
   int32_t message_template_with_prefix_length = prefix_length + message_template_length;
-  char* message_template_with_prefix = SPerl_ALLOCATOR_new_string(sperl, message_template_with_prefix_length);
+  char* message_template_with_prefix = SPerl_ALLOCATOR_PARSER_new_string(sperl, sperl->parser, message_template_with_prefix_length);
   strncpy(message_template_with_prefix, prefix, prefix_length);
   strncpy(message_template_with_prefix + prefix_length, message_template, message_template_length);
   message_template_with_prefix[message_template_with_prefix_length] = '\0';
@@ -59,7 +59,7 @@ void SPerl_yyerror_format(SPerl* sperl, const char* message_template, ...) {
   }
   va_end(args);
   
-  char* message = SPerl_ALLOCATOR_new_string(sperl, message_length);
+  char* message = SPerl_ALLOCATOR_PARSER_new_string(sperl, sperl->parser, message_length);
   
   va_start(args, message_template);
   vsprintf(message, message_template_with_prefix, args);
@@ -94,9 +94,9 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
       ptr++;
     }
     if (length >= SIZE_MAX) {
-      SPerl_ALLOCATOR_exit_with_malloc_failure(sperl);
+      SPerl_ALLOCATOR_PARSER_exit_with_malloc_failure(sperl, parser);
     }
-    char* token = (char*) SPerl_ALLOCATOR_safe_malloc_zero(sperl, length + 1, sizeof(char));
+    char* token = (char*) SPerl_ALLOCATOR_PARSER_safe_malloc_zero(sperl, parser, length + 1, sizeof(char));
     memcpy(token, parser->befbufptr + empty_count, length);
     token[length] = '\0';
 

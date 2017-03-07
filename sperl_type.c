@@ -9,7 +9,7 @@
 #include "sperl_array.h"
 #include "sperl_type_part.h"
 #include "sperl_op.h"
-#include "sperl_allocator.h"
+#include "sperl_allocator_parser.h"
 #include "sperl_hash.h"
 #include "sperl_resolved_type.h"
 #include "sperl_yacc_util.h"
@@ -32,9 +32,9 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
     return 1;
   }
   else {
-    SPerl_ARRAY* resolved_type_part_names = SPerl_ALLOCATOR_new_array(sperl, 0);
+    SPerl_ARRAY* resolved_type_part_names = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
     
-    SPerl_ARRAY* parts = SPerl_ALLOCATOR_new_array(sperl, 0);
+    SPerl_ARRAY* parts = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
     SPerl_TYPE_build_parts(sperl, type, parts);
     
     for (size_t i = 0; i < parts->length; i++) {
@@ -70,7 +70,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
         name_length += strlen(part_name);
       }
     }
-    char* resolved_type_name = SPerl_ALLOCATOR_new_string(sperl, name_length);
+    char* resolved_type_name = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, name_length);
     
     size_t cur_pos = 0;
     for (size_t i = 0; i < resolved_type_part_names->length; i++) {
@@ -104,7 +104,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
 }
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl* sperl) {
-  SPerl_TYPE* type = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_TYPE));
+  SPerl_TYPE* type = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_TYPE));
   
   return type;
 }

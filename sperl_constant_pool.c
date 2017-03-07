@@ -13,18 +13,18 @@
 #include "sperl_constant_pool_sub.h"
 #include "sperl_constant_pool_package.h"
 #include "sperl_constant_pool_field.h"
-#include "sperl_allocator.h"
+#include "sperl_allocator_parser.h"
 #include "sperl_array.h"
 #include "sperl_op.h"
 
 SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   (void)sperl;
   
-  SPerl_CONSTANT_POOL* constant_pool = SPerl_ALLOCATOR_safe_malloc(sperl, 1, sizeof(SPerl_CONSTANT_POOL));
+  SPerl_CONSTANT_POOL* constant_pool = SPerl_ALLOCATOR_PARSER_safe_malloc(sperl, sperl->parser, 1, sizeof(SPerl_CONSTANT_POOL));
   constant_pool->capacity = 64;
   constant_pool->length = 0;
   
-  int64_t* values = SPerl_ALLOCATOR_safe_malloc_zero(sperl, constant_pool->capacity, sizeof(int64_t));
+  int64_t* values = SPerl_ALLOCATOR_PARSER_safe_malloc_zero(sperl, sperl->parser, constant_pool->capacity, sizeof(int64_t));
   constant_pool->values = values;
   
   return constant_pool;
@@ -37,10 +37,10 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
   
   if (constant_pool->length + extend >= capacity) {
     if (capacity > INT32_MAX / 2) {
-      SPerl_ALLOCATOR_exit_with_malloc_failure(sperl);
+      SPerl_ALLOCATOR_PARSER_exit_with_malloc_failure(sperl, sperl->parser);
     }
     int64_t new_capacity = capacity * 2;
-    constant_pool->values = (int64_t*) SPerl_ALLOCATOR_safe_realloc(sperl, constant_pool->values, new_capacity, sizeof(int64_t));
+    constant_pool->values = (int64_t*) SPerl_ALLOCATOR_PARSER_safe_realloc(sperl, sperl->parser, constant_pool->values, new_capacity, sizeof(int64_t));
     memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(int64_t));
     constant_pool->capacity = new_capacity;
   }
@@ -77,7 +77,7 @@ void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constan
   package->constant_pool_address = constant_pool->length;
   
   // Constant pool package information
-  SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_PACKAGE));
+  SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_CONSTANT_POOL_PACKAGE));
   constant_pool_package->byte_size = package->byte_size;
 
   // Add package information
@@ -99,7 +99,7 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   // Constant pool sub information
   sub->constant_pool_address = constant_pool->length;
   // Constant pool sub information
-  SPerl_CONSTANT_POOL_SUB* constant_pool_sub = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_SUB));
+  SPerl_CONSTANT_POOL_SUB* constant_pool_sub = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_CONSTANT_POOL_SUB));
   constant_pool_sub->native_address = (uintptr_t)sub->native_address;
   constant_pool_sub->bytecode_base = (uint32_t)sub->bytecode_base;
   constant_pool_sub->my_vars_length = (uint16_t)sub->op_my_vars->length;
@@ -126,7 +126,7 @@ void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_
   field->constant_pool_address = constant_pool->length;
   
   // Constant pool field information
-  SPerl_CONSTANT_POOL_FIELD* constant_pool_field = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_CONSTANT_POOL_FIELD));
+  SPerl_CONSTANT_POOL_FIELD* constant_pool_field = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_CONSTANT_POOL_FIELD));
   constant_pool_field->package_byte_offset = field->package_byte_offset;
   
   // Add field information
@@ -204,7 +204,7 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     memcpy(&constant_pool->values[constant_pool->length], string, string_length);
     constant_pool->length += constant_pool_size;
     
-    int32_t* new_address_ptr = SPerl_ALLOCATOR_new_int(sperl);
+    int32_t* new_address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
     *new_address_ptr = constant->address;
 
     SPerl_HASH_insert(sperl, parser->string_literal_symtable, string, string_length, new_address_ptr);

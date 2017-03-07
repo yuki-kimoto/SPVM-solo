@@ -10,7 +10,6 @@
 #include "sperl_parser.h"
 #include "sperl_array.h"
 #include "sperl_hash.h"
-#include "sperl_allocator.h"
 #include "sperl_yacc_util.h"
 #include "sperl_op.h"
 #include "sperl_sub.h"
@@ -33,6 +32,7 @@
 #include "sperl_switch_info.h"
 #include "sperl_descriptor.h"
 #include "sperl_func.h"
+#include "sperl_allocator_parser.h"
 
 const char* const SPerl_OP_C_CODE_NAMES[] = {
   "IF",
@@ -143,7 +143,7 @@ SPerl_OP* SPerl_OP_build_switch_statement(SPerl* sperl, SPerl_OP* op_switch, SPe
   op_switch->uv.switch_info = SPerl_SWITCH_INFO_new(sperl);
   op_switch->uv.switch_info->op_cases = parser->cur_op_cases;
   
-  parser->cur_op_cases = SPerl_ALLOCATOR_new_array(sperl, 0);
+  parser->cur_op_cases = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser, 0);
   
   return op_switch;
 }
@@ -715,7 +715,7 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
 const char* SPerl_OP_create_abs_name(SPerl* sperl, const char* package_name, const char* name) {
   int32_t length = strlen(package_name) + 2 + strlen(name);
   
-  char* abs_name = SPerl_ALLOCATOR_new_string(sperl, length);
+  char* abs_name = SPerl_ALLOCATOR_PARSER_new_string(sperl, sperl->parser, length);
   
   sprintf(abs_name, "%s::%s", package_name, name);
   
@@ -757,8 +757,8 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     package->op_type = op_type;
     SPerl_ARRAY_push(sperl, parser->op_types, op_type);
     
-    SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_new_array(sperl, 0);
-    SPerl_ARRAY* op_subs = SPerl_ALLOCATOR_new_array(sperl, 0);
+    SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser, 0);
+    SPerl_ARRAY* op_subs = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser, 0);
     
     // Fields
     SPerl_OP* op_decls = op_block->first;
