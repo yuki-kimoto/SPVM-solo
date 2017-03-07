@@ -69,19 +69,6 @@ SPerl* SPerl_new() {
     sperl->alignment = sizeof(int64_t);
   }
   
-  // Memory pool - memory pool save short strings and object, except array and hash
-  // These datas are created at compile time
-  sperl->ct_memory_pool = SPerl_MEMORY_POOL_new(sperl);
-  
-  // Arrays - these arrays are created at compile time
-  sperl->ct_arrays = SPerl_ARRAY_new(sperl, 0);
-  
-  // Hashed - these hashes are created at compile time
-  sperl->ct_hashes = SPerl_ARRAY_new(sperl, 0);
-  
-  // Long strings - these strings are created at compile time
-  sperl->ct_long_strings = SPerl_ARRAY_new(sperl, 0);
-  
   // Parser
   sperl->parser = SPerl_PARSER_new(sperl);
   
@@ -104,29 +91,7 @@ SPerl* SPerl_new() {
 
 void SPerl_free(SPerl* sperl) {
   
-  // Free memory pool */
-  SPerl_MEMORY_POOL_free(sperl, sperl->ct_memory_pool);
-  
-  // Free all arrays
-  for (size_t i = 0, len = sperl->ct_arrays->length; i < len; i++) {
-    SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, sperl->ct_arrays, i);
-    SPerl_ARRAY_free(sperl, array);
-  }
-  SPerl_ARRAY_free(sperl, sperl->ct_arrays);
-  
-  // Free all hashes
-  for (size_t i = 0, len = sperl->ct_hashes->length; i < len; i++) {
-    SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, sperl->ct_hashes, i);
-    SPerl_HASH_free(sperl, hash);
-  }
-  SPerl_ARRAY_free(sperl, sperl->ct_hashes);
-  
-  // Free all long strings
-  for (size_t i = 0, len = sperl->ct_long_strings->length; i < len; i++) {
-    void* str = SPerl_ARRAY_fetch(sperl, sperl->ct_long_strings, i);
-    free(str);
-  }
-  SPerl_ARRAY_free(sperl, sperl->ct_long_strings);
+  SPerl_PARSER_free(sperl, sperl->parser);
   
   free(sperl);
 }

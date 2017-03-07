@@ -18,7 +18,22 @@
 #include "sperl_sub.h"
 
 SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
-  SPerl_PARSER* parser = SPerl_ALLOCATOR_alloc_memory_pool(sperl, sizeof(SPerl_PARSER));
+  SPerl_PARSER* parser = malloc(sizeof(SPerl_PARSER));
+
+  // Memory pool - memory pool save short strings and object, except array and hash
+  // These datas are created at compile time
+  parser->memory_pool = SPerl_MEMORY_POOL_new(sperl);
+  
+  // Arrays - these arrays are created at compile time
+  parser->arrays = SPerl_ARRAY_new(sperl, 0);
+  
+  // Hashed - these hashes are created at compile time
+  parser->hashes = SPerl_ARRAY_new(sperl, 0);
+  
+  // Long strings - these strings are created at compile time
+  parser->long_strings = SPerl_ARRAY_new(sperl, 0);
+  
+  sperl->parser = parser;
   
   // Parser information
   parser->op_sub_symtable = SPerl_ALLOCATOR_new_hash(sperl, 0);
@@ -82,7 +97,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
 int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   
   SPerl_PARSER* parser = sperl->parser;
-  
+
   /* Build use information */
   SPerl_OP* op_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, package_name, 1);
   op_package_name->uv.name = package_name;
@@ -107,3 +122,31 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   return parse_success;
 }
 
+void SPerl_PARSER_free(SPerl* sperl, SPerl_PARSER* parser) {
+  
+  // Free memory pool */
+  SPerl_MEMORY_POOL_free(sperl, parser->memory_pool);
+  
+  // Free arrays
+  for (size_t i = 0, len = parser->arrays->length; i < len; i++) {
+    SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, parser->arrays, i);
+    SPerl_ARRAY_free(sperl, array);
+  }
+  SPerl_ARRAY_free(sperl, parser->arrays);
+  
+  // Free hashes
+  for (size_t i = 0, len = parser->hashes->length; i < len; i++) {
+    SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, parser->hashes, i);
+    SPerl_HASH_free(sperl, hash);
+  }
+  SPerl_ARRAY_free(sperl, parser->hashes);
+  
+  // Free long strings
+  for (size_t i = 0, len = parser->long_strings->length; i < len; i++) {
+    void* str = SPerl_ARRAY_fetch(sperl, parser->long_strings, i);
+    free(str);
+  }
+  SPerl_ARRAY_free(sperl, parser->long_strings);
+  
+  free(parser);
+}
