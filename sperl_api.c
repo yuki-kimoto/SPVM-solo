@@ -9,7 +9,7 @@
 #include "sperl_memory_pool.h"
 #include "sperl_hash.h"
 #include "sperl_array.h"
-#include "sperl_allocator_parser.h"
+#include "sperl_allocator_util.h"
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_array.h"
 #include "sperl_func.h"
@@ -31,7 +31,7 @@ void SPerl_API_init_env(SPerl* sperl) {
   if (sperl->call_stack_capacity == -1) {
     sperl->call_stack_capacity = sperl->call_stack_capacity_default;
   }
-  sperl->call_stack = (SPerl_CALL_STACK_T*) SPerl_ALLOCATOR_PARSER_safe_malloc(sperl, parser, sperl->call_stack_capacity, sizeof(int64_t));
+  sperl->call_stack = (SPerl_CALL_STACK_T*) SPerl_ALLOCATOR_UTIL_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
   sperl->call_stack_base = -1;
   sperl->operand_stack_top = -1;
   sperl->abort = 0;
