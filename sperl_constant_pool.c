@@ -77,14 +77,15 @@ void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constan
   // Constant pool package information
   package->constant_pool_address = constant_pool->length;
   
-  // Constant pool package information
-  SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_CONSTANT_POOL_PACKAGE));
-  constant_pool_package->byte_size = package->byte_size;
 
   // Add package information
   int64_t extend_length = (sizeof(SPerl_CONSTANT_POOL_PACKAGE) + (sizeof(int64_t) - 1)) / sizeof(int64_t);
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
-  *(SPerl_CONSTANT_POOL_PACKAGE*)&constant_pool->values[constant_pool->length] = *constant_pool_package;
+
+  // Constant pool package information
+  SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPerl_CONSTANT_POOL_PACKAGE*)&constant_pool->values[constant_pool->length];
+  constant_pool_package->byte_size = package->byte_size;
+  
   constant_pool->length += extend_length;
 }
 
