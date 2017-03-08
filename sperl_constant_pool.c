@@ -100,7 +100,12 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   // Constant pool sub information
   sub->constant_pool_address = constant_pool->length;
   // Constant pool sub information
-  SPerl_CONSTANT_POOL_SUB* constant_pool_sub = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_CONSTANT_POOL_SUB));
+  
+  // Add sub information
+  int64_t extend_length = (sizeof(SPerl_CONSTANT_POOL_SUB) + (sizeof(int64_t) - 1)) / sizeof(int64_t);
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
+  
+  SPerl_CONSTANT_POOL_SUB* constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool->values[constant_pool->length];
   constant_pool_sub->native_address = (uintptr_t)sub->native_address;
   constant_pool_sub->bytecode_base = (uint32_t)sub->bytecode_base;
   constant_pool_sub->my_vars_length = (uint16_t)sub->op_my_vars->length;
@@ -110,11 +115,10 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
     constant_pool_sub->has_return_value = 1;
   }
+  else {
+    constant_pool_sub->has_return_value = 0;
+  }
   
-  // Add sub information
-  int64_t extend_length = (sizeof(SPerl_CONSTANT_POOL_SUB) + (sizeof(int64_t) - 1)) / sizeof(int64_t);
-  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
-  *(SPerl_CONSTANT_POOL_SUB*)&constant_pool->values[constant_pool->length] = *constant_pool_sub;
   constant_pool->length += extend_length;
 }
 
