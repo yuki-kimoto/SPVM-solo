@@ -12,6 +12,7 @@
 #include "sperl_yacc.h"
 #include "sperl_op.h"
 #include "sperl_allocator_parser.h"
+#include "sperl_allocator_util.h"
 #include "sperl_constant.h"
 #include "sperl_var.h"
 #include "sperl_array.h"
@@ -496,9 +497,9 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           // Number literal(first is space for sign)
           size_t str_len = parser->bufptr - cur_token_ptr;
           if (str_len > SIZE_MAX - 2) {
-            SPerl_ALLOCATOR_PARSER_exit_with_malloc_failure(sperl, parser);
+            SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
           }
-          char* num_str = (char*) SPerl_ALLOCATOR_PARSER_safe_malloc(sperl, parser, str_len + 2, sizeof(char));
+          char* num_str = (char*) SPerl_ALLOCATOR_UTIL_safe_malloc(str_len + 2, sizeof(char));
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
           
