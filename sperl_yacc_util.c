@@ -7,6 +7,7 @@
 #include "sperl_parser.h"
 #include "sperl_yacc_util.h"
 #include "sperl_allocator_parser.h"
+#include "sperl_allocator_util.h"
 #include "sperl_yacc.h"
 #include "sperl_constant.h"
 #include "sperl_var.h"
@@ -94,9 +95,9 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
       ptr++;
     }
     if (length >= SIZE_MAX) {
-      SPerl_ALLOCATOR_PARSER_exit_with_malloc_failure(sperl, parser);
+      SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
     }
-    char* token = (char*) SPerl_ALLOCATOR_PARSER_safe_malloc_zero(sperl, parser, length + 1, sizeof(char));
+    char* token = (char*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(length + 1, sizeof(char));
     memcpy(token, parser->befbufptr + empty_count, length);
     token[length] = '\0';
 
