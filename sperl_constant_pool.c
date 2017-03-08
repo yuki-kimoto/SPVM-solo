@@ -130,14 +130,14 @@ void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_
   // Constant pool field information
   field->constant_pool_address = constant_pool->length;
   
-  // Constant pool field information
-  SPerl_CONSTANT_POOL_FIELD* constant_pool_field = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_CONSTANT_POOL_FIELD));
-  constant_pool_field->package_byte_offset = field->package_byte_offset;
-  
   // Add field information
   int64_t extend_length = (sizeof(SPerl_CONSTANT_POOL_FIELD) + (sizeof(int64_t) - 1)) / sizeof(int64_t);
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
-  *(SPerl_CONSTANT_POOL_FIELD*)&constant_pool->values[constant_pool->length] = *constant_pool_field;
+
+  // Constant pool field information
+  SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool->values[constant_pool->length];
+  constant_pool_field->package_byte_offset = field->package_byte_offset;
+
   constant_pool->length += extend_length;
 }
 
