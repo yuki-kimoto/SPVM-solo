@@ -172,37 +172,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             switch (op_cur->code) {
               case SPerl_OP_C_CODE_CONSTANT: {
                 SPerl_CONSTANT* constant = op_cur->uv.constant;
-                
                 SPerl_CONSTANT_POOL* constant_pool = sperl->constant_pool;
-                
-                // Constant pool adding condition
-                _Bool isnt_add = 0;
-                if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
-                  if (constant->uv.double_value == 0 || constant->uv.double_value == 1) {
-                    isnt_add = 1;
-                  }
-                }
-                
-                if (!isnt_add) {
-                  constant->constant_pool_address = constant_pool->length;
-                  switch (constant->code) {
-                    case SPerl_CONSTANT_C_CODE_INT:
-                      SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant);
-                      break;
-                    case SPerl_CONSTANT_C_CODE_LONG:
-                      SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, constant);
-                      break;
-                    case SPerl_CONSTANT_C_CODE_FLOAT:
-                      SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant);
-                      break;
-                    case SPerl_CONSTANT_C_CODE_DOUBLE:
-                      SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, constant->uv.double_value);
-                      break;
-                    case SPerl_CONSTANT_C_CODE_STRING:
-                      SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, constant);
-                      break;
-                  }
-                }
+                SPerl_CONSTANT_POOL_push_constant(sperl, constant_pool, constant);
                 
                 break;
               }

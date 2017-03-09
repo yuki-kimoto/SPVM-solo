@@ -47,6 +47,27 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
   }
 }
 
+void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
+
+  switch (constant->code) {
+    case SPerl_CONSTANT_C_CODE_INT:
+      SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant);
+      break;
+    case SPerl_CONSTANT_C_CODE_LONG:
+      SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, constant);
+      break;
+    case SPerl_CONSTANT_C_CODE_FLOAT:
+      SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant);
+      break;
+    case SPerl_CONSTANT_C_CODE_DOUBLE:
+      SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, constant);
+      break;
+    case SPerl_CONSTANT_C_CODE_STRING:
+      SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, constant);
+      break;
+  }
+}
+
 void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
   (void)sperl;
   
@@ -117,8 +138,6 @@ void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_
 void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
   (void)sperl;
   
-  warn("AAAAAAA %p", constant);
-  
   int32_t value = constant->uv.int_value;
   
   if (value >= -32768 && value <= 32767) {
@@ -170,8 +189,17 @@ void SPerl_CONSTANT_POOL_push_float(SPerl* sperl, SPerl_CONSTANT_POOL* constant_
   constant_pool->length++;
 }
 
-void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, double value) {
+void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
   (void)sperl;
+  
+  double value = constant->uv.double_value;
+  
+  if (value == 0 || value == 1) {
+    constant->constant_pool_address = -1;
+    return;
+  }
+  
+  constant->constant_pool_address = constant_pool->length;
   
   // Add double value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
