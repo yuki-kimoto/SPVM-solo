@@ -55,9 +55,6 @@ struct SPerl_parser {
   // use symbol table
   SPerl_HASH* op_use_symtable;
   
-  // String literal symbol table
-  SPerl_HASH* string_literal_symtable;
-  
   // Types
   SPerl_ARRAY* op_types;
   

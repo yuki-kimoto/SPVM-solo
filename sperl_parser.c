@@ -48,7 +48,6 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   parser->resolved_types = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
   parser->resolved_type_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser, 0);
   parser->cur_op_cases = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
-  parser->string_literal_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser, 0);
   parser->cur_line = 0;
   
   // Core types

@@ -213,38 +213,26 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   
   const char* string = constant->uv.string_value;
   int32_t string_length = strlen(string);
-  int32_t* address_ptr = SPerl_HASH_search(sperl, parser->string_literal_symtable, string, strlen(string));
   
-  // Already exists
-  if (address_ptr) {
-    constant->constant_pool_address = *address_ptr;
+  constant->constant_pool_address = constant_pool->length;
+  
+  // Add string length
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
+  constant_pool->values[constant_pool->length] = string_length;
+  constant_pool->length++;
+  
+  // Calculate constant pool size
+  int32_t constant_pool_size;
+  if (string_length % sizeof(SPerl_VALUE_SIZE_T) == 0) {
+    constant_pool_size = string_length / sizeof(SPerl_VALUE_SIZE_T);
   }
   else {
-    constant->constant_pool_address = constant_pool->length;
-    
-    // Add string length
-    SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
-    constant_pool->values[constant_pool->length] = string_length;
-    constant_pool->length++;
-    
-    // Calculate constant pool size
-    int32_t constant_pool_size;
-    if (string_length % sizeof(SPerl_VALUE_SIZE_T) == 0) {
-      constant_pool_size = string_length / sizeof(SPerl_VALUE_SIZE_T);
-    }
-    else {
-      constant_pool_size = (string_length / sizeof(SPerl_VALUE_SIZE_T)) + 1;
-    }
-    
-    SPerl_CONSTANT_POOL_extend(sperl, constant_pool, constant_pool_size);
-    memcpy(&constant_pool->values[constant_pool->length], string, string_length);
-    constant_pool->length += constant_pool_size;
-    
-    int32_t* new_address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-    *new_address_ptr = constant->constant_pool_address;
-    
-    SPerl_HASH_insert(sperl, parser->string_literal_symtable, string, string_length, new_address_ptr);
+    constant_pool_size = (string_length / sizeof(SPerl_VALUE_SIZE_T)) + 1;
   }
+  
+  SPerl_CONSTANT_POOL_extend(sperl, constant_pool, constant_pool_size);
+  memcpy(&constant_pool->values[constant_pool->length], string, string_length);
+  constant_pool->length += constant_pool_size;
 }
 
 void SPerl_CONSTANT_POOL_free(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool) {
