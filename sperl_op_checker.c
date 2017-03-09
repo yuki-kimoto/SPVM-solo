@@ -170,6 +170,37 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           while (1) {
             // [START]Postorder traversal position
             switch (op_cur->code) {
+              case SPerl_OP_C_CODE_CONSTANT: {
+                SPerl_CONSTANT* constant = op_cur->uv.constant;
+                
+                // Constant pool adding condition
+                _Bool isnt_add = 0;
+                if (constant->code == SPerl_CONSTANT_C_CODE_INT) {
+                  if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
+                    isnt_add = 1;
+                  }
+                }
+                else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
+                  if (constant->uv.long_value == 0 || constant->uv.long_value == 1) {
+                    isnt_add = 1;
+                  }
+                }
+                else if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
+                  if (constant->uv.float_value == 0 || constant->uv.float_value == 1 || constant->uv.float_value == 2) {
+                    isnt_add = 1;
+                  }
+                }
+                else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
+                  if (constant->uv.double_value == 0 || constant->uv.double_value == 1) {
+                    isnt_add = 1;
+                  }
+                }
+                
+                if (!isnt_add) {
+                  SPerl_CONSTANT_POOL_push_constant(sperl, sperl->constant_pool, constant);
+                }
+                break;
+              }
               case SPerl_OP_C_CODE_POP: {
                 if (op_cur->first->code == SPerl_OP_C_CODE_CALL_SUB) {
                   SPerl_OP* op_call_sub = op_cur->first;
