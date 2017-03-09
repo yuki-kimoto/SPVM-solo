@@ -31,7 +31,7 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   return constant_pool;
 }
 
-void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int64_t extend) {
+void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t extend) {
   (void)sperl;
   
   int32_t capacity = constant_pool->capacity;
