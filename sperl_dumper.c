@@ -61,7 +61,7 @@ void SPerl_DUMPER_dump_ast(SPerl* sperl, SPerl_OP* op_base) {
           printf(" \"%s\"", constant->uv.string_value);
           break;
       }
-      printf(" (address %d)", constant->address);
+      printf(" (address %d)", constant->constant_pool_address);
     }
     else if (code == SPerl_OP_C_CODE_VAR) {
       SPerl_VAR* var = op_cur->uv.var;
@@ -425,7 +425,7 @@ void SPerl_DUMPER_dump_constant(SPerl* sperl, SPerl_CONSTANT* constant) {
       printf("      string \"%s\"\n", constant->uv.string_value);
       break;
   }
-  printf("      address => %d\n", constant->address);
+  printf("      address => %d\n", constant->constant_pool_address);
 }
 
 void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {

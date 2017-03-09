@@ -1714,29 +1714,29 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
                 else if (constant->code == SPerl_CONSTANT_C_CODE_STRING) {
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_MALLOCSTRING);
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->address >> 24) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->address >> 16) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->address >> 8) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, constant->address & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->constant_pool_address >> 24) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->constant_pool_address >> 16) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->constant_pool_address >> 8) & 0xFF);
+                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, constant->constant_pool_address & 0xFF);
                   bytecode_set = 1;
                 }
                 
                 if (!bytecode_set) {
-                  if (constant->address <= 0xFF) {
+                  if (constant->constant_pool_address <= 0xFF) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_LDC);
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, constant->address & 0xFF);
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, constant->constant_pool_address & 0xFF);
                   }
-                  else if (constant->address <= 0xFFFF) {
+                  else if (constant->constant_pool_address <= 0xFFFF) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_LDC_W);
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->address >> 8) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, constant->address & 0xFF);
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->constant_pool_address >> 8) & 0xFF);
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, constant->constant_pool_address & 0xFF);
                   }
                   else {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_LDC_WW);
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->address >> 24) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->address >> 16) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->address >> 8) & 0xFF);
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, constant->address & 0xFF);
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->constant_pool_address >> 24) & 0xFF);
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->constant_pool_address >> 16) & 0xFF);
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->constant_pool_address >> 8) & 0xFF);
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, constant->constant_pool_address & 0xFF);
                   }
                 }
                 

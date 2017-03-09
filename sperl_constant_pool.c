@@ -47,28 +47,6 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
   }
 }
 
-void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
-  (void)sperl;
-  constant->address = constant_pool->length;
-  switch (constant->code) {
-    case SPerl_CONSTANT_C_CODE_INT:
-      SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant->uv.int_value);
-      break;
-    case SPerl_CONSTANT_C_CODE_LONG:
-      SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, constant->uv.long_value);
-      break;
-    case SPerl_CONSTANT_C_CODE_FLOAT:
-      SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant->uv.float_value);
-      break;
-    case SPerl_CONSTANT_C_CODE_DOUBLE:
-      SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, constant->uv.double_value);
-      break;
-    case SPerl_CONSTANT_C_CODE_STRING:
-      SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, constant);
-      break;
-  }
-}
-
 void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
   (void)sperl;
   
@@ -188,11 +166,11 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   
   // Already exists
   if (address_ptr) {
-    constant->address = *address_ptr;
+    constant->constant_pool_address = *address_ptr;
   }
   else {
     
-    constant->address = constant_pool->length;
+    constant->constant_pool_address = constant_pool->length;
     
     // Add string length
     SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, string_length);
@@ -211,7 +189,7 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     constant_pool->length += constant_pool_size;
     
     int32_t* new_address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-    *new_address_ptr = constant->address;
+    *new_address_ptr = constant->constant_pool_address;
 
     SPerl_HASH_insert(sperl, parser->string_literal_symtable, string, string_length, new_address_ptr);
   }
