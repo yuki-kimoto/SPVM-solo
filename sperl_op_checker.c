@@ -177,12 +177,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 // Constant pool adding condition
                 _Bool isnt_add = 0;
-                if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
-                  if (constant->uv.float_value == 0 || constant->uv.float_value == 1 || constant->uv.float_value == 2) {
-                    isnt_add = 1;
-                  }
-                }
-                else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
+                if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
                   if (constant->uv.double_value == 0 || constant->uv.double_value == 1) {
                     isnt_add = 1;
                   }
@@ -198,7 +193,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                       SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, constant);
                       break;
                     case SPerl_CONSTANT_C_CODE_FLOAT:
-                      SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant->uv.float_value);
+                      SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant);
                       break;
                     case SPerl_CONSTANT_C_CODE_DOUBLE:
                       SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, constant->uv.double_value);
