@@ -70,12 +70,6 @@ void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constan
 void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_SUB* sub) {
   (void)sperl;
   
-  // Adjust alignment
-  if ((constant_pool->length % 2) != 0) {
-    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, 0);
-  }
-  assert((constant_pool->length % 2) == 0);
-
   // Constant pool sub information
   sub->constant_pool_address = constant_pool->length;
   // Constant pool sub information
@@ -120,8 +114,19 @@ void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_
   constant_pool->length += extend_length;
 }
 
-void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
+void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
   (void)sperl;
+  
+  warn("AAAAAAA %p", constant);
+  
+  int32_t value = constant->uv.int_value;
+  
+  if (value >= -32768 && value <= 32767) {
+    constant->constant_pool_address = -1;
+    return;
+  }
+  
+  constant->constant_pool_address = constant_pool->length;
   
   // Add int value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
