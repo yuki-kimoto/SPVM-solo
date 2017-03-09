@@ -26,7 +26,6 @@
 #include "sperl_package.h"
 #include "sperl_name_info.h"
 #include "sperl_resolved_type.h"
-#include "sperl_constant_pool.h"
 #include "sperl_bytecode_builder.h"
 #include "sperl_op_checker.h"
 #include "sperl_switch_info.h"
