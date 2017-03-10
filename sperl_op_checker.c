@@ -172,8 +172,26 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             switch (op_cur->code) {
               case SPerl_OP_C_CODE_CONSTANT: {
                 SPerl_CONSTANT* constant = op_cur->uv.constant;
+                
                 SPerl_CONSTANT_POOL* constant_pool = sperl->constant_pool;
-                SPerl_CONSTANT_POOL_push_constant(sperl, constant_pool, constant);
+                
+                switch (constant->code) {
+                  case SPerl_CONSTANT_C_CODE_INT:
+                    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant);
+                    break;
+                  case SPerl_CONSTANT_C_CODE_LONG:
+                    SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, constant);
+                    break;
+                  case SPerl_CONSTANT_C_CODE_FLOAT:
+                    SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant);
+                    break;
+                  case SPerl_CONSTANT_C_CODE_DOUBLE:
+                    SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, constant);
+                    break;
+                  case SPerl_CONSTANT_C_CODE_STRING:
+                    SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, constant);
+                    break;
+                }
                 
                 break;
               }

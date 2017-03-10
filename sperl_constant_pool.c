@@ -44,27 +44,6 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
   }
 }
 
-void SPerl_CONSTANT_POOL_push_constant(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
-
-  switch (constant->code) {
-    case SPerl_CONSTANT_C_CODE_INT:
-      SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant);
-      break;
-    case SPerl_CONSTANT_C_CODE_LONG:
-      SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, constant);
-      break;
-    case SPerl_CONSTANT_C_CODE_FLOAT:
-      SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant);
-      break;
-    case SPerl_CONSTANT_C_CODE_DOUBLE:
-      SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, constant);
-      break;
-    case SPerl_CONSTANT_C_CODE_STRING:
-      SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, constant);
-      break;
-  }
-}
-
 void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
   (void)sperl;
   
