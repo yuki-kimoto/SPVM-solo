@@ -43,9 +43,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       return;
     }
     
+    // Constant pool
+    SPerl_CONSTANT_POOL* constant_pool = sperl->constant_pool;
+    
+    // Push package name to constant pool
+    package->name_constant_pool_address = constant_pool->length;
+    SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, package->op_name->uv.name);
+    
     // Push package information to constant pool
-    package->constant_pool_address = sperl->constant_pool->length;
-    SPerl_CONSTANT_POOL_push_package(sperl, sperl->constant_pool, package);
+    package->constant_pool_address = constant_pool->length;
+    SPerl_CONSTANT_POOL_push_package(sperl, constant_pool, package);
     
     // Push field information to constant pool
     for (size_t field_pos = 0; field_pos < package->op_fields->length; field_pos++) {
