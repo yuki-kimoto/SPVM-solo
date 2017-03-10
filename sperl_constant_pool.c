@@ -100,15 +100,8 @@ void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_
   constant_pool->length += extend_length;
 }
 
-void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
+void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t value) {
   (void)sperl;
-  
-  int32_t value = constant->uv.int_value;
-  
-  if (value >= -32768 && value <= 32767) {
-    constant->constant_pool_address = -1;
-    return;
-  }
   
   // Add int value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
@@ -116,15 +109,8 @@ void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   constant_pool->length++;
 }
 
-void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
+void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int64_t value) {
   (void)sperl;
-  
-  int64_t value = constant->uv.long_value;
-  
-  if (value >= -32768 && value <= 32767) {
-    constant->constant_pool_address = -1;
-    return;
-  }
   
   // Add long value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
@@ -132,31 +118,17 @@ void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_p
   constant_pool->length++;
 }
 
-void SPerl_CONSTANT_POOL_push_float(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
+void SPerl_CONSTANT_POOL_push_float(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, float value) {
   (void)sperl;
 
-  float value = constant->uv.float_value;
-
-  if (value == 0 || value == 1 || value == 2) {
-    constant->constant_pool_address = -1;
-    return;
-  }
-  
   // Add float value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
   *(float*)&constant_pool->values[constant_pool->length] = value;
   constant_pool->length++;
 }
 
-void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
+void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, double value) {
   (void)sperl;
-  
-  double value = constant->uv.double_value;
-  
-  if (value == 0 || value == 1) {
-    constant->constant_pool_address = -1;
-    return;
-  }
   
   // Add double value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
@@ -164,11 +136,8 @@ void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   constant_pool->length++;
 }
 
-void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_CONSTANT* constant) {
+void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, const char* string) {
   
-  SPerl_PARSER* parser = sperl->parser;
-  
-  const char* string = constant->uv.string_value;
   int32_t string_length = strlen(string);
   
   // Add string length

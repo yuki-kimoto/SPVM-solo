@@ -180,21 +180,55 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 constant->constant_pool_address = constant_pool->length;
                 
                 switch (constant->code) {
-                  case SPerl_CONSTANT_C_CODE_INT:
-                    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant);
+                  case SPerl_CONSTANT_C_CODE_INT: {
+                    int32_t value = constant->uv.int_value;
+                    if (value >= -32768 && value <= 32767) {
+                      constant->constant_pool_address = -1;
+                      break;
+                    }
+                    
+                    SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, value);
                     break;
-                  case SPerl_CONSTANT_C_CODE_LONG:
-                    SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, constant);
+                  }
+                  case SPerl_CONSTANT_C_CODE_LONG: {
+                    int64_t value = constant->uv.long_value;
+                    
+                    if (value >= -32768 && value <= 32767) {
+                      constant->constant_pool_address = -1;
+                      break;
+                    }
+                    
+                    SPerl_CONSTANT_POOL_push_long(sperl, constant_pool, value);
                     break;
-                  case SPerl_CONSTANT_C_CODE_FLOAT:
-                    SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, constant);
+                  }
+                  case SPerl_CONSTANT_C_CODE_FLOAT: {
+                    float value = constant->uv.float_value;
+                    
+                    if (value == 0 || value == 1 || value == 2) {
+                      constant->constant_pool_address = -1;
+                      break;
+                    }
+                    
+                    SPerl_CONSTANT_POOL_push_float(sperl, constant_pool, value);
                     break;
-                  case SPerl_CONSTANT_C_CODE_DOUBLE:
-                    SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, constant);
+                  }
+                  case SPerl_CONSTANT_C_CODE_DOUBLE: {
+                    double value = constant->uv.double_value;
+                    
+                    if (value == 0 || value == 1) {
+                      constant->constant_pool_address = -1;
+                      break;
+                    }
+                    
+                    SPerl_CONSTANT_POOL_push_double(sperl, constant_pool, value);
                     break;
-                  case SPerl_CONSTANT_C_CODE_STRING:
-                    SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, constant);
+                  }
+                  case SPerl_CONSTANT_C_CODE_STRING: {
+                    const char* value = constant->uv.string_value;
+                    
+                    SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, value);
                     break;
+                  }
                 }
                 
                 break;
