@@ -1116,16 +1116,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 // Check sub name
                 SPerl_OP_resolve_sub_name(sperl, op_package, op_cur);
                 
-                const char* sub_name = op_cur->uv.name_info->resolved_name;
+                const char* sub_abs_name = op_cur->uv.name_info->resolved_name;
                 
                 SPerl_OP* found_op_sub= SPerl_HASH_search(sperl, 
                   parser->op_sub_symtable,
-                  sub_name,
-                  strlen(sub_name)
+                  sub_abs_name,
+                  strlen(sub_abs_name)
                 );
                 if (!found_op_sub) {
                   SPerl_yyerror_format(sperl, "unknown sub \"%s\" at %s line %d\n",
-                    sub_name, op_cur->file, op_cur->line);
+                    sub_abs_name, op_cur->file, op_cur->line);
                   break;
                 }
                 
@@ -1139,7 +1139,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 while ((op_term = SPerl_OP_sibling(sperl, op_term))) {
                   call_sub_args_count++;
                   if (call_sub_args_count > sub_args_count) {
-                    SPerl_yyerror_format(sperl, "Too may arguments. sub \"%s\" at %s line %d\n", sub_name, op_cur->file, op_cur->line);
+                    SPerl_yyerror_format(sperl, "Too may arguments. sub \"%s\" at %s line %d\n", sub_abs_name, op_cur->file, op_cur->line);
                     return;
                   }
                   
@@ -1164,13 +1164,13 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     }
                   }
                   if (is_invalid) {
-                    SPerl_yyerror_format(sperl, "Argument %d type is invalid. sub \"%s\" at %s line %d\n", (int) call_sub_args_count, sub_name, op_cur->file, op_cur->line);
+                    SPerl_yyerror_format(sperl, "Argument %d type is invalid. sub \"%s\" at %s line %d\n", (int) call_sub_args_count, sub_abs_name, op_cur->file, op_cur->line);
                     return;
                   }
                 }
                 
                 if (call_sub_args_count < sub_args_count) {
-                  SPerl_yyerror_format(sperl, "Too few argument. sub \"%s\" at %s line %d\n", sub_name, op_cur->file, op_cur->line);
+                  SPerl_yyerror_format(sperl, "Too few argument. sub \"%s\" at %s line %d\n", sub_abs_name, op_cur->file, op_cur->line);
                   return;
                 }
                 
