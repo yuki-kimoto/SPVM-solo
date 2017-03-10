@@ -28,6 +28,13 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   return constant_pool;
 }
 
+int32_t SPerl_CONSTANT_POOL_calculate_extend_length(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, size_t byte_size) {
+  
+  int32_t length = (byte_size + (sizeof(SPerl_VALUE_SIZE_T) - 1)) / sizeof(SPerl_VALUE_SIZE_T);
+  
+  return length;
+}
+
 void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t extend) {
   (void)sperl;
   
@@ -50,9 +57,9 @@ void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constan
   assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(SPerl_VALUE_SIZE_T));
   
   // Add package information
-  int32_t extend_length = (sizeof(SPerl_CONSTANT_POOL_PACKAGE) + (sizeof(SPerl_VALUE_SIZE_T) - 1)) / sizeof(SPerl_VALUE_SIZE_T);
+  int32_t extend_length = SPerl_CONSTANT_POOL_calculate_extend_length(sperl, constant_pool, sizeof(SPerl_CONSTANT_POOL_PACKAGE));
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
-
+  
   // Constant pool package information
   SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPerl_CONSTANT_POOL_PACKAGE*)&constant_pool->values[constant_pool->length];
   constant_pool_package->byte_size = package->byte_size;
