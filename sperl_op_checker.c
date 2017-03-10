@@ -44,12 +44,14 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     }
     
     // Push package information to constant pool
+    package->constant_pool_address = sperl->constant_pool->length;
     SPerl_CONSTANT_POOL_push_package(sperl, sperl->constant_pool, package);
     
     // Push field information to constant pool
     for (size_t field_pos = 0; field_pos < package->op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch(sperl, package->op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
+      field->constant_pool_address = sperl->constant_pool->length;
       SPerl_CONSTANT_POOL_push_field(sperl, sperl->constant_pool, field);
     }
     
@@ -1271,6 +1273,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       sub->operand_stack_max = op_count * 2;
       
       // Push sub information to constant pool
+      sub->constant_pool_address = sperl->constant_pool->length;
       SPerl_CONSTANT_POOL_push_sub(sperl, sperl->constant_pool, sub);
     }
   }
