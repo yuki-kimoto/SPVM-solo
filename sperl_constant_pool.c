@@ -121,8 +121,6 @@ void SPerl_CONSTANT_POOL_push_int(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
     return;
   }
   
-  constant->constant_pool_address = constant_pool->length;
-  
   // Add int value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
   *(int32_t*)&constant_pool->values[constant_pool->length] = value;
@@ -138,8 +136,6 @@ void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_p
     constant->constant_pool_address = -1;
     return;
   }
-  
-  constant->constant_pool_address = constant_pool->length;
   
   // Add long value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
@@ -157,8 +153,6 @@ void SPerl_CONSTANT_POOL_push_float(SPerl* sperl, SPerl_CONSTANT_POOL* constant_
     return;
   }
   
-  constant->constant_pool_address = constant_pool->length;
-  
   // Add float value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
   *(float*)&constant_pool->values[constant_pool->length] = value;
@@ -175,8 +169,6 @@ void SPerl_CONSTANT_POOL_push_double(SPerl* sperl, SPerl_CONSTANT_POOL* constant
     return;
   }
   
-  constant->constant_pool_address = constant_pool->length;
-  
   // Add double value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
   *(double*)&constant_pool->values[constant_pool->length] = value;
@@ -189,8 +181,6 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   
   const char* string = constant->uv.string_value;
   int32_t string_length = strlen(string);
-  
-  constant->constant_pool_address = constant_pool->length;
   
   // Add string length
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);

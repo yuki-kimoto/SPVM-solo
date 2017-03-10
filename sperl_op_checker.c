@@ -175,6 +175,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 SPerl_CONSTANT_POOL* constant_pool = sperl->constant_pool;
                 
+                constant->constant_pool_address = constant_pool->length;
+                
                 switch (constant->code) {
                   case SPerl_CONSTANT_C_CODE_INT:
                     SPerl_CONSTANT_POOL_push_int(sperl, constant_pool, constant);
