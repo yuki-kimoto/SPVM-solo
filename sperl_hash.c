@@ -21,7 +21,7 @@ SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int32_t capacity) {
   hash->count = 0;
   hash->capacity = capacity;
   
-  SPerl_HASH_ENTRY** entries = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(hash->capacity, sizeof(SPerl_HASH_ENTRY*));
+  SPerl_HASH_ENTRY** entries = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->capacity, sizeof(SPerl_HASH_ENTRY*));
   hash->entries = entries;
   
   return hash;
