@@ -82,6 +82,7 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   constant_pool_sub->operand_stack_max = (uint16_t)sub->operand_stack_max;
   constant_pool_sub->args_length = (uint8_t)sub->op_args->length;
   constant_pool_sub->is_native = (uint8_t)sub->is_native;
+  constant_pool_sub->abs_name_constant_pool_address = sub->abs_name_constant_pool_address;
   if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
     constant_pool_sub->has_return_value = 1;
   }
