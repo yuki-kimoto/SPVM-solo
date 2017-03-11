@@ -91,8 +91,6 @@ SPerl* SPerl_new() {
 
 void SPerl_free(SPerl* sperl) {
   
-  
-  
   // Free parser
   SPerl_PARSER_free(sperl, sperl->parser);
   
@@ -101,6 +99,9 @@ void SPerl_free(SPerl* sperl) {
   
   // Free bytecode array
   SPerl_BYTECODE_ARRAY_free(sperl, sperl->bytecode_array);
+  
+  // Free call stack
+  free(sperl->call_stack);
   
   free(sperl);
 }
