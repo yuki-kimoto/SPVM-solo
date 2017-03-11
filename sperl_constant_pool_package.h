@@ -6,7 +6,7 @@
 // Array
 struct SPerl_constant_pool_package {
   int32_t name_constant_pool_address;
-  uint16_t byte_size;
+  int32_t byte_size;
 };
 
 #endif
