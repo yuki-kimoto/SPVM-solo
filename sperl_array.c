@@ -18,7 +18,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, size_t capacity) {
     array->capacity = capacity;
   }
   
-  void** values = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(array->capacity, sizeof(void*));
+  void** values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(void*));
   array->values = values;
   
   return array;
@@ -35,7 +35,6 @@ void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
     }
     size_t new_capacity = capacity * 2;
     array->values = (void**) SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(void*));
-    memset(array->values + capacity, 0, (new_capacity - capacity) * sizeof(void*));
     array->capacity = new_capacity;
   }
   
