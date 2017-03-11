@@ -58,6 +58,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     for (size_t field_pos = 0; field_pos < package->op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch(sperl, package->op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
+      
+      // Add field name to constant pool
+      field->abs_name_constant_pool_address = sperl->constant_pool->length;
+      SPerl_CONSTANT_POOL_push_string(sperl, sperl->constant_pool, field->abs_name);
+      
+      // Add field to constant pool
       field->constant_pool_address = sperl->constant_pool->length;
       SPerl_CONSTANT_POOL_push_field(sperl, sperl->constant_pool, field);
     }

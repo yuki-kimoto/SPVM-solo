@@ -5,6 +5,7 @@
 
 // Array
 struct SPerl_constant_pool_field {
+  int32_t abs_name_constant_pool_address;
   uint16_t package_byte_offset;
 };
 
