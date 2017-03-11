@@ -1112,7 +1112,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               }
               case SPerl_OP_C_CODE_CALL_SUB: {
                 
-                
                 // Check sub name
                 SPerl_OP_resolve_sub_name(sperl, op_package, op_cur);
                 

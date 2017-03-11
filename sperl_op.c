@@ -778,8 +778,10 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
         else {
           SPerl_ARRAY_push(sperl, op_fields, op_field);
           
-          // Add op field symtable
           const char* field_abs_name = SPerl_OP_create_abs_name(sperl, package_name, field_name);
+          field->abs_name = field_abs_name;
+          
+          // Add op field symtable
           SPerl_HASH_insert(sperl, parser->op_field_symtable, field_abs_name, strlen(field_abs_name), op_field);
         }
       }
@@ -832,6 +834,8 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
             }
           }
         }
+        
+        sub->abs_name = sub_abs_name;
         
         SPerl_HASH_insert(sperl, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
         SPerl_ARRAY_push(sperl, op_subs, op_sub);
