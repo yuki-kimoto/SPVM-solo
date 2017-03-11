@@ -77,6 +77,15 @@ SPerl* SPerl_new() {
   
   // Bytecodes
   sperl->bytecode_array = SPerl_BYTECODE_ARRAY_new(sperl);
+
+  // Constant poll subroutine symbol table
+  sperl->constant_pool_package_symtable = SPerl_HASH_new(sperl, 0);
+  
+  // Constant poll subroutine symbol table
+  sperl->constant_pool_field_symtable = SPerl_HASH_new(sperl, 0);
+  
+  // Constant poll subroutine symbol table
+  sperl->constant_pool_sub_symtable = SPerl_HASH_new(sperl, 0);
   
   // Default call stack capacity
   sperl->call_stack_capacity_default = 255;

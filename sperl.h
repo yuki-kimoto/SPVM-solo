@@ -25,6 +25,15 @@ struct sperl_ {
   // Constant pool
   SPerl_CONSTANT_POOL* constant_pool;
   
+  // Constant poll subroutine symbol table
+  SPerl_HASH* constant_pool_package_symtable;
+
+  // Constant poll subroutine symbol table
+  SPerl_HASH* constant_pool_field_symtable;
+
+  // Constant poll subroutine symbol table
+  SPerl_HASH* constant_pool_sub_symtable;
+  
   // Bytecodes
   SPerl_BYTECODE_ARRAY* bytecode_array;
   
