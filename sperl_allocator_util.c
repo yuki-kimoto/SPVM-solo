@@ -10,17 +10,17 @@ void SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure() {
   /*NOTREACHED*/
 }
 
-void* SPerl_ALLOCATOR_UTIL_safe_malloc(size_t count, size_t size) {
+void* SPerl_ALLOCATOR_UTIL_safe_malloc(int64_t count, int64_t size) {
   if (count > SIZE_MAX / size) {
     SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
   }
 
-  size_t const allocation_size = count * size;
+  int64_t const allocation_size = count * size;
   if (allocation_size == 0) {
     SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
   }
 
-  void* const block = malloc(allocation_size);
+  void* const block = malloc((size_t)allocation_size);
   if (!block) {
     SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
   }
@@ -28,12 +28,12 @@ void* SPerl_ALLOCATOR_UTIL_safe_malloc(size_t count, size_t size) {
   return block;
 }
 
-void* SPerl_ALLOCATOR_UTIL_safe_malloc_zero(size_t count, size_t size) {
+void* SPerl_ALLOCATOR_UTIL_safe_malloc_zero(int64_t count, int64_t size) {
   if (count > SIZE_MAX / size) {
     SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
   }
 
-  size_t const allocation_size = count * size;
+  int64_t const allocation_size = count * size;
   if (allocation_size == 0) {
     SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
   }
@@ -46,12 +46,12 @@ void* SPerl_ALLOCATOR_UTIL_safe_malloc_zero(size_t count, size_t size) {
   return block;
 }
 
-void* SPerl_ALLOCATOR_UTIL_safe_realloc(void* ptr, size_t count, size_t size) {
+void* SPerl_ALLOCATOR_UTIL_safe_realloc(void* ptr, int64_t count, int64_t size) {
   if (count > SIZE_MAX / size) {
     SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
   }
 
-  size_t const allocation_size = count * size;
+  int64_t const allocation_size = count * size;
   if (allocation_size == 0) {
     SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
   }
