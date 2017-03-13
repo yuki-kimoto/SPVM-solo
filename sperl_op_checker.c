@@ -33,7 +33,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
   
   SPerl_PARSER* parser = sperl->parser;
   
-  for (size_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
+  for (int64_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
     SPerl_OP* op_package = SPerl_ARRAY_fetch(sperl, parser->op_packages, package_pos);
     SPerl_PACKAGE* package = op_package->uv.package;
     
@@ -55,7 +55,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     SPerl_CONSTANT_POOL_push_package(sperl, constant_pool, package);
     
     // Push field information to constant pool
-    for (size_t field_pos = 0; field_pos < package->op_fields->length; field_pos++) {
+    for (int64_t field_pos = 0; field_pos < package->op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch(sperl, package->op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
       
@@ -68,7 +68,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       SPerl_CONSTANT_POOL_push_field(sperl, sperl->constant_pool, field);
     }
     
-    for (size_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
+    for (int64_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
       
       SPerl_OP* op_sub = SPerl_ARRAY_fetch(sperl, package->op_subs, sub_pos);
       SPerl_SUB* sub = op_sub->uv.sub;
@@ -318,7 +318,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 SPerl_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
                 SPerl_ARRAY* op_cases = switch_info->op_cases;
-                size_t const length = op_cases->length;
+                int64_t const length = op_cases->length;
                 if (length > SPerl_OP_LIMIT_CASES) {
                   SPerl_yyerror_format(sperl, "too many case statements in switch at %s line %d\n", op_cur->file, op_cur->line);
                   break;
@@ -327,7 +327,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 int32_t min = SPerl_BASE_C_INT_MAX;
                 int32_t max = SPerl_BASE_C_INT_MIN;
                 
-                for (size_t i = 0; i < length; i++) {
+                for (int64_t i = 0; i < length; i++) {
                   SPerl_OP* op_case = SPerl_ARRAY_fetch(sperl, op_cases, i);
                   SPerl_OP* op_constant = op_case->first;
                   int32_t value = op_constant->uv.constant->uv.int_value;
@@ -1063,7 +1063,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 // Search same name variable
                 SPerl_OP* op_my_var = NULL;
-                for (size_t i = op_my_var_stack->length; i-- > 0; ) {
+                for (int64_t i = op_my_var_stack->length; i-- > 0; ) {
                   SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(sperl, op_my_var_stack, i);
                   SPerl_MY_VAR* my_var_tmp = op_my_var_tmp->uv.my_var;
                   if (strcmp(var->op_name->uv.name, my_var_tmp->op_name->uv.name) == 0) {
@@ -1137,10 +1137,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 // Constant
                 SPerl_SUB* found_sub = found_op_sub->uv.sub;
 
-                size_t sub_args_count = found_sub->op_args->length;
+                int64_t sub_args_count = found_sub->op_args->length;
                 SPerl_OP* op_list_args = op_cur->last;
                 SPerl_OP* op_term = op_list_args->first;
-                size_t call_sub_args_count = 0;
+                int64_t call_sub_args_count = 0;
                 while ((op_term = SPerl_OP_sibling(sperl, op_term))) {
                   call_sub_args_count++;
                   if (call_sub_args_count > sub_args_count) {
