@@ -42,7 +42,7 @@ void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
   }
   
   /* Casting away a const qualification, I know what I'm doing. */
-  array->values[length] = (void*) value;
+  array->values[(size_t)length] = (void*) value;
   array->length++;
 }
 
@@ -55,7 +55,7 @@ void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
     return NULL;
   }
   else {
-    return array->values[index];
+    return array->values[(size_t)index];
   }
 }
 
@@ -70,7 +70,7 @@ void* SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
   
   assert(array->length >= 0);
   
-  return array->values[array->length];
+  return array->values[(size_t)array->length];
 }
 
 void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array) {
