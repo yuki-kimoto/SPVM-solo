@@ -85,7 +85,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       
       // block base position stack
       SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
-      int32_t block_base = 0;
+      int64_t block_base = 0;
       _Bool block_start = 0;
       
       // In switch statement
@@ -98,9 +98,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       SPerl_OP* cur_default_op = NULL;
       
       // op count
-      int32_t op_count = 0;
+      int64_t op_count = 0;
       
-      int32_t next_my_var_address = 0;
+      int64_t next_my_var_address = 0;
       
       // Run OPs
       SPerl_OP* op_base = op_sub;
@@ -161,8 +161,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           case SPerl_OP_C_CODE_BLOCK: {
             if (block_start) {
               assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
-              int32_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, parser, sizeof(int32_t));
-              *block_base_ptr = (int32_t) op_my_var_stack->length;
+              int64_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, parser, sizeof(int64_t));
+              *block_base_ptr = op_my_var_stack->length;
               SPerl_ARRAY_push(sperl, block_base_stack, block_base_ptr);
               block_base = *block_base_ptr;
             }
@@ -324,13 +324,13 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   break;
                 }
 
-                int32_t min = SPerl_BASE_C_INT_MAX;
-                int32_t max = SPerl_BASE_C_INT_MIN;
+                int64_t min = SPerl_BASE_C_INT_MAX;
+                int64_t max = SPerl_BASE_C_INT_MIN;
                 
                 for (int64_t i = 0; i < length; i++) {
                   SPerl_OP* op_case = SPerl_ARRAY_fetch(sperl, op_cases, i);
                   SPerl_OP* op_constant = op_case->first;
-                  int32_t value = op_constant->uv.constant->uv.int_value;
+                  int64_t value = op_constant->uv.constant->uv.long_value;
                   if (value < min) {
                     min = value;
                   }
@@ -341,7 +341,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 double range = (double) max - (double) min;
                 
-                int32_t code;
+                int64_t code;
                 if (4.0 + range <= (3.0 + 2.0 * (double) length) * 1.5) {
                   code = SPerl_SWITCH_INFO_C_CODE_TABLESWITCH;
                 }
@@ -1041,7 +1041,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
 
                 int64_t* block_base_ptr = SPerl_ARRAY_pop(sperl, block_base_stack);
                 if (block_base_ptr) {
-                  int32_t const pop_count = op_my_var_stack->length - *block_base_ptr;
+                  int64_t const pop_count = op_my_var_stack->length - *block_base_ptr;
                   for (int64_t j = 0; j < pop_count; j++) {
                     SPerl_ARRAY_pop(sperl, op_my_var_stack);
                   }
@@ -1095,10 +1095,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 SPerl_MY_VAR* my_var = op_cur->uv.my_var;
                 
                 // Search same name variable
-                int32_t found = 0;
+                _Bool found = 0;
 
                 assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
-                for (int32_t i = (int32_t) op_my_var_stack->length; i-- > block_base; ) {
+                for (int64_t i = op_my_var_stack->length; i-- > block_base; ) {
                   SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(sperl, op_my_var_stack, i);
                   SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
                   if (strcmp(my_var->op_name->uv.name, bef_my_var->op_name->uv.name) == 0) {
