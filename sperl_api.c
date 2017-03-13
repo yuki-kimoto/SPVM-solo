@@ -26,12 +26,10 @@
 #include "sperl_resolved_type.h"
 
 void SPerl_API_init_env(SPerl* sperl) {
-  SPerl_PARSER* parser = sperl->parser;
-  
   if (sperl->call_stack_capacity == -1) {
     sperl->call_stack_capacity = sperl->call_stack_capacity_default;
   }
-  sperl->call_stack = (SPerl_VALUE_SIZE_T*) SPerl_ALLOCATOR_UTIL_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
+  sperl->call_stack = (SPerl_SIZE_T*) SPerl_ALLOCATOR_UTIL_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
   sperl->call_stack_base = -1;
   sperl->operand_stack_top = -1;
   sperl->abort = 0;
@@ -257,7 +255,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   
   SPerl_CONSTANT_POOL_SUB* constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub->constant_pool_address];
   
-  SPerl_VALUE_SIZE_T* call_stack = sperl->call_stack;
+  SPerl_SIZE_T* call_stack = sperl->call_stack;
   
   // Program counter
   register uint8_t* pc = NULL;

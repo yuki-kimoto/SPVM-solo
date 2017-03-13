@@ -22,15 +22,17 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   constant_pool->capacity = 64;
   constant_pool->length = 0;
   
-  SPerl_VALUE_SIZE_T* values = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(constant_pool->capacity, sizeof(SPerl_VALUE_SIZE_T));
+  SPerl_SIZE_T* values = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(constant_pool->capacity, sizeof(SPerl_SIZE_T));
   constant_pool->values = values;
   
   return constant_pool;
 }
 
 int32_t SPerl_CONSTANT_POOL_calculate_extend_length(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, size_t byte_size) {
+  (void)sperl;
+  (void)constant_pool;
   
-  int32_t length = (byte_size + (sizeof(SPerl_VALUE_SIZE_T) - 1)) / sizeof(SPerl_VALUE_SIZE_T);
+  int32_t length = (byte_size + (sizeof(SPerl_SIZE_T) - 1)) / sizeof(SPerl_SIZE_T);
   
   return length;
 }
@@ -45,8 +47,8 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
       SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
     }
     int32_t new_capacity = capacity * 2;
-    constant_pool->values = (SPerl_VALUE_SIZE_T*) SPerl_ALLOCATOR_UTIL_safe_realloc(constant_pool->values, new_capacity, sizeof(SPerl_VALUE_SIZE_T));
-    memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(SPerl_VALUE_SIZE_T));
+    constant_pool->values = (SPerl_SIZE_T*) SPerl_ALLOCATOR_UTIL_safe_realloc(constant_pool->values, new_capacity, sizeof(SPerl_SIZE_T));
+    memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(SPerl_SIZE_T));
     constant_pool->capacity = new_capacity;
   }
 }
@@ -54,7 +56,7 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
 void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
   (void)sperl;
   
-  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(SPerl_VALUE_SIZE_T));
+  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(SPerl_SIZE_T));
   
   // Add package information
   int32_t extend_length = SPerl_CONSTANT_POOL_calculate_extend_length(sperl, constant_pool, sizeof(SPerl_CONSTANT_POOL_PACKAGE));
@@ -96,7 +98,7 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
 void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_FIELD* field) {
   (void)sperl;
   
-  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(SPerl_VALUE_SIZE_T));
+  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(SPerl_SIZE_T));
   
   // Add field information
   int32_t extend_length = SPerl_CONSTANT_POOL_calculate_extend_length(sperl, constant_pool, sizeof(SPerl_CONSTANT_POOL_FIELD));
