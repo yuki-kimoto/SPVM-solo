@@ -143,11 +143,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
   // Bytecode
   SPerl_BYTECODE_ARRAY* bytecode_array = sperl->bytecode_array;
   
-  for (size_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
+  for (int64_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
     SPerl_OP* op_package = SPerl_ARRAY_fetch(sperl, parser->op_packages, package_pos);
     SPerl_PACKAGE* package = op_package->uv.package;
     
-    for (size_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
+    for (int64_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
       SPerl_OP* op_sub = SPerl_ARRAY_fetch(sperl, package->op_subs, sub_pos);
       SPerl_SUB* sub = op_sub->uv.sub;
       
@@ -298,7 +298,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     fprintf(stderr, "Invalid AST: too many cases in switch statement\n");
                     exit(1);
                   }
-                  size_t const length = switch_info->op_cases->length;
+                  int64_t const length = switch_info->op_cases->length;
 
                   // Machine address to calculate padding
                   cur_switch_address = bytecode_array->length - 1;
