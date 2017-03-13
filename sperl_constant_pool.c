@@ -28,7 +28,7 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   return constant_pool;
 }
 
-int32_t SPerl_CONSTANT_POOL_calculate_extend_length(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, size_t byte_size) {
+int32_t SPerl_CONSTANT_POOL_calculate_extend_length(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_SIZE_T byte_size) {
   (void)sperl;
   (void)constant_pool;
   
