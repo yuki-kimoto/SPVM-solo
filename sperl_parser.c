@@ -127,21 +127,21 @@ void SPerl_PARSER_free(SPerl* sperl, SPerl_PARSER* parser) {
   SPerl_MEMORY_POOL_free(sperl, parser->memory_pool);
   
   // Free arrays
-  for (size_t i = 0, len = parser->arrays->length; i < len; i++) {
+  for (int64_t i = 0, len = parser->arrays->length; i < len; i++) {
     SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, parser->arrays, i);
     SPerl_ARRAY_free(sperl, array);
   }
   SPerl_ARRAY_free(sperl, parser->arrays);
   
   // Free hashes
-  for (size_t i = 0, len = parser->hashes->length; i < len; i++) {
+  for (int64_t i = 0, len = parser->hashes->length; i < len; i++) {
     SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, parser->hashes, i);
     SPerl_HASH_free(sperl, hash);
   }
   SPerl_ARRAY_free(sperl, parser->hashes);
   
   // Free long strings
-  for (size_t i = 0, len = parser->long_strings->length; i < len; i++) {
+  for (int64_t i = 0, len = parser->long_strings->length; i < len; i++) {
     void* str = SPerl_ARRAY_fetch(sperl, parser->long_strings, i);
     free(str);
   }
