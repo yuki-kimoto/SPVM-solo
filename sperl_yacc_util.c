@@ -82,8 +82,8 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
   // Syntax structure error
   else {
     // Current token
-    size_t length = 0;
-    size_t empty_count = 0;
+    int64_t length = 0;
+    int64_t empty_count = 0;
     const char* ptr = parser->befbufptr;
     while (ptr != parser->bufptr) {
       if (*ptr == ' ' || *ptr == '\t' || *ptr == '\n') {
