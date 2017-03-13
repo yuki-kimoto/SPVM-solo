@@ -8,8 +8,8 @@ enum {
   SPerl_BASE_C_INT_MAX = 2147483647,
 };
 
-#ifndef SPerl_SIZE_T
-#define SPerl_SIZE_T int64_t
+#ifndef SPerl_VALUE_T
+#define SPerl_VALUE_T int64_t
 #endif
 
 /* sperl_env.h */
