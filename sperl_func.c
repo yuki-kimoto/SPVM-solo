@@ -53,7 +53,7 @@ void SPerl_FUNC_std_println(SPerl* sperl) {
   
   int8_t* byte_array_data = SPerl_API_get_byte_array_data(sperl, byte_array);
   
-  for (size_t i = 0; i < length; i++) {
+  for (int64_t i = 0; i < length; i++) {
     putchar((int)byte_array_data[i]);
   }
   
