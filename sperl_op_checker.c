@@ -85,7 +85,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       
       // block base position stack
       SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
-      intptr_t block_base = 0;
+      int64_t block_base = 0;
       _Bool block_start = 0;
       
       // In switch statement
@@ -161,8 +161,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           case SPerl_OP_C_CODE_BLOCK: {
             if (block_start) {
               assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
-              block_base = (intptr_t)op_my_var_stack->length;
-              SPerl_ARRAY_push(sperl, block_base_stack, (void*)block_base);
+              int64_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, parser, sizeof(int64_t));
+              *block_base_ptr = op_my_var_stack->length;
+              SPerl_ARRAY_push(sperl, block_base_stack, block_base_ptr);
+              block_base = *block_base_ptr;
             }
             else {
               block_start = 1;
@@ -1037,15 +1039,23 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               case SPerl_OP_C_CODE_BLOCK: {
                 assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
 
-                intptr_t block_base = SPerl_ARRAY_pop(sperl, block_base_stack);
-                int64_t const pop_count = op_my_var_stack->length - (int64_t)block_base;
-                for (int64_t j = 0; j < pop_count; j++) {
-                  SPerl_ARRAY_pop(sperl, op_my_var_stack);
+                int64_t* block_base_ptr = SPerl_ARRAY_pop(sperl, block_base_stack);
+                if (block_base_ptr) {
+                  int64_t const pop_count = op_my_var_stack->length - *block_base_ptr;
+                  for (int64_t j = 0; j < pop_count; j++) {
+                    SPerl_ARRAY_pop(sperl, op_my_var_stack);
+                  }
                 }
                 
                 if (block_base_stack->length > 0) {
-                  intptr_t before_block_base = SPerl_ARRAY_fetch(sperl, block_base_stack, block_base_stack->length - 1);
-                  block_base = before_block_base;
+                  int64_t* before_block_base_ptr = SPerl_ARRAY_fetch(sperl, block_base_stack, block_base_stack->length - 1);
+                  if (before_block_base_ptr) {
+                    
+                    block_base = *before_block_base_ptr;
+                  }
+                  else {
+                    block_base = 0;
+                  }
                 }
                 else {
                   block_base = 0;
