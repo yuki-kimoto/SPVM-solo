@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "sperl.h"
 #include "sperl_array.h"
@@ -26,7 +27,9 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
 
 void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
 
-  size_t length = array->length;
+  int64_t length = array->length;
+  assert(length >= 0);
+  
   int64_t capacity = array->capacity;
   
   if (length >= capacity) {
@@ -46,6 +49,8 @@ void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
 void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   (void)sperl;
   
+  assert(index >= 0);
+  
   if (array == NULL || index >= array->length) {
     return NULL;
   }
@@ -62,6 +67,8 @@ void* SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
   }
 
   array->length--;
+  
+  assert(array->length >= 0);
   
   return array->values[array->length];
 }

@@ -1039,16 +1039,23 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               case SPerl_OP_C_CODE_BLOCK: {
                 assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
 
-                int32_t* block_base_ptr = SPerl_ARRAY_pop(sperl, block_base_stack);
+                int64_t* block_base_ptr = SPerl_ARRAY_pop(sperl, block_base_stack);
                 if (block_base_ptr) {
-                  int32_t const pop_count = (int32_t) op_my_var_stack->length - *block_base_ptr;
-                  for (int32_t j = 0; j < pop_count; j++) {
+                  int32_t const pop_count = op_my_var_stack->length - *block_base_ptr;
+                  for (int64_t j = 0; j < pop_count; j++) {
                     SPerl_ARRAY_pop(sperl, op_my_var_stack);
                   }
                 }
-                int32_t* before_block_base_ptr = SPerl_ARRAY_fetch(sperl, block_base_stack, block_base_stack->length - 1);
-                if (before_block_base_ptr) {
-                  block_base = *before_block_base_ptr;
+                
+                if (block_base_stack->length > 0) {
+                  int64_t* before_block_base_ptr = SPerl_ARRAY_fetch(sperl, block_base_stack, block_base_stack->length - 1);
+                  if (before_block_base_ptr) {
+                    
+                    block_base = *before_block_base_ptr;
+                  }
+                  else {
+                    block_base = 0;
+                  }
                 }
                 else {
                   block_base = 0;
