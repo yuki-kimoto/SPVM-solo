@@ -74,7 +74,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             else {
               
               // Change :: to / and add ".spvm"
-              size_t module_path_base_length = strlen(package_name) + 6;
+              int64_t module_path_base_length = (int64_t)strlen(package_name) + 6;
               char* module_path_base = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, module_path_base_length);
               const char* bufptr_orig = package_name;
               char* bufptr_to = module_path_base;
@@ -97,11 +97,11 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               // Search module file
               char* cur_module_path = NULL;
               FILE* fh = NULL;
-              for (size_t i = 0, len = parser->include_pathes->length; i < len; i++) {
+              for (int64_t i = 0, len = parser->include_pathes->length; i < len; i++) {
                 const char* include_path = (const char*) SPerl_ARRAY_fetch(sperl, parser->include_pathes, i);
                 
                 // File name
-                size_t file_name_length = strlen(include_path) + 1 + strlen(module_path_base);
+                int64_t file_name_length = (int64_t)strlen(include_path) + 1 + (int64_t)strlen(module_path_base);
                 cur_module_path = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, file_name_length);
                 sprintf(cur_module_path, "%s/%s", include_path, module_path_base);
                 cur_module_path[file_name_length] = '\0';
@@ -129,14 +129,14 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               
               // Read file content
               fseek(fh, 0, SEEK_END);
-              long file_size = ftell(fh);
+              int64_t file_size = (int64_t)ftell(fh);
               if (file_size < 0) {
                 fprintf(stderr, "Can't read file %s at %s line %d\n", cur_module_path, op_use->file, op_use->line);
                 exit(1);
               }
               fseek(fh, 0, SEEK_SET);
               char* src = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, file_size);
-              if (fread(src, 1, file_size, fh) < (size_t) file_size) {
+              if ((int64_t)fread(src, 1, file_size, fh) < file_size) {
                 if (op_use) {
                   fprintf(stderr, "Can't read file %s at %s line %d\n", cur_module_path, op_use->file, op_use->line);
                 }
@@ -427,7 +427,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             exit(1);
           }
           
-          size_t str_len = parser->bufptr - cur_token_ptr;
+          int64_t str_len = (int64_t)(parser->bufptr - cur_token_ptr);
           str = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, str_len);
           memcpy(str, cur_token_ptr, str_len);
           str[str_len] = '\0';
@@ -458,7 +458,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             parser->bufptr++;
           }
           
-          size_t str_len = parser->bufptr - cur_token_ptr;
+          int64_t str_len = (int64_t)(parser->bufptr - cur_token_ptr);
           char* var_name = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, str_len);
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
@@ -495,7 +495,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           }
           
           // Number literal(first is space for sign)
-          size_t str_len = parser->bufptr - cur_token_ptr;
+          int64_t str_len = (int64_t)(parser->bufptr - cur_token_ptr);
           if (str_len > SIZE_MAX - 2) {
             SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
           }
@@ -596,7 +596,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           }
           
           
-          size_t str_len = parser->bufptr - cur_token_ptr;
+          int64_t str_len = (int64_t)(parser->bufptr - cur_token_ptr);
           char* keyword = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, str_len);
           
           memcpy(keyword, cur_token_ptr, str_len);
