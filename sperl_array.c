@@ -43,7 +43,7 @@ void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
   array->length++;
 }
 
-void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, size_t index) {
+void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   (void)sperl;
   
   if (array == NULL || index >= array->length) {
