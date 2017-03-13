@@ -625,7 +625,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         // Allocate array
         intptr_t array;
-        size_t allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
+        int64_t allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
         array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
         memset((void*)array, 0, allocate_size);
         memcpy((void*)(array + SPerl_C_ARRAY_HEADER_BYTE_SIZE), chars_ptr, length);
@@ -1432,8 +1432,8 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPerl_CONSTANT_POOL_PACKAGE*)&constant_pool[package_constant_pool_address];
         
         // Allocate memory
-        size_t fields_byte_size = constant_pool_package->byte_size;
-        size_t allocate_size = SPerl_C_OBJECT_HEADER_BYTE_SIZE + fields_byte_size;
+        int64_t fields_byte_size = constant_pool_package->byte_size;
+        int64_t allocate_size = SPerl_C_OBJECT_HEADER_BYTE_SIZE + fields_byte_size;
         intptr_t object = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
         
         // Set reference count
@@ -1457,7 +1457,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         // Allocate array
         intptr_t array;
-        size_t allocate_size;
+        int64_t allocate_size;
         if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
           allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
         }
