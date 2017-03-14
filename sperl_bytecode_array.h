@@ -12,7 +12,7 @@ struct SPerl_bytecode_array {
 
 // Array function
 SPerl_BYTECODE_ARRAY* SPerl_BYTECODE_ARRAY_new(SPerl* sperl);
-void SPerl_BYTECODE_ARRAY_push(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecodes, uint8_t value);
+void SPerl_BYTECODE_ARRAY_push_address(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecodes, uint8_t value);
 void SPerl_BYTECODE_ARRAY_free(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecodes);
 
 #endif

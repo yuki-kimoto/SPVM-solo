@@ -59,11 +59,11 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-    SPerl_ARRAY_push(sperl, resolved_type->part_names, name);
+    SPerl_ARRAY_push_address(sperl, resolved_type->part_names, name);
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
-    SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
+    SPerl_ARRAY_push_address(sperl, parser->resolved_types, resolved_type);
     SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
@@ -79,14 +79,14 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-    SPerl_ARRAY_push(sperl, resolved_type->part_names, core_name);
-    SPerl_ARRAY_push(sperl, resolved_type->part_names, "[");
-    SPerl_ARRAY_push(sperl, resolved_type->part_names, "]");
+    SPerl_ARRAY_push_address(sperl, resolved_type->part_names, core_name);
+    SPerl_ARRAY_push_address(sperl, resolved_type->part_names, "[");
+    SPerl_ARRAY_push_address(sperl, resolved_type->part_names, "]");
     
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = SPerl_RESOLVED_TYPE_C_CORE_LENGTH + i;
-    SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
+    SPerl_ARRAY_push_address(sperl, parser->resolved_types, resolved_type);
     SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
@@ -106,7 +106,7 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);
   
   /* Push package use information stack */
-  SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use);
+  SPerl_ARRAY_push_address(sperl, parser->op_use_stack, op_use);
   
   // Entry point
   char* start_sub_name = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, strlen(package_name) + 6);
@@ -128,21 +128,21 @@ void SPerl_PARSER_free(SPerl* sperl, SPerl_PARSER* parser) {
   
   // Free arrays
   for (int64_t i = 0, len = parser->arrays->length; i < len; i++) {
-    SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, parser->arrays, i);
+    SPerl_ARRAY* array = SPerl_ARRAY_fetch_address(sperl, parser->arrays, i);
     SPerl_ARRAY_free(sperl, array);
   }
   SPerl_ARRAY_free(sperl, parser->arrays);
   
   // Free hashes
   for (int64_t i = 0, len = parser->hashes->length; i < len; i++) {
-    SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, parser->hashes, i);
+    SPerl_HASH* hash = SPerl_ARRAY_fetch_address(sperl, parser->hashes, i);
     SPerl_HASH_free(sperl, hash);
   }
   SPerl_ARRAY_free(sperl, parser->hashes);
   
   // Free long strings
   for (int64_t i = 0, len = parser->long_strings->length; i < len; i++) {
-    void* str = SPerl_ARRAY_fetch(sperl, parser->long_strings, i);
+    void* str = SPerl_ARRAY_fetch_address(sperl, parser->long_strings, i);
     free(str);
   }
   SPerl_ARRAY_free(sperl, parser->long_strings);

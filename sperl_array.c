@@ -25,7 +25,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
   return array;
 }
 
-void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
+void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
 
   int64_t length = array->length;
   assert(length >= 0);
@@ -46,7 +46,7 @@ void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
   array->length++;
 }
 
-void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
+void* SPerl_ARRAY_fetch_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   (void)sperl;
   
   assert(index >= 0);
@@ -59,7 +59,7 @@ void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   }
 }
 
-void* SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
+void* SPerl_ARRAY_pop_address(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
   if (array->length == 0) {

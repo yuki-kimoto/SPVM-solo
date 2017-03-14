@@ -17,8 +17,8 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   
   SPerl_PARSER* parser = sperl->parser;
   
-  SPerl_ARRAY_push(sperl, parser->include_pathes, ".");
-  SPerl_ARRAY_push(sperl, parser->include_pathes, "lib");
+  SPerl_ARRAY_push_address(sperl, parser->include_pathes, ".");
+  SPerl_ARRAY_push_address(sperl, parser->include_pathes, "lib");
 
   SPerl_PARSER_parse(sperl, package_name);
 

@@ -18,7 +18,7 @@ SPerl_BYTECODE_ARRAY* SPerl_BYTECODE_ARRAY_new(SPerl* sperl) {
   return bytecodes;
 }
 
-void SPerl_BYTECODE_ARRAY_push(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecodes, uint8_t value) {
+void SPerl_BYTECODE_ARRAY_push_address(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecodes, uint8_t value) {
   
   int32_t length = bytecodes->length;
   int32_t capacity = bytecodes->capacity;
