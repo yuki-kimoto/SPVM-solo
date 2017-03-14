@@ -19,13 +19,13 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
     array->capacity = capacity;
   }
   
-  void** values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(void*));
+  intptr_t* values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(intptr_t));
   array->values = values;
   
   return array;
 }
 
-void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
+void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, intptr_t value) {
 
   int64_t length = array->length;
   assert(length >= 0);
@@ -37,16 +37,16 @@ void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
       SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
     }
     int64_t new_capacity = capacity * 2;
-    array->values = (void**) SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(void*));
+    array->values = (intptr_t*) SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(intptr_t));
     array->capacity = new_capacity;
   }
   
   /* Casting away a const qualification, I know what I'm doing. */
-  array->values[(size_t)length] = (void*) value;
+  array->values[length] = value;
   array->length++;
 }
 
-void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
+intptr_t SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   (void)sperl;
   
   assert(index >= 0);
@@ -55,11 +55,11 @@ void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
     return NULL;
   }
   else {
-    return array->values[(size_t)index];
+    return array->values[index];
   }
 }
 
-void* SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
+intptr_t SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
   if (array->length == 0) {
@@ -70,7 +70,7 @@ void* SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
   
   assert(array->length >= 0);
   
-  return array->values[(size_t)array->length];
+  return array->values[array->length];
 }
 
 void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array) {
