@@ -16,13 +16,16 @@ SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int64_t table_capacity) {
   }
   
   SPerl_HASH* hash = SPerl_ALLOCATOR_UTIL_safe_malloc(table_capacity, sizeof(SPerl_HASH));
-  memset(hash, 0, sizeof(SPerl_HASH));
   
-  hash->entries_count = 0;
   hash->table_capacity = table_capacity;
   
   SPerl_HASH_ENTRY** table = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->table_capacity, sizeof(SPerl_HASH_ENTRY*));
   hash->table = table;
+  
+  hash->entries_capacity = 0xFF;
+  hash->entries = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->entries_capacity, sizeof(SPerl_HASH_ENTRY));
+  
+  hash->entries_count = 0;
   
   return hash;
 }
