@@ -8,20 +8,20 @@
 #include "sperl_parser.h"
 #include "sperl.h"
 
-SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int32_t capacity) {
+SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int32_t table_capacity) {
   (void)sperl;
   
-  if (capacity == 0) {
-    capacity = 101;
+  if (table_capacity == 0) {
+    table_capacity = 101;
   }
   
-  SPerl_HASH* hash = SPerl_ALLOCATOR_UTIL_safe_malloc(capacity, sizeof(SPerl_HASH));
+  SPerl_HASH* hash = SPerl_ALLOCATOR_UTIL_safe_malloc(table_capacity, sizeof(SPerl_HASH));
   memset(hash, 0, sizeof(SPerl_HASH));
   
-  hash->count = 0;
-  hash->capacity = capacity;
+  hash->entries_count = 0;
+  hash->table_capacity = table_capacity;
   
-  SPerl_HASH_ENTRY** table = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->capacity, sizeof(SPerl_HASH_ENTRY*));
+  SPerl_HASH_ENTRY** table = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->table_capacity, sizeof(SPerl_HASH_ENTRY*));
   hash->table = table;
   
   return hash;
@@ -30,7 +30,7 @@ SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int32_t capacity) {
 void* SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key, int32_t length, void* value) {
 
   int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
-  int32_t index = hash_value % hash->capacity;
+  int32_t index = hash_value % hash->table_capacity;
   
   SPerl_HASH_ENTRY** next_entry_ptr = hash->table + index;
   SPerl_HASH_ENTRY* next_entry = hash->table[index];
@@ -56,23 +56,23 @@ void* SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key
       SPerl_HASH_ENTRY* new_entry = SPerl_HASH_ENTRY_new(sperl, key, length, value);
       *next_entry_ptr = new_entry;
       if (countup) {
-        hash->count++;
+        hash->entries_count++;
       }
       return NULL;
     }
   }
 }
 
-void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int32_t new_capacity) {
+void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int32_t new_table_capacity) {
 
   SPerl_HASH_ENTRY** table = hash->table;
   
   // Create new hash
-  SPerl_HASH* new_hash = SPerl_HASH_new(sperl, new_capacity);
+  SPerl_HASH* new_hash = SPerl_HASH_new(sperl, new_table_capacity);
   
   // Rehash
   int32_t i;
-  for (i = 0; i < hash->count; i++) {
+  for (i = 0; i < hash->entries_count; i++) {
     SPerl_HASH_ENTRY* entry = table[i];
     
     const char* key = entry->key;
@@ -95,8 +95,8 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int32_t new_capacity) {
     }
   }
   
-  hash->count = new_hash->count;
-  hash->capacity = new_hash->capacity;
+  hash->entries_count = new_hash->entries_count;
+  hash->table_capacity = new_hash->table_capacity;
   free(hash->table);
   hash->table = new_hash->table;
 }
@@ -107,10 +107,10 @@ void* SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int32_t
   }
   
   // Rehash
-  if (hash->count > hash->capacity * 0.75) {
-    int32_t new_capacity = (hash->capacity * 2) + 1;
+  if (hash->entries_count > hash->table_capacity * 0.75) {
+    int32_t new_table_capacity = (hash->table_capacity * 2) + 1;
 
-    SPerl_HASH_rehash(sperl, hash, new_capacity);
+    SPerl_HASH_rehash(sperl, hash, new_table_capacity);
   }
   
   return SPerl_HASH_insert_norehash(sperl, hash, key, length, value);
@@ -121,7 +121,7 @@ void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int32_t
     return 0;
   }
   int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
-  int32_t index = hash_value % hash->capacity;
+  int32_t index = hash_value % hash->table_capacity;
   SPerl_HASH_ENTRY* next_entry = hash->table[index];
   while (1) {
     if (next_entry) {
@@ -139,10 +139,10 @@ void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int32_t
 }
 
 void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash) {
-  int32_t capacity = hash->capacity;
+  int32_t table_capacity = hash->table_capacity;
   
   int32_t i;
-  for (i = 0; i < capacity; i++) {
+  for (i = 0; i < table_capacity; i++) {
     SPerl_HASH_ENTRY* next_entry = hash->table[i];
     while (next_entry) {
       SPerl_HASH_ENTRY* tmp_entry = next_entry->next;

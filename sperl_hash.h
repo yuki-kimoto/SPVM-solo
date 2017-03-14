@@ -6,8 +6,8 @@
 // Hash table
 struct SPerl_hash {
   SPerl_HASH_ENTRY** table;
-  int32_t count;
-  int32_t capacity;
+  int32_t table_capacity;
+  int32_t entries_count;
 };
 
 // Hash function
