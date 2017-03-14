@@ -5,7 +5,7 @@
 
 // Array
 struct SPerl_array {
-  void** values;
+  SPerl_VALUE_T* values;
   int64_t length;
   int64_t capacity;
 };

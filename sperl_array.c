@@ -19,7 +19,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
     array->capacity = capacity;
   }
   
-  void** values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(void*));
+  SPerl_VALUE_T* values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(SPerl_VALUE_T));
   array->values = values;
   
   return array;
@@ -37,12 +37,12 @@ void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, const void* valu
       SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
     }
     int64_t new_capacity = capacity * 2;
-    array->values = (void**) SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(void*));
+    array->values = SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(SPerl_VALUE_T));
     array->capacity = new_capacity;
   }
   
   /* Casting away a const qualification, I know what I'm doing. */
-  array->values[(size_t)length] = (void*) value;
+  *(void**)&array->values[length] = value;
   array->length++;
 }
 
@@ -55,7 +55,7 @@ void* SPerl_ARRAY_fetch_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index)
     return NULL;
   }
   else {
-    return array->values[(size_t)index];
+    return *(void**)&array->values[index];
   }
 }
 
@@ -70,7 +70,7 @@ void* SPerl_ARRAY_pop_address(SPerl* sperl, SPerl_ARRAY* array) {
   
   assert(array->length >= 0);
   
-  return array->values[(size_t)array->length];
+  return *(void**)&array->values[array->length];
 }
 
 void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array) {
