@@ -19,13 +19,13 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
     array->capacity = capacity;
   }
   
-  intptr_t* values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(intptr_t));
+  void** values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(void*));
   array->values = values;
   
   return array;
 }
 
-void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, intptr_t value) {
+void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
 
   int64_t length = array->length;
   assert(length >= 0);
@@ -37,16 +37,16 @@ void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, intptr_t value) {
       SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
     }
     int64_t new_capacity = capacity * 2;
-    array->values = (intptr_t*) SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(intptr_t));
+    array->values = (void**) SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(void*));
     array->capacity = new_capacity;
   }
   
   /* Casting away a const qualification, I know what I'm doing. */
-  array->values[length] = value;
+  array->values[(size_t)length] = (void*) value;
   array->length++;
 }
 
-intptr_t SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
+void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   (void)sperl;
   
   assert(index >= 0);
@@ -55,11 +55,11 @@ intptr_t SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
     return NULL;
   }
   else {
-    return array->values[index];
+    return array->values[(size_t)index];
   }
 }
 
-intptr_t SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
+void* SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
   if (array->length == 0) {
@@ -70,7 +70,7 @@ intptr_t SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
   
   assert(array->length >= 0);
   
-  return array->values[array->length];
+  return array->values[(size_t)array->length];
 }
 
 void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array) {
