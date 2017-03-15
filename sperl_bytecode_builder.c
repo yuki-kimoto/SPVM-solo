@@ -211,9 +211,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               // Add goto
               SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
               
-              int32_t* pos_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-              *pos_ptr = bytecode_array->length - 1;
-              SPerl_ARRAY_push_address(sperl, goto_loop_start_address_stack, pos_ptr);
+              int32_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
+              *address_ptr = bytecode_array->length - 1;
+              SPerl_ARRAY_push_address(sperl, goto_loop_start_address_stack, address_ptr);
               
               SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
               SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
@@ -537,9 +537,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 if (try_stack->length > 0) {
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
                   
-                  int32_t* pos_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-                  *pos_ptr = bytecode_array->length - 1;
-                  SPerl_ARRAY_push_address(sperl, goto_exception_handler_stack, pos_ptr);
+                  int32_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
+                  *address_ptr = bytecode_array->length - 1;
+                  SPerl_ARRAY_push_address(sperl, goto_exception_handler_stack, address_ptr);
                   
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
@@ -561,22 +561,22 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 // Add goto
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
                 
-                int32_t* pos_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-                *pos_ptr = bytecode_array->length - 1;
-                SPerl_ARRAY_push_address(sperl, goto_last_address_stack, pos_ptr);
+                int32_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
+                *address_ptr = bytecode_array->length - 1;
+                SPerl_ARRAY_push_address(sperl, goto_last_address_stack, address_ptr);
                 
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                 break;
               }
               case SPerl_OP_C_CODE_NEXT: {
-                int32_t* pos_ptr = SPerl_ARRAY_fetch_address(sperl, goto_loop_start_address_stack, goto_loop_start_address_stack->length - 1);
+                int32_t* address_ptr = SPerl_ARRAY_fetch_address(sperl, goto_loop_start_address_stack, goto_loop_start_address_stack->length - 1);
                 
                 // Add "goto"
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
                 
                 // Jump offset
-                int32_t jump_offset = *pos_ptr - (bytecode_array->length - 1) + 3;
+                int32_t jump_offset = *address_ptr - (bytecode_array->length - 1) + 3;
                 
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, (jump_offset >> 8) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, jump_offset & 0xFF);
@@ -590,42 +590,42 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_HAS_ELSE) {
                     // Prepare to jump to end of else block
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
-                    int32_t* pos_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-                    *pos_ptr = bytecode_array->length - 1;
-                    SPerl_ARRAY_push_address(sperl, goto_if_block_end_address_stack, pos_ptr);
+                    int32_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
+                    *address_ptr = bytecode_array->length - 1;
+                    SPerl_ARRAY_push_address(sperl, goto_if_block_end_address_stack, address_ptr);
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                   }
 
                   // Set if jump address
-                  int32_t* pos_ptr = NULL;
+                  int32_t* address_ptr = NULL;
                   if (if_address_stack->length > 0) {
-                    pos_ptr = SPerl_ARRAY_pop_address(sperl, if_address_stack);
+                    address_ptr = SPerl_ARRAY_pop_address(sperl, if_address_stack);
                   }
                   
-                  assert(pos_ptr);
+                  assert(address_ptr);
                   
                   // Jump offset
-                  int32_t jump_offset = bytecode_array->length - *pos_ptr;
+                  int32_t jump_offset = bytecode_array->length - *address_ptr;
                   
                   // Set jump offset
-                  bytecode_array->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
-                  bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
+                  bytecode_array->values[*address_ptr + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[*address_ptr + 2] = jump_offset & 0xFF;
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_ELSE) {
                   
-                  int32_t* pos_ptr = NULL;
+                  int32_t* address_ptr = NULL;
                   if (goto_if_block_end_address_stack->length > 0) {
-                    pos_ptr = SPerl_ARRAY_pop_address(sperl, goto_if_block_end_address_stack);
+                    address_ptr = SPerl_ARRAY_pop_address(sperl, goto_if_block_end_address_stack);
                   }
-                  assert(pos_ptr);
+                  assert(address_ptr);
                   
                   // Jump offset
-                  int32_t jump_offset = bytecode_array->length - *pos_ptr;
+                  int32_t jump_offset = bytecode_array->length - *address_ptr;
                   
                   // Set jump offset
-                  bytecode_array->values[*pos_ptr + 1] = (jump_offset >> 8) & 0xFF;
-                  bytecode_array->values[*pos_ptr + 2] = jump_offset & 0xFF;
+                  bytecode_array->values[*address_ptr + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[*address_ptr + 2] = jump_offset & 0xFF;
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
                   
@@ -896,11 +896,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                 }
                 
-                int32_t* pos_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-                *pos_ptr = bytecode_array->length - 1;
+                int32_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
+                *address_ptr = bytecode_array->length - 1;
                 
                 if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_IF) {
-                  SPerl_ARRAY_push_address(sperl, if_address_stack, pos_ptr);
+                  SPerl_ARRAY_push_address(sperl, if_address_stack, address_ptr);
                   // Prepare for bytecode position of branch
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
