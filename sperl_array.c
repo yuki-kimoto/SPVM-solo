@@ -41,6 +41,43 @@ void SPerl_ARRAY_maybe_extend(SPerl* sperl, SPerl_ARRAY* array) {
   }
 }
 
+/* Function templates
+
+This is function templates shared with array munipulate functions.
+All functions must be follow bellow templates
+
+void SPerl_ARRAY_push_<%= SUFFIX %>(SPerl* sperl, SPerl_ARRAY* array, <%= TYPE %> value) {
+  
+  SPerl_ARRAY_maybe_extend(sperl, array);
+  
+  int64_t length = array->length;
+  
+  *(<%= TYPE %>*)&array->values[length] = value;
+  array->length++;
+}
+
+void* SPerl_ARRAY_fetch_<%= SUFFIX %>(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
+  (void)sperl;
+  
+  assert(array);
+  assert(index >= 0);
+  assert(index < array->length);
+  
+  return *(<%= TYPE %>*)&array->values[index];
+}
+
+void* SPerl_ARRAY_pop_<%= SUFFIX %>(SPerl* sperl, SPerl_ARRAY* array) {
+  (void)sperl;
+  
+  assert(array->length > 0);
+  
+  array->length--;
+  
+  return *(<%= TYPE %>*)&array->values[array->length];
+}
+
+*/
+
 void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
   
   SPerl_ARRAY_maybe_extend(sperl, array);
