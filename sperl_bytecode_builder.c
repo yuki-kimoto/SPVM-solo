@@ -211,9 +211,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               // Add goto
               SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
               
-              int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-              *address_ptr = bytecode_array->length - 1;
-              SPerl_ARRAY_push_address(sperl, goto_loop_start_address_stack, address_ptr);
+              SPerl_ARRAY_push_long(sperl, goto_loop_start_address_stack, bytecode_array->length - 1);
               
               SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
               SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
@@ -570,13 +568,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 break;
               }
               case SPerl_OP_C_CODE_NEXT: {
-                int64_t* address_ptr = SPerl_ARRAY_fetch_address(sperl, goto_loop_start_address_stack, goto_loop_start_address_stack->length - 1);
+                int64_t address = SPerl_ARRAY_fetch_long(sperl, goto_loop_start_address_stack, goto_loop_start_address_stack->length - 1);
                 
                 // Add "goto"
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
                 
                 // Jump offset
-                int64_t jump_offset = *address_ptr - (bytecode_array->length - 1) + 3;
+                int64_t jump_offset = address - (bytecode_array->length - 1) + 3;
                 
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, (jump_offset >> 8) & 0xFF);
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, jump_offset & 0xFF);
@@ -629,13 +627,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
                   
-                  int64_t* goto_loop_start_address_ptr = SPerl_ARRAY_fetch_address(sperl, goto_loop_start_address_stack, goto_loop_start_address_stack->length - 1);
+                  int64_t goto_loop_start_address = SPerl_ARRAY_fetch_long(sperl, goto_loop_start_address_stack, goto_loop_start_address_stack->length - 1);
                   
                   // Jump offset
-                  int64_t goto_loop_start_offset = bytecode_array->length - *goto_loop_start_address_ptr;
+                  int64_t goto_loop_start_offset = bytecode_array->length - goto_loop_start_address;
                   
-                  bytecode_array->values[*goto_loop_start_address_ptr + 1] = (goto_loop_start_offset >> 8) & 0xFF;
-                  bytecode_array->values[*goto_loop_start_address_ptr + 2] = goto_loop_start_offset & 0xFF;
+                  bytecode_array->values[goto_loop_start_address + 1] = (goto_loop_start_offset >> 8) & 0xFF;
+                  bytecode_array->values[goto_loop_start_address + 2] = goto_loop_start_offset & 0xFF;
                 }
                 break;
               }
@@ -906,15 +904,14 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_LOOP) {
-                  int64_t* goto_loop_start_address_ptr = NULL;
-                  if (goto_loop_start_address_stack->length > 0) {
-                    goto_loop_start_address_ptr = SPerl_ARRAY_pop_address(sperl, goto_loop_start_address_stack);
-                  }
+                  int64_t goto_loop_start_address;
                   
-                  assert(goto_loop_start_address_ptr);
+                  assert(goto_loop_start_address_stack->length > 0);
+                  
+                  goto_loop_start_address = SPerl_ARRAY_pop_long(sperl, goto_loop_start_address_stack);
                   
                   // Jump offset
-                  int64_t goto_loop_start_offset = *goto_loop_start_address_ptr - (bytecode_array->length - 1) + 3;
+                  int64_t goto_loop_start_offset = goto_loop_start_address - (bytecode_array->length - 1) + 3;
                   
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, (goto_loop_start_offset >> 8) & 0xFF);
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, goto_loop_start_offset & 0xFF);
