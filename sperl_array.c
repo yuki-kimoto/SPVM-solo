@@ -49,6 +49,9 @@ All functions must be follow bellow templates
 %SUFFIX% : function name suffix
 %TYPE% : type name
 
+// Implementation
+// SUFFIX : %SUFFIX%
+// TYPE : %TYPE%
 void SPerl_ARRAY_push_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array, %TYPE% value) {
   
   SPerl_ARRAY_maybe_extend(sperl, array);
@@ -69,7 +72,7 @@ void SPerl_ARRAY_push_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array, %TYPE% value) {
   return *(%TYPE%*)&array->values[index];
 }
 
-void* SPerl_ARRAY_pop_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array) {
+%TYPE% SPerl_ARRAY_pop_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
   assert(array->length > 0);
@@ -81,7 +84,9 @@ void* SPerl_ARRAY_pop_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array) {
 
 */
 
-// Start pointer implementation 
+// Implementation
+// SUFFIX : address
+// TYPE : void*
 void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, void* value) {
   
   SPerl_ARRAY_maybe_extend(sperl, array);
@@ -111,7 +116,39 @@ void* SPerl_ARRAY_pop_address(SPerl* sperl, SPerl_ARRAY* array) {
   
   return *(void**)&array->values[array->length];
 }
-// End pointer implementation
+
+// Implementation
+// SUFFIX : long
+// TYPE : int64_t
+void SPerl_ARRAY_push_long(SPerl* sperl, SPerl_ARRAY* array, int64_t value) {
+  
+  SPerl_ARRAY_maybe_extend(sperl, array);
+  
+  int64_t length = array->length;
+  
+  *(int64_t*)&array->values[length] = value;
+  array->length++;
+}
+
+int64_t SPerl_ARRAY_fetch_long(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
+  (void)sperl;
+  
+  assert(array);
+  assert(index >= 0);
+  assert(index < array->length);
+  
+  return *(int64_t*)&array->values[index];
+}
+
+int64_t SPerl_ARRAY_pop_long(SPerl* sperl, SPerl_ARRAY* array) {
+  (void)sperl;
+  
+  assert(array->length > 0);
+  
+  array->length--;
+  
+  return *(int64_t*)&array->values[array->length];
+}
 
 
 void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array) {
