@@ -100,7 +100,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               // Search module file
               char* cur_module_path = NULL;
               FILE* fh = NULL;
-              for (int64_t i = 0, len = parser->include_pathes->length; i < len; i++) {
+              int64_t include_pathes_length = parser->include_pathes->length;
+              for (int64_t i = 0; i < include_pathes_length; i++) {
                 const char* include_path = (const char*) SPerl_ARRAY_fetch_address(sperl, parser->include_pathes, i);
                 
                 // File name

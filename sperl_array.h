@@ -16,6 +16,6 @@ void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, const void* valu
 void* SPerl_ARRAY_fetch_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index);
 void* SPerl_ARRAY_pop_address(SPerl* sperl, SPerl_ARRAY* array);
 void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array);
-void SPerl_ARRAY_maybe_realloc(SPerl* sperl, SPerl_ARRAY* array);
+void SPerl_ARRAY_maybe_extend(SPerl* sperl, SPerl_ARRAY* array);
 
 #endif

@@ -25,7 +25,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
   return array;
 }
 
-void SPerl_ARRAY_maybe_realloc(SPerl* sperl, SPerl_ARRAY* array) {
+void SPerl_ARRAY_maybe_extend(SPerl* sperl, SPerl_ARRAY* array) {
   int64_t length = array->length;
   assert(length >= 0);
   
@@ -43,7 +43,7 @@ void SPerl_ARRAY_maybe_realloc(SPerl* sperl, SPerl_ARRAY* array) {
 
 void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
   
-  SPerl_ARRAY_maybe_realloc(sperl, array);
+  SPerl_ARRAY_maybe_extend(sperl, array);
   
   int64_t length = array->length;
   
@@ -55,26 +55,19 @@ void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, const void* valu
 void* SPerl_ARRAY_fetch_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   (void)sperl;
   
+  assert(array);
   assert(index >= 0);
+  assert(index < array->length);
   
-  if (array == NULL || index >= array->length) {
-    return NULL;
-  }
-  else {
-    return *(void**)&array->values[index];
-  }
+  return *(void**)&array->values[index];
 }
 
 void* SPerl_ARRAY_pop_address(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
-  if (array->length == 0) {
-    abort();
-  }
-
-  array->length--;
+  assert(array->length > 0);
   
-  assert(array->length >= 0);
+  array->length--;
   
   return *(void**)&array->values[array->length];
 }
