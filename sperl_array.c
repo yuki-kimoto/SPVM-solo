@@ -46,45 +46,48 @@ void SPerl_ARRAY_maybe_extend(SPerl* sperl, SPerl_ARRAY* array) {
 This is function templates shared with array munipulate functions.
 All functions must be follow bellow templates
 
-void SPerl_ARRAY_push_<%= SUFFIX %>(SPerl* sperl, SPerl_ARRAY* array, <%= TYPE %> value) {
+%SUFFIX% : function name suffix
+%TYPE% : type name
+
+void SPerl_ARRAY_push_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array, %TYPE% value) {
   
   SPerl_ARRAY_maybe_extend(sperl, array);
   
   int64_t length = array->length;
   
-  *(<%= TYPE %>*)&array->values[length] = value;
+  *(%TYPE%*)&array->values[length] = value;
   array->length++;
 }
 
-void* SPerl_ARRAY_fetch_<%= SUFFIX %>(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
+%TYPE% SPerl_ARRAY_fetch_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   (void)sperl;
   
   assert(array);
   assert(index >= 0);
   assert(index < array->length);
   
-  return *(<%= TYPE %>*)&array->values[index];
+  return *(%TYPE%*)&array->values[index];
 }
 
-void* SPerl_ARRAY_pop_<%= SUFFIX %>(SPerl* sperl, SPerl_ARRAY* array) {
+void* SPerl_ARRAY_pop_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
   assert(array->length > 0);
   
   array->length--;
   
-  return *(<%= TYPE %>*)&array->values[array->length];
+  return *(%TYPE%*)&array->values[array->length];
 }
 
 */
 
-void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
+// Start pointer implementation 
+void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, void* value) {
   
   SPerl_ARRAY_maybe_extend(sperl, array);
   
   int64_t length = array->length;
   
-  /* Casting away a const qualification, I know what I'm doing. */
   *(void**)&array->values[length] = value;
   array->length++;
 }
@@ -108,6 +111,8 @@ void* SPerl_ARRAY_pop_address(SPerl* sperl, SPerl_ARRAY* array) {
   
   return *(void**)&array->values[array->length];
 }
+// End pointer implementation
+
 
 void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array) {
   free(array->values);
