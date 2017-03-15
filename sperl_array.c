@@ -25,8 +25,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
   return array;
 }
 
-void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
-
+void SPerl_ARRAY_maybe_realloc(SPerl* sperl, SPerl_ARRAY* array) {
   int64_t length = array->length;
   assert(length >= 0);
   
@@ -40,6 +39,13 @@ void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, const void* valu
     array->values = SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(SPerl_VALUE_T));
     array->capacity = new_capacity;
   }
+}
+
+void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, const void* value) {
+  
+  SPerl_ARRAY_maybe_realloc(sperl, array);
+  
+  int64_t length = array->length;
   
   /* Casting away a const qualification, I know what I'm doing. */
   *(void**)&array->values[length] = value;
