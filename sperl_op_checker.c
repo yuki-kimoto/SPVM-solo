@@ -1039,11 +1039,17 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               case SPerl_OP_C_CODE_BLOCK: {
                 assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
 
-                int64_t* block_base_ptr = SPerl_ARRAY_pop_address(sperl, block_base_stack);
+                int64_t* block_base_ptr = NULL;
+                if (block_base_stack->length > 0) {
+                  block_base_ptr = SPerl_ARRAY_pop_address(sperl, block_base_stack);
+                }
+                
                 if (block_base_ptr) {
                   int64_t const pop_count = op_my_var_stack->length - *block_base_ptr;
                   for (int64_t j = 0; j < pop_count; j++) {
-                    SPerl_ARRAY_pop_address(sperl, op_my_var_stack);
+                    if (op_my_var_stack->length > 0) {
+                      SPerl_ARRAY_pop_address(sperl, op_my_var_stack);
+                    }
                   }
                 }
                 

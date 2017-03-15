@@ -60,7 +60,10 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         SPerl_ARRAY* op_use_stack = parser->op_use_stack;
         
         while (1) {
-          SPerl_OP* op_use = SPerl_ARRAY_pop_address(sperl, op_use_stack);
+          SPerl_OP* op_use = NULL;
+          if (op_use_stack->length > 0) {
+            op_use = SPerl_ARRAY_pop_address(sperl, op_use_stack);
+          }
           
           if (op_use) {
             SPerl_OP* op_package_name = op_use->first;

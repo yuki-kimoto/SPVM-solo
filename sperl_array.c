@@ -69,7 +69,7 @@ void* SPerl_ARRAY_pop_address(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
   if (array->length == 0) {
-    return NULL;
+    abort();
   }
 
   array->length--;

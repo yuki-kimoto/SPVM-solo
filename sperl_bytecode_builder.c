@@ -231,11 +231,18 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
             // [START]Postorder traversal position
             switch (op_cur->code) {
               case SPerl_OP_C_CODE_CATCH: {
-                SPerl_ARRAY_pop_address(sperl, try_stack);
-
+                if (try_stack->length > 0) {
+                  SPerl_ARRAY_pop_address(sperl, try_stack);
+                }
+                
                 int32_t pop_count = goto_exception_handler_stack->length;
                 for (int32_t i = 0; i < pop_count; i++) {
-                  int32_t* address_ptr = SPerl_ARRAY_pop_address(sperl, goto_exception_handler_stack);
+                  int32_t* address_ptr = NULL;
+                  if (goto_exception_handler_stack->length > 0) {
+                    address_ptr = SPerl_ARRAY_pop_address(sperl, goto_exception_handler_stack);
+                  }
+                  
+                  assert(address_ptr);
                   
                   int32_t jump_offset = bytecode_array->length - *address_ptr;
                   
@@ -591,7 +598,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
 
                   // Set if jump address
-                  int32_t* pos_ptr = SPerl_ARRAY_pop_address(sperl, if_address_stack);
+                  int32_t* pos_ptr = NULL;
+                  if (if_address_stack->length > 0) {
+                    pos_ptr = SPerl_ARRAY_pop_address(sperl, if_address_stack);
+                  }
+                  
+                  assert(pos_ptr);
                   
                   // Jump offset
                   int32_t jump_offset = bytecode_array->length - *pos_ptr;
@@ -602,7 +614,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_ELSE) {
                   
-                  int32_t* pos_ptr = SPerl_ARRAY_pop_address(sperl, goto_if_block_end_address_stack);
+                  int32_t* pos_ptr = NULL;
+                  if (goto_if_block_end_address_stack->length > 0) {
+                    pos_ptr = SPerl_ARRAY_pop_address(sperl, goto_if_block_end_address_stack);
+                  }
+                  assert(pos_ptr);
                   
                   // Jump offset
                   int32_t jump_offset = bytecode_array->length - *pos_ptr;
@@ -631,7 +647,15 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 // Set last position
                 int32_t* goto_last_address_ptr;
-                while ((goto_last_address_ptr = SPerl_ARRAY_pop_address(sperl, goto_last_address_stack))) {
+                while (1) {
+                  goto_last_address_ptr = NULL;
+                  if (goto_last_address_stack->length > 0) {
+                    goto_last_address_ptr = SPerl_ARRAY_pop_address(sperl, goto_last_address_stack);
+                  }
+                  if (!goto_last_address_ptr) {
+                    break;
+                  }
+                  
                   // Last offset
                   int32_t goto_last_offset = bytecode_array->length - *goto_last_address_ptr;
                   
@@ -882,7 +906,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_LOOP) {
-                  int32_t* goto_loop_start_address_ptr = SPerl_ARRAY_pop_address(sperl, goto_loop_start_address_stack);
+                  int32_t* goto_loop_start_address_ptr = NULL;
+                  if (goto_loop_start_address_stack->length > 0) {
+                    goto_loop_start_address_ptr = SPerl_ARRAY_pop_address(sperl, goto_loop_start_address_stack);
+                  }
+                  
+                  assert(goto_loop_start_address_ptr);
                   
                   // Jump offset
                   int32_t goto_loop_start_offset = *goto_loop_start_address_ptr - (bytecode_array->length - 1) + 3;
