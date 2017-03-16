@@ -31,9 +31,17 @@ SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int64_t table_capacity) {
   return hash;
 }
 
-int64_t SPerl_HASH_alloc_hash_entry(SPerl* sperl, SPerl_HASH* hash) {
+int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* key, void* value) {
   
   int64_t index = hash->entries_length;
+  
+  SPerl_HASH_maybe_extend_entries(sperl, hash);
+  
+  SPerl_HASH_ENTRY* hash_entry = &hash->entries[index];
+  
+  hash_entry->key = key;
+  hash_entry->value = value;
+  hash_entry->next = -1;
   
   hash->entries_length++;
   

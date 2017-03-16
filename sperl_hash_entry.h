@@ -8,8 +8,7 @@ struct SPerl_hash_entry {
   char* key;
   void* value;
   SPerl_HASH_ENTRY* next;
+  int64_t next_index;
 };
-
-SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl* sperl, const char* key, int32_t length, void* value);
 
 #endif
