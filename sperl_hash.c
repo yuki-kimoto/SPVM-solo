@@ -92,7 +92,7 @@ void* SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key
       }
     }
     else {
-      SPerl_HASH_ENTRY* new_entry = SPerl_HASH_ENTRY_new(sperl, key, length, value);
+      SPerl_HASH_ENTRY* new_entry = SPerl_HASH_ENTRY_new(sperl, key, value);
       *next_entry_ptr = new_entry;
       if (countup) {
         hash->entries_length++;
