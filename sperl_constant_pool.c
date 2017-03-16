@@ -156,9 +156,12 @@ void SPerl_CONSTANT_POOL_push_string(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   constant_pool->values[constant_pool->length] = string_length;
   constant_pool->length++;
   
-  int32_t extend_length = SPerl_CONSTANT_POOL_calculate_extend_length(sperl, constant_pool, string_length);
+  int32_t extend_length = SPerl_CONSTANT_POOL_calculate_extend_length(sperl, constant_pool, string_length + 1);
+  
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
-  memcpy(&constant_pool->values[constant_pool->length], string, string_length);
+  
+  memcpy(&constant_pool->values[constant_pool->length], string, string_length + 1);
+  
   constant_pool->length += extend_length;
 }
 
