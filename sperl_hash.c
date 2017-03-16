@@ -41,7 +41,8 @@ int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* ke
   
   hash_entry->key = key;
   hash_entry->value = value;
-  hash_entry->next = -1;
+  hash_entry->next = NULL;
+  hash_entry->next_index = -1;
   
   hash->entries_length++;
   
