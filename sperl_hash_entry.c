@@ -16,4 +16,3 @@ SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl* sperl, const char* key, void* valu
   
   return new_entry;
 }
-
