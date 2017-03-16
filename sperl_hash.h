@@ -9,7 +9,7 @@ struct SPerl_hash {
   SPerl_HASH_ENTRY* entries;
   int64_t table_capacity;
   int64_t entries_capacity;
-  int64_t entries_count;
+  int64_t entries_length;
 };
 
 // Hash function
@@ -19,5 +19,6 @@ void* SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key
 void* SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value);
 void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length);
 void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash);
+void SPerl_HASH_maybe_extend_entries(SPerl* sperl, SPerl_HASH* hash);
 
 #endif

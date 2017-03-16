@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #include "sperl_hash.h"
 #include "sperl_hash_entry.h"
@@ -25,9 +26,35 @@ SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int64_t table_capacity) {
   hash->entries_capacity = 0xFF;
   hash->entries = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->entries_capacity, sizeof(SPerl_HASH_ENTRY));
   
-  hash->entries_count = 0;
+  hash->entries_length = 0;
   
   return hash;
+}
+
+int64_t SPerl_HASH_alloc_hash_entry(SPerl* sperl, SPerl_HASH* hash) {
+  
+  int64_t index = hash->entries_length;
+  
+  hash->entries_length++;
+  
+  return index;
+}
+
+void SPerl_HASH_maybe_extend_entries(SPerl* sperl, SPerl_HASH* hash) {
+  int64_t entries_length = hash->entries_length;
+  
+  assert(entries_length >= 0);
+  
+  int64_t entries_capacity = hash->entries_capacity;
+  
+  if (entries_length >= entries_capacity) {
+    if (entries_capacity > SIZE_MAX / 2) {
+      SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
+    }
+    int64_t new_entries_capacity = entries_capacity * 2;
+    hash->entries = SPerl_ALLOCATOR_UTIL_safe_realloc(hash->entries, new_entries_capacity, sizeof(SPerl_HASH_ENTRY));
+    hash->entries_capacity = new_entries_capacity;
+  }
 }
 
 void* SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
@@ -59,7 +86,7 @@ void* SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key
       SPerl_HASH_ENTRY* new_entry = SPerl_HASH_ENTRY_new(sperl, key, length, value);
       *next_entry_ptr = new_entry;
       if (countup) {
-        hash->entries_count++;
+        hash->entries_length++;
       }
       return NULL;
     }
@@ -75,7 +102,7 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
   
   // Rehash
   int64_t i;
-  for (i = 0; i < hash->entries_count; i++) {
+  for (i = 0; i < hash->entries_length; i++) {
     SPerl_HASH_ENTRY* entry = table[i];
     
     const char* key = entry->key;
@@ -98,7 +125,7 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
     }
   }
   
-  hash->entries_count = new_hash->entries_count;
+  hash->entries_length = new_hash->entries_length;
   hash->table_capacity = new_hash->table_capacity;
   free(hash->table);
   hash->table = new_hash->table;
@@ -110,7 +137,7 @@ void* SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t
   }
   
   // Rehash
-  if (hash->entries_count > hash->table_capacity * 0.75) {
+  if (hash->entries_length > hash->table_capacity * 0.75) {
     int64_t new_table_capacity = (hash->table_capacity * 2) + 1;
 
     SPerl_HASH_rehash(sperl, hash, new_table_capacity);
