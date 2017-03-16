@@ -149,9 +149,6 @@ void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash) {
     SPerl_HASH_ENTRY* next_entry = hash->table[i];
     while (next_entry) {
       SPerl_HASH_ENTRY* tmp_entry = next_entry->next;
-      if (next_entry->key) {
-        free(next_entry->key);
-      }
       free(next_entry);
       next_entry = tmp_entry;
     }

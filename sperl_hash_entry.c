@@ -13,9 +13,7 @@ SPerl_HASH_ENTRY* SPerl_HASH_ENTRY_new(SPerl* sperl, const char* key, int32_t le
   if (length >= SIZE_MAX) {
     SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
   }
-  new_entry->key = (char*) SPerl_ALLOCATOR_UTIL_safe_malloc(length + 1, sizeof(char));
-  strncpy(new_entry->key, key, length);
-  new_entry->key[length] = '\0';
+  new_entry->key = key;
   new_entry->value = value;
   
   return new_entry;
