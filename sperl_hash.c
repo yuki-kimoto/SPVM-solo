@@ -74,11 +74,6 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
   SPerl_HASH_ENTRY** next_entry_ptr = hash->table + index;
   SPerl_HASH_ENTRY* next_entry = hash->table[index];
 
-  _Bool countup = 0;
-  if (!next_entry) {
-    countup = 1;
-  }
-  
   while (1) {
     if (next_entry) {
       if (strncmp(next_entry->key, key, length) == 0) {
@@ -91,11 +86,9 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
       }
     }
     else {
-      SPerl_HASH_ENTRY* new_entry = SPerl_HASH_ENTRY_new(sperl, key, value);
+      int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
+      SPerl_HASH_ENTRY* new_entry = &hash->entries[new_entry_index];
       *next_entry_ptr = new_entry;
-      if (countup) {
-        hash->entries_length++;
-      }
       break;
     }
   }
@@ -177,18 +170,7 @@ void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t
 }
 
 void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash) {
-  int64_t table_capacity = hash->table_capacity;
-  
-  int64_t i;
-  for (i = 0; i < table_capacity; i++) {
-    SPerl_HASH_ENTRY* next_entry = hash->table[i];
-    while (next_entry) {
-      SPerl_HASH_ENTRY* tmp_entry = next_entry->next;
-      free(next_entry);
-      next_entry = tmp_entry;
-    }
-  }
-  
   free(hash->table);
+  free(hash->entries);
   free(hash);
 }
