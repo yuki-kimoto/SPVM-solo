@@ -148,9 +148,12 @@ void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t 
 }
 
 void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length) {
-  if (!hash) {
-    return 0;
-  }
+  (void)sperl;
+  
+  assert(hash);
+  assert(key);
+  assert(length >= 0);
+
   int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
   int64_t index = hash_value % hash->table_capacity;
   SPerl_HASH_ENTRY* next_entry = hash->table[index];
