@@ -71,7 +71,6 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
   int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
   int64_t index = hash_value % hash->table_capacity;
   
-  SPerl_HASH_ENTRY** next_entry_ptr = hash->table + index;
   SPerl_HASH_ENTRY* next_entry = hash->table[index];
 
   while (1) {
@@ -81,14 +80,12 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
         break;
       }
       else {
-        next_entry_ptr = &next_entry->next;
         next_entry = next_entry->next;
       }
     }
     else {
       int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
-      SPerl_HASH_ENTRY* new_entry = &hash->entries[new_entry_index];
-      *next_entry_ptr = new_entry;
+      hash->table[index] = &hash->entries[new_entry_index];
       break;
     }
   }
