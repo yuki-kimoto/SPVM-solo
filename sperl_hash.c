@@ -12,20 +12,19 @@
 SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int64_t table_capacity) {
   (void)sperl;
   
+  // Default table capacity
   if (table_capacity == 0) {
     table_capacity = 101;
   }
   
+  // Create hash
   SPerl_HASH* hash = SPerl_ALLOCATOR_UTIL_safe_malloc(table_capacity, sizeof(SPerl_HASH));
   
+  // Initialize hash fields
   hash->table_capacity = table_capacity;
-  
-  SPerl_HASH_ENTRY** table = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->table_capacity, sizeof(SPerl_HASH_ENTRY*));
-  hash->table = table;
-  
-  hash->entries_capacity = 0xFF;
+  hash->table = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(hash->table_capacity, sizeof(SPerl_HASH_ENTRY*));
+  hash->entries_capacity = 255;
   hash->entries = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->entries_capacity, sizeof(SPerl_HASH_ENTRY));
-  
   hash->entries_length = 0;
   
   return hash;
@@ -123,10 +122,14 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
     }
   }
   
+  // Replace hash fields
+  free(hash->table);
+  free(hash->entries);
   hash->entries_length = new_hash->entries_length;
   hash->table_capacity = new_hash->table_capacity;
-  free(hash->table);
+  hash->entries_capacity = new_hash->entries_capacity;
   hash->table = new_hash->table;
+  hash->entries = new_hash->entries;
 }
 
 void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
