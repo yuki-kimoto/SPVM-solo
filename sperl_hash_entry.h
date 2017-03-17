@@ -7,7 +7,6 @@
 struct SPerl_hash_entry {
   char* key;
   void* value;
-  SPerl_HASH_ENTRY* next;
   int64_t next_index;
 };
 

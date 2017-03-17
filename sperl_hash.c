@@ -40,7 +40,6 @@ int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* ke
   
   hash_entry->key = key;
   hash_entry->value = value;
-  hash_entry->next = NULL;
   hash_entry->next_index = -1;
   
   hash->entries_length++;
@@ -74,7 +73,6 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
   int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
   int64_t index = hash_value % hash->table_capacity;
   
-  
   if (hash->table[index]) {
     SPerl_HASH_ENTRY* next_entry = hash->table[index];
     while (1) {
@@ -83,12 +81,11 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
         break;
       }
       else {
-        if (next_entry->next) {
-          next_entry = next_entry->next;
+        if (next_entry->next_index != -1) {
+          next_entry = &hash->entries[next_entry->next_index];
         }
         else {
           int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
-          next_entry->next = &hash->entries[new_entry_index];
           next_entry->next_index = new_entry_index;
           break;
         }
@@ -120,7 +117,13 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
       SPerl_HASH_insert_norehash(sperl, new_hash, key, length, value);
     }
     
-    SPerl_HASH_ENTRY* next_entry = entry->next;
+    SPerl_HASH_ENTRY* next_entry;
+    if (entry->next_index == -1) {
+      next_entry = NULL;
+    }
+    else {
+      next_entry = &hash->entries[entry->next_index];
+    }
     while (next_entry) {
       const char* key = next_entry->key;
       if (key) {
@@ -128,8 +131,12 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
         void* value = SPerl_HASH_search(sperl, hash, key, length);
         SPerl_HASH_insert_norehash(sperl, new_hash, key, length, value);
       }
-      
-      next_entry = next_entry->next;
+      if (next_entry->next_index == -1) {
+        next_entry = NULL;
+      }
+      else {
+        next_entry = &hash->entries[next_entry->next_index];
+      }
     }
   }
   
@@ -174,7 +181,12 @@ void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t
         return next_entry->value;
       }
       else {
-        next_entry = next_entry->next;
+        if (next_entry->next_index == -1) {
+          next_entry = NULL;
+        }
+        else {
+          next_entry = &hash->entries[next_entry->next_index];
+        }
       }
     }
     else {
