@@ -138,6 +138,7 @@ int main()
     OK(hash->table_capacity == 5);
     OK(hash->entries_length == 4);
     
+    // Rehash
     int64_t value5 = 5;
     SPerl_HASH_insert(sperl, hash, "key5", 4, &value5);
 
@@ -155,6 +156,34 @@ int main()
     int64_t search_value5 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key5", 4);
     OK(search_value5 == 5);
 
+    int64_t value6 = 6;
+    SPerl_HASH_insert(sperl, hash, "key6", 4, &value6);
+    int64_t value7 = 7;
+    SPerl_HASH_insert(sperl, hash, "key7", 4, &value7);
+    int64_t value8 = 8;
+    SPerl_HASH_insert(sperl, hash, "key8", 4, &value8);
+    int64_t value9 = 9;
+    SPerl_HASH_insert(sperl, hash, "key9", 4, &value9);
+
+    OK(hash->table_capacity == 11);
+    OK(hash->entries_length == 9);
+    
+    // Rehash
+    int64_t value10 = 10;
+    SPerl_HASH_insert(sperl, hash, "key10", 5, &value10);
+    OK(hash->table_capacity == 23);
+    OK(hash->entries_length == 10);
+    
+    int64_t search_value6 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key6", 4);
+    OK(search_value6 == 6);
+    int64_t search_value7 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key7", 4);
+    OK(search_value7 == 7);
+    int64_t search_value8 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key8", 4);
+    OK(search_value8 == 8);
+    int64_t search_value9 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key9", 4);
+    OK(search_value9 == 9);
+    int64_t search_value10 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key10", 5);
+    OK(search_value10 == 10);
   }
   return 0;
 }
