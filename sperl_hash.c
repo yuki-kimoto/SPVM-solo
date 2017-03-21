@@ -108,36 +108,15 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
   // Rehash
   int64_t i;
   for (i = 0; i < hash->entries_length; i++) {
-    SPerl_HASH_ENTRY* entry = table[i];
+    SPerl_HASH_ENTRY* entry = &hash->entries[i];
     
     const char* key = entry->key;
-    if (key) {
-      int64_t length = strlen(key);
-      void* value = SPerl_HASH_search(sperl, hash, key, length);
-      SPerl_HASH_insert_norehash(sperl, new_hash, key, length, value);
-    }
     
-    SPerl_HASH_ENTRY* next_entry;
-    if (entry->next_index == -1) {
-      next_entry = NULL;
-    }
-    else {
-      next_entry = &hash->entries[entry->next_index];
-    }
-    while (next_entry) {
-      const char* key = next_entry->key;
-      if (key) {
-        int64_t length = strlen(key);
-        void* value = SPerl_HASH_search(sperl, hash, key, length);
-        SPerl_HASH_insert_norehash(sperl, new_hash, key, length, value);
-      }
-      if (next_entry->next_index == -1) {
-        next_entry = NULL;
-      }
-      else {
-        next_entry = &hash->entries[next_entry->next_index];
-      }
-    }
+    assert(key);
+    
+    const void* value = entry->value;
+    
+    SPerl_HASH_insert_norehash(sperl, new_hash, key, strlen(key), value);
   }
   
   // Replace hash fields
@@ -158,7 +137,7 @@ void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t 
   // Rehash
   if (hash->entries_length > hash->table_capacity * 0.75) {
     int64_t new_table_capacity = (hash->table_capacity * 2) + 1;
-
+    
     SPerl_HASH_rehash(sperl, hash, new_table_capacity);
   }
   

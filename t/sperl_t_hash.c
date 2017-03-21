@@ -122,5 +122,24 @@ int main()
     SPerl_HASH_free(sperl, hash);
   }
   
+  // Rehash
+  {
+    SPerl_HASH* hash = SPerl_HASH_new(sperl, 5);
+    
+    int64_t value1 = 1;
+    SPerl_HASH_insert(sperl, hash, "key1", 4, &value1);
+    int64_t value2 = 2;
+    SPerl_HASH_insert(sperl, hash, "key2", 4, &value2);
+    int64_t value3 = 3;
+    SPerl_HASH_insert(sperl, hash, "key3", 4, &value3);
+    int64_t value4 = 4;
+    SPerl_HASH_insert(sperl, hash, "key4", 4, &value4);
+    
+    OK(hash->table_capacity == 5);
+    OK(hash->entries_length == 4);
+    
+    int64_t value5 = 5;
+    SPerl_HASH_insert(sperl, hash, "key5", 4, &value5);
+  }
   return 0;
 }
