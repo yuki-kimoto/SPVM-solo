@@ -117,7 +117,6 @@ int main()
     
     OK(*(int32_t*)SPerl_ARRAY_fetch_address(sperl, array, 0) == 3);
     OK(*(int32_t*)SPerl_ARRAY_fetch_address(sperl, array, 1) == 5);
-    OK(SPerl_ARRAY_fetch_address(sperl, array, 2) == NULL);
   }
 
   // Array - push many values
