@@ -85,7 +85,6 @@ int main()
     OK(!value3_1);
   }
   
-  /*
   // Hash - insert link
   {
     SPerl_HASH* hash = SPerl_HASH_new(sperl, 1);
@@ -93,46 +92,35 @@ int main()
     SPerl_HASH_insert_norehash(sperl, hash, "key1", 4, &value1);
     
     OK(*(int64_t*)hash->table[0]->value == 3);
+    OK(hash->table[0] == &hash->entries[0]);
+    OK(hash->table_capacity == 1);
     OK(hash->entries_length == 1);
-
+    
     int64_t value2 = 5;
     SPerl_HASH_insert_norehash(sperl, hash, "key2", 4, &value2);
     
-    OK(*(int64_t*)hash->table[0]->next->value == 5);
-    OK(hash->entries_length == 1);
+    OK(*(int64_t*)hash->entries[hash->table[0]->next_index].value == 5);
+    OK(hash->table_capacity == 1);
+    OK(hash->entries_length == 2);
     
     int64_t value3 = 7;
     SPerl_HASH_insert_norehash(sperl, hash, "key3", 4, &value3);
     
-    OK(*(int64_t*)hash->table[0]->next->next->value == 7);
-    OK(hash->entries_length == 1);
-    
-    // Replace key2
-    int64_t value4 = 11;
-    SPerl_HASH_insert_norehash(sperl, hash, "key2", 4, &value4);
-    
-    OK(*(int64_t*)hash->table[0]->next->value == 11);
-    OK(hash->entries_length == 1);
-    
-    // Replace key3
-    int64_t value5 = 13;
-    SPerl_HASH_insert_norehash(sperl, hash, "key3", 4, &value5);
-    
-    OK(*(int64_t*)hash->table[0]->next->next->value == 13);
-    OK(hash->entries_length == 1);
+    OK(*(int64_t*)hash->entries[hash->entries[hash->table[0]->next_index].next_index].value == 7);
+    OK(hash->table_capacity == 1);
+    OK(hash->entries_length == 3);
 
     // Search
     int64_t value1_1 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key1", 4);
     OK(value1_1 == 3);
     int64_t value2_1 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key2", 4);
-    OK(value2_1 == 11);
+    OK(value2_1 == 5);
     int64_t value3_1 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key3", 4);
-    OK(value3_1 == 13);
+    OK(value3_1 == 7);
     
     // free
     SPerl_HASH_free(sperl, hash);
   }
-  */
   
   return 0;
 }
