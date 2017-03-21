@@ -140,6 +140,21 @@ int main()
     
     int64_t value5 = 5;
     SPerl_HASH_insert(sperl, hash, "key5", 4, &value5);
+
+    OK(hash->table_capacity == 11);
+    OK(hash->entries_length == 5);
+
+    int64_t search_value1 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key1", 4);
+    OK(search_value1 == 1);
+    int64_t search_value2 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key2", 4);
+    OK(search_value2 == 2);
+    int64_t search_value3 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key3", 4);
+    OK(search_value3 == 3);
+    int64_t search_value4 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key4", 4);
+    OK(search_value4 == 4);
+    int64_t search_value5 = *(int64_t*)SPerl_HASH_search(sperl, hash, "key5", 4);
+    OK(search_value5 == 5);
+
   }
   return 0;
 }
