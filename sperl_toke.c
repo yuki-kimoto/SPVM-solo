@@ -38,14 +38,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
   // Save buf pointer
   parser->befbufptr = parser->bufptr;
   
-  // use standard module
-  SPerl_OP* op_use_core = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_USE, "std", 0);
-  SPerl_OP* op_core_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "std", 0);
-  op_core_package_name->uv.name = "std";
-  SPerl_OP_sibling_splice(sperl, op_use_core, NULL, 0, op_core_package_name);
-  SPerl_ARRAY_push_address(sperl, parser->op_use_stack, op_use_core);
-  SPerl_HASH_insert(sperl, parser->op_use_symtable, op_core_package_name->uv.name, strlen(op_core_package_name->uv.name), op_use_core);
-  
   while(1) {
     // Get current character
     char c = *parser->bufptr;
