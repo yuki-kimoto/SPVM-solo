@@ -32,23 +32,6 @@ SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int64_t table_capacity) {
   return hash;
 }
 
-int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* key, void* value) {
-  
-  int64_t index = hash->entries_length;
-  
-  SPerl_HASH_maybe_extend_entries(sperl, hash);
-  
-  SPerl_HASH_ENTRY* hash_entry = &hash->entries[index];
-  
-  hash_entry->key = key;
-  hash_entry->value = value;
-  hash_entry->next_index = -1;
-  
-  hash->entries_length++;
-  
-  return index;
-}
-
 void SPerl_HASH_maybe_extend_entries(SPerl* sperl, SPerl_HASH* hash) {
   int64_t entries_length = hash->entries_length;
   
@@ -63,40 +46,6 @@ void SPerl_HASH_maybe_extend_entries(SPerl* sperl, SPerl_HASH* hash) {
     int64_t new_entries_capacity = entries_capacity * 2;
     hash->entries = SPerl_ALLOCATOR_UTIL_safe_realloc(hash->entries, new_entries_capacity, sizeof(SPerl_HASH_ENTRY));
     hash->entries_capacity = new_entries_capacity;
-  }
-}
-
-void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
-  
-  assert(hash);
-  assert(key);
-  assert(length >= 0);
-  
-  int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
-  int64_t index = hash_value % hash->table_capacity;
-  
-  if (hash->table[index]) {
-    SPerl_HASH_ENTRY* next_entry = hash->table[index];
-    while (1) {
-      if (strncmp(next_entry->key, key, length) == 0) {
-        next_entry->value = value;
-        break;
-      }
-      else {
-        if (next_entry->next_index != -1) {
-          next_entry = &hash->entries[next_entry->next_index];
-        }
-        else {
-          int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
-          next_entry->next_index = new_entry_index;
-          break;
-        }
-      }
-    }
-  }
-  else {
-    int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
-    hash->table[index] = &hash->entries[new_entry_index];
   }
 }
 
@@ -116,7 +65,7 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
     
     assert(key);
     
-    const void* value = entry->value;
+    const void* value = *(void**)&entry->value;
     
     SPerl_HASH_insert_norehash(sperl, new_hash, key, strlen(key), value);
   }
@@ -129,6 +78,63 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
   hash->entries_capacity = new_hash->entries_capacity;
   hash->table = new_hash->table;
   hash->entries = new_hash->entries;
+}
+
+void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash) {
+  free(hash->table);
+  free(hash->entries);
+  free(hash);
+}
+
+int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* key, void* value) {
+  
+  int64_t index = hash->entries_length;
+  
+  SPerl_HASH_maybe_extend_entries(sperl, hash);
+  
+  SPerl_HASH_ENTRY* hash_entry = &hash->entries[index];
+  
+  hash_entry->key = key;
+  *(void**)&hash_entry->value = value;
+  hash_entry->next_index = -1;
+  
+  hash->entries_length++;
+  
+  return index;
+}
+
+void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
+  
+  assert(hash);
+  assert(key);
+  assert(length >= 0);
+  
+  int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
+  int64_t index = hash_value % hash->table_capacity;
+  
+  if (hash->table[index]) {
+    SPerl_HASH_ENTRY* next_entry = hash->table[index];
+    while (1) {
+      if (strncmp(next_entry->key, key, length) == 0) {
+        *(void**)&next_entry->value = value;
+        break;
+      }
+      else {
+        if (next_entry->next_index != -1) {
+          next_entry = &hash->entries[next_entry->next_index];
+        }
+        else {
+          int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
+          next_entry->next_index = new_entry_index;
+          break;
+        }
+      }
+    }
+  }
+  else {
+    int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
+    hash->table[index] = &hash->entries[new_entry_index];
+  }
 }
 
 void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
@@ -161,7 +167,7 @@ void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t
   while (1) {
     if (next_entry) {
       if (strncmp(key, next_entry->key, length) == 0) {
-        return next_entry->value;
+        return *(void**)&next_entry->value;
       }
       else {
         if (next_entry->next_index == -1) {
@@ -176,10 +182,4 @@ void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t
       return NULL;
     }
   }
-}
-
-void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash) {
-  free(hash->table);
-  free(hash->entries);
-  free(hash);
 }
