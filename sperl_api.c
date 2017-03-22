@@ -250,7 +250,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   int64_t* vars = &sperl->call_stack[sperl->call_stack_base];
 
   // Constant pool sub
-  SPerl_OP* op_sub = SPerl_HASH_search(sperl, sperl->parser->op_sub_symtable, sub_base_name, strlen(sub_base_name));
+  SPerl_OP* op_sub = SPerl_HASH_search_address(sperl, sperl->parser->op_sub_symtable, sub_base_name, strlen(sub_base_name));
   SPerl_SUB* sub = op_sub->uv.sub;
   
   SPerl_CONSTANT_POOL_SUB* constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub->constant_pool_address];

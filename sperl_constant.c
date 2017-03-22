@@ -28,7 +28,7 @@ SPerl_CONSTANT* SPerl_CONSTANT_create_int_1(SPerl* sperl) {
   
   constant->code = SPerl_CONSTANT_C_CODE_INT;
   constant->uv.int_value = 1;
-  constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "int", strlen("int"));
+  constant->resolved_type = SPerl_HASH_search_address(sperl, parser->resolved_type_symtable, "int", strlen("int"));
   
   return constant;
 }

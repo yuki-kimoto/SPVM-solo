@@ -67,7 +67,7 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
     
     const void* value = *(void**)&entry->value;
     
-    SPerl_HASH_insert_norehash(sperl, new_hash, key, strlen(key), value);
+    SPerl_HASH_insert_norehash_address(sperl, new_hash, key, strlen(key), value);
   }
   
   // Replace hash fields
@@ -103,7 +103,7 @@ int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* ke
   return index;
 }
 
-void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
+void SPerl_HASH_insert_norehash_address(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
   
   assert(hash);
   assert(key);
@@ -137,7 +137,7 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
   }
 }
 
-void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
+void SPerl_HASH_insert_address(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
   
   if (hash == NULL) {
     return 0;
@@ -150,10 +150,10 @@ void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t 
     SPerl_HASH_rehash(sperl, hash, new_table_capacity);
   }
   
-  SPerl_HASH_insert_norehash(sperl, hash, key, length, value);
+  SPerl_HASH_insert_norehash_address(sperl, hash, key, length, value);
 }
 
-void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length) {
+void* SPerl_HASH_search_address(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length) {
   (void)sperl;
   
   assert(hash);
