@@ -43,8 +43,8 @@ void SPerl_ARRAY_maybe_extend(SPerl* sperl, SPerl_ARRAY* array) {
 
 /* Function templates
 
-This is function templates shared with array munipulate functions.
-All functions must be follow bellow templates
+This is function templates shared with array manipulate functions.
+All functions is genereted from the following templates.
 
 %SUFFIX% : function name suffix
 %TYPE% : type name

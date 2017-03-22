@@ -15,10 +15,12 @@ struct SPerl_hash {
 // Hash function
 SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int64_t capacity);
 void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash_ptr, int64_t new_capacity);
+void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash);
+void SPerl_HASH_maybe_extend_entries(SPerl* sperl, SPerl_HASH* hash);
+
 void SPerl_HASH_insert_norehash_address(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value);
 void SPerl_HASH_insert_address(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value);
 void* SPerl_HASH_search_address(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length);
-void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash);
-void SPerl_HASH_maybe_extend_entries(SPerl* sperl, SPerl_HASH* hash);
+int64_t SPerl_HASH_new_hash_entry_address(SPerl* sperl, SPerl_HASH* hash, const char* key, void* value);
 
 #endif

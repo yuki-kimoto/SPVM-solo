@@ -86,7 +86,7 @@ void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash) {
   free(hash);
 }
 
-int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* key, void* value) {
+int64_t SPerl_HASH_new_hash_entry_address(SPerl* sperl, SPerl_HASH* hash, const char* key, void* value) {
   
   int64_t index = hash->entries_length;
   
@@ -124,7 +124,7 @@ void SPerl_HASH_insert_norehash_address(SPerl* sperl, SPerl_HASH* hash, const ch
           next_entry = &hash->entries[next_entry->next_index];
         }
         else {
-          int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
+          int64_t new_entry_index = SPerl_HASH_new_hash_entry_address(sperl, hash, key, value);
           next_entry->next_index = new_entry_index;
           break;
         }
@@ -132,7 +132,7 @@ void SPerl_HASH_insert_norehash_address(SPerl* sperl, SPerl_HASH* hash, const ch
     }
   }
   else {
-    int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
+    int64_t new_entry_index = SPerl_HASH_new_hash_entry_address(sperl, hash, key, value);
     hash->table[index] = &hash->entries[new_entry_index];
   }
 }
