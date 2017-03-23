@@ -583,9 +583,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_HAS_ELSE) {
                     // Prepare to jump to end of else block
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
-                    int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-                    *address_ptr = bytecode_array->length - 1;
-                    SPerl_ARRAY_push_address(sperl, goto_if_block_end_address_stack, address_ptr);
+                    int64_t address = bytecode_array->length - 1;
+                    SPerl_ARRAY_push_long(sperl, goto_if_block_end_address_stack, address);
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                   }
@@ -607,18 +606,16 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_ELSE) {
                   
-                  int64_t* address_ptr = NULL;
-                  if (goto_if_block_end_address_stack->length > 0) {
-                    address_ptr = SPerl_ARRAY_pop_address(sperl, goto_if_block_end_address_stack);
-                  }
-                  assert(address_ptr);
+                  assert(goto_if_block_end_address_stack->length > 0);
+                  
+                  int64_t address = SPerl_ARRAY_pop_long(sperl, goto_if_block_end_address_stack);
                   
                   // Jump offset
-                  int64_t jump_offset = bytecode_array->length - *address_ptr;
+                  int64_t jump_offset = bytecode_array->length - address;
                   
                   // Set jump offset
-                  bytecode_array->values[*address_ptr + 1] = (jump_offset >> 8) & 0xFF;
-                  bytecode_array->values[*address_ptr + 2] = jump_offset & 0xFF;
+                  bytecode_array->values[address + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[address + 2] = jump_offset & 0xFF;
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_LOOP) {
                   
