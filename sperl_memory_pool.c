@@ -21,20 +21,20 @@ SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl) {
   return memory_pool;
 }
 
-void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int32_t byte_size) {
+void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int64_t byte_size) {
   (void)sperl;
   
   assert(byte_size > 0);
   
-  int32_t page_depth = memory_pool->page_depth;
-  int32_t current_pos = memory_pool->current_pos;
-  int32_t base_capacity = memory_pool->base_capacity;
+  int64_t page_depth = memory_pool->page_depth;
+  int64_t current_pos = memory_pool->current_pos;
+  int64_t base_capacity = memory_pool->base_capacity;
   
   // Adjust alignment
-  int32_t aligned_byte_size = (byte_size - 1) + (8 - ((byte_size - 1) % sperl->alignment));
+  int64_t aligned_byte_size = (byte_size - 1) + (8 - ((byte_size - 1) % sperl->alignment));
   
   // Calculate capacity
-  int32_t current_capacity = base_capacity * pow(2, page_depth - 1);
+  int64_t current_capacity = base_capacity * pow(2, page_depth - 1);
 
   // Create next memory page
   uint8_t* data_ptr;
@@ -42,7 +42,7 @@ void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int3
     page_depth++;
     current_pos = 0;
     
-    int32_t new_capacity = current_capacity * 2;
+    int64_t new_capacity = current_capacity * 2;
     SPerl_MEMORY_POOL_PAGE* new_page = (SPerl_MEMORY_POOL_PAGE*)SPerl_MEMORY_POOL_PAGE_new(sperl);
     new_page->data = (uint8_t*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(new_capacity, sizeof(uint8_t));
     

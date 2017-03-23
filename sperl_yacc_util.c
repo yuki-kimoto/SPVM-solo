@@ -15,17 +15,17 @@
 
 void SPerl_yyerror_format(SPerl* sperl, const char* message_template, ...) {
   
-  int32_t message_length = 0;
+  int64_t message_length = 0;
   
   // Prefix
   const char* prefix = "Error:";
-  int32_t prefix_length = strlen(prefix);
+  int64_t prefix_length = strlen(prefix);
    
   // Message template
-  int32_t message_template_length = strlen(message_template);
+  int64_t message_template_length = strlen(message_template);
   
   // Messsage template with prefix
-  int32_t message_template_with_prefix_length = prefix_length + message_template_length;
+  int64_t message_template_with_prefix_length = prefix_length + message_template_length;
   char* message_template_with_prefix = SPerl_ALLOCATOR_PARSER_new_string(sperl, sperl->parser, message_template_with_prefix_length);
   strncpy(message_template_with_prefix, prefix, prefix_length);
   strncpy(message_template_with_prefix + prefix_length, message_template, message_template_length);

@@ -16,7 +16,7 @@ struct SPerl_type_part {
     SPerl_OP* op_name;
     const char* char_name;
   } uv;
-  int32_t code;
+  int64_t code;
 };
 
 SPerl_TYPE_PART* SPerl_TYPE_PART_new(SPerl* sperl);

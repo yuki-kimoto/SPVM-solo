@@ -14,8 +14,8 @@ struct SPerl_name_info {
   SPerl_OP* op_var;
   SPerl_OP* op_name;
   const char* resolved_name;
-  int32_t code;
-  int32_t constant_pool_address;
+  int64_t code;
+  int64_t constant_pool_address;
 };
 
 SPerl_NAME_INFO* SPerl_NAME_INFO_new(SPerl* sperl);

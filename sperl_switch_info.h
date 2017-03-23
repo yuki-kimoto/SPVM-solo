@@ -11,9 +11,9 @@ enum {
 // Parser information
 struct SPerl_switch_info {
   SPerl_ARRAY* op_cases;
-  int32_t code;
-  int32_t max;
-  int32_t min;
+  int64_t code;
+  int64_t max;
+  int64_t min;
 };
 
 SPerl_SWITCH_INFO* SPerl_SWITCH_INFO_new(SPerl* sperl);
