@@ -333,10 +333,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               }
               case SPerl_OP_C_CODE_CASE: {
                 
-                int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-                *address_ptr = bytecode_array->length;
+                int64_t address = bytecode_array->length;
                 
-                SPerl_ARRAY_push_address(sperl, cur_case_addresses, address_ptr);
+                SPerl_ARRAY_push_address(sperl, cur_case_addresses, address);
                 SPerl_ARRAY_push_address(sperl, cur_op_cases, op_cur);
                 
                 break;
@@ -380,8 +379,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_OP* op_constant = op_case->first;
                     if (op_constant->uv.constant->uv.long_value - min == i) {
                       // Case
-                      int64_t* case_address_ptr = SPerl_ARRAY_fetch_address(sperl, cur_case_addresses, case_pos);
-                      int64_t case_offset = *case_address_ptr - cur_switch_address;
+                      int64_t case_address = SPerl_ARRAY_fetch_long(sperl, cur_case_addresses, case_pos);
+                      int64_t case_offset = case_address - cur_switch_address;
                       
                       *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) * 3 + 1 + (sizeof(int64_t) * i)] = case_offset;
                       
@@ -453,8 +452,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_OP* op_constant = op_case->first;
                     int64_t match = op_constant->uv.constant->uv.long_value;
 
-                    int64_t* case_address_ptr = SPerl_ARRAY_fetch_address(sperl, ordered_case_addresses, i);
-                    int64_t case_offset = *case_address_ptr - cur_switch_address;
+                    int64_t case_address = SPerl_ARRAY_fetch_long(sperl, ordered_case_addresses, i);
+                    int64_t case_offset = case_address - cur_switch_address;
                     
                     // Match
                     *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) * 2 + 1 + (sizeof(int64_t) * 2 * i)] = match;
