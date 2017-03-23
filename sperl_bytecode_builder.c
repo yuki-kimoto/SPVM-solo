@@ -554,9 +554,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 // Add goto
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
                 
-                int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-                *address_ptr = bytecode_array->length - 1;
-                SPerl_ARRAY_push_address(sperl, goto_last_address_stack, address_ptr);
+                int64_t address = bytecode_array->length - 1;
+                SPerl_ARRAY_push_long(sperl, goto_last_address_stack, address);
                 
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                 SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
@@ -636,21 +635,15 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_LOOP: {
                 
                 // Set last position
-                int64_t* goto_last_address_ptr;
-                while (1) {
-                  goto_last_address_ptr = NULL;
-                  if (goto_last_address_stack->length > 0) {
-                    goto_last_address_ptr = SPerl_ARRAY_pop_address(sperl, goto_last_address_stack);
-                  }
-                  if (!goto_last_address_ptr) {
-                    break;
-                  }
+                while (goto_last_address_stack->length > 0) {
+                  
+                  int64_t goto_last_address = SPerl_ARRAY_pop_long(sperl, goto_last_address_stack);
                   
                   // Last offset
-                  int64_t goto_last_offset = bytecode_array->length - *goto_last_address_ptr;
+                  int64_t goto_last_offset = bytecode_array->length - goto_last_address;
                   
-                  bytecode_array->values[*goto_last_address_ptr + 1] = (goto_last_offset >> 8) & 0xFF;
-                  bytecode_array->values[*goto_last_address_ptr + 2] = goto_last_offset & 0xFF;
+                  bytecode_array->values[goto_last_address + 1] = (goto_last_offset >> 8) & 0xFF;
+                  bytecode_array->values[goto_last_address + 2] = goto_last_offset & 0xFF;
                 }
                 
                 break;
