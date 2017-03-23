@@ -557,28 +557,28 @@ void SPerl_OP_check(SPerl* sperl) {
     SPerl_ARRAY* op_fields = package->op_fields;
     
     // Alignment is max size of field
-    int32_t alignment = 0;
+    int64_t alignment = 0;
     for (int64_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch_address(sperl, op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
       
       // Alignment
-      int32_t field_byte_size = SPerl_FIELD_get_byte_size(sperl, field);
+      int64_t field_byte_size = SPerl_FIELD_get_byte_size(sperl, field);
       if (field_byte_size > alignment) {
         alignment = field_byte_size;
       }
     }
     
     // Calculate package byte size
-    int32_t package_byte_size = 0;
+    int64_t package_byte_size = 0;
     for (int64_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPerl_OP* op_field = SPerl_ARRAY_fetch_address(sperl, op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
       
       // Current byte size
       
-      int32_t field_byte_size = SPerl_FIELD_get_byte_size(sperl, field);
-      int32_t next_alignment_base;
+      int64_t field_byte_size = SPerl_FIELD_get_byte_size(sperl, field);
+      int64_t next_alignment_base;
       if (package_byte_size % alignment == 0) {
         next_alignment_base = package_byte_size  + alignment;
       }
@@ -587,7 +587,7 @@ void SPerl_OP_check(SPerl* sperl) {
       }
       
       if (package_byte_size + field_byte_size > next_alignment_base) {
-        int32_t padding = alignment - (package_byte_size % alignment);
+        int64_t padding = alignment - (package_byte_size % alignment);
         package_byte_size += padding;
       }
       field->package_byte_offset = package_byte_size;
@@ -712,7 +712,7 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
 }
 
 const char* SPerl_OP_create_abs_name(SPerl* sperl, const char* package_name, const char* name) {
-  int32_t length = strlen(package_name) + 2 + strlen(name);
+  int64_t length = strlen(package_name) + 2 + strlen(name);
   
   char* abs_name = SPerl_ALLOCATOR_PARSER_new_string(sperl, sperl->parser, length);
   
@@ -1220,7 +1220,7 @@ SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* o
   return op_type_array;
 }
 
-SPerl_OP* SPerl_OP_append_elem(SPerl* sperl, SPerl_OP *first, SPerl_OP *last, const char* file, uint32_t line) {
+SPerl_OP* SPerl_OP_append_elem(SPerl* sperl, SPerl_OP *first, SPerl_OP *last, const char* file, int64_t line) {
   if (!first) {
     return last;
   }
@@ -1242,7 +1242,7 @@ SPerl_OP* SPerl_OP_append_elem(SPerl* sperl, SPerl_OP *first, SPerl_OP *last, co
   }
 }
 
-SPerl_OP* SPerl_OP_newOP_LIST(SPerl* sperl, const char* file, uint32_t line) {
+SPerl_OP* SPerl_OP_newOP_LIST(SPerl* sperl, const char* file, int64_t line) {
   
   SPerl_OP* op_pushmark = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_PUSHMARK, file, line);
   
@@ -1253,7 +1253,7 @@ SPerl_OP* SPerl_OP_newOP_LIST(SPerl* sperl, const char* file, uint32_t line) {
 }
 
 
-SPerl_OP* SPerl_OP_newOP(SPerl* sperl, int32_t code, const char* file, uint32_t line) {
+SPerl_OP* SPerl_OP_newOP(SPerl* sperl, int64_t code, const char* file, int64_t line) {
 
   SPerl_OP *op = SPerl_MEMORY_POOL_alloc(sperl, sperl->parser->memory_pool, sizeof(SPerl_OP));
   
@@ -1270,7 +1270,7 @@ SPerl_OP* SPerl_OP_newOP(SPerl* sperl, int32_t code, const char* file, uint32_t 
   return op;
 }
 
-SPerl_OP* SPerl_OP_sibling_splice(SPerl* sperl, SPerl_OP* parent, SPerl_OP* start, int32_t del_count, SPerl_OP* insert) {
+SPerl_OP* SPerl_OP_sibling_splice(SPerl* sperl, SPerl_OP* parent, SPerl_OP* start, int64_t del_count, SPerl_OP* insert) {
   SPerl_OP *first;
   SPerl_OP *rest;
   SPerl_OP *last_del = NULL;
