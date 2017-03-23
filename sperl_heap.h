@@ -3,7 +3,7 @@
 
 #include "sperl_base.h"
 
-void* SPerl_HEAP_alloc(SPerl* sperl, int32_t size);
+void* SPerl_HEAP_alloc(SPerl* sperl, int64_t size);
 
 #endif
 
