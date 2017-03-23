@@ -235,10 +235,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 int64_t pop_count = goto_exception_handler_stack->length;
                 for (int64_t i = 0; i < pop_count; i++) {
-                  int64_t* address_ptr = NULL;
-                  if (goto_exception_handler_stack->length > 0) {
-                    address_ptr = SPerl_ARRAY_pop_address(sperl, goto_exception_handler_stack);
-                  }
+                  assert(goto_exception_handler_stack->length > 0);
+                  
+                  int64_t* address_ptr = SPerl_ARRAY_pop_address(sperl, goto_exception_handler_stack);
                   
                   assert(address_ptr);
                   
