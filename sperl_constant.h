@@ -26,8 +26,8 @@ struct SPerl_constant {
     double double_value;
     const char* string_value;
   } uv;
-  int32_t code;
-  int32_t constant_pool_address;
+  int64_t code;
+  int64_t constant_pool_address;
   _Bool is_undef;
 };
 
