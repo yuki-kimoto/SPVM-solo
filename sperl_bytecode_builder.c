@@ -100,23 +100,23 @@ void SPerl_BYTECODE_BUILDER_push_load_bytecode(SPerl* sperl, SPerl_BYTECODE_ARRA
   
   SPerl_VAR* var = op_var->uv.var;
 
-  int64_t my_var_pos = var->op_my_var->uv.my_var->address;
+  int64_t my_var_address = var->op_my_var->uv.my_var->address;
 
-  if (my_var_pos > 0xFF) {
+  if (my_var_address > 0xFF) {
     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_WIDE);
   }
   
   _Bool has_operand = 0;
-  if (my_var_pos == 0) {
+  if (my_var_address == 0) {
     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_LOAD_0);
   }
-  else if (my_var_pos == 1) {
+  else if (my_var_address == 1) {
     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_LOAD_1);
   }
-  else if (my_var_pos == 2) {
+  else if (my_var_address == 2) {
     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_LOAD_2);
   }
-  else if (my_var_pos == 3) {
+  else if (my_var_address == 3) {
     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_LOAD_3);
   }
   else {
@@ -125,12 +125,12 @@ void SPerl_BYTECODE_BUILDER_push_load_bytecode(SPerl* sperl, SPerl_BYTECODE_ARRA
   }
   
   if (has_operand) {
-    if (my_var_pos > 0xFF) {
-      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, (my_var_pos >> 8) & 0xFF);
-      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, my_var_pos);
+    if (my_var_address > 0xFF) {
+      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, (my_var_address >> 8) & 0xFF);
+      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, my_var_address);
     }
     else {
-      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, my_var_pos);
+      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, my_var_address);
     }
   }
 }
@@ -1133,24 +1133,24 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 if (op_cur->first->code == SPerl_OP_C_CODE_VAR) {
                   SPerl_OP* op_var = op_cur->first;
-                  int64_t my_var_pos = op_var->uv.var->op_my_var->uv.my_var->address;
+                  int64_t my_var_address = op_var->uv.var->op_my_var->uv.my_var->address;
                   
-                  if (my_var_pos > 0xFF) {
+                  if (my_var_address > 0xFF) {
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_WIDE);
                   }
                   
                   _Bool has_operand = 0;
-                  if (my_var_pos == 0) {
+                  if (my_var_address == 0) {
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_0);
                   
                   }
-                  else if (my_var_pos == 1) {
+                  else if (my_var_address == 1) {
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_1);
                   }
-                  else if (my_var_pos == 2) {
+                  else if (my_var_address == 2) {
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_2);
                   }
-                  else if (my_var_pos == 3) {
+                  else if (my_var_address == 3) {
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_3);
                   }
                   else {
@@ -1159,12 +1159,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   
                   if (has_operand) {
-                    if (my_var_pos > 0xFF) {
-                      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, (my_var_pos >> 8) & 0xFF);
-                      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, my_var_pos);
+                    if (my_var_address > 0xFF) {
+                      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, (my_var_address >> 8) & 0xFF);
+                      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, my_var_address);
                     }
                     else {
-                      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, my_var_pos);
+                      SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, my_var_address);
                     }
                   }
                 }
