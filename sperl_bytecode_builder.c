@@ -588,20 +588,17 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                   }
 
+                  assert(if_address_stack->length > 0);
+
                   // Set if jump address
-                  int64_t* address_ptr = NULL;
-                  if (if_address_stack->length > 0) {
-                    address_ptr = SPerl_ARRAY_pop_address(sperl, if_address_stack);
-                  }
-                  
-                  assert(address_ptr);
+                  int64_t address = SPerl_ARRAY_pop_long(sperl, if_address_stack);
                   
                   // Jump offset
-                  int64_t jump_offset = bytecode_array->length - *address_ptr;
+                  int64_t jump_offset = bytecode_array->length - address;
                   
                   // Set jump offset
-                  bytecode_array->values[*address_ptr + 1] = (jump_offset >> 8) & 0xFF;
-                  bytecode_array->values[*address_ptr + 2] = jump_offset & 0xFF;
+                  bytecode_array->values[address + 1] = (jump_offset >> 8) & 0xFF;
+                  bytecode_array->values[address + 2] = jump_offset & 0xFF;
                 }
                 else if (op_cur->flag & SPerl_OP_C_FLAG_BLOCK_ELSE) {
                   
@@ -879,11 +876,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                 }
                 
-                int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, sperl->parser);
-                *address_ptr = bytecode_array->length - 1;
+                int64_t address = bytecode_array->length - 1;
                 
                 if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_IF) {
-                  SPerl_ARRAY_push_address(sperl, if_address_stack, address_ptr);
+                  SPerl_ARRAY_push_long(sperl, if_address_stack, address);
+                  
                   // Prepare for bytecode position of branch
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
                   SPerl_BYTECODE_ARRAY_push_address(sperl, bytecode_array, 0);
