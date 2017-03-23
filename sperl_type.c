@@ -21,7 +21,7 @@ const char* const SPerl_TYPE_C_CODE_NAMES[] = {
 };
 
 // Resolve type and index type
-_Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_length) {
+_Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int64_t name_length) {
   
   SPerl_PARSER* parser = sperl->parser;
   
@@ -92,7 +92,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
     }
     else {
       SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-      resolved_type->id = (int32_t) parser->resolved_types->length;
+      resolved_type->id = parser->resolved_types->length;
       resolved_type->name = resolved_type_name;
       SPerl_ARRAY_push_address(sperl, parser->resolved_types, resolved_type);
       SPerl_HASH_insert_address(sperl, parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);

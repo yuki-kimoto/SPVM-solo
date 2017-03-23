@@ -28,7 +28,7 @@
 #include "sperl_bytecode_array.h"
 
 void SPerl_DUMPER_dump_ast(SPerl* sperl, SPerl_OP* op_base) {
-  int32_t depth = 0;
+  int64_t depth = 0;
   
   // Run OPs
   SPerl_OP* op_cur = op_base;
@@ -36,10 +36,10 @@ void SPerl_DUMPER_dump_ast(SPerl* sperl, SPerl_OP* op_base) {
   while (op_cur) {
     // [START]Preorder traversal position
     
-    for (int32_t i = 0; i < depth; i++) {
+    for (int64_t i = 0; i < depth; i++) {
       printf(" ");
     }
-    int32_t code = op_cur->code;
+    int64_t code = op_cur->code;
     printf("%s", SPerl_OP_C_CODE_NAMES[code]);
     if (op_cur->code == SPerl_OP_C_CODE_CONSTANT) {
       SPerl_CONSTANT* constant = op_cur->uv.constant;
@@ -190,12 +190,12 @@ void SPerl_DUMPER_dump_constant_pool(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   }
 }
 
-void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecode_array, int32_t start_pos, int32_t length) {
+void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecode_array, int64_t start_pos, int64_t length) {
   (void)sperl;
   
-  int32_t end_pos = start_pos + length - 1;
+  int64_t end_pos = start_pos + length - 1;
   
-  for (int32_t i = start_pos; i <= end_pos; i++) {
+  for (int64_t i = start_pos; i <= end_pos; i++) {
     
     uint8_t bytecode = bytecode_array->values[i];
     printf("        [%" PRId32 "] %s\n", i, SPerl_BYTECODE_C_CODE_NAMES[bytecode]);
