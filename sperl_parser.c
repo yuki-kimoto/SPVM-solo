@@ -51,7 +51,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   parser->cur_line = 0;
   
   // Core types
-  for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
+  for (int64_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name
     const char* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
@@ -68,7 +68,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   }
   
   // Core array types
-  for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
+  for (int64_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name
     const char* name = SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[i];
     const char* core_name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
@@ -93,7 +93,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   return parser;
 }
 
-int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
+int64_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   
   SPerl_PARSER* parser = sperl->parser;
 
@@ -124,7 +124,7 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
 
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;
-  int32_t parse_success = SPerl_yyparse(sperl);
+  int64_t parse_success = SPerl_yyparse(sperl);
   
   return parse_success;
 }
