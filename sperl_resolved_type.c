@@ -44,7 +44,7 @@ int64_t SPerl_RESOLVED_TYPE_get_array_dimention(SPerl* sperl, SPerl_RESOLVED_TYP
     const char* resolved_type_name = resolved_type->name;
     const char* sub_end_ptr = strrchr(resolved_type_name, ')');
     
-    char* start_ptr = NULL;
+    const char* start_ptr = NULL;
     
     // Sub type
     if (sub_end_ptr == NULL) {

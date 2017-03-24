@@ -60,6 +60,7 @@ struct sperl_ {
 };
 
 SPerl* SPerl_new();
+void SPerl_run(SPerl* sperl, const char* package_name);
 void SPerl_free(SPerl* sperl);
 
 #endif
