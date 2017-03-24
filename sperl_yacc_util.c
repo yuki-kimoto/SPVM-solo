@@ -94,14 +94,12 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
       }
       ptr++;
     }
-    if (length >= SIZE_MAX) {
-      SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
-    }
+    
     char* token = (char*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(length + 1, sizeof(char));
     memcpy(token, parser->befbufptr + empty_count, length);
     token[length] = '\0';
-
-    fprintf(stderr, "Error: unexpected token \"%s\" at %s line %d\n", token, parser->cur_module_path, parser->cur_line);
+    
+    fprintf(stderr, "Error: unexpected token \"%s\" at %s line %" PRId64 "\n", token, parser->cur_module_path, parser->cur_line);
     free(token);
   }
 }
