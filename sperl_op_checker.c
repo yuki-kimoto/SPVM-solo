@@ -47,12 +47,17 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     SPerl_CONSTANT_POOL* constant_pool = sperl->constant_pool;
     
     // Push package name to constant pool
+    const char* package_name = package->op_name->uv.name;
     package->name_constant_pool_address = constant_pool->length;
-    SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, package->op_name->uv.name);
+    SPerl_CONSTANT_POOL_push_string(sperl, constant_pool, package_name);
     
     // Push package information to constant pool
     package->constant_pool_address = constant_pool->length;
     SPerl_CONSTANT_POOL_push_package(sperl, constant_pool, package);
+    
+    // Add constant pool sub to symbol table
+    const char* constant_pool_package_name = &sperl->constant_pool->values[package->name_constant_pool_address + 1];
+    SPerl_HASH_insert_long(sperl, sperl->constant_pool_package_symtable, constant_pool_package_name, strlen(constant_pool_package_name), package->constant_pool_address);
     
     // Push field information to constant pool
     for (int64_t field_pos = 0; field_pos < package->op_fields->length; field_pos++) {
