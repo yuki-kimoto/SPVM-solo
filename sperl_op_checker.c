@@ -1336,6 +1336,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       // Push sub information to constant pool
       sub->constant_pool_address = sperl->constant_pool->length;
       SPerl_CONSTANT_POOL_push_sub(sperl, sperl->constant_pool, sub);
+      
+      // Add constant pool sub to symbol table
+      const char* constant_pool_sub_name = &sperl->constant_pool->values[sub->abs_name_constant_pool_address + 1];
+      SPerl_HASH_insert_long(sperl, sperl->constant_pool_sub_symtable, constant_pool_sub_name, strlen(constant_pool_sub_name), sub->constant_pool_address);
     }
   }
 }
