@@ -71,6 +71,10 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       // Add field to constant pool
       field->constant_pool_address = sperl->constant_pool->length;
       SPerl_CONSTANT_POOL_push_field(sperl, sperl->constant_pool, field);
+      
+      // Add constant pool field to symbol table
+      const char* constant_pool_field_name = &sperl->constant_pool->values[field->abs_name_constant_pool_address + 1];
+      SPerl_HASH_insert_long(sperl, sperl->constant_pool_field_symtable, constant_pool_field_name, strlen(constant_pool_field_name), field->constant_pool_address);
     }
     
     for (int64_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
