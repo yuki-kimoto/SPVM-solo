@@ -84,6 +84,16 @@ void SPerl_ARRAY_push_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array, %TYPE% value) {
   return *(%TYPE%*)&array->values[index];
 }
 
+void SPerl_ARRAY_store_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array, int64_t index, %TYPE% value) {
+  (void)sperl;
+  
+  assert(array);
+  assert(index >= 0);
+  assert(index < array->length);
+  
+  *(%TYPE%*)&array->values[index] = value;
+}
+
 %TYPE% SPerl_ARRAY_pop_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
@@ -119,6 +129,16 @@ void* SPerl_ARRAY_fetch_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index)
   return *(void**)&array->values[index];
 }
 
+void SPerl_ARRAY_store_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index, void* value) {
+  (void)sperl;
+  
+  assert(array);
+  assert(index >= 0);
+  assert(index < array->length);
+  
+  *(void**)&array->values[index] = value;
+}
+
 void* SPerl_ARRAY_pop_address(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
@@ -149,6 +169,16 @@ int64_t SPerl_ARRAY_fetch_long(SPerl* sperl, SPerl_ARRAY* array, int64_t index) 
   assert(index < array->length);
   
   return *(int64_t*)&array->values[index];
+}
+
+void SPerl_ARRAY_store_long(SPerl* sperl, SPerl_ARRAY* array, int64_t index, int64_t value) {
+  (void)sperl;
+  
+  assert(array);
+  assert(index >= 0);
+  assert(index < array->length);
+  
+  *(int64_t*)&array->values[index] = value;
 }
 
 int64_t SPerl_ARRAY_pop_long(SPerl* sperl, SPerl_ARRAY* array) {

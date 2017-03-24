@@ -438,11 +438,11 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
 
                       
                       if (match_i > match_j) {
-                        ordered_op_cases->values[i] = op_case_j;
-                        ordered_op_cases->values[j] = op_case_i;
+                        SPerl_ARRAY_store_address(sperl, ordered_op_cases, i, op_case_j);
+                        SPerl_ARRAY_store_address(sperl, ordered_op_cases, j, op_case_i);
                         
-                        ordered_case_addresses->values[i] = case_address_j;
-                        ordered_case_addresses->values[j] = case_address_i;
+                        SPerl_ARRAY_store_address(sperl, ordered_case_addresses, i, case_address_j);
+                        SPerl_ARRAY_store_address(sperl, ordered_case_addresses, j, case_address_i);
                       }
                     }
                   }
