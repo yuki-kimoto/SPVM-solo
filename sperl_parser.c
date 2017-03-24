@@ -59,7 +59,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-    SPerl_ARRAY_push_address(sperl, resolved_type->part_names, name);
+    SPerl_ARRAY_push_address(sperl, resolved_type->part_names, (void*)name);
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
@@ -79,7 +79,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-    SPerl_ARRAY_push_address(sperl, resolved_type->part_names, core_name);
+    SPerl_ARRAY_push_address(sperl, resolved_type->part_names, (void*)core_name);
     SPerl_ARRAY_push_address(sperl, resolved_type->part_names, "[");
     SPerl_ARRAY_push_address(sperl, resolved_type->part_names, "]");
     
