@@ -261,12 +261,12 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
   register uint8_t* pc = NULL;
   
   // Top position of operand stack
-  register int32_t operand_stack_top = sperl->operand_stack_top;
+  register int64_t operand_stack_top = sperl->operand_stack_top;
   
-  register int32_t success;
+  register _Bool success;
   
-  int32_t call_stack_base = sperl->call_stack_base;
-  int32_t call_stack_base_start = call_stack_base;
+  int64_t call_stack_base = sperl->call_stack_base;
+  int64_t call_stack_base_start = call_stack_base;
   
   // Goto subroutine
   goto CALLSUB_COMMON;
