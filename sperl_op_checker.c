@@ -56,7 +56,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     SPerl_CONSTANT_POOL_push_package(sperl, constant_pool, package);
     
     // Add constant pool sub to symbol table
-    const char* constant_pool_package_name = &sperl->constant_pool->values[package->name_constant_pool_address + 1];
+    const char* constant_pool_package_name = (char*)&sperl->constant_pool->values[package->name_constant_pool_address + 1];
     SPerl_HASH_insert_long(sperl, sperl->constant_pool_package_symtable, constant_pool_package_name, strlen(constant_pool_package_name), package->constant_pool_address);
     
     // Push field information to constant pool
@@ -73,7 +73,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       SPerl_CONSTANT_POOL_push_field(sperl, sperl->constant_pool, field);
       
       // Add constant pool field to symbol table
-      const char* constant_pool_field_name = &sperl->constant_pool->values[field->abs_name_constant_pool_address + 1];
+      const char* constant_pool_field_name = (char*)&sperl->constant_pool->values[field->abs_name_constant_pool_address + 1];
       SPerl_HASH_insert_long(sperl, sperl->constant_pool_field_symtable, constant_pool_field_name, strlen(constant_pool_field_name), field->constant_pool_address);
     }
     
@@ -1338,7 +1338,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       SPerl_CONSTANT_POOL_push_sub(sperl, sperl->constant_pool, sub);
       
       // Add constant pool sub to symbol table
-      const char* constant_pool_sub_name = &sperl->constant_pool->values[sub->abs_name_constant_pool_address + 1];
+      const char* constant_pool_sub_name = (char*)&sperl->constant_pool->values[sub->abs_name_constant_pool_address + 1];
       SPerl_HASH_insert_long(sperl, sperl->constant_pool_sub_symtable, constant_pool_sub_name, strlen(constant_pool_sub_name), sub->constant_pool_address);
     }
   }
