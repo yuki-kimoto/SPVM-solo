@@ -8,6 +8,8 @@ Do you need a **fast Perl**? Static Perl is a fast calculation system of Perl.
 - **VM** - Byte codes are generated so that you can run them on Static Perl VM
 - **Perlish syntax** - the syntax is very similar to that of Perl
 - **Perl module** - Static Perl will be used from Perl itself as module.
+- 64 bit array index
+- No memory limitation
 
 This is now under **developing**.
 
@@ -466,6 +468,10 @@ Use the following types in source codes. This is defined in the standard header 
     int64_t
     float
     double
+
+# Limitation
+
+- Only support 64bit Perl
 
 # SPVM specification
 
