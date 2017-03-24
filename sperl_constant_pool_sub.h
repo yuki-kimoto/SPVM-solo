@@ -6,13 +6,13 @@
 // Array
 struct SPerl_constant_pool_sub {
   void* native_address;
-  int32_t bytecode_base;
-  int32_t abs_name_constant_pool_address;
-  int32_t operand_stack_max;
-  int32_t my_vars_length;
-  int32_t args_length;
-  int8_t is_native;
-  int8_t has_return_value;
+  int64_t bytecode_base;
+  int64_t abs_name_constant_pool_address;
+  int64_t operand_stack_max;
+  int64_t my_vars_length;
+  int64_t args_length;
+  _Bool is_native;
+  _Bool has_return_value;
 };
 
 #endif

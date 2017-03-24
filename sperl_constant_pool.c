@@ -56,8 +56,6 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
 void SPerl_CONSTANT_POOL_push_package(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_PACKAGE* package) {
   (void)sperl;
   
-  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(SPerl_VALUE_T));
-  
   // Add package information
   int64_t extend_length = SPerl_CONSTANT_POOL_calculate_extend_length(sperl, constant_pool, sizeof(SPerl_CONSTANT_POOL_PACKAGE));
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
@@ -78,12 +76,12 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, extend_length);
   
   SPerl_CONSTANT_POOL_SUB* constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool->values[constant_pool->length];
-  constant_pool_sub->native_address = (uintptr_t)sub->native_address;
-  constant_pool_sub->bytecode_base = (uint32_t)sub->bytecode_base;
-  constant_pool_sub->my_vars_length = (uint16_t)sub->op_my_vars->length;
-  constant_pool_sub->operand_stack_max = (uint16_t)sub->operand_stack_max;
-  constant_pool_sub->args_length = (uint8_t)sub->op_args->length;
-  constant_pool_sub->is_native = (uint8_t)sub->is_native;
+  constant_pool_sub->native_address = sub->native_address;
+  constant_pool_sub->bytecode_base = sub->bytecode_base;
+  constant_pool_sub->my_vars_length = sub->op_my_vars->length;
+  constant_pool_sub->operand_stack_max = sub->operand_stack_max;
+  constant_pool_sub->args_length = sub->op_args->length;
+  constant_pool_sub->is_native = sub->is_native;
   constant_pool_sub->abs_name_constant_pool_address = sub->abs_name_constant_pool_address;
   if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
     constant_pool_sub->has_return_value = 1;
@@ -97,8 +95,6 @@ void SPerl_CONSTANT_POOL_push_sub(SPerl* sperl, SPerl_CONSTANT_POOL* constant_po
 
 void SPerl_CONSTANT_POOL_push_field(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, SPerl_FIELD* field) {
   (void)sperl;
-  
-  assert(sizeof(SPerl_CONSTANT_POOL_FIELD) <= sizeof(SPerl_VALUE_T));
   
   // Add field information
   int64_t extend_length = SPerl_CONSTANT_POOL_calculate_extend_length(sperl, constant_pool, sizeof(SPerl_CONSTANT_POOL_FIELD));

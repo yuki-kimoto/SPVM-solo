@@ -5,8 +5,8 @@
 
 // Array
 struct SPerl_constant_pool_field {
-  int32_t abs_name_constant_pool_address;
-  int32_t package_byte_offset;
+  int64_t abs_name_constant_pool_address;
+  int64_t package_byte_offset;
 };
 
 #endif

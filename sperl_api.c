@@ -276,14 +276,14 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
       case_SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
       {
         // Get subroutine ID
-        int32_t sub_constant_pool_address
+        int64_t sub_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
         
         CALLSUB_COMMON: {
 
           // Extend call stack(current size + 2(return address + call stack base before) + lexical variable area + operand_stack area)
-          int32_t call_stack_max = operand_stack_top + 2 + constant_pool_sub->my_vars_length + constant_pool_sub->operand_stack_max;
+          int64_t call_stack_max = operand_stack_top + 2 + constant_pool_sub->my_vars_length + constant_pool_sub->operand_stack_max;
           
           while (call_stack_max > sperl->call_stack_capacity) {
             sperl->call_stack_capacity = sperl->call_stack_capacity * 2;
@@ -1360,7 +1360,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         
         if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
           int64_t branch_offset = *(int64_t*)((pc + padding + sizeof(int64_t) * 3 + 1) + (call_stack[operand_stack_top] - min) * sizeof(int64_t));
-          pc += (int32_t)branch_offset;
+          pc += branch_offset;
         }
         else {
           pc += default_offset;
@@ -1414,7 +1414,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
             }
             else {
               int64_t branch_offset = *(int64_t*)(pc + padding + sizeof(int64_t) * 2 + 1 + (cur_half_pos * sizeof(int64_t) * 2) + sizeof(int64_t));
-              pc += (int32_t)branch_offset;
+              pc += branch_offset;
               goto *jump[*pc];
             }
           }
@@ -1427,7 +1427,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
       }
       case_SPerl_BYTECODE_C_CODE_MALLOC: {
         // Get subroutine ID
-        int32_t package_constant_pool_address
+        int64_t package_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPerl_CONSTANT_POOL_PACKAGE*)&constant_pool[package_constant_pool_address];
         
@@ -1450,7 +1450,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_MALLOCARRAY: {
-        int32_t resolved_type_id = *(pc + 1);
+        int64_t resolved_type_id = *(pc + 1);
         
         // Array length
         int64_t length = call_stack[operand_stack_top];
@@ -1538,7 +1538,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         operand_stack_top--;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_BGETFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(int8_t*)&call_stack[operand_stack_top] = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset);
@@ -1546,7 +1546,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_SGETFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(int16_t*)&call_stack[operand_stack_top] = *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset);
@@ -1554,7 +1554,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_IGETFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(int32_t*)&call_stack[operand_stack_top] = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset);
@@ -1562,7 +1562,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_LGETFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(int64_t*)&call_stack[operand_stack_top] = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset);
@@ -1570,7 +1570,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_FGETFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(float*)&call_stack[operand_stack_top] = *(float*)(*(intptr_t*)&call_stack[operand_stack_top] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset);
@@ -1578,7 +1578,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_DGETFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(double*)&call_stack[operand_stack_top] = *(double*)(*(intptr_t*)&call_stack[operand_stack_top] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset);
@@ -1586,7 +1586,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_BPUTFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset) = *(int8_t*)&call_stack[operand_stack_top];
@@ -1595,7 +1595,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_SPUTFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset) = *(int16_t*)&call_stack[operand_stack_top];
@@ -1604,7 +1604,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_IPUTFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset) = *(int32_t*)&call_stack[operand_stack_top];
@@ -1613,7 +1613,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_LPUTFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset) = *(int64_t*)&call_stack[operand_stack_top];
@@ -1622,7 +1622,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_FPUTFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset) = *(float*)&call_stack[operand_stack_top];
@@ -1631,7 +1631,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name) {
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_DPUTFIELD: {
-        int32_t field_constant_pool_address
+        int64_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset) = *(double*)&call_stack[operand_stack_top];
