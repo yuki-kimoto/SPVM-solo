@@ -8,6 +8,9 @@
 #include "sperl_parser.h"
 
 SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
+  (void)sperl;
+  
+  assert(capacity >= 0);
   
   SPerl_ARRAY* array = SPerl_ALLOCATOR_UTIL_safe_malloc(1, sizeof(SPerl_ARRAY));
   array->length = 0;
@@ -20,21 +23,21 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
   }
   
   SPerl_VALUE_T* values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(SPerl_VALUE_T));
+  
   array->values = values;
   
   return array;
 }
 
 void SPerl_ARRAY_maybe_extend(SPerl* sperl, SPerl_ARRAY* array) {
-  int64_t length = array->length;
-  assert(length >= 0);
+  (void)sperl;
   
+  assert(array);
+  
+  int64_t length = array->length;
   int64_t capacity = array->capacity;
   
   if (length >= capacity) {
-    if (capacity > SIZE_MAX / 2) {
-      SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
-    }
     int64_t new_capacity = capacity * 2;
     array->values = SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(SPerl_VALUE_T));
     array->capacity = new_capacity;
