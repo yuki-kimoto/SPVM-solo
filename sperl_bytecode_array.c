@@ -7,6 +7,7 @@
 #include "sperl_parser.h"
 
 SPerl_BYTECODE_ARRAY* SPerl_BYTECODE_ARRAY_new(SPerl* sperl) {
+  (void)sperl;
   
   SPerl_BYTECODE_ARRAY* bytecodes = SPerl_ALLOCATOR_UTIL_safe_malloc(1, sizeof(SPerl_BYTECODE_ARRAY));
   bytecodes->capacity = 64;
@@ -19,6 +20,7 @@ SPerl_BYTECODE_ARRAY* SPerl_BYTECODE_ARRAY_new(SPerl* sperl) {
 }
 
 void SPerl_BYTECODE_ARRAY_push(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecodes, uint8_t value) {
+  (void)sperl;
   
   int64_t length = bytecodes->length;
   int64_t capacity = bytecodes->capacity;

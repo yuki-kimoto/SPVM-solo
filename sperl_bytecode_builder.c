@@ -335,7 +335,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 int64_t address = bytecode_array->length;
                 
-                SPerl_ARRAY_push_address(sperl, cur_case_addresses, address);
+                SPerl_ARRAY_push_long(sperl, cur_case_addresses, address);
                 SPerl_ARRAY_push_address(sperl, cur_op_cases, op_cur);
                 
                 break;

@@ -72,9 +72,9 @@ All functions is genereted from the following templates.
 
 You can create implementations by the following Perl one liner easily.
   
-  perl -E 'my $suffix = "address"; my $type = "void*"; my $start = 0; while (my $line = <>) { if ($line =~ /^\[END_TEMPLATE\]/) { last; } if ($start) { $line =~ s/%SUFFIX%/$suffix/g; $line =~ s/%TYPE%/$type/g; print $line; }  if ($line =~ /^\[START_TEMPLATE\]/) { $start = 1 }  }' sperl_hash.c > hash_impl.tmp
+  perl -E 'my $suffix = "address"; my $type = "void*"; my $start = 0; while (my $line = <>) { if ($line =~ /^\[END_TEMPLATE\]/) { last; } if ($start) { $line =~ s/%SUFFIX%/$suffix/g; $line =~ s/%TYPE%/$type/g; print $line; }  if ($line =~ /^\[START_TEMPLATE\]/) { $start = 1 }  }' sperl_hash.c > template.tmp
   
-  perl -E 'my $suffix = "long"; my $type = "int64_t"; my $start = 0; while (my $line = <>) { if ($line =~ /^\[END_TEMPLATE\]/) { last; } if ($start) { $line =~ s/%SUFFIX%/$suffix/g; $line =~ s/%TYPE%/$type/g; print $line; }  if ($line =~ /^\[START_TEMPLATE\]/) { $start = 1 }  }' sperl_hash.c >> hash_impl.tmp
+  perl -E 'my $suffix = "long"; my $type = "int64_t"; my $start = 0; while (my $line = <>) { if ($line =~ /^\[END_TEMPLATE\]/) { last; } if ($start) { $line =~ s/%SUFFIX%/$suffix/g; $line =~ s/%TYPE%/$type/g; print $line; }  if ($line =~ /^\[START_TEMPLATE\]/) { $start = 1 }  }' sperl_hash.c >> template.tmp
 
 [START_TEMPLATE]
 // Implementation
