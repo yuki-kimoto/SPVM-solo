@@ -5,7 +5,7 @@
 
 // Hash entry
 struct SPerl_hash_entry {
-  char* key;
+  const char* key;
   SPerl_VALUE_T value;
   int64_t next_index;
 };

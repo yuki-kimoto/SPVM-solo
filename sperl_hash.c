@@ -46,7 +46,7 @@ void SPerl_HASH_maybe_extend_entries(SPerl* sperl, SPerl_HASH* hash) {
   int64_t entries_capacity = hash->entries_capacity;
   
   if (entries_length >= entries_capacity) {
-    if (entries_capacity > SIZE_MAX / 2) {
+    if (entries_capacity > INT64_MAX / 2) {
       SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
     }
     int64_t new_entries_capacity = entries_capacity * 2;
@@ -106,8 +106,6 @@ void SPerl_HASH_rehash_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, int64_t new_tabl
   
   assert(hash);
   assert(new_table_capacity > 0);
-  
-  SPerl_HASH_ENTRY** table = hash->table;
   
   // Create new hash
   SPerl_HASH* new_hash = SPerl_HASH_new(sperl, new_table_capacity);
@@ -220,7 +218,6 @@ void SPerl_HASH_insert_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const char* key,
 }
 [END_TEMPLATE]
 */
-
 // Implementation
 // SUFFIX : address
 // TYPE : void*
@@ -250,8 +247,6 @@ void SPerl_HASH_rehash_address(SPerl* sperl, SPerl_HASH* hash, int64_t new_table
   
   assert(hash);
   assert(new_table_capacity > 0);
-  
-  SPerl_HASH_ENTRY** table = hash->table;
   
   // Create new hash
   SPerl_HASH* new_hash = SPerl_HASH_new(sperl, new_table_capacity);
@@ -391,8 +386,6 @@ void SPerl_HASH_rehash_long(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_ca
   
   assert(hash);
   assert(new_table_capacity > 0);
-  
-  SPerl_HASH_ENTRY** table = hash->table;
   
   // Create new hash
   SPerl_HASH* new_hash = SPerl_HASH_new(sperl, new_table_capacity);

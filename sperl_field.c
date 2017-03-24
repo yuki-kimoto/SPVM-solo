@@ -8,10 +8,14 @@
 #include "sperl_op.h"
 
 SPerl_FIELD* SPerl_FIELD_new(SPerl* sperl) {
+  (void)sperl;
+  
   return SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_FIELD));
 }
 
 int64_t SPerl_FIELD_get_byte_size(SPerl* sperl, SPerl_FIELD* field) {
+  (void)sperl;
+  
   SPerl_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
   
   int64_t byte_size;
