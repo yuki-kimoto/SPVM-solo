@@ -11,7 +11,7 @@ struct SPerl_sub {
   SPerl_ARRAY* op_args;
   SPerl_ARRAY* op_my_vars;
   void (*native_address)(SPerl* sperl);
-  char* abs_name;
+  const char* abs_name;
   int64_t bytecode_base;
   int64_t bytecode_length;
   int64_t operand_stack_max;

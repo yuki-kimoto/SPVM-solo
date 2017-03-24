@@ -7,7 +7,7 @@
 struct SPerl_field {
   SPerl_OP* op_type;
   SPerl_OP* op_name;
-  char* abs_name;
+  const char* abs_name;
   int64_t constant_pool_address;
   int64_t abs_name_constant_pool_address;
   int64_t package_byte_offset;
