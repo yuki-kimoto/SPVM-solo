@@ -13,7 +13,11 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity);
 void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array);
 void SPerl_ARRAY_maybe_extend(SPerl* sperl, SPerl_ARRAY* array);
 
-void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, void* value);
+void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, SPerl_VALUE_T value);
+SPerl_VALUE_T SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index);
+void SPerl_ARRAY_store(SPerl* sperl, SPerl_ARRAY* array, int64_t index, SPerl_VALUE_T value);
+SPerl_VALUE_T SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array);
+
 void* SPerl_ARRAY_fetch_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index);
 void* SPerl_ARRAY_pop_address(SPerl* sperl, SPerl_ARRAY* array);
 void SPerl_ARRAY_store_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index, void* value);
@@ -22,5 +26,7 @@ void SPerl_ARRAY_push_long(SPerl* sperl, SPerl_ARRAY* array, int64_t value);
 int64_t SPerl_ARRAY_fetch_long(SPerl* sperl, SPerl_ARRAY* array, int64_t index);
 int64_t SPerl_ARRAY_pop_long(SPerl* sperl, SPerl_ARRAY* array);
 void SPerl_ARRAY_store_long(SPerl* sperl, SPerl_ARRAY* array, int64_t index, int64_t value);
+
+#define SPerl_ARRAY_push_address(sperl, array, value) SPerl_ARRAY_push(sperl, array, (void*)value)
 
 #endif

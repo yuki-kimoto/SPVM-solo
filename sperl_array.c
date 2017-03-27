@@ -51,73 +51,50 @@ void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array) {
   free(array);
 }
 
-/* Function templates
-
-This is function templates shared with array manipulate functions.
-All functions is genereted from the following templates.
-
-  perl -E 'my $suffix = "address"; my $type = "void*"; my $start = 0; while (my $line = <>) { if ($line =~ /^\[END_TEMPLATE\]/) { last; } if ($start) { $line =~ s/%SUFFIX%/$suffix/g; $line =~ s/%TYPE%/$type/g; print $line; }  if ($line =~ /^\[START_TEMPLATE\]/) { $start = 1 }  }' sperl_array.c > template.tmp
-  
-  perl -E 'my $suffix = "long"; my $type = "int64_t"; my $start = 0; while (my $line = <>) { if ($line =~ /^\[END_TEMPLATE\]/) { last; } if ($start) { $line =~ s/%SUFFIX%/$suffix/g; $line =~ s/%TYPE%/$type/g; print $line; }  if ($line =~ /^\[START_TEMPLATE\]/) { $start = 1 }  }' sperl_array.c >> template.tmp
-
-[START_TEMPLATE]
-// Implementation
-// SUFFIX : %SUFFIX%
-// TYPE : %TYPE%
-void SPerl_ARRAY_push_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array, %TYPE% value) {
+void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, SPerl_VALUE_T value) {
   
   SPerl_ARRAY_maybe_extend(sperl, array);
   
   int64_t length = array->length;
   
-  *(%TYPE%*)&array->values[length] = value;
+  *(SPerl_VALUE_T*)&array->values[length] = value;
   array->length++;
 }
 
-%TYPE% SPerl_ARRAY_fetch_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
+SPerl_VALUE_T SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   (void)sperl;
   
   assert(array);
   assert(index >= 0);
   assert(index < array->length);
   
-  return *(%TYPE%*)&array->values[index];
+  return *(SPerl_VALUE_T*)&array->values[index];
 }
 
-void SPerl_ARRAY_store_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array, int64_t index, %TYPE% value) {
+void SPerl_ARRAY_store(SPerl* sperl, SPerl_ARRAY* array, int64_t index, SPerl_VALUE_T value) {
   (void)sperl;
   
   assert(array);
   assert(index >= 0);
   assert(index < array->length);
   
-  *(%TYPE%*)&array->values[index] = value;
+  *(SPerl_VALUE_T*)&array->values[index] = value;
 }
 
-%TYPE% SPerl_ARRAY_pop_%SUFFIX%(SPerl* sperl, SPerl_ARRAY* array) {
+SPerl_VALUE_T SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
   assert(array->length > 0);
   
   array->length--;
   
-  return *(%TYPE%*)&array->values[array->length];
+  return *(SPerl_VALUE_T*)&array->values[array->length];
 }
-[END_TEMPLATE]
-*/
+
 
 // Implementation
 // SUFFIX : address
 // TYPE : void*
-void SPerl_ARRAY_push_address(SPerl* sperl, SPerl_ARRAY* array, void* value) {
-  
-  SPerl_ARRAY_maybe_extend(sperl, array);
-  
-  int64_t length = array->length;
-  
-  *(void**)&array->values[length] = value;
-  array->length++;
-}
 
 void* SPerl_ARRAY_fetch_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   (void)sperl;
