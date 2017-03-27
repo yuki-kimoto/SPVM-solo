@@ -65,22 +65,7 @@ void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash) {
   free(hash);
 }
 
-/* Function templates
-
-This is function templates shared with hash manipulate functions.
-All functions is genereted from the following templates.
-
-You can create implementations by the following Perl one liner easily.
-  
-  perl -E 'my $suffix = "address"; my $type = "void*"; my $start = 0; while (my $line = <>) { if ($line =~ /^\[END_TEMPLATE\]/) { last; } if ($start) { $line =~ s/%SUFFIX%/$suffix/g; $line =~ s/%TYPE%/$type/g; print $line; }  if ($line =~ /^\[START_TEMPLATE\]/) { $start = 1 }  }' sperl_hash.c > template.tmp
-  
-  perl -E 'my $suffix = "long"; my $type = "int64_t"; my $start = 0; while (my $line = <>) { if ($line =~ /^\[END_TEMPLATE\]/) { last; } if ($start) { $line =~ s/%SUFFIX%/$suffix/g; $line =~ s/%TYPE%/$type/g; print $line; }  if ($line =~ /^\[START_TEMPLATE\]/) { $start = 1 }  }' sperl_hash.c >> template.tmp
-
-[START_TEMPLATE]
-// Implementation
-// SUFFIX : %SUFFIX%
-// TYPE : %TYPE%
-int64_t SPerl_HASH_new_hash_entry_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const char* key, %TYPE% value) {
+int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* key, SPerl_VALUE_T value) {
   (void)sperl;
   
   assert(hash);
@@ -93,7 +78,7 @@ int64_t SPerl_HASH_new_hash_entry_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const
   SPerl_HASH_ENTRY* hash_entry = &hash->entries[index];
   
   hash_entry->key = key;
-  *(%TYPE%*)&hash_entry->value = value;
+  *(SPerl_VALUE_T*)&hash_entry->value = value;
   hash_entry->next_index = -1;
   
   hash->entries_length++;
@@ -101,7 +86,7 @@ int64_t SPerl_HASH_new_hash_entry_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const
   return index;
 }
 
-void SPerl_HASH_rehash_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacity) {
+void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacity) {
   (void)sperl;
   
   assert(hash);
@@ -119,9 +104,9 @@ void SPerl_HASH_rehash_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, int64_t new_tabl
     
     assert(key);
     
-    const %TYPE% value = *(%TYPE%*)&entry->value;
+    const SPerl_VALUE_T value = *(SPerl_VALUE_T*)&entry->value;
     
-    SPerl_HASH_insert_norehash_%SUFFIX%(sperl, new_hash, key, strlen(key), value);
+    SPerl_HASH_insert_norehash(sperl, new_hash, key, strlen(key), value);
   }
   
   // Replace hash fields
@@ -134,7 +119,7 @@ void SPerl_HASH_rehash_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, int64_t new_tabl
   hash->entries = new_hash->entries;
 }
 
-void SPerl_HASH_insert_norehash_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, %TYPE% value) {
+void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, SPerl_VALUE_T value) {
   (void)sperl;
   
   assert(hash);
@@ -148,7 +133,7 @@ void SPerl_HASH_insert_norehash_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const c
     SPerl_HASH_ENTRY* next_entry = hash->table[index];
     while (1) {
       if (strncmp(next_entry->key, key, length) == 0) {
-        *(%TYPE%*)&next_entry->value = value;
+        *(SPerl_VALUE_T*)&next_entry->value = value;
         break;
       }
       else {
@@ -156,7 +141,7 @@ void SPerl_HASH_insert_norehash_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const c
           next_entry = &hash->entries[next_entry->next_index];
         }
         else {
-          int64_t new_entry_index = SPerl_HASH_new_hash_entry_%SUFFIX%(sperl, hash, key, value);
+          int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
           next_entry->next_index = new_entry_index;
           break;
         }
@@ -164,12 +149,12 @@ void SPerl_HASH_insert_norehash_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const c
     }
   }
   else {
-    int64_t new_entry_index = SPerl_HASH_new_hash_entry_%SUFFIX%(sperl, hash, key, value);
+    int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
     hash->table[index] = &hash->entries[new_entry_index];
   }
 }
 
-void SPerl_HASH_insert_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, %TYPE% value) {
+void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, SPerl_VALUE_T value) {
   (void)sperl;
   
   assert(hash);
@@ -180,13 +165,13 @@ void SPerl_HASH_insert_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const char* key,
   if (hash->entries_length > hash->table_capacity * 0.75) {
     int64_t new_table_capacity = (hash->table_capacity * 2) + 1;
     
-    SPerl_HASH_rehash_%SUFFIX%(sperl, hash, new_table_capacity);
+    SPerl_HASH_rehash(sperl, hash, new_table_capacity);
   }
   
-  SPerl_HASH_insert_norehash_%SUFFIX%(sperl, hash, key, length, value);
+  SPerl_HASH_insert_norehash(sperl, hash, key, length, value);
 }
 
-%TYPE% SPerl_HASH_search_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length) {
+SPerl_VALUE_T SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length) {
   (void)sperl;
   
   assert(hash);
@@ -200,7 +185,7 @@ void SPerl_HASH_insert_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const char* key,
   while (1) {
     if (next_entry) {
       if (strncmp(key, next_entry->key, length) == 0) {
-        return *(%TYPE%*)&next_entry->value;
+        return *(SPerl_VALUE_T*)&next_entry->value;
       }
       else {
         if (next_entry->next_index == -1) {
@@ -215,31 +200,6 @@ void SPerl_HASH_insert_%SUFFIX%(SPerl* sperl, SPerl_HASH* hash, const char* key,
       return NULL;
     }
   }
-}
-[END_TEMPLATE]
-*/
-// Implementation
-// SUFFIX : address
-// TYPE : void*
-int64_t SPerl_HASH_new_hash_entry_address(SPerl* sperl, SPerl_HASH* hash, const char* key, void* value) {
-  (void)sperl;
-  
-  assert(hash);
-  assert(key);
-  
-  int64_t index = hash->entries_length;
-  
-  SPerl_HASH_maybe_extend_entries(sperl, hash);
-  
-  SPerl_HASH_ENTRY* hash_entry = &hash->entries[index];
-  
-  hash_entry->key = key;
-  *(void**)&hash_entry->value = value;
-  hash_entry->next_index = -1;
-  
-  hash->entries_length++;
-  
-  return index;
 }
 
 void SPerl_HASH_rehash_address(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacity) {
