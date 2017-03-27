@@ -91,40 +91,6 @@ SPerl_VALUE_T SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
   return *(SPerl_VALUE_T*)&array->values[array->length];
 }
 
-
-// Implementation
-// SUFFIX : address
-// TYPE : void*
-
-void* SPerl_ARRAY_fetch_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
-  (void)sperl;
-  
-  assert(array);
-  assert(index >= 0);
-  assert(index < array->length);
-  
-  return *(void**)&array->values[index];
-}
-
-void SPerl_ARRAY_store_address(SPerl* sperl, SPerl_ARRAY* array, int64_t index, void* value) {
-  (void)sperl;
-  
-  assert(array);
-  assert(index >= 0);
-  assert(index < array->length);
-  
-  *(void**)&array->values[index] = value;
-}
-
-void* SPerl_ARRAY_pop_address(SPerl* sperl, SPerl_ARRAY* array) {
-  (void)sperl;
-  
-  assert(array->length > 0);
-  
-  array->length--;
-  
-  return *(void**)&array->values[array->length];
-}
 // Implementation
 // SUFFIX : long
 // TYPE : int64_t
