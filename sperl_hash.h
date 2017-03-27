@@ -29,10 +29,10 @@ SPerl_VALUE_T SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key,
 #define SPerl_HASH_insert_address(sperl, hash, key, length, value) SPerl_HASH_insert(sperl, hash, key, length, (SPerl_VALUE_T)value);
 #define SPerl_HASH_search_address(sperl, hash, key, length) (void*)SPerl_HASH_search(sperl, hash, key, length);
 
-int64_t SPerl_HASH_new_hash_entry_long(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t value);
-void SPerl_HASH_rehash_long(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacity);
-void SPerl_HASH_insert_norehash_long(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, int64_t value);
-void SPerl_HASH_insert_long(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, int64_t value);
-int64_t SPerl_HASH_search_long(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length);
+#define SPerl_HASH_new_hash_entry_long(sperl, hash, key, value) SPerl_HASH_new_hash_entry(sperl, hash, key, (SPerl_VALUE_T)value);
+#define SPerl_HASH_rehash_long(sperl, hash, new_capacity) SPerl_HASH_rehash(sperl, hash, new_capacity);
+#define SPerl_HASH_insert_norehash_long(sperl, hash, key, length, value) SPerl_HASH_insert_norehash(sperl, hash, key, length, (SPerl_VALUE_T)value);
+#define SPerl_HASH_insert_long(sperl, hash, key, length, value) SPerl_HASH_insert(sperl, hash, key, length, (SPerl_VALUE_T)value);
+#define SPerl_HASH_search_long(sperl, hash, key, length) (int64_t)SPerl_HASH_search(sperl, hash, key, length);
 
 #endif
