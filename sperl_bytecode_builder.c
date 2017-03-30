@@ -595,7 +595,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   assert(if_address_stack->length > 0);
 
                   // Set if jump address
-                  int64_t address = SPerl_ARRAY_pop_long(sperl, if_address_stack);
+                  int64_t* address_ptr = SPerl_ARRAY_pop_address(sperl, if_address_stack);
+                  int64_t address = *address_ptr;
                   
                   // Jump offset
                   int64_t jump_offset = bytecode_array->length - address;
@@ -884,7 +885,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 int64_t address = bytecode_array->length - 1;
                 
                 if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_IF) {
-                  SPerl_ARRAY_push_long(sperl, if_address_stack, address);
+                  int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+                  *address_ptr = address;
+                  
+                  SPerl_ARRAY_push_address(sperl, if_address_stack, address_ptr);
                   
                   // Prepare for bytecode position of branch
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
