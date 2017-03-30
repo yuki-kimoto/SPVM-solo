@@ -156,6 +156,10 @@ typedef struct SPerl_descriptor SPerl_DESCRIPTOR;
 struct SPerl_sub;
 typedef struct SPerl_sub SPerl_SUB;
 
+/* sperl_array_element.h */
+struct SPerl_array_element;
+typedef struct SPerl_array_element SPerl_ARRAY_ELEMENT;
+
 /* sperl_array.h */
 struct SPerl_array;
 typedef struct SPerl_array SPerl_ARRAY;
