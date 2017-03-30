@@ -175,7 +175,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             if (block_start) {
               assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
               block_base = op_my_var_stack->length;
-              SPerl_ARRAY_push_long(sperl, block_base_stack, block_base);
+              int64_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+              *block_base_ptr = block_base;
+              SPerl_ARRAY_push_address(sperl, block_base_stack, block_base_ptr);
             }
             else {
               block_start = 1;
@@ -1051,7 +1053,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
                 
                 if (block_base_stack->length > 0) {
-                  block_base = SPerl_ARRAY_pop_long(sperl, block_base_stack);
+                  int64_t* block_base_ptr = SPerl_ARRAY_pop_address(sperl, block_base_stack);
+                  block_base = *block_base_ptr;
                 }
                 
                 int64_t pop_count = op_my_var_stack->length - block_base;
@@ -1062,7 +1065,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                 
                 if (block_base_stack->length > 0) {
-                  int64_t before_block_base = SPerl_ARRAY_fetch_long(sperl, block_base_stack, block_base_stack->length - 1);
+                  int64_t* before_block_base_ptr = SPerl_ARRAY_fetch_address(sperl, block_base_stack, block_base_stack->length - 1);
+                  int64_t before_block_base = *before_block_base_ptr;
                   block_base = before_block_base;
                 }
                 else {
