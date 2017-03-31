@@ -22,7 +22,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
     array->capacity = capacity;
   }
   
-  SPerl_VALUE_T* values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(SPerl_VALUE_T));
+  void** values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(void*));
   
   array->values = values;
   
@@ -39,7 +39,7 @@ void SPerl_ARRAY_maybe_extend(SPerl* sperl, SPerl_ARRAY* array) {
   
   if (length >= capacity) {
     int64_t new_capacity = capacity * 2;
-    array->values = SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(SPerl_VALUE_T));
+    array->values = SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(void*));
     array->capacity = new_capacity;
   }
 }
@@ -51,42 +51,42 @@ void SPerl_ARRAY_free(SPerl* sperl, SPerl_ARRAY* array) {
   free(array);
 }
 
-void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, SPerl_VALUE_T value) {
+void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, void* value) {
   
   SPerl_ARRAY_maybe_extend(sperl, array);
   
   int64_t length = array->length;
   
-  *(SPerl_VALUE_T*)&array->values[length] = value;
+  *(void**)&array->values[length] = value;
   array->length++;
 }
 
-SPerl_VALUE_T SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
+void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   (void)sperl;
   
   assert(array);
   assert(index >= 0);
   assert(index < array->length);
   
-  return *(SPerl_VALUE_T*)&array->values[index];
+  return *(void**)&array->values[index];
 }
 
-void SPerl_ARRAY_store(SPerl* sperl, SPerl_ARRAY* array, int64_t index, SPerl_VALUE_T value) {
+void SPerl_ARRAY_store(SPerl* sperl, SPerl_ARRAY* array, int64_t index, void* value) {
   (void)sperl;
   
   assert(array);
   assert(index >= 0);
   assert(index < array->length);
   
-  *(SPerl_VALUE_T*)&array->values[index] = value;
+  *(void**)&array->values[index] = value;
 }
 
-SPerl_VALUE_T SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
+void* SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
   assert(array->length > 0);
   
   array->length--;
   
-  return *(SPerl_VALUE_T*)&array->values[array->length];
+  return *(void**)&array->values[array->length];
 }
