@@ -240,7 +240,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 for (int64_t i = 0; i < pop_count; i++) {
                   assert(goto_exception_handler_stack->length > 0);
                   
-                  int64_t address = SPerl_ARRAY_pop_long(sperl, goto_exception_handler_stack);
+                  int64_t* address_ptr = SPerl_ARRAY_pop_address(sperl, goto_exception_handler_stack);
+                  int64_t address = *address_ptr;
                   
                   int64_t jump_offset = bytecode_array->length - address;
                   
@@ -536,8 +537,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 if (try_stack->length > 0) {
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
                   
-                  int64_t address = bytecode_array->length - 1;
-                  SPerl_ARRAY_push_long(sperl, goto_exception_handler_stack, address);
+                  int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+                  *address_ptr = bytecode_array->length - 1;
+                  SPerl_ARRAY_push_address(sperl, goto_exception_handler_stack, address_ptr);
                   
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
