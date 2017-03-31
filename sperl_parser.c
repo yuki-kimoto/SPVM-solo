@@ -64,7 +64,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
     SPerl_ARRAY_push_address(sperl, parser->resolved_types, resolved_type);
-    SPerl_HASH_insert_address(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
+    SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
   // Core array types
@@ -87,7 +87,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     resolved_type->name_length = strlen(name);
     resolved_type->id = SPerl_RESOLVED_TYPE_C_CORE_LENGTH + i;
     SPerl_ARRAY_push_address(sperl, parser->resolved_types, resolved_type);
-    SPerl_HASH_insert_address(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
+    SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
   return parser;
@@ -120,7 +120,7 @@ int64_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   op_std_package_name->uv.name = "std";
   SPerl_OP_sibling_splice(sperl, op_use_std, NULL, 0, op_std_package_name);
   SPerl_ARRAY_push_address(sperl, parser->op_use_stack, op_use_std);
-  SPerl_HASH_insert_address(sperl, parser->op_use_symtable, op_std_package_name->uv.name, strlen(op_std_package_name->uv.name), op_use_std);
+  SPerl_HASH_insert(sperl, parser->op_use_symtable, op_std_package_name->uv.name, strlen(op_std_package_name->uv.name), op_use_std);
 
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;

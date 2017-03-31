@@ -265,7 +265,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   
                   const char* sub_name = op_call_sub->uv.name_info->resolved_name;
                   
-                  SPerl_OP* op_sub= SPerl_HASH_search_address(sperl, 
+                  SPerl_OP* op_sub= SPerl_HASH_search(sperl, 
                     parser->op_sub_symtable,
                     sub_name,
                     strlen(sub_name)
@@ -667,7 +667,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     break;
                   }
                   
-                  SPerl_OP* op_package = SPerl_HASH_search_address(sperl, parser->op_package_symtable, resolved_type->name, strlen(resolved_type->name));
+                  SPerl_OP* op_package = SPerl_HASH_search(sperl, parser->op_package_symtable, resolved_type->name, strlen(resolved_type->name));
                   
                   if (!op_package) {
                     SPerl_yyerror_format(sperl, "new operator can't receive non package name \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
@@ -1142,7 +1142,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 const char* sub_abs_name = op_cur->uv.name_info->resolved_name;
                 
-                SPerl_OP* found_op_sub= SPerl_HASH_search_address(sperl, 
+                SPerl_OP* found_op_sub= SPerl_HASH_search(sperl, 
                   parser->op_sub_symtable,
                   sub_abs_name,
                   strlen(sub_abs_name)
@@ -1230,7 +1230,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 const char* field_abs_name = op_cur->uv.name_info->resolved_name;
                 
-                SPerl_OP* found_op_field= SPerl_HASH_search_address(sperl, 
+                SPerl_OP* found_op_field= SPerl_HASH_search(sperl, 
                   parser->op_field_symtable,
                   field_abs_name,
                   strlen(field_abs_name)

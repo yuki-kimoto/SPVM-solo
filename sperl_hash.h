@@ -23,10 +23,4 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
 void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value);
 void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length);
 
-#define SPerl_HASH_new_hash_entry_address(sperl, hash, key, value) SPerl_HASH_new_hash_entry(sperl, hash, key, (void*)value);
-#define SPerl_HASH_rehash_address(sperl, hash, new_capacity) SPerl_HASH_rehash(sperl, hash, new_capacity);
-#define SPerl_HASH_insert_norehash_address(sperl, hash, key, length, value) SPerl_HASH_insert_norehash(sperl, hash, key, length, (void*)value);
-#define SPerl_HASH_insert_address(sperl, hash, key, length, value) SPerl_HASH_insert(sperl, hash, key, length, (void*)value);
-#define SPerl_HASH_search_address(sperl, hash, key, length) (void*)SPerl_HASH_search(sperl, hash, key, length);
-
 #endif
