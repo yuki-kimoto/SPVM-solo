@@ -16,7 +16,7 @@ void* SPerl_ALLOCATOR_PARSER_alloc_memory_pool(SPerl* sperl, SPerl_PARSER* parse
 SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_PARSER* parser, int64_t capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(sperl, capacity);
   
-  SPerl_ARRAY_push_address(sperl, parser->arrays, array);
+  SPerl_ARRAY_push(sperl, parser->arrays, array);
   
   return array;
 }
@@ -24,7 +24,7 @@ SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_PARSER* parser
 SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_PARSER* parser, int64_t capacity) {
   SPerl_HASH* hash = SPerl_HASH_new(sperl, capacity);
   
-  SPerl_ARRAY_push_address(sperl, parser->hashes, hash);
+  SPerl_ARRAY_push(sperl, parser->hashes, hash);
   
   return hash;
 }
@@ -49,7 +49,7 @@ char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_PARSER* parser, int6
   }
   else {
     str = (char*) SPerl_ALLOCATOR_UTIL_safe_malloc(length + 1, sizeof(char));
-    SPerl_ARRAY_push_address(sperl, parser->long_strings, str);
+    SPerl_ARRAY_push(sperl, parser->long_strings, str);
   }
   
   return str;

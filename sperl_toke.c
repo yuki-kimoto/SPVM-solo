@@ -55,7 +55,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         while (1) {
           SPerl_OP* op_use = NULL;
           if (op_use_stack->length > 0) {
-            op_use = SPerl_ARRAY_pop_address(sperl, op_use_stack);
+            op_use = SPerl_ARRAY_pop(sperl, op_use_stack);
           }
           
           if (op_use) {
@@ -95,7 +95,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               FILE* fh = NULL;
               int64_t include_pathes_length = parser->include_pathes->length;
               for (int64_t i = 0; i < include_pathes_length; i++) {
-                const char* include_path = (const char*) SPerl_ARRAY_fetch_address(sperl, parser->include_pathes, i);
+                const char* include_path = (const char*) SPerl_ARRAY_fetch(sperl, parser->include_pathes, i);
                 
                 // File name
                 int64_t file_name_length = (int64_t)strlen(include_path) + 1 + (int64_t)strlen(module_path_base);

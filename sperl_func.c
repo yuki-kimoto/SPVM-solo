@@ -31,7 +31,7 @@ void SPerl_FUNC_std_test_call2(SPerl* sperl) {
 
 void SPerl_FUNC_std_suml(SPerl* sperl) {
   
-  intptr_t long_array = SPerl_API_get_var_address(sperl, 0);
+  intptr_t long_array = SPerl_API_get_var(sperl, 0);
   
   int64_t length = SPerl_API_get_array_length(sperl, long_array);
   
@@ -47,7 +47,7 @@ void SPerl_FUNC_std_suml(SPerl* sperl) {
 
 void SPerl_FUNC_std_println(SPerl* sperl) {
   
-  intptr_t byte_array = SPerl_API_get_var_address(sperl, 0);
+  intptr_t byte_array = SPerl_API_get_var(sperl, 0);
   
   int64_t length = SPerl_API_get_array_length(sperl, byte_array);
   

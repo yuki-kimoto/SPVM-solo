@@ -34,7 +34,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
   SPerl_PARSER* parser = sperl->parser;
   
   for (int64_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
-    SPerl_OP* op_package = SPerl_ARRAY_fetch_address(sperl, parser->op_packages, package_pos);
+    SPerl_OP* op_package = SPerl_ARRAY_fetch(sperl, parser->op_packages, package_pos);
     SPerl_PACKAGE* package = op_package->uv.package;
     
     if (strchr(package->op_name->uv.name, '_') != NULL) {
@@ -63,7 +63,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     
     // Push field information to constant pool
     for (int64_t field_pos = 0; field_pos < package->op_fields->length; field_pos++) {
-      SPerl_OP* op_field = SPerl_ARRAY_fetch_address(sperl, package->op_fields, field_pos);
+      SPerl_OP* op_field = SPerl_ARRAY_fetch(sperl, package->op_fields, field_pos);
       SPerl_FIELD* field = op_field->uv.field;
       
       // Add field name to constant pool
@@ -83,7 +83,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     
     for (int64_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
       
-      SPerl_OP* op_sub = SPerl_ARRAY_fetch_address(sperl, package->op_subs, sub_pos);
+      SPerl_OP* op_sub = SPerl_ARRAY_fetch(sperl, package->op_subs, sub_pos);
       SPerl_SUB* sub = op_sub->uv.sub;
       
       if (sub->is_constant) {
@@ -177,7 +177,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               block_base = op_my_var_stack->length;
               int64_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
               *block_base_ptr = block_base;
-              SPerl_ARRAY_push_address(sperl, block_base_stack, block_base_ptr);
+              SPerl_ARRAY_push(sperl, block_base_stack, block_base_ptr);
             }
             else {
               block_start = 1;
@@ -307,7 +307,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 if (!cur_case_ops) {
                   cur_case_ops = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
                 }
-                SPerl_ARRAY_push_address(sperl, cur_case_ops, op_cur);
+                SPerl_ARRAY_push(sperl, cur_case_ops, op_cur);
                 
                 break;
               }
@@ -341,7 +341,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 int64_t max = SPerl_BASE_C_INT_MIN;
                 
                 for (int64_t i = 0; i < length; i++) {
-                  SPerl_OP* op_case = SPerl_ARRAY_fetch_address(sperl, op_cases, i);
+                  SPerl_OP* op_case = SPerl_ARRAY_fetch(sperl, op_cases, i);
                   SPerl_OP* op_constant = op_case->first;
                   int64_t value = op_constant->uv.constant->uv.long_value;
                   if (value < min) {
@@ -1053,19 +1053,19 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
                 
                 if (block_base_stack->length > 0) {
-                  int64_t* block_base_ptr = SPerl_ARRAY_pop_address(sperl, block_base_stack);
+                  int64_t* block_base_ptr = SPerl_ARRAY_pop(sperl, block_base_stack);
                   block_base = *block_base_ptr;
                 }
                 
                 int64_t pop_count = op_my_var_stack->length - block_base;
                 for (int64_t j = 0; j < pop_count; j++) {
                   if (op_my_var_stack->length > 0) {
-                    SPerl_ARRAY_pop_address(sperl, op_my_var_stack);
+                    SPerl_ARRAY_pop(sperl, op_my_var_stack);
                   }
                 }
                 
                 if (block_base_stack->length > 0) {
-                  int64_t* before_block_base_ptr = SPerl_ARRAY_fetch_address(sperl, block_base_stack, block_base_stack->length - 1);
+                  int64_t* before_block_base_ptr = SPerl_ARRAY_fetch(sperl, block_base_stack, block_base_stack->length - 1);
                   int64_t before_block_base = *before_block_base_ptr;
                   block_base = before_block_base;
                 }
@@ -1083,7 +1083,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 // Search same name variable
                 SPerl_OP* op_my_var = NULL;
                 for (int64_t i = op_my_var_stack->length; i-- > 0; ) {
-                  SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch_address(sperl, op_my_var_stack, i);
+                  SPerl_OP* op_my_var_tmp = SPerl_ARRAY_fetch(sperl, op_my_var_stack, i);
                   SPerl_MY_VAR* my_var_tmp = op_my_var_tmp->uv.my_var;
                   if (strcmp(var->op_name->uv.name, my_var_tmp->op_name->uv.name) == 0) {
                     op_my_var = op_my_var_tmp;
@@ -1111,7 +1111,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
 
                 assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
                 for (int64_t i = op_my_var_stack->length; i-- > block_base; ) {
-                  SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch_address(sperl, op_my_var_stack, i);
+                  SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(sperl, op_my_var_stack, i);
                   SPerl_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
                   if (strcmp(my_var->op_name->uv.name, bef_my_var->op_name->uv.name) == 0) {
                     found = 1;
@@ -1130,8 +1130,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                 else {
                   my_var->address = next_my_var_address++;
-                  SPerl_ARRAY_push_address(sperl, op_my_vars, op_cur);
-                  SPerl_ARRAY_push_address(sperl, op_my_var_stack, op_cur);
+                  SPerl_ARRAY_push(sperl, op_my_vars, op_cur);
+                  SPerl_ARRAY_push(sperl, op_my_var_stack, op_cur);
                 }
                 break;
               }
@@ -1169,7 +1169,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   
                   _Bool is_invalid = 0;
                   
-                  SPerl_OP* op_sub_arg_my_var = SPerl_ARRAY_fetch_address(sperl, found_sub->op_args, call_sub_args_count - 1);
+                  SPerl_OP* op_sub_arg_my_var = SPerl_ARRAY_fetch(sperl, found_sub->op_args, call_sub_args_count - 1);
                   
                   SPerl_RESOLVED_TYPE* sub_arg_resolved_type = SPerl_OP_get_resolved_type(sperl, op_sub_arg_my_var);
                   

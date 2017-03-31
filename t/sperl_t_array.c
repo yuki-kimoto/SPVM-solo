@@ -49,19 +49,19 @@ int main()
     
     // push long value at first
     int64_t value1 = 10;
-    SPerl_ARRAY_push_address(sperl, array, &value1);
+    SPerl_ARRAY_push(sperl, array, &value1);
     OK(*(int64_t*)array->values[0] == 10);
     OK(array->length == 1);
     
     // push long value next
     int64_t value2 = 15;
-    SPerl_ARRAY_push_address(sperl, array, &value2);
+    SPerl_ARRAY_push(sperl, array, &value2);
     OK(*(int64_t*)array->values[1] == 15);
     OK(array->length == 2);
     
     // push pointer value
     const char* value3 = "foo";
-    SPerl_ARRAY_push_address(sperl, array, value3);
+    SPerl_ARRAY_push(sperl, array, value3);
     OK(array->values[2] == value3);
   }
 
@@ -71,18 +71,18 @@ int main()
     
     // push long value at first
     int64_t value1 = 10;
-    SPerl_ARRAY_push_address(sperl, array, &value1);
+    SPerl_ARRAY_push(sperl, array, &value1);
     OK(*(int64_t*)array->values[0] == 10);
     OK(array->length == 1);
     
     // push long value next
     int64_t value2 = 15;
-    SPerl_ARRAY_push_address(sperl, array, &value2);
+    SPerl_ARRAY_push(sperl, array, &value2);
     OK(*(int64_t*)array->values[1] == 15);
     OK(array->length == 2);
     
     // pop
-    void* pop_value = SPerl_ARRAY_pop_address(sperl, array);
+    void* pop_value = SPerl_ARRAY_pop(sperl, array);
     OK(*(int64_t*)pop_value == 15);
     OK(array->length == 1);
   }
@@ -93,12 +93,12 @@ int main()
     
     int64_t value1 = 1;
     int64_t value2 = 2;
-    SPerl_ARRAY_push_address(sperl, array, &value1);
-    SPerl_ARRAY_push_address(sperl, array, &value2);
+    SPerl_ARRAY_push(sperl, array, &value1);
+    SPerl_ARRAY_push(sperl, array, &value2);
     OK(array->capacity == 2);
     
     int64_t value3 = 3;
-    SPerl_ARRAY_push_address(sperl, array, &value3);
+    SPerl_ARRAY_push(sperl, array, &value3);
     OK(array->capacity == 4);
     OK(array->length == 3);
     OK(*(int64_t*)array->values[0] == 1);
@@ -112,11 +112,11 @@ int main()
     int64_t value1 = 3;
     int64_t value2 = 5;
     
-    SPerl_ARRAY_push_address(sperl, array, &value1);
-    SPerl_ARRAY_push_address(sperl, array, &value2);
+    SPerl_ARRAY_push(sperl, array, &value1);
+    SPerl_ARRAY_push(sperl, array, &value2);
     
-    OK(*(int64_t*)SPerl_ARRAY_fetch_address(sperl, array, 0) == 3);
-    OK(*(int64_t*)SPerl_ARRAY_fetch_address(sperl, array, 1) == 5);
+    OK(*(int64_t*)SPerl_ARRAY_fetch(sperl, array, 0) == 3);
+    OK(*(int64_t*)SPerl_ARRAY_fetch(sperl, array, 1) == 5);
   }
 
   // Array - push many values
@@ -138,20 +138,20 @@ int main()
     int64_t value13 = 13;
     int64_t value14 = 14;
     
-    SPerl_ARRAY_push_address(sperl, array, &value1);
-    SPerl_ARRAY_push_address(sperl, array, &value2);
-    SPerl_ARRAY_push_address(sperl, array, &value3);
-    SPerl_ARRAY_push_address(sperl, array, &value4);
-    SPerl_ARRAY_push_address(sperl, array, &value5);
-    SPerl_ARRAY_push_address(sperl, array, &value6);
-    SPerl_ARRAY_push_address(sperl, array, &value7);
-    SPerl_ARRAY_push_address(sperl, array, &value8);
-    SPerl_ARRAY_push_address(sperl, array, &value9);
-    SPerl_ARRAY_push_address(sperl, array, &value10);
-    SPerl_ARRAY_push_address(sperl, array, &value11);
-    SPerl_ARRAY_push_address(sperl, array, &value12);
-    SPerl_ARRAY_push_address(sperl, array, &value13);
-    SPerl_ARRAY_push_address(sperl, array, &value14);
+    SPerl_ARRAY_push(sperl, array, &value1);
+    SPerl_ARRAY_push(sperl, array, &value2);
+    SPerl_ARRAY_push(sperl, array, &value3);
+    SPerl_ARRAY_push(sperl, array, &value4);
+    SPerl_ARRAY_push(sperl, array, &value5);
+    SPerl_ARRAY_push(sperl, array, &value6);
+    SPerl_ARRAY_push(sperl, array, &value7);
+    SPerl_ARRAY_push(sperl, array, &value8);
+    SPerl_ARRAY_push(sperl, array, &value9);
+    SPerl_ARRAY_push(sperl, array, &value10);
+    SPerl_ARRAY_push(sperl, array, &value11);
+    SPerl_ARRAY_push(sperl, array, &value12);
+    SPerl_ARRAY_push(sperl, array, &value13);
+    SPerl_ARRAY_push(sperl, array, &value14);
   }
   
   return 0;

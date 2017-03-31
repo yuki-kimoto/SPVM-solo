@@ -17,8 +17,8 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   
   SPerl_PARSER* parser = sperl->parser;
   
-  SPerl_ARRAY_push_address(sperl, parser->include_pathes, ".");
-  SPerl_ARRAY_push_address(sperl, parser->include_pathes, "lib");
+  SPerl_ARRAY_push(sperl, parser->include_pathes, ".");
+  SPerl_ARRAY_push(sperl, parser->include_pathes, "lib");
 
   SPerl_PARSER_parse(sperl, package_name);
 
@@ -38,7 +38,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   SPerl_API_call_sub(sperl, start_sub_name);
   
   if (sperl->abort) {
-    intptr_t message = SPerl_API_pop_ret_address(sperl);
+    intptr_t message = SPerl_API_pop_ret(sperl);
     
     int64_t length = SPerl_API_get_array_length(sperl, message);
     
