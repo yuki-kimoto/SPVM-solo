@@ -336,9 +336,10 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               }
               case SPerl_OP_C_CODE_CASE: {
                 
-                int64_t address = bytecode_array->length;
+                int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+                *address_ptr = bytecode_array->length;
                 
-                SPerl_ARRAY_push_long(sperl, cur_case_addresses, address);
+                SPerl_ARRAY_push_address(sperl, cur_case_addresses, address_ptr);
                 SPerl_ARRAY_push_address(sperl, cur_op_cases, op_cur);
                 
                 break;
@@ -382,7 +383,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_OP* op_constant = op_case->first;
                     if (op_constant->uv.constant->uv.long_value - min == i) {
                       // Case
-                      int64_t case_address = SPerl_ARRAY_fetch_long(sperl, cur_case_addresses, case_pos);
+                      int64_t* case_address_ptr = SPerl_ARRAY_fetch_address(sperl, cur_case_addresses, case_pos);
+                      int64_t case_address = *case_address_ptr;
                       int64_t case_offset = case_address - cur_switch_address;
                       
                       *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) * 3 + 1 + (sizeof(int64_t) * i)] = case_offset;
@@ -424,8 +426,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   SPerl_ARRAY* ordered_case_addresses = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
                   for (int64_t i = 0; i < length; i++) {
-                    SPerl_OP* case_address = SPerl_ARRAY_fetch_address(sperl, cur_case_addresses, i);
-                    SPerl_ARRAY_push_address(sperl, ordered_case_addresses, case_address);
+                    int64_t* case_address_ptr = SPerl_ARRAY_fetch_address(sperl, cur_case_addresses, i);
+                    SPerl_ARRAY_push_address(sperl, ordered_case_addresses, case_address_ptr);
                   }
                   
                   // sort by asc order
@@ -436,9 +438,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                       int64_t match_i = op_case_i->first->uv.constant->uv.long_value;
                       int64_t match_j = op_case_j->first->uv.constant->uv.long_value;
                       
-                      SPerl_OP* case_address_i = SPerl_ARRAY_fetch_address(sperl, ordered_case_addresses, i);
-                      SPerl_OP* case_address_j = SPerl_ARRAY_fetch_address(sperl, ordered_case_addresses, j);
-
+                      int64_t* case_address_i = SPerl_ARRAY_fetch_address(sperl, ordered_case_addresses, i);
+                      int64_t* case_address_j = SPerl_ARRAY_fetch_address(sperl, ordered_case_addresses, j);
                       
                       if (match_i > match_j) {
                         SPerl_ARRAY_store_address(sperl, ordered_op_cases, i, op_case_j);
@@ -455,7 +456,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_OP* op_constant = op_case->first;
                     int64_t match = op_constant->uv.constant->uv.long_value;
 
-                    int64_t case_address = SPerl_ARRAY_fetch_long(sperl, ordered_case_addresses, i);
+                    int64_t* case_address_ptr = SPerl_ARRAY_fetch_address(sperl, ordered_case_addresses, i);
+                    int64_t case_address = *case_address_ptr;
                     int64_t case_offset = case_address - cur_switch_address;
                     
                     // Match
