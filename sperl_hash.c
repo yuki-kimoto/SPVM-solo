@@ -109,8 +109,9 @@ int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* ke
   
   hash_entry->key_index = hash->key_buffer_length;
   
-  strncpy(hash->key_buffer, key, key_length);
-  hash->key_buffer[key_length] = '\0';
+  strncpy(&hash->key_buffer[hash->key_buffer_length], key, key_length);
+  hash->key_buffer[hash->key_buffer_length + key_length] = '\0';
+  
   hash->key_buffer_length += key_length + 1;
   
   hash_entry->key = key;
@@ -148,11 +149,16 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
   // Replace hash fields
   free(hash->table);
   free(hash->entries);
+  free(hash->key_buffer);
   hash->entries_length = new_hash->entries_length;
   hash->table_capacity = new_hash->table_capacity;
   hash->entries_capacity = new_hash->entries_capacity;
   hash->table = new_hash->table;
   hash->entries = new_hash->entries;
+  
+  hash->key_buffer_capacity = new_hash->key_buffer_capacity;
+  hash->key_buffer_length = new_hash->key_buffer_length;
+  hash->key_buffer = new_hash->key_buffer;
 }
 
 void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
@@ -168,7 +174,7 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
   if (hash->table[index]) {
     SPerl_HASH_ENTRY* next_entry = hash->table[index];
     while (1) {
-      if (strncmp(next_entry->key, key, length) == 0) {
+      if (strncmp(key, &hash->key_buffer[next_entry->key_index], length) == 0) {
         *(void**)&next_entry->value = value;
         break;
       }
@@ -220,7 +226,8 @@ void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t
   SPerl_HASH_ENTRY* next_entry = hash->table[index];
   while (1) {
     if (next_entry) {
-      if (strncmp(key, next_entry->key, length) == 0) {
+      
+      if (strncmp(key, &hash->key_buffer[next_entry->key_index], length) == 0) {
         return *(void**)&next_entry->value;
       }
       else {
