@@ -25,11 +25,18 @@ SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int64_t table_capacity) {
     hash->table_capacity = table_capacity;
   }
   
-  // Initialize hash fields
+  // Initialize table
   hash->table = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(hash->table_capacity, sizeof(SPerl_HASH_ENTRY*));
+  
+  // Initialize entries
   hash->entries_capacity = 255;
   hash->entries = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->entries_capacity, sizeof(SPerl_HASH_ENTRY));
   hash->entries_length = 0;
+  
+  // Initialize key buffer
+  hash->key_buffer_capacity = 0xFF;
+  hash->key_buffer = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->key_buffer_capacity, sizeof(char));
+  hash->key_buffer_length = 0;
   
   return hash;
 }
@@ -52,6 +59,27 @@ void SPerl_HASH_maybe_extend_entries(SPerl* sperl, SPerl_HASH* hash) {
     int64_t new_entries_capacity = entries_capacity * 2;
     hash->entries = SPerl_ALLOCATOR_UTIL_safe_realloc(hash->entries, new_entries_capacity, sizeof(SPerl_HASH_ENTRY));
     hash->entries_capacity = new_entries_capacity;
+  }
+}
+
+void SPerl_HASH_maybe_extend_key_buffer(SPerl* sperl, SPerl_HASH* hash, int64_t length) {
+  (void)sperl;
+  
+  assert(hash);
+  
+  int64_t key_buffer_length = hash->key_buffer_length;
+  
+  assert(key_buffer_length >= 0);
+  
+  int64_t key_buffer_capacity = hash->key_buffer_capacity;
+  
+  if (key_buffer_length + length >= key_buffer_capacity) {
+    if (key_buffer_capacity > INT64_MAX / 2) {
+      SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
+    }
+    int64_t new_key_buffer_capacity = key_buffer_capacity * 2;
+    hash->key_buffer = SPerl_ALLOCATOR_UTIL_safe_realloc(hash->key_buffer, new_key_buffer_capacity, sizeof(SPerl_HASH_ENTRY));
+    hash->key_buffer_capacity = new_key_buffer_capacity;
   }
 }
 

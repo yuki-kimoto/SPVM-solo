@@ -10,6 +10,9 @@ struct SPerl_hash {
   int64_t table_capacity;
   int64_t entries_capacity;
   int64_t entries_length;
+  int64_t key_buffer_capacity;
+  int64_t key_buffer_length;
+  char* key_buffer;
 };
 
 // Hash function
