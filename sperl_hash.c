@@ -102,8 +102,16 @@ int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* ke
   int64_t index = hash->entries_length;
   
   SPerl_HASH_maybe_extend_entries(sperl, hash);
-  
   SPerl_HASH_ENTRY* hash_entry = &hash->entries[index];
+  
+  int64_t key_length = strlen(key);
+  SPerl_HASH_maybe_extend_key_buffer(sperl, hash, key_length);
+  
+  hash_entry->key_index = hash->key_buffer_length;
+  
+  strncpy(hash->key_buffer, key, key_length);
+  hash->key_buffer[key_length] = '\0';
+  hash->key_buffer_length += key_length + 1;
   
   hash_entry->key = key;
   *(void**)&hash_entry->value = value;
