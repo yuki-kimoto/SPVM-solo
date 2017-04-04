@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 #include "sperl.h"
-#include "sperl_parser.h"
 #include "sperl_memory_pool.h"
 #include "sperl_hash.h"
 #include "sperl_array.h"
@@ -239,7 +238,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
     &&case_SPerl_BYTECODE_C_CODE_BINC,
     &&case_SPerl_BYTECODE_C_CODE_SINC,
   };
-
+  
   // Constant pool
   int64_t* constant_pool = sperl->constant_pool->values;
   
@@ -248,12 +247,9 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
   
   // Variables
   int64_t* vars = &sperl->call_stack[sperl->call_stack_base];
-
-  // Constant pool sub
-  SPerl_OP* op_sub = SPerl_HASH_search(sperl, sperl->parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name));
-  SPerl_SUB* sub = op_sub->uv.sub;
   
-  SPerl_CONSTANT_POOL_SUB* constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub->constant_pool_address];
+  // Constant pool sub
+  int64_t sub_constant_pool_address = (int64_t)SPerl_HASH_search(sperl, sperl->constant_pool_sub_symtable, sub_abs_name, strlen(sub_abs_name));
   
   SPerl_VALUE_T* call_stack = sperl->call_stack;
   
@@ -276,11 +272,12 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
       case_SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
       {
         // Get subroutine ID
-        int64_t sub_constant_pool_address
+        sub_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-        constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
         
         CALLSUB_COMMON: {
+
+          SPerl_CONSTANT_POOL_SUB* constant_pool_sub = (SPerl_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
 
           // Extend call stack(current size + 2(return address + call stack base before) + lexical variable area + operand_stack area)
           int64_t call_stack_max = operand_stack_top + 2 + constant_pool_sub->my_vars_length + constant_pool_sub->operand_stack_max;
