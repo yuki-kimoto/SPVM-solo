@@ -19,14 +19,14 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   
   SPerl_ARRAY_push(sperl, parser->include_pathes, ".");
   SPerl_ARRAY_push(sperl, parser->include_pathes, "lib");
-
+  
   SPerl_PARSER_parse(sperl, package_name);
-
+  
   if (parser->error_count > 0) {
     return;
   }
   // Entry point
-  const char* start_sub_name = parser->start_sub_name;
+  const char* entry_point_sub_name = sperl->entry_point_sub_name;
   
   // Initialize environment
   SPerl_API_init_env(sperl);
@@ -35,7 +35,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   SPerl_API_push_var_long(sperl, 2);
   
   // Run
-  SPerl_API_call_sub(sperl, start_sub_name);
+  SPerl_API_call_sub(sperl, entry_point_sub_name);
   
   if (sperl->abort) {
     intptr_t message = SPerl_API_pop_ret(sperl);

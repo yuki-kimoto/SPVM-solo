@@ -22,6 +22,9 @@ struct sperl_ {
   // Parser
   SPerl_PARSER* parser;
   
+  // Entry point subroutine name
+  const char* entry_point_sub_name;
+  
   // Constant pool
   SPerl_CONSTANT_POOL* constant_pool;
   

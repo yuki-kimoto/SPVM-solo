@@ -109,11 +109,14 @@ int64_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use);
   
   // Entry point
-  char* start_sub_name = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, strlen(package_name) + 6);
-  strncpy(start_sub_name, package_name, strlen(package_name));
-  strncpy(start_sub_name + strlen(package_name), "::main", 6);
-  parser->start_sub_name = start_sub_name;
-
+  int64_t package_name_length = (int64_t)strlen(package_name);
+  int64_t entry_point_sub_name_length =  package_name_length + 6;
+  char* entry_point_sub_name = SPerl_ALLOCATOR_UTIL_safe_malloc(entry_point_sub_name_length + 1, sizeof(char));
+  strncpy(entry_point_sub_name, package_name, package_name_length);
+  strncpy(entry_point_sub_name + package_name_length, "::main", 6);
+  entry_point_sub_name[entry_point_sub_name_length] = '\0';
+  sperl->entry_point_sub_name = entry_point_sub_name;
+  
   // use standard module
   SPerl_OP* op_use_std = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_USE, "std", 0);
   SPerl_OP* op_std_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "std", 0);
@@ -121,7 +124,7 @@ int64_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   SPerl_OP_sibling_splice(sperl, op_use_std, NULL, 0, op_std_package_name);
   SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use_std);
   SPerl_HASH_insert(sperl, parser->op_use_symtable, op_std_package_name->uv.name, strlen(op_std_package_name->uv.name), op_use_std);
-
+  
   /* call SPerl_yyparse */
   SPerl_yydebug = 0;
   int64_t parse_success = SPerl_yyparse(sperl);
