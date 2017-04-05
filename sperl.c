@@ -25,6 +25,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   if (parser->error_count > 0) {
     return;
   }
+  
   // Entry point
   const char* entry_point_sub_name = sperl->entry_point_sub_name;
   
