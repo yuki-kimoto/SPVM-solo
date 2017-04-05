@@ -136,7 +136,7 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
   for (i = 0; i < hash->entries_length; i++) {
     SPerl_HASH_ENTRY* entry = &hash->entries[i];
     
-    const char* key = hash->key_buffer[entry->key_index];
+    const char* key = &hash->key_buffer[entry->key_index];
     
     assert(key);
     
@@ -144,6 +144,7 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
     
     SPerl_HASH_insert_norehash(sperl, new_hash, key, strlen(key), value);
   }
+  
   
   // Replace hash fields
   free(hash->table);
