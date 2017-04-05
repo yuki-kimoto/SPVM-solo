@@ -15,16 +15,20 @@
 
 void SPerl_run(SPerl* sperl, const char* package_name) {
   
-  SPerl_PARSER* parser = sperl->parser;
+  sperl->parser = SPerl_PARSER_new(sperl);
   
-  SPerl_ARRAY_push(sperl, parser->include_pathes, ".");
-  SPerl_ARRAY_push(sperl, parser->include_pathes, "lib");
+  SPerl_ARRAY_push(sperl, sperl->parser->include_pathes, ".");
+  SPerl_ARRAY_push(sperl, sperl->parser->include_pathes, "lib");
   
   SPerl_PARSER_parse(sperl, package_name);
   
-  if (parser->error_count > 0) {
+  if (sperl->parser->error_count > 0) {
     return;
   }
+  
+  // Free parser
+  SPerl_PARSER_free(sperl, sperl->parser);
+  sperl->parser = NULL;
   
   // Entry point
   const char* entry_point_sub_name = sperl->entry_point_sub_name;
@@ -70,9 +74,6 @@ SPerl* SPerl_new() {
     sperl->alignment = sizeof(int64_t);
   }
   
-  // Parser
-  sperl->parser = SPerl_PARSER_new(sperl);
-  
   // Constant pool
   sperl->constant_pool = SPerl_CONSTANT_POOL_new(sperl);
   
@@ -102,7 +103,9 @@ SPerl* SPerl_new() {
 void SPerl_free(SPerl* sperl) {
   
   // Free parser
-  SPerl_PARSER_free(sperl, sperl->parser);
+  if (sperl->parser) {
+    SPerl_PARSER_free(sperl, sperl->parser);
+  }
   
   // Free constant pool
   SPerl_CONSTANT_POOL_free(sperl, sperl->constant_pool);
