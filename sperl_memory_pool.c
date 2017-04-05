@@ -7,11 +7,17 @@
 #include "sperl_memory_pool_page.h"
 #include "sperl_allocator_util.h"
 
-SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl) {
+SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, int64_t base_capacity) {
   (void)sperl;
   
   SPerl_MEMORY_POOL* memory_pool = (SPerl_MEMORY_POOL*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(1, sizeof(SPerl_MEMORY_POOL));
-  memory_pool->base_capacity = 0xFF;
+  
+  if (base_capacity == 0) {
+    memory_pool->base_capacity = 0xFF;
+  }
+  else {
+    memory_pool->base_capacity = base_capacity;
+  }
   
   SPerl_MEMORY_POOL_PAGE* page = (SPerl_MEMORY_POOL_PAGE*)SPerl_MEMORY_POOL_PAGE_new(sperl);
   page->data = (uint8_t*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(memory_pool->base_capacity, sizeof(uint8_t));

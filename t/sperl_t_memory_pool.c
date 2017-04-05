@@ -24,7 +24,7 @@ int main()
   
   // new and free
   {
-    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sperl);
+    SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
     
     int64_t* int_ptr1 = (int64_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int64_t));
     int64_t* int_ptr2 = (int64_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int64_t));

@@ -22,7 +22,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
 
   // Memory pool - memory pool save short strings and object, except array and hash
   // These datas are created at compile time
-  parser->memory_pool = SPerl_MEMORY_POOL_new(sperl);
+  parser->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
   
   // Arrays - these arrays are created at compile time
   parser->arrays = SPerl_ARRAY_new(sperl, 0);
