@@ -233,12 +233,6 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         yylvalp->opval = op;
         return BIT_XOR;
       }
-      case '@': {
-        parser->bufptr++;
-        SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_ARRAY_LENGTH);
-        yylvalp->opval = op;
-        return '@';
-      }
       case '|':
         parser->bufptr++;
         /* Or */
@@ -708,6 +702,13 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             yylvalp->opval = op;
             
             return DESCRIPTOR;
+          }
+          else if (memcmp(keyword, "len", str_len) == 0) {
+            parser->bufptr++;
+            SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_ARRAY_LENGTH);
+            yylvalp->opval = op;
+            
+            return ARRAY_LENGTH;
           }
           
           SPerl_OP* op = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_NAME);

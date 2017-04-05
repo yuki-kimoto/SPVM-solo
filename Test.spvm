@@ -294,8 +294,8 @@ package Test {
       $nums[1] = 12;
       std::printl($nums[0]);
       std::printl($nums[1]);
-      std::printl(@$nums);
-      my $nums_length : long = @$nums;
+      std::printl(len $nums);
+      my $nums_length : long = len $nums;
     }
     
     {

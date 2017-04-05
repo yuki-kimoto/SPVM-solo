@@ -38,7 +38,7 @@
 %left <opval> SHIFT
 %left <opval> '+' '-'
 %left <opval> MULTIPLY DIVIDE REMAINDER
-%right <opval> NOT '~' '@' UMINUS
+%right <opval> NOT '~' ARRAY_LENGTH UMINUS
 %nonassoc <opval> INC DEC
 %left <opval> ARROW
 %nonassoc <opval> ')'
@@ -359,7 +359,7 @@ terms
   | term
 
 array_length
-  : '@' term
+  : ARRAY_LENGTH term
     {
       $$ = SPerl_OP_build_array_length(sperl, $1, $2);
     }
