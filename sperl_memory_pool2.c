@@ -4,7 +4,6 @@
 
 #include "sperl.h"
 #include "sperl_memory_pool2.h"
-#include "sperl_memory_pool_page.h"
 #include "sperl_allocator_util.h"
 
 SPerl_MEMORY_POOL2* SPerl_MEMORY_POOL2_new(SPerl* sperl, int64_t page_byte_size) {
