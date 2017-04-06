@@ -37,12 +37,12 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   int64_t pages_length = memory_pool->pages_length;
   int64_t current_offset = memory_pool->current_offset;
   int64_t page_byte_size = memory_pool->page_byte_size;
+  int64_t current_page = memory_pool->current_page;
+  
   
   // Adjust alignment
-  int64_t aligned_byte_size = (byte_size - 1) + (8 - ((byte_size - 1) % sperl->alignment));
+  int64_t aligned_byte_size = (byte_size - 1) + (sperl->alignment - ((byte_size - 1) % sperl->alignment));
   
-  // Calculate capacity
-  int64_t current_capacity = page_byte_size * pow(2, pages_length - 1);
 
   // Create next memory page
   uint8_t* data_ptr;

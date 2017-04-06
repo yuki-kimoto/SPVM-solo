@@ -10,7 +10,7 @@
 SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, int64_t base_capacity) {
   (void)sperl;
   
-  SPerl_MEMORY_POOL* memory_pool = (SPerl_MEMORY_POOL*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(1, sizeof(SPerl_MEMORY_POOL));
+  SPerl_MEMORY_POOL* memory_pool = (SPerl_MEMORY_POOL*) SPerl_ALLOCATOR_UTIL_safe_malloc(1, sizeof(SPerl_MEMORY_POOL));
   
   if (base_capacity == 0) {
     memory_pool->base_capacity = 0xFF;
@@ -23,6 +23,7 @@ SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, int64_t base_capacity) {
   page->data = (uint8_t*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(memory_pool->base_capacity, sizeof(uint8_t));
   memory_pool->page = page;
   memory_pool->page_depth = 1;
+  memory_pool->current_pos = 0;
   
   return memory_pool;
 }
