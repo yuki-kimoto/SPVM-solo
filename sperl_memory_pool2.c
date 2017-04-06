@@ -19,10 +19,11 @@ SPerl_MEMORY_POOL2* SPerl_MEMORY_POOL2_new(SPerl* sperl, int64_t page_byte_size)
     memory_pool->page_byte_size = page_byte_size;
   }
   
-  SPerl_MEMORY_POOL_PAGE* page = (SPerl_MEMORY_POOL_PAGE*)SPerl_MEMORY_POOL_PAGE_new(sperl);
-  page->data = (uint8_t*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(memory_pool->page_byte_size, sizeof(uint8_t));
-  memory_pool->page = page;
+  uint8_t* page = SPerl_ALLOCATOR_UTIL_safe_malloc(memory_pool->page_byte_size, sizeof(uint8_t));
+  memory_pool->pages_capacity = 1;
   memory_pool->pages_length = 1;
+  memory_pool->pages = SPerl_ALLOCATOR_UTIL_safe_malloc(memory_pool->pages_capacity, sizeof(uint8_t*));
+  memory_pool->pages[0] = page;
   
   return memory_pool;
 }
@@ -34,7 +35,7 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   assert(byte_size <= memory_pool->page_byte_size);
   
   int64_t pages_length = memory_pool->pages_length;
-  int64_t current_pos = memory_pool->current_pos;
+  int64_t current_offset = memory_pool->current_offset;
   int64_t page_byte_size = memory_pool->page_byte_size;
   
   // Adjust alignment
@@ -45,28 +46,17 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
 
   // Create next memory page
   uint8_t* data_ptr;
-  if (current_pos + aligned_byte_size > current_capacity) {
-    pages_length++;
-    current_pos = 0;
-    
-    int64_t new_capacity = current_capacity * 2;
-    SPerl_MEMORY_POOL_PAGE* new_page = (SPerl_MEMORY_POOL_PAGE*)SPerl_MEMORY_POOL_PAGE_new(sperl);
-    new_page->data = (uint8_t*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(new_capacity, sizeof(uint8_t));
-    
-    new_page->next = memory_pool->page;
-    memory_pool->page = new_page;
-    memory_pool->pages_length = pages_length;
-  }
-
-  data_ptr = memory_pool->page->data + current_pos;
-  
-  memory_pool->current_pos = current_pos + aligned_byte_size;
   
   return data_ptr;
 }
 
 void SPerl_MEMORY_POOL2_free(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool) {
   (void)sperl;
+  
+  for (int64_t i = 0; i < memory_pool->pages_length; i++) {
+    free(memory_pool->pages[i]);
+  }
+  free(memory_pool->pages);
   
   free(memory_pool);
 }

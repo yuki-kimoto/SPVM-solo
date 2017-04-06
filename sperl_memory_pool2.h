@@ -4,10 +4,11 @@
 #include "sperl_base.h"
 
 struct SPerl_memory_pool {
-  SPerl_MEMORY_POOL_PAGE* page;
   int64_t page_byte_size;
   int64_t pages_length;
-  int64_t current_pos;
+  int64_t current_offset;
+  uint8_t** pages;
+  int64_t pages_capacity;
 };
 
 SPerl_MEMORY_POOL2* SPerl_MEMORY_POOL2_new(SPerl* sperl, int64_t page_byte_size);
