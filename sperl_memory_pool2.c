@@ -35,19 +35,17 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   assert(byte_size <= memory_pool->page_byte_size);
   
   int64_t pages_length = memory_pool->pages_length;
-  int64_t current_offset = memory_pool->current_offset;
   int64_t page_byte_size = memory_pool->page_byte_size;
   int64_t current_page = memory_pool->current_page;
   
+  uint8_t* next_address = (uint8_t*)&memory_pool->pages[current_page] + memory_pool->current_offset;
+  
+  memory_pool->current_offset += byte_size;
   
   // Adjust alignment
   int64_t aligned_byte_size = (byte_size - 1) + (sperl->alignment - ((byte_size - 1) % sperl->alignment));
   
-
-  // Create next memory page
-  uint8_t* data_ptr;
-  
-  return data_ptr;
+  return next_address;
 }
 
 void SPerl_MEMORY_POOL2_free(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool) {
