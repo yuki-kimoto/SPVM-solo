@@ -8,7 +8,7 @@ struct SPerl_memory_pool {
   int64_t pages_length;
   int64_t current_offset;
   uint8_t** pages;
-  int64_t pages_capacity;
+  int64_t current_page;
 };
 
 SPerl_MEMORY_POOL2* SPerl_MEMORY_POOL2_new(SPerl* sperl, int64_t page_byte_size);
