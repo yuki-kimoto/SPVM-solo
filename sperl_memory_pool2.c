@@ -31,6 +31,7 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   (void)sperl;
   
   assert(byte_size > 0);
+  assert(byte_size <= memory_pool->page_byte_size);
   
   int64_t pages_length = memory_pool->pages_length;
   int64_t current_pos = memory_pool->current_pos;
