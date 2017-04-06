@@ -128,6 +128,10 @@ typedef struct SPerl_memory_pool_page SPerl_MEMORY_POOL_PAGE;
 struct SPerl_memory_pool;
 typedef struct SPerl_memory_pool SPerl_MEMORY_POOL;
 
+/* sperl_memory_pool2.h */
+struct SPerl_memory_pool2;
+typedef struct SPerl_memory_pool SPerl_MEMORY_POOL2;
+
 /* sperl_var.h */
 struct SPerl_var;
 typedef struct SPerl_var SPerl_VAR;
