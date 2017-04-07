@@ -40,7 +40,14 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   if (memory_pool->current_offset + aligned_byte_size > memory_pool->page_byte_size) {
     // Next page is not yet allocated
     if (memory_pool->current_page + 1 > memory_pool->pages_length) {
+      int64_t new_memory_pool_pages_length = memory_pool->pages_length * 2;
       
+      memory_pool->pages = SPerl_ALLOCATOR_UTIL_safe_realloc(memory_pool->pages, memory_pool->pages_length, sizeof(uint8_t*));
+      for (int64_t i = memory_pool->pages_length + 1; i < new_memory_pool_pages_length; i++) {
+        memory_pool->pages[i] = SPerl_ALLOCATOR_UTIL_safe_malloc(memory_pool->page_byte_size, sizeof(uint8_t));
+      }
+      
+      memory_pool->pages_length = new_memory_pool_pages_length;
     }
     memory_pool->current_page++;
     memory_pool->current_offset = 0;
