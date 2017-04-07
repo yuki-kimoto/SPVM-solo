@@ -44,14 +44,11 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
     }
   }
   
-  uint8_t* next_address = (uint8_t*)&memory_pool->pages[memory_pool->current_page] + memory_pool->current_offset;
-  
+  // Allocated address
+  uint8_t* alloc_address = (uint8_t*)&memory_pool->pages[memory_pool->current_page] + memory_pool->current_offset;
   memory_pool->current_offset += byte_size;
   
-  
-  
-  
-  return next_address;
+  return alloc_address;
 }
 
 void SPerl_MEMORY_POOL2_free(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool) {
