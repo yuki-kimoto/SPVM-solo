@@ -36,12 +36,14 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   // Adjust alignment
   int64_t aligned_byte_size = (byte_size - 1) + (sperl->alignment - ((byte_size - 1) % sperl->alignment));
   
-  // Need next page
+  // Move to next page
   if (memory_pool->current_offset + aligned_byte_size > memory_pool->page_byte_size) {
     // Next page is not yet allocated
     if (memory_pool->current_page + 1 > memory_pool->pages_length) {
       
     }
+    memory_pool->current_page++;
+    memory_pool->current_offset = 0;
   }
   
   // Allocated address
