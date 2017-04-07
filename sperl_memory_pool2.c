@@ -33,16 +33,23 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   assert(byte_size > 0);
   assert(byte_size <= memory_pool->page_byte_size);
   
-  int64_t pages_length = memory_pool->pages_length;
-  int64_t page_byte_size = memory_pool->page_byte_size;
-  int64_t current_page = memory_pool->current_page;
+  // Adjust alignment
+  int64_t aligned_byte_size = (byte_size - 1) + (sperl->alignment - ((byte_size - 1) % sperl->alignment));
   
-  uint8_t* next_address = (uint8_t*)&memory_pool->pages[current_page] + memory_pool->current_offset;
+  // Need next page
+  if (memory_pool->current_offset + aligned_byte_size > memory_pool->page_byte_size) {
+    // Next page is not yet allocated
+    if (memory_pool->current_page + 1 > memory_pool->pages_length) {
+      
+    }
+  }
+  
+  uint8_t* next_address = (uint8_t*)&memory_pool->pages[memory_pool->current_page] + memory_pool->current_offset;
   
   memory_pool->current_offset += byte_size;
   
-  // Adjust alignment
-  int64_t aligned_byte_size = (byte_size - 1) + (sperl->alignment - ((byte_size - 1) % sperl->alignment));
+  
+  
   
   return next_address;
 }

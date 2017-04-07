@@ -38,7 +38,7 @@ void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int6
   int64_t base_capacity = memory_pool->base_capacity;
   
   // Adjust alignment
-  int64_t aligned_byte_size = (byte_size - 1) + (8 - ((byte_size - 1) % sperl->alignment));
+  int64_t aligned_byte_size = (byte_size - 1) + (sperl->alignment - ((byte_size - 1) % sperl->alignment));
   
   // Calculate capacity
   int64_t current_capacity = base_capacity * pow(2, page_depth - 1);
