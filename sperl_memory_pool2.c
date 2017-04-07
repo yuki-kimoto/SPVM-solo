@@ -64,7 +64,9 @@ void SPerl_MEMORY_POOL2_free(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool) {
   (void)sperl;
   
   for (int64_t i = 0; i < memory_pool->pages_length; i++) {
+      warn("AAAAAAAAA %d %d", i, memory_pool->pages[i]);
     free(memory_pool->pages[i]);
+      warn("BBBBBBBBB %d", i);
   }
   free(memory_pool->pages);
   
