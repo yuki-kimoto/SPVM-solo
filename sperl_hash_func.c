@@ -5,7 +5,7 @@
 #include "sperl.h"
 #include "sperl_hash_func.h"
 
-int64_t SPerl_HASH_FUNC_calc_hash(SPerl* sperl, const char* str, int64_t len) {
+uint32_t SPerl_HASH_FUNC_calc_hash(SPerl* sperl, const char* str, size_t len) {
   (void)sperl;
   
   assert(len > 0);
@@ -16,5 +16,5 @@ int64_t SPerl_HASH_FUNC_calc_hash(SPerl* sperl, const char* str, int64_t len) {
     hash = ((hash << 5) + hash) + (uint8_t) *str_tmp++;
   }
   
-  return (int64_t)hash;
+  return hash;
 }
