@@ -18,7 +18,7 @@ struct SPerl_type {
     SPerl_TYPE_COMPONENT_NAME* type_component_name;
     SPerl_TYPE_COMPONENT_ARRAY* type_component_array;
   } uv;
-  int64_t code;
+  int32_t code;
 };
 
 
