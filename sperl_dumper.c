@@ -14,7 +14,6 @@
 #include "sperl_sub.h"
 #include "sperl_my_var.h"
 #include "sperl_var.h"
-#include "sperl_memory_pool.h"
 #include "sperl_op.h"
 #include "sperl_enumeration_value.h"
 #include "sperl_type.h"
@@ -509,6 +508,7 @@ void SPerl_DUMPER_dump_my_var(SPerl* sperl, SPerl_MY_VAR* my_var) {
     printf("        name => \"%s\"\n", my_var->op_name->uv.name);
     
     SPerl_TYPE* type = my_var->op_type->uv.type;
+    warn("AAAAAAAAAA %p", type->resolved_type);
     printf("        resolved_type => \"%s\"\n", type->resolved_type->name);
     
   }

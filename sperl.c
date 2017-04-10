@@ -8,7 +8,6 @@
 #include "sperl_hash.h"
 #include "sperl_array.h"
 #include "sperl_api.h"
-#include "sperl_memory_pool.h"
 #include "sperl_allocator_util.h"
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_array.h"

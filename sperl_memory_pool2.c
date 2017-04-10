@@ -12,7 +12,7 @@ SPerl_MEMORY_POOL2* SPerl_MEMORY_POOL2_new(SPerl* sperl, int64_t page_byte_size)
   SPerl_MEMORY_POOL2* memory_pool = (SPerl_MEMORY_POOL2*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(1, sizeof(SPerl_MEMORY_POOL2));
   
   if (page_byte_size == 0) {
-    memory_pool->page_byte_size = 0xFF;
+    memory_pool->page_byte_size = 0xFFFF;
   }
   else {
     memory_pool->page_byte_size = page_byte_size;
@@ -36,6 +36,7 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   
   // Adjust alignment
   int64_t aligned_byte_size = (byte_size - 1) + (sperl->alignment - ((byte_size - 1) % sperl->alignment));
+  warn("AAAAAAAAAAA %d, %d %d", memory_pool->current_offset, aligned_byte_size, memory_pool->page_byte_size);
   
   // Move to next page
   if (memory_pool->current_offset + aligned_byte_size > memory_pool->page_byte_size) {
@@ -49,7 +50,6 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
       memory_pool->pages = SPerl_ALLOCATOR_UTIL_safe_realloc(memory_pool->pages, new_memory_pool_pages_length, sizeof(uint8_t*));
       for (int64_t i = memory_pool->pages_length; i < new_memory_pool_pages_length; i++) {
         memory_pool->pages[i] = SPerl_ALLOCATOR_UTIL_safe_malloc(memory_pool->page_byte_size, sizeof(uint8_t));
-        warn("DDDDDDDDDD %d %p", i, memory_pool->pages[i]);
       }
       
       memory_pool->pages_length = new_memory_pool_pages_length;
@@ -57,11 +57,9 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   }
   
   // Allocated address
-  uint8_t* alloc_address = memory_pool->pages[memory_pool->current_page] + memory_pool->current_offset;
+  int8_t* alloc_address = memory_pool->pages[memory_pool->current_page] + memory_pool->current_offset;
   
-  memory_pool->current_offset += byte_size;
-  
-  assert(alloc_address);
+  memory_pool->current_offset += aligned_byte_size;
   
   return alloc_address;
 }
