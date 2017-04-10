@@ -24,6 +24,6 @@ struct SPerl_type {
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl* sperl);
 void SPerl_TYPE_build_parts(SPerl* sperl, SPerl_TYPE* type, SPerl_ARRAY* parts);
-_Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int64_t name_length);
+_Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, size_t name_length);
 
 #endif

@@ -23,7 +23,7 @@ const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[] = {
   "double[]"
 };
 
-int64_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
+int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
   1,
   1,
   1,
@@ -32,14 +32,14 @@ int64_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
   2
 };
 
-int64_t SPerl_RESOLVED_TYPE_get_array_dimention(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+int32_t SPerl_RESOLVED_TYPE_get_array_dimention(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
   (void)sperl;
   
   if (!SPerl_RESOLVED_TYPE_is_array(sperl, resolved_type)) {
     return 0;
   }
   else {
-    int64_t dimention = 0;
+    int32_t dimention = 0;
     
     const char* resolved_type_name = resolved_type->name;
     const char* sub_end_ptr = strrchr(resolved_type_name, ')');
@@ -81,7 +81,7 @@ SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl* sperl) {
 _Bool SPerl_RESOLVED_TYPE_is_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
   (void)sperl;
   
-  int64_t length = strlen(resolved_type->name);
+  size_t length = strlen(resolved_type->name);
   
   if (strlen(resolved_type->name) >= 2) {
     char char1 = resolved_type->name[length - 2];

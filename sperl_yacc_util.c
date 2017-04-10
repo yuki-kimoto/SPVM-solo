@@ -15,17 +15,17 @@
 
 void SPerl_yyerror_format(SPerl* sperl, const char* message_template, ...) {
   
-  int64_t message_length = 0;
+  size_t message_length = 0;
   
   // Prefix
   const char* prefix = "Error:";
-  int64_t prefix_length = strlen(prefix);
+  size_t prefix_length = strlen(prefix);
    
   // Message template
-  int64_t message_template_length = strlen(message_template);
+  size_t message_template_length = strlen(message_template);
   
   // Messsage template with prefix
-  int64_t message_template_with_prefix_length = prefix_length + message_template_length;
+  size_t message_template_with_prefix_length = prefix_length + message_template_length;
   char* message_template_with_prefix = SPerl_ALLOCATOR_PARSER_new_string(sperl, sperl->parser, message_template_with_prefix_length);
   strncpy(message_template_with_prefix, prefix, prefix_length);
   strncpy(message_template_with_prefix + prefix_length, message_template, message_template_length);
@@ -82,8 +82,8 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
   // Syntax structure error
   else {
     // Current token
-    int64_t length = 0;
-    int64_t empty_count = 0;
+    size_t length = 0;
+    int32_t empty_count = 0;
     const char* ptr = parser->befbufptr;
     while (ptr != parser->bufptr) {
       if (*ptr == ' ' || *ptr == '\t' || *ptr == '\n') {
