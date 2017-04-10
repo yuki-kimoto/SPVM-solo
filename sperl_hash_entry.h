@@ -6,8 +6,8 @@
 // Hash entry
 struct SPerl_hash_entry {
   void* value;
-  int64_t next_index;
-  int64_t key_index;
+  size_t next_index;
+  size_t key_index;
 };
 
 #endif

@@ -9,7 +9,7 @@
 #include "sperl_parser.h"
 #include "sperl.h"
 
-SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int64_t table_capacity) {
+SPerl_HASH* SPerl_HASH_new(SPerl* sperl, size_t table_capacity) {
   (void)sperl;
   
   assert(table_capacity >= 0);
@@ -46,38 +46,38 @@ void SPerl_HASH_maybe_extend_entries(SPerl* sperl, SPerl_HASH* hash) {
   
   assert(hash);
   
-  int64_t entries_length = hash->entries_length;
+  size_t entries_length = hash->entries_length;
   
   assert(entries_length >= 0);
   
-  int64_t entries_capacity = hash->entries_capacity;
+  size_t entries_capacity = hash->entries_capacity;
   
   if (entries_length >= entries_capacity) {
     if (entries_capacity > INT64_MAX / 2) {
       SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
     }
-    int64_t new_entries_capacity = entries_capacity * 2;
+    size_t new_entries_capacity = entries_capacity * 2;
     hash->entries = SPerl_ALLOCATOR_UTIL_safe_realloc(hash->entries, new_entries_capacity, sizeof(SPerl_HASH_ENTRY));
     hash->entries_capacity = new_entries_capacity;
   }
 }
 
-void SPerl_HASH_maybe_extend_key_buffer(SPerl* sperl, SPerl_HASH* hash, int64_t length) {
+void SPerl_HASH_maybe_extend_key_buffer(SPerl* sperl, SPerl_HASH* hash, size_t length) {
   (void)sperl;
   
   assert(hash);
   
-  int64_t key_buffer_length = hash->key_buffer_length;
+  size_t key_buffer_length = hash->key_buffer_length;
   
   assert(key_buffer_length >= 0);
   
-  int64_t key_buffer_capacity = hash->key_buffer_capacity;
+  size_t key_buffer_capacity = hash->key_buffer_capacity;
   
   if (key_buffer_length + length >= key_buffer_capacity) {
     if (key_buffer_capacity > INT64_MAX / 2) {
       SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
     }
-    int64_t new_key_buffer_capacity = key_buffer_capacity * 2;
+    size_t new_key_buffer_capacity = key_buffer_capacity * 2;
     hash->key_buffer = SPerl_ALLOCATOR_UTIL_safe_realloc(hash->key_buffer, new_key_buffer_capacity, sizeof(SPerl_HASH_ENTRY));
     hash->key_buffer_capacity = new_key_buffer_capacity;
   }
@@ -93,18 +93,18 @@ void SPerl_HASH_free(SPerl* sperl, SPerl_HASH* hash) {
   free(hash);
 }
 
-int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* key, void* value) {
+size_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* key, void* value) {
   (void)sperl;
   
   assert(hash);
   assert(key);
   
-  int64_t index = hash->entries_length;
+  size_t index = hash->entries_length;
   
   SPerl_HASH_maybe_extend_entries(sperl, hash);
   SPerl_HASH_ENTRY* hash_entry = &hash->entries[index];
   
-  int64_t key_length = strlen(key);
+  size_t key_length = strlen(key);
   SPerl_HASH_maybe_extend_key_buffer(sperl, hash, key_length);
   
   hash_entry->key_index = hash->key_buffer_length;
@@ -122,7 +122,7 @@ int64_t SPerl_HASH_new_hash_entry(SPerl* sperl, SPerl_HASH* hash, const char* ke
   return index;
 }
 
-void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacity) {
+void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, size_t new_table_capacity) {
   (void)sperl;
   
   assert(hash);
@@ -132,8 +132,7 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
   SPerl_HASH* new_hash = SPerl_HASH_new(sperl, new_table_capacity);
   
   // Rehash
-  int64_t i;
-  for (i = 0; i < hash->entries_length; i++) {
+  for (size_t i = 0; i < hash->entries_length; i++) {
     SPerl_HASH_ENTRY* entry = &hash->entries[i];
     
     const char* key = &hash->key_buffer[entry->key_index];
@@ -161,15 +160,15 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int64_t new_table_capacit
   hash->key_buffer = new_hash->key_buffer;
 }
 
-void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
+void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key, size_t length, void* value) {
   (void)sperl;
   
   assert(hash);
   assert(key);
   assert(length > 0);
   
-  int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
-  int64_t index = hash_value % hash->table_capacity;
+  uint32_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
+  size_t index = hash_value % hash->table_capacity;
   
   if (hash->table[index]) {
     SPerl_HASH_ENTRY* next_entry = hash->table[index];
@@ -183,7 +182,7 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
           next_entry = &hash->entries[next_entry->next_index];
         }
         else {
-          int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
+          size_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
           next_entry->next_index = new_entry_index;
           break;
         }
@@ -191,12 +190,12 @@ void SPerl_HASH_insert_norehash(SPerl* sperl, SPerl_HASH* hash, const char* key,
     }
   }
   else {
-    int64_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
+    size_t new_entry_index = SPerl_HASH_new_hash_entry(sperl, hash, key, value);
     hash->table[index] = &hash->entries[new_entry_index];
   }
 }
 
-void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length, void* value) {
+void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, size_t length, void* value) {
   (void)sperl;
   
   assert(hash);
@@ -205,7 +204,7 @@ void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t 
   
   // Rehash
   if (hash->entries_length > hash->table_capacity * 0.75) {
-    int64_t new_table_capacity = (hash->table_capacity * 2) + 1;
+    size_t new_table_capacity = (hash->table_capacity * 2) + 1;
     
     SPerl_HASH_rehash(sperl, hash, new_table_capacity);
   }
@@ -213,15 +212,15 @@ void SPerl_HASH_insert(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t 
   SPerl_HASH_insert_norehash(sperl, hash, key, length, value);
 }
 
-void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, int64_t length) {
+void* SPerl_HASH_search(SPerl* sperl, SPerl_HASH* hash, const char* key, size_t length) {
   (void)sperl;
   
   assert(hash);
   assert(key);
   assert(length > 0);
 
-  int64_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
-  int64_t index = hash_value % hash->table_capacity;
+  uint32_t hash_value = SPerl_HASH_FUNC_calc_hash(sperl, key, length);
+  size_t index = hash_value % hash->table_capacity;
   
   SPerl_HASH_ENTRY* next_entry = hash->table[index];
   while (1) {
