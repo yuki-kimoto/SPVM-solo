@@ -50,7 +50,6 @@ int main()
     int64_t* int_ptr3 = SPerl_MEMORY_POOL2_alloc(sperl, memory_pool, sizeof(int64_t));
     int64_t* int_ptr4 = SPerl_MEMORY_POOL2_alloc(sperl, memory_pool, sizeof(int64_t));
     int64_t* int_ptr5 = SPerl_MEMORY_POOL2_alloc(sperl, memory_pool, sizeof(int64_t));
-    warn("AAAAA %p", int_ptr5);
     int64_t* int_ptr6 = SPerl_MEMORY_POOL2_alloc(sperl, memory_pool, sizeof(int64_t));
     int64_t* int_ptr7 = SPerl_MEMORY_POOL2_alloc(sperl, memory_pool, sizeof(int64_t));
     int64_t* int_ptr8 = SPerl_MEMORY_POOL2_alloc(sperl, memory_pool, sizeof(int64_t));
@@ -82,10 +81,7 @@ int main()
     OK(*(int64_t*)memory_pool->pages[3]);
     OK(*(int64_t*)(memory_pool->pages[3] + sizeof(int64_t)));
     
-    assert(0);
-    
     SPerl_MEMORY_POOL2_free(sperl, memory_pool);
-    
   }
   
   return 0;
