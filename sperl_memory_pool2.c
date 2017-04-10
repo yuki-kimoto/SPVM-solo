@@ -36,7 +36,6 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   
   // Adjust alignment
   int64_t aligned_byte_size = (byte_size - 1) + (sperl->alignment - ((byte_size - 1) % sperl->alignment));
-  warn("AAAAAAAAAAA %d, %d %d", memory_pool->current_offset, aligned_byte_size, memory_pool->page_byte_size);
   
   // Move to next page
   if (memory_pool->current_offset + aligned_byte_size > memory_pool->page_byte_size) {

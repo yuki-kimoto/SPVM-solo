@@ -508,7 +508,6 @@ void SPerl_DUMPER_dump_my_var(SPerl* sperl, SPerl_MY_VAR* my_var) {
     printf("        name => \"%s\"\n", my_var->op_name->uv.name);
     
     SPerl_TYPE* type = my_var->op_type->uv.type;
-    warn("AAAAAAAAAA %p", type->resolved_type);
     printf("        resolved_type => \"%s\"\n", type->resolved_type->name);
     
   }
