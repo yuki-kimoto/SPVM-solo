@@ -17,7 +17,6 @@
 #include "sperl_field.h"
 #include "sperl_my_var.h"
 #include "sperl_var.h"
-#include "sperl_memory_pool.h"
 #include "sperl_enumeration_value.h"
 #include "sperl_type.h"
 #include "sperl_type_component_name.h"
@@ -1255,7 +1254,7 @@ SPerl_OP* SPerl_OP_newOP_LIST(SPerl* sperl, const char* file, int64_t line) {
 
 SPerl_OP* SPerl_OP_newOP(SPerl* sperl, int64_t code, const char* file, int64_t line) {
 
-  SPerl_OP *op = SPerl_MEMORY_POOL_alloc(sperl, sperl->parser->memory_pool, sizeof(SPerl_OP));
+  SPerl_OP *op = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_OP));
   
   memset(op, 0, sizeof(SPerl_OP));
   
