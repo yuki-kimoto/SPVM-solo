@@ -7,7 +7,7 @@
 #include "sperl_allocator_util.h"
 #include "sperl_parser.h"
 
-SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int64_t capacity) {
+SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, size_t capacity) {
   (void)sperl;
   
   assert(capacity >= 0);
@@ -34,11 +34,11 @@ void SPerl_ARRAY_maybe_extend(SPerl* sperl, SPerl_ARRAY* array) {
   
   assert(array);
   
-  int64_t length = array->length;
-  int64_t capacity = array->capacity;
+  size_t length = array->length;
+  size_t capacity = array->capacity;
   
   if (length >= capacity) {
-    int64_t new_capacity = capacity * 2;
+    size_t new_capacity = capacity * 2;
     array->values = SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(void*));
     array->capacity = new_capacity;
   }
@@ -55,13 +55,13 @@ void SPerl_ARRAY_push(SPerl* sperl, SPerl_ARRAY* array, void* value) {
   
   SPerl_ARRAY_maybe_extend(sperl, array);
   
-  int64_t length = array->length;
+  size_t length = array->length;
   
   *(void**)&array->values[length] = value;
   array->length++;
 }
 
-void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
+void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, size_t index) {
   (void)sperl;
   
   assert(array);
@@ -71,7 +71,7 @@ void* SPerl_ARRAY_fetch(SPerl* sperl, SPerl_ARRAY* array, int64_t index) {
   return *(void**)&array->values[index];
 }
 
-void SPerl_ARRAY_store(SPerl* sperl, SPerl_ARRAY* array, int64_t index, void* value) {
+void SPerl_ARRAY_store(SPerl* sperl, SPerl_ARRAY* array, size_t index, void* value) {
   (void)sperl;
   
   assert(array);
