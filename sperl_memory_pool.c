@@ -3,13 +3,13 @@
 #include <assert.h>
 
 #include "sperl.h"
-#include "sperl_memory_pool2.h"
+#include "sperl_memory_pool.h"
 #include "sperl_allocator_util.h"
 
-SPerl_MEMORY_POOL2* SPerl_MEMORY_POOL2_new(SPerl* sperl, int64_t page_byte_size) {
+SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, int64_t page_byte_size) {
   (void)sperl;
   
-  SPerl_MEMORY_POOL2* memory_pool = (SPerl_MEMORY_POOL2*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(1, sizeof(SPerl_MEMORY_POOL2));
+  SPerl_MEMORY_POOL* memory_pool = (SPerl_MEMORY_POOL*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(1, sizeof(SPerl_MEMORY_POOL));
   
   if (page_byte_size == 0) {
     memory_pool->page_byte_size = 0xFFFF;
@@ -28,7 +28,7 @@ SPerl_MEMORY_POOL2* SPerl_MEMORY_POOL2_new(SPerl* sperl, int64_t page_byte_size)
   return memory_pool;
 }
 
-void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, int64_t byte_size) {
+void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int64_t byte_size) {
   (void)sperl;
   
   assert(byte_size > 0);
@@ -63,7 +63,7 @@ void* SPerl_MEMORY_POOL2_alloc(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool, in
   return alloc_address;
 }
 
-void SPerl_MEMORY_POOL2_free(SPerl* sperl, SPerl_MEMORY_POOL2* memory_pool) {
+void SPerl_MEMORY_POOL_free(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool) {
   (void)sperl;
   
   for (int64_t i = 0; i < memory_pool->pages_length; i++) {

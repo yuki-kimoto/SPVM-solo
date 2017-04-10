@@ -8,7 +8,7 @@
 #include "sperl_type_component_name.h"
 #include "sperl_type.h"
 #include "sperl_op.h"
-#include "sperl_memory_pool2.h"
+#include "sperl_memory_pool.h"
 #include "sperl_hash.h"
 #include "sperl_array.h"
 #include "sperl_allocator_parser.h"
@@ -22,7 +22,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
 
   // Memory pool - memory pool save short strings and object, except array and hash
   // These datas are created at compile time
-  parser->memory_pool = SPerl_MEMORY_POOL2_new(sperl, 0);
+  parser->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
   
   // Arrays - these arrays are created at compile time
   parser->arrays = SPerl_ARRAY_new(sperl, 0);
@@ -135,7 +135,7 @@ int64_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
 void SPerl_PARSER_free(SPerl* sperl, SPerl_PARSER* parser) {
   
   // Free memory pool */
-  SPerl_MEMORY_POOL2_free(sperl, parser->memory_pool);
+  SPerl_MEMORY_POOL_free(sperl, parser->memory_pool);
   
   // Free arrays
   for (int64_t i = 0, len = parser->arrays->length; i < len; i++) {

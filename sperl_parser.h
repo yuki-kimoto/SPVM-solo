@@ -8,7 +8,7 @@
 // Parser information
 struct SPerl_parser {
   // Memory_pool - This is compile time memory pool. This memory pool save short string and object except array, hash
-  SPerl_MEMORY_POOL2* memory_pool;
+  SPerl_MEMORY_POOL* memory_pool;
   
   // Compile time arrays
   SPerl_ARRAY* arrays;

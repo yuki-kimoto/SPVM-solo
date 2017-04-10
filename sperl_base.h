@@ -120,9 +120,9 @@ typedef struct SPerl_enumeration_value SPerl_ENUMERATION_VALUE;
 struct SPerl_use;
 typedef struct SPerl_use SPerl_USE;
 
-/* sperl_memory_pool2.h */
-struct SPerl_memory_pool2;
-typedef struct SPerl_memory_pool SPerl_MEMORY_POOL2;
+/* sperl_memory_pool.h */
+struct SPerl_memory_pool;
+typedef struct SPerl_memory_pool SPerl_MEMORY_POOL;
 
 /* sperl_var.h */
 struct SPerl_var;
