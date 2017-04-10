@@ -17,7 +17,7 @@
 #include "sperl_op.h"
 #include "sperl_constant_pool.h"
 #include "sperl_package.h"
-#include "sperl_heap.h"
+#include "sperl_allocator_runtime.h"
 #include "sperl_constant_pool_sub.h"
 #include "sperl_constant_pool_package.h"
 #include "sperl_constant_pool_field.h"
@@ -622,7 +622,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         // Allocate array
         intptr_t array;
         int64_t allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
-        array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+        array = (intptr_t)SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
         memset((void*)array, 0, allocate_size);
         memcpy((void*)(array + SPerl_C_ARRAY_HEADER_BYTE_SIZE), chars_ptr, length);
         
@@ -1430,7 +1430,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         // Allocate memory
         int64_t fields_byte_size = constant_pool_package->byte_size;
         int64_t allocate_size = SPerl_C_OBJECT_HEADER_BYTE_SIZE + fields_byte_size;
-        intptr_t object = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+        intptr_t object = (intptr_t)SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
         
         // Set reference count
         *(int64_t*)(object + SPerl_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
@@ -1475,7 +1475,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         else {
           assert(0);
         }
-        array = (intptr_t)SPerl_HEAP_alloc(sperl, allocate_size);
+        array = (intptr_t)SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
 
         // Set reference count
         *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
