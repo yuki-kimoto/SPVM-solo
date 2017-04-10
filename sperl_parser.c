@@ -93,7 +93,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   return parser;
 }
 
-int64_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
+int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   
   SPerl_PARSER* parser = sperl->parser;
 

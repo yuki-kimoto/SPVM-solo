@@ -71,20 +71,20 @@ struct SPerl_parser {
   const char* start_sub_name;
 
   // Current line number
-  int64_t cur_line;
+  int32_t cur_line;
   
   // Syntax error count
-  int64_t error_count;
+  int32_t error_count;
   
   // Current package count
-  int64_t current_package_count;
+  int32_t current_package_count;
   
   // Error is fatal
   _Bool fatal_error;
 };
 
 SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl);
-int64_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name);
+int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name);
 
 void SPerl_PARSER_free(SPerl* sperl, SPerl_PARSER* parser);
 

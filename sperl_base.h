@@ -2,6 +2,7 @@
 #define SPERL_BASE_H
 
 #include <stdint.h>
+#include <stdlib.h>;
 
 enum {
   SPerl_BASE_C_INT_MIN = -2147483648,

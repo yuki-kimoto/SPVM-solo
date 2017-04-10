@@ -6,7 +6,7 @@
 #include "sperl_memory_pool.h"
 #include "sperl_allocator_util.h"
 
-SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, int64_t page_byte_size) {
+SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, size_t page_byte_size) {
   (void)sperl;
   
   SPerl_MEMORY_POOL* memory_pool = (SPerl_MEMORY_POOL*) SPerl_ALLOCATOR_UTIL_safe_malloc_zero(1, sizeof(SPerl_MEMORY_POOL));
@@ -28,14 +28,14 @@ SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, int64_t page_byte_size) {
   return memory_pool;
 }
 
-void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int64_t byte_size) {
+void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, size_t byte_size) {
   (void)sperl;
   
   assert(byte_size > 0);
   assert(byte_size <= memory_pool->page_byte_size);
   
   // Adjust alignment
-  int64_t aligned_byte_size = (byte_size - 1) + (sperl->alignment - ((byte_size - 1) % sperl->alignment));
+  size_t aligned_byte_size = (byte_size - 1) + (sperl->alignment - ((byte_size - 1) % sperl->alignment));
   
   // Move to next page
   if (memory_pool->current_offset + aligned_byte_size > memory_pool->page_byte_size) {
@@ -44,10 +44,10 @@ void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int6
     memory_pool->current_offset = 0;
     
     if (memory_pool->current_page == memory_pool->pages_length) {
-      int64_t new_memory_pool_pages_length = memory_pool->pages_length * 2;
+      size_t new_memory_pool_pages_length = memory_pool->pages_length * 2;
       
       memory_pool->pages = SPerl_ALLOCATOR_UTIL_safe_realloc(memory_pool->pages, new_memory_pool_pages_length, sizeof(uint8_t*));
-      for (int64_t i = memory_pool->pages_length; i < new_memory_pool_pages_length; i++) {
+      for (size_t i = memory_pool->pages_length; i < new_memory_pool_pages_length; i++) {
         memory_pool->pages[i] = SPerl_ALLOCATOR_UTIL_safe_malloc(memory_pool->page_byte_size, sizeof(uint8_t));
       }
       
@@ -66,7 +66,7 @@ void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int6
 void SPerl_MEMORY_POOL_free(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool) {
   (void)sperl;
   
-  for (int64_t i = 0; i < memory_pool->pages_length; i++) {
+  for (size_t i = 0; i < memory_pool->pages_length; i++) {
     free(memory_pool->pages[i]);
   }
   
