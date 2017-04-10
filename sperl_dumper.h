@@ -6,7 +6,6 @@
 void SPerl_DUMPER_dump_sperl(SPerl* sperl);
 void SPerl_DUMPER_dump_classs(SPerl* sperl, SPerl_ARRAY* classs);
 void SPerl_DUMPER_dump_constants(SPerl* sperl, SPerl_ARRAY* constants);
-void SPerl_DUMPER_dump_const_pool(SPerl* sperl, int64_t* const_pool, int64_t size);
 void SPerl_DUMPER_dump_constant(SPerl* sperl, SPerl_CONSTANT* constant);
 void SPerl_DUMPER_dump_field(SPerl* sperl, SPerl_FIELD* field);
 void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub);
