@@ -21,7 +21,7 @@ const char* const SPerl_TYPE_C_CODE_NAMES[] = {
 };
 
 // Resolve type and index type
-_Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, uint32_t name_length) {
+_Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_length) {
   
   SPerl_PARSER* parser = sperl->parser;
   
@@ -37,7 +37,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, uint32_t name_len
     SPerl_ARRAY* parts = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
     SPerl_TYPE_build_parts(sperl, type, parts);
     
-    for (uint32_t i = 0; i < parts->length; i++) {
+    for (int32_t i = 0; i < parts->length; i++) {
       SPerl_TYPE_PART* part = SPerl_ARRAY_fetch(sperl, parts, i);
       if (part->code == SPerl_TYPE_PART_C_CODE_SUB) {
         name_length += 3;
@@ -72,10 +72,10 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, uint32_t name_len
     }
     char* resolved_type_name = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, name_length);
     
-    uint32_t cur_pos = 0;
-    for (uint32_t i = 0; i < resolved_type_part_names->length; i++) {
+    int32_t cur_pos = 0;
+    for (int32_t i = 0; i < resolved_type_part_names->length; i++) {
       const char* resolved_type_part_name = (const char*) SPerl_ARRAY_fetch(sperl, resolved_type_part_names, i);
-      uint32_t resolved_type_part_name_length = (uint32_t)strlen(resolved_type_part_name);
+      int32_t resolved_type_part_name_length = (int32_t)strlen(resolved_type_part_name);
       memcpy(resolved_type_name + cur_pos, resolved_type_part_name, resolved_type_part_name_length);
       cur_pos += resolved_type_part_name_length;
     }
