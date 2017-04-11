@@ -30,7 +30,7 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   return constant_pool;
 }
 
-int32_t SPerl_CONSTANT_POOL_calculate_extend_length(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int64_t byte_size) {
+int32_t SPerl_CONSTANT_POOL_calculate_extend_length(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t byte_size) {
   (void)sperl;
   (void)constant_pool;
   
@@ -49,8 +49,7 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
       SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
     }
     int32_t new_capacity = capacity * 2;
-    constant_pool->values = (int64_t*) SPerl_ALLOCATOR_UTIL_safe_realloc(constant_pool->values, new_capacity, sizeof(int64_t));
-    memset(constant_pool->values + capacity, 0, (new_capacity - capacity) * sizeof(int64_t));
+    constant_pool->values = SPerl_ALLOCATOR_UTIL_safe_realloc(constant_pool->values, new_capacity, sizeof(int64_t));
     constant_pool->capacity = new_capacity;
   }
 }
