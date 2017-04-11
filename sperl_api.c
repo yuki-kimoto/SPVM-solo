@@ -27,7 +27,7 @@ void SPerl_API_init_env(SPerl* sperl) {
   if (sperl->call_stack_capacity == -1) {
     sperl->call_stack_capacity = sperl->call_stack_capacity_default;
   }
-  sperl->call_stack = (SPerl_VALUE_T*) SPerl_ALLOCATOR_UTIL_safe_malloc(sperl->call_stack_capacity, sizeof(SPerl_VALUE_T));
+  sperl->call_stack = (int64_t*) SPerl_ALLOCATOR_UTIL_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
   sperl->call_stack_base = -1;
   sperl->operand_stack_top = -1;
   sperl->abort = 0;
@@ -250,7 +250,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
   // Constant pool sub
   int64_t sub_constant_pool_address = (int64_t)SPerl_HASH_search(sperl, sperl->constant_pool_sub_symtable, sub_abs_name, strlen(sub_abs_name));
   
-  SPerl_VALUE_T* call_stack = sperl->call_stack;
+  int64_t* call_stack = sperl->call_stack;
   
   // Program counter
   register uint8_t* pc = NULL;

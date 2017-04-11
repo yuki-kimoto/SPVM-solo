@@ -332,8 +332,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   break;
                 }
 
-                int64_t min = SPerl_BASE_C_INT_MAX;
-                int64_t max = SPerl_BASE_C_INT_MIN;
+                int64_t min = INT64_MIN;
+                int64_t max = INT64_MAX;
                 
                 for (int32_t i = 0; i < length; i++) {
                   SPerl_OP* op_case = SPerl_ARRAY_fetch(sperl, op_cases, i);
@@ -349,7 +349,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 double range = (double) max - (double) min;
                 
-                int64_t code;
+                int32_t code;
                 if (4.0 + range <= (3.0 + 2.0 * (double) length) * 1.5) {
                   code = SPerl_SWITCH_INFO_C_CODE_TABLESWITCH;
                 }
