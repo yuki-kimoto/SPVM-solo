@@ -44,19 +44,19 @@ struct sperl_ {
   int64_t* call_stack;
   
   // Call stack capacity default
-  size_t call_stack_capacity_default;
+  int32_t call_stack_capacity_default;
   
   // Call stack capacity
-  size_t call_stack_capacity;
+  int32_t call_stack_capacity;
   
   // Operand stack base
-  size_t call_stack_base;
+  int32_t call_stack_base;
   
   // Operand stack top
-  size_t operand_stack_top;
+  int32_t operand_stack_top;
 
   // Alignment size
-  size_t alignment;
+  int32_t alignment;
   
   // Exception
   _Bool abort;
