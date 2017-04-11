@@ -51,7 +51,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   parser->cur_line = 0;
   
   // Core types
-  for (size_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
+  for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name
     const char* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
@@ -68,7 +68,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   }
   
   // Core array types
-  for (size_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
+  for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name
     const char* name = SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[i];
     const char* core_name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
@@ -109,8 +109,8 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use);
   
   // Entry point
-  size_t package_name_length = strlen(package_name);
-  size_t entry_point_sub_name_length =  package_name_length + 6;
+  int32_t package_name_length = (int32_t)strlen(package_name);
+  int32_t entry_point_sub_name_length =  (int32_t)(package_name_length + 6);
   char* entry_point_sub_name = SPerl_ALLOCATOR_UTIL_safe_malloc(entry_point_sub_name_length + 1, sizeof(char));
   strncpy(entry_point_sub_name, package_name, package_name_length);
   strncpy(entry_point_sub_name + package_name_length, "::main", 6);
@@ -138,21 +138,21 @@ void SPerl_PARSER_free(SPerl* sperl, SPerl_PARSER* parser) {
   SPerl_MEMORY_POOL_free(sperl, parser->memory_pool);
   
   // Free arrays
-  for (size_t i = 0, len = parser->arrays->length; i < len; i++) {
+  for (int32_t i = 0, len = parser->arrays->length; i < len; i++) {
     SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, parser->arrays, i);
     SPerl_ARRAY_free(sperl, array);
   }
   SPerl_ARRAY_free(sperl, parser->arrays);
   
   // Free hashes
-  for (size_t i = 0, len = parser->hashes->length; i < len; i++) {
+  for (int32_t i = 0, len = parser->hashes->length; i < len; i++) {
     SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, parser->hashes, i);
     SPerl_HASH_free(sperl, hash);
   }
   SPerl_ARRAY_free(sperl, parser->hashes);
   
   // Free long strings
-  for (size_t i = 0, len = parser->long_strings->length; i < len; i++) {
+  for (int32_t i = 0, len = parser->long_strings->length; i < len; i++) {
     void* str = SPerl_ARRAY_fetch(sperl, parser->long_strings, i);
     free(str);
   }

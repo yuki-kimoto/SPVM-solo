@@ -81,7 +81,7 @@ SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl* sperl) {
 _Bool SPerl_RESOLVED_TYPE_is_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
   (void)sperl;
   
-  size_t length = strlen(resolved_type->name);
+  int32_t length = (int32_t)strlen(resolved_type->name);
   
   if (strlen(resolved_type->name) >= 2) {
     char char1 = resolved_type->name[length - 2];
