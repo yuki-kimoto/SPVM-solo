@@ -211,7 +211,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               // Add goto
               SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
               
-              int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+              int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, parser);
               *address_ptr = bytecode_array->length - 1;
               
               SPerl_ARRAY_push(sperl, goto_loop_start_address_stack, address_ptr);
@@ -337,7 +337,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               }
               case SPerl_OP_C_CODE_CASE: {
                 
-                int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+                int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, parser);
                 *address_ptr = bytecode_array->length;
                 
                 SPerl_ARRAY_push(sperl, cur_case_addresses, address_ptr);
@@ -537,7 +537,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 if (try_stack->length > 0) {
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
                   
-                  int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+                  int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, parser);
                   *address_ptr = bytecode_array->length - 1;
                   SPerl_ARRAY_push(sperl, goto_exception_handler_stack, address_ptr);
                   
@@ -561,7 +561,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 // Add goto
                 SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
                 
-                int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+                int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, parser);
                 *address_ptr = bytecode_array->length - 1;
                 
                 SPerl_ARRAY_push(sperl, goto_last_address_stack, address_ptr);
@@ -593,7 +593,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     // Prepare to jump to end of else block
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_GOTO);
                     
-                    int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+                    int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, parser);
                     *address_ptr = bytecode_array->length - 1;
                     SPerl_ARRAY_push(sperl, goto_if_block_end_address_stack, address_ptr);
                     
@@ -896,7 +896,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 int64_t address = bytecode_array->length - 1;
                 
                 if (op_cur->flag & SPerl_OP_C_FLAG_CONDITION_IF) {
-                  int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+                  int64_t* address_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, parser);
                   *address_ptr = address;
                   
                   SPerl_ARRAY_push(sperl, if_address_stack, address_ptr);
