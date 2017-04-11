@@ -39,7 +39,7 @@ int64_t SPerl_CONSTANT_POOL_calculate_extend_length(SPerl* sperl, SPerl_CONSTANT
   return length;
 }
 
-void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, size_t extend) {
+void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool, int32_t extend) {
   (void)sperl;
   
   int64_t capacity = constant_pool->capacity;
