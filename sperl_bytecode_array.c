@@ -22,11 +22,11 @@ SPerl_BYTECODE_ARRAY* SPerl_BYTECODE_ARRAY_new(SPerl* sperl) {
 void SPerl_BYTECODE_ARRAY_push(SPerl* sperl, SPerl_BYTECODE_ARRAY* bytecodes, uint8_t value) {
   (void)sperl;
   
-  size_t length = bytecodes->length;
-  size_t capacity = bytecodes->capacity;
+  int32_t length = bytecodes->length;
+  int32_t capacity = bytecodes->capacity;
   
   if (length >= capacity) {
-    size_t new_capacity = capacity * 2;
+    int32_t new_capacity = capacity * 2;
     bytecodes->values = (uint8_t*) SPerl_ALLOCATOR_UTIL_safe_realloc(bytecodes->values, new_capacity, sizeof(uint8_t));
     memset(bytecodes->values + capacity, 0, (new_capacity - capacity) * sizeof(uint8_t));
     bytecodes->capacity = new_capacity;
