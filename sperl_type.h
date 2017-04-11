@@ -18,12 +18,12 @@ struct SPerl_type {
     SPerl_TYPE_COMPONENT_NAME* type_component_name;
     SPerl_TYPE_COMPONENT_ARRAY* type_component_array;
   } uv;
-  int32_t code;
+  uint8_t code;
 };
 
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl* sperl);
 void SPerl_TYPE_build_parts(SPerl* sperl, SPerl_TYPE* type, SPerl_ARRAY* parts);
-_Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, size_t name_length);
+_Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, uint32_t name_length);
 
 #endif
