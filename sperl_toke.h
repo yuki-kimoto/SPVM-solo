@@ -4,6 +4,6 @@
 #include "sperl.h"
 
 int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl);
-SPerl_OP* SPerl_TOKE_newOP(SPerl* sperl, uint8_t type);
+SPerl_OP* SPerl_TOKE_newOP(SPerl* sperl, int32_t type);
 
 #endif

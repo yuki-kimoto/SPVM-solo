@@ -12,11 +12,11 @@ struct SPerl_sub {
   SPerl_ARRAY* op_my_vars;
   void (*native_address)(SPerl* sperl);
   const char* abs_name;
-  size_t bytecode_base;
-  size_t bytecode_length;
-  size_t operand_stack_max;
-  size_t constant_pool_address;
-  size_t abs_name_constant_pool_address;
+  uint32_t bytecode_base;
+  uint32_t bytecode_length;
+  uint32_t operand_stack_max;
+  uint32_t constant_pool_address;
+  uint32_t abs_name_constant_pool_address;
   _Bool is_native;
   _Bool is_constant;
 };

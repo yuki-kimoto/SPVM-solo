@@ -21,7 +21,7 @@
 #include "sperl_descriptor.h"
 #include "sperl_type.h"
 
-SPerl_OP* SPerl_TOKE_newOP(SPerl* sperl, uint8_t type) {
+SPerl_OP* SPerl_TOKE_newOP(SPerl* sperl, int32_t type) {
   
   SPerl_PARSER* parser = sperl->parser;
   

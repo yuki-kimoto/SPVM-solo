@@ -24,9 +24,9 @@ extern const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[];
 struct SPerl_resolved_type {
   SPerl_ARRAY* part_names;
   const char* name;
-  size_t name_length;
-  int32_t code;
+  uint32_t name_length;
   int32_t id;
+  int32_t code;
 };
 
 SPerl_RESOLVED_TYPE* SPerl_RESOLVED_TYPE_new(SPerl* sperl);
