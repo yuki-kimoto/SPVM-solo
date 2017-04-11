@@ -184,9 +184,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
       SPerl_OP* cur_op_switch_info = NULL;
       
       // Current case addresses
-      int64_t cur_switch_address = -1;
+      int32_t cur_switch_address = -1;
       
-      int64_t cur_default_address = -1;
+      int32_t cur_default_address = -1;
       SPerl_ARRAY* cur_case_addresses = NULL;
       SPerl_ARRAY* cur_op_cases = NULL;
       
