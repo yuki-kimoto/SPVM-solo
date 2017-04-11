@@ -41,8 +41,8 @@ struct sperl_ {
   SPerl_BYTECODE_ARRAY* bytecode_array;
   
   // Call stack
-  SPerl_VALUE_T* call_stack;
-
+  int64_t* call_stack;
+  
   // Call stack capacity default
   size_t call_stack_capacity_default;
   
