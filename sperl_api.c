@@ -1828,51 +1828,51 @@ void SPerl_API_push_var_double(SPerl* sperl, double value) {
   *(double*)&sperl->call_stack[sperl->operand_stack_top] = value;
 }
 
-void SPerl_API_push_var_ref(SPerl* sperl, intptr_t value) {
+void SPerl_API_push_var_ref(SPerl* sperl, void* value) {
   (void)sperl;
   
   sperl->operand_stack_top++;
-  *(intptr_t*)&sperl->call_stack[sperl->operand_stack_top] = value;
+  *(void**)&sperl->call_stack[sperl->operand_stack_top] = value;
 }
 
-int64_t SPerl_API_get_array_length(SPerl* sperl, intptr_t array) {
+int64_t SPerl_API_get_array_length(SPerl* sperl, void* array) {
   (void)sperl;
   
   return *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_BYTE_OFFSET);
 }
 
-int64_t SPerl_API_get_array_ref_count(SPerl* sperl, intptr_t array) {
+int64_t SPerl_API_get_array_ref_count(SPerl* sperl, void* array) {
   (void)sperl;
   
   return *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_BYTE_OFFSET);
 }
 
-int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, intptr_t array) {
+int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, void* array) {
   (void)sperl;
   return (int8_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
-int16_t* SPerl_API_get_short_array_data(SPerl* sperl, intptr_t array) {
+int16_t* SPerl_API_get_short_array_data(SPerl* sperl, void* array) {
   (void)sperl;
   return (int16_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
-int32_t* SPerl_API_get_int_array_data(SPerl* sperl, intptr_t array) {
+int32_t* SPerl_API_get_int_array_data(SPerl* sperl, void* array) {
   (void)sperl;
   return (int32_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
-int64_t* SPerl_API_get_long_array_data(SPerl* sperl, intptr_t array) {
+int64_t* SPerl_API_get_long_array_data(SPerl* sperl, void* array) {
   (void)sperl;
   return (int64_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
-float* SPerl_API_get_float_array_data(SPerl* sperl, intptr_t array) {
+float* SPerl_API_get_float_array_data(SPerl* sperl, void* array) {
   (void)sperl;
   return (float*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
-double* SPerl_API_get_double_array_data(SPerl* sperl, intptr_t array) {
+double* SPerl_API_get_double_array_data(SPerl* sperl, void* array) {
   (void)sperl;
   return (double*)(array + SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
