@@ -409,13 +409,13 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
       case_SPerl_BYTECODE_C_CODE_ATHROW: {
         
         // Return value
-        int64_t return_value = call_stack[operand_stack_top];
+        SPerl_VALUE_T return_value = call_stack[operand_stack_top];
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
         
         // Return address
-        int64_t return_address = call_stack[call_stack_base - 2];
+        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 2];
         
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1];
