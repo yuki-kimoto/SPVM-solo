@@ -55,9 +55,6 @@ struct sperl_ {
   // Operand stack top
   int32_t operand_stack_top;
 
-  // Alignment size
-  int32_t alignment;
-  
   // Exception
   _Bool abort;
 };

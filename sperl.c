@@ -65,14 +65,6 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
 SPerl* SPerl_new() {
   SPerl* sperl = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(1, sizeof(SPerl));
   
-  // Alignment size
-  if (sizeof(intptr_t) > sizeof(int64_t)) {
-    sperl->alignment = sizeof(intptr_t);
-  }
-  else {
-    sperl->alignment = sizeof(int64_t);
-  }
-  
   // Constant pool
   sperl->constant_pool = SPerl_CONSTANT_POOL_new(sperl);
   
