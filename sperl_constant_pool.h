@@ -5,7 +5,7 @@
 
 // Array
 struct SPerl_constant_pool {
-  int64_t* values;
+  SPerl_VALUE_T* values;
   int32_t length;
   int32_t capacity;
 };

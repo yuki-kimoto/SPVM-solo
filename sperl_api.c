@@ -239,7 +239,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
   };
   
   // Constant pool
-  int64_t* constant_pool = sperl->constant_pool->values;
+  SPerl_VALUE_T* constant_pool = sperl->constant_pool->values;
   
   // Bytecode
   uint8_t* bytecodes = sperl->bytecode_array->values;
