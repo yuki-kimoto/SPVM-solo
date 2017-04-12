@@ -666,37 +666,37 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_IALOAD:
         *(int32_t*)&call_stack[operand_stack_top - 1]
-          = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int32_t) * (intptr_t)call_stack[operand_stack_top]);
+          = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int32_t) * (size_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_LALOAD:
         call_stack[operand_stack_top - 1]
-          = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int64_t) * (intptr_t)call_stack[operand_stack_top]);
+          = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int64_t) * (size_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_FALOAD:
         *(float*)&call_stack[operand_stack_top - 1]
-          = *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(float) * (intptr_t)call_stack[operand_stack_top]);
+          = *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(float) * (size_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_DALOAD:
         *(double*)&call_stack[operand_stack_top - 1]
-          = *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(double) * (intptr_t)call_stack[operand_stack_top]);
+          = *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(double) * (size_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_BALOAD:
         *(int8_t*)&call_stack[operand_stack_top - 1]
-          = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * (intptr_t)call_stack[operand_stack_top]);
+          = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * (size_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_SALOAD:
         *(int16_t*)&call_stack[operand_stack_top - 1]
-          = *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int16_t) * (intptr_t)call_stack[operand_stack_top]);
+          = *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int16_t) * (size_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
