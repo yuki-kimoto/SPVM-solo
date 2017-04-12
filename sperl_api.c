@@ -350,13 +350,13 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
       case_SPerl_BYTECODE_C_CODE_RETURN_VALUE: {
         
         // Get return value
-        int64_t return_value = call_stack[operand_stack_top];
+        SPerl_VALUE_T return_value = call_stack[operand_stack_top];
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
         
         // Get return address
-        int64_t return_address = call_stack[call_stack_base - 2];
+        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 2];
         
         // Resotre call stack base
         call_stack_base = call_stack[call_stack_base - 1];
@@ -376,7 +376,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
           // Restore vars
           vars = &call_stack[call_stack_base];
           
-          pc = (uint8_t*)return_address;
+          pc = return_address;
           goto *jump[*pc];
         }
       }
@@ -386,7 +386,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         operand_stack_top = call_stack_base - 3;
         
         // Return address
-        int64_t return_address = call_stack[call_stack_base - 2];
+        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 2];
         
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1];
@@ -402,7 +402,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
           // Restore vars
           vars = &call_stack[call_stack_base];
 
-          pc = (uint8_t*)return_address;
+          pc = return_address;
           goto *jump[*pc];
         }
       }
