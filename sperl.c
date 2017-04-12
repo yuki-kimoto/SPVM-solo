@@ -42,7 +42,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   SPerl_API_call_sub(sperl, entry_point_sub_name);
   
   if (sperl->abort) {
-    intptr_t message = SPerl_API_pop_ret(sperl);
+    void* message = SPerl_API_pop_ret_ref(sperl);
     
     int64_t length = SPerl_API_get_array_length(sperl, message);
     

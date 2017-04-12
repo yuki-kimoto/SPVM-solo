@@ -1736,10 +1736,10 @@ double SPerl_API_pop_ret_double(SPerl* sperl) {
   return ret;
 }
 
-intptr_t SPerl_API_pop_ret(SPerl* sperl) {
+void* SPerl_API_pop_ret_ref(SPerl* sperl) {
   (void)sperl;
   
-  intptr_t ret = *(intptr_t*)&sperl->call_stack[sperl->operand_stack_top];
+  void* ret = *(void**)&sperl->call_stack[sperl->operand_stack_top];
   sperl->operand_stack_top--;
   return ret;
 }
@@ -1780,10 +1780,10 @@ double SPerl_API_get_var_double(SPerl* sperl, int64_t index) {
   return *(double*)&sperl->call_stack[sperl->call_stack_base + (size_t)index];
 }
 
-intptr_t SPerl_API_get_var_ref(SPerl* sperl, int64_t index) {
+void* SPerl_API_get_var_ref(SPerl* sperl, int64_t index) {
   (void)sperl;
   
-  return *(intptr_t*)&sperl->call_stack[sperl->call_stack_base + (size_t)index];
+  return *(void**)&sperl->call_stack[sperl->call_stack_base + (size_t)index];
 }
 
 void SPerl_API_push_var_byte(SPerl* sperl, int8_t value) {
