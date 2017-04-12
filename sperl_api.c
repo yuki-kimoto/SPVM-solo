@@ -27,7 +27,7 @@ void SPerl_API_init_env(SPerl* sperl) {
   if (sperl->call_stack_capacity == -1) {
     sperl->call_stack_capacity = sperl->call_stack_capacity_default;
   }
-  sperl->call_stack = SPerl_ALLOCATOR_UTIL_safe_malloc(sperl->call_stack_capacity, sizeof(int64_t));
+  sperl->call_stack = SPerl_ALLOCATOR_UTIL_safe_malloc(sperl->call_stack_capacity, sizeof(SPerl_VALUE_T));
   sperl->call_stack_base = -1;
   sperl->operand_stack_top = -1;
   sperl->abort = 0;
@@ -245,12 +245,12 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
   uint8_t* bytecodes = sperl->bytecode_array->values;
   
   // Variables
-  int64_t* vars = &sperl->call_stack[sperl->call_stack_base];
+  SPerl_VALUE_T* vars = &sperl->call_stack[sperl->call_stack_base];
   
   // Constant pool sub
   int32_t sub_constant_pool_address = (int32_t)SPerl_HASH_search(sperl, sperl->constant_pool_sub_symtable, sub_abs_name, strlen(sub_abs_name));
   
-  int64_t* call_stack = sperl->call_stack;
+  SPerl_VALUE_T* call_stack = sperl->call_stack;
   
   // Program counter
   register uint8_t* pc = NULL;
@@ -283,13 +283,13 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
           
           while (call_stack_max > sperl->call_stack_capacity) {
             sperl->call_stack_capacity = sperl->call_stack_capacity * 2;
-            sperl->call_stack = call_stack = realloc(call_stack, sizeof(int64_t) * sperl->call_stack_capacity);
+            sperl->call_stack = call_stack = realloc(call_stack, sizeof(SPerl_VALUE_T) * sperl->call_stack_capacity);
           }
 
           operand_stack_top -= constant_pool_sub->args_length;
 
           // Prepare arguments
-          memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(int64_t));
+          memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(SPerl_VALUE_T));
 
           // Save return address(operand + (throw or goto exception handler))
           if (call_stack_base == call_stack_base_start) {
@@ -306,7 +306,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
           call_stack_base = operand_stack_top + 3;
           
           // Initialize my variables
-          memset(&call_stack[call_stack_base + constant_pool_sub->args_length], 0, (constant_pool_sub->my_vars_length - constant_pool_sub->args_length) * sizeof(int64_t));
+          memset(&call_stack[call_stack_base + constant_pool_sub->args_length], 0, (constant_pool_sub->my_vars_length - constant_pool_sub->args_length) * sizeof(SPerl_VALUE_T));
           
           // Set variables to local variable
           vars = &call_stack[call_stack_base];
