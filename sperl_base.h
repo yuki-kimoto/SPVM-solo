@@ -2,7 +2,7 @@
 #define SPERL_BASE_H
 
 #include <stdint.h>
-#include <stdlib.h>;
+#include <stdlib.h>
 
 /* sperl_env.h */
 struct SPerl_env;
