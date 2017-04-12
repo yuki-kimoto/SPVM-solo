@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#ifndef SPerl_VALUE_T
+#  define SPerl_VALUE_T int64_t
+#endif
+
 /* sperl_env.h */
 struct SPerl_env;
 typedef struct SPerl_env SPerl_ENV;
