@@ -444,7 +444,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         assert(0);
       case_SPerl_BYTECODE_C_CODE_ACONST_NULL:
         operand_stack_top++;
-        *(intptr_t*)&call_stack[operand_stack_top] = (intptr_t)NULL;
+        *(void**)&call_stack[operand_stack_top] = (void*)NULL;
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_BCONST_0:
@@ -620,9 +620,8 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         int8_t* chars_ptr = (int8_t*)&string_info_ptr[1];
         
         // Allocate array
-        intptr_t array;
         int64_t allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
-        array = (intptr_t)SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
+        void* array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
         memset((void*)array, 0, allocate_size);
         memcpy((void*)(array + SPerl_C_ARRAY_HEADER_BYTE_SIZE), chars_ptr, length);
         
@@ -634,7 +633,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         
         // Set array
         operand_stack_top++;
-        *(intptr_t*)&call_stack[operand_stack_top] = array;
+        *(void**)&call_stack[operand_stack_top] = array;
         
         pc += 5;
         goto *jump[*pc];
