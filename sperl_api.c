@@ -1329,12 +1329,12 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         operand_stack_top -= 2;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_IF_ACMPEQ:
-        success = *(intptr_t*)&call_stack[operand_stack_top - 1] == *(intptr_t*)&call_stack[operand_stack_top];
+        success = *(void**)&call_stack[operand_stack_top - 1] == *(void**)&call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_IF_ACMPNE:
-        success = *(intptr_t*)&call_stack[operand_stack_top - 1] != *(intptr_t*)&call_stack[operand_stack_top];
+        success = *(void**)&call_stack[operand_stack_top - 1] != *(void**)&call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
@@ -1430,7 +1430,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         // Allocate memory
         int32_t fields_byte_size = constant_pool_package->byte_size;
         int32_t allocate_size = SPerl_C_OBJECT_HEADER_BYTE_SIZE + fields_byte_size;
-        intptr_t object = (intptr_t)SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
+        void* object = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
         
         // Set reference count
         *(int64_t*)(object + SPerl_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
@@ -1440,7 +1440,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         
         // Push object
         operand_stack_top++;
-        *(intptr_t*)&call_stack[operand_stack_top] = object;
+        *(void**)&call_stack[operand_stack_top] = object;
         
         pc += 5;
         goto *jump[*pc];
@@ -1452,7 +1452,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         int64_t length = call_stack[operand_stack_top];
         
         // Allocate array
-        intptr_t array;
+        void* array;
         int64_t allocate_size;
         if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
           allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
@@ -1475,7 +1475,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         else {
           assert(0);
         }
-        array = (intptr_t)SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
+        array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
 
         // Set reference count
         *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
@@ -1484,13 +1484,13 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
         *(int64_t*)(array + SPerl_C_ARRAY_HEADER_LENGTH_BYTE_OFFSET) = length;
         
         // Set array
-        *(intptr_t*)&call_stack[operand_stack_top] = array;
+        *(void**)&call_stack[operand_stack_top] = array;
         
         pc += 2;
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
-        call_stack[operand_stack_top] = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top] + SPerl_C_ARRAY_HEADER_LENGTH_BYTE_OFFSET);
+        call_stack[operand_stack_top] = *(int64_t*)(*(void**)&call_stack[operand_stack_top] + SPerl_C_ARRAY_HEADER_LENGTH_BYTE_OFFSET);
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_WIDE:
