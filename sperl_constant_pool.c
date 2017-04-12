@@ -122,7 +122,7 @@ void SPerl_CONSTANT_POOL_push_long(SPerl* sperl, SPerl_CONSTANT_POOL* constant_p
   
   // Add long value
   SPerl_CONSTANT_POOL_extend(sperl, constant_pool, 1);
-  constant_pool->values[constant_pool->length] = value;
+  *(int64_t*)&constant_pool->values[constant_pool->length] = value;
   constant_pool->length++;
 }
 
