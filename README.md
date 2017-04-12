@@ -471,7 +471,6 @@ Use the following types in source codes. This is defined in the standard header 
 
 # Limitation
 
-- Only support 64bit Perl
 - Array can't have object except for string
 - Object can't have object except for array and string
 
