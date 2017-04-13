@@ -7,7 +7,7 @@ struct SPerl_memory_pool {
   int32_t page_byte_size;
   int32_t pages_length;
   int32_t current_offset;
-  uint8_t** pages;
+  int8_t** pages;
   int32_t current_page;
 };
 

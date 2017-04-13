@@ -18,7 +18,7 @@ SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, int32_t page_byte_size) {
     memory_pool->page_byte_size = page_byte_size;
   }
   
-  uint8_t* page = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(memory_pool->page_byte_size, sizeof(uint8_t));
+  int8_t* page = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(memory_pool->page_byte_size, sizeof(int8_t));
   memory_pool->pages_length = 1;
   memory_pool->pages = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(memory_pool->pages_length, sizeof(uint8_t*));
   memory_pool->pages[0] = page;
