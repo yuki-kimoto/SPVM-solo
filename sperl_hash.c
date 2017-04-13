@@ -134,7 +134,7 @@ void SPerl_HASH_rehash(SPerl* sperl, SPerl_HASH* hash, int32_t new_table_capacit
     
     assert(key);
     
-    const void* value = *(void**)&entry->value;
+    void* value = *(void**)&entry->value;
     
     SPerl_HASH_insert_norehash(sperl, new_hash, key, strlen(key), value);
   }

@@ -56,7 +56,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
     
     // Add constant pool sub to symbol table
     const char* constant_pool_package_name = (char*)&sperl->constant_pool->values[package->name_constant_pool_address + 1];
-    SPerl_HASH_insert(sperl, sperl->constant_pool_package_symtable, constant_pool_package_name, strlen(constant_pool_package_name), (intptr_t)package->constant_pool_address);
+    SPerl_HASH_insert(sperl, sperl->constant_pool_package_symtable, constant_pool_package_name, strlen(constant_pool_package_name), (void*)(intptr_t)package->constant_pool_address);
     
     // Push field information to constant pool
     for (int32_t field_pos = 0; field_pos < package->op_fields->length; field_pos++) {
@@ -73,7 +73,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       
       // Add constant pool field to symbol table
       const char* constant_pool_field_name = (char*)&sperl->constant_pool->values[field->abs_name_constant_pool_address + 1];
-      SPerl_HASH_insert(sperl, sperl->constant_pool_field_symtable, constant_pool_field_name, strlen(constant_pool_field_name), (intptr_t)field->constant_pool_address);
+      SPerl_HASH_insert(sperl, sperl->constant_pool_field_symtable, constant_pool_field_name, strlen(constant_pool_field_name), (void*)(intptr_t)field->constant_pool_address);
     }
     
     for (int32_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
@@ -170,7 +170,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             if (block_start) {
               assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
               block_base = op_my_var_stack->length;
-              int32_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_new_long(sperl, parser);
+              int32_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, parser);
               *block_base_ptr = block_base;
               SPerl_ARRAY_push(sperl, block_base_stack, block_base_ptr);
             }
@@ -1342,7 +1342,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       
       // Add constant pool sub to symbol table
       const char* constant_pool_sub_name = (char*)&sperl->constant_pool->values[sub->abs_name_constant_pool_address + 1];
-      SPerl_HASH_insert(sperl, sperl->constant_pool_sub_symtable, constant_pool_sub_name, strlen(constant_pool_sub_name), (intptr_t)sub->constant_pool_address);
+      SPerl_HASH_insert(sperl, sperl->constant_pool_sub_symtable, constant_pool_sub_name, strlen(constant_pool_sub_name), (void*)(intptr_t)sub->constant_pool_address);
     }
   }
 }
