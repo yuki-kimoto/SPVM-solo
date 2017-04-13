@@ -54,9 +54,6 @@ void SPerl_HASH_maybe_extend_entries(SPerl* sperl, SPerl_HASH* hash) {
   int32_t entries_capacity = hash->entries_capacity;
   
   if (entries_length >= entries_capacity) {
-    if (entries_capacity > INT64_MAX / 2) {
-      SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
-    }
     int32_t new_entries_capacity = entries_capacity * 2;
     hash->entries = SPerl_ALLOCATOR_UTIL_safe_realloc(hash->entries, new_entries_capacity, sizeof(SPerl_HASH_ENTRY));
     hash->entries_capacity = new_entries_capacity;
@@ -75,9 +72,6 @@ void SPerl_HASH_maybe_extend_key_buffer(SPerl* sperl, SPerl_HASH* hash, int32_t 
   int32_t key_buffer_capacity = hash->key_buffer_capacity;
   
   if (key_buffer_length + length >= key_buffer_capacity) {
-    if (key_buffer_capacity > INT64_MAX / 2) {
-      SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
-    }
     int32_t new_key_buffer_capacity = key_buffer_capacity * 2;
     hash->key_buffer = SPerl_ALLOCATOR_UTIL_safe_realloc(hash->key_buffer, new_key_buffer_capacity, sizeof(SPerl_HASH_ENTRY));
     hash->key_buffer_capacity = new_key_buffer_capacity;

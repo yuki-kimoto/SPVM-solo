@@ -45,9 +45,6 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
   int32_t capacity = constant_pool->capacity;
   
   if (constant_pool->length + extend >= capacity) {
-    if (capacity > INT32_MAX / 2) {
-      SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
-    }
     int32_t new_capacity = capacity * 2;
     constant_pool->values = SPerl_ALLOCATOR_UTIL_safe_realloc(constant_pool->values, new_capacity, sizeof(SPerl_VALUE_T));
     constant_pool->capacity = new_capacity;

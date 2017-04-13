@@ -7,8 +7,6 @@
 
 void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, size_t size) {
   (void) sperl;
-  if (size < 0 || SIZE_MAX < size) {
-    SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
-  }
+
   return SPerl_ALLOCATOR_UTIL_safe_malloc(size, sizeof(char));
 }
