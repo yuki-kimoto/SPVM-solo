@@ -28,20 +28,6 @@ void* SPerl_ALLOCATOR_UTIL_safe_malloc(size_t count, size_t size) {
   return block;
 }
 
-void* SPerl_ALLOCATOR_UTIL_safe_malloc_zero(size_t count, size_t size) {
-  if (count <= 0 || size <= 0 || count > SIZE_MAX / size) {
-    SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
-  }
-  
-  void* block = calloc(count, size);
-  
-  if (!block) {
-    SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();
-  }
-  
-  return block;
-}
-
 void* SPerl_ALLOCATOR_UTIL_safe_realloc(void* ptr, size_t count, size_t size) {
   if (count <= 0 || size <= 0 || count > SIZE_MAX / size) {
     SPerl_ALLOCATOR_UTIL_exit_with_malloc_failure();

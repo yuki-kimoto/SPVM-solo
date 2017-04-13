@@ -26,7 +26,8 @@ SPerl_HASH* SPerl_HASH_new(SPerl* sperl, int32_t table_capacity) {
   }
   
   // Initialize table
-  hash->table = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(hash->table_capacity, sizeof(SPerl_HASH_ENTRY*));
+  hash->table = SPerl_ALLOCATOR_UTIL_safe_malloc(hash->table_capacity, sizeof(SPerl_HASH_ENTRY*));
+  memset(hash->table, 0, hash->table_capacity * sizeof(SPerl_HASH_ENTRY*));
   
   // Initialize entries
   hash->entries_capacity = 255;
