@@ -11,9 +11,8 @@ void* SPerl_ALLOCATOR_UTIL_safe_malloc(int32_t count, int32_t size) {
   assert(size >= 0);
   assert(count <= INT32_MAX / size);
   
-  int32_t allocation_size = count * size;
-  
-  void* block = malloc(allocation_size);
+  int32_t block_size = count * size;
+  void* block = malloc(block_size);
   
   if (!block) {
     fprintf(stderr, "Failed to allocate memory. Sperl will exit.\n");
@@ -29,9 +28,8 @@ void* SPerl_ALLOCATOR_UTIL_safe_realloc(void* ptr, int32_t count, int32_t size) 
   assert(size >= 0);
   assert(count <= INT32_MAX / size);
 
-  int32_t allocation_size = count * size;
-
-  void* block = realloc(ptr, allocation_size);
+  int32_t block_size = count * size;
+  void* block = realloc(ptr, block_size);
   
   if (!block) {
     fprintf(stderr, "Failed to reallocate memory. Sperl will exit.\n");
