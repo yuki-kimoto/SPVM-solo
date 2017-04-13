@@ -35,7 +35,7 @@ void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int3
   assert(byte_size <= memory_pool->page_byte_size);
   
   // Adjust alignment
-  int32_t aligned_byte_size = (byte_size - 1) + (sizeof(SPerl_VALUE_T) - ((byte_size - 1) % sizeof(SPerl_VALUE_T)));
+  int32_t aligned_byte_size = (byte_size - 1) + (sizeof(intmax_t) - ((byte_size - 1) % sizeof(intmax_t)));
   
   // Move to next page
   if (memory_pool->current_offset + aligned_byte_size > memory_pool->page_byte_size) {

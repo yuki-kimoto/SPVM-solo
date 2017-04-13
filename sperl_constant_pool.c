@@ -24,7 +24,7 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   // index 0 is not used.
   constant_pool->length = 1;
   
-  SPerl_VALUE_T* values = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(constant_pool->capacity, sizeof(SPerl_VALUE_T));
+  intmax_t* values = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(constant_pool->capacity, sizeof(intmax_t));
   constant_pool->values = values;
   
   return constant_pool;
@@ -34,7 +34,7 @@ int32_t SPerl_CONSTANT_POOL_calculate_extend_length(SPerl* sperl, SPerl_CONSTANT
   (void)sperl;
   (void)constant_pool;
   
-  int32_t length = (byte_size + (sizeof(SPerl_VALUE_T) - 1)) / sizeof(SPerl_VALUE_T);
+  int32_t length = (byte_size + (sizeof(intmax_t) - 1)) / sizeof(intmax_t);
   
   return length;
 }
@@ -46,7 +46,7 @@ void SPerl_CONSTANT_POOL_extend(SPerl* sperl, SPerl_CONSTANT_POOL* constant_pool
   
   if (constant_pool->length + extend >= capacity) {
     int32_t new_capacity = capacity * 2;
-    constant_pool->values = SPerl_ALLOCATOR_UTIL_safe_realloc_i32(constant_pool->values, new_capacity, sizeof(SPerl_VALUE_T));
+    constant_pool->values = SPerl_ALLOCATOR_UTIL_safe_realloc_i32(constant_pool->values, new_capacity, sizeof(intmax_t));
     constant_pool->capacity = new_capacity;
   }
 }

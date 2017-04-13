@@ -27,7 +27,7 @@ void SPerl_API_init_env(SPerl* sperl) {
   if (sperl->call_stack_capacity == -1) {
     sperl->call_stack_capacity = sperl->call_stack_capacity_default;
   }
-  sperl->call_stack = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(sperl->call_stack_capacity, sizeof(SPerl_VALUE_T));
+  sperl->call_stack = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(sperl->call_stack_capacity, sizeof(intmax_t));
   sperl->call_stack_base = -1;
   sperl->operand_stack_top = -1;
   sperl->abort = 0;
@@ -239,18 +239,18 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
   };
   
   // Constant pool
-  SPerl_VALUE_T* constant_pool = sperl->constant_pool->values;
+  intmax_t* constant_pool = sperl->constant_pool->values;
   
   // Bytecode
   uint8_t* bytecodes = sperl->bytecode_array->values;
   
   // Variables
-  SPerl_VALUE_T* vars = &sperl->call_stack[sperl->call_stack_base];
+  intmax_t* vars = &sperl->call_stack[sperl->call_stack_base];
   
   // Constant pool sub
   int32_t sub_constant_pool_address = (int32_t)(intptr_t)SPerl_HASH_search(sperl, sperl->constant_pool_sub_symtable, sub_abs_name, strlen(sub_abs_name));
   
-  SPerl_VALUE_T* call_stack = sperl->call_stack;
+  intmax_t* call_stack = sperl->call_stack;
   
   // Program counter
   register uint8_t* pc = NULL;
@@ -283,13 +283,13 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
           
           while (call_stack_max > sperl->call_stack_capacity) {
             sperl->call_stack_capacity = sperl->call_stack_capacity * 2;
-            sperl->call_stack = call_stack = realloc(call_stack, sizeof(SPerl_VALUE_T) * sperl->call_stack_capacity);
+            sperl->call_stack = call_stack = realloc(call_stack, sizeof(intmax_t) * sperl->call_stack_capacity);
           }
 
           operand_stack_top -= constant_pool_sub->args_length;
 
           // Prepare arguments
-          memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(SPerl_VALUE_T));
+          memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(intmax_t));
 
           // Save return address(operand + (throw or goto exception handler))
           if (call_stack_base == call_stack_base_start) {
@@ -306,7 +306,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
           call_stack_base = operand_stack_top + 3;
           
           // Initialize my variables
-          memset(&call_stack[call_stack_base + constant_pool_sub->args_length], 0, (constant_pool_sub->my_vars_length - constant_pool_sub->args_length) * sizeof(SPerl_VALUE_T));
+          memset(&call_stack[call_stack_base + constant_pool_sub->args_length], 0, (constant_pool_sub->my_vars_length - constant_pool_sub->args_length) * sizeof(intmax_t));
           
           // Set variables to local variable
           vars = &call_stack[call_stack_base];
@@ -350,7 +350,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
       case_SPerl_BYTECODE_C_CODE_RETURN_VALUE: {
         
         // Get return value
-        SPerl_VALUE_T return_value = call_stack[operand_stack_top];
+        intmax_t return_value = call_stack[operand_stack_top];
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
@@ -409,7 +409,7 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_abs_name) {
       case_SPerl_BYTECODE_C_CODE_ATHROW: {
         
         // Return value
-        SPerl_VALUE_T return_value = call_stack[operand_stack_top];
+        intmax_t return_value = call_stack[operand_stack_top];
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
