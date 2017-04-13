@@ -9,7 +9,7 @@
 SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, int32_t page_byte_size) {
   (void)sperl;
   
-  SPerl_MEMORY_POOL* memory_pool = (SPerl_MEMORY_POOL*) SPerl_ALLOCATOR_UTIL_safe_malloc(1, sizeof(SPerl_MEMORY_POOL));
+  SPerl_MEMORY_POOL* memory_pool = (SPerl_MEMORY_POOL*) SPerl_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPerl_MEMORY_POOL));
   
   if (page_byte_size == 0) {
     memory_pool->page_byte_size = 0xFFFF;
@@ -18,9 +18,9 @@ SPerl_MEMORY_POOL* SPerl_MEMORY_POOL_new(SPerl* sperl, int32_t page_byte_size) {
     memory_pool->page_byte_size = page_byte_size;
   }
   
-  uint8_t* page = SPerl_ALLOCATOR_UTIL_safe_malloc(memory_pool->page_byte_size, sizeof(uint8_t));
+  uint8_t* page = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(memory_pool->page_byte_size, sizeof(uint8_t));
   memory_pool->pages_length = 1;
-  memory_pool->pages = SPerl_ALLOCATOR_UTIL_safe_malloc(memory_pool->pages_length, sizeof(uint8_t*));
+  memory_pool->pages = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(memory_pool->pages_length, sizeof(uint8_t*));
   memory_pool->pages[0] = page;
   
   memory_pool->current_page = 0;
@@ -46,9 +46,9 @@ void* SPerl_MEMORY_POOL_alloc(SPerl* sperl, SPerl_MEMORY_POOL* memory_pool, int3
     if (memory_pool->current_page == memory_pool->pages_length) {
       int32_t new_memory_pool_pages_length = memory_pool->pages_length * 2;
       
-      memory_pool->pages = SPerl_ALLOCATOR_UTIL_safe_realloc(memory_pool->pages, new_memory_pool_pages_length, sizeof(uint8_t*));
+      memory_pool->pages = SPerl_ALLOCATOR_UTIL_safe_realloc_i32(memory_pool->pages, new_memory_pool_pages_length, sizeof(uint8_t*));
       for (int32_t i = memory_pool->pages_length; i < new_memory_pool_pages_length; i++) {
-        memory_pool->pages[i] = SPerl_ALLOCATOR_UTIL_safe_malloc(memory_pool->page_byte_size, sizeof(uint8_t));
+        memory_pool->pages[i] = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(memory_pool->page_byte_size, sizeof(uint8_t));
       }
       
       memory_pool->pages_length = new_memory_pool_pages_length;

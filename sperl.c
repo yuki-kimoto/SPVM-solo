@@ -64,7 +64,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
 }
 
 SPerl* SPerl_new() {
-  SPerl* sperl = SPerl_ALLOCATOR_UTIL_safe_malloc(1, sizeof(SPerl));
+  SPerl* sperl = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPerl));
   
   // Parser
   sperl->parser = NULL;

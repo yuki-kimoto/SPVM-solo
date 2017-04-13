@@ -12,7 +12,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int32_t capacity) {
   
   assert(capacity >= 0);
   
-  SPerl_ARRAY* array = SPerl_ALLOCATOR_UTIL_safe_malloc(1, sizeof(SPerl_ARRAY));
+  SPerl_ARRAY* array = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPerl_ARRAY));
   array->length = 0;
   
   if (capacity == 0) {
@@ -22,7 +22,7 @@ SPerl_ARRAY* SPerl_ARRAY_new(SPerl* sperl, int32_t capacity) {
     array->capacity = capacity;
   }
   
-  void** values = SPerl_ALLOCATOR_UTIL_safe_malloc(array->capacity, sizeof(void*));
+  void** values = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(array->capacity, sizeof(void*));
   
   array->values = values;
   
@@ -39,7 +39,7 @@ void SPerl_ARRAY_maybe_extend(SPerl* sperl, SPerl_ARRAY* array) {
   
   if (length >= capacity) {
     int32_t new_capacity = capacity * 2;
-    array->values = SPerl_ALLOCATOR_UTIL_safe_realloc(array->values, new_capacity, sizeof(void*));
+    array->values = SPerl_ALLOCATOR_UTIL_safe_realloc_i32(array->values, new_capacity, sizeof(void*));
     array->capacity = new_capacity;
   }
 }

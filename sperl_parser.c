@@ -111,7 +111,7 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   // Entry point
   int32_t package_name_length = (int32_t)strlen(package_name);
   int32_t entry_point_sub_name_length =  (int32_t)(package_name_length + 6);
-  char* entry_point_sub_name = SPerl_ALLOCATOR_UTIL_safe_malloc(entry_point_sub_name_length + 1, sizeof(char));
+  char* entry_point_sub_name = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(entry_point_sub_name_length + 1, sizeof(char));
   strncpy(entry_point_sub_name, package_name, package_name_length);
   strncpy(entry_point_sub_name + package_name_length, "::main", 6);
   entry_point_sub_name[entry_point_sub_name_length] = '\0';

@@ -95,7 +95,7 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
       ptr++;
     }
     
-    char* token = (char*) SPerl_ALLOCATOR_UTIL_safe_malloc(length + 1, sizeof(char));
+    char* token = (char*) SPerl_ALLOCATOR_UTIL_safe_malloc_i32(length + 1, sizeof(char));
     memcpy(token, parser->befbufptr + empty_count, length);
     token[length] = '\0';
     

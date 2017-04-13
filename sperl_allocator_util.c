@@ -5,7 +5,7 @@
 
 #include "sperl_allocator_util.h"
 
-void* SPerl_ALLOCATOR_UTIL_safe_malloc(int32_t count, int32_t size) {
+void* SPerl_ALLOCATOR_UTIL_safe_malloc_i32(int32_t count, int32_t size) {
   
   assert(count >= 0);
   assert(size >= 0);
@@ -22,7 +22,7 @@ void* SPerl_ALLOCATOR_UTIL_safe_malloc(int32_t count, int32_t size) {
   return block;
 }
 
-void* SPerl_ALLOCATOR_UTIL_safe_realloc(void* ptr, int32_t count, int32_t size) {
+void* SPerl_ALLOCATOR_UTIL_safe_realloc_i32(void* ptr, int32_t count, int32_t size) {
 
   assert(count >= 0);
   assert(size >= 0);

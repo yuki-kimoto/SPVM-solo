@@ -48,7 +48,7 @@ char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_PARSER* parser, size
     str = (char*) SPerl_MEMORY_POOL_alloc(sperl, parser->memory_pool, length + 1);
   }
   else {
-    str = (char*)SPerl_ALLOCATOR_UTIL_safe_malloc(length + 1, sizeof(char));
+    str = (char*)SPerl_ALLOCATOR_UTIL_safe_malloc_i32(length + 1, sizeof(char));
     SPerl_ARRAY_push(sperl, parser->long_strings, str);
   }
   
