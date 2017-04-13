@@ -6,11 +6,10 @@
 #include "sperl_allocator_util.h"
 
 void* SPerl_ALLOCATOR_UTIL_safe_malloc(size_t count, size_t size) {
-
-  if (count <= 0 || size <= 0 || count > SIZE_MAX / size) {
-    fprintf(stderr, "Failed to allocate memory. Sperl will exit.\n");
-    exit(EXIT_FAILURE);
-  }
+  
+  assert(count >= 0);
+  assert(size >= 0);
+  assert(count <= SIZE_MAX / size);
   
   size_t allocation_size = count * size;
   
@@ -25,10 +24,10 @@ void* SPerl_ALLOCATOR_UTIL_safe_malloc(size_t count, size_t size) {
 }
 
 void* SPerl_ALLOCATOR_UTIL_safe_realloc(void* ptr, size_t count, size_t size) {
-  if (count <= 0 || size <= 0 || count > SIZE_MAX / size) {
-    fprintf(stderr, "Failed to allocate memory. Sperl will exit.\n");
-    exit(EXIT_FAILURE);
-  }
+
+  assert(count >= 0);
+  assert(size >= 0);
+  assert(count <= SIZE_MAX / size);
 
   size_t allocation_size = count * size;
 
