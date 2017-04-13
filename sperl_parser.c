@@ -11,6 +11,7 @@
 #include "sperl_memory_pool.h"
 #include "sperl_hash.h"
 #include "sperl_array.h"
+#include "sperl_allocator_util.h"
 #include "sperl_allocator_parser.h"
 #include "sperl_yacc_util.h"
 #include "sperl_array.h"

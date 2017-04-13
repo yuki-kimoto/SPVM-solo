@@ -185,7 +185,7 @@ void SPerl_DUMPER_dump_constant_pool(SPerl* sperl, SPerl_CONSTANT_POOL* constant
   (void)sperl;
 
   for (int32_t i = 0; i < constant_pool->length; i++) {
-    printf("      constant_pool[%" PRId32 "] %" PRId64 "\n", i, constant_pool->values[i]);
+    printf("      constant_pool[%" PRId32 "] %" PRIdMAX "\n", i, constant_pool->values[i]);
   }
 }
 

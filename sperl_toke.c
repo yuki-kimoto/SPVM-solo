@@ -113,7 +113,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               }
               if (!fh) {
                 if (op_use) {
-                  fprintf(stderr, "Can't find package \"%s\" at %s line %" PRId64 "\n", op_package_name->uv.name, op_use->file, op_use->line);
+                  fprintf(stderr, "Can't find package \"%s\" at %s line %" PRId32 "\n", op_package_name->uv.name, op_use->file, op_use->line);
                 }
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_module_path);
@@ -128,14 +128,14 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               fseek(fh, 0, SEEK_END);
               int32_t file_size = (int32_t)ftell(fh);
               if (file_size < 0) {
-                fprintf(stderr, "Can't read file %s at %s line %" PRId64 "\n", cur_module_path, op_use->file, op_use->line);
+                fprintf(stderr, "Can't read file %s at %s line %" PRId32 "\n", cur_module_path, op_use->file, op_use->line);
                 exit(1);
               }
               fseek(fh, 0, SEEK_SET);
               char* src = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, file_size);
               if (fread(src, 1, file_size, fh) < file_size) {
                 if (op_use) {
-                  fprintf(stderr, "Can't read file %s at %s line %" PRId64 "\n", cur_module_path, op_use->file, op_use->line);
+                  fprintf(stderr, "Can't read file %s at %s line %" PRId32 "\n", cur_module_path, op_use->file, op_use->line);
                 }
                 else {
                   fprintf(stderr, "Can't read file %s\n", cur_module_path);
@@ -520,7 +520,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           if (constant->code == SPerl_CONSTANT_C_CODE_FLOAT) {
             float num = strtof(num_str, &end);
             if (*end != '\0') {
-              fprintf(stderr, "Invalid number literal %s at %s line %" PRId64 "\n", num_str, parser->cur_module_path, parser->cur_line);
+              fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
               exit(1);
             }
             constant->uv.float_value = num;
@@ -530,7 +530,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           else if (constant->code == SPerl_CONSTANT_C_CODE_DOUBLE) {
             double num = strtod(num_str, &end);
             if (*end != '\0') {
-              fprintf(stderr, "Invalid number literal %s at %s line %" PRId64 "\n", num_str, parser->cur_module_path, parser->cur_line);
+              fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
               exit(1);
             }
             constant->uv.double_value = num;
@@ -547,11 +547,11 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               num = strtol(num_str, &end, 10);
             }
             if (*end != '\0') {
-              fprintf(stderr, "Invalid number literal %s at %s line %" PRId64 "\n", num_str, parser->cur_module_path, parser->cur_line);
+              fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
               exit(1);
             }
             else if (num == INT64_MAX && errno == ERANGE) {
-              fprintf(stderr, "Number literal out of range %s at %s line %" PRId64 "\n", num_str, parser->cur_module_path, parser->cur_line);
+              fprintf(stderr, "Number literal out of range %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
               exit(1);
             }
             constant->uv.long_value = num;
@@ -605,7 +605,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           else if (memcmp(keyword, "package", str_len) == 0) {
             // File can contains only one package
             if (parser->current_package_count) {
-              fprintf(stderr, "Can't write second package declaration in file at %s line %" PRId64 "\n", parser->cur_module_path, parser->cur_line);
+              fprintf(stderr, "Can't write second package declaration in file at %s line %" PRId32 "\n", parser->cur_module_path, parser->cur_line);
               exit(1);
             }
             parser->current_package_count++;

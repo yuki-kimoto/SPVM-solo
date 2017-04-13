@@ -99,7 +99,7 @@ void SPerl_yyerror(SPerl* sperl, const char* message)
     memcpy(token, parser->befbufptr + empty_count, length);
     token[length] = '\0';
     
-    fprintf(stderr, "Error: unexpected token \"%s\" at %s line %" PRId64 "\n", token, parser->cur_module_path, parser->cur_line);
+    fprintf(stderr, "Error: unexpected token \"%s\" at %s line %" PRId32 "\n", token, parser->cur_module_path, parser->cur_line);
     free(token);
   }
 }
