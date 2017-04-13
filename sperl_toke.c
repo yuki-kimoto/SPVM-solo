@@ -133,7 +133,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               }
               fseek(fh, 0, SEEK_SET);
               char* src = SPerl_ALLOCATOR_PARSER_new_string(sperl, parser, file_size);
-              if (fread(src, 1, file_size, fh) < file_size) {
+              if ((int32_t)fread(src, 1, file_size, fh) < file_size) {
                 if (op_use) {
                   fprintf(stderr, "Can't read file %s at %s line %" PRId32 "\n", cur_module_path, op_use->file, op_use->line);
                 }
@@ -538,7 +538,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           }
           // long
           else if (constant->code == SPerl_CONSTANT_C_CODE_LONG) {
-            int32_t num;
+            int64_t num;
             errno = 0;
             if (num_str[0] == '0' && num_str[1] == 'x') {
               num = strtol(num_str, &end, 16);
