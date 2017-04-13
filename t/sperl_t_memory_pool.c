@@ -26,14 +26,14 @@ int main()
   {
     SPerl_MEMORY_POOL* memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
     
-    int64_t* int_ptr1 = (int64_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int64_t));
-    int64_t* int_ptr2 = (int64_t*)SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int64_t));
+    int64_t* int_ptr1 = SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int64_t));
+    int64_t* int_ptr2 = SPerl_MEMORY_POOL_alloc(sperl, memory_pool, sizeof(int64_t));
     
     *int_ptr1 = 1;
     *int_ptr2 = 2;
     
-    OK(int_ptr1 == memory_pool->pages[0]);
-    OK(int_ptr2 == memory_pool->pages[0] + sizeof(int64_t));
+    OK((int8_t*)int_ptr1 == memory_pool->pages[0]);
+    OK((int8_t*)int_ptr2 == memory_pool->pages[0] + sizeof(int64_t));
     OK(*(int64_t*)memory_pool->pages[0] == 1);
     OK(*(int64_t*)(memory_pool->pages[0] + sizeof(int64_t)) == 2);
     
@@ -63,14 +63,14 @@ int main()
     *int_ptr7 = 7;
     *int_ptr8 = 8;
     
-    OK(int_ptr1 == memory_pool->pages[0]);
-    OK(int_ptr2 == memory_pool->pages[0] + sizeof(int64_t));
-    OK(int_ptr3 == memory_pool->pages[1]);
-    OK(int_ptr4 == memory_pool->pages[1] + sizeof(int64_t));
-    OK(int_ptr5 == memory_pool->pages[2]);
-    OK(int_ptr6 == memory_pool->pages[2] + sizeof(int64_t));
-    OK(int_ptr7 == memory_pool->pages[3]);
-    OK(int_ptr8 == memory_pool->pages[3] + sizeof(int64_t));
+    OK((int8_t*)int_ptr1 == memory_pool->pages[0]);
+    OK((int8_t*)int_ptr2 == memory_pool->pages[0] + sizeof(int64_t));
+    OK((int8_t*)int_ptr3 == memory_pool->pages[1]);
+    OK((int8_t*)int_ptr4 == memory_pool->pages[1] + sizeof(int64_t));
+    OK((int8_t*)int_ptr5 == memory_pool->pages[2]);
+    OK((int8_t*)int_ptr6 == memory_pool->pages[2] + sizeof(int64_t));
+    OK((int8_t*)int_ptr7 == memory_pool->pages[3]);
+    OK((int8_t*)int_ptr8 == memory_pool->pages[3] + sizeof(int64_t));
 
     OK(*(int64_t*)memory_pool->pages[0]);
     OK(*(int64_t*)(memory_pool->pages[0] + sizeof(int64_t)));
