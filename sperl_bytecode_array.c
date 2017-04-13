@@ -13,7 +13,7 @@ SPerl_BYTECODE_ARRAY* SPerl_BYTECODE_ARRAY_new(SPerl* sperl) {
   bytecodes->capacity = 64;
   bytecodes->length = 0;
   
-  uint8_t* values = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(bytecodes->capacity, sizeof(uint8_t));
+  uint8_t* values = SPerl_ALLOCATOR_UTIL_safe_malloc(bytecodes->capacity, sizeof(uint8_t));
   bytecodes->values = values;
   
   return bytecodes;

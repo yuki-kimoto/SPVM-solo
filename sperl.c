@@ -11,6 +11,7 @@
 #include "sperl_allocator_util.h"
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_array.h"
+#include "sperl_parser.h"
 
 void SPerl_run(SPerl* sperl, const char* package_name) {
   
@@ -63,7 +64,13 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
 }
 
 SPerl* SPerl_new() {
-  SPerl* sperl = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(1, sizeof(SPerl));
+  SPerl* sperl = SPerl_ALLOCATOR_UTIL_safe_malloc(1, sizeof(SPerl));
+  
+  // Parser
+  sperl->parser = NULL;
+  
+  // Entry point sub name
+  sperl->entry_point_sub_name = NULL;
   
   // Constant pool
   sperl->constant_pool = SPerl_CONSTANT_POOL_new(sperl);
@@ -80,6 +87,9 @@ SPerl* SPerl_new() {
   // Constant poll subroutine symbol table
   sperl->constant_pool_sub_symtable = SPerl_HASH_new(sperl, 0);
   
+  // Call stack
+  sperl->call_stack = NULL;
+  
   // Default call stack capacity
   sperl->call_stack_capacity_default = 255;
   
@@ -87,6 +97,8 @@ SPerl* SPerl_new() {
   
   sperl->call_stack_base = 0;
   sperl->operand_stack_top = -1;
+  
+  sperl->abort = 0;
   
   return sperl;
 }

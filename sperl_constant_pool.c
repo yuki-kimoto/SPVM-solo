@@ -24,7 +24,7 @@ SPerl_CONSTANT_POOL* SPerl_CONSTANT_POOL_new(SPerl* sperl) {
   // index 0 is not used.
   constant_pool->length = 1;
   
-  SPerl_VALUE_T* values = SPerl_ALLOCATOR_UTIL_safe_malloc_zero(constant_pool->capacity, sizeof(SPerl_VALUE_T));
+  SPerl_VALUE_T* values = SPerl_ALLOCATOR_UTIL_safe_malloc(constant_pool->capacity, sizeof(SPerl_VALUE_T));
   constant_pool->values = values;
   
   return constant_pool;
