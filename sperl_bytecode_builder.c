@@ -268,31 +268,31 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   cur_switch_address = bytecode_array->length - 1;
                   
                   // Padding
-                  int32_t padding = (sizeof(int64_t) - 1) - (cur_switch_address % sizeof(int64_t));
+                  int32_t padding = ((int32_t)sizeof(int64_t) - 1) - (cur_switch_address % (int32_t)sizeof(int64_t));
                   
                   for (int32_t i = 0; i < padding; i++) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
                   }
                   
                   // Default
-                  for (int32_t i = 0; i < sizeof(int64_t); i++) {
+                  for (int32_t i = 0; i < (int32_t)sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
                   }
                   
                   // Low
-                  for (int32_t i = 0; i < sizeof(int64_t); i++) {
+                  for (int32_t i = 0; i < (int32_t)sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
                   }
                   *(int64_t*)&bytecode_array->values[bytecode_array->length - sizeof(int64_t)] = min;
                   
                   // Low
-                  for (int32_t i = 0; i < sizeof(int64_t); i++) {
+                  for (int32_t i = 0; i < (int32_t)sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
                   }
                   *(int64_t*)&bytecode_array->values[bytecode_array->length - sizeof(int64_t)] = max;
                   
                   // Offsets
-                  for (int64_t i = 0; i < (max - min + 1) * sizeof(int64_t); i++) {
+                  for (int64_t i = 0; i < (max - min + 1) * (int64_t)sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
                   }
                 }
@@ -317,17 +317,17 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   
                   // Default
-                  for (int32_t i = 0; i < sizeof(int64_t); i++) {
+                  for (int32_t i = 0; i < (int32_t)sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
                   }
                   
                   // Case count
-                  for (int32_t i = 0; i < sizeof(int64_t); i++) {
+                  for (int32_t i = 0; i < (int32_t)sizeof(int64_t); i++) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
                   }
-                  *(int64_t*)&bytecode_array->values[bytecode_array->length - sizeof(int64_t)] = length;
+                  *(int64_t*)&bytecode_array->values[bytecode_array->length - (int32_t)sizeof(int64_t)] = length;
                   
-                  int32_t size_of_match_offset_pairs = length * sizeof(int64_t) * 2;
+                  int32_t size_of_match_offset_pairs = length * (int32_t)sizeof(int64_t) * 2;
                   for (int32_t i = 0; i < size_of_match_offset_pairs; i++) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, 0);
                   }
