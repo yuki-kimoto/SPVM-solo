@@ -5,11 +5,11 @@
 
 SPerl_ALLOCATOR_PARSER* SPerl_ALLOCATOR_PARSER_new(SPerl* sperl);
 
-SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t capacity);
-SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t capacity);
-char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t length);
+SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity);
+SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity);
+char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t length);
 int32_t* SPerl_ALLOCATOR_PARSER_new_int(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator);
-void* SPerl_ALLOCATOR_PARSER_alloc_memory_pool(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t size);
+void* SPerl_ALLOCATOR_PARSER_alloc_memory_pool(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t size);
 
 SPerl_VMCODE* SPerl_ALLOCATOR_PARSER_new_vmcode(SPerl* sperl, SPerl_PARSER* parser);
 
@@ -25,9 +25,6 @@ struct SPerl_allocator_parser {
   
   // Compile time hashes
   SPerl_ARRAY* hashes;
-  
-  // Compile time long strings
-  SPerl_ARRAY* long_strings;
 };
 
 #endif

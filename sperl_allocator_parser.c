@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "sperl.h"
 #include "sperl_array.h"
@@ -22,17 +23,14 @@ SPerl_ALLOCATOR_PARSER* SPerl_ALLOCATOR_PARSER_new(SPerl* sperl) {
   // Hashed - these hashes are created at compile time
   allocator->hashes = SPerl_ARRAY_new(sperl, 0);
   
-  // Long strings - these strings are created at compile time
-  allocator->long_strings = SPerl_ARRAY_new(sperl, 0);
-  
   return allocator;
 }
 
-void* SPerl_ALLOCATOR_PARSER_alloc_memory_pool(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t size) {
+void* SPerl_ALLOCATOR_PARSER_alloc_memory_pool(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t size) {
   return SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, size);
 }
 
-SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t capacity) {
+SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(sperl, capacity);
   
   SPerl_ARRAY_push(sperl, allocator->arrays, array);
@@ -40,7 +38,7 @@ SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_ALLOCATOR_PARS
   return array;
 }
 
-SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t capacity) {
+SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity) {
   SPerl_HASH* hash = SPerl_HASH_new(sperl, capacity);
   
   SPerl_ARRAY_push(sperl, allocator->hashes, hash);
@@ -54,16 +52,11 @@ int32_t* SPerl_ALLOCATOR_PARSER_new_int(SPerl* sperl, SPerl_ALLOCATOR_PARSER* al
   return value;
 }
 
-char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t length) {
-  char* str;
+char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t length) {
+  assert(length > 0);
+  assert(length <= 0xFFFF);
   
-  if (length < 0xFF) {
-    str = (char*) SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, length + 1);
-  }
-  else {
-    str = (char*)SPerl_ALLOCATOR_UTIL_safe_malloc_i32(length + 1, sizeof(char));
-    SPerl_ARRAY_push(sperl, allocator->long_strings, str);
-  }
+  char* str = SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, length + 1);
   
   return str;
 }
@@ -85,11 +78,4 @@ void SPerl_ALLOCATOR_PARSER_free(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator
     SPerl_HASH_free(sperl, hash);
   }
   SPerl_ARRAY_free(sperl, allocator->hashes);
-  
-  // Free long strings
-  for (int32_t i = 0, len = allocator->long_strings->length; i < len; i++) {
-    void* str = SPerl_ARRAY_fetch(sperl, allocator->long_strings, i);
-    free(str);
-  }
-  SPerl_ARRAY_free(sperl, allocator->long_strings);
 }
