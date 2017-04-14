@@ -170,7 +170,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             if (block_start) {
               assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
               block_base = op_my_var_stack->length;
-              int32_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, parser);
+              int32_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, parser->allocator);
               *block_base_ptr = block_base;
               SPerl_ARRAY_push(sperl, block_base_stack, block_base_ptr);
             }

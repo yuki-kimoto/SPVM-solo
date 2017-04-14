@@ -48,8 +48,8 @@ SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_PARSER* parser, 
   return hash;
 }
 
-int32_t* SPerl_ALLOCATOR_PARSER_new_int(SPerl* sperl, SPerl_PARSER* parser) {
-  int32_t* value = SPerl_MEMORY_POOL_alloc(sperl, parser->memory_pool, sizeof(int32_t));
+int32_t* SPerl_ALLOCATOR_PARSER_new_int(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator) {
+  int32_t* value = SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, sizeof(int32_t));
   
   return value;
 }
