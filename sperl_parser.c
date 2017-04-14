@@ -40,17 +40,17 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   sperl->parser = parser;
   
   // Parser information
-  parser->op_sub_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser, 0);
+  parser->op_sub_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser->allocator, 0);
   parser->op_packages = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
-  parser->op_package_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser, 0);
+  parser->op_package_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser->allocator, 0);
   parser->op_types = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
-  parser->op_use_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser, 0);
+  parser->op_use_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser->allocator, 0);
   parser->op_use_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
-  parser->op_field_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser, 0);
+  parser->op_field_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser->allocator, 0);
   parser->include_pathes = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
   parser->bufptr = "";
   parser->resolved_types = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
-  parser->resolved_type_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser, 0);
+  parser->resolved_type_symtable = SPerl_ALLOCATOR_PARSER_new_hash(sperl, parser->allocator, 0);
   parser->cur_op_cases = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
   parser->cur_line = 0;
   

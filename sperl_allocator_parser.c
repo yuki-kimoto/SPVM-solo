@@ -40,10 +40,10 @@ SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_PARSER* parser
   return array;
 }
 
-SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_PARSER* parser, size_t capacity) {
+SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t capacity) {
   SPerl_HASH* hash = SPerl_HASH_new(sperl, capacity);
   
-  SPerl_ARRAY_push(sperl, parser->hashes, hash);
+  SPerl_ARRAY_push(sperl, allocator->hashes, hash);
   
   return hash;
 }
