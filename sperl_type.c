@@ -32,9 +32,9 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
     return 1;
   }
   else {
-    SPerl_ARRAY* resolved_type_part_names = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+    SPerl_ARRAY* resolved_type_part_names = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
     
-    SPerl_ARRAY* parts = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+    SPerl_ARRAY* parts = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
     SPerl_TYPE_build_parts(sperl, type, parts);
     
     for (int32_t i = 0; i < parts->length; i++) {

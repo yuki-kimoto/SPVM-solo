@@ -141,7 +141,7 @@ SPerl_OP* SPerl_OP_build_switch_statement(SPerl* sperl, SPerl_OP* op_switch, SPe
   op_switch->uv.switch_info = SPerl_SWITCH_INFO_new(sperl);
   op_switch->uv.switch_info->op_cases = parser->cur_op_cases;
   
-  parser->cur_op_cases = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser, 0);
+  parser->cur_op_cases = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser->allocator, 0);
   
   return op_switch;
 }
@@ -755,8 +755,8 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
     package->op_type = op_type;
     SPerl_ARRAY_push(sperl, parser->op_types, op_type);
     
-    SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser, 0);
-    SPerl_ARRAY* op_subs = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser, 0);
+    SPerl_ARRAY* op_fields = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser->allocator, 0);
+    SPerl_ARRAY* op_subs = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser->allocator, 0);
     
     // Fields
     SPerl_OP* op_decls = op_block->first;

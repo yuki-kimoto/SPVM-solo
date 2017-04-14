@@ -163,22 +163,22 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
       _Bool finish = 0;
       
       // IFXXX Bytecode address(except loop)
-      SPerl_ARRAY* if_address_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+      SPerl_ARRAY* if_address_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
 
       // GOTO Bytecode address for last
-      SPerl_ARRAY* goto_last_address_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+      SPerl_ARRAY* goto_last_address_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
 
       // GOTO Bytecode address for end of if block
-      SPerl_ARRAY* goto_if_block_end_address_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+      SPerl_ARRAY* goto_if_block_end_address_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
       
       // GOTO bytecode address for loop start
-      SPerl_ARRAY* goto_loop_start_address_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+      SPerl_ARRAY* goto_loop_start_address_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
       
       // GOTO exception handler address
-      SPerl_ARRAY* goto_exception_handler_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+      SPerl_ARRAY* goto_exception_handler_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
 
       // try stack
-      SPerl_ARRAY* try_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+      SPerl_ARRAY* try_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
       
       // Current switch
       SPerl_OP* cur_op_switch_info = NULL;
@@ -202,8 +202,8 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
           }
           case SPerl_OP_C_CODE_SWITCH: {
             cur_op_switch_info = op_cur;
-            cur_case_addresses = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
-            cur_op_cases = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+            cur_case_addresses = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
+            cur_op_cases = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
             break;
           }
           case SPerl_OP_C_CODE_BLOCK: {
@@ -420,12 +420,12 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   int64_t const length = (int64_t) switch_info->op_cases->length;
                   
-                  SPerl_ARRAY* ordered_op_cases = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+                  SPerl_ARRAY* ordered_op_cases = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
                   for (int64_t i = 0; i < length; i++) {
                     SPerl_OP* op_case = SPerl_ARRAY_fetch(sperl, cur_op_cases, i);
                     SPerl_ARRAY_push(sperl, ordered_op_cases, op_case);
                   }
-                  SPerl_ARRAY* ordered_case_addresses = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser, 0);
+                  SPerl_ARRAY* ordered_case_addresses = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
                   for (int64_t i = 0; i < length; i++) {
                     int64_t* case_address_ptr = SPerl_ARRAY_fetch(sperl, cur_case_addresses, i);
                     SPerl_ARRAY_push(sperl, ordered_case_addresses, case_address_ptr);
