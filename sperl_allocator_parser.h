@@ -5,13 +5,13 @@
 
 SPerl_ALLOCATOR_PARSER* SPerl_ALLOCATOR_PARSER_new(SPerl* sperl);
 
-SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity);
-SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity);
-char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t length);
-int32_t* SPerl_ALLOCATOR_PARSER_new_int(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator);
+SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_alloc_array(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity);
+SPerl_HASH* SPerl_ALLOCATOR_PARSER_alloc_hash(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity);
+char* SPerl_ALLOCATOR_PARSER_alloc_string(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t length);
+int32_t* SPerl_ALLOCATOR_PARSER_alloc_int(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator);
 void* SPerl_ALLOCATOR_PARSER_alloc_memory_pool(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t size);
 
-SPerl_VMCODE* SPerl_ALLOCATOR_PARSER_new_vmcode(SPerl* sperl, SPerl_PARSER* parser);
+SPerl_VMCODE* SPerl_ALLOCATOR_PARSER_alloc_vmcode(SPerl* sperl, SPerl_PARSER* parser);
 
 void SPerl_ALLOCATOR_PARSER_free(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator);
 

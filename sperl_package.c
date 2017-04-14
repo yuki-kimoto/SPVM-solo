@@ -7,8 +7,8 @@
 SPerl_PACKAGE* SPerl_PACKAGE_new(SPerl* sperl) {
   SPerl_PACKAGE* package = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser->allocator, sizeof(SPerl_PACKAGE));
   
-  package->op_subs = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser->allocator, 0);
-  package->op_fields = SPerl_ALLOCATOR_PARSER_new_array(sperl, sperl->parser->allocator, 0);
+  package->op_subs = SPerl_ALLOCATOR_PARSER_alloc_array(sperl, sperl->parser->allocator, 0);
+  package->op_fields = SPerl_ALLOCATOR_PARSER_alloc_array(sperl, sperl->parser->allocator, 0);
   
   return package;
 }

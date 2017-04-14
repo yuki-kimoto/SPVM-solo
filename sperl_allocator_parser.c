@@ -30,7 +30,7 @@ void* SPerl_ALLOCATOR_PARSER_alloc_memory_pool(SPerl* sperl, SPerl_ALLOCATOR_PAR
   return SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, size);
 }
 
-SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity) {
+SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_alloc_array(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity) {
   SPerl_ARRAY* array = SPerl_ARRAY_new(sperl, capacity);
   
   SPerl_ARRAY_push(sperl, allocator->arrays, array);
@@ -38,7 +38,7 @@ SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_ALLOCATOR_PARS
   return array;
 }
 
-SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity) {
+SPerl_HASH* SPerl_ALLOCATOR_PARSER_alloc_hash(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t capacity) {
   SPerl_HASH* hash = SPerl_HASH_new(sperl, capacity);
   
   SPerl_ARRAY_push(sperl, allocator->hashes, hash);
@@ -46,13 +46,13 @@ SPerl_HASH* SPerl_ALLOCATOR_PARSER_new_hash(SPerl* sperl, SPerl_ALLOCATOR_PARSER
   return hash;
 }
 
-int32_t* SPerl_ALLOCATOR_PARSER_new_int(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator) {
+int32_t* SPerl_ALLOCATOR_PARSER_alloc_int(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator) {
   int32_t* value = SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, sizeof(int32_t));
   
   return value;
 }
 
-char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t length) {
+char* SPerl_ALLOCATOR_PARSER_alloc_string(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, int32_t length) {
   assert(length > 0);
   assert(length <= 0xFFFF);
   

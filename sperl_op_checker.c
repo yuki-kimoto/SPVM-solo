@@ -86,13 +86,13 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
       }
       
       // my var informations
-      SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
+      SPerl_ARRAY* op_my_vars = SPerl_ALLOCATOR_PARSER_alloc_array(sperl, parser->allocator, 0);
       
       // my variable stack
-      SPerl_ARRAY* op_my_var_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
+      SPerl_ARRAY* op_my_var_stack = SPerl_ALLOCATOR_PARSER_alloc_array(sperl, parser->allocator, 0);
       
       // block base position stack
-      SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
+      SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_PARSER_alloc_array(sperl, parser->allocator, 0);
       int32_t block_base = 0;
       _Bool block_start = 0;
       
@@ -170,7 +170,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             if (block_start) {
               assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
               block_base = op_my_var_stack->length;
-              int32_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_new_int(sperl, parser->allocator);
+              int32_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_alloc_int(sperl, parser->allocator);
               *block_base_ptr = block_base;
               SPerl_ARRAY_push(sperl, block_base_stack, block_base_ptr);
             }
@@ -300,7 +300,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                 
                 if (!cur_case_ops) {
-                  cur_case_ops = SPerl_ALLOCATOR_PARSER_new_array(sperl, parser->allocator, 0);
+                  cur_case_ops = SPerl_ALLOCATOR_PARSER_alloc_array(sperl, parser->allocator, 0);
                 }
                 SPerl_ARRAY_push(sperl, cur_case_ops, op_cur);
                 
