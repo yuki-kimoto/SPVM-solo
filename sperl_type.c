@@ -104,7 +104,7 @@ _Bool SPerl_TYPE_resolve_type(SPerl* sperl, SPerl_OP* op_type, int32_t name_leng
 }
 
 SPerl_TYPE* SPerl_TYPE_new(SPerl* sperl) {
-  SPerl_TYPE* type = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_TYPE));
+  SPerl_TYPE* type = SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser->allocator, sizeof(SPerl_TYPE));
   
   return type;
 }

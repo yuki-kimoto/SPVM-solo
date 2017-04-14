@@ -28,8 +28,8 @@ SPerl_ALLOCATOR_PARSER* SPerl_ALLOCATOR_PARSER_new(SPerl* sperl) {
   return allocator;
 }
 
-void* SPerl_ALLOCATOR_PARSER_alloc_memory_pool(SPerl* sperl, SPerl_PARSER* parser, size_t size) {
-  return SPerl_MEMORY_POOL_alloc(sperl, parser->memory_pool, size);
+void* SPerl_ALLOCATOR_PARSER_alloc_memory_pool(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t size) {
+  return SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, size);
 }
 
 SPerl_ARRAY* SPerl_ALLOCATOR_PARSER_new_array(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t capacity) {

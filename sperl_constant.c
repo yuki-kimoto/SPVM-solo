@@ -17,7 +17,7 @@ const char* const SPerl_CONSTANT_C_CODE_NAMES[] = {
 };
 
 SPerl_CONSTANT* SPerl_CONSTANT_new(SPerl* sperl) {
-  return SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser, sizeof(SPerl_CONSTANT));
+  return SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser->allocator, sizeof(SPerl_CONSTANT));
 }
 
 SPerl_CONSTANT* SPerl_CONSTANT_create_int_1(SPerl* sperl) {
