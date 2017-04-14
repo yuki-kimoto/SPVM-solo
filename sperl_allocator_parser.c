@@ -54,7 +54,7 @@ int32_t* SPerl_ALLOCATOR_PARSER_new_int(SPerl* sperl, SPerl_ALLOCATOR_PARSER* al
   return value;
 }
 
-char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl,  SPerl_ALLOCATOR_PARSER* allocator, size_t length) {
+char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator, size_t length) {
   char* str;
   
   if (length < 0xFF) {
