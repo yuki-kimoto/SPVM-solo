@@ -34,6 +34,9 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   // Long strings - these strings are created at compile time
   parser->long_strings = SPerl_ARRAY_new(sperl, 0);
   
+  // Allocator
+  parser->allocator = SPerl_ALLOCATOR_PARSER_new(sperl);
+  
   sperl->parser = parser;
   
   // Parser information
