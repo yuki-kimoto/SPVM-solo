@@ -162,5 +162,8 @@ void SPerl_PARSER_free(SPerl* sperl, SPerl_PARSER* parser) {
   }
   SPerl_ARRAY_free(sperl, parser->long_strings);
   
+  // Free allocator
+  SPerl_ALLOCATOR_PARSER_free(sperl, parser->allocator);
+  
   free(parser);
 }
