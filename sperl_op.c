@@ -713,7 +713,7 @@ SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages) {
 const char* SPerl_OP_create_abs_name(SPerl* sperl, const char* package_name, const char* name) {
   int32_t length = (int32_t)(strlen(package_name) + 2 + strlen(name));
   
-  char* abs_name = SPerl_ALLOCATOR_PARSER_new_string(sperl, sperl->parser, length);
+  char* abs_name = SPerl_ALLOCATOR_PARSER_new_string(sperl, sperl->parser->allocator, length);
   
   sprintf(abs_name, "%s::%s", package_name, name);
   

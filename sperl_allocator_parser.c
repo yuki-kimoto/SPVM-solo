@@ -54,15 +54,15 @@ int32_t* SPerl_ALLOCATOR_PARSER_new_int(SPerl* sperl, SPerl_ALLOCATOR_PARSER* al
   return value;
 }
 
-char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_PARSER* parser, size_t length) {
+char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl,  SPerl_ALLOCATOR_PARSER* allocator, size_t length) {
   char* str;
   
   if (length < 0xFF) {
-    str = (char*) SPerl_MEMORY_POOL_alloc(sperl, parser->memory_pool, length + 1);
+    str = (char*) SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, length + 1);
   }
   else {
     str = (char*)SPerl_ALLOCATOR_UTIL_safe_malloc_i32(length + 1, sizeof(char));
-    SPerl_ARRAY_push(sperl, parser->long_strings, str);
+    SPerl_ARRAY_push(sperl, allocator->long_strings, str);
   }
   
   return str;
