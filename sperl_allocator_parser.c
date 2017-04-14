@@ -9,6 +9,25 @@
 #include "sperl_allocator_parser.h"
 #include "sperl_parser.h"
 
+SPerl_ALLOCATOR_PARSER* SPerl_ALLOCATOR_PARSER_new(SPerl* sperl) {
+  SPerl_ALLOCATOR_PARSER* allocator = malloc(sizeof(SPerl_ALLOCATOR_PARSER));
+  
+  // Memory pool - memory pool save short strings and object, except array and hash
+  // These datas are created at compile time
+  allocator->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
+  
+  // Arrays - these arrays are created at compile time
+  allocator->arrays = SPerl_ARRAY_new(sperl, 0);
+  
+  // Hashed - these hashes are created at compile time
+  allocator->hashes = SPerl_ARRAY_new(sperl, 0);
+  
+  // Long strings - these strings are created at compile time
+  allocator->long_strings = SPerl_ARRAY_new(sperl, 0);
+  
+  return allocator;
+}
+
 void* SPerl_ALLOCATOR_PARSER_alloc_memory_pool(SPerl* sperl, SPerl_PARSER* parser, size_t size) {
   return SPerl_MEMORY_POOL_alloc(sperl, parser->memory_pool, size);
 }
@@ -53,4 +72,30 @@ char* SPerl_ALLOCATOR_PARSER_new_string(SPerl* sperl, SPerl_PARSER* parser, size
   }
   
   return str;
+}
+
+void SPerl_ALLOCATOR_PARSER_free(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator) {
+  // Free memory pool */
+  SPerl_MEMORY_POOL_free(sperl, allocator->memory_pool);
+  
+  // Free arrays
+  for (int32_t i = 0, len = allocator->arrays->length; i < len; i++) {
+    SPerl_ARRAY* array = SPerl_ARRAY_fetch(sperl, allocator->arrays, i);
+    SPerl_ARRAY_free(sperl, array);
+  }
+  SPerl_ARRAY_free(sperl, allocator->arrays);
+  
+  // Free hashes
+  for (int32_t i = 0, len = allocator->hashes->length; i < len; i++) {
+    SPerl_HASH* hash = SPerl_ARRAY_fetch(sperl, allocator->hashes, i);
+    SPerl_HASH_free(sperl, hash);
+  }
+  SPerl_ARRAY_free(sperl, allocator->hashes);
+  
+  // Free long strings
+  for (int32_t i = 0, len = allocator->long_strings->length; i < len; i++) {
+    void* str = SPerl_ARRAY_fetch(sperl, allocator->long_strings, i);
+    free(str);
+  }
+  SPerl_ARRAY_free(sperl, allocator->long_strings);
 }
