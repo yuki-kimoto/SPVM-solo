@@ -20,7 +20,7 @@ void SPerl_FUNC_std_test_call1(SPerl* sperl, SPerl_ENV* env) {
   SPerl_ENV* new_env = SPerl_ENV_new(sperl);
   SPerl_API_push_var_long(sperl, new_env, value2);
   SPerl_API_call_sub(sperl, new_env, "std::test_call2");
-  int64_t value3 = SPerl_API_pop_ret_long(sperl, env);
+  int64_t value3 = SPerl_API_pop_ret_long(sperl, new_env);
   SPerl_ENV_free(sperl, new_env);
   
   SPerl_API_push_ret_long(sperl, env, value3);
