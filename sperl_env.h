@@ -22,4 +22,7 @@ struct SPerl_env {
   _Bool abort;
 };
 
+SPerl_ENV* SPerl_ENV_new(SPerl* sperl);
+void SPerl_ENV_free(SPerl* sperl, SPerl_ENV* env);
+
 #endif

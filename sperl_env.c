@@ -17,3 +17,12 @@ SPerl_ENV* SPerl_ENV_new(SPerl* sperl) {
   
   return env;
 }
+
+void SPerl_ENV_free(SPerl* sperl, SPerl_ENV* env) {
+  (void)sperl;
+  
+  // Free call stack
+  free(env->call_stack);
+  
+  free(env);
+}
