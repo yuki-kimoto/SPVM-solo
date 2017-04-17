@@ -6,12 +6,12 @@ void SPerl_API_call_sub(SPerl* sperl, const char* sub_base_name);
 
 int64_t SPerl_API_get_array_ref_count(SPerl* sperl, void* array);
 int64_t SPerl_API_get_array_length(SPerl* sperl, void* array);
-int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, void* array);
-int16_t* SPerl_API_get_short_array_data(SPerl* sperl, void* array);
-int32_t* SPerl_API_get_int_array_data(SPerl* sperl, void* array);
-int64_t* SPerl_API_get_long_array_data(SPerl* sperl, void* array);
-float* SPerl_API_get_float_array_data(SPerl* sperl, void* array);
-double* SPerl_API_get_double_array_data(SPerl* sperl, void* array);
+int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, SPerl_ENV* env, void* array);
+int16_t* SPerl_API_get_short_array_data(SPerl* sperl, SPerl_ENV* env, void* array);
+int32_t* SPerl_API_get_int_array_data(SPerl* sperl, SPerl_ENV* env, void* array);
+int64_t* SPerl_API_get_long_array_data(SPerl* sperl, SPerl_ENV* env, void* array);
+float* SPerl_API_get_float_array_data(SPerl* sperl, SPerl_ENV* env, void* array);
+double* SPerl_API_get_double_array_data(SPerl* sperl, SPerl_ENV* env, void* array);
 
 int8_t SPerl_API_get_var_byte(SPerl* sperl, int64_t index);
 int16_t SPerl_API_get_var_short(SPerl* sperl, int64_t index);

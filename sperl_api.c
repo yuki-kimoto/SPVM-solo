@@ -22,6 +22,7 @@
 #include "sperl_constant_pool_package.h"
 #include "sperl_constant_pool_field.h"
 #include "sperl_resolved_type.h"
+#include "sperl_env.h"
 
 void SPerl_API_init_env(SPerl* sperl) {
   if (sperl->call_stack_capacity == -1) {
@@ -1846,32 +1847,44 @@ int64_t SPerl_API_get_array_ref_count(SPerl* sperl, void* array) {
   return *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_BYTE_OFFSET);
 }
 
-int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, void* array) {
+int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, SPerl_ENV* env, void* array) {
   (void)sperl;
+  (void)env;
+  
   return (int8_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
-int16_t* SPerl_API_get_short_array_data(SPerl* sperl, void* array) {
+int16_t* SPerl_API_get_short_array_data(SPerl* sperl, SPerl_ENV* env, void* array) {
   (void)sperl;
+  (void)env;
+  
   return (int16_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
-int32_t* SPerl_API_get_int_array_data(SPerl* sperl, void* array) {
+int32_t* SPerl_API_get_int_array_data(SPerl* sperl, SPerl_ENV* env, void* array) {
   (void)sperl;
+  (void)env;
+  
   return (int32_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
-int64_t* SPerl_API_get_long_array_data(SPerl* sperl, void* array) {
+int64_t* SPerl_API_get_long_array_data(SPerl* sperl, SPerl_ENV* env, void* array) {
   (void)sperl;
+  (void)env;
+  
   return (int64_t*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
-float* SPerl_API_get_float_array_data(SPerl* sperl, void* array) {
+float* SPerl_API_get_float_array_data(SPerl* sperl, SPerl_ENV* env, void* array) {
   (void)sperl;
+  (void)env;
+  
   return (float*)(array +  SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
 
-double* SPerl_API_get_double_array_data(SPerl* sperl, void* array) {
+double* SPerl_API_get_double_array_data(SPerl* sperl, SPerl_ENV* env, void* array) {
   (void)sperl;
+  (void)env;
+  
   return (double*)(array + SPerl_C_ARRAY_HEADER_BYTE_SIZE);
 }
