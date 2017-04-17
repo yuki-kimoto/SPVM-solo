@@ -12,6 +12,7 @@
 #include "sperl_constant_pool.h"
 #include "sperl_bytecode_array.h"
 #include "sperl_parser.h"
+#include "sperl_env.h"
 
 void SPerl_run(SPerl* sperl, const char* package_name) {
   
@@ -32,6 +33,8 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   
   // Entry point
   const char* entry_point_sub_name = sperl->entry_point_sub_name;
+  
+  SPerl_ENV* env = SPerl_ENV_new(sperl);
   
   // Initialize environment
   SPerl_API_init_env(sperl);
