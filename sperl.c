@@ -40,15 +40,15 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   SPerl_API_init_env(sperl);
   
   // Push argument
-  SPerl_API_push_var_long(sperl, 2);
+  SPerl_API_push_var_long(sperl, env, 2);
   
   // Run
-  SPerl_API_call_sub(sperl, entry_point_sub_name);
+  SPerl_API_call_sub(sperl, env, entry_point_sub_name);
   
   if (sperl->abort) {
-    void* message = SPerl_API_pop_ret_ref(sperl);
+    void* message = SPerl_API_pop_ret_ref(sperl, env);
     
-    int64_t length = SPerl_API_get_array_length(sperl, message);
+    int64_t length = SPerl_API_get_array_length(sperl, env, message);
     
     int8_t* byte_array_data = SPerl_API_get_byte_array_data(sperl, env, message);
     
@@ -60,7 +60,7 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
   }
   else {
     // Get return value
-    int64_t return_value = SPerl_API_pop_ret_long(sperl);
+    int64_t return_value = SPerl_API_pop_ret_long(sperl, env);
     
     printf("TEST return_value: %ld\n", return_value);
   }

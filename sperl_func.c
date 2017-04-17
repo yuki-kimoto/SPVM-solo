@@ -12,35 +12,35 @@ void SPerl_FUNC_std_test_call1(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  int64_t value =  SPerl_API_get_var_long(sperl, 0);
+  int64_t value =  SPerl_API_get_var_long(sperl, env, 0);
   
   int64_t value2 = value * 2;
   
-  SPerl_API_push_var_long(sperl, value2);
-  SPerl_API_call_sub(sperl, "std::test_call2");
-  int64_t value3 = SPerl_API_pop_ret_long(sperl);
+  SPerl_API_push_var_long(sperl, env, value2);
+  SPerl_API_call_sub(sperl, env, "std::test_call2");
+  int64_t value3 = SPerl_API_pop_ret_long(sperl, env);
   
-  SPerl_API_push_ret_long(sperl, value3);
+  SPerl_API_push_ret_long(sperl, env, value3);
 }
 
 void SPerl_FUNC_std_test_call2(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  int64_t value =  SPerl_API_get_var_long(sperl, 0);
+  int64_t value =  SPerl_API_get_var_long(sperl, env, 0);
   
   int64_t value2 = value * 3;
   
-  SPerl_API_push_ret_long(sperl, value2);
+  SPerl_API_push_ret_long(sperl, env, value2);
 }
 
 void SPerl_FUNC_std_suml(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  void* long_array = SPerl_API_get_var_ref(sperl, 0);
+  void* long_array = SPerl_API_get_var_ref(sperl, env, 0);
   
-  int64_t length = SPerl_API_get_array_length(sperl, long_array);
+  int64_t length = SPerl_API_get_array_length(sperl, env, long_array);
   
   int64_t* long_array_data = SPerl_API_get_long_array_data(sperl, env, long_array);
   
@@ -49,16 +49,16 @@ void SPerl_FUNC_std_suml(SPerl* sperl, SPerl_ENV* env) {
     total += long_array_data[i];
   }
   
-  SPerl_API_push_ret_long(sperl, total);
+  SPerl_API_push_ret_long(sperl, env, total);
 }
 
 void SPerl_FUNC_std_println(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  void* byte_array = SPerl_API_get_var_ref(sperl, 0);
+  void* byte_array = SPerl_API_get_var_ref(sperl, env, 0);
   
-  int64_t length = SPerl_API_get_array_length(sperl, byte_array);
+  int64_t length = SPerl_API_get_array_length(sperl, env, byte_array);
   
   int8_t* byte_array_data = SPerl_API_get_byte_array_data(sperl, env, byte_array);
   
@@ -73,7 +73,7 @@ void SPerl_FUNC_std_printb(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  int8_t value = SPerl_API_get_var_byte(sperl, 0);
+  int8_t value = SPerl_API_get_var_byte(sperl, env, 0);
   
   printf("TEST: %" PRId8 "\n", value);
 }
@@ -82,7 +82,7 @@ void SPerl_FUNC_std_prints(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  int16_t value = SPerl_API_get_var_short(sperl, 0);
+  int16_t value = SPerl_API_get_var_short(sperl, env, 0);
   
   printf("TEST: %" PRId16 "\n", value);
 }
@@ -91,7 +91,7 @@ void SPerl_FUNC_std_printi(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  int32_t value = SPerl_API_get_var_int(sperl, 0);
+  int32_t value = SPerl_API_get_var_int(sperl, env, 0);
   
   printf("TEST: %" PRId32 "\n", value);
 }
@@ -100,7 +100,7 @@ void SPerl_FUNC_std_printl(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  int64_t value = SPerl_API_get_var_long(sperl, 0);
+  int64_t value = SPerl_API_get_var_long(sperl, env, 0);
   
   printf("TEST: %" PRId64 "\n", value);
 }
@@ -109,7 +109,7 @@ void SPerl_FUNC_std_printf(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  float value = SPerl_API_get_var_float(sperl, 0);
+  float value = SPerl_API_get_var_float(sperl, env, 0);
   
   printf("TEST: %f\n", value);
 }
@@ -118,7 +118,7 @@ void SPerl_FUNC_std_printd(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  double value = SPerl_API_get_var_double(sperl, 0);
+  double value = SPerl_API_get_var_double(sperl, env, 0);
   
   printf("TEST: %f\n", value);
 }
