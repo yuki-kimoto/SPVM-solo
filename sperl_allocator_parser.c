@@ -78,4 +78,6 @@ void SPerl_ALLOCATOR_PARSER_free(SPerl* sperl, SPerl_ALLOCATOR_PARSER* allocator
     SPerl_HASH_free(sperl, hash);
   }
   SPerl_ARRAY_free(sperl, allocator->hashes);
+  
+  free(allocator);
 }
