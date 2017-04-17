@@ -314,8 +314,8 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
             env->call_stack_base = call_stack_base;
             
             // Call native sub
-            void (*native_address)(SPerl* sperl) = constant_pool_sub->native_address;
-            (*native_address)(sperl);
+            void (*native_address)(SPerl* sperl, SPerl_ENV* env) = constant_pool_sub->native_address;
+            (*native_address)(sperl, env);
             
             // Get enviromnet
             operand_stack_top = env->operand_stack_top;
@@ -1717,9 +1717,7 @@ int32_t SPerl_API_pop_ret_int(SPerl* sperl, SPerl_ENV* env) {
 int64_t SPerl_API_pop_ret_long(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
-  
-  warn("BBBBBBBBBB %d %d", env->operand_stack_top, *(int64_t*)&env->call_stack[env->operand_stack_top]);
-  
+
   int64_t ret = *(int64_t*)&env->call_stack[env->operand_stack_top];
   env->operand_stack_top--;
   return ret;
