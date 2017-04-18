@@ -9,9 +9,9 @@
 SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl) {
   SPerl_ALLOCATOR_RUNTIME* allocator = malloc(sizeof(SPerl_ALLOCATOR_RUNTIME));
   
-  // Memory pool - memory pool save short strings and object, except array and hash
-  // These datas are created at compile time
+  // Memory pool
   allocator->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
+  
   
   return allocator;
 }

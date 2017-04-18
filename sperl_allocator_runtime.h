@@ -5,8 +5,11 @@
 
 // Parser information
 struct SPerl_allocator_runtime {
-  // Memory_pool - This is compile time memory pool. This memory pool save short string and object except array, hash
+  // Memory_pool
   SPerl_MEMORY_POOL* memory_pool;
+  
+  // Free addresses list
+  void** free_addresses_list;
 };
 
 SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl);
