@@ -23,6 +23,7 @@
 #include "sperl_constant_pool_field.h"
 #include "sperl_resolved_type.h"
 #include "sperl_env.h"
+#include "sperl_allocator_runtime.h"
 
 void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) {
   (void)sperl;
@@ -255,6 +256,8 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
   
   int32_t call_stack_base = env->call_stack_base;
   int32_t call_stack_base_start = call_stack_base;
+  
+  SPerl_ALLOCATOR_RUNTIME* allocator = sperl->allocator_runtime;
   
   // Goto subroutine
   goto CALLSUB_COMMON;
@@ -614,7 +617,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         
         // Allocate array
         int64_t allocate_size = SPerl_C_ARRAY_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
-        void* array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
+        void* array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
         memset((void*)array, 0, allocate_size);
         memcpy((void*)(array + SPerl_C_ARRAY_HEADER_BYTE_SIZE), chars_ptr, length);
         
@@ -1422,7 +1425,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         // Allocate memory
         int32_t fields_byte_size = constant_pool_package->byte_size;
         int32_t allocate_size = SPerl_C_OBJECT_HEADER_BYTE_SIZE + fields_byte_size;
-        void* object = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
+        void* object = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
         
         // Set reference count
         *(int64_t*)(object + SPerl_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
@@ -1467,7 +1470,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         else {
           assert(0);
         }
-        array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocate_size);
+        array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
 
         // Set reference count
         *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_BYTE_OFFSET) = 1;

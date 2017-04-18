@@ -9,7 +9,7 @@ struct SPerl_allocator_runtime {
   SPerl_MEMORY_POOL* memory_pool;
 };
 
-void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, size_t size);
+void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator, size_t size);
 SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl);
 void* SPerl_ALLOCATOR_RUNTIME_alloc_memory_pool(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator, int32_t size);
 void SPerl_ALLOCATOR_RUNTIME_free(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator);
