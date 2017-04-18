@@ -1471,7 +1471,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
           assert(0);
         }
         array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
-
+        
         // Set reference count
         *(int64_t*)(array + SPerl_C_ARRAY_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
         
