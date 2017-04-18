@@ -27,10 +27,6 @@ void SPerl_run(SPerl* sperl, const char* package_name) {
     return;
   }
   
-  // Free parser
-  SPerl_PARSER_free(sperl, sperl->parser);
-  sperl->parser = NULL;
-  
   // Entry point
   const char* entry_point_sub_name = sperl->entry_point_sub_name;
   
@@ -88,22 +84,25 @@ SPerl* SPerl_new() {
   
   // Constant poll subroutine symbol table
   sperl->constant_pool_sub_symtable = SPerl_HASH_new(sperl, 0);
+  
+  // Runtime memory allocator
+  sperl->allocator_runtime = SPerl_ALLOCATOR_RUNTIME_new(sperl);
 
   return sperl;
 }
 
 void SPerl_free(SPerl* sperl) {
   
-  // Free parser
-  if (sperl->parser) {
-    SPerl_PARSER_free(sperl, sperl->parser);
-  }
+  SPerl_PARSER_free(sperl, sperl->parser);
   
   // Free constant pool
   SPerl_CONSTANT_POOL_free(sperl, sperl->constant_pool);
   
   // Free bytecode array
   SPerl_BYTECODE_ARRAY_free(sperl, sperl->bytecode_array);
+  
+  // Free runtime allocator
+  SPerl_ALLOCATOR_RUNTIME_free(sperl, sperl->allocator_runtime);
   
   free(sperl);
 }

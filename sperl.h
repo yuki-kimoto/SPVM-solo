@@ -39,6 +39,9 @@ struct sperl_ {
   
   // Bytecodes
   SPerl_BYTECODE_ARRAY* bytecode_array;
+  
+  // Runtime memory allocator
+  SPerl_ALLOCATOR_RUNTIME* allocator_runtime;
 };
 
 SPerl* SPerl_new();
