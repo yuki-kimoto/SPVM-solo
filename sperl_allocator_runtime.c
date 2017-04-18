@@ -15,10 +15,18 @@ SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl) {
   return allocator;
 }
 
-void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator, size_t size) {
+void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator, int64_t size) {
   (void) sperl;
-
-  return SPerl_ALLOCATOR_UTIL_safe_malloc_i32(size, sizeof(char));
+  
+  void* block;
+  if (size > 0xFF) {
+    block = SPerl_ALLOCATOR_UTIL_safe_malloc_i64(1, size);
+  }
+  else {
+    block = SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, size);
+  }
+  
+  return block;
 }
 
 void SPerl_ALLOCATOR_RUNTIME_free(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator) {
