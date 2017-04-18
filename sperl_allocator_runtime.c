@@ -7,11 +7,14 @@
 #include "sperl_allocator_util.h"
 
 SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl) {
-  SPerl_ALLOCATOR_RUNTIME* allocator = malloc(sizeof(SPerl_ALLOCATOR_RUNTIME));
+  SPerl_ALLOCATOR_RUNTIME* allocator = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPerl_ALLOCATOR_RUNTIME));
   
   // Memory pool
   allocator->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
   
+  // Free addresses list
+  allocator->free_addresses_list = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(16, sizeof(void*));
+  memset(allocator->free_addresses_list, 0, 16 * sizeof(void*));
   
   return allocator;
 }
@@ -64,6 +67,8 @@ void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* alloc
 void SPerl_ALLOCATOR_RUNTIME_free(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator) {
   // Free memory pool */
   SPerl_MEMORY_POOL_free(sperl, allocator->memory_pool);
+  
+  free(allocator->free_addresses_list);
   
   free(allocator);
 }
