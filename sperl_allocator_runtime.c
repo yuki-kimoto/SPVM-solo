@@ -7,7 +7,7 @@
 #include "sperl_allocator_runtime.h"
 #include "sperl_allocator_util.h"
 #include "sperl_memory_pool.h"
-#include "sperl_freelist.h"
+#include "sperl_array.h"
 
 SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl) {
   SPerl_ALLOCATOR_RUNTIME* allocator = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPerl_ALLOCATOR_RUNTIME));
@@ -15,9 +15,13 @@ SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl) {
   // Memory pool
   allocator->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
   
-  // Free addresses list
-  allocator->freelists = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(16, sizeof(SPerl_FREELIST));
-  memset(allocator->freelists, 0, 16 * sizeof(SPerl_FREELIST));
+  // Free lists
+  allocator->freelists = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(16, sizeof(SPerl_ARRAY));
+  
+  // Initialize free list
+  for (int32_t i = 0; i < 16; i++) {
+    allocator->freelists[i] = SPerl_ARRAY_new(sperl, 0);
+  }
   
   return allocator;
 }

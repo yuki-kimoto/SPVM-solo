@@ -4,10 +4,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-/* sperl_freelist.h */
-struct SPerl_freelist;
-typedef struct SPerl_freelist SPerl_FREELIST;
-
 /* sperl_allocator_runtime.h */
 struct SPerl_allocator_runtime;
 typedef struct SPerl_allocator_runtime SPerl_ALLOCATOR_RUNTIME;

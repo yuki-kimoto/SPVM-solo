@@ -9,7 +9,7 @@ struct SPerl_allocator_runtime {
   SPerl_MEMORY_POOL* memory_pool;
   
   // Free lists
-  SPerl_FREELIST* freelists;
+  SPerl_ARRAY** freelists;
 };
 
 SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl);
