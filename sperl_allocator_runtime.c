@@ -1,10 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 #include "sperl.h"
 #include "sperl_allocator_runtime.h"
 #include "sperl_allocator_util.h"
+#include "sperl_memory_pool.h"
+#include "sperl_freelist.h"
 
 SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl) {
   SPerl_ALLOCATOR_RUNTIME* allocator = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPerl_ALLOCATOR_RUNTIME));
@@ -13,8 +16,8 @@ SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl) {
   allocator->memory_pool = SPerl_MEMORY_POOL_new(sperl, 0);
   
   // Free addresses list
-  allocator->free_addresses_list = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(16, sizeof(void*));
-  memset(allocator->free_addresses_list, 0, 16 * sizeof(void*));
+  allocator->freelists = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(16, sizeof(SPerl_FREELIST));
+  memset(allocator->freelists, 0, 16 * sizeof(SPerl_FREELIST));
   
   return allocator;
 }
@@ -68,7 +71,7 @@ void SPerl_ALLOCATOR_RUNTIME_free(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocat
   // Free memory pool */
   SPerl_MEMORY_POOL_free(sperl, allocator->memory_pool);
   
-  free(allocator->free_addresses_list);
+  free(allocator->freelists);
   
   free(allocator);
 }
