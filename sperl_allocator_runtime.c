@@ -46,8 +46,7 @@ void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* alloc
     int32_t _N4 = _N3 | (_N3 >>  4);
     int32_t _N5 = _N4 | (_N4 >>  8);
     int32_t _N6 = _N5 | (_N5 >> 16);
-    int32_t _N7 = _N6 | (_N6 >> 32);
-    int32_t Value = _N7 + 1;
+    int32_t Value = _N6 + 1;
     
     // Allocate size
     int32_t allocate_size = Value;
