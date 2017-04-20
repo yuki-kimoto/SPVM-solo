@@ -32,8 +32,9 @@ enum {
 };
 
 enum {
-  SPerl_API_C_OBJECT_HEADER_BYTE_SIZE = sizeof(int64_t),
-  SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET = 0,
+  SPerl_API_C_OBJECT_HEADER_BYTE_SIZE = sizeof(int64_t) * 2,
+  SPerl_API_C_OBJECT_INFO = sizeof(int64_t) * 0,
+  SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET = sizeof(int64_t) * 1,
 };
 
 void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) {
