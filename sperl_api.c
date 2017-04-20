@@ -26,10 +26,13 @@
 #include "sperl_allocator_runtime.h"
 
 enum {
-  SPerl_API_C_OBJECT_HEADER_BYTE_SIZE = sizeof(int64_t) * 2 + sizeof(intmax_t) * 1,
-  SPerl_API_C_OBJECT_HEADER_INFO = 0,
+  SPerl_API_C_OBJECT_HEADER_BYTE_SIZE = sizeof(int64_t) + sizeof(int64_t) + sizeof(intmax_t),
+  SPerl_API_C_OBJECT_HEADER_INFO_OFFSET = 0,
+  SPerl_API_C_OBJECT_HEADER_INFO_BYTE_SIZE = sizeof(int64_t),
   SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET = sizeof(int64_t),
-  SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET = sizeof(int64_t) + sizeof(int64_t)
+  SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_SIZE = sizeof(int64_t),
+  SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET = sizeof(int64_t) + sizeof(int64_t),
+  SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_SIZE = sizeof(intmax_t)
 };
 
 void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) {
