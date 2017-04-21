@@ -15,5 +15,6 @@ struct SPerl_allocator_runtime {
 SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl);
 void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator, int64_t size);
 void SPerl_ALLOCATOR_RUNTIME_free(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator);
+int32_t SPerl_ALLOCATOR_RUNTIME_get_freelist_index(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator, int64_t size);
 
 #endif
