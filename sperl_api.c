@@ -1509,7 +1509,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         void* array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
         memset((void*)array, 0, allocate_size);
         memcpy((void*)(array + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE), chars_ptr, length);
-
+        
         // Set type
         *(int8_t*)(array + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_STRING;
         
