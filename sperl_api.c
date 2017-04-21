@@ -52,6 +52,12 @@ enum {
   SPerl_API_C_OBJECT_HEADER_BYTE_SIZE = SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_SIZE,
 };
 
+enum {
+  SPerl_API_C_OBJECT_HEADER_TYPE_OBJECT,
+  SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY,
+  SPerl_API_C_OBJECT_HEADER_TYPE_STRING
+};
+
 void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) {
   (void)sperl;
   (void)env;
@@ -636,31 +642,6 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         call_stack[operand_stack_top] = constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
         pc += 5;
         goto *jump[*pc];
-      case_SPerl_BYTECODE_C_CODE_MALLOCSTRING: {
-        int64_t* string_info_ptr = &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
-        
-        int64_t length = string_info_ptr[0];
-        int8_t* chars_ptr = (int8_t*)&string_info_ptr[1];
-        
-        // Allocate array
-        int64_t allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
-        void* array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
-        memset((void*)array, 0, allocate_size);
-        memcpy((void*)(array + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE), chars_ptr, length);
-        
-        // Set reference count
-        *(int64_t*)(array + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
-        
-        // Set array length
-        *(int64_t*)(array + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = length;
-        
-        // Set array
-        operand_stack_top++;
-        *(void**)&call_stack[operand_stack_top] = array;
-        
-        pc += 5;
-        goto *jump[*pc];
-      }
       case_SPerl_BYTECODE_C_CODE_LOAD:
         operand_stack_top++;
         call_stack[operand_stack_top] = vars[*(pc + 1)];
@@ -1454,6 +1435,9 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         int32_t allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + fields_byte_size;
         void* object = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
         
+        // Set type
+        *(int8_t*)(object + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_OBJECT;
+        
         // Set reference count
         *(int64_t*)(object + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
         
@@ -1499,6 +1483,9 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         }
         array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
         
+        // Set type
+        *(int8_t*)(array + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
+        
         // Set reference count
         *(int64_t*)(array + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
         
@@ -1509,6 +1496,34 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         *(void**)&call_stack[operand_stack_top] = array;
         
         pc += 2;
+        goto *jump[*pc];
+      }
+      case_SPerl_BYTECODE_C_CODE_MALLOCSTRING: {
+        int64_t* string_info_ptr = &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
+        
+        int64_t length = string_info_ptr[0];
+        int8_t* chars_ptr = (int8_t*)&string_info_ptr[1];
+        
+        // Allocate array
+        int64_t allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
+        void* array = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
+        memset((void*)array, 0, allocate_size);
+        memcpy((void*)(array + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE), chars_ptr, length);
+
+        // Set type
+        *(int8_t*)(array + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_STRING;
+        
+        // Set reference count
+        *(int64_t*)(array + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
+        
+        // Set array length
+        *(int64_t*)(array + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = length;
+        
+        // Set array
+        operand_stack_top++;
+        *(void**)&call_stack[operand_stack_top] = array;
+        
+        pc += 5;
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_ARRAYLENGTH:
