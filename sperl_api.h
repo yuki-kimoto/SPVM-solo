@@ -1,6 +1,8 @@
 #ifndef SPERL_API_H
 #define SPERL_API_H
 
+void SPerl_API_dec_ref_count(SPerl* sperl, SPerl_ENV* env, void* address);
+
 void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_base_name);
 
 int64_t SPerl_API_get_array_ref_count(SPerl* sperl, SPerl_ENV* env, void* array);

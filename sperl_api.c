@@ -737,18 +737,10 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_ASTORE: {
-        void* address = vars[*(pc + 1)];
+        void* address = (void*)vars[*(pc + 1)];
         
         if (address != NULL) {
-          assert(*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
-          
-          // Decrement reference count
-          *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
-          
-          // If reference count is zero, free address.
-          if (*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
-            SPerl_ALLOCATOR_RUNTIME_free_address(sperl, allocator, address);
-          }
+          SPerl_API_dec_ref_count(sperl, env, address);
         }
         
         vars[*(pc + 1)] = call_stack[operand_stack_top];
@@ -796,15 +788,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         void* address = *(void**)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(void*) * (size_t)call_stack[operand_stack_top - 1]);
         
         if (address != NULL) {
-          assert(*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
-          
-          // Decrement reference count
-          *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
-          
-          // If reference count is zero, free address.
-          if (*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
-            SPerl_ALLOCATOR_RUNTIME_free_address(sperl, allocator, address);
-          }
+          SPerl_API_dec_ref_count(sperl, env, address);
         }
         
         *(void**)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(void*) * (size_t)call_stack[operand_stack_top - 1])
@@ -1610,18 +1594,10 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
           pc +=4;
         }
         else if (*(pc + 1) == SPerl_BYTECODE_C_CODE_ASTORE) {
-          void* address = vars[(*(pc + 2) << 8) + *(pc + 3)];
+          void* address = (void*)vars[(*(pc + 2) << 8) + *(pc + 3)];
           
           if (address != NULL) {
-            assert(*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
-            
-            // Decrement reference count
-            *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
-            
-            // If reference count is zero, free address.
-            if (*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
-              SPerl_ALLOCATOR_RUNTIME_free_address(sperl, allocator, address);
-            }
+            SPerl_API_dec_ref_count(sperl, env, address);
           }
           
           vars[(*(pc + 2) << 8) + *(pc + 3)] = call_stack[operand_stack_top];
@@ -1765,15 +1741,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         void* address = *(void**)(*(void**)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset);
         
         if (address != NULL) {
-          assert(*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
-          
-          // Decrement reference count
-          *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
-          
-          // If reference count is zero, free address.
-          if (*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
-            SPerl_ALLOCATOR_RUNTIME_free_address(sperl, allocator, address);
-          }
+          SPerl_API_dec_ref_count(sperl, env, address);
         }
         
         *(void**)(*(void**)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset) = *(void**)&call_stack[operand_stack_top];
@@ -1783,6 +1751,22 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
       }
     // }
   // }
+}
+
+void SPerl_API_dec_ref_count(SPerl* sperl, SPerl_ENV* env, void* address) {
+  (void)sperl;
+  (void)env;
+  
+  assert(address);
+  assert(*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
+  
+  // Decrement reference count
+  *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
+  
+  // If reference count is zero, free address.
+  if (*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
+    SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, address);
+  }
 }
 
 void SPerl_API_push_ret_byte(SPerl* sperl, SPerl_ENV* env, int8_t value) {
