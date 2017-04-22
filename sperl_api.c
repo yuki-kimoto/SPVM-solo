@@ -748,6 +748,26 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         pc += 2;
         goto *jump[*pc];
       }
+      case_SPerl_BYTECODE_C_CODE_DECREFCOUNT: {
+        void* address = (void*)vars[*(pc + 1)];
+        
+        if (address != NULL) {
+          SPerl_API_dec_ref_count(sperl, env, address);
+        }
+        
+        pc += 2;
+        goto *jump[*pc];
+      }
+      case_SPerl_BYTECODE_C_CODE_INCREFCOUNT: {
+        void* address = (void*)vars[*(pc + 1)];
+        
+        if (address != NULL) {
+          SPerl_API_dec_ref_count(sperl, env, address);
+        }
+        
+        pc += 2;
+        goto *jump[*pc];
+      }
       case_SPerl_BYTECODE_C_CODE_BASTORE:
         *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(int8_t) * (size_t)call_stack[operand_stack_top - 1])
           = *(int8_t*)&call_stack[operand_stack_top];
@@ -1767,6 +1787,17 @@ void SPerl_API_dec_ref_count(SPerl* sperl, SPerl_ENV* env, void* address) {
   if (*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
     SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, address);
   }
+}
+
+void SPerl_API_inc_ref_count(SPerl* sperl, SPerl_ENV* env, void* address) {
+  (void)sperl;
+  (void)env;
+  
+  assert(address);
+  assert(*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) >= 0);
+  
+  // Decrement reference count
+  *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) += 1;
 }
 
 void SPerl_API_push_ret_byte(SPerl* sperl, SPerl_ENV* env, int8_t value) {

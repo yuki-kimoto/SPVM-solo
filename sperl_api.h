@@ -2,6 +2,7 @@
 #define SPERL_API_H
 
 void SPerl_API_dec_ref_count(SPerl* sperl, SPerl_ENV* env, void* address);
+void SPerl_API_inc_ref_count(SPerl* sperl, SPerl_ENV* env, void* address);
 
 void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_base_name);
 

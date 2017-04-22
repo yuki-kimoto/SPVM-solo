@@ -209,6 +209,6 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "ASTORE",
   "AASTORE",
   "APUTFIELD",
-  "REFCOUNTINC",
-  "REFCOUNTDEC",
+  "INCREFCOUNT",
+  "DECREFCOUNT",
 };
