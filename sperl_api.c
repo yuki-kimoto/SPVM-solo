@@ -1456,16 +1456,16 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         void* address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
         
         // Set type
-        *(int8_t*)(address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_OBJECT;
+        *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_OBJECT;
         
         // Set byte size
-        *(int32_t*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = fields_byte_size;
+        *(int32_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = fields_byte_size;
         
         // Set reference count
-        *(int64_t*)(address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
+        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
         
         // Initialize fields area by 0
-        memset((void*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE), 0, fields_byte_size);
+        memset((void*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE), 0, fields_byte_size);
         
         // Push address
         operand_stack_top++;
@@ -1515,16 +1515,16 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
         
         // Set type
-        *(int8_t*)(address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
+        *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
         
         // Set byte size
-        *(int32_t*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = unit_byte_size;
+        *(int32_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = unit_byte_size;
         
         // Set reference count
-        *(int64_t*)(address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
+        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
         
         // Set array length
-        *(int64_t*)(address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = length;
+        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = length;
         
         // Set array
         *(void**)&call_stack[operand_stack_top] = address;
@@ -1542,19 +1542,19 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         int64_t allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
         void* address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
         memset((void*)address, 0, allocate_size);
-        memcpy((void*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE), chars_ptr, length);
+        memcpy((void*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE), chars_ptr, length);
         
         // Set type
-        *(int8_t*)(address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_STRING;
+        *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_STRING;
 
         // Set byte size
-        *(int32_t*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = sizeof(int8_t);
+        *(int32_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = sizeof(int8_t);
         
         // Set reference count
-        *(int64_t*)(address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
+        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
         
         // Set array length
-        *(int64_t*)(address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = length;
+        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = length;
         
         // Set array
         operand_stack_top++;
@@ -1955,54 +1955,54 @@ int64_t SPerl_API_get_array_length(SPerl* sperl, SPerl_ENV* env, void* address) 
   (void)sperl;
   (void)env;
   
-  return *(int64_t*)(address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
+  return *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
 }
 
 int64_t SPerl_API_get_array_ref_count(SPerl* sperl, SPerl_ENV* env, void* address) {
   (void)sperl;
   (void)env;
   
-  return *(int64_t*)(address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET);
+  return *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET);
 }
 
 int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, SPerl_ENV* env, void* address) {
   (void)sperl;
   (void)env;
   
-  return (int8_t*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
+  return (int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
 }
 
 int16_t* SPerl_API_get_short_array_data(SPerl* sperl, SPerl_ENV* env, void* address) {
   (void)sperl;
   (void)env;
   
-  return (int16_t*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
+  return (int16_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
 }
 
 int32_t* SPerl_API_get_int_array_data(SPerl* sperl, SPerl_ENV* env, void* address) {
   (void)sperl;
   (void)env;
   
-  return (int32_t*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
+  return (int32_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
 }
 
 int64_t* SPerl_API_get_long_array_data(SPerl* sperl, SPerl_ENV* env, void* address) {
   (void)sperl;
   (void)env;
   
-  return (int64_t*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
+  return (int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
 }
 
 float* SPerl_API_get_float_array_data(SPerl* sperl, SPerl_ENV* env, void* address) {
   (void)sperl;
   (void)env;
   
-  return (float*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
+  return (float*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
 }
 
 double* SPerl_API_get_double_array_data(SPerl* sperl, SPerl_ENV* env, void* address) {
   (void)sperl;
   (void)env;
   
-  return (double*)(address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
+  return (double*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
 }
