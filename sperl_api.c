@@ -740,8 +740,15 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         void* address = vars[*(pc + 1)];
         
         if (address != NULL) {
+          assert(*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
+          
           // Decrement reference count
           *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
+          
+          // If reference count is zero, free address.
+          if (*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
+            SPerl_ALLOCATOR_RUNTIME_free_address(sperl, allocator, address);
+          }
         }
         
         vars[*(pc + 1)] = call_stack[operand_stack_top];

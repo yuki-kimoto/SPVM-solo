@@ -85,6 +85,10 @@ void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* alloc
   return block;
 }
 
+void SPerl_ALLOCATOR_RUNTIME_free_address(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator, void* address) {
+  
+}
+
 void SPerl_ALLOCATOR_RUNTIME_free(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator) {
   // Free memory pool */
   SPerl_MEMORY_POOL_free(sperl, allocator->memory_pool);
