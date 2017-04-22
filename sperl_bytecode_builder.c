@@ -1154,26 +1154,34 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   SPerl_OP* op_var = op_cur->first;
                   int32_t my_var_address = op_var->uv.var->op_my_var->uv.my_var->address;
                   
+                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_var);
+                  
                   if (my_var_address > 0xFF) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_WIDE);
                   }
                   
                   _Bool has_operand = 0;
-                  if (my_var_address == 0) {
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_0);
                   
-                  }
-                  else if (my_var_address == 1) {
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_1);
-                  }
-                  else if (my_var_address == 2) {
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_2);
-                  }
-                  else if (my_var_address == 3) {
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_3);
+                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type)) {
+                    if (my_var_address == 0) {
+                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_0);
+                    }
+                    else if (my_var_address == 1) {
+                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_1);
+                    }
+                    else if (my_var_address == 2) {
+                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_2);
+                    }
+                    else if (my_var_address == 3) {
+                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_3);
+                    }
+                    else {
+                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE);
+                      has_operand = 1;
+                    }
                   }
                   else {
-                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE);
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_ASTORE);
                     has_operand = 1;
                   }
                   

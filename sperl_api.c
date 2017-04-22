@@ -261,6 +261,9 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
     &&case_SPerl_BYTECODE_C_CODE_MALLOCSTRING,
     &&case_SPerl_BYTECODE_C_CODE_BINC,
     &&case_SPerl_BYTECODE_C_CODE_SINC,
+    &&case_SPerl_BYTECODE_C_CODE_ASTORE,
+    &&case_SPerl_BYTECODE_C_CODE_AASTORE,
+    &&case_SPerl_BYTECODE_C_CODE_APUTFIELD,
   };
   
   // Constant pool

@@ -206,4 +206,7 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "MALLOCSTRING",
   "BINC",
   "SINC",
+  "ASTORE",
+  "AASTORE",
+  "APUTFIELD",
 };

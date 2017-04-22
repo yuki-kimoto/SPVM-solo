@@ -208,6 +208,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
         switch (bytecode) {
           // Have tow operand]
           case SPerl_BYTECODE_C_CODE_STORE:
+          case SPerl_BYTECODE_C_CODE_ASTORE:
           case SPerl_BYTECODE_C_CODE_LOAD:
           {
             i++;
@@ -231,6 +232,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       case SPerl_BYTECODE_C_CODE_BIPUSH:
       case SPerl_BYTECODE_C_CODE_BLPUSH:
       case SPerl_BYTECODE_C_CODE_STORE:
+      case SPerl_BYTECODE_C_CODE_ASTORE:
       case SPerl_BYTECODE_C_CODE_LOAD:
       case SPerl_BYTECODE_C_CODE_LDC:
       case SPerl_BYTECODE_C_CODE_MALLOCARRAY:
