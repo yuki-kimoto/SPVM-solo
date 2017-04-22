@@ -84,9 +84,13 @@ void SPerl_ARRAY_store(SPerl* sperl, SPerl_ARRAY* array, int32_t index, void* va
 void* SPerl_ARRAY_pop(SPerl* sperl, SPerl_ARRAY* array) {
   (void)sperl;
   
-  assert(array->length > 0);
+  assert(array->length >= 0);
   
-  array->length--;
-  
-  return *(void**)&array->values[array->length];
+  if (array->length == 0) {
+    return NULL;
+  }
+  else {
+    array->length--;
+    return *(void**)&array->values[array->length];
+  }
 }

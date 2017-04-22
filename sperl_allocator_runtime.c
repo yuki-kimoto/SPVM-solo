@@ -73,10 +73,13 @@ void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* alloc
   else {
     int32_t index = SPerl_ALLOCATOR_RUNTIME_get_freelist_index(sperl, allocator, size);
     
-    // Allocate size
-    int32_t allocate_size = (int32_t)pow(2, index);
-    
-    block = SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, allocate_size);
+    void* free_address = SPerl_ARRAY_pop(sperl, allocator->freelists[index]);
+    if (free_address) {
+      assert(0);
+    }
+    else {
+      block = SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, size);
+    }
   }
   
   return block;
