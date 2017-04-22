@@ -737,6 +737,13 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_ASTORE: {
+        void* address = vars[*(pc + 1)];
+        
+        if (address != NULL) {
+          // Decrement reference count
+          *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
+        }
+        
         vars[*(pc + 1)] = call_stack[operand_stack_top];
         operand_stack_top--;
         pc += 2;

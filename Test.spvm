@@ -76,6 +76,12 @@ package Test {
       std::printl($m{x});
       std::printl($m{y});
     }
+
+    # Free when assignment
+    {
+      my $m = malloc Test::Minimal;
+      $m = malloc Test::Minimal;
+    }
     
     # increment long value
     {
