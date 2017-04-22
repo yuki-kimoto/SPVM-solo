@@ -111,6 +111,8 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "VOID",
   "TRY",
   "CATCH",
+  "DECREFCOUNT",
+  "INCREFCOUNT",
 };
 
 SPerl_OP* SPerl_OP_build_try_catch(SPerl* sperl, SPerl_OP* op_try, SPerl_OP* op_try_block, SPerl_OP* op_catch, SPerl_OP* op_my_var, SPerl_OP* op_catch_block) {

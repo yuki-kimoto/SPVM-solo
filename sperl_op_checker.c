@@ -825,6 +825,14 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     if (first_resolved_type->id != sub_return_resolved_type->id) {
                       is_invalid = 1;
                     }
+                    
+                    // Reference type
+                    if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                      // INC reference count of return value
+                      SPerl_OP* op_increfcount = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_INCREFCOUNT, op_cur->file, op_cur->line);
+                      
+                      SPerl_OP_sibling_splice(sperl, op_cur, op_cur->first, NULL, op_increfcount);
+                    }
                   }
                   // Empty
                   else {
@@ -837,6 +845,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     SPerl_yyerror_format(sperl, "Invalid return type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
+
                 }
                 
                 break;
