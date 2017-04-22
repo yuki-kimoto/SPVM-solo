@@ -1203,31 +1203,28 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_array_elem);
                   SPerl_RESOLVED_TYPE* index_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term_index);
                   
-                  if (index_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                    if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
-                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_BASTORE);
-                    }
-                    else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
-                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_SASTORE);
-                    }
-                    else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
-                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_IASTORE);
-                    }
-                    else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_LASTORE);
-                    }
-                    else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_FASTORE);
-                    }
-                    else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                      SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_DASTORE);
-                    }
-                    else {
-                      assert(0);
-                    }
+                  assert(index_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG);
+                  
+                  if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_BASTORE);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_SASTORE);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_INT) {
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_IASTORE);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_LASTORE);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_FASTORE);
+                  }
+                  else if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_DASTORE);
                   }
                   else {
-                    assert(0);
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_AASTORE);
                   }
                 }
                 else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
