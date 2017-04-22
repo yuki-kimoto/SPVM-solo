@@ -1249,7 +1249,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_DPUTFIELD);
                   }
                   else {
-                    assert(0);
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_APUTFIELD);
                   }
                   
                   // Call subroutine
