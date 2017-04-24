@@ -121,34 +121,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         // [START]Preorder traversal position
         
         switch (op_cur->code) {
-          /*
-          case SPerl_OP_C_CODE_DECL_MY_VAR: {
-            
-            // If left is object type and right is not exists, append "= undef" code
-            SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
-            
-            if (first_resolved_type && !SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && !SPerl_OP_sibling(sperl, op_cur)) {
-              SPerl_OP* op_assign = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ASSIGN, op_cur->file, op_cur->line);
-              
-              SPerl_VAR* var = SPerl_VAR_new(sperl);
-              SPerl_OP* op_var_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_cur->file, op_cur->line);
-              op_var_name->uv.name = op_cur->uv.my_var->op_name->uv.name;
-              var->op_name = op_var_name;
-              var->op_my_var = op_cur;
-              
-              SPerl_OP* op_var = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_VAR, op_cur->file, op_cur->line);
-              op_var->uv.var = var;
-              
-              SPerl_OP* op_undef = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_UNDEF, op_cur->file, op_cur->line);
-              
-              SPerl_OP_sibling_splice(sperl, op_assign, op_assign->last, 0, op_var);
-              SPerl_OP_sibling_splice(sperl, op_assign, op_assign->last, 0, op_undef);
-              
-              SPerl_OP_sibling_splice(sperl, op_cur->sibparent, op_cur->sibparent->last, 0, op_assign);
-            }
-            break;
-          }
-          */
           case SPerl_OP_C_CODE_DECL_FIELD: {
             SPerl_FIELD* field = op_cur->uv.field;
             SPerl_RESOLVED_TYPE* resolved_type = field->op_type->uv.type->resolved_type;
@@ -1165,6 +1137,33 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   my_var->address = next_my_var_address++;
                   SPerl_ARRAY_push(sperl, op_my_vars, op_cur);
                   SPerl_ARRAY_push(sperl, op_my_var_stack, op_cur);
+                }
+
+                // If left is object type and right is not exists, append "= undef" code
+                SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
+                
+                // Assign undef if left value is object and right value is nothing
+                if (first_resolved_type && !SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && !SPerl_OP_sibling(sperl, op_cur)) {
+                  // Only my declarations after subroutine arguments
+                  if (my_var->address >= sub->op_args->length) {
+                    SPerl_OP* op_assign = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ASSIGN, op_cur->file, op_cur->line);
+                    
+                    SPerl_VAR* var = SPerl_VAR_new(sperl);
+                    SPerl_OP* op_var_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_cur->file, op_cur->line);
+                    op_var_name->uv.name = op_cur->uv.my_var->op_name->uv.name;
+                    var->op_name = op_var_name;
+                    var->op_my_var = op_cur;
+                    
+                    SPerl_OP* op_var = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_VAR, op_cur->file, op_cur->line);
+                    op_var->uv.var = var;
+                    
+                    SPerl_OP* op_undef = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_UNDEF, op_cur->file, op_cur->line);
+                    
+                    SPerl_OP_sibling_splice(sperl, op_assign, op_assign->last, 0, op_var);
+                    SPerl_OP_sibling_splice(sperl, op_assign, op_assign->last, 0, op_undef);
+                    
+                    SPerl_OP_sibling_splice(sperl, op_cur->sibparent, op_cur->sibparent->last, 0, op_assign);
+                  }
                 }
                 
                 break;
