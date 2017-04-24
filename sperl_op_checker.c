@@ -774,7 +774,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   }
                 }
                 
-                if (first_resolved_type->id != last_resolved_type->id) {
+                // It is OK that left type is object and right is undef
+                if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && !last_resolved_type) {
+                  // OK
+                }
+                // Invalid type
+                else if (first_resolved_type->id != last_resolved_type->id) {
                   SPerl_yyerror_format(sperl, "Invalid type at %s line %d\n", op_cur->file, op_cur->line);
                   parser->fatal_error = 1;
                   return;
@@ -1134,6 +1139,11 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_ARRAY_push(sperl, op_my_vars, op_cur);
                   SPerl_ARRAY_push(sperl, op_my_var_stack, op_cur);
                 }
+                
+                if (SPerl_OP_sibling(sperl, op_cur)) {
+                  
+                }
+                
                 break;
               }
               case SPerl_OP_C_CODE_CALL_SUB: {

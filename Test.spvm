@@ -82,6 +82,12 @@ package Test {
       my $m = malloc Test::Minimal;
       $m = malloc Test::Minimal;
     }
+
+    # left is object, right is undef
+    {
+      my $obj : Test::Minimal = undef;
+    }
+    
     
     # increment long value
     {
