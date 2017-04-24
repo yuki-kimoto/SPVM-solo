@@ -758,12 +758,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 if (!first_resolved_type) {
                   SPerl_OP* op_var = op_cur->first;
                   SPerl_MY_VAR* my_var = op_var->uv.var->op_my_var->uv.my_var;
-                  SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, my_var->op_term_assumption);
+                  first_resolved_type = SPerl_OP_get_resolved_type(sperl, my_var->op_term_assumption);
                   
-                  if (resolved_type) {
+                  if (first_resolved_type) {
                     SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_cur->file, op_cur->line);
                     SPerl_TYPE* type = SPerl_TYPE_new(sperl);
-                    type->resolved_type = resolved_type;
+                    type->resolved_type = first_resolved_type;
                     op_type->uv.type = type;
                     my_var->op_type = op_type;
                   }
@@ -773,9 +773,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     return;
                   }
                 }
-                
-                first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
-                last_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->last);
                 
                 if (first_resolved_type->id != last_resolved_type->id) {
                   SPerl_yyerror_format(sperl, "Invalid type at %s line %d\n", op_cur->file, op_cur->line);
@@ -1112,7 +1109,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 // Search same name variable
                 _Bool found = 0;
-
+                
                 assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
                 for (int32_t i = op_my_var_stack->length; i-- > block_base; ) {
                   SPerl_OP* op_bef_my_var = SPerl_ARRAY_fetch(sperl, op_my_var_stack, i);
