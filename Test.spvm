@@ -7,6 +7,14 @@ use Test::Minimal;
 package Test {
   sub main($mvar : long) : long {
     std::printl(std::test_call1(4));
+    
+    {
+      my $obj1 = malloc Test::Minimal;
+      
+      my $obj2 : Test::Minimal;
+      
+      my $obj3 : Test::Minimal = undef;
+    }
 
     # byte increment
     {
