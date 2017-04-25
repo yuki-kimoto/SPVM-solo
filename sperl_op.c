@@ -115,6 +115,17 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "INCREFCOUNT",
 };
 
+SPerl_OP* SPerl_OP_get_op_block_from_op_sub(SPerl* sperl, SPerl_OP* op_sub) {
+  SPerl_OP* op_block = op_sub->last;
+  
+  if (op_block->code == SPerl_OP_C_CODE_BLOCK) {
+    return op_block;
+  }
+  else {
+    return NULL;
+  }
+}
+
 SPerl_OP* SPerl_OP_build_try_catch(SPerl* sperl, SPerl_OP* op_try, SPerl_OP* op_try_block, SPerl_OP* op_catch, SPerl_OP* op_my_var, SPerl_OP* op_catch_block) {
   
   // insert var declaration into catch block top
@@ -1056,20 +1067,21 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
     }
   }
   
+  /*
   // Add my declaration to top of block
-  {
-    SPerl_OP* op_arg = op_args->first;
-    SPerl_OP* op_list_my = SPerl_OP_newOP_LIST(sperl, op_args->file, op_args->line);
-    while ((op_arg = SPerl_OP_sibling(sperl, op_arg))) {
+  if (op_block) {
+    SPerl_OP* op_list_statement = op_block->first;
+    for (int32_t i = sub->op_args->length - 1; i >= 0; i--) {
+      SPerl_OP* op_arg = SPerl_ARRAY_fetch(sperl, sub->op_args, i);
       SPerl_OP* op_decl_my_var = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, op_arg->file, op_arg->line);
       op_decl_my_var->uv.my_var = op_arg->uv.my_var;
-      SPerl_OP_sibling_splice(sperl, op_list_my, op_list_my->last, 0, op_decl_my_var);
+      SPerl_OP* op_null = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NULL, op_arg->file, op_arg->line);
+      SPerl_OP_sibling_splice(sperl, op_null, op_null->last, 0, op_decl_my_var);
+      
+      SPerl_OP_sibling_splice(sperl, op_list_statement, op_list_statement->first, 0, op_null);
     }
   }
-  
-  if (op_block) {
-    
-  }
+  */
   
   // return type
   sub->op_return_type = op_type_or_void;
