@@ -51,7 +51,6 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "DECL_DESCRIPTOR",
   "DECL_ENUMERATION_VALUE",
   "BLOCK",
-  "SUB_BLOCK",
   "ENUM_BLOCK",
   "CLASS_BLOCK",
   "TYPE",
@@ -1025,6 +1024,7 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   SPerl_OP_sibling_splice(sperl, op_sub, op_args, 0, op_descriptors);
   SPerl_OP_sibling_splice(sperl, op_sub, op_descriptors, 0, op_type_or_void);
   if (op_block) {
+    op_block->flag = SPerl_OP_C_FLAG_BLOCK_SUB;
     SPerl_OP_sibling_splice(sperl, op_sub, op_type_or_void, 0, op_block);
   }
   
