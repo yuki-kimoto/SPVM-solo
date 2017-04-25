@@ -151,7 +151,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
       SPerl_OP* op_sub = SPerl_ARRAY_fetch(sperl, package->op_subs, sub_pos);
       SPerl_SUB* sub = op_sub->uv.sub;
       
-      if (sub->is_constant) {
+      if (sub->is_constant || sub->is_native) {
         continue;
       }
       
