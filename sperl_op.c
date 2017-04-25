@@ -1048,9 +1048,22 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
   }
   
   // subargs
-  SPerl_OP* op_arg = op_args->first;
-  while ((op_arg = SPerl_OP_sibling(sperl, op_arg))) {
-    SPerl_ARRAY_push(sperl, sub->op_args, op_arg->first);
+  {
+    SPerl_OP* op_arg = op_args->first;
+    while ((op_arg = SPerl_OP_sibling(sperl, op_arg))) {
+      SPerl_ARRAY_push(sperl, sub->op_args, op_arg->first);
+    }
+  }
+  
+  // Add my declaration to top of block
+  {
+    SPerl_OP* op_arg = op_args->first;
+    SPerl_OP* op_list_my = SPerl_OP_newOP_LIST(sperl, op_args->file, op_args->line);
+    while ((op_arg = SPerl_OP_sibling(sperl, op_arg))) {
+      SPerl_OP* op_decl_my_var = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, op_arg->file, op_arg->line);
+      op_decl_my_var->uv.my_var = op_arg->uv.my_var;
+      SPerl_OP_sibling_splice(sperl, op_list_my, op_list_my->last, 0, op_decl_my_var);
+    }
   }
   
   // return type
