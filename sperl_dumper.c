@@ -439,13 +439,14 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
     printf("      name => \"%s\"\n", sub->op_name->uv.name);
     
     if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
-      printf("      resolved_type => void");
+      printf("      resolved_type => void\n");
     }
     else {
       printf("      resolved_type => \"%s\"\n", sub->op_return_type->uv.type->resolved_type->name);
     }
     
-    printf("      is_constant %d\n", sub->is_constant);
+    printf("      is_constant => %d\n", sub->is_constant);
+    printf("      is_native => %d\n", sub->is_native);
     
     printf("      args\n");
     SPerl_ARRAY* op_args = sub->op_args;
@@ -456,19 +457,21 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
       SPerl_DUMPER_dump_my_var(sperl, my_var);
     }
     
-    printf("      my_vars\n");
-    SPerl_ARRAY* op_my_vars = sub->op_my_vars;
-    for (int32_t i = 0, len = op_my_vars->length; i < len; i++) {
-      SPerl_OP* op_my_var = SPerl_ARRAY_fetch(sperl, sub->op_my_vars, i);
-      SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
-      printf("      my_var[%" PRId32 "]\n", i);
-      SPerl_DUMPER_dump_my_var(sperl, my_var);
+    if (!sub->is_native) {
+      printf("      my_vars\n");
+      SPerl_ARRAY* op_my_vars = sub->op_my_vars;
+      for (int32_t i = 0, len = op_my_vars->length; i < len; i++) {
+        SPerl_OP* op_my_var = SPerl_ARRAY_fetch(sperl, sub->op_my_vars, i);
+        SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
+        printf("        my_var[%" PRId32 "]\n", i);
+        SPerl_DUMPER_dump_my_var(sperl, my_var);
+      }
+      
+      printf("      operand_stack_max => %" PRId32 "\n", sub->operand_stack_max);
+      
+      printf("      bytecode_array\n");
+      SPerl_DUMPER_dump_bytecode_array(sperl, sperl->bytecode_array, sub->bytecode_base, sub->bytecode_length);
     }
-    
-    printf("      operand_stack_max => %" PRId32 "\n", sub->operand_stack_max);
-    
-    printf("      bytecode_array\n");
-    SPerl_DUMPER_dump_bytecode_array(sperl, sperl->bytecode_array, sub->bytecode_base, sub->bytecode_length);
   }
   else {
     printf("      None\n");
@@ -511,13 +514,13 @@ void SPerl_DUMPER_dump_my_var(SPerl* sperl, SPerl_MY_VAR* my_var) {
   (void)sperl;
 
   if (my_var) {
-    printf("        name => \"%s\"\n", my_var->op_name->uv.name);
+    printf("          name => \"%s\"\n", my_var->op_name->uv.name);
     
     SPerl_TYPE* type = my_var->op_type->uv.type;
-    printf("        resolved_type => \"%s\"\n", type->resolved_type->name);
+    printf("          resolved_type => \"%s\"\n", type->resolved_type->name);
     
   }
   else {
-    printf("        None\n");
+    printf("          None\n");
   }
 }
