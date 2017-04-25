@@ -1042,6 +1042,11 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
     }
   }
   
+  // Native subroutine can't have block
+  if (sub->is_native && op_block) {
+    SPerl_yyerror_format(sperl, "Native subroutine can't have block", op_block->file, op_block->line);
+  }
+  
   // subargs
   SPerl_OP* op_arg = op_args->first;
   while ((op_arg = SPerl_OP_sibling(sperl, op_arg))) {
