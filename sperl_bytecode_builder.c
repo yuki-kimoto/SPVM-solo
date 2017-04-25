@@ -158,7 +158,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
       sub->bytecode_base = bytecode_array->length;
       
       // Run OPs
-      SPerl_OP* op_base = op_sub;
+      SPerl_OP* op_base = SPerl_OP_get_op_block_from_op_sub(sperl, op_sub);
       SPerl_OP* op_cur = op_base;
       _Bool finish = 0;
       

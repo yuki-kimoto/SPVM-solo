@@ -93,7 +93,6 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         // block base position stack
         SPerl_ARRAY* block_base_stack = SPerl_ALLOCATOR_PARSER_alloc_array(sperl, parser->allocator, 0);
         int32_t block_base = 0;
-        _Bool block_start = 0;
         
         // In switch statement
         _Bool in_switch = 0;
@@ -110,7 +109,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         int32_t next_my_var_address = 0;
         
         // Run OPs
-        SPerl_OP* op_base = op_sub;
+        SPerl_OP* op_base = SPerl_OP_get_op_block_from_op_sub(sperl, op_sub);
         SPerl_OP* op_cur = op_base;
         _Bool finish = 0;
         while (op_cur) {
@@ -165,16 +164,12 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
             }
             // Start scope
             case SPerl_OP_C_CODE_BLOCK: {
-              if (block_start) {
-                assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
-                block_base = op_my_var_stack->length;
-                int32_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_alloc_int(sperl, parser->allocator);
-                *block_base_ptr = block_base;
-                SPerl_ARRAY_push(sperl, block_base_stack, block_base_ptr);
-              }
-              else {
-                block_start = 1;
-              }
+              assert(op_my_var_stack->length <= SPerl_OP_LIMIT_LEXICAL_VARIABLES);
+              block_base = op_my_var_stack->length;
+              int32_t* block_base_ptr = SPerl_ALLOCATOR_PARSER_alloc_int(sperl, parser->allocator);
+              *block_base_ptr = block_base;
+              SPerl_ARRAY_push(sperl, block_base_stack, block_base_ptr);
+
               break;
             }
             case SPerl_OP_C_CODE_ASSIGN: {
@@ -1298,8 +1293,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               
               if (op_cur == op_base) {
                 
-                SPerl_OP* op_block = op_cur->last;
-                SPerl_OP* op_statements = op_block->first;
+                SPerl_OP* op_statements = op_cur->first;
                 
                 if (op_statements->last->code != SPerl_OP_C_CODE_RETURN) {
                   // Add return to the end of subroutine

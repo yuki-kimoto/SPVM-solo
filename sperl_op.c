@@ -1070,7 +1070,6 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
     }
   }
   
-  /*
   // Add my declaration to top of block
   if (op_block) {
     SPerl_OP* op_list_statement = op_block->first;
@@ -1084,7 +1083,6 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
       SPerl_OP_sibling_splice(sperl, op_list_statement, op_list_statement->first, 0, op_null);
     }
   }
-  */
   
   // return type
   sub->op_return_type = op_type_or_void;
