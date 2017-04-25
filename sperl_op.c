@@ -916,11 +916,14 @@ SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_
           sub->op_return_type = op_return_type;
           sub->op_block = op_constant;
           sub->is_constant = 1;
+
+          // Create absolute name
+          const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, op_name->uv.name);
+          sub->abs_name = sub_abs_name;
           
           // Set sub
           op_sub->uv.sub = sub;
-          
-          const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, op_name->uv.name);
+         
           SPerl_OP* found_op_sub = SPerl_HASH_search(sperl, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name));
           
           if (found_op_sub) {

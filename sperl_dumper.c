@@ -437,6 +437,7 @@ void SPerl_DUMPER_dump_sub(SPerl* sperl, SPerl_SUB* sub) {
   if (sub) {
     
     printf("      name => \"%s\"\n", sub->op_name->uv.name);
+    printf("      abs_name => \"%s\"\n", sub->abs_name);
     
     if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
       printf("      resolved_type => void\n");
