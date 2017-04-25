@@ -65,6 +65,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_DECL_DESCRIPTOR,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE,    // UNKNOWN
   SPerl_OP_C_CODE_BLOCK,        // UNKNOWN
+  SPerl_OP_C_CODE_SUB_BLOCK,        // UNKNOWN
   SPerl_OP_C_CODE_ENUM_BLOCK,    // UNKNOWN
   SPerl_OP_C_CODE_CLASS_BLOCK,   // UNKNOWN
   SPerl_OP_C_CODE_TYPE,         // UNKNOWN
