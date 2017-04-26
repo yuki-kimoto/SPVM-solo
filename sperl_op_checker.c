@@ -1132,9 +1132,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     SPerl_ARRAY_push(sperl, op_my_vars, op_cur);
                     SPerl_ARRAY_push(sperl, op_my_var_stack, op_cur);
                   }
-
+                  
                   // If left is object type and right is not exists, append "= undef" code
                   SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
+                  
+                  // If argument my var is object, increment reference count
+                  if (my_var->address < sub->op_args->length) {
+                    if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
+                      
+                    }
+                  }
                   
                   // Assign undef if left value is object and right value is nothing
                   if (first_resolved_type && !SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && !SPerl_OP_sibling(sperl, op_cur)) {

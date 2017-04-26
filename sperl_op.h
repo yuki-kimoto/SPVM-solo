@@ -59,6 +59,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_NAME,         // UNKNOWN
   SPerl_OP_C_CODE_DECL_PACKAGE,      // UNKNOWN
   SPerl_OP_C_CODE_DECL_MY_VAR,   // UNKNOWN
+  SPerl_OP_C_CODE_DECL_MY_VAR_PARENT,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_FIELD,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_SUB,          // UNKNOWN
   SPerl_OP_C_CODE_DECL_ENUM,
