@@ -512,4 +512,10 @@ package Test {
     
     return $num3 + 3;
   }
+
+  sub increfcount($test : Test::Minimal, $num : long) : long {
+    
+    my $aaa = malloc Test::Minimal;
+  }
+
 }

@@ -1104,14 +1104,25 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                 case SPerl_OP_C_CODE_DECL_MY_VAR_PARENT: {
                   
-                  SPerl_OP* op_decl_my_var = op_cur->first;
-                  SPerl_MY_VAR* my_var = op_decl_my_var->uv.my_var;
+                  SPerl_OP* op_my_var = op_cur->first;
+                  SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
                   
                   // If argument my var is object, increment reference count
                   if (my_var->address < sub->op_args->length) {
-                    SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_decl_my_var);
+                    SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_my_var);
                     if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type)) {
-                      SPerl_OP* op_increfcount = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_INCREFCOUNT, op_decl_my_var->file, op_decl_my_var->line);
+                      SPerl_VAR* var = SPerl_VAR_new(sperl);
+                      SPerl_OP* op_var = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_VAR, op_my_var->file, op_my_var->line);
+                      
+                      SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_my_var->file, op_my_var->line);
+                      op_name->uv.name = my_var->op_name->uv.name;
+                      var->op_name = op_name;
+                      var->op_my_var = op_my_var;
+                      op_var->uv.var = var;
+                      
+                      SPerl_OP* op_increfcount = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_INCREFCOUNT, op_my_var->file, op_my_var->line);
+                      SPerl_OP_sibling_splice(sperl, op_increfcount, NULL, 0, op_var);
+                      
                       SPerl_OP_sibling_splice(sperl, op_cur, op_cur->last, 0, op_increfcount);
                     }
                   }
