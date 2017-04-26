@@ -739,13 +739,20 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_ASTORE: {
-        void* address = (void*)vars[*(pc + 1)];
         
-        if (address != NULL) {
-          SPerl_API_dec_ref_count(sperl, env, address);
+        // Decrement reference count if original object is not null
+        if ((void*)vars[*(pc + 1)] != NULL) {
+          SPerl_API_dec_ref_count(sperl, env, (void*)vars[*(pc + 1)]);
         }
         
+        // Store address
         vars[*(pc + 1)] = call_stack[operand_stack_top];
+        
+        // Increment reference count if stored object is not null
+        if ((void*)vars[*(pc + 1)] != NULL) {
+          SPerl_API_inc_ref_count(sperl, env, (void*)vars[*(pc + 1)]);
+        }
+        
         operand_stack_top--;
         pc += 2;
         goto *jump[*pc];
@@ -1497,7 +1504,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         *(int32_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = fields_byte_size;
         
         // Set reference count
-        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
+        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
         
         // Initialize fields area by 0
         memset((void*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE), 0, fields_byte_size);
@@ -1556,7 +1563,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         *(int32_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = unit_byte_size;
         
         // Set reference count
-        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
+        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
         
         // Set array length
         *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = length;
@@ -1586,7 +1593,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         *(int32_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = sizeof(int8_t);
         
         // Set reference count
-        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 1;
+        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
         
         // Set array length
         *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = length;
