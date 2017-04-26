@@ -740,6 +740,11 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_ASTORE: {
         int32_t vars_index = *(pc + 1);
+
+        // Increment reference count if stored object is not null
+        if ((void*)call_stack[operand_stack_top] != NULL) {
+          SPerl_API_inc_ref_count(sperl, env, (void*)call_stack[operand_stack_top]);
+        }
         
         // Decrement reference count if original object is not null
         if ((void*)vars[vars_index] != NULL) {
@@ -748,11 +753,6 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         
         // Store address
         vars[vars_index] = call_stack[operand_stack_top];
-        
-        // Increment reference count if stored object is not null
-        if ((void*)vars[vars_index] != NULL) {
-          SPerl_API_inc_ref_count(sperl, env, (void*)vars[vars_index]);
-        }
         
         operand_stack_top--;
         pc += 2;
