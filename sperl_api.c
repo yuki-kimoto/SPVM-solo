@@ -815,14 +815,13 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_AASTORE: {
-        void* address = *(void**)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(void*) * (size_t)call_stack[operand_stack_top - 1]);
+        intptr_t array_index = *(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(void*) * (size_t)call_stack[operand_stack_top - 1];
         
-        if (address != NULL) {
-          SPerl_API_dec_ref_count(sperl, env, address);
+        if (*(void**)(array_index) != NULL) {
+          SPerl_API_dec_ref_count(sperl, env, *(void**)(array_index));
         }
         
-        *(void**)(*(intptr_t*)&call_stack[operand_stack_top - 2] + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(void*) * (size_t)call_stack[operand_stack_top - 1])
-          = *(void**)&call_stack[operand_stack_top];
+        *(void**)(array_index) = *(void**)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
