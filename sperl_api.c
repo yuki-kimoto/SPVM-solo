@@ -1634,16 +1634,16 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
           int32_t var_index = (*(pc + 2) << 8) + *(pc + 3);
           
           // Decrement reference count if original object is not null
-          if (vars[var_index] != NULL) {
-            SPerl_API_dec_ref_count(sperl, env, vars[var_index]);
+          if ((void*)vars[var_index] != NULL) {
+            SPerl_API_dec_ref_count(sperl, env, (void*)vars[var_index]);
           }
           
           // Store address
           vars[var_index] = call_stack[operand_stack_top];
           
           // Increment reference count if stored object is not null
-          if (vars[var_index] != NULL) {
-            SPerl_API_inc_ref_count(sperl, env, vars[var_index]);
+          if ((void*)vars[var_index] != NULL) {
+            SPerl_API_inc_ref_count(sperl, env, (void*)vars[var_index]);
           }
           
           operand_stack_top--;
@@ -1805,13 +1805,21 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPerl_CONSTANT_POOL_FIELD* constant_pool_field = (SPerl_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         
-        void* address = *(void**)(*(void**)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset);
+        intptr_t field_index = (intptr_t)*(void**)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset;
         
-        if (address != NULL) {
-          SPerl_API_dec_ref_count(sperl, env, address);
+        // Decrement reference count if original object is not null
+        if (*(void**)(field_index) != NULL) {
+          SPerl_API_dec_ref_count(sperl, env, *(void**)(field_index));
         }
         
-        *(void**)(*(void**)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset) = *(void**)&call_stack[operand_stack_top];
+        // Store object
+        *(void**)(field_index) = *(void**)&call_stack[operand_stack_top];
+        
+        // Increment reference count if stored object is not null
+        if (*(void**)(field_index) != NULL) {
+          SPerl_API_inc_ref_count(sperl, env, *(void**)(field_index));
+        }
+        
         operand_stack_top -= 2;
         pc += 5;
         goto *jump[*pc];
