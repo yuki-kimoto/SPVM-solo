@@ -840,6 +840,12 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         pc++;
         goto *jump[*pc];
       case_SPerl_BYTECODE_C_CODE_APOP:
+        
+        // Free object
+        if ((void*)call_stack[operand_stack_top] != NULL) {
+          SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, (void*)call_stack[operand_stack_top]);
+        }
+        
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
