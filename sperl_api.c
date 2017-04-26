@@ -116,6 +116,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
     &&case_SPerl_BYTECODE_C_CODE_FASTORE,
     &&case_SPerl_BYTECODE_C_CODE_DASTORE,
     &&case_SPerl_BYTECODE_C_CODE_POP,
+    &&case_SPerl_BYTECODE_C_CODE_APOP,
     &&case_SPerl_BYTECODE_C_CODE_IADD,
     &&case_SPerl_BYTECODE_C_CODE_LADD,
     &&case_SPerl_BYTECODE_C_CODE_FADD,
@@ -835,6 +836,10 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_POP:
+        operand_stack_top--;
+        pc++;
+        goto *jump[*pc];
+      case_SPerl_BYTECODE_C_CODE_APOP:
         operand_stack_top--;
         pc++;
         goto *jump[*pc];

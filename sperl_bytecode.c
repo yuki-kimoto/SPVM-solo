@@ -54,6 +54,7 @@ const char* const SPerl_BYTECODE_C_CODE_NAMES[] = {
   "FASTORE",
   "DASTORE",
   "POP",
+  "APOP",
   "IADD",
   "LADD",
   "FADD",
