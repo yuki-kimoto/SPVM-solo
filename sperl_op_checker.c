@@ -1103,7 +1103,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   }
                   break;
                 }
-                case SPerl_OP_C_CODE_DECL_MY_VAR_PARENT: {
+                case SPerl_OP_C_CODE_MY_VAR_PARENT: {
                   
                   SPerl_OP* op_my_var = op_cur->first;
                   SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
@@ -1122,7 +1122,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   
                   break;
                 }
-                case SPerl_OP_C_CODE_DECL_MY_VAR: {
+                case SPerl_OP_C_CODE_MY_VAR: {
                   SPerl_MY_VAR* my_var = op_cur->uv.my_var;
                   
                   // Search same name variable

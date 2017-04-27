@@ -18,7 +18,7 @@
 %token <opval> LAST NEXT NAME VAR CONSTANT ENUM DESCRIPTOR CORETYPE UNDEF DIE
 %token <opval> SWITCH CASE DEFAULT VOID TRY CATCH
 
-%type <opval> grammar opt_statements statements statement decl_my decl_field if_statement else_statement
+%type <opval> grammar opt_statements statements statement my decl_field if_statement else_statement
 %type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub unop binop
 %type <opval> opt_terms terms term args arg opt_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> decl_enumeration_values decl_enumeration_value
@@ -270,22 +270,22 @@ decl_enum
       $$ = SPerl_OP_build_decl_enum(sperl, $1, $2);
     }
 
-decl_my
+my
   : MY VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, $4, NULL);
+      $$ = SPerl_OP_build_my(sperl, $1, $2, $4, NULL);
     }
   | MY VAR
     {
-      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, NULL, NULL);
+      $$ = SPerl_OP_build_my(sperl, $1, $2, NULL, NULL);
     }
   | MY VAR ':' type ASSIGN term
     {
-      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, $4, $6);
+      $$ = SPerl_OP_build_my(sperl, $1, $2, $4, $6);
     }
   | MY VAR ASSIGN term
     {
-      $$ = SPerl_OP_build_decl_my(sperl, $1, $2, NULL, $4);
+      $$ = SPerl_OP_build_my(sperl, $1, $2, NULL, $4);
     }
 
 opt_decl_things_in_class
@@ -333,7 +333,7 @@ expression
       SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
   | throw_exception
-  | decl_my
+  | my
 
 opt_terms
   :	/* Empty */
@@ -569,7 +569,7 @@ args
 arg
   : VAR ':' type
     {
-      $$ = SPerl_OP_build_decl_my(sperl, SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, $1->file, $1->line), $1, $3, NULL);
+      $$ = SPerl_OP_build_my(sperl, SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_MY_VAR, $1->file, $1->line), $1, $3, NULL);
     }
 
 opt_descriptors

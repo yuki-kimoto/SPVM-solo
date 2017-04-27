@@ -44,8 +44,8 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "GRAMMAR",
   "NAME",
   "DECL_PACKAGE",
-  "DECL_MY_VAR",
-  "DECL_MY_VAR_PARENT",
+  "MY_VAR",
+  "MY_VAR_PARENT",
   "DECL_FIELD",
   "DECL_SUB",
   "DECL_ENUM",
@@ -377,7 +377,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
       }
       break;
     }
-    case SPerl_OP_C_CODE_DECL_MY_VAR: {
+    case SPerl_OP_C_CODE_MY_VAR: {
       SPerl_MY_VAR* my_var = op->uv.my_var;
       if ( my_var->op_type) {
         resolved_type = my_var->op_type->uv.type->resolved_type;
@@ -983,10 +983,10 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_p
   return op_use;
 }
 
-SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op_var, SPerl_OP* op_type, SPerl_OP* op_term) {
+SPerl_OP* SPerl_OP_build_my(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op_var, SPerl_OP* op_type, SPerl_OP* op_term) {
   
   // Stab
-  SPerl_OP* op_decl_my_var_parent = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_DECL_MY_VAR_PARENT, op_my_var->file, op_my_var->line);
+  SPerl_OP* op_my_var_parent = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_MY_VAR_PARENT, op_my_var->file, op_my_var->line);
   
   // Create my var information
   SPerl_MY_VAR* my_var = SPerl_MY_VAR_new(sperl);
@@ -1001,7 +1001,7 @@ SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op
   op_my_var->uv.my_var = my_var;
   
   // Add my_var op
-  SPerl_OP_sibling_splice(sperl, op_decl_my_var_parent, NULL, 0, op_my_var);
+  SPerl_OP_sibling_splice(sperl, op_my_var_parent, NULL, 0, op_my_var);
   
   // Assign
   if (op_term) {
@@ -1012,7 +1012,7 @@ SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op
     SPerl_OP_sibling_splice(sperl, op_assign, NULL, 0, op_var);
     SPerl_OP_sibling_splice(sperl, op_assign, op_var, 0, op_term);
     
-    SPerl_OP_sibling_splice(sperl, op_decl_my_var_parent, op_my_var, 0, op_assign);
+    SPerl_OP_sibling_splice(sperl, op_my_var_parent, op_my_var, 0, op_assign);
     
     // Type assumption
     my_var->op_term_assumption = op_term;
@@ -1023,7 +1023,7 @@ SPerl_OP* SPerl_OP_build_decl_my(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op
     SPerl_yyerror_format(sperl, "\"my %s\" can't detect type at %s line %d\n", my_var->op_name->uv.name, op_my_var->file, op_my_var->line);
   }
   
-  return op_decl_my_var_parent;
+  return op_my_var_parent;
 }
 
 SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* op_field_name, SPerl_OP* op_type) {
@@ -1092,12 +1092,12 @@ SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_s
     SPerl_OP* op_list_statement = op_block->first;
     for (int32_t i = sub->op_args->length - 1; i >= 0; i--) {
       SPerl_OP* op_arg = SPerl_ARRAY_fetch(sperl, sub->op_args, i);
-      SPerl_OP* op_decl_my_var = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_DECL_MY_VAR, op_arg->file, op_arg->line);
-      op_decl_my_var->uv.my_var = op_arg->uv.my_var;
-      SPerl_OP* op_decl_my_var_parent = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_DECL_MY_VAR_PARENT, op_arg->file, op_arg->line);
-      SPerl_OP_sibling_splice(sperl, op_decl_my_var_parent, op_decl_my_var_parent->last, 0, op_decl_my_var);
+      SPerl_OP* op_my_var = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_MY_VAR, op_arg->file, op_arg->line);
+      op_my_var->uv.my_var = op_arg->uv.my_var;
+      SPerl_OP* op_my_var_parent = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_MY_VAR_PARENT, op_arg->file, op_arg->line);
+      SPerl_OP_sibling_splice(sperl, op_my_var_parent, op_my_var_parent->last, 0, op_my_var);
       
-      SPerl_OP_sibling_splice(sperl, op_list_statement, op_list_statement->first, 0, op_decl_my_var_parent);
+      SPerl_OP_sibling_splice(sperl, op_list_statement, op_list_statement->first, 0, op_my_var_parent);
     }
   }
   
