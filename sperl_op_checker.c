@@ -107,7 +107,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
         // op count
         int32_t op_count = 0;
         
-        int32_t next_my_var_address = 0;
+        int32_t my_var_address = -1;
         
         // Run OPs
         SPerl_OP* op_base = SPerl_OP_get_op_block_from_op_sub(sperl, op_sub);
@@ -1125,7 +1125,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 case SPerl_OP_C_CODE_MY_VAR: {
                   SPerl_MY_VAR* my_var = op_cur->uv.my_var;
                   
-                  if (my_var->address == SPerl_LIMIT_C_MY_VARS) {
+                  if (my_var_address == SPerl_LIMIT_C_MY_VARS) {
                     SPerl_yyerror_format(sperl, "too many lexical variables, my \"%s\" ignored at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
                     parser->fatal_error = 1;
                     break;
@@ -1148,7 +1148,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     break;
                   }
                   else {
-                    my_var->address = next_my_var_address++;
+                    my_var->address = ++my_var_address;
                     SPerl_ARRAY_push(sperl, op_my_vars, op_cur);
                     SPerl_ARRAY_push(sperl, op_my_var_stack, op_cur);
                   }
