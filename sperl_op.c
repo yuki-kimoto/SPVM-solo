@@ -116,6 +116,22 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "INCREFCOUNT",
 };
 
+SPerl_OP* SPerl_OP_new_op_var_from_op_my_var(SPerl* sperl, SPerl_OP* op_my_var) {
+  
+  SPerl_VAR* var = SPerl_VAR_new(sperl);
+  SPerl_OP* op_var = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_VAR, op_my_var->file, op_my_var->line);
+  
+  SPerl_MY_VAR* my_var = op_my_var->uv.my_var;
+  
+  SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_my_var->file, op_my_var->line);
+  op_name->uv.name = my_var->op_name->uv.name;
+  var->op_name = op_name;
+  var->op_my_var = op_my_var;
+  op_var->uv.var = var;
+  
+  return op_var;
+}
+
 SPerl_OP* SPerl_OP_get_op_block_from_op_sub(SPerl* sperl, SPerl_OP* op_sub) {
   SPerl_OP* op_block = op_sub->last;
   

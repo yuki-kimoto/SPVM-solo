@@ -189,6 +189,8 @@ struct SPerl_op {
   _Bool lvalue;
 };
 
+SPerl_OP* SPerl_OP_new_op_var_from_op_my_var(SPerl* sperl, SPerl_OP* op_my_var);
+
 SPerl_OP* SPerl_OP_get_op_block_from_op_sub(SPerl* sperl, SPerl_OP* op_sub);
 
 void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op);
