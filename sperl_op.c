@@ -986,7 +986,7 @@ SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_n
   return op_use;
 }
 
-SPerl_OP* SPerl_OP_build_my(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op_var, SPerl_OP* op_type, SPerl_OP* op_term) {
+SPerl_OP* SPerl_OP_build_my_var(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op_var, SPerl_OP* op_type, SPerl_OP* op_term) {
   
   // Stab
   SPerl_OP* op_my_var_parent = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_MY_VAR_PARENT, op_my_var->file, op_my_var->line);

@@ -273,19 +273,19 @@ decl_enum
 my
   : MY VAR ':' type
     {
-      $$ = SPerl_OP_build_my(sperl, $1, $2, $4, NULL);
+      $$ = SPerl_OP_build_my_var(sperl, $1, $2, $4, NULL);
     }
   | MY VAR
     {
-      $$ = SPerl_OP_build_my(sperl, $1, $2, NULL, NULL);
+      $$ = SPerl_OP_build_my_var(sperl, $1, $2, NULL, NULL);
     }
   | MY VAR ':' type ASSIGN term
     {
-      $$ = SPerl_OP_build_my(sperl, $1, $2, $4, $6);
+      $$ = SPerl_OP_build_my_var(sperl, $1, $2, $4, $6);
     }
   | MY VAR ASSIGN term
     {
-      $$ = SPerl_OP_build_my(sperl, $1, $2, NULL, $4);
+      $$ = SPerl_OP_build_my_var(sperl, $1, $2, NULL, $4);
     }
 
 opt_decl_things_in_class
@@ -569,7 +569,7 @@ args
 arg
   : VAR ':' type
     {
-      $$ = SPerl_OP_build_my(sperl, SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_MY_VAR, $1->file, $1->line), $1, $3, NULL);
+      $$ = SPerl_OP_build_my_var(sperl, SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_MY_VAR, $1->file, $1->line), $1, $3, NULL);
     }
 
 opt_descriptors
