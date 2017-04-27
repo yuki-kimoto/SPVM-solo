@@ -24,7 +24,7 @@
 %type <opval> decl_enumeration_values decl_enumeration_value
 %type <opval> type package_name field_name sub_name package decl_things_in_grammar opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar opt_term throw_exception
-%type <opval> field array_elem convert_type decl_enum new_object type_name array_length decl_thing_in_grammar
+%type <opval> call_field array_elem convert_type decl_enum new_object type_name array_length decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement type_array_with_length
 %type <opval> ';' opt_descriptors descriptors type_or_void normal_statement try_catch
 
@@ -376,9 +376,9 @@ term
   | CONSTANT
   | UNDEF
   | call_sub
+  | call_field
   | unop
   | binop
-  | field
   | array_elem
   | convert_type
   | new_object
@@ -400,10 +400,10 @@ convert_type
       $$ = SPerl_OP_build_convert_type(sperl, $2, $4);
     }
 
-field
+call_field
   : term '{' field_name '}'
     {
-      $$ = SPerl_OP_build_field(sperl, $1, $3);
+      $$ = SPerl_OP_build_call_field(sperl, $1, $3);
     }
 
 unop

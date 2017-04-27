@@ -230,7 +230,7 @@ SPerl_OP* SPerl_OP_build_binop(SPerl* sperl, SPerl_OP* op_call_op, SPerl_OP* op_
 SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_type_name);
 SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term);
 
-SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_packagename, SPerl_OP* op_fieldname);
+SPerl_OP* SPerl_OP_build_call_field(SPerl* sperl, SPerl_OP* op_packagename, SPerl_OP* op_fieldname);
 SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block);
 SPerl_OP* SPerl_OP_build_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* op_descriptors, SPerl_OP* type, SPerl_OP* op_block);
 SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl* sperl, SPerl_OP* op_const);

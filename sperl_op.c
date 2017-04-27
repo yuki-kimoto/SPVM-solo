@@ -681,7 +681,7 @@ SPerl_OP* SPerl_OP_build_array_elem(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op
   return op_array_elem;
 }
 
-SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_field_name) {
+SPerl_OP* SPerl_OP_build_call_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_field_name) {
   SPerl_OP* op_field = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CALL_FIELD, op_var->file, op_var->line);
   SPerl_OP_sibling_splice(sperl, op_field, NULL, 0, op_var);
   SPerl_OP_sibling_splice(sperl, op_field, op_var, 0, op_field_name);
