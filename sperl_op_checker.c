@@ -119,7 +119,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
           // [START]Preorder traversal position
           
           switch (op_cur->code) {
-            case SPerl_OP_C_CODE_DECL_FIELD: {
+            case SPerl_OP_C_CODE_FIELD: {
               SPerl_FIELD* field = op_cur->uv.field;
               SPerl_RESOLVED_TYPE* resolved_type = field->op_type->uv.type->resolved_type;
               if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type) && !SPerl_RESOLVED_TYPE_is_core_type_array(sperl, resolved_type)) {

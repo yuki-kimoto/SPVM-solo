@@ -595,7 +595,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             return MY;
           }
           else if (memcmp(keyword, "has", str_len) == 0) {
-            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_FIELD);
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_FIELD);
             return HAS;
           }
           else if (memcmp(keyword, "sub", str_len) == 0) {

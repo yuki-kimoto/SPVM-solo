@@ -46,7 +46,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "PACKAGE",
   "MY_VAR",
   "MY_VAR_PARENT",
-  "DECL_FIELD",
+  "FIELD",
   "SUB",
   "DECL_ENUM",
   "DECL_DESCRIPTOR",
@@ -797,7 +797,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* o
     SPerl_OP* op_decls = op_block->first;
     SPerl_OP* op_decl = op_decls->first;
     while ((op_decl = SPerl_OP_sibling(sperl, op_decl))) {
-      if (op_decl->code == SPerl_OP_C_CODE_DECL_FIELD) {
+      if (op_decl->code == SPerl_OP_C_CODE_FIELD) {
         SPerl_OP* op_field = op_decl;
         SPerl_FIELD* field = op_field->uv.field;
         const char* field_name = field->op_name->uv.name;
@@ -1029,7 +1029,7 @@ SPerl_OP* SPerl_OP_build_my(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op_var,
   return op_my_var_parent;
 }
 
-SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* op_field_name, SPerl_OP* op_type) {
+SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* op_field_name, SPerl_OP* op_type) {
   
   // Build OP
   SPerl_OP_sibling_splice(sperl, op_field, NULL, 0, op_field_name);

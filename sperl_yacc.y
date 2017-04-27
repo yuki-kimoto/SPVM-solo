@@ -18,7 +18,7 @@
 %token <opval> LAST NEXT NAME VAR CONSTANT ENUM DESCRIPTOR CORETYPE UNDEF DIE
 %token <opval> SWITCH CASE DEFAULT VOID TRY CATCH
 
-%type <opval> grammar opt_statements statements statement my decl_field if_statement else_statement
+%type <opval> grammar opt_statements statements statement my field if_statement else_statement
 %type <opval> block enum_block class_block sub opt_decl_things_in_class call_sub unop binop
 %type <opval> opt_terms terms term args arg opt_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> decl_enumeration_values decl_enumeration_value
@@ -249,10 +249,10 @@ decl_use
     }
 
 
-decl_field
+field
   : HAS field_name ':' type ';'
     {
-      $$ = SPerl_OP_build_decl_field(sperl, $1, $2, $4);
+      $$ = SPerl_OP_build_field(sperl, $1, $2, $4);
     }
 
 sub
@@ -312,7 +312,7 @@ decl_things_in_class
   | decl_thing_in_class
 
 decl_thing_in_class
-  : decl_field
+  : field
   | sub
   | decl_enum
 
