@@ -969,7 +969,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* o
   return op_package;
 }
 
-SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_name_package) {
+SPerl_OP* SPerl_OP_build_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_name_package) {
   
   SPerl_PARSER* parser = sperl->parser;
   
@@ -1115,7 +1115,7 @@ SPerl_OP* SPerl_OP_build_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_name_s
   return op_sub;
 }
 
-SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enumeration, SPerl_OP* op_enumeration_block) {
+SPerl_OP* SPerl_OP_build_enumeration(SPerl* sperl, SPerl_OP* op_enumeration, SPerl_OP* op_enumeration_block) {
   
   // Build OP_SUB
   SPerl_OP_sibling_splice(sperl, op_enumeration, NULL, 0, op_enumeration_block);

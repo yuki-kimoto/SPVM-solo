@@ -237,7 +237,7 @@ SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl* sperl, SPerl_OP* op_const);
 SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* op_field_base_name, SPerl_OP* type);
 SPerl_OP* SPerl_OP_build_my_var(SPerl* sperl, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_type, SPerl_OP* op_term);
 SPerl_OP* SPerl_OP_build_grammar(SPerl* sperl, SPerl_OP* op_packages);
-SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_name_package);
+SPerl_OP* SPerl_OP_build_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_name_package);
 SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_subname, SPerl_OP* op_terms);
 SPerl_OP* SPerl_OP_new_op_list(SPerl* sperl, const char* file, int32_t line);
 SPerl_OP* SPerl_OP_build_convert_type(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term);
@@ -252,7 +252,7 @@ void SPerl_OP_moresib_set(SPerl* sperl, SPerl_OP* o, SPerl_OP* sib);
 void SPerl_OP_lastsib_set(SPerl* sperl, SPerl_OP* o, SPerl_OP* parent);
 void SPerl_OP_maybesib_set(SPerl* sperl, SPerl_OP* o, SPerl_OP* sib, SPerl_OP* parent);
 
-SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enum, SPerl_OP* op_enum_block);
+SPerl_OP* SPerl_OP_build_enumeration(SPerl* sperl, SPerl_OP* op_enumeration, SPerl_OP* op_enumeration_block);
 
 SPerl_OP* SPerl_OP_new_op(SPerl* sperl, int32_t code, const char* file, int32_t line);
 

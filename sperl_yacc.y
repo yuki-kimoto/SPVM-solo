@@ -19,12 +19,12 @@
 %token <opval> SWITCH CASE DEFAULT VOID TRY CATCH
 
 %type <opval> grammar opt_statements statements statement my field if_statement else_statement
-%type <opval> block enum_block class_block sub opt_decl_things_in_class call_sub unop binop
-%type <opval> opt_terms terms term args arg opt_args decl_use decl_thing_in_class decl_things_in_class
+%type <opval> block enumeration_block class_block sub opt_declarations_in_class call_sub unop binop
+%type <opval> opt_terms terms term args arg opt_args use declaration_in_class declarations_in_class
 %type <opval> enumeration_values enumeration_value
-%type <opval> type package_name field_name sub_name package decl_things_in_grammar opt_enumeration_values type_array
-%type <opval> for_statement while_statement expression opt_decl_things_in_grammar opt_term throw_exception
-%type <opval> call_field array_elem convert_type decl_enum new_object type_name array_length decl_thing_in_grammar
+%type <opval> type package_name field_name sub_name package declarations_in_grammar opt_enumeration_values type_array
+%type <opval> for_statement while_statement expression opt_declarations_in_grammar opt_term throw_exception
+%type <opval> call_field array_elem convert_type enumeration new_object type_name array_length declaration_in_grammar
 %type <opval> switch_statement case_statement default_statement type_array_with_length
 %type <opval> ';' opt_descriptors descriptors type_or_void normal_statement try_catch
 
@@ -48,7 +48,7 @@
 %%
 
 grammar
-  : opt_decl_things_in_grammar
+  : opt_declarations_in_grammar
     {
       $$ = SPerl_OP_build_grammar(sperl, $1);
 
@@ -62,12 +62,12 @@ grammar
       }
     }
 
-opt_decl_things_in_grammar
+opt_declarations_in_grammar
   :	/* Empty */
     {
       $$ = SPerl_OP_new_op_list(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
-  |	decl_things_in_grammar
+  |	declarations_in_grammar
     {
       if ($1->code == SPerl_OP_C_CODE_LIST) {
         $$ = $1;
@@ -78,15 +78,15 @@ opt_decl_things_in_grammar
       }
     }
   
-decl_things_in_grammar
-  : decl_things_in_grammar decl_thing_in_grammar
+declarations_in_grammar
+  : declarations_in_grammar declaration_in_grammar
     {
       $$ = SPerl_OP_append_elem(sperl, $1, $2, $1->file, $1->line);
     }
-  | decl_thing_in_grammar
+  | declaration_in_grammar
 
-decl_thing_in_grammar
-  : decl_use
+declaration_in_grammar
+  : use
   | package
 
 package
@@ -98,7 +98,7 @@ package
       }
     }
 
-enum_block 
+enumeration_block 
   : '{' opt_enumeration_values '}'
     {
       $$ = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_ENUM_BLOCK, $1->file, $1->line);
@@ -242,10 +242,10 @@ else_statement
       $$ = SPerl_OP_build_if_statement(sperl, $1, $3, $5, $6);
     }
 
-decl_use
+use
   : USE package_name ';'
     {
-      $$ = SPerl_OP_build_decl_use(sperl, $1, $2);
+      $$ = SPerl_OP_build_use(sperl, $1, $2);
     }
 
 
@@ -264,10 +264,10 @@ sub
      {
        $$ = SPerl_OP_build_sub(sperl, $1, $2, $4, $7, $8, NULL);
      }
-decl_enum
-  : ENUM enum_block
+enumeration
+  : ENUM enumeration_block
     {
-      $$ = SPerl_OP_build_decl_enum(sperl, $1, $2);
+      $$ = SPerl_OP_build_enumeration(sperl, $1, $2);
     }
 
 my
@@ -288,12 +288,12 @@ my
       $$ = SPerl_OP_build_my_var(sperl, $1, $2, NULL, $4);
     }
 
-opt_decl_things_in_class
+opt_declarations_in_class
   :	/* Empty */
     {
       $$ = SPerl_OP_new_op_list(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
-  |	decl_things_in_class
+  |	declarations_in_class
     {
       if ($1->code == SPerl_OP_C_CODE_LIST) {
         $$ = $1;
@@ -304,20 +304,20 @@ opt_decl_things_in_class
       }
     }
 
-decl_things_in_class
-  : decl_things_in_class decl_thing_in_class
+declarations_in_class
+  : declarations_in_class declaration_in_class
     {
       $$ = SPerl_OP_append_elem(sperl, $1, $2, $1->file, $1->line);
     }
-  | decl_thing_in_class
+  | declaration_in_class
 
-decl_thing_in_class
+declaration_in_class
   : field
   | sub
-  | decl_enum
+  | enumeration
 
 class_block
-  : '{' opt_decl_things_in_class '}'
+  : '{' opt_declarations_in_class '}'
     {
       $$ = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CLASS_BLOCK, $1->file, $1->line);
       SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
