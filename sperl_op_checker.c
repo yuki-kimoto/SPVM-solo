@@ -1163,9 +1163,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                       SPerl_OP* op_assign = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_ASSIGN, op_cur->file, op_cur->line);
                       
                       SPerl_VAR* var = SPerl_VAR_new(sperl);
-                      SPerl_OP* op_var_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, op_cur->file, op_cur->line);
-                      op_var_name->uv.name = op_cur->uv.my_var->op_name->uv.name;
-                      var->op_name = op_var_name;
+                      SPerl_OP* op_name_var = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, op_cur->file, op_cur->line);
+                      op_name_var->uv.name = op_cur->uv.my_var->op_name->uv.name;
+                      var->op_name = op_name_var;
                       var->op_my_var = op_cur;
                       
                       SPerl_OP* op_var = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_VAR, op_cur->file, op_cur->line);

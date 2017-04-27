@@ -59,8 +59,8 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
           }
           
           if (op_use) {
-            SPerl_OP* op_package_name = op_use->first;
-            const char* package_name = op_package_name->uv.name;
+            SPerl_OP* op_name_package = op_use->first;
+            const char* package_name = op_name_package->uv.name;
             
             SPerl_OP* found_op_package = SPerl_HASH_search(sperl, parser->op_package_symtable, package_name, strlen(package_name));
             
@@ -113,7 +113,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
               }
               if (!fh) {
                 if (op_use) {
-                  fprintf(stderr, "Can't find package \"%s\" at %s line %" PRId32 "\n", op_package_name->uv.name, op_use->file, op_use->line);
+                  fprintf(stderr, "Can't find package \"%s\" at %s line %" PRId32 "\n", op_name_package->uv.name, op_use->file, op_use->line);
                 }
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_module_path);

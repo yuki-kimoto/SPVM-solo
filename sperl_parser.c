@@ -89,12 +89,12 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   SPerl_PARSER* parser = sperl->parser;
 
   /* Build use information */
-  SPerl_OP* op_package_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, package_name, 1);
-  op_package_name->uv.name = package_name;
+  SPerl_OP* op_name_package = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, package_name, 1);
+  op_name_package->uv.name = package_name;
   
   // Use OP
   SPerl_OP* op_use = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_USE, package_name, 1);
-  SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);
+  SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_name_package);
   
   /* Push package use information stack */
   SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use);

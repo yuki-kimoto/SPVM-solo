@@ -681,21 +681,21 @@ SPerl_OP* SPerl_OP_build_array_elem(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op
   return op_array_elem;
 }
 
-SPerl_OP* SPerl_OP_build_call_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_field_name) {
+SPerl_OP* SPerl_OP_build_call_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_name_field) {
   SPerl_OP* op_field = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CALL_FIELD, op_var->file, op_var->line);
   SPerl_OP_sibling_splice(sperl, op_field, NULL, 0, op_var);
-  SPerl_OP_sibling_splice(sperl, op_field, op_var, 0, op_field_name);
+  SPerl_OP_sibling_splice(sperl, op_field, op_var, 0, op_name_field);
   
   SPerl_NAME_INFO* name_info = SPerl_NAME_INFO_new(sperl);
   
-  if (strstr(op_field_name->uv.name, ":")) {
+  if (strstr(op_name_field->uv.name, ":")) {
     SPerl_yyerror_format(sperl, "field name \"%s\" can't contain :: at %s line %d\n",
-      op_field_name, op_field_name->file, op_field_name->line);
+      op_name_field, op_name_field->file, op_name_field->line);
   }
   
   name_info->code = SPerl_NAME_INFO_C_CODE_VARBASENAME;
   name_info->op_var = op_var;
-  name_info->op_name = op_field_name;
+  name_info->op_name = op_name_field;
   op_field->uv.name_info = name_info;
   
   return op_field;
@@ -755,14 +755,14 @@ const char* SPerl_OP_create_abs_name(SPerl* sperl, const char* package_name, con
   return abs_name;
 }
 
-SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_name_package, SPerl_OP* op_block) {
   
   SPerl_PARSER* parser = sperl->parser;
 
-  SPerl_OP_sibling_splice(sperl, op_package, NULL, 0, op_package_name);
-  SPerl_OP_sibling_splice(sperl, op_package, op_package_name, 0, op_block);
+  SPerl_OP_sibling_splice(sperl, op_package, NULL, 0, op_name_package);
+  SPerl_OP_sibling_splice(sperl, op_package, op_name_package, 0, op_block);
   
-  const char* package_name = op_package_name->uv.name;
+  const char* package_name = op_name_package->uv.name;
   SPerl_HASH* op_package_symtable = parser->op_package_symtable;
   
   // Redeclaration package error
@@ -773,17 +773,17 @@ SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* o
   else {
     // Package
     SPerl_PACKAGE* package = SPerl_PACKAGE_new(sperl);
-    package->op_name = op_package_name;
+    package->op_name = op_name_package;
     
     // Type(type is same as package name)
     SPerl_TYPE* type = SPerl_TYPE_new(sperl);
     type->code = SPerl_TYPE_C_CODE_NAME;
     SPerl_TYPE_COMPONENT_NAME* type_component_name = SPerl_TYPE_COMPONENT_NAME_new(sperl);
-    type_component_name->op_name = op_package_name;
+    type_component_name->op_name = op_name_package;
     type->uv.type_component_name = type_component_name;
     
     // Type OP
-    SPerl_OP* op_type = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_TYPE, op_package_name->file, op_package_name->line);
+    SPerl_OP* op_type = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_TYPE, op_name_package->file, op_name_package->line);
     op_type->uv.type = type;
     
     // Add type
@@ -823,8 +823,8 @@ SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* o
         SPerl_OP* op_sub = op_decl;
         SPerl_SUB* sub = op_sub->uv.sub;
         
-        SPerl_OP* op_sub_name = sub->op_name;
-        const char* sub_name = op_sub_name->uv.name;
+        SPerl_OP* op_name_sub = sub->op_name;
+        const char* sub_name = op_name_sub->uv.name;
         const char* sub_abs_name = SPerl_OP_create_abs_name(sperl, package_name, sub_name);
         
         SPerl_OP* found_op_sub = SPerl_HASH_search(sperl, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name));
@@ -969,13 +969,13 @@ SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* o
   return op_package;
 }
 
-SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_package_name) {
+SPerl_OP* SPerl_OP_build_decl_use(SPerl* sperl, SPerl_OP* op_use, SPerl_OP* op_name_package) {
   
   SPerl_PARSER* parser = sperl->parser;
   
-  SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);
+  SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_name_package);
   
-  const char* package_name = op_package_name->uv.name;
+  const char* package_name = op_name_package->uv.name;
   SPerl_OP* found_op_use = SPerl_HASH_search(sperl, parser->op_use_symtable, package_name, strlen(package_name));
   
   if (!found_op_use) {
@@ -1029,17 +1029,17 @@ SPerl_OP* SPerl_OP_build_my(SPerl* sperl, SPerl_OP* op_my_var, SPerl_OP* op_var,
   return op_my_var_parent;
 }
 
-SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* op_field_name, SPerl_OP* op_type) {
+SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* op_name_field, SPerl_OP* op_type) {
   
   // Build OP
-  SPerl_OP_sibling_splice(sperl, op_field, NULL, 0, op_field_name);
-  SPerl_OP_sibling_splice(sperl, op_field, op_field_name, 0, op_type);
+  SPerl_OP_sibling_splice(sperl, op_field, NULL, 0, op_name_field);
+  SPerl_OP_sibling_splice(sperl, op_field, op_name_field, 0, op_type);
   
   // Create field information
   SPerl_FIELD* field = SPerl_FIELD_new(sperl);
   
   // Name
-  field->op_name = op_field_name;
+  field->op_name = op_name_field;
   
   // Type
   field->op_type = op_type;
@@ -1050,11 +1050,11 @@ SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* op_fi
   return op_field;
 }
 
-SPerl_OP* SPerl_OP_build_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_args, SPerl_OP* op_descriptors, SPerl_OP* op_type_or_void, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_name_sub, SPerl_OP* op_args, SPerl_OP* op_descriptors, SPerl_OP* op_type_or_void, SPerl_OP* op_block) {
   
   // Build OP_SUB
-  SPerl_OP_sibling_splice(sperl, op_sub, NULL, 0, op_sub_name);
-  SPerl_OP_sibling_splice(sperl, op_sub, op_sub_name, 0, op_args);
+  SPerl_OP_sibling_splice(sperl, op_sub, NULL, 0, op_name_sub);
+  SPerl_OP_sibling_splice(sperl, op_sub, op_name_sub, 0, op_args);
   SPerl_OP_sibling_splice(sperl, op_sub, op_args, 0, op_descriptors);
   SPerl_OP_sibling_splice(sperl, op_sub, op_descriptors, 0, op_type_or_void);
   if (op_block) {
@@ -1064,7 +1064,7 @@ SPerl_OP* SPerl_OP_build_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_na
   
   // Create sub information
   SPerl_SUB* sub = SPerl_SUB_new(sperl);
-  sub->op_name = op_sub_name;
+  sub->op_name = op_name_sub;
   
   // Descriptors
   SPerl_OP* op_descriptor = op_descriptors->first;
@@ -1123,16 +1123,16 @@ SPerl_OP* SPerl_OP_build_decl_enum(SPerl* sperl, SPerl_OP* op_enumeration, SPerl
   return op_enumeration;
 }
 
-SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_sub_name, SPerl_OP* op_terms) {
+SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP* op_name_sub, SPerl_OP* op_terms) {
   
   // Build OP_SUB
-  SPerl_OP* op_call_sub = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CALL_SUB, op_sub_name->file, op_sub_name->line);
-  SPerl_OP_sibling_splice(sperl, op_call_sub, NULL, 0, op_sub_name);
-  SPerl_OP_sibling_splice(sperl, op_call_sub, op_sub_name, 0, op_terms);
+  SPerl_OP* op_call_sub = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CALL_SUB, op_name_sub->file, op_name_sub->line);
+  SPerl_OP_sibling_splice(sperl, op_call_sub, NULL, 0, op_name_sub);
+  SPerl_OP_sibling_splice(sperl, op_call_sub, op_name_sub, 0, op_terms);
   
   SPerl_NAME_INFO* name_info = SPerl_NAME_INFO_new(sperl);
   
-  const char* sub_name = op_sub_name->uv.name;
+  const char* sub_name = op_name_sub->uv.name;
   SPerl_OP* op_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, op_invocant->file, op_invocant->line);
   
   // Normal call
@@ -1166,7 +1166,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
     else {
       name_info->code = SPerl_NAME_INFO_C_CODE_VARBASENAME;
       name_info->op_var = op_invocant;
-      name_info->op_name = op_sub_name;
+      name_info->op_name = op_name_sub;
     }
     SPerl_OP_sibling_splice(sperl, op_terms, op_terms->first, 0, op_invocant);
   }
@@ -1180,7 +1180,7 @@ SPerl_OP* SPerl_OP_build_call_sub(SPerl* sperl, SPerl_OP* op_invocant, SPerl_OP*
     // Base name
     else {
       const char* package_name = op_invocant->uv.name;
-      const char* name = op_sub_name->uv.name;
+      const char* name = op_name_sub->uv.name;
       
       // Create abs name
       const char* abs_name = SPerl_OP_create_abs_name(sperl, package_name, name);
