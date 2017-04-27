@@ -754,7 +754,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     first_resolved_type = SPerl_OP_get_resolved_type(sperl, my_var->op_term_assumption);
                     
                     if (first_resolved_type) {
-                      SPerl_OP* op_type = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_TYPE, op_cur->file, op_cur->line);
+                      SPerl_OP* op_type = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_TYPE, op_cur->file, op_cur->line);
                       SPerl_TYPE* type = SPerl_TYPE_new(sperl);
                       type->resolved_type = first_resolved_type;
                       op_type->uv.type = type;
@@ -780,7 +780,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   
                   // Insert var op
                   if (op_cur->last->code == SPerl_OP_C_CODE_ASSIGN) {
-                    SPerl_OP* op_var = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_VAR, op_cur->file, op_cur->line);
+                    SPerl_OP* op_var = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_VAR, op_cur->file, op_cur->line);
                     op_var->uv.var = op_cur->last->first->uv.var;
                     
                     SPerl_OP* op_last_old = op_cur->last;
@@ -824,7 +824,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                       // Reference type
                       if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
                         // INC reference count of return value
-                        SPerl_OP* op_increfcount = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_INCREFCOUNT, op_cur->file, op_cur->line);
+                        SPerl_OP* op_increfcount = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_INCREFCOUNT, op_cur->file, op_cur->line);
                         
                         SPerl_OP_sibling_splice(sperl, op_cur, op_cur->first, NULL, op_increfcount);
                       }
@@ -1114,7 +1114,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type)) {
                       SPerl_OP* op_var = SPerl_OP_new_op_var_from_op_my_var(sperl, op_my_var);
                       
-                      SPerl_OP* op_increfcount = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_INCREFCOUNT, op_my_var->file, op_my_var->line);
+                      SPerl_OP* op_increfcount = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_INCREFCOUNT, op_my_var->file, op_my_var->line);
                       SPerl_OP_sibling_splice(sperl, op_increfcount, NULL, 0, op_var);
                       SPerl_OP_sibling_splice(sperl, op_cur, op_cur->last, 0, op_increfcount);
                     }
@@ -1160,18 +1160,18 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   if (first_resolved_type && !SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type) && !SPerl_OP_sibling(sperl, op_cur)) {
                     // Only my declarations after subroutine arguments
                     if (my_var->address >= sub->op_args->length) {
-                      SPerl_OP* op_assign = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_ASSIGN, op_cur->file, op_cur->line);
+                      SPerl_OP* op_assign = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_ASSIGN, op_cur->file, op_cur->line);
                       
                       SPerl_VAR* var = SPerl_VAR_new(sperl);
-                      SPerl_OP* op_var_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, op_cur->file, op_cur->line);
+                      SPerl_OP* op_var_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, op_cur->file, op_cur->line);
                       op_var_name->uv.name = op_cur->uv.my_var->op_name->uv.name;
                       var->op_name = op_var_name;
                       var->op_my_var = op_cur;
                       
-                      SPerl_OP* op_var = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_VAR, op_cur->file, op_cur->line);
+                      SPerl_OP* op_var = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_VAR, op_cur->file, op_cur->line);
                       op_var->uv.var = var;
                       
-                      SPerl_OP* op_undef = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_UNDEF, op_cur->file, op_cur->line);
+                      SPerl_OP* op_undef = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_UNDEF, op_cur->file, op_cur->line);
                       
                       SPerl_OP_sibling_splice(sperl, op_assign, op_assign->last, 0, op_var);
                       SPerl_OP_sibling_splice(sperl, op_assign, op_assign->last, 0, op_undef);
@@ -1317,7 +1317,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 
                 if (op_statements->last->code != SPerl_OP_C_CODE_RETURN) {
                   // Add return to the end of subroutine
-                  SPerl_OP* op_return = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_RETURN, op_cur->file, op_cur->line);
+                  SPerl_OP* op_return = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_RETURN, op_cur->file, op_cur->line);
                   if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
                     SPerl_RESOLVED_TYPE* op_return_resolved_type = SPerl_OP_get_resolved_type(sperl, sub->op_return_type);
                     if (op_return_resolved_type) {
@@ -1339,7 +1339,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                           constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
                           constant->uv.double_value = 0;
                         }
-                        SPerl_OP* op_constant = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_CONSTANT, op_cur->file, op_cur->line);
+                        SPerl_OP* op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, op_cur->file, op_cur->line);
                         op_constant->uv.constant = constant;
                         
                         SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_constant);
@@ -1347,7 +1347,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                       // Reference
                       else {
                         // Undef
-                        SPerl_OP* op_undef = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_UNDEF, op_cur->file, op_cur->line);
+                        SPerl_OP* op_undef = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_UNDEF, op_cur->file, op_cur->line);
                         SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_undef);
                       }
                     }

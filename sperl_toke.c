@@ -25,7 +25,7 @@ SPerl_OP* SPerl_TOKE_newOP(SPerl* sperl, int32_t type) {
   
   SPerl_PARSER* parser = sperl->parser;
   
-  SPerl_OP* op = SPerl_OP_newOP(sperl, type, parser->cur_module_path, parser->cur_line);
+  SPerl_OP* op = SPerl_OP_new_op(sperl, type, parser->cur_module_path, parser->cur_line);
   
   return op;
 }

@@ -45,7 +45,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Name
     const char* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
-    SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
+    SPerl_OP* op_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
     op_name->uv.name = name;
     
     // Resolved type
@@ -65,7 +65,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     const char* core_name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
     
     // Name
-    SPerl_OP* op_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
+    SPerl_OP* op_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
     op_name->uv.name = name;
     
     // Resolved type
@@ -89,11 +89,11 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   SPerl_PARSER* parser = sperl->parser;
 
   /* Build use information */
-  SPerl_OP* op_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, package_name, 1);
+  SPerl_OP* op_package_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, package_name, 1);
   op_package_name->uv.name = package_name;
   
   // Use OP
-  SPerl_OP* op_use = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_USE, package_name, 1);
+  SPerl_OP* op_use = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_USE, package_name, 1);
   SPerl_OP_sibling_splice(sperl, op_use, NULL, 0, op_package_name);
   
   /* Push package use information stack */
@@ -109,8 +109,8 @@ int32_t SPerl_PARSER_parse(SPerl* sperl, const char* package_name) {
   sperl->entry_point_sub_name = entry_point_sub_name;
   
   // use standard module
-  SPerl_OP* op_use_std = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_USE, "std", 0);
-  SPerl_OP* op_std_package_name = SPerl_OP_newOP(sperl, SPerl_OP_C_CODE_NAME, "std", 0);
+  SPerl_OP* op_use_std = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_USE, "std", 0);
+  SPerl_OP* op_std_package_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, "std", 0);
   op_std_package_name->uv.name = "std";
   SPerl_OP_sibling_splice(sperl, op_use_std, NULL, 0, op_std_package_name);
   SPerl_ARRAY_push(sperl, parser->op_use_stack, op_use_std);
