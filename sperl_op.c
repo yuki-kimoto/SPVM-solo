@@ -43,7 +43,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "PUSHMARK",
   "GRAMMAR",
   "NAME",
-  "DECL_PACKAGE",
+  "PACKAGE",
   "MY_VAR",
   "MY_VAR_PARENT",
   "DECL_FIELD",
@@ -752,7 +752,7 @@ const char* SPerl_OP_create_abs_name(SPerl* sperl, const char* package_name, con
   return abs_name;
 }
 
-SPerl_OP* SPerl_OP_build_decl_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block) {
   
   SPerl_PARSER* parser = sperl->parser;
 

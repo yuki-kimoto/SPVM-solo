@@ -610,7 +610,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
             }
             parser->current_package_count++;
             
-            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_DECL_PACKAGE);
+            yylvalp->opval = SPerl_TOKE_newOP(sperl, SPerl_OP_C_CODE_PACKAGE);
             return PACKAGE;
           }
           else if (memcmp(keyword, "switch", str_len) == 0) {

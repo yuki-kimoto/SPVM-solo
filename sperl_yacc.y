@@ -22,7 +22,7 @@
 %type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub unop binop
 %type <opval> opt_terms terms term args arg opt_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> decl_enumeration_values decl_enumeration_value
-%type <opval> type package_name field_name sub_name decl_package decl_things_in_grammar opt_decl_enumeration_values type_array
+%type <opval> type package_name field_name sub_name package decl_things_in_grammar opt_decl_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar opt_term throw_exception
 %type <opval> field array_elem convert_type decl_enum new_object type_name array_length decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement type_array_with_length
@@ -87,12 +87,12 @@ decl_things_in_grammar
 
 decl_thing_in_grammar
   : decl_use
-  | decl_package
+  | package
 
-decl_package
+package
   : PACKAGE package_name class_block
     {
-      $$ = SPerl_OP_build_decl_package(sperl, $1, $2, $3);
+      $$ = SPerl_OP_build_package(sperl, $1, $2, $3);
       if (sperl->parser->fatal_error) {
         YYABORT;
       }
