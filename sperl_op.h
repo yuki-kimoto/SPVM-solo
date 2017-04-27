@@ -100,9 +100,9 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_OR,           // LOGICALOP
   SPerl_OP_C_CODE_NOT,          // LOGICALOP
   SPerl_OP_C_CODE_ARRAY_ELEM,        // UNKNOWN
-  SPerl_OP_C_CODE_FIELD,        // UNKNOWN
   SPerl_OP_C_CODE_ASSIGN,       // ASSIGN
   SPerl_OP_C_CODE_CALL_SUB,      // UNKNOWN
+  SPerl_OP_C_CODE_CALL_FIELD,        // UNKNOWN
   SPerl_OP_C_CODE_USE,          // UNKNOWN
   SPerl_OP_C_CODE_RETURN,       // UNKNOWN
   SPerl_OP_C_CODE_LAST,         // UNKNOWN

@@ -86,9 +86,9 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "OR",
   "NOT",
   "ARRAY_ELEM",
-  "FIELD",
   "ASSIGN",
   "CALL_SUB",
+  "CALL_FIELD",
   "USE",
   "RETURN",
   "LAST",
@@ -117,6 +117,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
 };
 
 SPerl_OP* SPerl_OP_new_op_var_from_op_my_var(SPerl* sperl, SPerl_OP* op_my_var) {
+  (void)sperl;
   
   SPerl_VAR* var = SPerl_VAR_new(sperl);
   SPerl_OP* op_var = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_VAR, op_my_var->file, op_my_var->line);
@@ -133,6 +134,8 @@ SPerl_OP* SPerl_OP_new_op_var_from_op_my_var(SPerl* sperl, SPerl_OP* op_my_var) 
 }
 
 SPerl_OP* SPerl_OP_get_op_block_from_op_sub(SPerl* sperl, SPerl_OP* op_sub) {
+  (void)sperl;
+  
   SPerl_OP* op_block = op_sub->last;
   
   if (op_block->code == SPerl_OP_C_CODE_BLOCK) {
@@ -394,7 +397,7 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
       }
       break;
     }
-    case SPerl_OP_C_CODE_FIELD: {
+    case SPerl_OP_C_CODE_CALL_FIELD: {
       SPerl_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
       SPerl_OP* op_field = SPerl_HASH_search(sperl, parser->op_field_symtable, abs_name, strlen(abs_name));
@@ -679,7 +682,7 @@ SPerl_OP* SPerl_OP_build_array_elem(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op
 }
 
 SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_var, SPerl_OP* op_field_name) {
-  SPerl_OP* op_field = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_FIELD, op_var->file, op_var->line);
+  SPerl_OP* op_field = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CALL_FIELD, op_var->file, op_var->line);
   SPerl_OP_sibling_splice(sperl, op_field, NULL, 0, op_var);
   SPerl_OP_sibling_splice(sperl, op_field, op_var, 0, op_field_name);
   

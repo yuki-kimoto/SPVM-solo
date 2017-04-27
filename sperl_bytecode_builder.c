@@ -475,7 +475,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 
                 break;
               }
-              case SPerl_OP_C_CODE_FIELD: {
+              case SPerl_OP_C_CODE_CALL_FIELD: {
                 
                 if (!op_cur->lvalue) {
                   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur);
@@ -1248,7 +1248,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_AASTORE);
                   }
                 }
-                else if (op_cur->first->code == SPerl_OP_C_CODE_FIELD) {
+                else if (op_cur->first->code == SPerl_OP_C_CODE_CALL_FIELD) {
                   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                   
                   if (resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_BYTE) {
