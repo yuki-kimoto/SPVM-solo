@@ -21,8 +21,8 @@
 %type <opval> grammar opt_statements statements statement my field if_statement else_statement
 %type <opval> block enum_block class_block sub opt_decl_things_in_class call_sub unop binop
 %type <opval> opt_terms terms term args arg opt_args decl_use decl_thing_in_class decl_things_in_class
-%type <opval> decl_enumeration_values decl_enumeration_value
-%type <opval> type package_name field_name sub_name package decl_things_in_grammar opt_decl_enumeration_values type_array
+%type <opval> enumeration_values enumeration_value
+%type <opval> type package_name field_name sub_name package decl_things_in_grammar opt_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_decl_things_in_grammar opt_term throw_exception
 %type <opval> call_field array_elem convert_type decl_enum new_object type_name array_length decl_thing_in_grammar
 %type <opval> switch_statement case_statement default_statement type_array_with_length
@@ -99,18 +99,18 @@ package
     }
 
 enum_block 
-  : '{' opt_decl_enumeration_values '}'
+  : '{' opt_enumeration_values '}'
     {
       $$ = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_ENUM_BLOCK, $1->file, $1->line);
       SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
 
-opt_decl_enumeration_values
+opt_enumeration_values
   :	/* Empty */
     {
       $$ = SPerl_OP_new_op_list(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
     }
-  |	decl_enumeration_values
+  |	enumeration_values
     {
       if ($1->code == SPerl_OP_C_CODE_LIST) {
         $$ = $1;
@@ -121,14 +121,14 @@ opt_decl_enumeration_values
       }
     }
     
-decl_enumeration_values
-  : decl_enumeration_values ',' decl_enumeration_value 
+enumeration_values
+  : enumeration_values ',' enumeration_value 
     {
       $$ = SPerl_OP_append_elem(sperl, $1, $3, $1->file, $1->line);
     }
-  | decl_enumeration_value
+  | enumeration_value
   
-decl_enumeration_value
+enumeration_value
   : NAME
     {
       $$ = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE, $1->file, $1->line);
