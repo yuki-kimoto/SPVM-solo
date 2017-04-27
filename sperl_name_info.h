@@ -7,7 +7,6 @@ enum {
   SPerl_NAME_INFO_C_CODE_VARBASENAME,
   SPerl_NAME_INFO_C_CODE_BASENAME,
   SPerl_NAME_INFO_C_CODE_ABSNAME,
-  SPerl_NAME_INFO_C_CODE_ANON,
 };
 
 struct SPerl_name_info {
