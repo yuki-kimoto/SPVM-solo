@@ -19,7 +19,7 @@
 %token <opval> SWITCH CASE DEFAULT VOID TRY CATCH
 
 %type <opval> grammar opt_statements statements statement my decl_field if_statement else_statement
-%type <opval> block enum_block class_block decl_sub opt_decl_things_in_class call_sub unop binop
+%type <opval> block enum_block class_block sub opt_decl_things_in_class call_sub unop binop
 %type <opval> opt_terms terms term args arg opt_args decl_use decl_thing_in_class decl_things_in_class
 %type <opval> decl_enumeration_values decl_enumeration_value
 %type <opval> type package_name field_name sub_name package decl_things_in_grammar opt_decl_enumeration_values type_array
@@ -255,14 +255,14 @@ decl_field
       $$ = SPerl_OP_build_decl_field(sperl, $1, $2, $4);
     }
 
-decl_sub
+sub
  : SUB sub_name '(' opt_args ')' ':' opt_descriptors type_or_void block
      {
-       $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $7, $8, $9);
+       $$ = SPerl_OP_build_sub(sperl, $1, $2, $4, $7, $8, $9);
      }
  | SUB sub_name '(' opt_args ')' ':' opt_descriptors type_or_void ';'
      {
-       $$ = SPerl_OP_build_decl_sub(sperl, $1, $2, $4, $7, $8, NULL);
+       $$ = SPerl_OP_build_sub(sperl, $1, $2, $4, $7, $8, NULL);
      }
 decl_enum
   : ENUM enum_block
@@ -313,7 +313,7 @@ decl_things_in_class
 
 decl_thing_in_class
   : decl_field
-  | decl_sub
+  | sub
   | decl_enum
 
 class_block

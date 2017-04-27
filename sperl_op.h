@@ -61,7 +61,7 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_MY_VAR,   // UNKNOWN
   SPerl_OP_C_CODE_MY_VAR_PARENT,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_FIELD,   // UNKNOWN
-  SPerl_OP_C_CODE_DECL_SUB,          // UNKNOWN
+  SPerl_OP_C_CODE_SUB,          // UNKNOWN
   SPerl_OP_C_CODE_DECL_ENUM,
   SPerl_OP_C_CODE_DECL_DESCRIPTOR,   // UNKNOWN
   SPerl_OP_C_CODE_DECL_ENUMERATION_VALUE,    // UNKNOWN
@@ -232,7 +232,7 @@ SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* o
 
 SPerl_OP* SPerl_OP_build_field(SPerl* sperl, SPerl_OP* op_packagename, SPerl_OP* op_fieldname);
 SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* op_package_name, SPerl_OP* op_block);
-SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* op_descriptors, SPerl_OP* type, SPerl_OP* op_block);
+SPerl_OP* SPerl_OP_build_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_subname, SPerl_OP* op_subargs, SPerl_OP* op_descriptors, SPerl_OP* type, SPerl_OP* op_block);
 SPerl_OP* SPerl_OP_build_CONSTVALUE(SPerl* sperl, SPerl_OP* op_const);
 SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_has, SPerl_OP* op_field_base_name, SPerl_OP* type);
 SPerl_OP* SPerl_OP_build_my(SPerl* sperl, SPerl_OP* op_my, SPerl_OP* op_var, SPerl_OP* op_type, SPerl_OP* op_term);

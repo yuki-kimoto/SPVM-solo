@@ -47,7 +47,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "MY_VAR",
   "MY_VAR_PARENT",
   "DECL_FIELD",
-  "DECL_SUB",
+  "SUB",
   "DECL_ENUM",
   "DECL_DESCRIPTOR",
   "DECL_ENUMERATION_VALUE",
@@ -816,7 +816,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* o
           SPerl_HASH_insert(sperl, parser->op_field_symtable, field_abs_name, strlen(field_abs_name), op_field);
         }
       }
-      else if (op_decl->code == SPerl_OP_C_CODE_DECL_SUB) {
+      else if (op_decl->code == SPerl_OP_C_CODE_SUB) {
         SPerl_OP* op_sub = op_decl;
         SPerl_SUB* sub = op_sub->uv.sub;
         
@@ -905,7 +905,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* o
           }
           
           // sub
-          SPerl_OP* op_sub = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_DECL_SUB, op_enumeration_value->file, op_enumeration_value->line);
+          SPerl_OP* op_sub = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_SUB, op_enumeration_value->file, op_enumeration_value->line);
           op_sub->file = op_enumeration_value->file;
           op_sub->line = op_enumeration_value->line;
           
@@ -1047,7 +1047,7 @@ SPerl_OP* SPerl_OP_build_decl_field(SPerl* sperl, SPerl_OP* op_field, SPerl_OP* 
   return op_field;
 }
 
-SPerl_OP* SPerl_OP_build_decl_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_args, SPerl_OP* op_descriptors, SPerl_OP* op_type_or_void, SPerl_OP* op_block) {
+SPerl_OP* SPerl_OP_build_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_sub_name, SPerl_OP* op_args, SPerl_OP* op_descriptors, SPerl_OP* op_type_or_void, SPerl_OP* op_block) {
   
   // Build OP_SUB
   SPerl_OP_sibling_splice(sperl, op_sub, NULL, 0, op_sub_name);
