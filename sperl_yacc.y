@@ -19,8 +19,8 @@
 %token <opval> SWITCH CASE DEFAULT VOID TRY CATCH
 
 %type <opval> grammar opt_statements statements statement my field if_statement else_statement
-%type <opval> block enumeration_block class_block sub opt_declarations_in_class call_sub unop binop
-%type <opval> opt_terms terms term args arg opt_args use declaration_in_class declarations_in_class
+%type <opval> block enumeration_block package_block sub opt_declarations_in_package call_sub unop binop
+%type <opval> opt_terms terms term args arg opt_args use declaration_in_package declarations_in_package
 %type <opval> enumeration_values enumeration_value
 %type <opval> type package_name field_name sub_name package declarations_in_grammar opt_enumeration_values type_array
 %type <opval> for_statement while_statement expression opt_declarations_in_grammar opt_term throw_exception
@@ -89,13 +89,54 @@ declaration_in_grammar
   : use
   | package
 
+use
+  : USE package_name ';'
+    {
+      $$ = SPerl_OP_build_use(sperl, $1, $2);
+    }
+
 package
-  : PACKAGE package_name class_block
+  : PACKAGE package_name package_block
     {
       $$ = SPerl_OP_build_package(sperl, $1, $2, $3);
       if (sperl->parser->fatal_error) {
         YYABORT;
       }
+    }
+
+opt_declarations_in_package
+  :	/* Empty */
+    {
+      $$ = SPerl_OP_new_op_list(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
+    }
+  |	declarations_in_package
+    {
+      if ($1->code == SPerl_OP_C_CODE_LIST) {
+        $$ = $1;
+      }
+      else {
+        $$ = SPerl_OP_new_op_list(sperl, $1->file, $1->line);
+        SPerl_OP_sibling_splice(sperl, $$, $$->first, 0, $1);
+      }
+    }
+
+declarations_in_package
+  : declarations_in_package declaration_in_package
+    {
+      $$ = SPerl_OP_append_elem(sperl, $1, $2, $1->file, $1->line);
+    }
+  | declaration_in_package
+
+declaration_in_package
+  : field
+  | sub
+  | enumeration
+
+package_block
+  : '{' opt_declarations_in_package '}'
+    {
+      $$ = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CLASS_BLOCK, $1->file, $1->line);
+      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
 
 enumeration_block 
@@ -182,6 +223,13 @@ statement
   | default_statement
   | try_catch
 
+block 
+  : '{' opt_statements '}'
+    {
+      $$ = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BLOCK, $1->file, $1->line);
+      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
+    }
+
 normal_statement
   : term ';'
     {
@@ -242,13 +290,6 @@ else_statement
       $$ = SPerl_OP_build_if_statement(sperl, $1, $3, $5, $6);
     }
 
-use
-  : USE package_name ';'
-    {
-      $$ = SPerl_OP_build_use(sperl, $1, $2);
-    }
-
-
 field
   : HAS field_name ':' type ';'
     {
@@ -286,41 +327,6 @@ my
   | MY VAR ASSIGN term
     {
       $$ = SPerl_OP_build_my_var(sperl, $1, $2, NULL, $4);
-    }
-
-opt_declarations_in_class
-  :	/* Empty */
-    {
-      $$ = SPerl_OP_new_op_list(sperl, sperl->parser->cur_module_path, sperl->parser->cur_line);
-    }
-  |	declarations_in_class
-    {
-      if ($1->code == SPerl_OP_C_CODE_LIST) {
-        $$ = $1;
-      }
-      else {
-        $$ = SPerl_OP_new_op_list(sperl, $1->file, $1->line);
-        SPerl_OP_sibling_splice(sperl, $$, $$->first, 0, $1);
-      }
-    }
-
-declarations_in_class
-  : declarations_in_class declaration_in_class
-    {
-      $$ = SPerl_OP_append_elem(sperl, $1, $2, $1->file, $1->line);
-    }
-  | declaration_in_class
-
-declaration_in_class
-  : field
-  | sub
-  | enumeration
-
-class_block
-  : '{' opt_declarations_in_class '}'
-    {
-      $$ = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CLASS_BLOCK, $1->file, $1->line);
-      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
 
 expression
@@ -534,13 +540,6 @@ call_sub
     {
       SPerl_OP* op_terms = SPerl_OP_new_op_list(sperl, $1->file, $2->line);
       $$ = SPerl_OP_build_call_sub(sperl, $1, $3, op_terms);
-    }
-
-block 
-  : '{' opt_statements '}'
-    {
-      $$ = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BLOCK, $1->file, $1->line);
-      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
     }
 
 opt_args
