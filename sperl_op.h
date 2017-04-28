@@ -130,6 +130,8 @@ enum {                          // [GROUP]
   SPerl_OP_C_CODE_INCREFCOUNT,
   SPerl_OP_C_CODE_ARGS_MY_VARS,
   SPerl_OP_C_CODE_BLOCK_END,
+  SPerl_OP_C_CODE_SUB_END_PROCESS,
+  SPerl_OP_C_CODE_BEFORE_SUB_END,
 };
 
 extern const char* const SPerl_OP_C_CODE_NAMES[];

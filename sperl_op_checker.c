@@ -170,7 +170,8 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
               if (op_cur == op_base) {
                 SPerl_OP* op_statements = op_cur->first;
                 
-                if (op_statements->last->code != SPerl_OP_C_CODE_RETURN) {
+                if (op_statements->last->code != SPerl_OP_C_CODE_SUB_END_PROCESS) {
+                  
                   SPerl_OP* op_return = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_RETURN, op_cur->file, op_cur->line);
                   if (sub->op_return_type->code != SPerl_OP_C_CODE_VOID) {
                     SPerl_RESOLVED_TYPE* op_return_resolved_type = SPerl_OP_get_resolved_type(sperl, sub->op_return_type);
@@ -201,7 +202,13 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     }
                   }
                   
-                  SPerl_OP_sibling_splice(sperl, op_statements, op_statements->last, 0, op_return);
+                  SPerl_OP* op_sub_end_process = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_SUB_END_PROCESS, op_return->file, op_return->line);
+                  SPerl_OP* op_before_sub_end = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BEFORE_SUB_END, op_return->file, op_return->line);
+                  
+                  SPerl_OP_sibling_splice(sperl, op_sub_end_process, op_sub_end_process->last, 0, op_before_sub_end);
+                  SPerl_OP_sibling_splice(sperl, op_sub_end_process, op_sub_end_process->last, 0, op_return);
+                  
+                  SPerl_OP_sibling_splice(sperl, op_statements, op_statements->last, 0, op_sub_end_process);
                 }
               }
               
