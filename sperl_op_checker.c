@@ -1099,7 +1099,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   }
                   
                   // Free my variables at end of block
-                  SPerl_OP* op_block_end_free_my_vars = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BLOCK_END_FREE_MY_VARS, op_cur->file, op_cur->line);
+                  SPerl_OP* op_block_end_free_my_vars = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BLOCK_END, op_cur->file, op_cur->line);
                   
                   int32_t pop_count = op_my_var_stack->length - block_base;
                   for (int32_t j = 0; j < pop_count; j++) {
@@ -1118,9 +1118,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     assert(op_my_var);
                   }
                   
-                  if (op_cur != op_base) {
-                    SPerl_OP_sibling_splice(sperl, op_list_statement, op_list_statement->last, 0, op_block_end_free_my_vars);
-                  }
+                  SPerl_OP_sibling_splice(sperl, op_list_statement, op_list_statement->last, 0, op_block_end_free_my_vars);
                   
                   if (block_base_stack->length > 0) {
                     int32_t* before_block_base_ptr = SPerl_ARRAY_fetch(sperl, block_base_stack, block_base_stack->length - 1);

@@ -115,7 +115,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "DECREFCOUNT",
   "INCREFCOUNT",
   "ARGS_MY_VARS",
-  "BLOCK_END_FREE_MY_VARS",
+  "BLOCK_END",
 };
 
 SPerl_OP* SPerl_OP_new_op_constant_int(SPerl* sperl, int32_t value, const char* file, int32_t line) {
