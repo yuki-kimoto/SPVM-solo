@@ -65,6 +65,7 @@ void SPerl_DUMPER_dump_ast(SPerl* sperl, SPerl_OP* op_base) {
     else if (code == SPerl_OP_C_CODE_VAR) {
       SPerl_VAR* var = op_cur->uv.var;
       printf(" \"%s\"", var->op_name->uv.name);
+      printf(" (my_var->address:%d)", var->op_my_var->uv.my_var->address);
     }
     else if (code == SPerl_OP_C_CODE_NAME) {
       printf(" \"%s\"", op_cur->uv.name);

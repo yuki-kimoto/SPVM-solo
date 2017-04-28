@@ -1138,7 +1138,7 @@ SPerl_OP* SPerl_OP_build_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_name_s
   if (op_block) {
     SPerl_OP* op_list_statement = op_block->first;
     SPerl_OP* op_args_my_vars = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_ARGS_MY_VARS, op_list_statement->file, op_list_statement->line);
-    for (int32_t i = sub->op_args->length - 1; i >= 0; i--) {
+    for (int32_t i = 0; i < sub->op_args->length; i++) {
       SPerl_OP* op_arg = SPerl_ARRAY_fetch(sperl, sub->op_args, i);
       SPerl_OP* op_my_var = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_MY_VAR, op_arg->file, op_arg->line);
       op_my_var->uv.my_var = op_arg->uv.my_var;
