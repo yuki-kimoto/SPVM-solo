@@ -176,29 +176,19 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                     SPerl_RESOLVED_TYPE* op_return_resolved_type = SPerl_OP_get_resolved_type(sperl, sub->op_return_type);
                     if (op_return_resolved_type) {
                       if (SPerl_RESOLVED_TYPE_is_core_type(sperl, op_return_resolved_type)) {
-                        SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+                        SPerl_OP* op_constant;
                         if (op_return_resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_INT) {
-                          constant->code = SPerl_CONSTANT_C_CODE_INT;
-                          constant->uv.int_value = 0;
-                          constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "int", strlen("int"));
+                          op_constant = SPerl_OP_new_op_constant_int(sperl, 0, op_cur->file, op_cur->line);
                         }
                         else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
-                          constant->code = SPerl_CONSTANT_C_CODE_LONG;
-                          constant->uv.long_value = 0;
-                          constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "long", strlen("long"));
+                          op_constant = SPerl_OP_new_op_constant_long(sperl, 0, op_cur->file, op_cur->line);
                         }
                         else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
-                          constant->code = SPerl_CONSTANT_C_CODE_FLOAT;
-                          constant->uv.float_value = 0;
-                          constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "float", strlen("float"));
+                          op_constant = SPerl_OP_new_op_constant_float(sperl, 0, op_cur->file, op_cur->line);
                         }
                         else if (op_return_resolved_type->id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
-                          constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
-                          constant->uv.double_value = 0;
-                          constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "double", strlen("double"));
+                          op_constant = SPerl_OP_new_op_constant_double(sperl, 0, op_cur->file, op_cur->line);
                         }
-                        SPerl_OP* op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, op_cur->file, op_cur->line);
-                        op_constant->uv.constant = constant;
                         
                         SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_constant);
                       }

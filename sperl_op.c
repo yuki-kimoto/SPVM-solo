@@ -118,6 +118,58 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "BLOCK_END_FREE_MY_VARS",
 };
 
+SPerl_OP* SPerl_OP_new_op_constant_int(SPerl* sperl, int32_t value, const char* file, int32_t line) {
+  SPerl_OP* op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, file, line);
+  SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+  
+  constant->code = SPerl_CONSTANT_C_CODE_INT;
+  constant->uv.int_value = 0;
+  constant->resolved_type = SPerl_HASH_search(sperl, sperl->parser->resolved_type_symtable, "int", strlen("int"));
+  
+  op_constant->uv.constant = constant;
+  
+  return op_constant;
+}
+
+SPerl_OP* SPerl_OP_new_op_constant_long(SPerl* sperl, int64_t value, const char* file, int32_t line) {
+  SPerl_OP* op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, file, line);
+  SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+  
+  constant->code = SPerl_CONSTANT_C_CODE_LONG;
+  constant->uv.long_value = 0;
+  constant->resolved_type = SPerl_HASH_search(sperl, sperl->parser->resolved_type_symtable, "long", strlen("long"));
+  
+  op_constant->uv.constant = constant;
+  
+  return op_constant;
+}
+
+SPerl_OP* SPerl_OP_new_op_constant_float(SPerl* sperl, float value, const char* file, int32_t line) {
+  SPerl_OP* op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, file, line);
+  SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+  
+  constant->code = SPerl_CONSTANT_C_CODE_FLOAT;
+  constant->uv.float_value = 0;
+  constant->resolved_type = SPerl_HASH_search(sperl, sperl->parser->resolved_type_symtable, "float", strlen("float"));
+  
+  op_constant->uv.constant = constant;
+
+  return op_constant;
+}
+
+SPerl_OP* SPerl_OP_new_op_constant_double(SPerl* sperl, double value, const char* file, int32_t line) {
+  SPerl_OP* op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, file, line);
+  SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
+  
+  constant->code = SPerl_CONSTANT_C_CODE_DOUBLE;
+  constant->uv.double_value = 0;
+  constant->resolved_type = SPerl_HASH_search(sperl, sperl->parser->resolved_type_symtable, "double", strlen("double"));
+  
+  op_constant->uv.constant = constant;
+
+  return op_constant;
+}
+
 SPerl_OP* SPerl_OP_new_op_var_from_op_my_var(SPerl* sperl, SPerl_OP* op_my_var) {
   (void)sperl;
   
