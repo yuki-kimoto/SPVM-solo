@@ -193,6 +193,7 @@ struct SPerl_op {
 };
 
 SPerl_OP* SPerl_OP_build_return(SPerl* sperl, SPerl_OP* op_return, SPerl_OP* op_term);
+SPerl_OP* SPerl_OP_build_die(SPerl* sperl, SPerl_OP* op_die, SPerl_OP* op_term);
 
 SPerl_OP* SPerl_OP_new_op_constant_int(SPerl* sperl, int32_t value, const char* file, int32_t line);
 SPerl_OP* SPerl_OP_new_op_constant_long(SPerl* sperl, int64_t value, const char* file, int32_t line);

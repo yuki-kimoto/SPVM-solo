@@ -1276,6 +1276,22 @@ SPerl_OP* SPerl_OP_build_return(SPerl* sperl, SPerl_OP* op_return, SPerl_OP* op_
   return op_sub_end_process;
 }
 
+SPerl_OP* SPerl_OP_build_die(SPerl* sperl, SPerl_OP* op_die, SPerl_OP* op_term) {
+  
+  SPerl_OP* op_sub_end_process = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_SUB_END_PROCESS, op_die->file, op_die->line);
+  
+  SPerl_OP* op_before_sub_end = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BEFORE_SUB_END, op_die->file, op_die->line);
+  
+  if (op_term) {
+    SPerl_OP_sibling_splice(sperl, op_die, NULL, 0, op_term);
+  }
+  
+  SPerl_OP_sibling_splice(sperl, op_sub_end_process, op_sub_end_process->last, 0, op_before_sub_end);
+  SPerl_OP_sibling_splice(sperl, op_sub_end_process, op_sub_end_process->last, 0, op_die);
+  
+  return op_sub_end_process;
+}
+
 SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term) {
   
   SPerl_PARSER* parser = sperl->parser;

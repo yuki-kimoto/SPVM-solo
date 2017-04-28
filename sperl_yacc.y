@@ -23,7 +23,7 @@
 %type <opval> opt_terms terms term args arg opt_args use declaration_in_package declarations_in_package
 %type <opval> enumeration_values enumeration_value
 %type <opval> type package_name field_name sub_name package declarations_in_grammar opt_enumeration_values type_array
-%type <opval> for_statement while_statement expression opt_declarations_in_grammar opt_term throw_exception
+%type <opval> for_statement while_statement expression opt_declarations_in_grammar opt_term
 %type <opval> call_field array_elem convert_type enumeration new_object type_name array_length declaration_in_grammar
 %type <opval> switch_statement case_statement default_statement type_array_with_length
 %type <opval> ';' opt_descriptors descriptors type_or_void normal_statement try_catch
@@ -182,13 +182,6 @@ enumeration_value
       SPerl_OP_sibling_splice(sperl, $$, $1, 0, $3);
     }
 
-throw_exception
-  : DIE term
-    {
-      SPerl_OP_sibling_splice(sperl, $1, NULL, 0, $2);
-      $$ = $1;
-    }
-
 opt_statements
   :	/* Empty */
     {
@@ -339,7 +332,10 @@ expression
     {
       $$ = SPerl_OP_build_return(sperl, $1, $2);
     }
-  | throw_exception
+  | DIE term
+    {
+      $$ = SPerl_OP_build_die(sperl, $1, $2);
+    }
   | my
 
 opt_terms
