@@ -332,11 +332,12 @@ my
 expression
   : LAST
   | NEXT
-  | RETURN
+  | RETURN {
+      $$ = SPerl_OP_build_return(sperl, $1, NULL);
+    }
   | RETURN term
     {
-      $$ = $1;
-      SPerl_OP_sibling_splice(sperl, $$, NULL, 0, $2);
+      $$ = SPerl_OP_build_return(sperl, $1, $2);
     }
   | throw_exception
   | my

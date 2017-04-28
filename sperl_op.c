@@ -1258,6 +1258,14 @@ SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_name) {
   return op_type_name;
 }
 
+SPerl_OP* SPerl_OP_build_return(SPerl* sperl, SPerl_OP* op_return, SPerl_OP* op_term) {
+  if (op_term) {
+    SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_term);
+  }
+  
+  return op_return;
+}
+
 SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term) {
   
   SPerl_PARSER* parser = sperl->parser;
