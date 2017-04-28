@@ -517,4 +517,13 @@ package Test {
     
     my $aaa = malloc Test::Minimal;
   }
+
+  sub decinctest ($num1 : Test::Minimal, $num2 : long, $num3 : Test::Minimal) : long {
+    {
+      my $num4 = malloc Test::Minimal;
+      my $num5 = malloc Test::Minimal;
+    }
+    return 2;
+  }
+
 }

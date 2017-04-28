@@ -115,6 +115,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "DECREFCOUNT",
   "INCREFCOUNT",
   "ARGS_MY_VARS",
+  "BLOCK_END_FREE_MY_VARS",
 };
 
 SPerl_OP* SPerl_OP_new_op_var_from_op_my_var(SPerl* sperl, SPerl_OP* op_my_var) {

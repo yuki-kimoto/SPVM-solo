@@ -1051,17 +1051,35 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 // End of scope
                 case SPerl_OP_C_CODE_BLOCK: {
                   
+                  SPerl_OP* op_list_statement = op_cur->first;
+                  
                   if (block_base_stack->length > 0) {
                     int32_t* block_base_ptr = SPerl_ARRAY_pop(sperl, block_base_stack);
                     block_base = *block_base_ptr;
                   }
                   
+                  // Free my variables at end of block
+                  SPerl_OP* op_block_end_free_my_vars = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BLOCK_END_FREE_MY_VARS, op_cur->file, op_cur->line);
+                  
                   int32_t pop_count = op_my_var_stack->length - block_base;
                   for (int32_t j = 0; j < pop_count; j++) {
-                    if (op_my_var_stack->length > 0) {
-                      SPerl_OP* op_my_var = SPerl_ARRAY_pop(sperl, op_my_var_stack);
-                      
+                    SPerl_OP* op_my_var = SPerl_ARRAY_pop(sperl, op_my_var_stack);
+                    
+                    SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_my_var);
+                    
+                    // Decrement reference count at end of scope
+                    if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type)) {
+                      SPerl_OP* op_decrefcount = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_DECREFCOUNT, op_cur->file, op_cur->line);
+                      SPerl_OP* op_var = SPerl_OP_new_op_var_from_op_my_var(sperl, op_my_var);
+                      SPerl_OP_sibling_splice(sperl, op_decrefcount, NULL, 0, op_var);
+                      SPerl_OP_sibling_splice(sperl, op_block_end_free_my_vars, NULL, 0, op_decrefcount);
                     }
+                    
+                    assert(op_my_var);
+                  }
+                  
+                  if (op_cur != op_base) {
+                    SPerl_OP_sibling_splice(sperl, op_list_statement, op_list_statement->last, 0, op_block_end_free_my_vars);
                   }
                   
                   if (block_base_stack->length > 0) {
