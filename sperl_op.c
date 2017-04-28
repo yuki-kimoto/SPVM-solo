@@ -510,16 +510,13 @@ void SPerl_OP_convert_and_to_if(SPerl* sperl, SPerl_OP* op) {
   SPerl_OP* op_last = op->last;
   
   // Constant false 1
-  SPerl_OP* op_constant_false1 = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NULL, op->file, op->line);
-  SPerl_OP_convert_to_op_constant_false(sperl, op_constant_false1);
+  SPerl_OP* op_constant_false1 = SPerl_OP_new_op_constant_long(sperl, 0, op->file, op->line);
   
   // Constant false 2
-  SPerl_OP* op_constant_false2 = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NULL, op->file, op->line);
-  SPerl_OP_convert_to_op_constant_false(sperl, op_constant_false2);
+  SPerl_OP* op_constant_false2 = SPerl_OP_new_op_constant_long(sperl, 0, op->file, op->line);
   
   // Constant true
-  SPerl_OP* op_constant_true = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NULL, op->file, op->line);
-  SPerl_OP_convert_to_op_constant_true(sperl, op_constant_true);
+  SPerl_OP* op_constant_true = SPerl_OP_new_op_constant_long(sperl, 1, op->file, op->line);
   
   // if
   SPerl_OP* op_if = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_IF, op->file, op->line);
@@ -557,16 +554,13 @@ void SPerl_OP_convert_or_to_if(SPerl* sperl, SPerl_OP* op) {
   SPerl_OP* op_last = op->last;
   
   // Constant true 1
-  SPerl_OP* op_constant_true1 = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NULL, op->file, op->line);
-  SPerl_OP_convert_to_op_constant_true(sperl, op_constant_true1);
+  SPerl_OP* op_constant_true1 = SPerl_OP_new_op_constant_long(sperl, 1, op->file, op->line);
   
   // Constant true 2
-  SPerl_OP* op_constant_true2 = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NULL, op->file, op->line);
-  SPerl_OP_convert_to_op_constant_true(sperl, op_constant_true2);
+  SPerl_OP* op_constant_true2 = SPerl_OP_new_op_constant_long(sperl, 1, op->file, op->line);
   
   // Constant false
-  SPerl_OP* op_constant_false = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NULL, op->file, op->line);
-  SPerl_OP_convert_to_op_constant_false(sperl, op_constant_false);
+  SPerl_OP* op_constant_false = SPerl_OP_new_op_constant_long(sperl, 0, op->file, op->line);
   
   // if
   SPerl_OP* op_if = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_IF, op->file, op->line);
@@ -597,12 +591,10 @@ void SPerl_OP_convert_not_to_if(SPerl* sperl, SPerl_OP* op) {
   SPerl_OP* op_first = op->first;
   
   // Constant true 1
-  SPerl_OP* op_constant_true = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NULL, op->file, op->line);
-  SPerl_OP_convert_to_op_constant_true(sperl, op_constant_true);
+  SPerl_OP* op_constant_true = SPerl_OP_new_op_constant_long(sperl, 1, op->file, op->line);
   
   // Constant false
-  SPerl_OP* op_constant_false = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NULL, op->file, op->line);
-  SPerl_OP_convert_to_op_constant_false(sperl, op_constant_false);
+  SPerl_OP* op_constant_false = SPerl_OP_new_op_constant_long(sperl, 0, op->file, op->line);
   
   // If
   op->code = SPerl_OP_C_CODE_IF;
