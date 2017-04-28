@@ -943,18 +943,18 @@ SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* o
             enumeration_value->op_constant = op_enumeration_value->last;
           }
           
-          SPerl_CONSTANT* constant;
+          SPerl_OP* op_constant;
           if (enumeration_value->op_constant) {
-            SPerl_OP* op_constant = enumeration_value->op_constant;
+            op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
+            op_constant->uv.constant = enumeration_value->op_constant->uv.constant;
             start_value = op_constant->uv.constant->uv.long_value + 1;
-            constant = op_constant->uv.constant;
           }
           else {
-            constant = SPerl_CONSTANT_new(sperl);
+            SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
             constant->code = SPerl_CONSTANT_C_CODE_LONG;
             constant->uv.int_value = start_value;
             constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "long", strlen("long"));
-            SPerl_OP* op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
+            op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
             op_constant->uv.constant = constant;
             
             enumeration_value->op_constant = op_constant;
@@ -969,16 +969,12 @@ SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* o
           // Type
           SPerl_OP* op_return_type = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_TYPE, op_enumeration_value->file, op_enumeration_value->line);
           SPerl_TYPE* return_type = SPerl_TYPE_new(sperl);
-          return_type->resolved_type = constant->resolved_type;
+          return_type->resolved_type = op_constant->uv.constant->resolved_type;
           op_return_type->uv.type = return_type;
 
           // Name
           SPerl_OP* op_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, op_enumeration_value->file, op_enumeration_value->line);
           op_name->uv.name = enumeration_value->op_name->uv.name;
-          
-          // Constant
-          SPerl_OP* op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
-          op_constant->uv.constant = constant;
           
           // Return
           SPerl_OP* op_return = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_RETURN, op_enumeration_value->file, op_enumeration_value->line);
