@@ -464,30 +464,6 @@ SPerl_RESOLVED_TYPE* SPerl_OP_get_resolved_type(SPerl* sperl, SPerl_OP* op) {
   return resolved_type;
 }
 
-void SPerl_OP_convert_to_op_constant_true(SPerl* sperl, SPerl_OP* op) {
-  
-  SPerl_PARSER* parser = sperl->parser;
-  
-  op->code = SPerl_OP_C_CODE_CONSTANT;
-  SPerl_CONSTANT* constant_true = SPerl_CONSTANT_new(sperl);
-  constant_true->code = SPerl_CONSTANT_C_CODE_LONG;
-  constant_true->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "long", strlen("long"));
-  constant_true->uv.long_value = 1;
-  op->uv.constant = constant_true;
-}
-
-void SPerl_OP_convert_to_op_constant_false(SPerl* sperl, SPerl_OP* op) {
-
-  SPerl_PARSER* parser = sperl->parser;
-
-  op->code = SPerl_OP_C_CODE_CONSTANT;
-  SPerl_CONSTANT* constant_false = SPerl_CONSTANT_new(sperl);
-  constant_false->code = SPerl_CONSTANT_C_CODE_LONG;
-  constant_false->uv.long_value = 0;
-  constant_false->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "long", strlen("long"));
-  op->uv.constant = constant_false;
-}
-
 void SPerl_OP_convert_and_to_if(SPerl* sperl, SPerl_OP* op) {
   
   /* before

@@ -190,6 +190,11 @@ struct SPerl_op {
   _Bool lvalue;
 };
 
+SPerl_OP* SPerl_OP_new_op_constant_int(SPerl* sperl, int32_t value, const char* file, int32_t line);
+SPerl_OP* SPerl_OP_new_op_constant_long(SPerl* sperl, int64_t value, const char* file, int32_t line);
+SPerl_OP* SPerl_OP_new_op_constant_float(SPerl* sperl, float value, const char* file, int32_t line);
+SPerl_OP* SPerl_OP_new_op_constant_double(SPerl* sperl, double value, const char* file, int32_t line);
+
 SPerl_OP* SPerl_OP_new_op_var_from_op_my_var(SPerl* sperl, SPerl_OP* op_my_var);
 
 SPerl_OP* SPerl_OP_get_op_block_from_op_sub(SPerl* sperl, SPerl_OP* op_sub);
