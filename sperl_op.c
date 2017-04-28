@@ -950,13 +950,7 @@ SPerl_OP* SPerl_OP_build_package(SPerl* sperl, SPerl_OP* op_package, SPerl_OP* o
             start_value = op_constant->uv.constant->uv.long_value + 1;
           }
           else {
-            SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
-            constant->code = SPerl_CONSTANT_C_CODE_LONG;
-            constant->uv.int_value = start_value;
-            constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "long", strlen("long"));
-            op_constant = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
-            op_constant->uv.constant = constant;
-            
+            op_constant = SPerl_OP_new_op_constant_long(sperl, start_value, op_enumeration_value->file, op_enumeration_value->line);
             enumeration_value->op_constant = op_constant;
             start_value++;
           }
