@@ -114,6 +114,7 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "CATCH",
   "DECREFCOUNT",
   "INCREFCOUNT",
+  "ARGS_MY_VARS",
 };
 
 SPerl_OP* SPerl_OP_new_op_var_from_op_my_var(SPerl* sperl, SPerl_OP* op_my_var) {
@@ -1093,6 +1094,7 @@ SPerl_OP* SPerl_OP_build_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_name_s
   // Add my declaration to top of block
   if (op_block) {
     SPerl_OP* op_list_statement = op_block->first;
+    SPerl_OP* op_args_my_vars = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_ARGS_MY_VARS, op_list_statement->file, op_list_statement->line);
     for (int32_t i = sub->op_args->length - 1; i >= 0; i--) {
       SPerl_OP* op_arg = SPerl_ARRAY_fetch(sperl, sub->op_args, i);
       SPerl_OP* op_my_var = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_MY_VAR, op_arg->file, op_arg->line);
@@ -1100,8 +1102,9 @@ SPerl_OP* SPerl_OP_build_sub(SPerl* sperl, SPerl_OP* op_sub, SPerl_OP* op_name_s
       SPerl_OP* op_my_var_parent = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_MY_VAR_PARENT, op_arg->file, op_arg->line);
       SPerl_OP_sibling_splice(sperl, op_my_var_parent, op_my_var_parent->last, 0, op_my_var);
       
-      SPerl_OP_sibling_splice(sperl, op_list_statement, op_list_statement->first, 0, op_my_var_parent);
+      SPerl_OP_sibling_splice(sperl, op_args_my_vars, op_args_my_vars->first, 0, op_my_var_parent);
     }
+    SPerl_OP_sibling_splice(sperl, op_list_statement, op_list_statement->first, 0, op_args_my_vars);
   }
   
   // return type
