@@ -760,23 +760,23 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_DECREFCOUNT: {
-        void* address = (void*)vars[*(pc + 1)];
+        void* address = (void*)call_stack[operand_stack_top];
         
         if (address != NULL) {
           SPerl_API_dec_ref_count(sperl, env, address);
         }
         
-        pc += 2;
+        pc += 1;
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_INCREFCOUNT: {
-        void* address = (void*)vars[*(pc + 1)];
+        void* address = (void*)call_stack[operand_stack_top];
         
         if (address != NULL) {
           SPerl_API_inc_ref_count(sperl, env, address);
         }
         
-        pc += 2;
+        pc += 1;
         goto *jump[*pc];
       }
       case_SPerl_BYTECODE_C_CODE_BASTORE:
@@ -1657,28 +1657,6 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
           // Store address
           vars[var_index] = call_stack[operand_stack_top];
           
-          operand_stack_top--;
-          pc +=4;
-        }
-        else if (*(pc + 1) == SPerl_BYTECODE_C_CODE_DECREFCOUNT) {
-          void* address = (void*)vars[(*(pc + 2) << 8) + *(pc + 3)];
-          
-          if (address != NULL) {
-            SPerl_API_dec_ref_count(sperl, env, address);
-          }
-          
-          vars[(*(pc + 2) << 8) + *(pc + 3)] = call_stack[operand_stack_top];
-          operand_stack_top--;
-          pc +=4;
-        }
-        else if (*(pc + 1) == SPerl_BYTECODE_C_CODE_INCREFCOUNT) {
-          void* address = (void*)vars[(*(pc + 2) << 8) + *(pc + 3)];
-          
-          if (address != NULL) {
-            SPerl_API_inc_ref_count(sperl, env, address);
-          }
-          
-          vars[(*(pc + 2) << 8) + *(pc + 3)] = call_stack[operand_stack_top];
           operand_stack_top--;
           pc +=4;
         }

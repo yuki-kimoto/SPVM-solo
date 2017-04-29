@@ -1150,22 +1150,13 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               }
               case SPerl_OP_C_CODE_INCREFCOUNT: {
                 
-                SPerl_OP* op_var = op_cur->first;
-                int32_t my_var_address = op_var->uv.var->op_my_var->uv.my_var->address;
-                
-                if (my_var_address > 0xFF) {
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_WIDE);
-                }
-                
                 SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_INCREFCOUNT);
                 
-                if (my_var_address > 0xFF) {
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (my_var_address >> 8) & 0xFF);
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, my_var_address);
-                }
-                else {
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, my_var_address);
-                }
+                break;
+              }
+              case SPerl_OP_C_CODE_DECREFCOUNT: {
+                
+                SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_DECREFCOUNT);
                 
                 break;
               }
