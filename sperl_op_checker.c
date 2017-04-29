@@ -846,14 +846,16 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                 }
                 case SPerl_OP_C_CODE_RETURN: {
                   
-                  if (op_cur->first) {
-                    SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
+                  SPerl_OP* op_term = op_cur->first;
+                  
+                  if (op_term) {
+                    SPerl_RESOLVED_TYPE* first_resolved_type = SPerl_OP_get_resolved_type(sperl, op_term);
                     SPerl_RESOLVED_TYPE* sub_return_resolved_type = SPerl_OP_get_resolved_type(sperl, sub->op_return_type);
                     
                     _Bool is_invalid = 0;
                     
                     // Undef
-                    if (op_cur->first->code == SPerl_OP_C_CODE_UNDEF) {
+                    if (op_term->code == SPerl_OP_C_CODE_UNDEF) {
                       if (sub->op_return_type->code == SPerl_OP_C_CODE_VOID) {
                         is_invalid = 1;
                       }
@@ -864,17 +866,9 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                       }
                     }
                     // Normal
-                    else if (op_cur->first) {
+                    else if (op_term) {
                       if (first_resolved_type->id != sub_return_resolved_type->id) {
                         is_invalid = 1;
-                      }
-                      
-                      // Reference type
-                      if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, first_resolved_type)) {
-                        // INC reference count of return value
-                        SPerl_OP* op_increfcount = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_INCREFCOUNT, op_cur->file, op_cur->line);
-                        
-                        SPerl_OP_sibling_splice(sperl, op_cur, op_cur->first, NULL, op_increfcount);
                       }
                     }
                     // Empty
@@ -888,7 +882,43 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                       SPerl_yyerror_format(sperl, "Invalid return type at %s line %d\n", op_cur->file, op_cur->line);
                       break;
                     }
-
+                  }
+                  
+                  // Add before return process
+                  SPerl_OP* op_return_process = op_cur->sibparent;
+                  SPerl_OP* op_before_return = op_return_process->first;
+                  
+                  for (int32_t j = op_my_var_stack->length - 1; j >= 0; j--) {
+                    SPerl_OP* op_my_var = SPerl_ARRAY_fetch(sperl, op_my_var_stack, j);
+                    
+                    SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_my_var);
+                    
+                    // Decrement reference count at before return
+                    if (!SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type)) {
+                      // If return target is variable, don't decrement reference count
+                      _Bool do_dec_ref_count = 0;
+                      if (op_term) {
+                        if (op_term->code == SPerl_OP_C_CODE_VAR) {
+                          if (op_term->uv.var->op_my_var->uv.my_var->address != op_my_var->uv.my_var->address) {
+                            do_dec_ref_count = 1;
+                          }
+                        }
+                        else {
+                          do_dec_ref_count = 1;
+                        }
+                      }
+                      else {
+                        do_dec_ref_count = 1;
+                      }
+                      
+                      if (do_dec_ref_count) {
+                        SPerl_OP* op_decrefcount = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_DECREFCOUNT, op_cur->file, op_cur->line);
+                        SPerl_OP* op_var = SPerl_OP_new_op_var_from_op_my_var(sperl, op_my_var);
+                        SPerl_OP_sibling_splice(sperl, op_decrefcount, NULL, 0, op_var);
+                        SPerl_OP_sibling_splice(sperl, op_before_return, NULL, 0, op_decrefcount);
+                      }
+                    }
+                    assert(op_my_var);
                   }
                   
                   break;
@@ -1162,7 +1192,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   }
                   else {
                     // Error
-                    SPerl_yyerror_format(sperl, "\"my %s\" undeclared at %s line %d\n", var->op_name->uv.name, op_cur->file, op_cur->line);
+                    SPerl_yyerror_format(sperl, "%s is undeclared in this scope at %s line %d\n", var->op_name->uv.name, op_cur->file, op_cur->line);
                     parser->fatal_error = 1;
                     return;
                   }

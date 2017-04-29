@@ -526,4 +526,17 @@ package Test {
     return 2;
   }
 
+  sub return_object() : Test::Minimal {
+    my $obj0 = malloc Test::Minimal;
+    {
+      my $obj1 = malloc Test::Minimal;
+      
+      my $obj2 : Test::Minimal;
+      
+      my $obj3 : Test::Minimal = undef;
+
+      return $obj2;
+    }
+  }
+
 }
