@@ -116,8 +116,10 @@ const char* const SPerl_OP_C_CODE_NAMES[] = {
   "INCREFCOUNT",
   "ARGS_MY_VARS",
   "BLOCK_END",
-  "SUB_END_PROCESS",
-  "BEFORE_SUB_END",
+  "RETURN_PROCESS",
+  "BEFORE_RETURN",
+  "DIE_PROCESS",
+  "BEFORE_DIE",
 };
 
 SPerl_OP* SPerl_OP_new_op_constant_int(SPerl* sperl, int32_t value, const char* file, int32_t line) {
@@ -1262,9 +1264,9 @@ SPerl_OP* SPerl_OP_build_type_name(SPerl* sperl, SPerl_OP* op_name) {
 
 SPerl_OP* SPerl_OP_build_return(SPerl* sperl, SPerl_OP* op_return, SPerl_OP* op_term) {
   
-  SPerl_OP* op_sub_end_process = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_SUB_END_PROCESS, op_return->file, op_return->line);
+  SPerl_OP* op_sub_end_process = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_RETURN_PROCESS, op_return->file, op_return->line);
   
-  SPerl_OP* op_before_sub_end = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BEFORE_SUB_END, op_return->file, op_return->line);
+  SPerl_OP* op_before_sub_end = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BEFORE_RETURN, op_return->file, op_return->line);
   
   if (op_term) {
     SPerl_OP_sibling_splice(sperl, op_return, NULL, 0, op_term);
@@ -1278,18 +1280,18 @@ SPerl_OP* SPerl_OP_build_return(SPerl* sperl, SPerl_OP* op_return, SPerl_OP* op_
 
 SPerl_OP* SPerl_OP_build_die(SPerl* sperl, SPerl_OP* op_die, SPerl_OP* op_term) {
   
-  SPerl_OP* op_sub_end_process = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_SUB_END_PROCESS, op_die->file, op_die->line);
+  SPerl_OP* op_die_process = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_DIE_PROCESS, op_die->file, op_die->line);
   
-  SPerl_OP* op_before_sub_end = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BEFORE_SUB_END, op_die->file, op_die->line);
+  SPerl_OP* op_before_die = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_BEFORE_DIE, op_die->file, op_die->line);
   
   if (op_term) {
     SPerl_OP_sibling_splice(sperl, op_die, NULL, 0, op_term);
   }
   
-  SPerl_OP_sibling_splice(sperl, op_sub_end_process, op_sub_end_process->last, 0, op_before_sub_end);
-  SPerl_OP_sibling_splice(sperl, op_sub_end_process, op_sub_end_process->last, 0, op_die);
+  SPerl_OP_sibling_splice(sperl, op_die_process, op_die_process->last, 0, op_before_die);
+  SPerl_OP_sibling_splice(sperl, op_die_process, op_die_process->last, 0, op_die);
   
-  return op_sub_end_process;
+  return op_die_process;
 }
 
 SPerl_OP* SPerl_OP_build_type_array(SPerl* sperl, SPerl_OP* op_type, SPerl_OP* op_term) {
