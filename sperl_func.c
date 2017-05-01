@@ -7,6 +7,7 @@
 #include "sperl_func.h"
 #include "sperl_api.h"
 #include "sperl_env.h"
+#include "sperl_sv.h"
 
 void SPerl_FUNC_std_test_call1(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
@@ -59,14 +60,15 @@ void SPerl_FUNC_std_println(SPerl* sperl, SPerl_ENV* env) {
   (void)sperl;
   (void)env;
   
-  void* byte_array = SPerl_API_get_var_ref(sperl, env, 0);
+  void* string = SPerl_API_get_var_ref(sperl, env, 0);
   
-  int64_t length = SPerl_API_get_array_length(sperl, env, byte_array);
+  SPerl_SV* sv = SPerl_API_get_string_sv(sperl, env, string);
   
-  int8_t* byte_array_data = SPerl_API_get_byte_array_data(sperl, env, byte_array);
+  char* buffer = sv->buffer;
+  int64_t length = sv->length;
   
   for (int64_t i = 0; i < length; i++) {
-    putchar((int)byte_array_data[i]);
+    putchar((int)buffer[i]);
   }
   
   printf("\n");

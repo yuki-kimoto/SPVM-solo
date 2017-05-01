@@ -2067,11 +2067,11 @@ int8_t* SPerl_API_get_byte_array_data(SPerl* sperl, SPerl_ENV* env, void* addres
   return (int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE);
 }
 
-void* SPerl_API_get_string_sv(SPerl* sperl, SPerl_ENV* env, void* address) {
+SPerl_SV* SPerl_API_get_string_sv(SPerl* sperl, SPerl_ENV* env, void* address) {
   (void)sperl;
   (void)env;
   
-  return (void*)*(intmax_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
+  return (SPerl_SV*)*(intmax_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
 }
 
 int16_t* SPerl_API_get_short_array_data(SPerl* sperl, SPerl_ENV* env, void* address) {

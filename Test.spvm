@@ -69,7 +69,7 @@ package Test {
     {
       my $string = "ace";
       
-      # std::println($string);
+      std::println($string);
     }
     
     {

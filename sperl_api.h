@@ -52,6 +52,7 @@ int32_t* SPerl_API_get_int_array_data(SPerl* sperl, SPerl_ENV* env, void* array)
 int64_t* SPerl_API_get_long_array_data(SPerl* sperl, SPerl_ENV* env, void* array);
 float* SPerl_API_get_float_array_data(SPerl* sperl, SPerl_ENV* env, void* array);
 double* SPerl_API_get_double_array_data(SPerl* sperl, SPerl_ENV* env, void* array);
+SPerl_SV* SPerl_API_get_string_sv(SPerl* sperl, SPerl_ENV* env, void* address);
 
 int8_t SPerl_API_get_var_byte(SPerl* sperl, SPerl_ENV* env, int64_t index);
 int16_t SPerl_API_get_var_short(SPerl* sperl, SPerl_ENV* env, int64_t index);
