@@ -43,14 +43,10 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   
   // Core types
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
-    // Name
-    const char* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
-    SPerl_OP* op_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
-    op_name->uv.name = name;
-    
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-    SPerl_ARRAY_push(sperl, resolved_type->part_names, (void*)name);
+    const char* name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
+    SPerl_ARRAY_push(sperl, resolved_type->part_names, name);
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
@@ -60,20 +56,9 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   
   // Core array types
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
-    // Name
-    const char* name = SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[i];
-    const char* core_name = SPerl_RESOLVED_TYPE_C_CORE_NAMES[i];
-    
-    // Name
-    SPerl_OP* op_name = SPerl_OP_new_op(sperl, SPerl_OP_C_CODE_NAME, "CORE", 1);
-    op_name->uv.name = name;
-    
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-    SPerl_ARRAY_push(sperl, resolved_type->part_names, (void*)core_name);
-    SPerl_ARRAY_push(sperl, resolved_type->part_names, "[");
-    SPerl_ARRAY_push(sperl, resolved_type->part_names, "]");
-    
+    const char* name = SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[i];
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = SPerl_RESOLVED_TYPE_C_CORE_LENGTH + i;
