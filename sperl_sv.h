@@ -10,4 +10,6 @@ struct SPerl_sv {
   int64_t length;
 };
 
+SPerl_SV* SPerl_SV_new_pvn(SPerl* sperl, const char* pv, size_t length);
+
 #endif
