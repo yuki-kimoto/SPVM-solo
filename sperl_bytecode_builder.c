@@ -982,7 +982,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_MALLOC: {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 
-                if (SPerl_RESOLVED_TYPE_is_core_value_array(sperl, resolved_type)) {
+                if (SPerl_RESOLVED_TYPE_is_core_array(sperl, resolved_type)) {
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_MALLOCARRAY);
                   
                   if (strcmp(resolved_type->name, "byte[]") == 0) {
@@ -1002,6 +1002,9 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                   else if (strcmp(resolved_type->name, "double[]") == 0) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_RESOLVED_TYPE_C_ID_DOUBLE);
+                  }
+                  else if (strcmp(resolved_type->name, "string[]") == 0) {
+                    SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_RESOLVED_TYPE_C_ID_STRING);
                   }
                   else {
                     assert(0);

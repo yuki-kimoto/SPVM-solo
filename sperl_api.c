@@ -1576,6 +1576,10 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
           allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(double) * length;
           unit_byte_size = sizeof(double);
         }
+        else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_STRING) {
+          allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(intptr_t) * length;
+          unit_byte_size = sizeof(intptr_t);
+        }
         else {
           assert(0);
         }

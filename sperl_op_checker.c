@@ -668,7 +668,7 @@ void SPerl_OP_CHECKER_check(SPerl* sperl) {
                   SPerl_OP* op_type = op_cur->first;
                   SPerl_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
                   
-                  if (SPerl_RESOLVED_TYPE_is_core_value_array(sperl, resolved_type)) {
+                  if (SPerl_RESOLVED_TYPE_is_core_array(sperl, resolved_type)) {
                     SPerl_OP* op_index_term = op_type->last;
                     SPerl_RESOLVED_TYPE* index_resolved_type = SPerl_OP_get_resolved_type(sperl, op_index_term);
                     

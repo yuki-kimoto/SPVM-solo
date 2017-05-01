@@ -13,6 +13,11 @@ package Test {
     }
     
     {
+      my $strings : string[] = malloc string[5];
+      
+    }
+    
+    {
       malloc Test::Minimal;
     }
     

@@ -129,6 +129,22 @@ _Bool SPerl_RESOLVED_TYPE_is_core_value_array(SPerl* sperl, SPerl_RESOLVED_TYPE*
   }
 }
 
+_Bool SPerl_RESOLVED_TYPE_is_core_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+  (void)sperl;
+  
+  const char* name = resolved_type->name;
+  
+  if (strcmp(name, "char[]") == 0 || strcmp(name, "byte[]") == 0 || strcmp(name, "short[]") == 0
+    || strcmp(name, "int[]") == 0 || strcmp(name, "long[]") == 0 || strcmp(name, "float[]") == 0 || strcmp(name, "double[]") == 0
+    || strcmp(name, "string[]") == 0)
+  {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 _Bool SPerl_RESOLVED_TYPE_is_core_value(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
   (void)sperl;
   
