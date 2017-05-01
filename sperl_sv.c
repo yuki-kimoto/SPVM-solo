@@ -12,6 +12,7 @@ SPerl_SV* SPerl_SV_new(SPerl* sperl) {
   
   sv->buffer = NULL;
   sv->ref_count = 1;
+  sv->length = 0;
   
   return sv;
 }

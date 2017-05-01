@@ -7,6 +7,7 @@
 struct SPerl_sv {
   char* buffer;
   int64_t ref_count;
+  int64_t length;
 };
 
 #endif
