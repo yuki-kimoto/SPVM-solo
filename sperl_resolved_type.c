@@ -11,19 +11,16 @@ const char* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[] = {
   "int",
   "long",
   "float",
-  "double"
-};
-
-const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[] = {
+  "double",
+  "string",
   "byte[]",
   "short[]",
   "int[]",
   "long[]",
   "float[]",
-  "double[]"
+  "double[]",
+  "string[]",
 };
-
-extern const char* const SPerl_RESOLVED_TYPE_C_CORE_STRING_NAME = "string";
 
 int32_t SPerl_RESOLVED_TYPE_get_array_dimention(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
   (void)sperl;

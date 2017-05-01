@@ -4,7 +4,7 @@
 #include "sperl_base.h"
 
 enum {
-  SPerl_RESOLVED_TYPE_C_CORE_LENGTH = 6
+  SPerl_RESOLVED_TYPE_C_CORE_LENGTH = 14
 };
 
 enum {
@@ -14,13 +14,17 @@ enum {
   SPerl_RESOLVED_TYPE_C_ID_LONG,
   SPerl_RESOLVED_TYPE_C_ID_FLOAT,
   SPerl_RESOLVED_TYPE_C_ID_DOUBLE,
+  SPerl_RESOLVED_TYPE_C_ID_STRING,
+  SPerl_RESOLVED_TYPE_C_ID_ARRAY_BYTE,
+  SPerl_RESOLVED_TYPE_C_ID_ARRAY_SHORT,
+  SPerl_RESOLVED_TYPE_C_ID_ARRAY_INT,
+  SPerl_RESOLVED_TYPE_C_ID_ARRAY_LONG,
+  SPerl_RESOLVED_TYPE_C_ID_ARRAY_FLOAT,
+  SPerl_RESOLVED_TYPE_C_ID_ARRAY_DOUBLE,
+  SPerl_RESOLVED_TYPE_C_ID_ARRAY_STRING,
 };
 
 extern const char* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[];
-
-extern const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[];
-
-extern const char* const SPerl_RESOLVED_TYPE_C_CORE_STRING_NAME;
 
 struct SPerl_resolved_type {
   SPerl_ARRAY* part_names;

@@ -41,7 +41,7 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   parser->cur_op_cases = SPerl_ALLOCATOR_PARSER_alloc_array(sperl, parser->allocator, 0);
   parser->cur_line = 0;
   
-  // Core types
+  // Add core types
   for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
@@ -50,31 +50,6 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
-    SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
-    SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
-  }
-  
-  // Core array types
-  for (int32_t i = 0; i < SPerl_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
-    // Resolved type
-    SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-    const char* name = SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[i];
-    resolved_type->name = name;
-    resolved_type->name_length = strlen(name);
-    resolved_type->id = SPerl_RESOLVED_TYPE_C_CORE_LENGTH + i;
-    SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
-    SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
-  }
-  
-  // Core string type
-  {
-    // Resolved type
-    SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
-    const char* name = SPerl_RESOLVED_TYPE_C_CORE_STRING_NAME;
-    SPerl_ARRAY_push(sperl, resolved_type->part_names, name);
-    resolved_type->name = name;
-    resolved_type->name_length = strlen(name);
-    resolved_type->id = 12;
     SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
     SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
