@@ -114,7 +114,7 @@ _Bool SPerl_RESOLVED_TYPE_is_integral(SPerl* sperl, SPerl_RESOLVED_TYPE* resolve
   }
 }
 
-_Bool SPerl_RESOLVED_TYPE_is_core_type_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+_Bool SPerl_RESOLVED_TYPE_is_core_value_array(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
   (void)sperl;
   
   const char* name = resolved_type->name;
@@ -129,7 +129,7 @@ _Bool SPerl_RESOLVED_TYPE_is_core_type_array(SPerl* sperl, SPerl_RESOLVED_TYPE* 
   }
 }
 
-_Bool SPerl_RESOLVED_TYPE_is_core_type(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
+_Bool SPerl_RESOLVED_TYPE_is_core_value(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
   (void)sperl;
   
   if (resolved_type && resolved_type->id <= SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {

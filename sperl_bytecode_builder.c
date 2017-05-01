@@ -982,7 +982,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
               case SPerl_OP_C_CODE_MALLOC: {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 
-                if (SPerl_RESOLVED_TYPE_is_core_type_array(sperl, resolved_type)) {
+                if (SPerl_RESOLVED_TYPE_is_core_value_array(sperl, resolved_type)) {
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_MALLOCARRAY);
                   
                   if (strcmp(resolved_type->name, "byte[]") == 0) {
@@ -1174,7 +1174,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   
                   _Bool has_operand = 0;
                   
-                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type)) {
+                  if (SPerl_RESOLVED_TYPE_is_core_value(sperl, resolved_type)) {
                     if (my_var_address == 0) {
                       SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_STORE_0);
                     }
@@ -1474,7 +1474,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 if (op_first->code != SPerl_OP_C_CODE_ASSIGN && op_first->code != SPerl_OP_C_CODE_RETURN && !op_first->lvalue) {
                   SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_first);
                   
-                  if (SPerl_RESOLVED_TYPE_is_core_type(sperl, resolved_type)) {
+                  if (SPerl_RESOLVED_TYPE_is_core_value(sperl, resolved_type)) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_POP);
                   }
                   else {
