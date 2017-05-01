@@ -24,6 +24,7 @@
 #include "sperl_resolved_type.h"
 #include "sperl_env.h"
 #include "sperl_allocator_runtime.h"
+#include "sperl_sv.h"
 
 void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) {
   (void)sperl;
@@ -1579,22 +1580,20 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         int8_t* chars_ptr = (int8_t*)&string_info_ptr[1];
         
         // Allocate array
-        int64_t allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
+        int64_t allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE;
         void* address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
-        memset((void*)address, 0, allocate_size);
-        memcpy((void*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE), chars_ptr, length);
         
         // Set type
         *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_STRING;
-
-        // Set byte size
-        *(int32_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = sizeof(int8_t);
         
         // Set reference count
         *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
         
-        // Set array length
-        *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = length;
+        // New sv
+        SPerl_SV* sv = SPerl_SV_new_pvn(sperl, chars_ptr, length);
+        
+        // Set sv
+        *(intmax_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = (intmax_t)sv;
         
         // Set array
         operand_stack_top++;
