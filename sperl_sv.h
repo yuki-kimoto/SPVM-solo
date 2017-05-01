@@ -6,6 +6,7 @@
 // Field information
 struct SPerl_sv {
   char* buffer;
+  int64_t ref_count;
 };
 
 #endif

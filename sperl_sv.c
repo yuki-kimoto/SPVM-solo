@@ -8,5 +8,10 @@
 SPerl_SV* SPerl_SV_new(SPerl* sperl) {
   (void)sperl;
   
-  return SPerl_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPerl_SV));
+  SPerl_SV* sv = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPerl_SV));
+  
+  sv->buffer = NULL;
+  sv->ref_count = 1;
+  
+  return sv;
 }
