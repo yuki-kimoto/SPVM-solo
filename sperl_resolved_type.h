@@ -17,7 +17,6 @@ enum {
 };
 
 extern const char* const SPerl_RESOLVED_TYPE_C_CORE_NAMES[];
-extern int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[];
 
 extern const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[];
 

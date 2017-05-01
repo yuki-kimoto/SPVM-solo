@@ -23,15 +23,6 @@ const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[] = {
   "double[]"
 };
 
-int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[] = {
-  1,
-  1,
-  1,
-  2,
-  1,
-  2
-};
-
 extern const char* const SPerl_RESOLVED_TYPE_C_CORE_STRING_NAME = "string";
 
 int32_t SPerl_RESOLVED_TYPE_get_array_dimention(SPerl* sperl, SPerl_RESOLVED_TYPE* resolved_type) {
