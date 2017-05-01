@@ -68,11 +68,9 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
   
   // Core string type
   {
-    // Name
-    const char* name = SPerl_RESOLVED_TYPE_C_CORE_STRING_NAME;
-    
     // Resolved type
     SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
+    const char* name = SPerl_RESOLVED_TYPE_C_CORE_STRING_NAME;
     SPerl_ARRAY_push(sperl, resolved_type->part_names, name);
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
