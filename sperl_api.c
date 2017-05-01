@@ -839,16 +839,22 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPerl_BYTECODE_C_CODE_APOP:
+      case_SPerl_BYTECODE_C_CODE_APOP: {
+        
+        void* address = (void*)call_stack[operand_stack_top];
         
         // Free object
-        if ((void*)call_stack[operand_stack_top] != NULL) {
-          SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, (void*)call_stack[operand_stack_top]);
+        if (address != NULL) {
+          int64_t ref_count = *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET);
+          if (ref_count == 0) {
+            SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, (void*)call_stack[operand_stack_top]);
+          }
         }
         
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
+      }
       case_SPerl_BYTECODE_C_CODE_BADD:
         *(int8_t*)&call_stack[operand_stack_top - 1] += *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
