@@ -21,6 +21,8 @@ extern int32_t const SPerl_RESOLVED_TYPE_C_CORE_SIZES[];
 
 extern const char* const SPerl_RESOLVED_TYPE_C_CORE_ARRAY_NAMES[];
 
+extern const char* const SPerl_RESOLVED_TYPE_C_CORE_STRING_NAME;
+
 struct SPerl_resolved_type {
   SPerl_ARRAY* part_names;
   const char* name;

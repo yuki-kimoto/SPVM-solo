@@ -81,6 +81,21 @@ SPerl_PARSER* SPerl_PARSER_new(SPerl* sperl) {
     SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
+  // Core string type
+  {
+    // Name
+    const char* name = SPerl_RESOLVED_TYPE_C_CORE_STRING_NAME;
+    
+    // Resolved type
+    SPerl_RESOLVED_TYPE* resolved_type = SPerl_RESOLVED_TYPE_new(sperl);
+    SPerl_ARRAY_push(sperl, resolved_type->part_names, name);
+    resolved_type->name = name;
+    resolved_type->name_length = strlen(name);
+    resolved_type->id = 12;
+    SPerl_ARRAY_push(sperl, parser->resolved_types, resolved_type);
+    SPerl_HASH_insert(sperl, parser->resolved_type_symtable, name, strlen(name), resolved_type);
+  }
+  
   return parser;
 }
 
