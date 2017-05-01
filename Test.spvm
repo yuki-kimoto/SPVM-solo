@@ -9,6 +9,10 @@ package Test {
     std::printl(std::test_call1(4));
     
     {
+      my $string : string;
+    }
+    
+    {
       malloc Test::Minimal;
     }
     
