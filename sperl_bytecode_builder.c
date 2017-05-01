@@ -983,7 +983,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                 SPerl_RESOLVED_TYPE* resolved_type = SPerl_OP_get_resolved_type(sperl, op_cur->first);
                 
                 if (SPerl_RESOLVED_TYPE_is_core_array(sperl, resolved_type)) {
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_MALLOCARRAY);
+                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_MALLOC_ARRAY);
                   
                   if (strcmp(resolved_type->name, "byte[]") == 0) {
                     SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_RESOLVED_TYPE_C_ID_BYTE);
@@ -1011,7 +1011,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                 }
                 else {
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_MALLOC);
+                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_MALLOC_OBJECT);
                   
                   const char* package_name = op_cur->first->uv.type->resolved_type->name;
                   
@@ -1767,7 +1767,7 @@ void SPerl_BYTECODE_BUILDER_build_bytecode_array(SPerl* sperl) {
                   }
                 }
                 else if (constant->code == SPerl_CONSTANT_C_CODE_STRING) {
-                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_MALLOCSTRING);
+                  SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, SPerl_BYTECODE_C_CODE_MALLOC_STRING);
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->constant_pool_address >> 24) & 0xFF);
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->constant_pool_address >> 16) & 0xFF);
                   SPerl_BYTECODE_ARRAY_push(sperl, bytecode_array, (constant->constant_pool_address >> 8) & 0xFF);

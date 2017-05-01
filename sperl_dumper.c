@@ -236,7 +236,7 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       case SPerl_BYTECODE_C_CODE_ASTORE:
       case SPerl_BYTECODE_C_CODE_LOAD:
       case SPerl_BYTECODE_C_CODE_LDC:
-      case SPerl_BYTECODE_C_CODE_MALLOCARRAY:
+      case SPerl_BYTECODE_C_CODE_MALLOC_ARRAY:
       {
         i++;
         bytecode = bytecode_array->values[i];
@@ -296,8 +296,8 @@ void SPerl_DUMPER_dump_bytecode_array(SPerl* sperl, SPerl_BYTECODE_ARRAY* byteco
       case SPerl_BYTECODE_C_CODE_DPUTFIELD:
       case SPerl_BYTECODE_C_CODE_INVOKESTATIC_WW:
       case SPerl_BYTECODE_C_CODE_LDC_WW:
-      case SPerl_BYTECODE_C_CODE_MALLOCSTRING:
-      case SPerl_BYTECODE_C_CODE_MALLOC:
+      case SPerl_BYTECODE_C_CODE_MALLOC_STRING:
+      case SPerl_BYTECODE_C_CODE_MALLOC_OBJECT:
       {
         i++;
         bytecode = bytecode_array->values[i];

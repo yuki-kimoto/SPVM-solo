@@ -226,8 +226,9 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
     &&case_SPerl_BYTECODE_C_CODE_D2B,
     &&case_SPerl_BYTECODE_C_CODE_D2S,
     &&case_SPerl_BYTECODE_C_CODE_B2S,
-    &&case_SPerl_BYTECODE_C_CODE_MALLOC,
-    &&case_SPerl_BYTECODE_C_CODE_MALLOCARRAY,
+    &&case_SPerl_BYTECODE_C_CODE_MALLOC_OBJECT,
+    &&case_SPerl_BYTECODE_C_CODE_MALLOC_ARRAY,
+    &&case_SPerl_BYTECODE_C_CODE_MALLOC_STRING,
     &&case_SPerl_BYTECODE_C_CODE_RETURN_VOID,
     &&case_SPerl_BYTECODE_C_CODE_RETURN_VALUE,
     &&case_SPerl_BYTECODE_C_CODE_LOAD,
@@ -266,7 +267,6 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
     &&case_SPerl_BYTECODE_C_CODE_SOR ,
     &&case_SPerl_BYTECODE_C_CODE_SXOR,
     &&case_SPerl_BYTECODE_C_CODE_SCMP,
-    &&case_SPerl_BYTECODE_C_CODE_MALLOCSTRING,
     &&case_SPerl_BYTECODE_C_CODE_BINC,
     &&case_SPerl_BYTECODE_C_CODE_SINC,
     &&case_SPerl_BYTECODE_C_CODE_ASTORE,
@@ -1511,7 +1511,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         
         goto *jump[*pc];
       }
-      case_SPerl_BYTECODE_C_CODE_MALLOC: {
+      case_SPerl_BYTECODE_C_CODE_MALLOC_OBJECT: {
         // Get subroutine ID
         int32_t package_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
@@ -1541,7 +1541,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         pc += 5;
         goto *jump[*pc];
       }
-      case_SPerl_BYTECODE_C_CODE_MALLOCARRAY: {
+      case_SPerl_BYTECODE_C_CODE_MALLOC_ARRAY: {
         int32_t resolved_type_id = (int32_t)*(pc + 1);
         
         // Array length
@@ -1603,7 +1603,7 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
         pc += 2;
         goto *jump[*pc];
       }
-      case_SPerl_BYTECODE_C_CODE_MALLOCSTRING: {
+      case_SPerl_BYTECODE_C_CODE_MALLOC_STRING: {
         int64_t* string_info_ptr = &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
         
         int64_t length = string_info_ptr[0];
