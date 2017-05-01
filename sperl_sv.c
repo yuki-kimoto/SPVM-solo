@@ -8,5 +8,5 @@
 SPerl_SV* SPerl_SV_new(SPerl* sperl) {
   (void)sperl;
   
-  return SPerl_ALLOCATOR_PARSER_alloc_memory_pool(sperl, sperl->parser->allocator, sizeof(SPerl_SV));
+  return SPerl_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPerl_SV));
 }
