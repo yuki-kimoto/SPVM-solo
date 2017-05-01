@@ -9,7 +9,7 @@ package Test {
     std::printl(std::test_call1(4));
     
     {
-      my $string : string;
+      my $string : string = "abc";
     }
     
     {
@@ -62,15 +62,9 @@ package Test {
     }
 
     {
-      my $nums = "ace";
+      my $string = "ace";
       
-      std::println($nums);
-    }
-    
-    {
-      my $nums = "ace";
-      
-      std::printb($nums[2]);
+      std::println($string);
     }
     
     {

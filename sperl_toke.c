@@ -430,7 +430,7 @@ int SPerl_yylex(SPerl_YYSTYPE* yylvalp, SPerl* sperl) {
         SPerl_CONSTANT* constant = SPerl_CONSTANT_new(sperl);
         constant->code = SPerl_CONSTANT_C_CODE_STRING;
         constant->uv.string_value = str;
-        constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
+        constant->resolved_type = SPerl_HASH_search(sperl, parser->resolved_type_symtable, "string", strlen("string"));
         op->uv.constant = constant;
         yylvalp->opval = (SPerl_OP*)op;
         
