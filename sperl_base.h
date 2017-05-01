@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+/* sperl_env.h */
+struct SPerl_sv;
+typedef struct SPerl_sv SPerl_SV;
+
 /* sperl_allocator_runtime.h */
 struct SPerl_allocator_runtime;
 typedef struct SPerl_allocator_runtime SPerl_ALLOCATOR_RUNTIME;
