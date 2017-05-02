@@ -1807,6 +1807,7 @@ void SPerl_API_dec_ref_count(SPerl* sperl, SPerl_ENV* env, void* address) {
   
   // If reference count is zero, free address.
   if (*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
+    
     SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, address);
   }
 }
