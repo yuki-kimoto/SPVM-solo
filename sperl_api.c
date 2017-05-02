@@ -1519,44 +1519,71 @@ void SPerl_API_call_sub(SPerl* sperl, SPerl_ENV* env, const char* sub_abs_name) 
           allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
           unit_byte_size = sizeof(int8_t);
           address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
+          
+          // Set type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
+
+          // Set array type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_SHORT) {
           allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(int16_t) * length;
           unit_byte_size = sizeof(int16_t);
           address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
+          // Set type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          // Set array type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_SHORT;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_INT) {
           allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(int32_t) * length;
           unit_byte_size = sizeof(int32_t);
           address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
+          // Set type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          // Set array type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_INT;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_LONG) {
           allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(int64_t) * length;
           unit_byte_size = sizeof(int64_t);
           address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
+          // Set type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          // Set array type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_LONG;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_FLOAT) {
           allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(float) * length;
           unit_byte_size = sizeof(float);
           address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
+          // Set type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          // Set array type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_FLOAT;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_DOUBLE) {
           allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(double) * length;
           unit_byte_size = sizeof(double);
           address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
+          // Set type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          // Set array type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_DOUBLE;
         }
         else if (resolved_type_id == SPerl_RESOLVED_TYPE_C_ID_STRING) {
           allocate_size = SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(intptr_t) * length;
           unit_byte_size = sizeof(intptr_t);
           address = SPerl_ALLOCATOR_RUNTIME_alloc(sperl, allocator, allocate_size);
           memset(address, 0, allocate_size);
+          // Set type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          // Set array type
+          *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_STRING;
         }
         else {
           assert(0);
         }
-        
-        // Set type
-        *(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPerl_API_C_OBJECT_HEADER_TYPE_ARRAY;
         
         // Set byte size
         *(int32_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = unit_byte_size;

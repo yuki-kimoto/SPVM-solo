@@ -39,6 +39,16 @@ enum {
   SPerl_API_C_OBJECT_HEADER_TYPE_STRING
 };
 
+enum {
+  SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE,
+  SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_SHORT,
+  SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_INT,
+  SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_LONG,
+  SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_FLOAT,
+  SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_DOUBLE,
+  SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_STRING,
+};
+
 void SPerl_API_dec_ref_count(SPerl* sperl, SPerl_ENV* env, void* address);
 void SPerl_API_inc_ref_count(SPerl* sperl, SPerl_ENV* env, void* address);
 
