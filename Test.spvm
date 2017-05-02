@@ -14,7 +14,7 @@ package Test {
     
     {
       my $strings : string[] = malloc string[5];
-      
+      $strings[0] = "abc";
     }
     
     {

@@ -1826,10 +1826,10 @@ void SPerl_API_dec_ref_count(SPerl* sperl, SPerl_ENV* env, void* address) {
   (void)sperl;
   (void)env;
   
-  assert(address);
-  assert(*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
-  
   if (address != NULL) {
+    
+    assert(*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
+    
     // Decrement reference count
     *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
     
@@ -1838,10 +1838,24 @@ void SPerl_API_dec_ref_count(SPerl* sperl, SPerl_ENV* env, void* address) {
       
       // Object is string
       if (*(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) == SPerl_API_C_OBJECT_HEADER_TYPE_STRING) {
+        
+        SPerl_SV* sv = *(intmax_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
+        
+        sv->ref_count--;
+        
         SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, address);
       }
       // Object is array of string
       else if (*(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) == SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_STRING) {
+        
+        // Array length
+        int64_t length = *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
+        
+        for (int64_t i = 0; i < length; i++) {
+          void* element_address = *(void**)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(void*) * i);
+          SPerl_API_dec_ref_count(sperl, env, element_address);
+        }
+        
         SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, address);
       }
       else {
