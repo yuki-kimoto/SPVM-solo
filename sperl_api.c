@@ -1829,13 +1829,25 @@ void SPerl_API_dec_ref_count(SPerl* sperl, SPerl_ENV* env, void* address) {
   assert(address);
   assert(*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
   
-  // Decrement reference count
-  *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
-  
-  // If reference count is zero, free address.
-  if (*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
+  if (address != NULL) {
+    // Decrement reference count
+    *(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
     
-    SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, address);
+    // If reference count is zero, free address.
+    if (*(int64_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
+      
+      // Object is string
+      if (*(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) == SPerl_API_C_OBJECT_HEADER_TYPE_STRING) {
+        SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, address);
+      }
+      // Object is array of string
+      else if (*(int8_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) == SPerl_API_C_OBJECT_HEADER_ARRAY_TYPE_STRING) {
+        SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, address);
+      }
+      else {
+        SPerl_ALLOCATOR_RUNTIME_free_address(sperl, sperl->allocator_runtime, address);
+      }
+    }
   }
 }
 
