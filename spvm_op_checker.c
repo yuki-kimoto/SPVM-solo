@@ -107,7 +107,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
         // op count
         int32_t op_count = 0;
         
-        int32_t my_var_address = -1;
+        int32_t my_var_length = 0;
         
         // Run OPs
         SPVM_OP* op_base = SPVM_OP_get_op_block_from_op_sub(spvm, op_sub);
@@ -1220,7 +1220,8 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                 case SPVM_OP_C_CODE_MY_VAR: {
                   SPVM_MY_VAR* my_var = op_cur->uv.my_var;
                   
-                  if (my_var_address == SPVM_LIMIT_C_MY_VARS) {
+                  assert(my_var_length <= SPVM_LIMIT_C_MY_VARS);
+                  if (my_var_length == SPVM_LIMIT_C_MY_VARS) {
                     SPVM_yyerror_format(spvm, "too many lexical variables, my \"%s\" ignored at %s line %d\n", my_var->op_name->uv.name, op_cur->file, op_cur->line);
                     parser->fatal_error = 1;
                     break;
@@ -1243,7 +1244,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     break;
                   }
                   else {
-                    my_var->address = ++my_var_address;
+                    my_var->address = my_var_length++;
                     SPVM_ARRAY_push(spvm, op_my_vars, op_cur);
                     SPVM_ARRAY_push(spvm, op_my_var_stack, op_cur);
                   }

@@ -819,10 +819,12 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
         const char* field_name = field->op_name->uv.name;
         SPVM_OP* found_op_field = SPVM_HASH_search(spvm, parser->op_field_symtable, field_name, strlen(field_name));
         
+        assert(op_fields->length <= SPVM_LIMIT_C_FIELDS);
+        
         if (found_op_field) {
           SPVM_yyerror_format(spvm, "redeclaration of has \"%s\" at %s line %d\n", field_name, op_field->file, op_field->line);
         }
-        else if (op_fields->length >= SPVM_LIMIT_C_FIELDS) {
+        else if (op_fields->length == SPVM_LIMIT_C_FIELDS) {
           SPVM_yyerror_format(spvm, "too many fields, field \"%s\" ignored at %s line %d\n", field_name, op_field->file, op_field->line);
         }
         else {
