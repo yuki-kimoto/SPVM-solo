@@ -87,10 +87,6 @@ _Bool SPVM_TYPE_resolve_type(SPVM* spvm, SPVM_OP* op_type, int32_t name_length) 
     if (found_resolved_type) {
       type->resolved_type = found_resolved_type;
     }
-    else if (parser->resolved_types->length >= SPVM_LIMIT_C_TYPES) {
-      SPVM_yyerror_format(spvm, "too many resolved types, the type \"%s\" ignored at %s line %d\n", resolved_type_name, op_type->file, op_type->line);
-      return 0;
-    }
     else {
       SPVM_RESOLVED_TYPE* resolved_type = SPVM_RESOLVED_TYPE_new(spvm);
       resolved_type->id = parser->resolved_types->length;

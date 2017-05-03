@@ -586,7 +586,16 @@ void SPVM_OP_resolve_types(SPVM* spvm) {
   SPVM_ARRAY* op_types = parser->op_types;
   
   for (int32_t i = 0, len = op_types->length; i < len; i++) {
+    assert(parser->resolved_types->length <= SPVM_LIMIT_C_RESOLVED_TYPES);
+    
     SPVM_OP* op_type = SPVM_ARRAY_fetch(spvm, op_types, i);
+    
+    if (parser->resolved_types->length == SPVM_LIMIT_C_RESOLVED_TYPES) {
+      SPVM_yyerror_format(spvm, "too many types at %s line %d\n", op_type->file, op_type->line);
+      parser->fatal_error = 1;
+      return;
+    }
+    
     _Bool success = SPVM_TYPE_resolve_type(spvm, op_type, 0);
     
     if (!success) {

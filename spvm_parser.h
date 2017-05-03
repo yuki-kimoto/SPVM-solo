@@ -21,7 +21,7 @@ struct SPVM_parser {
   
   // Source data
   const char* cur_src;
-
+  
   // AST grammar
   SPVM_OP* op_grammar;
   
@@ -52,15 +52,15 @@ struct SPVM_parser {
   // Resovled types
   SPVM_ARRAY* resolved_types;
   
-  // Resolved type string symbol table
+  // Resolved type symbol table
   SPVM_HASH* resolved_type_symtable;
-
+  
   // Current case statements in switch statement
   SPVM_ARRAY* cur_op_cases;
   
   // Entry point subroutine name
   const char* start_sub_name;
-
+  
   // Current line number
   int32_t cur_line;
   
