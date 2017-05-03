@@ -110,7 +110,7 @@ const char* const SPVM_OP_C_CODE_NAMES[] = {
   "CATCH",
   "DECREFCOUNT",
   "INCREFCOUNT",
-  "ARGS_MY_VARS",
+  "FORMAL_ARGS",
   "BLOCK_END",
   "RETURN_PROCESS",
   "BEFORE_RETURN",
@@ -1098,7 +1098,7 @@ SPVM_OP* SPVM_OP_build_sub(SPVM* spvm, SPVM_OP* op_sub, SPVM_OP* op_name_sub, SP
   // Add my declaration to top of block
   if (op_block) {
     SPVM_OP* op_list_statement = op_block->first;
-    SPVM_OP* op_args_my_vars = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_ARGS_MY_VARS, op_list_statement->file, op_list_statement->line);
+    SPVM_OP* op_formal_args = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_FORMAL_ARGS, op_list_statement->file, op_list_statement->line);
     for (int32_t i = 0; i < sub->op_args->length; i++) {
       SPVM_OP* op_arg = SPVM_ARRAY_fetch(spvm, sub->op_args, i);
       SPVM_OP* op_my_var = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR, op_arg->file, op_arg->line);
@@ -1106,9 +1106,9 @@ SPVM_OP* SPVM_OP_build_sub(SPVM* spvm, SPVM_OP* op_sub, SPVM_OP* op_name_sub, SP
       SPVM_OP* op_my_var_parent = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR_INIT, op_arg->file, op_arg->line);
       SPVM_OP_sibling_splice(spvm, op_my_var_parent, op_my_var_parent->last, 0, op_my_var);
       
-      SPVM_OP_sibling_splice(spvm, op_args_my_vars, op_args_my_vars->first, 0, op_my_var_parent);
+      SPVM_OP_sibling_splice(spvm, op_formal_args, op_formal_args->first, 0, op_my_var_parent);
     }
-    SPVM_OP_sibling_splice(spvm, op_list_statement, op_list_statement->first, 0, op_args_my_vars);
+    SPVM_OP_sibling_splice(spvm, op_list_statement, op_list_statement->first, 0, op_formal_args);
   }
   
   // return type
