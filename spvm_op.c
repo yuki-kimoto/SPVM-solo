@@ -96,10 +96,8 @@ const char* const SPVM_OP_C_CODE_NAMES[] = {
   "VAR",
   "CONVERT",
   "POP",
-  "NEW_ARRAY",
   "UNDEF",
   "MALLOC",
-  "NEW_ARRAY_CONSTANT",
   "ARRAY_LENGTH",
   "CONDITION",
   "DIE",
@@ -723,13 +721,6 @@ SPVM_OP* SPVM_OP_build_call_field(SPVM* spvm, SPVM_OP* op_var, SPVM_OP* op_name_
   op_field->uv.name_info = name_info;
   
   return op_field;
-}
-
-SPVM_OP* SPVM_OP_build_array_init(SPVM* spvm, SPVM_OP* op_opt_terms) {
-  SPVM_OP* op_new_array = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NEW_ARRAY_CONSTANT, op_opt_terms->file, op_opt_terms->line);
-  SPVM_OP_sibling_splice(spvm, op_new_array, NULL, 0, op_opt_terms);
-  
-  return op_new_array;
 }
 
 SPVM_OP* SPVM_OP_build_convert_type(SPVM* spvm, SPVM_OP* op_type, SPVM_OP* op_term) {
