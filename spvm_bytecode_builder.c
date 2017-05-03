@@ -25,6 +25,7 @@
 #include "spvm_constant_pool.h"
 #include "spvm_type.h"
 #include "spvm_constant_pool_sub.h"
+#include "spvm_limit.h"
 
 void SPVM_BYTECODE_BUILDER_push_inc_bytecode(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_array, SPVM_OP* op_inc, int32_t value) {
   
@@ -300,7 +301,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 else if (switch_info->code == SPVM_SWITCH_INFO_C_CODE_LOOKUPSWITCH) {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LOOKUPSWITCH);
                   
-                  if (switch_info->op_cases->length > SPVM_OP_LIMIT_CASES) {
+                  if (switch_info->op_cases->length > SPVM_LIMIT_C_CASES) {
                     fprintf(stderr, "Invalid AST: too many cases in switch statement\n");
                     exit(1);
                   }
@@ -413,8 +414,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   *(int64_t*)&bytecode_array->values[cur_switch_address + padding + 1] = default_offset;
                   
                   // Note: Here it's assumed that the number of cases can be expressed by a int64_t variable.
-                  assert(SPVM_OP_LIMIT_CASES <= INT32_MAX);
-                  if (switch_info->op_cases->length > SPVM_OP_LIMIT_CASES) {
+                  if (switch_info->op_cases->length > SPVM_LIMIT_C_CASES) {
                     fprintf(stderr, "Invalid AST: too many cases in switch statement\n");
                     exit(1);
                   }

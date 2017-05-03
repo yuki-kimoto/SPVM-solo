@@ -367,7 +367,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   SPVM_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
                   SPVM_ARRAY* op_cases = switch_info->op_cases;
                   int32_t const length = op_cases->length;
-                  if (length > SPVM_OP_LIMIT_CASES) {
+                  if (length > SPVM_LIMIT_C_CASES) {
                     SPVM_yyerror_format(spvm, "too many case statements in switch at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }

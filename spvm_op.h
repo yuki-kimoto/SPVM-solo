@@ -155,15 +155,6 @@ enum {
   SPVM_OP_C_FLAG_CONSTANT_CASE = 1,
 };
 
-enum {
-  // Miscellaneous limits for syntactic contraints
-  SPVM_OP_LIMIT_CASES             = INT32_MAX , /* should be expressible by the type of SPVM_BYTECODE_C_CODE_LOOKUPSWITCH operands */
-  SPVM_OP_LIMIT_FIELDS            = UINT16_MAX, /* should be expressible by the type of SPVM_FIELD::id */
-  SPVM_OP_LIMIT_SUBROUTINES       = INT32_MAX , /* should be expressible by the type of SPVM_SUB::id */
-  SPVM_OP_LIMIT_TYPES             = INT32_MAX , /* should be expressible by the type of SPVM_RESOLVED_TYPE::id
-                                                    and greater than 2 * SPVM_RESOLVED_TYPE_C_CORE_LENGTH */
-};
-
 /* Binary operation */
 struct SPVM_op {
   SPVM_OP* first;

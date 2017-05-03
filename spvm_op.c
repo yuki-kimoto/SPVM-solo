@@ -31,6 +31,7 @@
 #include "spvm_descriptor.h"
 #include "spvm_func.h"
 #include "spvm_allocator_parser.h"
+#include "spvm_limit.h"
 
 const char* const SPVM_OP_C_CODE_NAMES[] = {
   "IF",
@@ -821,7 +822,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
         if (found_op_field) {
           SPVM_yyerror_format(spvm, "redeclaration of has \"%s\" at %s line %d\n", field_name, op_field->file, op_field->line);
         }
-        else if (op_fields->length >= SPVM_OP_LIMIT_FIELDS) {
+        else if (op_fields->length >= SPVM_LIMIT_C_FIELDS) {
           SPVM_yyerror_format(spvm, "too many fields, field \"%s\" ignored at %s line %d\n", field_name, op_field->file, op_field->line);
         }
         else {
