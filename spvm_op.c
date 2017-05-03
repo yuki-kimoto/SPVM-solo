@@ -45,7 +45,7 @@ const char* const SPVM_OP_C_CODE_NAMES[] = {
   "NAME",
   "PACKAGE",
   "MY_VAR",
-  "MY_VAR_PARENT",
+  "MY_VAR_INIT",
   "FIELD",
   "SUB",
   "DECL_ENUM",
@@ -1005,7 +1005,7 @@ SPVM_OP* SPVM_OP_build_use(SPVM* spvm, SPVM_OP* op_use, SPVM_OP* op_name_package
 SPVM_OP* SPVM_OP_build_my_var(SPVM* spvm, SPVM_OP* op_my_var, SPVM_OP* op_var, SPVM_OP* op_type, SPVM_OP* op_term) {
   
   // Stab
-  SPVM_OP* op_my_var_parent = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR_PARENT, op_my_var->file, op_my_var->line);
+  SPVM_OP* op_my_var_parent = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR_INIT, op_my_var->file, op_my_var->line);
   
   // Create my var information
   SPVM_MY_VAR* my_var = SPVM_MY_VAR_new(spvm);
@@ -1114,7 +1114,7 @@ SPVM_OP* SPVM_OP_build_sub(SPVM* spvm, SPVM_OP* op_sub, SPVM_OP* op_name_sub, SP
       SPVM_OP* op_arg = SPVM_ARRAY_fetch(spvm, sub->op_args, i);
       SPVM_OP* op_my_var = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR, op_arg->file, op_arg->line);
       op_my_var->uv.my_var = op_arg->uv.my_var;
-      SPVM_OP* op_my_var_parent = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR_PARENT, op_arg->file, op_arg->line);
+      SPVM_OP* op_my_var_parent = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR_INIT, op_arg->file, op_arg->line);
       SPVM_OP_sibling_splice(spvm, op_my_var_parent, op_my_var_parent->last, 0, op_my_var);
       
       SPVM_OP_sibling_splice(spvm, op_args_my_vars, op_args_my_vars->first, 0, op_my_var_parent);

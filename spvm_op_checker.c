@@ -1198,7 +1198,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                   break;
                 }
-                case SPVM_OP_C_CODE_MY_VAR_PARENT: {
+                case SPVM_OP_C_CODE_MY_VAR_INIT: {
                   
                   SPVM_OP* op_my_var = op_cur->first;
                   SPVM_MY_VAR* my_var = op_my_var->uv.my_var;
