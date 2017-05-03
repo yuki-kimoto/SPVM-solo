@@ -9,6 +9,7 @@
 #include "sperl_allocator_util.h"
 #include "sperl_memory_pool.h"
 #include "sperl_array.h"
+#include "sperl_api.h"
 
 SPerl_ALLOCATOR_RUNTIME* SPerl_ALLOCATOR_RUNTIME_new(SPerl* sperl) {
   SPerl_ALLOCATOR_RUNTIME* allocator = SPerl_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPerl_ALLOCATOR_RUNTIME));
@@ -75,7 +76,7 @@ void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* alloc
     
     void* free_address = SPerl_ARRAY_pop(sperl, allocator->freelists[index]);
     if (free_address) {
-      assert(0);
+      return free_address;
     }
     else {
       block = SPerl_MEMORY_POOL_alloc(sperl, allocator->memory_pool, size);
@@ -86,7 +87,21 @@ void* SPerl_ALLOCATOR_RUNTIME_alloc(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* alloc
 }
 
 void SPerl_ALLOCATOR_RUNTIME_free_address(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator, void* address) {
-  
+  if (address == NULL) {
+    return;
+  }
+  else {
+    // Object byte size
+    int32_t byte_size = *(int32_t*)((intptr_t)address + SPerl_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET);
+    
+    assert(byte_size > 0);
+    
+    // Freelist index
+    int32_t freelist_index = SPerl_ALLOCATOR_RUNTIME_get_freelist_index(sperl, allocator, byte_size);
+    
+    // Push free address
+    SPerl_ARRAY_push(sperl, allocator->freelists[freelist_index], address);
+  }
 }
 
 void SPerl_ALLOCATOR_RUNTIME_free(SPerl* sperl, SPerl_ALLOCATOR_RUNTIME* allocator) {
