@@ -172,12 +172,12 @@ enumeration_values
 enumeration_value
   : NAME
     {
-      $$ = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_DECL_ENUMERATION_VALUE, $1->file, $1->line);
+      $$ = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_ENUMERATION_VALUE, $1->file, $1->line);
       SPVM_OP_sibling_splice(spvm, $$, NULL, 0, $1);
     }
   | NAME ASSIGN CONSTANT
     {
-      $$ = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_DECL_ENUMERATION_VALUE, $1->file, $1->line);
+      $$ = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_ENUMERATION_VALUE, $1->file, $1->line);
       SPVM_OP_sibling_splice(spvm, $$, NULL, 0, $1);
       SPVM_OP_sibling_splice(spvm, $$, $1, 0, $3);
     }

@@ -48,9 +48,9 @@ const char* const SPVM_OP_C_CODE_NAMES[] = {
   "MY_VAR_INIT",
   "FIELD",
   "SUB",
-  "DECL_ENUM",
-  "DECL_DESCRIPTOR",
-  "DECL_ENUMERATION_VALUE",
+  "ENUM",
+  "DESCRIPTOR",
+  "ENUMERATION_VALUE",
   "BLOCK",
   "ENUM_BLOCK",
   "CLASS_BLOCK",
@@ -108,7 +108,6 @@ const char* const SPVM_OP_C_CODE_NAMES[] = {
   "CASE",
   "DEFAULT",
   "SWITCH_CONDITION",
-  "DESCRIPTOR",   // UNKNOWN
   "VOID",
   "TRY",
   "CATCH",
@@ -900,7 +899,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
         SPVM_HASH_insert(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
         SPVM_ARRAY_push(spvm, op_subs, op_sub);
       }
-      else if (op_decl->code == SPVM_OP_C_CODE_DECL_ENUM) {
+      else if (op_decl->code == SPVM_OP_C_CODE_ENUM) {
         SPVM_OP* op_enumeration = op_decl;
         SPVM_OP* op_enumeration_block = op_enumeration->first;
         

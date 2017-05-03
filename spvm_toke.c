@@ -674,7 +674,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
             return MALLOC;
           }
           else if (memcmp(keyword, "enum", str_len) == 0) {
-            yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_DECL_ENUM);
+            yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_ENUM);
             return ENUM;
           }
           else if (memcmp(keyword, "die", str_len) == 0) {
