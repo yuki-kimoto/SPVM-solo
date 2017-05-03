@@ -14,44 +14,44 @@ DIRS += $(OBJDIR) $(OBJDIR)/main $(OBJDIR)/t
 $(OBJDIR)/%.o: %.c | $(OBJDIR) $(OBJDIR)/main $(OBJDIR)/t
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
-# libsperl
-libsperl_SRCS := $(wildcard *.c) sperl_yacc.c
-libsperl_OBJS := $(libsperl_SRCS:%.c=$(OBJDIR)/%.o)
--include $(libsperl_OBJS:%.o=%.Po)
-generated_sources += sperl_yacc.c sperl_yacc.h
-sperl_yacc.c: sperl_yacc.y
-	bison -t -p SPerl_yy -d sperl_yacc.y
-	mv -f sperl_yacc.tab.c $@
-	mv -f sperl_yacc.tab.h $(@:%.c=%.h)
-sperl_yacc.h: sperl_yacc.c
-$(OBJDIR)/sperl_toke.o: sperl_toke.c sperl_yacc.h
-$(OBJDIR)/sperl_yacc_util.o: sperl_yacc_util.c sperl_yacc.h
-libsperl.a: $(libsperl_OBJS)
-	$(AR) crs $@ $(libsperl_OBJS)
-all: libsperl.a
+# libspvm
+libspvm_SRCS := $(wildcard *.c) spvm_yacc.c
+libspvm_OBJS := $(libspvm_SRCS:%.c=$(OBJDIR)/%.o)
+-include $(libspvm_OBJS:%.o=%.Po)
+generated_sources += spvm_yacc.c spvm_yacc.h
+spvm_yacc.c: spvm_yacc.y
+	bison -t -p SPVM_yy -d spvm_yacc.y
+	mv -f spvm_yacc.tab.c $@
+	mv -f spvm_yacc.tab.h $(@:%.c=%.h)
+spvm_yacc.h: spvm_yacc.c
+$(OBJDIR)/spvm_toke.o: spvm_toke.c spvm_yacc.h
+$(OBJDIR)/spvm_yacc_util.o: spvm_yacc_util.c spvm_yacc.h
+libspvm.a: $(libspvm_OBJS)
+	$(AR) crs $@ $(libspvm_OBJS)
+all: libspvm.a
 
-# sperl
-sperl_SRCS    := main/sperl_main.c
-sperl_OBJS    := $(sperl_SRCS:%.c=$(OBJDIR)/%.o)
-sperl_LDFLAGS := $(LDFLAGS) -L .
-sperl_LIBS    := -lsperl $(LIBS)
--include $(sperl_OBJS:%.o=%.Po)
-sperl: $(sperl_OBJS) libsperl.a
-	$(CC) -o $@ $(sperl_LDFLAGS) $(sperl_OBJS) $(sperl_LIBS)
-all: sperl
+# spvm
+spvm_SRCS    := main/spvm_main.c
+spvm_OBJS    := $(spvm_SRCS:%.c=$(OBJDIR)/%.o)
+spvm_LDFLAGS := $(LDFLAGS) -L .
+spvm_LIBS    := -lspvm $(LIBS)
+-include $(spvm_OBJS:%.o=%.Po)
+spvm: $(spvm_OBJS) libspvm.a
+	$(CC) -o $@ $(spvm_LDFLAGS) $(spvm_OBJS) $(spvm_LIBS)
+all: spvm
 
-# test (t/sperl_t_*)
-test_names := $(wildcard t/sperl_t_*.c)
-test_names := $(test_names:t/sperl_t_%.c=sperl_t_%)
+# test (t/spvm_t_*)
+test_names := $(wildcard t/spvm_t_*.c)
+test_names := $(test_names:t/spvm_t_%.c=spvm_t_%)
 
-sperl_t_LDFLAGS := $(LDFLAGS) -L .
-sperl_t_LIBS    := -lsperl $(LIBS)
--include $(test_names:sperl_t_%=$(OBJDIR)/t/sperl_t_%.Po)
-$(OBJDIR)/t/sperl_t_%: $(OBJDIR)/t/sperl_t_%.o libsperl.a
-	$(CC) $(sperl_t_LDFLAGS) -o $@ $< $(sperl_t_LIBS)
-sperl_t_%: $(OBJDIR)/t/sperl_t_%
+spvm_t_LDFLAGS := $(LDFLAGS) -L .
+spvm_t_LIBS    := -lspvm $(LIBS)
+-include $(test_names:spvm_t_%=$(OBJDIR)/t/spvm_t_%.Po)
+$(OBJDIR)/t/spvm_t_%: $(OBJDIR)/t/spvm_t_%.o libspvm.a
+	$(CC) $(spvm_t_LDFLAGS) -o $@ $< $(spvm_t_LIBS)
+spvm_t_%: $(OBJDIR)/t/spvm_t_%
 	./$<
-.PRECIOUS: $(OBJDIR)/t/sperl_t_%.o $(OBJDIR)/t/sperl_t_%
+.PRECIOUS: $(OBJDIR)/t/spvm_t_%.o $(OBJDIR)/t/spvm_t_%
 test: $(test_names)
 .PHONY: test
 
@@ -62,4 +62,4 @@ $(DIRS):
 .PHONY: clean
 clean:
 	-find $(OBJDIR) -name \*.o -o -name \*.Po | xargs rm -rf
-	-rm -rf libsperl.a $(generated_sources)
+	-rm -rf libspvm.a $(generated_sources)

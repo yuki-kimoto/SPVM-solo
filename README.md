@@ -44,7 +44,7 @@ package Main {
 
 ## Run
 
-    make && ./sperl Main
+    make && ./spvm Main
 
 Now only AST and bytecodes are printed.
 
@@ -450,7 +450,7 @@ TEST return_value: 0
 
 ## Run
     
-    make && ./sperl Test
+    make && ./spvm Test
 
 ## Test
     
