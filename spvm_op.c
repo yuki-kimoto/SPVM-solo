@@ -826,6 +826,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
         }
         else if (op_fields->length == SPVM_LIMIT_C_FIELDS) {
           SPVM_yyerror_format(spvm, "too many fields, field \"%s\" ignored at %s line %d\n", field_name, op_field->file, op_field->line);
+          parser->fatal_error = 1;
         }
         else {
           SPVM_ARRAY_push(spvm, op_fields, op_field);
@@ -847,8 +848,13 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
         
         SPVM_OP* found_op_sub = SPVM_HASH_search(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name));
         
+        assert(op_subs->length <= SPVM_LIMIT_C_SUBS);
         if (found_op_sub) {
-          SPVM_yyerror_format(spvm, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
+          SPVM_yyerror_format(spvm, "Redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
+        }
+        else if (op_subs->length == SPVM_LIMIT_C_SUBS) {
+          SPVM_yyerror_format(spvm, "too many subroutines at %s line %d\n", sub_name, op_sub->file, op_sub->line);
+          parser->fatal_error = 1;
         }
         // Unknown sub
         else {
@@ -885,12 +891,12 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
               sub->native_address = SPVM_FUNC_std_test_call2;
             }
           }
+          
+          sub->abs_name = sub_abs_name;
+          
+          SPVM_HASH_insert(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
+          SPVM_ARRAY_push(spvm, op_subs, op_sub);
         }
-        
-        sub->abs_name = sub_abs_name;
-        
-        SPVM_HASH_insert(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
-        SPVM_ARRAY_push(spvm, op_subs, op_sub);
       }
       else if (op_decl->code == SPVM_OP_C_CODE_ENUM) {
         SPVM_OP* op_enumeration = op_decl;
