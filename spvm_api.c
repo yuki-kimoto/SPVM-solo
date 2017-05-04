@@ -81,17 +81,17 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_POP,
     &&case_SPVM_BYTECODE_C_CODE_APOP,
     &&case_SPVM_BYTECODE_C_CODE_ADD_INT,
-    &&case_SPVM_BYTECODE_C_CODE_LADD,
-    &&case_SPVM_BYTECODE_C_CODE_FADD,
-    &&case_SPVM_BYTECODE_C_CODE_DADD,
-    &&case_SPVM_BYTECODE_C_CODE_ISUB,
-    &&case_SPVM_BYTECODE_C_CODE_LSUB,
-    &&case_SPVM_BYTECODE_C_CODE_FSUB,
+    &&case_SPVM_BYTECODE_C_CODE_ADD_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_ADD_FLOAT,
+    &&case_SPVM_BYTECODE_C_CODE_ADD_DOUBLE,
+    &&case_SPVM_BYTECODE_C_CODE_SUBTRACT_INT,
+    &&case_SPVM_BYTECODE_C_CODE_SUBTRACT_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_SUBTRACT_FLOAT,
     &&case_SPVM_BYTECODE_C_CODE_DSUB,
-    &&case_SPVM_BYTECODE_C_CODE_IMUL,
-    &&case_SPVM_BYTECODE_C_CODE_LMUL,
-    &&case_SPVM_BYTECODE_C_CODE_FMUL,
-    &&case_SPVM_BYTECODE_C_CODE_DMUL,
+    &&case_SPVM_BYTECODE_C_CODE_MULTIPLY_INT,
+    &&case_SPVM_BYTECODE_C_CODE_MULTIPLY_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_MULTIPLY_FLOAT,
+    &&case_SPVM_BYTECODE_C_CODE_MULTIPLY_DOUBLE,
     &&case_SPVM_BYTECODE_C_CODE_IDIV,
     &&case_SPVM_BYTECODE_C_CODE_LDIV,
     &&case_SPVM_BYTECODE_C_CODE_FDIV,
@@ -847,17 +847,17 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LADD:
+      case_SPVM_BYTECODE_C_CODE_ADD_LONG:
         call_stack[operand_stack_top - 1] += call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_FADD:
+      case_SPVM_BYTECODE_C_CODE_ADD_FLOAT:
         *((float*)&call_stack[operand_stack_top -1]) += *(float*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_DADD:
+      case_SPVM_BYTECODE_C_CODE_ADD_DOUBLE:
         *((double*)&call_stack[operand_stack_top - 1]) += *(double*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
@@ -872,17 +872,17 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_ISUB:
+      case_SPVM_BYTECODE_C_CODE_SUBTRACT_INT:
         *(int32_t*)&call_stack[operand_stack_top - 1] -= *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LSUB:
+      case_SPVM_BYTECODE_C_CODE_SUBTRACT_LONG:
         call_stack[operand_stack_top - 1] -= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_FSUB:
+      case_SPVM_BYTECODE_C_CODE_SUBTRACT_FLOAT:
         *((float*)&call_stack[operand_stack_top - 1]) -= *(float*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
@@ -902,22 +902,22 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IMUL:
+      case_SPVM_BYTECODE_C_CODE_MULTIPLY_INT:
         *(int32_t*)&call_stack[operand_stack_top - 1] *= *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LMUL:
+      case_SPVM_BYTECODE_C_CODE_MULTIPLY_LONG:
         call_stack[operand_stack_top - 1] *= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_FMUL:
+      case_SPVM_BYTECODE_C_CODE_MULTIPLY_FLOAT:
         *(float*)&call_stack[operand_stack_top - 1] *= *(float*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_DMUL:
+      case_SPVM_BYTECODE_C_CODE_MULTIPLY_DOUBLE:
         *(double*)&call_stack[operand_stack_top - 1] *= *(double*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
