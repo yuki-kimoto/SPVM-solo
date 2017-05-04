@@ -117,17 +117,17 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_XOR_INT,
     &&case_SPVM_BYTECODE_C_CODE_XOR_LONG,
     &&case_SPVM_BYTECODE_C_CODE_IINC,
-    &&case_SPVM_BYTECODE_C_CODE_I2L,
-    &&case_SPVM_BYTECODE_C_CODE_I2F,
-    &&case_SPVM_BYTECODE_C_CODE_I2D,
-    &&case_SPVM_BYTECODE_C_CODE_L2I,
-    &&case_SPVM_BYTECODE_C_CODE_L2F,
-    &&case_SPVM_BYTECODE_C_CODE_L2D,
-    &&case_SPVM_BYTECODE_C_CODE_F2I,
-    &&case_SPVM_BYTECODE_C_CODE_F2L,
-    &&case_SPVM_BYTECODE_C_CODE_F2D,
-    &&case_SPVM_BYTECODE_C_CODE_D2I,
-    &&case_SPVM_BYTECODE_C_CODE_D2L,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_FLOAT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_DOUBLE,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_FLOAT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_DOUBLE,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_DOUBLE,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_LONG,
     &&case_SPVM_BYTECODE_C_CODE_D2F,
     &&case_SPVM_BYTECODE_C_CODE_I2B,
     &&case_SPVM_BYTECODE_C_CODE_I2S,
@@ -1143,47 +1143,47 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         vars[*(pc + 1)] += (int8_t)*(pc + 2);
         pc += 3;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_I2L:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_LONG:
         call_stack[operand_stack_top] = (int64_t)*(int32_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_I2F:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_FLOAT:
         *((float*)&call_stack[operand_stack_top]) = (float)*(int32_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_I2D:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_DOUBLE:
         *((double*)&call_stack[operand_stack_top]) = (double)*(int32_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_L2I:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_INT:
         call_stack[operand_stack_top] = (int32_t)call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_L2F:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_FLOAT:
         *((float*)&call_stack[operand_stack_top]) = (float)*((int64_t*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_L2D:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_DOUBLE:
         *((double*)&call_stack[operand_stack_top]) = (double)*((int64_t*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_F2I:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_INT:
         *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*((float*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_F2L:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_LONG:
         call_stack[operand_stack_top] = (int64_t)*((float*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_F2D:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_DOUBLE:
         *((double*)&call_stack[operand_stack_top]) = (double)*((float*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_D2I:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_INT:
         *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*((double*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_D2L:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_LONG:
         call_stack[operand_stack_top] = (int64_t)*((double*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
