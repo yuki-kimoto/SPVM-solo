@@ -2171,10 +2171,3 @@ double* SPVM_API_get_array_double_values(SPVM* spvm, SPVM_ENV* env, void* addres
   
   return (double*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE);
 }
-
-SPVM_SV** SPVM_API_get_array_string_values(SPVM* spvm, SPVM_ENV* env, void* address) {
-  (void)spvm;
-  (void)env;
-  
-  return (SPVM_SV**)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE);
-}
