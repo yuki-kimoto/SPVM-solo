@@ -50,7 +50,7 @@ void SPVM_yyerror_format(SPVM* spvm, const char* message_template, ...) {
       }
       else {
         fprintf(stderr, "Invalid arguments(SPVM_yyerror_format)\n");
-        exit(1);
+        exit(EXIT_FAILURE);
       }
       found_ptr++;
     }

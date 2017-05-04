@@ -118,7 +118,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
                 else {
                   fprintf(stderr, "Can't find file %s\n", cur_module_path);
                 }
-                exit(1);
+                exit(EXIT_FAILURE);
               }
               
               parser->cur_module_path = cur_module_path;
@@ -129,7 +129,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
               int32_t file_size = (int32_t)ftell(fh);
               if (file_size < 0) {
                 fprintf(stderr, "Can't read file %s at %s line %" PRId32 "\n", cur_module_path, op_use->file, op_use->line);
-                exit(1);
+                exit(EXIT_FAILURE);
               }
               fseek(fh, 0, SEEK_SET);
               char* src = SPVM_ALLOCATOR_PARSER_alloc_string(spvm, parser->allocator, file_size);
@@ -140,7 +140,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
                 else {
                   fprintf(stderr, "Can't read file %s\n", cur_module_path);
                 }
-                exit(1);
+                exit(EXIT_FAILURE);
               }
               fclose(fh);
               src[file_size] = '\0';
@@ -379,7 +379,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           parser->bufptr++;
           if (*parser->bufptr != '\'') {
             fprintf(stderr, "syntax error: string don't finish\n");
-            exit(1);
+            exit(EXIT_FAILURE);
           }
           parser->bufptr++;
         }
@@ -415,7 +415,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           }
           if (*parser->bufptr == '\0') {
             fprintf(stderr, "syntax error: string don't finish\n");
-            exit(1);
+            exit(EXIT_FAILURE);
           }
           
           int32_t str_len = (parser->bufptr - cur_token_ptr);
@@ -521,7 +521,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
             float num = strtof(num_str, &end);
             if (*end != '\0') {
               fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
-              exit(1);
+              exit(EXIT_FAILURE);
             }
             constant->uv.float_value = num;
             constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "float", strlen("float"));
@@ -531,7 +531,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
             double num = strtod(num_str, &end);
             if (*end != '\0') {
               fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
-              exit(1);
+              exit(EXIT_FAILURE);
             }
             constant->uv.double_value = num;
             constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "double", strlen("double"));
@@ -548,11 +548,11 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
             }
             if (*end != '\0') {
               fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
-              exit(1);
+              exit(EXIT_FAILURE);
             }
             else if (num == INT64_MAX && errno == ERANGE) {
               fprintf(stderr, "Number literal out of range %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
-              exit(1);
+              exit(EXIT_FAILURE);
             }
             constant->uv.long_value = num;
             constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "long", strlen("long"));
@@ -606,7 +606,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
             // File can contains only one package
             if (parser->current_package_count) {
               fprintf(stderr, "Can't write second package declaration in file at %s line %" PRId32 "\n", parser->cur_module_path, parser->cur_line);
-              exit(1);
+              exit(EXIT_FAILURE);
             }
             parser->current_package_count++;
             

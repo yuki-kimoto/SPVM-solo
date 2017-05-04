@@ -15,8 +15,8 @@ void* SPVM_ALLOCATOR_UTIL_safe_malloc_i32(int32_t count, int32_t size) {
   void* block = malloc(block_size);
   
   if (!block) {
-    fprintf(stderr, "Failed to allocate memory. Sperl will exit.\n");
-    exit(EXIT_FAILURE);
+    fprintf(stderr, "Failed to allocate memory. Sperl will abort.\n");
+    abort();
   }
   
   return block;
@@ -32,8 +32,8 @@ void* SPVM_ALLOCATOR_UTIL_safe_realloc_i32(void* ptr, int32_t count, int32_t siz
   void* block = realloc(ptr, block_size);
   
   if (!block) {
-    fprintf(stderr, "Failed to reallocate memory. Sperl will exit.\n");
-    exit(EXIT_FAILURE);
+    fprintf(stderr, "Failed to reallocate memory. Sperl will abort.\n");
+    abort();
   }
 
   return block;
@@ -49,8 +49,8 @@ void* SPVM_ALLOCATOR_UTIL_safe_malloc_i64(int64_t count, int64_t size) {
   void* block = malloc(block_size);
   
   if (!block) {
-    fprintf(stderr, "Failed to allocate memory. Sperl will exit.\n");
-    exit(EXIT_FAILURE);
+    fprintf(stderr, "Failed to allocate memory. Sperl will abort.\n");
+    abort();
   }
   
   return block;

@@ -303,7 +303,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   
                   if (switch_info->op_cases->length > SPVM_LIMIT_C_CASES) {
                     fprintf(stderr, "Invalid AST: too many cases in switch statement\n");
-                    exit(1);
+                    exit(EXIT_FAILURE);
                   }
                   int32_t const length = switch_info->op_cases->length;
 
@@ -416,7 +416,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   // Note: Here it's assumed that the number of cases can be expressed by a int64_t variable.
                   if (switch_info->op_cases->length > SPVM_LIMIT_C_CASES) {
                     fprintf(stderr, "Invalid AST: too many cases in switch statement\n");
-                    exit(1);
+                    exit(EXIT_FAILURE);
                   }
                   int64_t const length = (int64_t) switch_info->op_cases->length;
                   

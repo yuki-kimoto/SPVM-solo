@@ -1452,7 +1452,7 @@ SPVM_OP* SPVM_OP_sibling_splice(SPVM* spvm, SPVM_OP* parent, SPVM_OP* start, int
 
   no_parent:
     fprintf(stderr, "panic: op_sibling_splice(): NULL parent");
-    exit(1);
+    exit(EXIT_FAILURE);
 }
 
 SPVM_OP* SPVM_OP_sibling(SPVM* spvm, SPVM_OP* op) {
