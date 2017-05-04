@@ -80,7 +80,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_DASTORE,
     &&case_SPVM_BYTECODE_C_CODE_POP,
     &&case_SPVM_BYTECODE_C_CODE_APOP,
-    &&case_SPVM_BYTECODE_C_CODE_IADD,
+    &&case_SPVM_BYTECODE_C_CODE_ADD_INT,
     &&case_SPVM_BYTECODE_C_CODE_LADD,
     &&case_SPVM_BYTECODE_C_CODE_FADD,
     &&case_SPVM_BYTECODE_C_CODE_DADD,
@@ -842,7 +842,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IADD:
+      case_SPVM_BYTECODE_C_CODE_ADD_INT:
         *(int32_t*)&call_stack[operand_stack_top - 1] += *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
