@@ -13,6 +13,7 @@
 #include "spvm_bytecode_array.h"
 #include "spvm_parser.h"
 #include "spvm_env.h"
+#include "spvm_sv.h"
 
 void SPVM_run(SPVM* spvm, const char* package_name) {
   
@@ -42,14 +43,9 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   if (env->abort) {
     void* message = SPVM_API_pop_ret_ref(spvm, env);
     
-    int64_t length = SPVM_API_get_array_length(spvm, env, message);
+    SPVM_SV* sv_message = SPVM_API_get_string_sv(spvm, env, message);
     
-    int8_t* byte_array_data = SPVM_API_get_byte_array_data(spvm, env, message);
-    
-    for (int64_t i = 0; i < length; i++) {
-      putchar((int)byte_array_data[i]);
-    }
-    
+    printf("%s", sv_message->buffer);
     printf("\n");
   }
   else {

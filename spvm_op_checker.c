@@ -1098,8 +1098,8 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                 case SPVM_OP_C_CODE_DIE: {
                   SPVM_RESOLVED_TYPE* first_resolved_type = SPVM_OP_get_resolved_type(spvm, op_cur->first);
                   
-                  if (!first_resolved_type || strcmp(first_resolved_type->name, "byte[]") != 0) {
-                    SPVM_yyerror_format(spvm, "die can only receive byte array at %s line %d\n", op_cur->file, op_cur->line);
+                  if (!first_resolved_type || strcmp(first_resolved_type->name, "string") != 0) {
+                    SPVM_yyerror_format(spvm, "die can only receive string at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
                   break;
