@@ -21,7 +21,7 @@ void SPVM_FUNC_std_test_call1(SPVM* spvm, SPVM_ENV* env) {
   SPVM_ENV* new_env = SPVM_ENV_new(spvm);
   SPVM_API_push_var_long(spvm, new_env, value2);
   SPVM_API_call_sub(spvm, new_env, "std::test_call2");
-  int64_t value3 = SPVM_API_pop_ret_long(spvm, new_env);
+  int64_t value3 = SPVM_API_pop_return_value_long(spvm, new_env);
   SPVM_ENV_free(spvm, new_env);
   
   SPVM_API_push_ret_long(spvm, env, value3);

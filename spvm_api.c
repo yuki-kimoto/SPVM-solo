@@ -1941,7 +1941,7 @@ void SPVM_API_push_ret(SPVM* spvm, SPVM_ENV* env, void* value) {
   *(void**)&env->call_stack[env->operand_stack_top] = value;
 }
 
-int8_t SPVM_API_pop_ret_byte(SPVM* spvm, SPVM_ENV* env) {
+int8_t SPVM_API_pop_return_value_byte(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -1950,7 +1950,7 @@ int8_t SPVM_API_pop_ret_byte(SPVM* spvm, SPVM_ENV* env) {
   return ret;
 }
 
-int16_t SPVM_API_pop_ret_short(SPVM* spvm, SPVM_ENV* env) {
+int16_t SPVM_API_pop_return_value_short(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -1959,7 +1959,7 @@ int16_t SPVM_API_pop_ret_short(SPVM* spvm, SPVM_ENV* env) {
   return ret;
 }
 
-int32_t SPVM_API_pop_ret_int(SPVM* spvm, SPVM_ENV* env) {
+int32_t SPVM_API_pop_return_value_int(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -1968,7 +1968,7 @@ int32_t SPVM_API_pop_ret_int(SPVM* spvm, SPVM_ENV* env) {
   return ret;
 }
 
-int64_t SPVM_API_pop_ret_long(SPVM* spvm, SPVM_ENV* env) {
+int64_t SPVM_API_pop_return_value_long(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
 
@@ -1977,7 +1977,7 @@ int64_t SPVM_API_pop_ret_long(SPVM* spvm, SPVM_ENV* env) {
   return ret;
 }
 
-float SPVM_API_pop_ret_float(SPVM* spvm, SPVM_ENV* env) {
+float SPVM_API_pop_return_value_float(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -1986,7 +1986,7 @@ float SPVM_API_pop_ret_float(SPVM* spvm, SPVM_ENV* env) {
   return ret;
 }
 
-double SPVM_API_pop_ret_double(SPVM* spvm, SPVM_ENV* env) {
+double SPVM_API_pop_return_value_double(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -1995,7 +1995,7 @@ double SPVM_API_pop_ret_double(SPVM* spvm, SPVM_ENV* env) {
   return ret;
 }
 
-void* SPVM_API_pop_ret_ref(SPVM* spvm, SPVM_ENV* env) {
+void* SPVM_API_pop_return_value_ref(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
