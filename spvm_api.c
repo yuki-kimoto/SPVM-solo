@@ -33,30 +33,30 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   // Jump table for direct threaded code
   static void* jump[] = {
     &&case_SPVM_BYTECODE_C_CODE_NOP,
-    &&case_SPVM_BYTECODE_C_CODE_ACONST_NULL,
-    &&case_SPVM_BYTECODE_C_CODE_BCONST_0,
-    &&case_SPVM_BYTECODE_C_CODE_BCONST_1,
-    &&case_SPVM_BYTECODE_C_CODE_SCONST_0,
-    &&case_SPVM_BYTECODE_C_CODE_SCONST_1,
-    &&case_SPVM_BYTECODE_C_CODE_ICONST_M1,
-    &&case_SPVM_BYTECODE_C_CODE_ICONST_0,
-    &&case_SPVM_BYTECODE_C_CODE_ICONST_1,
-    &&case_SPVM_BYTECODE_C_CODE_ICONST_2,
-    &&case_SPVM_BYTECODE_C_CODE_ICONST_3,
-    &&case_SPVM_BYTECODE_C_CODE_ICONST_4,
-    &&case_SPVM_BYTECODE_C_CODE_ICONST_5,
-    &&case_SPVM_BYTECODE_C_CODE_LCONST_M1,
-    &&case_SPVM_BYTECODE_C_CODE_LCONST_0,
-    &&case_SPVM_BYTECODE_C_CODE_LCONST_1,
-    &&case_SPVM_BYTECODE_C_CODE_LCONST_2,
-    &&case_SPVM_BYTECODE_C_CODE_LCONST_3,
-    &&case_SPVM_BYTECODE_C_CODE_LCONST_4,
-    &&case_SPVM_BYTECODE_C_CODE_LCONST_5,
-    &&case_SPVM_BYTECODE_C_CODE_FCONST_0,
-    &&case_SPVM_BYTECODE_C_CODE_FCONST_1,
-    &&case_SPVM_BYTECODE_C_CODE_FCONST_2,
-    &&case_SPVM_BYTECODE_C_CODE_DCONST_0,
-    &&case_SPVM_BYTECODE_C_CODE_DCONST_1,
+    &&case_SPVM_BYTECODE_C_CODE_UNDEF,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_BYTE_0,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_BYTE_1,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_SHORT_0,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_SHORT_1,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_M1,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_0,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_1,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_2,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_3,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_4,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_5,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_M1,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_0,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_1,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_2,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_3,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_4,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_5,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_0,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_1,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_2,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_DOUBLE_0,
+    &&case_SPVM_BYTECODE_C_CODE_CONSTANT_DOUBLE_1,
     &&case_SPVM_BYTECODE_C_CODE_BBPUSH,
     &&case_SPVM_BYTECODE_C_CODE_BSPUSH,
     &&case_SPVM_BYTECODE_C_CODE_SSPUSH,
@@ -445,123 +445,123 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_NOP:
         // Not used
         assert(0);
-      case_SPVM_BYTECODE_C_CODE_ACONST_NULL:
+      case_SPVM_BYTECODE_C_CODE_UNDEF:
         operand_stack_top++;
         *(void**)&call_stack[operand_stack_top] = (void*)NULL;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BCONST_0:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_BYTE_0:
         operand_stack_top++;
         *(int8_t*)&call_stack[operand_stack_top] = 0;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BCONST_1:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_BYTE_1:
         operand_stack_top++;
         *(int8_t*)&call_stack[operand_stack_top] = 1;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_SCONST_0:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_SHORT_0:
         operand_stack_top++;
         *(int16_t*)&call_stack[operand_stack_top] = 0;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_SCONST_1:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_SHORT_1:
         operand_stack_top++;
         *(int16_t*)&call_stack[operand_stack_top] = 1;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_ICONST_M1:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_M1:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = -1;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_ICONST_0:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_0:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 0;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_ICONST_1:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_1:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 1;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_ICONST_2:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_2:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 2;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_ICONST_3:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_3:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 3;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_ICONST_4:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_4:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 4;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_ICONST_5:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_INT_5:
         operand_stack_top++;
         *(int32_t*)&call_stack[operand_stack_top] = 5;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LCONST_M1:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_M1:
         operand_stack_top++;
         call_stack[operand_stack_top] = -1L;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LCONST_0:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_0:
         operand_stack_top++;
         call_stack[operand_stack_top] = 0L;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LCONST_1:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_1:
         operand_stack_top++;
         call_stack[operand_stack_top] = 1L;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LCONST_2:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_2:
         
         operand_stack_top++;
         call_stack[operand_stack_top] = 2L;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LCONST_3:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_3:
         operand_stack_top++;
         call_stack[operand_stack_top] = 3L;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LCONST_4:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_4:
         operand_stack_top++;
         call_stack[operand_stack_top] = 4L;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LCONST_5:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_5:
         operand_stack_top++;
         call_stack[operand_stack_top] = 5L;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_FCONST_0:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_0:
         operand_stack_top++;
         *((float*)&call_stack[operand_stack_top]) = 0.F;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_FCONST_1:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_1:
         operand_stack_top++;
         *((float*)&call_stack[operand_stack_top]) = 1.F;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_FCONST_2:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_2:
         operand_stack_top++;
         *((float*)&call_stack[operand_stack_top]) = 2.F;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_DCONST_0:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_DOUBLE_0:
         operand_stack_top++;
         *(double*)&call_stack[operand_stack_top] = 0.0;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_DCONST_1:
+      case_SPVM_BYTECODE_C_CODE_CONSTANT_DOUBLE_1:
         operand_stack_top++;
         *(double*)&call_stack[operand_stack_top] = 1.0;
         pc++;

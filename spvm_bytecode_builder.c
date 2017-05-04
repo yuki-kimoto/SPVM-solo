@@ -1030,7 +1030,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
               
               case SPVM_OP_C_CODE_UNDEF: {
                 
-                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_ACONST_NULL);
+                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_UNDEF);
                 
                 break;
               }
@@ -1626,11 +1626,11 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 _Bool bytecode_set = 0;
                 if (constant->code == SPVM_CONSTANT_C_CODE_BYTE) {
                   if (constant->uv.byte_value == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BCONST_0);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_BYTE_0);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.byte_value == 1) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BCONST_1);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_BYTE_1);
                     bytecode_set = 1;
                   }
                   else {
@@ -1641,11 +1641,11 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 }
                 else if (constant->code == SPVM_CONSTANT_C_CODE_SHORT) {
                   if (constant->uv.short_value == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_SCONST_0);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_SHORT_0);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.short_value == 1) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_SCONST_1);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_SHORT_1);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.short_value >= -128 && constant->uv.short_value <= 127) {
@@ -1662,31 +1662,31 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 }
                 else if (constant->code == SPVM_CONSTANT_C_CODE_INT) {
                   if (constant->uv.int_value == -1) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_ICONST_M1);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_M1);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.int_value == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_ICONST_0);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_0);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.int_value == 1) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_ICONST_1);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_1);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.int_value == 2) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_ICONST_2);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_2);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.int_value == 3) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_ICONST_3);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_3);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.int_value == 4) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_ICONST_4);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_4);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.int_value == 5) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_ICONST_5);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_5);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.int_value >= -128 && constant->uv.int_value <= 127) {
@@ -1703,31 +1703,31 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 }
                 else if (constant->code == SPVM_CONSTANT_C_CODE_LONG) {
                   if (constant->uv.long_value == -1) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LCONST_M1);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_LONG_M1);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.long_value == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LCONST_0);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_LONG_0);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.long_value == 1) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LCONST_1);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_LONG_1);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.long_value == 2) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LCONST_2);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_LONG_2);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.long_value == 3) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LCONST_3);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_LONG_3);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.long_value == 4) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LCONST_4);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_LONG_4);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.long_value == 5) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LCONST_5);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_LONG_5);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.long_value >= -128 && constant->uv.long_value <= 127) {
@@ -1744,25 +1744,25 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 }
                 else if (constant->code == SPVM_CONSTANT_C_CODE_FLOAT) {
                   if (constant->uv.float_value == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_FCONST_0);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_0);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.float_value == 1) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_FCONST_1);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_1);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.float_value == 2) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_FCONST_2);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_2);
                     bytecode_set = 1;
                   }
                 }
                 else if (constant->code == SPVM_CONSTANT_C_CODE_DOUBLE) {
                   if (constant->uv.double_value == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_DCONST_0);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_DOUBLE_0);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.double_value == 1) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_DCONST_1);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_DOUBLE_1);
                     bytecode_set = 1;
                   }
                 }
