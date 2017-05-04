@@ -96,10 +96,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_DIVIDE_LONG,
     &&case_SPVM_BYTECODE_C_CODE_DIVIDE_FLOAT,
     &&case_SPVM_BYTECODE_C_CODE_DIVIDE_DOUBLE,
-    &&case_SPVM_BYTECODE_C_CODE_IREM,
-    &&case_SPVM_BYTECODE_C_CODE_LREM,
-    &&case_SPVM_BYTECODE_C_CODE_FREM,
-    &&case_SPVM_BYTECODE_C_CODE_DREM,
+    &&case_SPVM_BYTECODE_C_CODE_REMAINDER_INT,
+    &&case_SPVM_BYTECODE_C_CODE_REMAINDER_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_REMAINDER_FLOAT,
+    &&case_SPVM_BYTECODE_C_CODE_REMAINDER_DOUBLE,
     &&case_SPVM_BYTECODE_C_CODE_INEG,
     &&case_SPVM_BYTECODE_C_CODE_LNEG,
     &&case_SPVM_BYTECODE_C_CODE_FNEG,
@@ -208,7 +208,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_SUBTRACT_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_MULTIPLY_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_DIVIDE_BYTE,
-    &&case_SPVM_BYTECODE_C_CODE_BREM,
+    &&case_SPVM_BYTECODE_C_CODE_REMAINDER_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_BNEG,
     &&case_SPVM_BYTECODE_C_CODE_BSHL,
     &&case_SPVM_BYTECODE_C_CODE_BSHR,
@@ -221,7 +221,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_SUBTRACT_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_MULTIPLY_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_DIVIDE_SHORT,
-    &&case_SPVM_BYTECODE_C_CODE_SREM,
+    &&case_SPVM_BYTECODE_C_CODE_REMAINDER_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_SNEG,
     &&case_SPVM_BYTECODE_C_CODE_SSHL,
     &&case_SPVM_BYTECODE_C_CODE_SSHR,
@@ -952,33 +952,33 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BREM:
+      case_SPVM_BYTECODE_C_CODE_REMAINDER_BYTE:
         *(int8_t*)&call_stack[operand_stack_top - 1] = *(int8_t*)&call_stack[operand_stack_top - 1] % *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_SREM:
+      case_SPVM_BYTECODE_C_CODE_REMAINDER_SHORT:
         *(int16_t*)&call_stack[operand_stack_top - 1] = *(int16_t*)&call_stack[operand_stack_top - 1] % *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IREM:
+      case_SPVM_BYTECODE_C_CODE_REMAINDER_INT:
         *(int32_t*)&call_stack[operand_stack_top - 1] = *(int32_t*)&call_stack[operand_stack_top - 1] % *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LREM:
+      case_SPVM_BYTECODE_C_CODE_REMAINDER_LONG:
         // z = a - (a/b) * b;
         call_stack[operand_stack_top - 1] = call_stack[operand_stack_top - 1] % call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_FREM:
+      case_SPVM_BYTECODE_C_CODE_REMAINDER_FLOAT:
         *((float*)&call_stack[operand_stack_top - 1]) = (float)fmod((double)*((float*)&call_stack[operand_stack_top - 1]), (double)*(float*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_DREM:
+      case_SPVM_BYTECODE_C_CODE_REMAINDER_DOUBLE:
         *((double*)&call_stack[operand_stack_top - 1]) = fmod(*(double*)&call_stack[operand_stack_top - 1], *(double*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
