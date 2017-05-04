@@ -46,7 +46,7 @@ void SPVM_FUNC_std_suml(SPVM* spvm, SPVM_ENV* env) {
   
   int64_t length = SPVM_API_get_array_length(spvm, env, long_array);
   
-  int64_t* long_array_data = SPVM_API_get_long_array_data(spvm, env, long_array);
+  int64_t* long_array_data = SPVM_API_get_array_long_values(spvm, env, long_array);
   
   int64_t total = 0;
   for (int64_t i = 0; i < length; i++) {
