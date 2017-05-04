@@ -209,26 +209,26 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_MULTIPLY_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_DIVIDE_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_REMAINDER_BYTE,
-    &&case_SPVM_BYTECODE_C_CODE_BNEG,
-    &&case_SPVM_BYTECODE_C_CODE_BSHL,
-    &&case_SPVM_BYTECODE_C_CODE_BSHR,
-    &&case_SPVM_BYTECODE_C_CODE_BUSHR,
-    &&case_SPVM_BYTECODE_C_CODE_BAND,
-    &&case_SPVM_BYTECODE_C_CODE_BOR ,
-    &&case_SPVM_BYTECODE_C_CODE_BXOR,
+    &&case_SPVM_BYTECODE_C_CODE_NEGATE_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_LEFT_SHIFT_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_AND_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_OR_BYTE ,
+    &&case_SPVM_BYTECODE_C_CODE_XOR_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_BCMP,
     &&case_SPVM_BYTECODE_C_CODE_ADD_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_SUBTRACT_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_MULTIPLY_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_DIVIDE_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_REMAINDER_SHORT,
-    &&case_SPVM_BYTECODE_C_CODE_SNEG,
-    &&case_SPVM_BYTECODE_C_CODE_SSHL,
-    &&case_SPVM_BYTECODE_C_CODE_SSHR,
-    &&case_SPVM_BYTECODE_C_CODE_SUSHR,
-    &&case_SPVM_BYTECODE_C_CODE_SAND,
-    &&case_SPVM_BYTECODE_C_CODE_SOR ,
-    &&case_SPVM_BYTECODE_C_CODE_SXOR,
+    &&case_SPVM_BYTECODE_C_CODE_NEGATE_SHORT,
+    &&case_SPVM_BYTECODE_C_CODE_LEFT_SHIFT_SHORT,
+    &&case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_SHORT,
+    &&case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_SHORT,
+    &&case_SPVM_BYTECODE_C_CODE_AND_SHORT,
+    &&case_SPVM_BYTECODE_C_CODE_OR_SHORT ,
+    &&case_SPVM_BYTECODE_C_CODE_XOR_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_SCMP,
     &&case_SPVM_BYTECODE_C_CODE_BINC,
     &&case_SPVM_BYTECODE_C_CODE_SINC,
@@ -983,11 +983,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BNEG:
+      case_SPVM_BYTECODE_C_CODE_NEGATE_BYTE:
         *(int8_t*)&call_stack[operand_stack_top] = -*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_SNEG:
+      case_SPVM_BYTECODE_C_CODE_NEGATE_SHORT:
         *(int16_t*)&call_stack[operand_stack_top] = -*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
@@ -1007,12 +1007,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         *((double*)&call_stack[operand_stack_top]) = -*((double*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BSHL:
+      case_SPVM_BYTECODE_C_CODE_LEFT_SHIFT_BYTE:
         *(int8_t*)&call_stack[operand_stack_top - 1] <<= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_SSHL:
+      case_SPVM_BYTECODE_C_CODE_LEFT_SHIFT_SHORT:
         *(int16_t*)&call_stack[operand_stack_top - 1] <<= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
@@ -1027,12 +1027,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BSHR:
+      case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_BYTE:
         *(int8_t*)&call_stack[operand_stack_top - 1] >>= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_SSHR:
+      case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_SHORT:
         *(int16_t*)&call_stack[operand_stack_top - 1] >>= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
@@ -1047,12 +1047,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BUSHR:
+      case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_BYTE:
         *(int8_t*)&call_stack[operand_stack_top - 1] = (*(int8_t*)&call_stack[operand_stack_top - 1] >> call_stack[operand_stack_top]) & 0xFF;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_SUSHR:
+      case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_SHORT:
         *(int8_t*)&call_stack[operand_stack_top - 1] = (*(int16_t*)&call_stack[operand_stack_top - 1] >> call_stack[operand_stack_top]) & 0xFFFF;
         operand_stack_top--;
         pc++;
@@ -1067,12 +1067,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BAND:
+      case_SPVM_BYTECODE_C_CODE_AND_BYTE:
         *(int8_t*)&call_stack[operand_stack_top - 1] &= *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_SAND:
+      case_SPVM_BYTECODE_C_CODE_AND_SHORT:
         *(int16_t*)&call_stack[operand_stack_top - 1] &= *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
@@ -1087,12 +1087,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BOR:
+      case_SPVM_BYTECODE_C_CODE_OR_BYTE:
         *(int8_t*)&call_stack[operand_stack_top - 1] |= *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_SOR:
+      case_SPVM_BYTECODE_C_CODE_OR_SHORT:
         *(int16_t*)&call_stack[operand_stack_top - 1] |= *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
@@ -1107,12 +1107,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BXOR:
+      case_SPVM_BYTECODE_C_CODE_XOR_BYTE:
         *(int8_t*)&call_stack[operand_stack_top - 1] ^= *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_SXOR:
+      case_SPVM_BYTECODE_C_CODE_XOR_SHORT:
         *(int16_t*)&call_stack[operand_stack_top - 1] ^= *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;
