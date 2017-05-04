@@ -128,9 +128,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_DOUBLE,
     &&case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_INT,
     &&case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_LONG,
-    &&case_SPVM_BYTECODE_C_CODE_D2F,
-    &&case_SPVM_BYTECODE_C_CODE_I2B,
-    &&case_SPVM_BYTECODE_C_CODE_I2S,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_FLOAT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_ICMP,
     &&case_SPVM_BYTECODE_C_CODE_FCMPL,
     &&case_SPVM_BYTECODE_C_CODE_FCMPG,
@@ -173,22 +173,22 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_FPUTFIELD,
     &&case_SPVM_BYTECODE_C_CODE_DPUTFIELD,
     &&case_SPVM_BYTECODE_C_CODE_LINC,
-    &&case_SPVM_BYTECODE_C_CODE_B2I,
-    &&case_SPVM_BYTECODE_C_CODE_S2I,
-    &&case_SPVM_BYTECODE_C_CODE_B2L,
-    &&case_SPVM_BYTECODE_C_CODE_B2F,
-    &&case_SPVM_BYTECODE_C_CODE_B2D,
-    &&case_SPVM_BYTECODE_C_CODE_S2B,
-    &&case_SPVM_BYTECODE_C_CODE_S2L,
-    &&case_SPVM_BYTECODE_C_CODE_S2F,
-    &&case_SPVM_BYTECODE_C_CODE_S2D,
-    &&case_SPVM_BYTECODE_C_CODE_L2B,
-    &&case_SPVM_BYTECODE_C_CODE_L2S,
-    &&case_SPVM_BYTECODE_C_CODE_F2B,
-    &&case_SPVM_BYTECODE_C_CODE_F2S,
-    &&case_SPVM_BYTECODE_C_CODE_D2B,
-    &&case_SPVM_BYTECODE_C_CODE_D2S,
-    &&case_SPVM_BYTECODE_C_CODE_B2S,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_FLOAT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_DOUBLE,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_FLOAT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_DOUBLE,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_SHORT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_SHORT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_SHORT,
+    &&case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_MALLOC_OBJECT,
     &&case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY,
     &&case_SPVM_BYTECODE_C_CODE_MALLOC_STRING,
@@ -1187,83 +1187,83 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         call_stack[operand_stack_top] = (int64_t)*((double*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_D2F:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_FLOAT:
         *((float*)&call_stack[operand_stack_top]) = (float)*((double*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_I2B:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_BYTE:
         *(int8_t*)&call_stack[operand_stack_top] = (int8_t)(*(int32_t*)&call_stack[operand_stack_top] & 0xFF);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_I2S:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_SHORT:
         *(int16_t*)&call_stack[operand_stack_top] = (int16_t)(*(int32_t*)&call_stack[operand_stack_top] & 0xFFFF);
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_B2I:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_INT:
         *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_S2I:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_INT:
         *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_B2L:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_LONG:
         call_stack[operand_stack_top] = (int64_t)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_B2F:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_FLOAT:
         *(float*)&call_stack[operand_stack_top] = (float)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_B2D:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_DOUBLE:
         *(double*)&call_stack[operand_stack_top] = (double)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_S2B:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_BYTE:
         *(int8_t*)&call_stack[operand_stack_top] = *(int16_t*)&call_stack[operand_stack_top] & 0xFF;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_S2L:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_LONG:
         call_stack[operand_stack_top] = (int64_t)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_S2F:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_FLOAT:
         *(float*)&call_stack[operand_stack_top] = (float)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_S2D:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_DOUBLE:
         *(double*)&call_stack[operand_stack_top] = (double)*(int16_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_L2B:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_BYTE:
         *(int8_t*)&call_stack[operand_stack_top] = call_stack[operand_stack_top] & 0xFF;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_L2S:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_SHORT:
         *(int16_t*)&call_stack[operand_stack_top] = call_stack[operand_stack_top] & 0xFFFF;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_F2B:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_BYTE:
         // TODO
         *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*(float*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_F2S:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_SHORT:
         // TODO
         *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(float*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_D2B:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_BYTE:
         // TODO
         *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*(double*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_D2S:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_SHORT:
         // TODO
         *(int8_t*)&call_stack[operand_stack_top] = (int16_t)*(double*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_B2S:
+      case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_SHORT:
         *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
