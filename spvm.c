@@ -41,7 +41,7 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   SPVM_API_call_sub(spvm, env, entry_point_sub_name);
   
   if (env->abort) {
-    void* message = SPVM_API_pop_return_value_ref(spvm, env);
+    void* message = SPVM_API_pop_return_value_address(spvm, env);
     
     SPVM_SV* sv_message = SPVM_API_get_string_sv(spvm, env, message);
     

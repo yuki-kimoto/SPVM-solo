@@ -24,7 +24,7 @@ void SPVM_FUNC_std_test_call1(SPVM* spvm, SPVM_ENV* env) {
   int64_t value3 = SPVM_API_pop_return_value_long(spvm, new_env);
   SPVM_ENV_free(spvm, new_env);
   
-  SPVM_API_push_ret_long(spvm, env, value3);
+  SPVM_API_push_return_value_long(spvm, env, value3);
 }
 
 void SPVM_FUNC_std_test_call2(SPVM* spvm, SPVM_ENV* env) {
@@ -35,14 +35,14 @@ void SPVM_FUNC_std_test_call2(SPVM* spvm, SPVM_ENV* env) {
   
   int64_t value2 = value * 3;
   
-  SPVM_API_push_ret_long(spvm, env, value2);
+  SPVM_API_push_return_value_long(spvm, env, value2);
 }
 
 void SPVM_FUNC_std_suml(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  void* long_array = SPVM_API_get_var_ref(spvm, env, 0);
+  void* long_array = SPVM_API_get_var_address(spvm, env, 0);
   
   int64_t length = SPVM_API_get_array_length(spvm, env, long_array);
   
@@ -53,14 +53,14 @@ void SPVM_FUNC_std_suml(SPVM* spvm, SPVM_ENV* env) {
     total += long_array_data[i];
   }
   
-  SPVM_API_push_ret_long(spvm, env, total);
+  SPVM_API_push_return_value_long(spvm, env, total);
 }
 
 void SPVM_FUNC_std_println(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  void* string = SPVM_API_get_var_ref(spvm, env, 0);
+  void* string = SPVM_API_get_var_address(spvm, env, 0);
   
   SPVM_SV* sv = SPVM_API_get_string_sv(spvm, env, string);
   
