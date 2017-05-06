@@ -1634,7 +1634,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                     bytecode_set = 1;
                   }
                   else {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BBPUSH);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_PUSH_BYTE);
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.byte_value & 0xFF);
                     bytecode_set = 1;
                   }
@@ -1649,12 +1649,12 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                     bytecode_set = 1;
                   }
                   else if (constant->uv.short_value >= -128 && constant->uv.short_value <= 127) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BSPUSH);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_SHORT);
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.short_value & 0xFF);
                     bytecode_set = 1;
                   }
                   else {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_SSPUSH);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_PUSH_SHORT);
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->uv.short_value >> 8) & 0xFF);
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.short_value & 0xFF);
                     bytecode_set = 1;
@@ -1690,12 +1690,12 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                     bytecode_set = 1;
                   }
                   else if (constant->uv.int_value >= -128 && constant->uv.int_value <= 127) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BIPUSH);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_INT);
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.int_value & 0xFF);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_SIPUSH);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_PUSH_SHORT_TO_INT);
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->uv.int_value >> 8) & 0xFF);
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.int_value & 0xFF);
                     bytecode_set = 1;
@@ -1731,12 +1731,12 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                     bytecode_set = 1;
                   }
                   else if (constant->uv.long_value >= -128 && constant->uv.long_value <= 127) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BLPUSH);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_LONG);
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.long_value & 0xFF);
                     bytecode_set = 1;
                   }
                   else if (constant->uv.long_value >= -32768 && constant->uv.long_value <= 32767) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_SLPUSH);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_PUSH_SHORT_TO_LONG);
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->uv.long_value >> 8) & 0xFF);
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.long_value & 0xFF);
                     bytecode_set = 1;
