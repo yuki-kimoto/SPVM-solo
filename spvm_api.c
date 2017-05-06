@@ -64,8 +64,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_PUSH_SHORT_TO_INT,
     &&case_SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_LONG,
     &&case_SPVM_BYTECODE_C_CODE_PUSH_SHORT_TO_LONG,
-    &&case_SPVM_BYTECODE_C_CODE_LDC,
-    &&case_SPVM_BYTECODE_C_CODE_LDC_W,
+    &&case_SPVM_BYTECODE_C_CODE_LOAD_CONSTANT,
+    &&case_SPVM_BYTECODE_C_CODE_LOAD_CONSTANT_W,
     &&case_SPVM_BYTECODE_C_CODE_IALOAD,
     &&case_SPVM_BYTECODE_C_CODE_LALOAD,
     &&case_SPVM_BYTECODE_C_CODE_FALOAD,
@@ -159,7 +159,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_IFNULL,
     &&case_SPVM_BYTECODE_C_CODE_IFNONNULL,
     &&case_SPVM_BYTECODE_C_CODE_INVOKESTATIC_WW,
-    &&case_SPVM_BYTECODE_C_CODE_LDC_WW,
+    &&case_SPVM_BYTECODE_C_CODE_LOAD_CONSTANT_WW,
     &&case_SPVM_BYTECODE_C_CODE_BGETFIELD,
     &&case_SPVM_BYTECODE_C_CODE_SGETFIELD,
     &&case_SPVM_BYTECODE_C_CODE_IGETFIELD,
@@ -601,17 +601,17 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         *(int32_t*)&call_stack[operand_stack_top] = (int16_t)((int16_t)(*(pc + 1) << 8) +  *(pc + 2));
         pc += 3;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LDC:
+      case_SPVM_BYTECODE_C_CODE_LOAD_CONSTANT:
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[*(pc + 1)];
         pc += 2;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LDC_W:
+      case_SPVM_BYTECODE_C_CODE_LOAD_CONSTANT_W:
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[(*(pc + 1) << 8) + *(pc + 2)];
         pc += 3;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_LDC_WW:
+      case_SPVM_BYTECODE_C_CODE_LOAD_CONSTANT_WW:
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
         pc += 5;
