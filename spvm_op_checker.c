@@ -912,7 +912,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                       }
                       
                       if (do_dec_ref_count) {
-                        SPVM_OP* op_decrefcount = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_DECREFCOUNT, op_cur->file, op_cur->line);
+                        SPVM_OP* op_decrefcount = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_DEC_REF_COUNT, op_cur->file, op_cur->line);
                         SPVM_OP* op_var = SPVM_OP_new_op_var_from_op_my_var(spvm, op_my_var);
                         SPVM_OP_sibling_splice(spvm, op_decrefcount, NULL, 0, op_var);
                         SPVM_OP_sibling_splice(spvm, op_before_return, NULL, 0, op_decrefcount);
@@ -1146,7 +1146,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     
                     // Decrement reference count at end of scope
                     if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, resolved_type)) {
-                      SPVM_OP* op_decrefcount = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_DECREFCOUNT, op_cur->file, op_cur->line);
+                      SPVM_OP* op_decrefcount = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_DEC_REF_COUNT, op_cur->file, op_cur->line);
                       SPVM_OP* op_var = SPVM_OP_new_op_var_from_op_my_var(spvm, op_my_var);
                       SPVM_OP_sibling_splice(spvm, op_decrefcount, NULL, 0, op_var);
                       SPVM_OP_sibling_splice(spvm, op_block_end, NULL, 0, op_decrefcount);
@@ -1209,7 +1209,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, resolved_type)) {
                       SPVM_OP* op_var = SPVM_OP_new_op_var_from_op_my_var(spvm, op_my_var);
                       
-                      SPVM_OP* op_increfcount = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_INCREFCOUNT, op_my_var->file, op_my_var->line);
+                      SPVM_OP* op_increfcount = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_INC_REF_COUNT, op_my_var->file, op_my_var->line);
                       SPVM_OP_sibling_splice(spvm, op_increfcount, NULL, 0, op_var);
                       SPVM_OP_sibling_splice(spvm, op_cur, op_cur->last, 0, op_increfcount);
                     }
