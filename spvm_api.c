@@ -128,10 +128,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_INT,
     &&case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_BIT_AND_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_BIT_AND_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_BIT_AND_INT,
     &&case_SPVM_BYTECODE_C_CODE_BIT_AND_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_BIT_OR_BYTE ,
+    &&case_SPVM_BYTECODE_C_CODE_BIT_OR_SHORT ,
     &&case_SPVM_BYTECODE_C_CODE_BIT_OR_INT,
-    &&case_SPVM_BYTECODE_C_CODE_BIT_OR_LEFT,
+    &&case_SPVM_BYTECODE_C_CODE_BIT_OR_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_BIT_XOR_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_BIT_XOR_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_BIT_XOR_INT,
     &&case_SPVM_BYTECODE_C_CODE_BIT_XOR_LONG,
     &&case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_LONG,
@@ -227,12 +233,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_STORE_2,
     &&case_SPVM_BYTECODE_C_CODE_STORE_3,
     &&case_SPVM_BYTECODE_C_CODE_STORE_ADDRESS,
-    &&case_SPVM_BYTECODE_C_CODE_BIT_AND_BYTE,
-    &&case_SPVM_BYTECODE_C_CODE_BIT_OR_BYTE ,
-    &&case_SPVM_BYTECODE_C_CODE_BIT_XOR_BYTE,
-    &&case_SPVM_BYTECODE_C_CODE_BIT_AND_SHORT,
-    &&case_SPVM_BYTECODE_C_CODE_BIT_OR_SHORT ,
-    &&case_SPVM_BYTECODE_C_CODE_BIT_XOR_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_INC_REF_COUNT,
     &&case_SPVM_BYTECODE_C_CODE_DEC_REF_COUNT,
   };
@@ -1090,7 +1090,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_BIT_OR_LEFT:
+      case_SPVM_BYTECODE_C_CODE_BIT_OR_LONG:
         call_stack[operand_stack_top - 1] |= call_stack[operand_stack_top];
         operand_stack_top--;
         pc++;

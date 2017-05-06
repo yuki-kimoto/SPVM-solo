@@ -1089,7 +1089,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BIT_OR_INT);
                 }
                 else if (resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_LONG) {
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BIT_OR_LEFT);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BIT_OR_LONG);
                 }
                               
                 break;
