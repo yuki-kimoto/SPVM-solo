@@ -246,8 +246,10 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
       }
       
       // Have tow operands
-      case SPVM_BYTECODE_C_CODE_IINC:
-      case SPVM_BYTECODE_C_CODE_LINC:
+      case SPVM_BYTECODE_C_CODE_INC_BYTE:
+      case SPVM_BYTECODE_C_CODE_INC_SHORT:
+      case SPVM_BYTECODE_C_CODE_INC_INT:
+      case SPVM_BYTECODE_C_CODE_INC_LONG:
       case SPVM_BYTECODE_C_CODE_SSPUSH:
       case SPVM_BYTECODE_C_CODE_SIPUSH:
       case SPVM_BYTECODE_C_CODE_SLPUSH:

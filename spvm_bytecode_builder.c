@@ -66,14 +66,14 @@ void SPVM_BYTECODE_BUILDER_push_inc_bytecode(SPVM* spvm, SPVM_BYTECODE_ARRAY* by
   else if (resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_INT) {
     if (my_var->address > 0xFF || (value < -128 || value > 127)) {
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_WIDE);
-      SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_IINC);
+      SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_INC_INT);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (my_var->address >> 8) & 0xFF);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, my_var->address & 0xFF);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (value >> 8) & 0xFF);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, value & 0xFF);
     }
     else {
-      SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_IINC);
+      SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_INC_INT);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, my_var->address);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, value);
     }
@@ -81,14 +81,14 @@ void SPVM_BYTECODE_BUILDER_push_inc_bytecode(SPVM* spvm, SPVM_BYTECODE_ARRAY* by
   else if (resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_LONG) {
     if (my_var->address > 0xFF || (value < -128 || value > 127)) {
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_WIDE);
-      SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LINC);
+      SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_INC_LONG);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (my_var->address >> 8) & 0xFF);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, my_var->address & 0xFF);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (value >> 8) & 0xFF);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, value & 0xFF);
     }
     else {
-      SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LINC);
+      SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_INC_LONG);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, my_var->address);
       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, value);
     }
@@ -1062,16 +1062,16 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 
                 SPVM_RESOLVED_TYPE* resolved_type = SPVM_OP_get_resolved_type(spvm, op_cur);
                 if (resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_BYTE) {
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_XOR_BYTE);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BIT_XOR_BYTE);
                 }
                 else if (resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_SHORT) {
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_XOR_SHORT);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BIT_XOR_SHORT);
                 }
                 else if (resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_INT) {
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_XOR_INT);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BIT_XOR_INT);
                 }
                 else if (resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_LONG) {
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_XOR_LONG);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_BIT_XOR_LONG);
                 }
                 
                 break;
