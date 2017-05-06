@@ -256,18 +256,18 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
       case SPVM_BYTECODE_C_CODE_LOAD_CONSTANT_W:
       case SPVM_BYTECODE_C_CODE_IF_ACMPEQ:
       case SPVM_BYTECODE_C_CODE_IF_ACMPNE:
-      case SPVM_BYTECODE_C_CODE_IF_LCMPEQ:
-      case SPVM_BYTECODE_C_CODE_IF_LCMPNE:
-      case SPVM_BYTECODE_C_CODE_IF_LCMPLT:
-      case SPVM_BYTECODE_C_CODE_IF_LCMPGE:
-      case SPVM_BYTECODE_C_CODE_IF_LCMPGT:
-      case SPVM_BYTECODE_C_CODE_IF_LCMPLE:
-      case SPVM_BYTECODE_C_CODE_IFEQ:
-      case SPVM_BYTECODE_C_CODE_IFNE:
-      case SPVM_BYTECODE_C_CODE_IFLT:
-      case SPVM_BYTECODE_C_CODE_IFGE:
-      case SPVM_BYTECODE_C_CODE_IFGT:
-      case SPVM_BYTECODE_C_CODE_IFLE:
+      case SPVM_BYTECODE_C_CODE_IF_CMP_LONG_EQ:
+      case SPVM_BYTECODE_C_CODE_IF_CMP_LONG_NE:
+      case SPVM_BYTECODE_C_CODE_IF_CMP_LONG_LT:
+      case SPVM_BYTECODE_C_CODE_IF_CMP_LONG_GE:
+      case SPVM_BYTECODE_C_CODE_IF_CMP_LONG_GT:
+      case SPVM_BYTECODE_C_CODE_IF_CMP_LONG_LE:
+      case SPVM_BYTECODE_C_CODE_IF_EQ:
+      case SPVM_BYTECODE_C_CODE_IF_NE:
+      case SPVM_BYTECODE_C_CODE_IF_LT:
+      case SPVM_BYTECODE_C_CODE_IF_GE:
+      case SPVM_BYTECODE_C_CODE_IF_GT:
+      case SPVM_BYTECODE_C_CODE_IF_LE:
       case SPVM_BYTECODE_C_CODE_IFNONNULL:
       case SPVM_BYTECODE_C_CODE_IFNULL:
       case SPVM_BYTECODE_C_CODE_GOTO:
@@ -296,8 +296,7 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
       case SPVM_BYTECODE_C_CODE_LPUTFIELD:
       case SPVM_BYTECODE_C_CODE_FPUTFIELD:
       case SPVM_BYTECODE_C_CODE_DPUTFIELD:
-      case SPVM_BYTECODE_C_CODE_APUTFIELD:
-      case SPVM_BYTECODE_C_CODE_INVOKESTATIC_WW:
+      case SPVM_BYTECODE_C_CODE_CALL_SUB_WW:
       case SPVM_BYTECODE_C_CODE_LOAD_CONSTANT_WW:
       case SPVM_BYTECODE_C_CODE_MALLOC_STRING:
       case SPVM_BYTECODE_C_CODE_MALLOC_OBJECT:
@@ -321,7 +320,7 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
         break;
       }
       
-      case SPVM_BYTECODE_C_CODE_TABLESWITCH: {
+      case SPVM_BYTECODE_C_CODE_TABLE_SWITCH: {
         
         // Machine address to calculate padding
         int32_t pc = i;
@@ -368,7 +367,7 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
         
         break;
       }
-      case SPVM_BYTECODE_C_CODE_LOOKUPSWITCH: {
+      case SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH: {
         
         // Machine address to calculate padding
         int32_t pc = i;

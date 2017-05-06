@@ -391,10 +391,10 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   
                   int32_t code;
                   if (4.0 + range <= (3.0 + 2.0 * (double) length) * 1.5) {
-                    code = SPVM_SWITCH_INFO_C_CODE_TABLESWITCH;
+                    code = SPVM_SWITCH_INFO_C_CODE_TABLE_SWITCH;
                   }
                   else {
-                    code = SPVM_SWITCH_INFO_C_CODE_LOOKUPSWITCH;
+                    code = SPVM_SWITCH_INFO_C_CODE_LOOKUP_SWITCH;
                   }
                   
                   switch_info->code = code;
