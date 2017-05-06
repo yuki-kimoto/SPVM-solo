@@ -519,7 +519,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
               case SPVM_OP_C_CODE_CALL_SUB: {
                 
                 // Call subroutine
-                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CALL_SUB_WW);
+                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CALL_SUB);
                 SPVM_NAME_INFO* name_info = op_cur->uv.name_info;
                 const char* sub_name = name_info->resolved_name;
                 

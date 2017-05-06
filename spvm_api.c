@@ -174,7 +174,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_WIDE,
     &&case_SPVM_BYTECODE_C_CODE_IF_NULL,
     &&case_SPVM_BYTECODE_C_CODE_IF_NON_NULL,
-    &&case_SPVM_BYTECODE_C_CODE_CALL_SUB_WW,
+    &&case_SPVM_BYTECODE_C_CODE_CALL_SUB,
     &&case_SPVM_BYTECODE_C_CODE_GET_FIELD_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_GET_FIELD_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_GET_FIELD_INT,
@@ -269,7 +269,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   
   // while (1) {
     // switch (*pc) {
-      case_SPVM_BYTECODE_C_CODE_CALL_SUB_WW:
+      case_SPVM_BYTECODE_C_CODE_CALL_SUB:
       {
         // Get subroutine ID
         sub_constant_pool_address

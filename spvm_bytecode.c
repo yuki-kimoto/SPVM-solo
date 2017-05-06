@@ -149,7 +149,7 @@ const char* const SPVM_BYTECODE_C_CODE_NAMES[] = {
   "WIDE",
   "IF_NULL",
   "IF_NON_NULL",
-  "CALL_SUB_WW",
+  "CALL_SUB",
   "GET_FIELD_BYTE",
   "GET_FIELD_SHORT",
   "GET_FIELD_INT",
