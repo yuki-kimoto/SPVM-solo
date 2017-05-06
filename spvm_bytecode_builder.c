@@ -1776,22 +1776,11 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 }
                 
                 if (!bytecode_set) {
-                  if (constant->constant_pool_address <= 0xFF) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LOAD_CONSTANT);
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->constant_pool_address & 0xFF);
-                  }
-                  else if (constant->constant_pool_address <= 0xFFFF) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LOAD_CONSTANT_W);
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->constant_pool_address >> 8) & 0xFF);
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->constant_pool_address & 0xFF);
-                  }
-                  else {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LOAD_CONSTANT_WW);
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->constant_pool_address >> 24) & 0xFF);
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->constant_pool_address >> 16) & 0xFF);
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->constant_pool_address >> 8) & 0xFF);
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->constant_pool_address & 0xFF);
-                  }
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LOAD_CONSTANT);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->constant_pool_address >> 24) & 0xFF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->constant_pool_address >> 16) & 0xFF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->constant_pool_address >> 8) & 0xFF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->constant_pool_address & 0xFF);
                 }
                 
                 break;
