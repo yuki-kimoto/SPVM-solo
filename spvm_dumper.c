@@ -209,7 +209,7 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
         switch (bytecode) {
           // Have tow operand]
           case SPVM_BYTECODE_C_CODE_STORE:
-          case SPVM_BYTECODE_C_CODE_ASTORE:
+          case SPVM_BYTECODE_C_CODE_STORE_ADDRESS:
           case SPVM_BYTECODE_C_CODE_LOAD:
           {
             i++;
@@ -233,7 +233,7 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
       case SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_INT:
       case SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_LONG:
       case SPVM_BYTECODE_C_CODE_STORE:
-      case SPVM_BYTECODE_C_CODE_ASTORE:
+      case SPVM_BYTECODE_C_CODE_STORE_ADDRESS:
       case SPVM_BYTECODE_C_CODE_LOAD:
       case SPVM_BYTECODE_C_CODE_LOAD_CONSTANT:
       case SPVM_BYTECODE_C_CODE_MALLOC_ARRAY:
@@ -254,8 +254,8 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
       case SPVM_BYTECODE_C_CODE_PUSH_SHORT_TO_INT:
       case SPVM_BYTECODE_C_CODE_PUSH_SHORT_TO_LONG:
       case SPVM_BYTECODE_C_CODE_LOAD_CONSTANT_W:
-      case SPVM_BYTECODE_C_CODE_IF_ACMPEQ:
-      case SPVM_BYTECODE_C_CODE_IF_ACMPNE:
+      case SPVM_BYTECODE_C_CODE_IF_CMP_ADDRESS_EQ:
+      case SPVM_BYTECODE_C_CODE_IF_CMP_ADDRESS_NE:
       case SPVM_BYTECODE_C_CODE_IF_CMP_LONG_EQ:
       case SPVM_BYTECODE_C_CODE_IF_CMP_LONG_NE:
       case SPVM_BYTECODE_C_CODE_IF_CMP_LONG_LT:

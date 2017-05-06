@@ -79,7 +79,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_FLOAT,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_DOUBLE,
     &&case_SPVM_BYTECODE_C_CODE_POP,
-    &&case_SPVM_BYTECODE_C_CODE_APOP,
+    &&case_SPVM_BYTECODE_C_CODE_POP_ADDRESS,
     &&case_SPVM_BYTECODE_C_CODE_ADD_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_ADD_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_ADD_INT,
@@ -165,13 +165,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_IF_CMP_LONG_GE,
     &&case_SPVM_BYTECODE_C_CODE_IF_CMP_LONG_GT,
     &&case_SPVM_BYTECODE_C_CODE_IF_CMP_LONG_LE,
-    &&case_SPVM_BYTECODE_C_CODE_IF_ACMPEQ,
-    &&case_SPVM_BYTECODE_C_CODE_IF_ACMPNE,
+    &&case_SPVM_BYTECODE_C_CODE_IF_CMP_ADDRESS_EQ,
+    &&case_SPVM_BYTECODE_C_CODE_IF_CMP_ADDRESS_NE,
     &&case_SPVM_BYTECODE_C_CODE_GOTO,
     &&case_SPVM_BYTECODE_C_CODE_TABLE_SWITCH,
     &&case_SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_LENGTH,
-    &&case_SPVM_BYTECODE_C_CODE_ATHROW,
+    &&case_SPVM_BYTECODE_C_CODE_DIE,
     &&case_SPVM_BYTECODE_C_CODE_WIDE,
     &&case_SPVM_BYTECODE_C_CODE_IFNULL,
     &&case_SPVM_BYTECODE_C_CODE_IFNONNULL,
@@ -232,9 +232,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_BIT_OR_SHORT ,
     &&case_SPVM_BYTECODE_C_CODE_BIT_XOR_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_CMP_SHORT,
-    &&case_SPVM_BYTECODE_C_CODE_ASTORE,
-    &&case_SPVM_BYTECODE_C_CODE_AASTORE,
-    &&case_SPVM_BYTECODE_C_CODE_APUTFIELD,
+    &&case_SPVM_BYTECODE_C_CODE_STORE_ADDRESS,
+    &&case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_ADDRESS,
+    &&case_SPVM_BYTECODE_C_CODE_PUT_FIELD_ADDRESS,
     &&case_SPVM_BYTECODE_C_CODE_INC_REF_COUNT,
     &&case_SPVM_BYTECODE_C_CODE_DEC_REF_COUNT,
   };
@@ -332,7 +332,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
             call_stack_base = env->call_stack_base;
             
             if (env->abort) {
-              goto case_SPVM_BYTECODE_C_CODE_ATHROW;
+              goto case_SPVM_BYTECODE_C_CODE_DIE;
             }
             else {
               if (constant_pool_sub->has_return_value) {
@@ -409,7 +409,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           goto *jump[*pc];
         }
       }
-      case_SPVM_BYTECODE_C_CODE_ATHROW: {
+      case_SPVM_BYTECODE_C_CODE_DIE: {
         
         // Return value
         intmax_t return_value = call_stack[operand_stack_top];
@@ -716,7 +716,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_ASTORE: {
+      case_SPVM_BYTECODE_C_CODE_STORE_ADDRESS: {
         int32_t vars_index = *(pc + 1);
 
         // Increment reference count if stored object is not null
@@ -792,7 +792,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_AASTORE: {
+      case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_ADDRESS: {
         intptr_t array_index = *(intptr_t*)&call_stack[operand_stack_top - 2] + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(void*) * (size_t)call_stack[operand_stack_top - 1];
 
         // Increment reference count if stored object is not null
@@ -816,7 +816,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_APOP: {
+      case_SPVM_BYTECODE_C_CODE_POP_ADDRESS: {
         
         void* address = (void*)call_stack[operand_stack_top];
         
@@ -1395,12 +1395,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IF_ACMPEQ:
+      case_SPVM_BYTECODE_C_CODE_IF_CMP_ADDRESS_EQ:
         success = *(void**)&call_stack[operand_stack_top - 1] == *(void**)&call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IF_ACMPNE:
+      case_SPVM_BYTECODE_C_CODE_IF_CMP_ADDRESS_NE:
         success = *(void**)&call_stack[operand_stack_top - 1] != *(void**)&call_stack[operand_stack_top];
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
@@ -1655,7 +1655,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           operand_stack_top--;
           pc +=4;
         }
-        else if (*(pc + 1) == SPVM_BYTECODE_C_CODE_ASTORE) {
+        else if (*(pc + 1) == SPVM_BYTECODE_C_CODE_STORE_ADDRESS) {
           int32_t var_index = (*(pc + 2) << 8) + *(pc + 3);
 
           // Increment reference count if stored object is not null
@@ -1803,7 +1803,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_APUTFIELD: {
+      case_SPVM_BYTECODE_C_CODE_PUT_FIELD_ADDRESS: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
