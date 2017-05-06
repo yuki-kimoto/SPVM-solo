@@ -153,12 +153,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_CMP_FLOAT_G,
     &&case_SPVM_BYTECODE_C_CODE_CMP_DOUBLE_L,
     &&case_SPVM_BYTECODE_C_CODE_CMP_DOUBLE_G,
-    &&case_SPVM_BYTECODE_C_CODE_IF_EQ,
-    &&case_SPVM_BYTECODE_C_CODE_IF_NE,
-    &&case_SPVM_BYTECODE_C_CODE_IF_LT,
-    &&case_SPVM_BYTECODE_C_CODE_IF_GE,
-    &&case_SPVM_BYTECODE_C_CODE_IF_GT,
-    &&case_SPVM_BYTECODE_C_CODE_IF_LE,
+    &&case_SPVM_BYTECODE_C_CODE_IF_EQ_ZERO,
+    &&case_SPVM_BYTECODE_C_CODE_IF_NE_ZERO,
+    &&case_SPVM_BYTECODE_C_CODE_IF_LT_ZERO,
+    &&case_SPVM_BYTECODE_C_CODE_IF_GE_ZERO,
+    &&case_SPVM_BYTECODE_C_CODE_IF_GT_ZERO,
+    &&case_SPVM_BYTECODE_C_CODE_IF_LE_ZERO,
     &&case_SPVM_BYTECODE_C_CODE_IF_CMP_LONG_EQ,
     &&case_SPVM_BYTECODE_C_CODE_IF_CMP_LONG_NE,
     &&case_SPVM_BYTECODE_C_CODE_IF_CMP_LONG_LT,
@@ -183,12 +183,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_GET_FIELD_LONG,
     &&case_SPVM_BYTECODE_C_CODE_GET_FIELD_FLOAT,
     &&case_SPVM_BYTECODE_C_CODE_GET_FIELD_DOUBLE,
-    &&case_SPVM_BYTECODE_C_CODE_PUT_FIELD_BYTE,
-    &&case_SPVM_BYTECODE_C_CODE_PUT_FIELD_SHORT,
-    &&case_SPVM_BYTECODE_C_CODE_PUT_FIELD_INT,
-    &&case_SPVM_BYTECODE_C_CODE_PUT_FIELD_LONG,
-    &&case_SPVM_BYTECODE_C_CODE_PUT_FIELD_FLOAT,
-    &&case_SPVM_BYTECODE_C_CODE_PUT_FIELD_DOUBLE,
+    &&case_SPVM_BYTECODE_C_CODE_SET_FIELD_BYTE,
+    &&case_SPVM_BYTECODE_C_CODE_SET_FIELD_SHORT,
+    &&case_SPVM_BYTECODE_C_CODE_SET_FIELD_INT,
+    &&case_SPVM_BYTECODE_C_CODE_SET_FIELD_LONG,
+    &&case_SPVM_BYTECODE_C_CODE_SET_FIELD_FLOAT,
+    &&case_SPVM_BYTECODE_C_CODE_SET_FIELD_DOUBLE,
     &&case_SPVM_BYTECODE_C_CODE_INC_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_INC_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_INC_INT,
@@ -234,7 +234,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_CMP_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_STORE_ADDRESS,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_ADDRESS,
-    &&case_SPVM_BYTECODE_C_CODE_PUT_FIELD_ADDRESS,
+    &&case_SPVM_BYTECODE_C_CODE_SET_FIELD_ADDRESS,
     &&case_SPVM_BYTECODE_C_CODE_INC_REF_COUNT,
     &&case_SPVM_BYTECODE_C_CODE_DEC_REF_COUNT,
   };
@@ -1335,32 +1335,32 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IF_EQ:
+      case_SPVM_BYTECODE_C_CODE_IF_EQ_ZERO:
         success = call_stack[operand_stack_top] == 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IF_NE:
+      case_SPVM_BYTECODE_C_CODE_IF_NE_ZERO:
         success = call_stack[operand_stack_top] != 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IF_LT:
+      case_SPVM_BYTECODE_C_CODE_IF_LT_ZERO:
         success = call_stack[operand_stack_top] < 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IF_GE:
+      case_SPVM_BYTECODE_C_CODE_IF_GE_ZERO:
         success = call_stack[operand_stack_top] >= 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IF_GT:
+      case_SPVM_BYTECODE_C_CODE_IF_GT_ZERO:
         success = call_stack[operand_stack_top] > 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_IF_LE:
+      case_SPVM_BYTECODE_C_CODE_IF_LE_ZERO:
         success = call_stack[operand_stack_top] <= 0;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
@@ -1749,7 +1749,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_PUT_FIELD_BYTE: {
+      case_SPVM_BYTECODE_C_CODE_SET_FIELD_BYTE: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1758,7 +1758,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_PUT_FIELD_SHORT: {
+      case_SPVM_BYTECODE_C_CODE_SET_FIELD_SHORT: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1767,7 +1767,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_PUT_FIELD_INT: {
+      case_SPVM_BYTECODE_C_CODE_SET_FIELD_INT: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1776,7 +1776,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_PUT_FIELD_LONG: {
+      case_SPVM_BYTECODE_C_CODE_SET_FIELD_LONG: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1785,7 +1785,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_PUT_FIELD_FLOAT: {
+      case_SPVM_BYTECODE_C_CODE_SET_FIELD_FLOAT: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1794,7 +1794,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_PUT_FIELD_DOUBLE: {
+      case_SPVM_BYTECODE_C_CODE_SET_FIELD_DOUBLE: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
@@ -1803,7 +1803,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_PUT_FIELD_ADDRESS: {
+      case_SPVM_BYTECODE_C_CODE_SET_FIELD_ADDRESS: {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
