@@ -1289,7 +1289,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_RETURN_VOID);
                 }
                 else {
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_RETURN_VALUE);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_RETURN);
                 }
                 
                 break;

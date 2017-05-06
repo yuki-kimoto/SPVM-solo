@@ -230,7 +230,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_GOTO,
     &&case_SPVM_BYTECODE_C_CODE_CALL_SUB,
     &&case_SPVM_BYTECODE_C_CODE_RETURN_VOID,
-    &&case_SPVM_BYTECODE_C_CODE_RETURN_VALUE,
+    &&case_SPVM_BYTECODE_C_CODE_RETURN,
     &&case_SPVM_BYTECODE_C_CODE_DIE,
     &&case_SPVM_BYTECODE_C_CODE_INC_REF_COUNT,
     &&case_SPVM_BYTECODE_C_CODE_DEC_REF_COUNT,
@@ -334,7 +334,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
             }
             else {
               if (constant_pool_sub->has_return_value) {
-                goto case_SPVM_BYTECODE_C_CODE_RETURN_VALUE;
+                goto case_SPVM_BYTECODE_C_CODE_RETURN;
               }
               else {
                 goto case_SPVM_BYTECODE_C_CODE_RETURN_VOID;
@@ -348,7 +348,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           goto *jump[*pc];
         }
       }
-      case_SPVM_BYTECODE_C_CODE_RETURN_VALUE: {
+      case_SPVM_BYTECODE_C_CODE_RETURN: {
         
         // Get return value
         intmax_t return_value = call_stack[operand_stack_top];

@@ -205,7 +205,7 @@ const char* const SPVM_BYTECODE_C_CODE_NAMES[] = {
   "GOTO",
   "CALL_SUB",
   "RETURN_VOID",
-  "RETURN_VALUE",
+  "RETURN",
   "DIE",
   "INC_REF_COUNT",
   "DEC_REF_COUNT",
