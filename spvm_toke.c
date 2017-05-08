@@ -493,7 +493,11 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           
           // Constant type
           int32_t constant_code;
-          if (num_str[str_len - 1] == 'f')  {
+          if (num_str[str_len - 1] == 'I')  {
+            constant_code = SPVM_CONSTANT_C_CODE_INT;
+            num_str[str_len - 1] = '\0';
+          }
+          else if (num_str[str_len - 1] == 'f')  {
             constant_code = SPVM_CONSTANT_C_CODE_FLOAT;
             num_str[str_len - 1] = '\0';
           }
@@ -535,6 +539,27 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
             }
             constant->uv.double_value = num;
             constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "double", strlen("double"));
+          }
+          // int
+          else if (constant->code == SPVM_CONSTANT_C_CODE_INT) {
+            int64_t num;
+            errno = 0;
+            if (num_str[0] == '0' && num_str[1] == 'x') {
+              num = strtol(num_str, &end, 16);
+            }
+            else {
+              num = strtol(num_str, &end, 10);
+            }
+            if (*end != '\0') {
+              fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
+              exit(EXIT_FAILURE);
+            }
+            else if (num == INT64_MAX && errno == ERANGE) {
+              fprintf(stderr, "Number literal out of range %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
+              exit(EXIT_FAILURE);
+            }
+            constant->uv.int_value = (int32_t)num;
+            constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "int", strlen("int"));
           }
           // long
           else if (constant->code == SPVM_CONSTANT_C_CODE_LONG) {
