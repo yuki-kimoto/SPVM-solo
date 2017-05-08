@@ -231,6 +231,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_IF_NE_CMP_ADDRESS,
     &&case_SPVM_BYTECODE_C_CODE_IF_NULL,
     &&case_SPVM_BYTECODE_C_CODE_IF_NON_NULL,
+    &&case_SPVM_BYTECODE_C_CODE_TABLE_SWITCH_INT,
+    &&case_SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH_INT,
     &&case_SPVM_BYTECODE_C_CODE_TABLE_SWITCH_LONG,
     &&case_SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH_LONG,
     &&case_SPVM_BYTECODE_C_CODE_GOTO,
@@ -1429,6 +1431,86 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_GOTO:
         pc += (int16_t)((*(pc + 1) << 8) +  *(pc + 2));
         goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_TABLE_SWITCH_INT: {
+        // Padding
+        int32_t padding = (sizeof(int32_t) - 1) - ((intptr_t)pc % sizeof(int32_t));
+        
+        // default offset
+        int32_t default_offset = *(int32_t*)(pc + padding + 1);
+        
+        // min
+        int32_t min = *(int32_t*)(pc + padding + sizeof(int32_t) + 1);
+        
+        // max
+        int32_t max = *(int32_t*)(pc + padding + sizeof(int32_t) * 2 + 1);
+        
+        if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
+          int32_t branch_offset = *(int32_t*)((pc + padding + sizeof(int32_t) * 3 + 1) + (call_stack[operand_stack_top] - min) * sizeof(int32_t));
+          pc += branch_offset;
+        }
+        else {
+          pc += default_offset;
+        }
+        
+        goto *jump[*pc];
+      }
+      case_SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH_INT: {
+
+        // Padding
+        int32_t padding = (sizeof(int32_t) - 1) - ((intptr_t)pc % sizeof(int32_t));
+
+        /*
+        1  default
+        5  npare
+        9  match  13 branch // min
+        17 match 21 branch
+        25 match 29 branch // max
+        */
+        
+        // default offset
+        int32_t default_offset = *(int32_t*)(pc + padding + 1);
+        
+        // npare
+        int32_t pair_count = *(int32_t*)(pc + padding + sizeof(int32_t) + 1);
+        
+        // min
+        int32_t min = *(int32_t*)(pc + padding + sizeof(int32_t) * 2 + 1);
+        
+        // max
+        int32_t max = *(int32_t*)(pc + padding + sizeof(int32_t) * 2 + 1 + ((pair_count - 1) * sizeof(int32_t) * 2));
+        
+        if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
+          // 2 branch searching
+          int32_t cur_min_pos = 0;
+          int32_t cur_max_pos = pair_count - 1;
+
+          while (1) {
+            if (cur_max_pos < cur_min_pos) {
+              pc += default_offset;
+              goto *jump[*pc];
+            }
+            int32_t cur_half_pos = cur_min_pos + (cur_max_pos - cur_min_pos) / 2;
+            int32_t cur_half = *(int32_t*)(pc + padding + sizeof(int32_t) * 2 + 1 + (cur_half_pos * sizeof(int32_t) * 2));
+            
+            if (call_stack[operand_stack_top] > cur_half) {
+              cur_min_pos = cur_half_pos + 1;
+            }
+            else if (call_stack[operand_stack_top] < cur_half) {
+              cur_max_pos = cur_half_pos - 1;
+            }
+            else {
+              int32_t branch_offset = *(int32_t*)(pc + padding + sizeof(int32_t) * 2 + 1 + (cur_half_pos * sizeof(int32_t) * 2) + sizeof(int32_t));
+              pc += branch_offset;
+              goto *jump[*pc];
+            }
+          }
+        }
+        else {
+          pc += default_offset;
+        }
+        
+        goto *jump[*pc];
+      }
       case_SPVM_BYTECODE_C_CODE_TABLE_SWITCH_LONG: {
         // Padding
         int64_t padding = (sizeof(int64_t) - 1) - ((intptr_t)pc % sizeof(int64_t));
