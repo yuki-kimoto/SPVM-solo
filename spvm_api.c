@@ -209,6 +209,18 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_CMP_FLOAT_G,
     &&case_SPVM_BYTECODE_C_CODE_CMP_DOUBLE_L,
     &&case_SPVM_BYTECODE_C_CODE_CMP_DOUBLE_G,
+    &&case_SPVM_BYTECODE_C_CODE_IF_EQ_ZERO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_NE_ZERO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_LT_ZERO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_GE_ZERO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_GT_ZERO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_LE_ZERO_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_EQ_CMP_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_NE_CMP_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_LT_CMP_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_GE_CMP_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_GT_CMP_INT,
+    &&case_SPVM_BYTECODE_C_CODE_IF_LE_CMP_INT,
     &&case_SPVM_BYTECODE_C_CODE_IF_EQ_ZERO_LONG,
     &&case_SPVM_BYTECODE_C_CODE_IF_NE_ZERO_LONG,
     &&case_SPVM_BYTECODE_C_CODE_IF_LT_ZERO_LONG,
@@ -1322,6 +1334,66 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           );
         operand_stack_top--;
         pc++;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_EQ_ZERO_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top] == 0;
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top--;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_NE_ZERO_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top] != 0;
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top--;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_LT_ZERO_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top] < 0;
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top--;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_GE_ZERO_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top] >= 0;
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top--;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_GT_ZERO_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top] > 0;
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top--;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_LE_ZERO_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top] <= 0;
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top--;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_EQ_CMP_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top - 1] == *(int32_t*)&call_stack[operand_stack_top];
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top -= 2;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_NE_CMP_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top - 1] != *(int32_t*)&call_stack[operand_stack_top];
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top -= 2;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_LT_CMP_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top - 1] < *(int32_t*)&call_stack[operand_stack_top];
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top -= 2;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_GE_CMP_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top - 1] >= *(int32_t*)&call_stack[operand_stack_top];
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top -= 2;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_GT_CMP_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top - 1] > *(int32_t*)&call_stack[operand_stack_top];
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top -= 2;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_IF_LE_CMP_INT:
+        success = *(int32_t*)&call_stack[operand_stack_top - 1] <= *(int32_t*)&call_stack[operand_stack_top];
+        pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
+        operand_stack_top -= 2;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_IF_EQ_ZERO_LONG:
         success = *(int64_t*)&call_stack[operand_stack_top] == 0;
