@@ -325,7 +325,7 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
         break;
       }
       
-      case SPVM_BYTECODE_C_CODE_TABLE_SWITCH: {
+      case SPVM_BYTECODE_C_CODE_TABLE_SWITCH_LONG: {
         
         // Machine address to calculate padding
         int32_t pc = i;
@@ -372,7 +372,7 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
         
         break;
       }
-      case SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH: {
+      case SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH_LONG: {
         
         // Machine address to calculate padding
         int32_t pc = i;
