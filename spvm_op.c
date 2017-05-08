@@ -912,9 +912,11 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
         SPVM_OP* op_enumeration_block = op_enumeration->first;
         
         // Starting value
-        int32_t start_value = 0;
+        int64_t start_value = 0;
         SPVM_OP* op_enumeration_values = op_enumeration_block->first;
         SPVM_OP* op_enumeration_value = op_enumeration_values->first;
+        
+        int32_t constant_code = SPVM_CONSTANT_C_CODE_LONG;
         while ((op_enumeration_value = SPVM_OP_sibling(spvm, op_enumeration_value))) {
           SPVM_ENUMERATION_VALUE* enumeration_value = SPVM_ENUMERATION_VALUE_new(spvm);
           enumeration_value->op_name = op_enumeration_value->first;
@@ -926,11 +928,31 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
           if (enumeration_value->op_constant) {
             op_constant = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_CONSTANT, op_enumeration_value->file, op_enumeration_value->line);
             op_constant->uv.constant = enumeration_value->op_constant->uv.constant;
-            start_value = op_constant->uv.constant->uv.long_value + 1;
+            
+            if (op_constant->uv.constant->code == SPVM_CONSTANT_C_CODE_INT) {
+              constant_code = SPVM_CONSTANT_C_CODE_INT;
+              start_value = op_constant->uv.constant->uv.int_value + 1;
+            }
+            else if (op_constant->uv.constant->code == SPVM_CONSTANT_C_CODE_LONG) {
+              constant_code = SPVM_CONSTANT_C_CODE_LONG;
+              start_value = op_constant->uv.constant->uv.long_value + 1;
+            }
+            else {
+              assert(0);
+            }
           }
           else {
-            op_constant = SPVM_OP_new_op_constant_long(spvm, start_value, op_enumeration_value->file, op_enumeration_value->line);
+            if (constant_code == SPVM_CONSTANT_C_CODE_INT) {
+              op_constant = SPVM_OP_new_op_constant_int(spvm, (int32_t)start_value, op_enumeration_value->file, op_enumeration_value->line);
+            }
+            else if (constant_code == SPVM_CONSTANT_C_CODE_LONG) {
+              op_constant = SPVM_OP_new_op_constant_long(spvm, start_value, op_enumeration_value->file, op_enumeration_value->line);
+            }
+            else {
+              assert(0);
+            }
             enumeration_value->op_constant = op_constant;
+            
             start_value++;
           }
           

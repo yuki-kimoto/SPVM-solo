@@ -1,11 +1,15 @@
 use Test::EnumA;
 use Test::EnumB;
 use Test::EnumC;
+use Test::EnumD;
 use Test::Simple;
 use Test::Minimal;
 
 package Test {
   sub main($mvar : long) : long {
+    std::printi(Test::EnumD->THREE);
+    std::printi(Test::EnumD->FORE);
+
     std::printl(std::test_call1(4));
     
     {
