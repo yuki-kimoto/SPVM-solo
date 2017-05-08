@@ -352,8 +352,9 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   
                   SPVM_RESOLVED_TYPE* term_resolved_type = SPVM_OP_get_resolved_type(spvm, op_switch_condition->first);
                   
-                  if (term_resolved_type->id != SPVM_RESOLVED_TYPE_C_ID_LONG) {
-                    SPVM_yyerror_format(spvm, "switch need long at %s line %d\n", op_cur->file, op_cur->line);
+                  // Check type
+                  if (!term_resolved_type || !(term_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_INT || term_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_LONG)) {
+                    SPVM_yyerror_format(spvm, "Switch condition need int or long value at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
                   
