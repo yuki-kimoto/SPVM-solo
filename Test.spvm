@@ -186,8 +186,8 @@ package Test {
     std::printi((int)-128);
     std::printi((int)-2);
     std::printi((int)-1);
-    std::printi((int)0);
-    std::printi((int)1);
+    std::printi(0I);
+    std::printi(1I);
     std::printi((int)2);
     std::printi((int)3);
     std::printi((int)4);
