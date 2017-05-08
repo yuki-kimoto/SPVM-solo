@@ -263,7 +263,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   // Top position of operand stack
   register int32_t operand_stack_top = env->operand_stack_top;
   
-  register _Bool success;
+  register int32_t success;
   
   int32_t call_stack_base = env->call_stack_base;
   int32_t call_stack_base_start = call_stack_base;
@@ -1263,7 +1263,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CMP_BYTE:
         // z = (x > y) + (x < y) * -1
-        call_stack[operand_stack_top - 1]
+        *(int32_t*)&call_stack[operand_stack_top - 1]
           = (*(int8_t*)&call_stack[operand_stack_top - 1] > *(int8_t*)&call_stack[operand_stack_top])
           + (*(int8_t*)&call_stack[operand_stack_top - 1] < *(int8_t*)&call_stack[operand_stack_top]) * -1;
         operand_stack_top--;
@@ -1271,14 +1271,14 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CMP_SHORT:
         // z = (x > y) + (x < y) * -1
-        call_stack[operand_stack_top - 1]
+        *(int32_t*)&call_stack[operand_stack_top - 1]
           = (*(int16_t*)&call_stack[operand_stack_top - 1] > *(int16_t*)&call_stack[operand_stack_top])
           + (*(int16_t*)&call_stack[operand_stack_top - 1] < *(int16_t*)&call_stack[operand_stack_top]) * -1;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CMP_FLOAT_L:
-        call_stack[operand_stack_top - 1]
+        *(int32_t*)&call_stack[operand_stack_top - 1]
           = (*(float*)&call_stack[operand_stack_top - 1] > *(float*)&call_stack[operand_stack_top])
           + (*(float*)&call_stack[operand_stack_top - 1] < *(float*)&call_stack[operand_stack_top]) * -1
           + -!!(
@@ -1289,7 +1289,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CMP_FLOAT_G:
-        call_stack[operand_stack_top - 1]
+        *(int32_t*)&call_stack[operand_stack_top - 1]
           = (*(float*)&call_stack[operand_stack_top - 1] > *(float*)&call_stack[operand_stack_top])
           + (*(float*)&call_stack[operand_stack_top - 1] < *(float*)&call_stack[operand_stack_top]) * -1
           + !!(
@@ -1300,7 +1300,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CMP_DOUBLE_L:
-        call_stack[operand_stack_top - 1]
+        *(int32_t*)&call_stack[operand_stack_top - 1]
           = (*(double*)&call_stack[operand_stack_top - 1] > *(double*)&call_stack[operand_stack_top])
           + (*(double*)&call_stack[operand_stack_top - 1] < *(double*)&call_stack[operand_stack_top]) * -1
           + -!!(
@@ -1311,7 +1311,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CMP_DOUBLE_G:
-        call_stack[operand_stack_top - 1]
+        *(int32_t*)&call_stack[operand_stack_top - 1]
           = (*(double*)&call_stack[operand_stack_top - 1] > *(double*)&call_stack[operand_stack_top])
           + (*(double*)&call_stack[operand_stack_top - 1] < *(double*)&call_stack[operand_stack_top]) * -1
           + !!(

@@ -259,6 +259,34 @@ package Test {
 
     my $simple2 : Test::Simple = malloc Test::Simple;
     
+    if ((int)1) { }
+    
+    if ((int)1 == (int)1) {
+    
+    }
+
+    if ((int)1 != (int)1) {
+    
+    }
+
+    if ((int)1 <= (int)1) {
+    
+    }
+
+    if ((int)1 < (int)1) {
+    
+    }
+
+    if ((int)1 >= (int)1) {
+    
+    }
+
+    if ((int)1 > (int)1) {
+    
+    }
+
+    if (!(int)1) { }
+    
     if (1) { }
     if (1.5) { }
     if ($simple2) { }
