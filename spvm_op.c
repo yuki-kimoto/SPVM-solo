@@ -227,7 +227,6 @@ SPVM_OP* SPVM_OP_build_switch_statement(SPVM* spvm, SPVM_OP* op_switch, SPVM_OP*
   op_block->flag |= SPVM_OP_C_FLAG_BLOCK_SWITCH;
   
   op_switch->uv.switch_info = SPVM_SWITCH_INFO_new(spvm);
-  op_switch->uv.switch_info->op_switch = op_switch;
   op_switch->uv.switch_info->op_cases = parser->cur_op_cases;
   
   parser->cur_op_cases = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, spvm->parser->allocator, 0);
