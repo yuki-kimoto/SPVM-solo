@@ -18,8 +18,7 @@ extern const char* const SPVM_CONSTANT_C_CODE_NAMES[];
 struct SPVM_constant {
   SPVM_RESOLVED_TYPE* resolved_type;
   union {
-    int8_t byte_value;
-    int16_t short_value;
+    // byte, short, int value is saved to long_value
     int32_t int_value;
     int64_t long_value;
     float float_value;
