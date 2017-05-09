@@ -250,14 +250,6 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 
                 SPVM_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
                 
-                if (switch_info->op_cases->length == 0) {
-                  break;
-                }
-                
-                SPVM_OP* op_condition_term = op_cur->first;
-                
-                SPVM_RESOLVED_TYPE* condition_term_resolved_type = SPVM_OP_get_resolved_type(spvm, op_condition_term);
-                
                 // tableswitch
                 if (switch_info->code == SPVM_SWITCH_INFO_C_CODE_TABLE_SWITCH) {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_TABLE_SWITCH_LONG);
@@ -288,7 +280,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   }
                   *(int64_t*)&bytecode_array->values[bytecode_array->length - sizeof(int64_t)] = min;
                   
-                  // Low
+                  // High
                   for (int32_t i = 0; i < (int32_t)sizeof(int64_t); i++) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                   }
