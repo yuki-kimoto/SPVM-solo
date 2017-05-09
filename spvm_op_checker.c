@@ -358,9 +358,6 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   SPVM_ARRAY* op_cases = switch_info->op_cases;
                   int32_t length = op_cases->length;
                   
-                  int64_t min = INT64_MIN;
-                  int64_t max = INT64_MAX;
-                  
                   // Check case type
                   _Bool has_syntax_error = 0;
                   for (int32_t i = 0; i < length; i++) {
@@ -384,6 +381,8 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     break;
                   }
                   
+                  int64_t min = INT64_MAX;
+                  int64_t max = INT64_MIN;
                   for (int32_t i = 0; i < length; i++) {
                     SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, op_cases, i);
                     SPVM_OP* op_constant = op_case->first;

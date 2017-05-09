@@ -211,28 +211,31 @@ package Test {
     std::printl(sum1(1, 5));
     
     "abc";
-    my $num2 = 3;
-    
-    switch($num2) {
-      case 1:
-        std::printl(1);
-      case 3:
-        std::printl(2);
-      case 5:
-        std::printl(3);
-      default:
-        std::printl(5);
+    {
+      my $num = 3;
+      switch ($num) {
+        case 1:
+          std::printl(1);
+        case 3:
+          std::printl(2);
+        case 5:
+          std::printl(3);
+        default:
+          std::printl(5);
+      }
     }
-    
-    switch($num2) {
-      case 1:
-        std::printl(1);
-      case 3:
-        std::printl(2);
-      case 10000:
-        std::printl(2);
-      default:
-        std::printl(5);
+    {
+      my $num = 3;
+      switch ($num) {
+        case 1:
+          std::printl(1);
+        case 3:
+          std::printl(2);
+        case 10000:
+          std::printl(2);
+        default:
+          std::printl(5);
+      }
     }
     
     {
@@ -250,13 +253,13 @@ package Test {
       }
     }
     
-    {
-      my $num = 5;
-      switch($num) {
-        default:
-          std::printl(5);
-      }
-    }
+    # {
+    #   my $num = 5;
+    #   switch($num) {
+    #     default:
+    #       std::printl(5);
+    #   }
+    # }
     
     # my $num;
     # my $num1 = undef;
