@@ -186,7 +186,6 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
       
       int32_t cur_default_address = -1;
       SPVM_ARRAY* cur_case_addresses = NULL;
-      SPVM_ARRAY* cur_op_cases = NULL;
       
       while (op_cur) {
         // [START]Preorder traversal position
@@ -200,7 +199,6 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
           }
           case SPVM_OP_C_CODE_SWITCH: {
             cur_case_addresses = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
-            cur_op_cases = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
             break;
           }
           case SPVM_OP_C_CODE_BLOCK: {
@@ -342,7 +340,6 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 *address_ptr = bytecode_array->length;
                 
                 SPVM_ARRAY_push(spvm, cur_case_addresses, address_ptr);
-                SPVM_ARRAY_push(spvm, cur_op_cases, op_cur);
                 
                 break;
               }
@@ -381,7 +378,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   
                   int64_t case_pos = 0;
                   for (int64_t i = 0; i < length; i++) {
-                    SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, cur_op_cases, case_pos);
+                    SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, switch_info->op_cases, case_pos);
                     SPVM_OP* op_constant = op_case->first;
                     if (op_constant->uv.constant->uv.long_value - min == i) {
                       // Case
@@ -413,16 +410,11 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   }
                   *(int64_t*)&bytecode_array->values[cur_switch_address + padding + 1] = default_offset;
                   
-                  // Note: Here it's assumed that the number of cases can be expressed by a int64_t variable.
-                  if (switch_info->op_cases->length > SPVM_LIMIT_C_CASES) {
-                    fprintf(stderr, "Invalid AST: too many cases in switch statement\n");
-                    exit(EXIT_FAILURE);
-                  }
                   int64_t const length = (int64_t) switch_info->op_cases->length;
                   
                   SPVM_ARRAY* ordered_op_cases = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
                   for (int64_t i = 0; i < length; i++) {
-                    SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, cur_op_cases, i);
+                    SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, switch_info->op_cases, i);
                     SPVM_ARRAY_push(spvm, ordered_op_cases, op_case);
                   }
                   SPVM_ARRAY* ordered_case_addresses = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
