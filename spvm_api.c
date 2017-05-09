@@ -30,6 +30,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   (void)spvm;
   (void)env;
   
+  
   // Jump table for direct threaded code
   static void* jump[] = {
     &&case_SPVM_BYTECODE_C_CODE_NOP,
