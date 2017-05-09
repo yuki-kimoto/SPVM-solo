@@ -375,7 +375,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     SPVM_RESOLVED_TYPE* case_value_resolved_type = SPVM_OP_get_resolved_type(spvm, op_constant);
                     
                     if (case_value_resolved_type->id != term_resolved_type->id) {
-                      SPVM_yyerror_format(spvm, "case value type must be same as switch condition value type at %s line %d\n", op_cur->file, op_cur->line);
+                      SPVM_yyerror_format(spvm, "case value type must be same as switch condition value type at %s line %d\n", op_case->file, op_case->line);
                       has_syntax_error = 1;
                       break;
                     }

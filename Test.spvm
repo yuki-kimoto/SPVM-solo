@@ -235,6 +235,21 @@ package Test {
         std::printl(5);
     }
     
+    {
+      my $num = 3I;
+      
+      switch($num) {
+        case Test::EnumD->THREE:
+          std::printl(1);
+        case Test::EnumD->FORE:
+          std::printl(2);
+        case 5I:
+          std::printl(3);
+        default:
+          std::printl(5);
+      }
+    }
+    
     # my $num;
     # my $num1 = undef;
     
