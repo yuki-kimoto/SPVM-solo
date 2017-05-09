@@ -328,17 +328,6 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   
                   SPVM_OP* op_term = op_cur->first;
                   
-                  if (op_term->code != SPVM_OP_C_CODE_CONSTANT) {
-                    SPVM_yyerror_format(spvm, "case need constant at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }
-                  
-                  SPVM_RESOLVED_TYPE* op_term_resolved_type = SPVM_OP_get_resolved_type(spvm, op_term);
-                  if (op_term_resolved_type->id != SPVM_RESOLVED_TYPE_C_ID_LONG) {
-                    SPVM_yyerror_format(spvm, "case need long at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }
-                  
                   if (!cur_case_ops) {
                     cur_case_ops = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
                   }
@@ -367,10 +356,33 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   
                   SPVM_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
                   SPVM_ARRAY* op_cases = switch_info->op_cases;
-                  int32_t const length = op_cases->length;
+                  int32_t length = op_cases->length;
                   
                   int64_t min = INT64_MIN;
                   int64_t max = INT64_MAX;
+                  
+                  // Check case type
+                  _Bool has_syntax_error = 0;
+                  for (int32_t i = 0; i < length; i++) {
+                    SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, op_cases, i);
+                    SPVM_OP* op_constant = op_case->first;
+
+                    if (op_constant->code != SPVM_OP_C_CODE_CONSTANT) {
+                      SPVM_yyerror_format(spvm, "case need constant at %s line %d\n", op_cur->file, op_cur->line);
+                      break;
+                    }
+                    
+                    SPVM_RESOLVED_TYPE* case_value_resolved_type = SPVM_OP_get_resolved_type(spvm, op_constant);
+                    
+                    if (case_value_resolved_type->id != term_resolved_type->id) {
+                      SPVM_yyerror_format(spvm, "case value type must be same as switch condition value type at %s line %d\n", op_cur->file, op_cur->line);
+                      has_syntax_error = 1;
+                      break;
+                    }
+                  }
+                  if (has_syntax_error) {
+                    break;
+                  }
                   
                   for (int32_t i = 0; i < length; i++) {
                     SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, op_cases, i);
