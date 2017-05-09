@@ -124,7 +124,7 @@ SPVM_OP* SPVM_OP_new_op_constant_int(SPVM* spvm, int32_t value, const char* file
   SPVM_CONSTANT* constant = SPVM_CONSTANT_new(spvm);
   
   constant->code = SPVM_CONSTANT_C_CODE_INT;
-  constant->uv.int_value = value;
+  constant->uv.long_value = value;
   constant->resolved_type = SPVM_HASH_search(spvm, spvm->parser->resolved_type_symtable, "int", strlen("int"));
   
   op_constant->uv.constant = constant;
@@ -940,15 +940,14 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
             
             if (op_constant->uv.constant->code == SPVM_CONSTANT_C_CODE_INT) {
               constant_code = SPVM_CONSTANT_C_CODE_INT;
-              start_value = op_constant->uv.constant->uv.int_value + 1;
             }
             else if (op_constant->uv.constant->code == SPVM_CONSTANT_C_CODE_LONG) {
               constant_code = SPVM_CONSTANT_C_CODE_LONG;
-              start_value = op_constant->uv.constant->uv.long_value + 1;
             }
             else {
               assert(0);
             }
+            start_value = op_constant->uv.constant->uv.long_value + 1;
           }
           else {
             if (constant_code == SPVM_CONSTANT_C_CODE_INT) {

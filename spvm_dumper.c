@@ -45,7 +45,7 @@ void SPVM_DUMPER_dump_ast(SPVM* spvm, SPVM_OP* op_base) {
       printf(" %s", SPVM_CONSTANT_C_CODE_NAMES[constant->code]);
       switch (constant->code) {
         case SPVM_CONSTANT_C_CODE_INT:
-          printf(" %" PRId32, constant->uv.int_value);
+          printf(" %" PRId64, constant->uv.long_value);
           break;
         case SPVM_CONSTANT_C_CODE_LONG:
           printf(" %" PRId64, constant->uv.long_value);
@@ -419,10 +419,10 @@ void SPVM_DUMPER_dump_constant(SPVM* spvm, SPVM_CONSTANT* constant) {
   
   switch(constant->code) {
     case SPVM_CONSTANT_C_CODE_INT:
-      printf("      int %" PRId32 "\n", constant->uv.int_value);
+      printf("      int ld%" PRId64 "\n", constant->uv.long_value);
       break;
     case SPVM_CONSTANT_C_CODE_LONG:
-      printf("      long %" PRId64 "\n", constant->uv.long_value);
+      printf("      long ld%" PRId64 "\n", constant->uv.long_value);
       break;
     case SPVM_CONSTANT_C_CODE_FLOAT:
       printf("      float %f\n", constant->uv.float_value);

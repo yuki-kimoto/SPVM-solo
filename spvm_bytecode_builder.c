@@ -1631,43 +1631,43 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   }
                 }
                 else if (constant->code == SPVM_CONSTANT_C_CODE_INT) {
-                  if (constant->uv.int_value == -1) {
+                  if (constant->uv.long_value == -1) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_M1);
                     bytecode_set = 1;
                   }
-                  else if (constant->uv.int_value == 0) {
+                  else if (constant->uv.long_value == 0) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_0);
                     bytecode_set = 1;
                   }
-                  else if (constant->uv.int_value == 1) {
+                  else if (constant->uv.long_value == 1) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_1);
                     bytecode_set = 1;
                   }
-                  else if (constant->uv.int_value == 2) {
+                  else if (constant->uv.long_value == 2) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_2);
                     bytecode_set = 1;
                   }
-                  else if (constant->uv.int_value == 3) {
+                  else if (constant->uv.long_value == 3) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_3);
                     bytecode_set = 1;
                   }
-                  else if (constant->uv.int_value == 4) {
+                  else if (constant->uv.long_value == 4) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_4);
                     bytecode_set = 1;
                   }
-                  else if (constant->uv.int_value == 5) {
+                  else if (constant->uv.long_value == 5) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_CONSTANT_INT_5);
                     bytecode_set = 1;
                   }
-                  else if (constant->uv.int_value >= -128 && constant->uv.int_value <= 127) {
+                  else if (constant->uv.long_value >= -128 && constant->uv.long_value <= 127) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_INT);
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.int_value & 0xFF);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.long_value & 0xFF);
                     bytecode_set = 1;
                   }
-                  else if (constant->uv.int_value >= -32768 && constant->uv.int_value <= 32767) {
+                  else if (constant->uv.long_value >= -32768 && constant->uv.long_value <= 32767) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_PUSH_SHORT_TO_INT);
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->uv.int_value >> 8) & 0xFF);
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.int_value & 0xFF);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->uv.long_value >> 8) & 0xFF);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant->uv.long_value & 0xFF);
                     bytecode_set = 1;
                   }
                 }

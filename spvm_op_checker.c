@@ -242,13 +242,13 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   
                   switch (constant->code) {
                     case SPVM_CONSTANT_C_CODE_INT: {
-                      int32_t value = constant->uv.int_value;
+                      int64_t value = constant->uv.long_value;
                       if (value >= -32768 && value <= 32767) {
                         constant->constant_pool_address = -1;
                         break;
                       }
                       
-                      SPVM_CONSTANT_POOL_push_int(spvm, constant_pool, value);
+                      SPVM_CONSTANT_POOL_push_int(spvm, constant_pool, (int32_t)value);
                       break;
                     }
                     case SPVM_CONSTANT_C_CODE_LONG: {
@@ -386,16 +386,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   for (int32_t i = 0; i < length; i++) {
                     SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, op_cases, i);
                     SPVM_OP* op_constant = op_case->first;
-                    int64_t value;
-                    if (op_constant->uv.constant->code == SPVM_CONSTANT_C_CODE_INT) {
-                      value = op_constant->uv.constant->uv.int_value;
-                    }
-                    else if (op_constant->uv.constant->code == SPVM_CONSTANT_C_CODE_LONG) {
-                      value = op_constant->uv.constant->uv.long_value;
-                    }
-                    else {
-                      assert(0);
-                    }
+                    int64_t value = op_constant->uv.constant->uv.long_value;
                     
                     if (value < min) {
                       min = value;

@@ -19,7 +19,6 @@ struct SPVM_constant {
   SPVM_RESOLVED_TYPE* resolved_type;
   union {
     // byte, short, int value is saved to long_value
-    int32_t int_value;
     int64_t long_value;
     float float_value;
     double double_value;

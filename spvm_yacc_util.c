@@ -122,7 +122,7 @@ void SPVM_yyprint (FILE *file, int type, YYSTYPE yylval) {
       
       switch(constant->code) {
         case SPVM_CONSTANT_C_CODE_INT:
-          fprintf(file, "int %" PRId32, constant->uv.int_value);
+          fprintf(file, "int %" PRId64, constant->uv.long_value);
           break;
         case SPVM_CONSTANT_C_CODE_LONG:
           fprintf(file, "long %" PRId64, constant->uv.long_value);

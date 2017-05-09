@@ -27,7 +27,7 @@ SPVM_CONSTANT* SPVM_CONSTANT_create_int_1(SPVM* spvm) {
   SPVM_CONSTANT* constant = SPVM_CONSTANT_new(spvm);
   
   constant->code = SPVM_CONSTANT_C_CODE_INT;
-  constant->uv.int_value = 1;
+  constant->uv.long_value = 1;
   constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "int", strlen("int"));
   
   return constant;

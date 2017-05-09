@@ -369,7 +369,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
       case '\'': {
         parser->bufptr++;
         
-        char ch;
+        int8_t ch;
         if (*parser->bufptr == '\'') {
           ch = '\0';
           parser->bufptr++;
@@ -388,7 +388,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
         SPVM_OP* op = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_CONSTANT);
         SPVM_CONSTANT* constant = SPVM_CONSTANT_new(spvm);
         constant->code = SPVM_CONSTANT_C_CODE_INT;
-        constant->uv.int_value = (int32_t) (uint8_t) ch;
+        constant->uv.long_value = ch;
         constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "byte", strlen("byte"));
         
         op->uv.constant = constant;
@@ -558,7 +558,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
               fprintf(stderr, "Number literal out of range %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
               exit(EXIT_FAILURE);
             }
-            constant->uv.int_value = (int32_t)num;
+            constant->uv.long_value = (int32_t)num;
             constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "int", strlen("int"));
           }
           // long
