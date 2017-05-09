@@ -250,6 +250,14 @@ package Test {
       }
     }
     
+    {
+      my $num = 5;
+      switch($num) {
+        default:
+          std::printl(5);
+      }
+    }
+    
     # my $num;
     # my $num1 = undef;
     

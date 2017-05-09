@@ -387,7 +387,17 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   for (int32_t i = 0; i < length; i++) {
                     SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, op_cases, i);
                     SPVM_OP* op_constant = op_case->first;
-                    int64_t value = op_constant->uv.constant->uv.long_value;
+                    int64_t value;
+                    if (op_constant->uv.constant->code == SPVM_CONSTANT_C_CODE_INT) {
+                      value = op_constant->uv.constant->uv.int_value;
+                    }
+                    else if (op_constant->uv.constant->code == SPVM_CONSTANT_C_CODE_LONG) {
+                      value = op_constant->uv.constant->uv.long_value;
+                    }
+                    else {
+                      assert(0);
+                    }
+                    
                     if (value < min) {
                       min = value;
                     }

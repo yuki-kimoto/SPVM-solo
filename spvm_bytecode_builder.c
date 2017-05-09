@@ -256,6 +256,10 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 
                 SPVM_SWITCH_INFO* switch_info = cur_op_switch_info->uv.switch_info;
                 
+                if (switch_info->op_cases->length == 0) {
+                  break;
+                }
+                
                 // tableswitch
                 if (switch_info->code == SPVM_SWITCH_INFO_C_CODE_TABLE_SWITCH) {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_TABLE_SWITCH_LONG);
