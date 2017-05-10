@@ -255,38 +255,38 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 // tableswitch
                 if (switch_info->code == SPVM_SWITCH_INFO_C_CODE_TABLE_SWITCH) {
                   if (term_condition_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_INT) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_TABLE_SWITCH_LONG);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_TABLE_SWITCH_INT);
                     
                     cur_switch_address = bytecode_array->length - 1;
                     
                     // Padding
-                    int32_t padding = ((int32_t)sizeof(int64_t) - 1) - (cur_switch_address % (int32_t)sizeof(int64_t));
+                    int32_t padding = ((int32_t)sizeof(int32_t) - 1) - (cur_switch_address % (int32_t)sizeof(int32_t));
                     
                     for (int32_t i = 0; i < padding; i++) {
                       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                     }
                     
                     // Default
-                    for (int32_t i = 0; i < (int32_t)sizeof(int64_t); i++) {
+                    for (int32_t i = 0; i < (int32_t)sizeof(int32_t); i++) {
                       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                     }
                     
                     // Low
-                    for (int32_t i = 0; i < (int32_t)sizeof(int64_t); i++) {
+                    for (int32_t i = 0; i < (int32_t)sizeof(int32_t); i++) {
                       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                     }
-                    int64_t min = (int64_t)switch_info->min;
-                    *(int64_t*)&bytecode_array->values[bytecode_array->length - sizeof(int64_t)] = (int64_t)min;
+                    int32_t min = (int32_t)switch_info->min;
+                    *(int32_t*)&bytecode_array->values[bytecode_array->length - sizeof(int32_t)] = (int32_t)min;
                     
                     // High
-                    for (int32_t i = 0; i < (int32_t)sizeof(int64_t); i++) {
+                    for (int32_t i = 0; i < (int32_t)sizeof(int32_t); i++) {
                       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                     }
-                    int64_t max = (int64_t)switch_info->max;
-                    *(int64_t*)&bytecode_array->values[bytecode_array->length - sizeof(int64_t)] = (int64_t)switch_info->max;
+                    int32_t max = (int32_t)switch_info->max;
+                    *(int32_t*)&bytecode_array->values[bytecode_array->length - sizeof(int32_t)] = (int32_t)switch_info->max;
                     
                     // Offsets
-                    for (int64_t i = 0; i < (max - min + 1) * (int64_t)sizeof(int64_t); i++) {
+                    for (int32_t i = 0; i < (max - min + 1) * (int32_t)sizeof(int32_t); i++) {
                       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                     }
                   }
@@ -373,7 +373,11 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 // tableswitch
                 if (switch_info->code == SPVM_SWITCH_INFO_C_CODE_TABLE_SWITCH) {
                   if (term_condition_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_INT) {
-                    int32_t padding = (sizeof(int64_t) - 1) - (cur_switch_address % sizeof(int64_t));
+                    
+                    // This code is created by copying long logic and replacing int64_t with int32_t
+                    // [START]
+                    
+                    int32_t padding = (sizeof(int32_t) - 1) - (cur_switch_address % sizeof(int32_t));
                     
                     // Default offset
                     int32_t default_offset;
@@ -383,35 +387,36 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                     else {
                       default_offset = cur_default_address - cur_switch_address;
                     }
-                    *(int64_t*)&bytecode_array->values[cur_switch_address + padding + 1] = default_offset;
+                    *(int32_t*)&bytecode_array->values[cur_switch_address + padding + 1] = default_offset;
                     
                     // min
-                    int64_t min = *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) + 1];
+                    int32_t min = *(int32_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int32_t) + 1];
                     
                     // max
-                    int64_t max = *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) * 2 + 1];
+                    int32_t max = *(int32_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int32_t) * 2 + 1];
                     
                     int32_t length = (int32_t)(max - min + 1);
                     
-                    int64_t case_pos = 0;
+                    int32_t case_pos = 0;
                     for (int32_t i = 0; i < length; i++) {
                       SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, switch_info->op_cases, case_pos);
                       SPVM_OP* op_constant = op_case->first;
                       if (op_constant->uv.constant->uv.long_value - min == i) {
                         // Case
-                        int64_t* case_address_ptr = SPVM_ARRAY_fetch(spvm, cur_case_addresses, case_pos);
-                        int64_t case_address = *case_address_ptr;
-                        int64_t case_offset = case_address - cur_switch_address;
+                        int32_t* case_address_ptr = SPVM_ARRAY_fetch(spvm, cur_case_addresses, case_pos);
+                        int32_t case_address = *case_address_ptr;
+                        int32_t case_offset = case_address - cur_switch_address;
                         
-                        *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) * 3 + 1 + (sizeof(int64_t) * i)] = case_offset;
+                        *(int32_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int32_t) * 3 + 1 + (sizeof(int32_t) * i)] = case_offset;
                         
                         case_pos++;
                       }
                       else {
                         // Default
-                        *(int64_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int64_t) * 3 + 1 + (sizeof(int64_t) * i)] = default_offset;
+                        *(int32_t*)&bytecode_array->values[cur_switch_address + padding + sizeof(int32_t) * 3 + 1 + (sizeof(int32_t) * i)] = default_offset;
                       }
                     }
+                    // [END]
                   }
                   else if (term_condition_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_LONG) {
                     int32_t padding = (sizeof(int64_t) - 1) - (cur_switch_address % sizeof(int64_t));

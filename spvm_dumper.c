@@ -325,6 +325,53 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
         break;
       }
       
+      case SPVM_BYTECODE_C_CODE_TABLE_SWITCH_INT: {
+        
+        // Machine address to calculate padding
+        int32_t pc = i;
+        
+        // Padding
+        int32_t padding = (sizeof(int32_t) - 1) - (pc % sizeof(int32_t));
+        
+        for (int32_t j = 0; j < padding; j++) {
+          i++;
+          bytecode = bytecode_array->values[i];
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
+        }
+        
+        // Default
+        for (int32_t j = 0; j < (int32_t)sizeof(int32_t); j++) {
+          i++;
+          bytecode = bytecode_array->values[i];
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
+        }
+        
+        // Low
+        int32_t min = *(int32_t*)&bytecode_array->values[i + 1];
+        for (int32_t j = 0; j < (int32_t)sizeof(int32_t); j++) {
+          i++;
+          bytecode = bytecode_array->values[i];
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
+        }
+        
+        // High
+        int32_t max = *(int32_t*)&bytecode_array->values[i + 1];
+        for (int32_t j = 0; j < (int32_t)sizeof(int32_t); j++) {
+          i++;
+          bytecode = bytecode_array->values[i];
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
+        }
+        
+        // Addresses
+        int32_t length = max - min + 1;
+        for (int32_t j = 0; j < length * (int32_t)sizeof(int32_t); j++) {
+          i++;
+          bytecode = bytecode_array->values[i];
+          printf("        [%" PRId32 "] %d\n", i, bytecode);
+        }
+        
+        break;
+      }
       case SPVM_BYTECODE_C_CODE_TABLE_SWITCH_LONG: {
         
         // Machine address to calculate padding
