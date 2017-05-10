@@ -211,6 +211,8 @@ package Test {
     std::printl(sum1(1, 5));
     
     "abc";
+    
+    # Table switch long
     {
       my $num = 3;
       switch ($num) {
@@ -224,6 +226,8 @@ package Test {
           std::printl(5);
       }
     }
+
+    # Lookup switch long
     {
       my $num = 3;
       switch ($num) {
@@ -238,6 +242,7 @@ package Test {
       }
     }
     
+    # Table switch int
     {
       my $num = 3I;
       
@@ -248,6 +253,21 @@ package Test {
           std::printl(2);
         case 5I:
           std::printl(3);
+        default:
+          std::printl(5);
+      }
+    }
+
+    # Lookup switch int
+    {
+      my $num = 3I;
+      switch ($num) {
+        case 1I:
+          std::printl(1);
+        case 3I:
+          std::printl(2);
+        case 10000I:
+          std::printl(2);
         default:
           std::printl(5);
       }
