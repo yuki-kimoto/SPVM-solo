@@ -719,10 +719,23 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                 }
                 // Rethrow exception
                 else {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_DIE);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                 }
@@ -731,6 +744,14 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
               }
               case SPVM_OP_C_CODE_DIE: {
                 SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_DIE);
+                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
+                SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, 0);
                 break;
               }
               case SPVM_OP_C_CODE_LAST: {

@@ -301,12 +301,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           // Prepare arguments
           memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(intmax_t));
 
-          // Save return address(operand + (throw or goto exception handler))
+          // Save return address(operand + (die or goto exception handler))
           if (call_stack_base == call_stack_base_start) {
             call_stack[operand_stack_top + 1] = -1;
           }
           else {
-            call_stack[operand_stack_top + 1] = (intptr_t)pc + 5 + 3;
+            call_stack[operand_stack_top + 1] = (intptr_t)pc + 5 + 9;
           }
           
           // Save vars base before
@@ -391,7 +391,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_RETURN_VOID: {
-        
         // Restore operand stack top
         operand_stack_top = call_stack_base - 3;
         
@@ -411,7 +410,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           // Restore vars
           vars = &call_stack[call_stack_base];
-
+          
           pc = return_address;
           goto *jump[*pc];
         }
@@ -444,7 +443,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           // Restore vars
           vars = &call_stack[call_stack_base];
-
+          
           pc = (uint8_t*)(return_address - 3);
           goto *jump[*pc];
         }

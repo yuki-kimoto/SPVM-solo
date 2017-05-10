@@ -324,6 +324,43 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
         
         break;
       }
+
+      // Have eight operands
+      case SPVM_BYTECODE_C_CODE_DIE: {
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        i++;
+        bytecode = bytecode_array->values[i];
+        printf("        [%" PRId32 "] %d\n", i, bytecode);
+        
+        break;
+      }
       
       case SPVM_BYTECODE_C_CODE_TABLE_SWITCH_INT: {
         
