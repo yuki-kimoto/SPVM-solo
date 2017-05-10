@@ -249,6 +249,8 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
               case SPVM_OP_C_CODE_SWITCH_CONDITION: {
                 
                 SPVM_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
+                SPVM_OP* op_term_condition = switch_info->op_term_condition;
+                SPVM_RESOLVED_TYPE* term_condition_resolved_type = SPVM_OP_get_resolved_type(spvm, op_term_condition);
                 
                 // tableswitch
                 if (switch_info->code == SPVM_SWITCH_INFO_C_CODE_TABLE_SWITCH) {
@@ -324,6 +326,8 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
               case SPVM_OP_C_CODE_SWITCH: {
                 
                 SPVM_SWITCH_INFO* switch_info = op_cur->uv.switch_info;
+                SPVM_OP* op_term_condition = switch_info->op_term_condition;
+                SPVM_RESOLVED_TYPE* term_condition_resolved_type = SPVM_OP_get_resolved_type(spvm, op_term_condition);
                 
                 // tableswitch
                 if (switch_info->code == SPVM_SWITCH_INFO_C_CODE_TABLE_SWITCH) {

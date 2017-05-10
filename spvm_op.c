@@ -214,12 +214,12 @@ SPVM_OP* SPVM_OP_build_try_catch(SPVM* spvm, SPVM_OP* op_try, SPVM_OP* op_try_bl
   return op_try;
 }
 
-SPVM_OP* SPVM_OP_build_switch_statement(SPVM* spvm, SPVM_OP* op_switch, SPVM_OP* op_term, SPVM_OP* op_block) {
+SPVM_OP* SPVM_OP_build_switch_statement(SPVM* spvm, SPVM_OP* op_switch, SPVM_OP* op_term_condition, SPVM_OP* op_block) {
   
   SPVM_PARSER* parser = spvm->parser;
   
-  SPVM_OP* op_switch_condition = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_SWITCH_CONDITION, op_term->file, op_term->line);
-  SPVM_OP_sibling_splice(spvm, op_switch_condition, op_switch_condition->last, 0, op_term);
+  SPVM_OP* op_switch_condition = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_SWITCH_CONDITION, op_term_condition->file, op_term_condition->line);
+  SPVM_OP_sibling_splice(spvm, op_switch_condition, op_switch_condition->last, 0, op_term_condition);
   
   SPVM_OP_sibling_splice(spvm, op_switch, op_switch->last, 0, op_switch_condition);
   SPVM_OP_sibling_splice(spvm, op_switch, op_switch->last, 0, op_block);
@@ -231,6 +231,7 @@ SPVM_OP* SPVM_OP_build_switch_statement(SPVM* spvm, SPVM_OP* op_switch, SPVM_OP*
   op_switch->uv.switch_info->op_cases = parser->cur_op_cases;
   
   op_switch_condition->uv.switch_info = switch_info;
+  switch_info->op_term_condition = op_term_condition;
   
   parser->cur_op_cases = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, spvm->parser->allocator, 0);
   

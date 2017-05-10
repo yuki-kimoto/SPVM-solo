@@ -10,6 +10,7 @@ enum {
 
 // Parser information
 struct SPVM_switch_info {
+  SPVM_OP* op_term_condition;
   SPVM_ARRAY* op_cases;
   int64_t max;
   int64_t min;
