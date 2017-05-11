@@ -1452,6 +1452,11 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       sub->abs_name_constant_pool_address = spvm->constant_pool->length;
       SPVM_CONSTANT_POOL_push_string(spvm, spvm->constant_pool, sub->abs_name);
       
+      // Push file name to constant pool
+      sub->file_name_constant_pool_address = spvm->constant_pool->length;
+      assert(sub->file_name);
+      SPVM_CONSTANT_POOL_push_string(spvm, spvm->constant_pool, sub->file_name);
+      
       // Push sub information to constant pool
       sub->constant_pool_address = spvm->constant_pool->length;
       SPVM_CONSTANT_POOL_push_sub(spvm, spvm->constant_pool, sub);

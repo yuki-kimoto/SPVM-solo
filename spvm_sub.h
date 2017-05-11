@@ -18,6 +18,7 @@ struct SPVM_sub {
   int32_t operand_stack_max;
   int32_t constant_pool_address;
   int32_t abs_name_constant_pool_address;
+  int32_t file_name_constant_pool_address;
   _Bool is_native;
   _Bool is_constant;
 };

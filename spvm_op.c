@@ -913,6 +913,10 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
           
           sub->abs_name = sub_abs_name;
           
+          assert(op_sub->file);
+          
+          sub->file_name = op_sub->file;
+          
           SPVM_HASH_insert(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
           SPVM_ARRAY_push(spvm, op_subs, op_sub);
         }
@@ -994,6 +998,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
           // Create absolute name
           const char* sub_abs_name = SPVM_OP_create_abs_name(spvm, package_name, op_name->uv.name);
           sub->abs_name = sub_abs_name;
+          sub->file_name = op_enumeration_value->file;
           
           // Set sub
           op_sub->uv.sub = sub;
