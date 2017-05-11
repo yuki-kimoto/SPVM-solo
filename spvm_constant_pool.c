@@ -81,6 +81,7 @@ void SPVM_CONSTANT_POOL_push_sub(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, 
   constant_pool_sub->args_length = sub->op_args->length;
   constant_pool_sub->is_native = sub->is_native;
   constant_pool_sub->abs_name_constant_pool_address = sub->abs_name_constant_pool_address;
+  constant_pool_sub->file_name_constant_pool_address = sub->file_name_constant_pool_address;
   if (sub->op_return_type->code != SPVM_OP_C_CODE_VOID) {
     constant_pool_sub->has_return_value = 1;
   }
@@ -157,6 +158,16 @@ void SPVM_CONSTANT_POOL_push_string(SPVM* spvm, SPVM_CONSTANT_POOL* constant_poo
   memcpy(&constant_pool->values[constant_pool->length], string, string_length + 1);
   
   constant_pool->length += extend_length;
+}
+
+char* SPVM_CONSTANT_POOL_get_string_value(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int32_t address) {
+  assert(address);
+  
+  int64_t length = &constant_pool->values[address + 1];
+  
+  char* string_value = (char*)&constant_pool->values[address + 1];
+  
+  return string_value;
 }
 
 void SPVM_CONSTANT_POOL_free(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool) {

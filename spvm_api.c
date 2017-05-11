@@ -325,7 +325,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           
           // Set operant stack top
           operand_stack_top = call_stack_base + constant_pool_sub->my_vars_length - 1;
-
+          
           // Call native sub
           if (constant_pool_sub->is_native) {
             // Set environment
@@ -419,14 +419,14 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_DIE: {
-
+        
         // Sub name
         int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
-        const char* sub_name = "Test";
-
+        const char* sub_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, sub_name_constant_pool_address);
+        
         // File name
         int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
-        const char* file_name = "Test";
+        const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
         
         // Return value
         intmax_t return_value = call_stack[operand_stack_top];
