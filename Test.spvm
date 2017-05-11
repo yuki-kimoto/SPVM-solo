@@ -588,6 +588,7 @@ package Test {
   }
   
   sub sum2 ($num1 : long, $num2 : long) : long {
+    # die "Error";
     
     my $num3 = sum0($num1, $num2);
     

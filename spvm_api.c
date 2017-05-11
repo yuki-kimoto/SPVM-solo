@@ -429,14 +429,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       }
       case_SPVM_BYTECODE_C_CODE_DIE: {
         
-        // Sub name
-        int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
-        const char* sub_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, sub_name_constant_pool_address);
-        
-        // File name
-        int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
-        const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
-        
         // Return value
         intmax_t return_value = call_stack[operand_stack_top];
         
@@ -448,6 +440,19 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
 
         // Get sub_constant_pool_address
         sub_constant_pool_address = *(int32_t*)&call_stack[call_stack_base - 2];
+        
+        // Get constant pool sub
+        constant_pool_sub = (SPVM_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
+        
+        // Sub name
+        int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
+        const char* sub_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, sub_name_constant_pool_address);
+        
+        // File name
+        int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
+        const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
+        
+        warn("AAAAAAAAAA %s %s", sub_name, file_name);
         
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1];
