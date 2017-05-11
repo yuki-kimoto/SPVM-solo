@@ -301,7 +301,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           operand_stack_top -= constant_pool_sub->args_length;
 
           // Prepare arguments
-          memmove(&call_stack[operand_stack_top + 3], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(intmax_t));
+          memmove(&call_stack[operand_stack_top + 4], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(intmax_t));
 
           // Save return address(operand + (throw or goto exception handler))
           if (call_stack_base == call_stack_base_start) {
@@ -311,11 +311,14 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
             call_stack[operand_stack_top + 1] = (intptr_t)pc + 5 + 3;
           }
           
+          // Save sub_constant_pool_address
+          *(int32_t*)&call_stack[operand_stack_top + 2] = sub_constant_pool_address;
+          
           // Save vars base before
-          call_stack[operand_stack_top + 2] = call_stack_base;
+          call_stack[operand_stack_top + 3] = call_stack_base;
           
           // Set vars base
-          call_stack_base = operand_stack_top + 3;
+          call_stack_base = operand_stack_top + 4;
           
           // Initialize my variables
           memset(&call_stack[call_stack_base + constant_pool_sub->args_length], 0, (constant_pool_sub->my_vars_length - constant_pool_sub->args_length) * sizeof(intmax_t));
@@ -365,10 +368,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         intmax_t return_value = call_stack[operand_stack_top];
         
         // Restore operand stack top
-        operand_stack_top = call_stack_base - 3;
+        operand_stack_top = call_stack_base - 4;
         
         // Get return address
-        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 2];
+        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 3];
+        
+        // Get sub_constant_pool_address
+        sub_constant_pool_address = *(int32_t*)&call_stack[call_stack_base - 2];
         
         // Resotre call stack base
         call_stack_base = call_stack[call_stack_base - 1];
@@ -395,11 +401,14 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_RETURN_VOID: {
         
         // Restore operand stack top
-        operand_stack_top = call_stack_base - 3;
+        operand_stack_top = call_stack_base - 4;
         
         // Return address
-        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 2];
-        
+        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 3];
+
+        // Get sub_constant_pool_address
+        sub_constant_pool_address = *(int32_t*)&call_stack[call_stack_base - 2];
+
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1];
         
@@ -432,10 +441,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         intmax_t return_value = call_stack[operand_stack_top];
         
         // Restore operand stack top
-        operand_stack_top = call_stack_base - 3;
+        operand_stack_top = call_stack_base - 4;
         
         // Return address
-        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 2];
+        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 3];
+
+        // Get sub_constant_pool_address
+        sub_constant_pool_address = *(int32_t*)&call_stack[call_stack_base - 2];
         
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1];
