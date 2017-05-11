@@ -273,6 +273,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   
   SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
   
+  SPVM_CONSTANT_POOL_SUB* constant_pool_sub = NULL;
+  
   // Goto subroutine
   goto CALLSUB_COMMON;
   
@@ -286,7 +288,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         CALLSUB_COMMON: {
 
-          SPVM_CONSTANT_POOL_SUB* constant_pool_sub = (SPVM_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
+          constant_pool_sub = (SPVM_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
 
           // Extend call stack(current size + 2(return address + call stack base before) + lexical variable area + operand_stack area)
           int32_t call_stack_max = operand_stack_top + 2 + constant_pool_sub->my_vars_length + constant_pool_sub->operand_stack_max;
@@ -417,6 +419,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_DIE: {
+
+        // Sub name
+        const char* sub_name = "Test";
         
         // Return value
         intmax_t return_value = call_stack[operand_stack_top];
@@ -433,7 +438,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Push return value
         operand_stack_top++;
         call_stack[operand_stack_top] = return_value;
-
+        
         // Finish call sub with exception
         if (call_stack_base == call_stack_base_start) {
           env->call_stack_base = call_stack_base;
@@ -444,7 +449,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           // Restore vars
           vars = &call_stack[call_stack_base];
-
+          
           pc = (uint8_t*)(return_address - 3);
           goto *jump[*pc];
         }
