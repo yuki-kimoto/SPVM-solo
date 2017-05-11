@@ -421,7 +421,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_DIE: {
 
         // Sub name
+        int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
         const char* sub_name = "Test";
+
+        // File name
+        int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
+        const char* file_name = "Test";
         
         // Return value
         intmax_t return_value = call_stack[operand_stack_top];
