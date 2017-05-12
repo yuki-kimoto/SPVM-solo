@@ -431,7 +431,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_DIE: {
         
         // Return value
-        intmax_t return_value = call_stack[operand_stack_top];
+        void* return_value = call_stack[operand_stack_top];
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 4;
@@ -460,7 +460,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Push return value
         operand_stack_top++;
-        call_stack[operand_stack_top] = return_value;
+        *(void**)&call_stack[operand_stack_top] = return_value;
         
         // Finish call sub with exception
         if (call_stack_base == call_stack_base_start) {
