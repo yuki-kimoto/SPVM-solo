@@ -1768,7 +1768,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
         
         // New sv
-        SPVM_SV* sv = SPVM_SV_new_pvn(spvm, chars_ptr, length);
+        SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, chars_ptr, length);
         
         // Set sv
         *(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = (intmax_t)sv;
