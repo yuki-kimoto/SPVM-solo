@@ -457,13 +457,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         SPVM_SV* sv_message = SPVM_API_get_string_sv(spvm, env, return_value);
         
-        const char* message = SPVM_API_get_string_value(spvm, env, return_value);
+        const char* pv_message = SPVM_API_get_string_value(spvm, env, return_value);
         
-        warn("CCCCCCCCC %s", message);
+        warn("CCCCCCCCC %s", pv_message);
         
-        SPVM_COMPAT_sv_catpvn(sv_message, sub_name, strlen(sub_name));
-        SPVM_COMPAT_sv_catpvn(sv_message, " ", strlen(" "));
-        SPVM_COMPAT_sv_catpvn(sv_message, file_name, strlen(file_name));
+        void* new_message_address = SPVM_API_create_string(spvm, env, pv_message, strlen(pv_message));
+        SPVM_SV* new_sv_message = SPVM_API_get_string_sv(spvm, env, new_message_address);
+        
+        SPVM_COMPAT_sv_catpvn(new_sv_message, sub_name, strlen(sub_name));
+        SPVM_COMPAT_sv_catpvn(new_sv_message, " ", strlen(" "));
+        SPVM_COMPAT_sv_catpvn(new_sv_message, file_name, strlen(file_name));
         
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1];
