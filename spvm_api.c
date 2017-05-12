@@ -455,6 +455,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         warn("AAAAAAAAAA %s %s", sub_name, file_name);
         
+        const char* string_value = SPVM_API_get_string_value(spvm, env, return_value);
+        
+        warn("CCCCCCCCC %s", string_value);
+        
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1];
         

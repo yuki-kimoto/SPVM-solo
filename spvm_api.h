@@ -99,4 +99,6 @@ float SPVM_API_pop_return_value_float(SPVM* spvm, SPVM_ENV* env);
 double SPVM_API_pop_return_value_double(SPVM* spvm, SPVM_ENV* env);
 void* SPVM_API_pop_return_value_address(SPVM* spvm, SPVM_ENV* env);
 
+SPVM_SV* SPVM_API_get_string_value(SPVM* spvm, SPVM_ENV* env, void* address);
+
 #endif
