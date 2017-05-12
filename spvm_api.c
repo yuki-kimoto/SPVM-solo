@@ -1752,28 +1752,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int64_t* string_info_ptr = &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
         
         int64_t length = string_info_ptr[0];
-        int8_t* chars_ptr = (int8_t*)&string_info_ptr[1];
+        char* pv = (int8_t*)&string_info_ptr[1];
         
-        // Allocate array
-        int64_t allocate_size = SPVM_API_C_OBJECT_HEADER_BYTE_SIZE;
-        void* address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+        // Create string
+        void* address = SPVM_API_create_string(spvm, env, pv, length);
         
-        // Set type
-        *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_STRING;
-
-        // Set byte size
-        *(int32_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = (int32_t)allocate_size;
-        
-        // Set reference count
-        *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
-        
-        // New sv
-        SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, chars_ptr, length);
-        
-        // Set sv
-        *(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = (intmax_t)sv;
-        
-        // Set array
+        // Set string
         operand_stack_top++;
         *(void**)&call_stack[operand_stack_top] = address;
         
@@ -2323,4 +2307,30 @@ double* SPVM_API_get_array_double_values(SPVM* spvm, SPVM_ENV* env, void* addres
   (void)env;
   
   return (double*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE);
+}
+
+void* SPVM_API_create_string(SPVM* spvm, SPVM_ENV* env, char* pv, int64_t length) {
+  
+  SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
+  
+  // Allocate array
+  int64_t allocate_size = SPVM_API_C_OBJECT_HEADER_BYTE_SIZE;
+  void* address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+
+  // Set type
+  *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_STRING;
+
+  // Set byte size
+  *(int32_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = (int32_t)allocate_size;
+
+  // Set reference count
+  *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
+
+  // New sv
+  SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, length);
+
+  // Set sv
+  *(SPVM_SV**)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = (SPVM_SV*)sv;
+  
+  return address;
 }
