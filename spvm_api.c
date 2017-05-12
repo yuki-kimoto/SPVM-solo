@@ -25,6 +25,7 @@
 #include "spvm_env.h"
 #include "spvm_allocator_runtime.h"
 #include "spvm_sv.h"
+#include "spvm_compat.h"
 
 void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   (void)spvm;
@@ -2259,6 +2260,17 @@ SPVM_SV* SPVM_API_get_string_sv(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)env;
   
   return (SPVM_SV*)*(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
+}
+
+SPVM_SV* SPVM_API_get_string_value(SPVM* spvm, SPVM_ENV* env, void* address) {
+  (void)spvm;
+  (void)env;
+  
+  SPVM_SV* sv = SPVM_API_get_string_sv(spvm, env, address);
+  assert(sv);
+  const char* value = SPVM_COMPAT_SVpv(sv);
+  
+  return value;
 }
 
 int8_t* SPVM_API_get_array_byte_values(SPVM* spvm, SPVM_ENV* env, void* address) {
