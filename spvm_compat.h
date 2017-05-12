@@ -5,4 +5,8 @@
 
 char* SPVM_COMPAT_SVpv(SPVM_SV* sv);
 
+void SPVM_COMPAT_sv_catpvn(SPVM_SV*, const char*, size_t);
+
+SPVM_SV* SPVM_COMPAT_newSVsv(SPVM_SV* sv);
+
 #endif
