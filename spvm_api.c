@@ -460,9 +460,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         const char* pv_message = SPVM_API_get_string_value(spvm, env, return_value);
         
         warn("CCCCCCCCC %s", pv_message);
+
+        // New sv
+        SPVM_SV* new_sv_message = SPVM_COMPAT_newSVpvn(spvm, pv_message, strlen(pv_message));
         
-        void* new_message_address = SPVM_API_create_string(spvm, env, pv_message, strlen(pv_message));
-        SPVM_SV* new_sv_message = SPVM_API_get_string_sv(spvm, env, new_message_address);
+        void* new_message_address = SPVM_API_create_string_sv(spvm, env, new_sv_message);
         
         SPVM_COMPAT_sv_catpvn(new_sv_message, sub_name, strlen(sub_name));
         SPVM_COMPAT_sv_catpvn(new_sv_message, " ", strlen(" "));
@@ -473,7 +475,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Push return value
         operand_stack_top++;
-        *(void**)&call_stack[operand_stack_top] = return_value;
+        *(void**)&call_stack[operand_stack_top] = new_message_address;
         
         // Finish call sub with exception
         if (call_stack_base == call_stack_base_start) {
@@ -1756,9 +1758,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         int64_t length = string_info_ptr[0];
         char* pv = (int8_t*)&string_info_ptr[1];
+
+        // New sv
+        SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, length);
         
         // Create string
-        void* address = SPVM_API_create_string(spvm, env, pv, length);
+        void* address = SPVM_API_create_string_sv(spvm, env, sv);
         
         // Set string
         operand_stack_top++;
@@ -2312,26 +2317,23 @@ double* SPVM_API_get_array_double_values(SPVM* spvm, SPVM_ENV* env, void* addres
   return (double*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE);
 }
 
-void* SPVM_API_create_string(SPVM* spvm, SPVM_ENV* env, char* pv, int64_t length) {
+void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   
   SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
   
   // Allocate array
   int64_t allocate_size = SPVM_API_C_OBJECT_HEADER_BYTE_SIZE;
   void* address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
-
+  
   // Set type
   *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_STRING;
-
+  
   // Set byte size
   *(int32_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = (int32_t)allocate_size;
-
+  
   // Set reference count
   *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
-
-  // New sv
-  SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, length);
-
+  
   // Set sv
   *(SPVM_SV**)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = (SPVM_SV*)sv;
   
