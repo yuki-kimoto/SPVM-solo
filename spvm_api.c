@@ -1984,8 +1984,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
         
         SPVM_SV* sv = *(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
         
-        sv->ref_count--;
-        
+        SPVM_SvREFCNT_dec(sv);
         SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
       }
       // Object is array of string
