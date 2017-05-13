@@ -453,14 +453,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
         const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
         
-        warn("AAAAAAAAAA %s %s", sub_name, file_name);
-        
         SPVM_SV* sv_message = SPVM_API_get_string_sv(spvm, env, return_value);
         
         const char* pv_message = SPVM_API_get_string_value(spvm, env, return_value);
         
-        warn("CCCCCCCCC %s", pv_message);
-        
+        // Free string if need
         if (return_value != NULL) {
           int64_t ref_count = SPVM_API_get_ref_count(spvm, env, return_value);
           if (ref_count == 0) {
@@ -474,8 +471,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         void* new_message_address = SPVM_API_create_string_sv(spvm, env, new_sv_message);
         
+        SPVM_COMPAT_sv_catpvn(new_sv_message, "\n from ", strlen("\n from "));
         SPVM_COMPAT_sv_catpvn(new_sv_message, sub_name, strlen(sub_name));
-        SPVM_COMPAT_sv_catpvn(new_sv_message, " ", strlen(" "));
+        SPVM_COMPAT_sv_catpvn(new_sv_message, " at ", strlen(" at "));
         SPVM_COMPAT_sv_catpvn(new_sv_message, file_name, strlen(file_name));
         
         // Resotre vars base
