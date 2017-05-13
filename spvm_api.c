@@ -460,7 +460,15 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         const char* pv_message = SPVM_API_get_string_value(spvm, env, return_value);
         
         warn("CCCCCCCCC %s", pv_message);
-
+        
+        if (return_value != NULL) {
+          int64_t ref_count = SPVM_API_get_ref_count(spvm, env, return_value);
+          if (ref_count == 0) {
+            SPVM_SvREFCNT_dec(sv_message);
+            SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, return_value);
+          }
+        }
+        
         // New sv
         SPVM_SV* new_sv_message = SPVM_COMPAT_newSVpvn(spvm, pv_message, strlen(pv_message));
         
