@@ -695,7 +695,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           assert(0);
         }
         else {
-          int64_t length = *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
+          int64_t length = *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
           if (index < 0 || index > length - 1) {
             assert(0);
           }
@@ -1745,7 +1745,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
         
         // Set array length
-        *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = length;
+        *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET) = length;
         
         // Set array
         *(void**)&call_stack[operand_stack_top] = address;
@@ -1773,7 +1773,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_ARRAY_LENGTH:
-        call_stack[operand_stack_top] = *(int64_t*)(*(void**)&call_stack[operand_stack_top] + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
+        call_stack[operand_stack_top] = *(int64_t*)(*(void**)&call_stack[operand_stack_top] + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_WIDE:
@@ -1982,8 +1982,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
       // Object is string
       if (*(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) == SPVM_API_C_OBJECT_HEADER_TYPE_STRING) {
         
-        SPVM_SV* sv = *(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
-        
+        SPVM_SV* sv = *(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
         SPVM_SvREFCNT_dec(sv);
         SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
       }
@@ -1991,7 +1990,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
       else if (*(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) == SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_STRING) {
         
         // Array length
-        int64_t length = *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
+        int64_t length = *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
         
         for (int64_t i = 0; i < length; i++) {
           void* element_address = *(void**)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(void*) * i);
@@ -2246,7 +2245,7 @@ int64_t SPVM_API_get_array_length(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)spvm;
   (void)env;
   
-  return *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
+  return *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
 }
 
 int64_t SPVM_API_get_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
@@ -2260,7 +2259,7 @@ SPVM_SV* SPVM_API_get_string_sv(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)spvm;
   (void)env;
   
-  return (SPVM_SV*)*(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET);
+  return (SPVM_SV*)*(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
 }
 
 SPVM_SV* SPVM_API_get_string_value(SPVM* spvm, SPVM_ENV* env, void* address) {
@@ -2334,7 +2333,7 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
   
   // Set sv
-  *(SPVM_SV**)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_LENGTH_OR_ADDRESS_BYTE_OFFSET) = (SPVM_SV*)sv;
+  *(SPVM_SV**)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET) = (SPVM_SV*)sv;
   
   return address;
 }
