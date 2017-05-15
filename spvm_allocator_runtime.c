@@ -10,6 +10,7 @@
 #include "spvm_memory_pool.h"
 #include "spvm_array.h"
 #include "spvm_api.h"
+#include "spvm_object_header.h"
 
 SPVM_ALLOCATOR_RUNTIME* SPVM_ALLOCATOR_RUNTIME_new(SPVM* spvm) {
   SPVM_ALLOCATOR_RUNTIME* allocator = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPVM_ALLOCATOR_RUNTIME));
@@ -92,7 +93,7 @@ void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* all
   }
   else {
     // Object byte size
-    int32_t byte_size = *(int32_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET);
+    int32_t byte_size = ((SPVM_OBJECT_HEADER*)address)->byte_size;
     
     assert(byte_size > 0);
     
