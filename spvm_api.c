@@ -182,6 +182,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_LONG,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_FLOAT,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_DOUBLE,
+    &&case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_ADDRESS,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_INT,
@@ -720,6 +721,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_DOUBLE:
         *(double*)&call_stack[operand_stack_top - 1]
           = *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(double) * (size_t)call_stack[operand_stack_top]);
+        operand_stack_top--;
+        pc++;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_ADDRESS:
+        *(void**)&call_stack[operand_stack_top - 1]
+          = *(void**)(*(intptr_t*)&call_stack[operand_stack_top - 1] + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE + sizeof(void*) * (size_t)call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
