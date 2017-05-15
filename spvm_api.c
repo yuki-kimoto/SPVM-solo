@@ -853,7 +853,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Free object
         if (address != NULL) {
-          int64_t ref_count = *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET);
+          int64_t ref_count = ((SPVM_OBJECT_HEADER*)address)->ref_count;
           if (ref_count == 0) {
             SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, (void*)call_stack[operand_stack_top]);
           }
@@ -1641,10 +1641,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_OBJECT;
         
         // Set byte size
-        *(int32_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = allocate_size;
+        ((SPVM_OBJECT_HEADER*)address)->byte_size = allocate_size;
         
         // Set reference count
-        *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
+        ((SPVM_OBJECT_HEADER*)address)->ref_count = 0;
         
         // Initialize fields area by 0
         memset((void*)((intptr_t)address + sizeof(SPVM_OBJECT_HEADER)), 0, fields_byte_size);
@@ -1730,13 +1730,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
         
         // Set byte size
-        *(int32_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = allocate_size;
+        ((SPVM_OBJECT_HEADER*)address)->byte_size = allocate_size;
         
         // Set reference count
-        *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
+        ((SPVM_OBJECT_HEADER*)address)->ref_count = 0;
         
         // Set array length
-        *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET) = length;
+        ((SPVM_OBJECT_HEADER*)address)->array_length_or_sv = length;
         
         // Set array
         *(void**)&call_stack[operand_stack_top] = address;
@@ -1962,18 +1962,18 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
   
   if (address != NULL) {
     
-    assert(*(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
+    assert(((SPVM_OBJECT_HEADER*)address)->ref_count > 0);
     
     // Decrement reference count
-    *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
+    ((SPVM_OBJECT_HEADER*)address)->ref_count -= 1;
     
     // If reference count is zero, free address.
-    if (*(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
+    if (((SPVM_OBJECT_HEADER*)address)->ref_count == 0) {
       
       // Object is string
       if (((SPVM_OBJECT_HEADER*)address)->type == SPVM_API_C_OBJECT_HEADER_TYPE_STRING) {
         
-        SPVM_SV* sv = *(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
+        SPVM_SV* sv = ((SPVM_OBJECT_HEADER*)address)->array_length_or_sv;
         SPVM_SvREFCNT_dec(sv);
         SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
       }
@@ -1981,7 +1981,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
       else if (((SPVM_OBJECT_HEADER*)address)->array_type == SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_STRING) {
         
         // Array length
-        int64_t length = *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
+        int64_t length = ((SPVM_OBJECT_HEADER*)address)->array_length_or_sv;
         
         for (int64_t i = 0; i < length; i++) {
           void* element_address = *(void**)((intptr_t)address + sizeof(SPVM_OBJECT_HEADER) + sizeof(void*) * i);
@@ -2002,13 +2002,13 @@ void SPVM_API_dec_ref_count_object(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)env;
   
   if (address != NULL) {
-    assert(*(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
+    assert(((SPVM_OBJECT_HEADER*)address)->ref_count > 0);
     
     // Decrement reference count
-    *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
+    ((SPVM_OBJECT_HEADER*)address)->ref_count -= 1;
     
     // If reference count is zero, free address.
-    if (*(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
+    if (((SPVM_OBJECT_HEADER*)address)->ref_count == 0) {
       SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
     }
   }
@@ -2020,14 +2020,14 @@ void SPVM_API_dec_ref_count_string(SPVM* spvm, SPVM_ENV* env, void* address) {
   
   if (address != NULL) {
     
-    assert(*(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
+    assert(((SPVM_OBJECT_HEADER*)address)->ref_count > 0);
     
     // Decrement reference count
-    *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
+    ((SPVM_OBJECT_HEADER*)address)->ref_count -= 1;
     
     // If reference count is zero, free address.
-    if (*(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
-      SPVM_SV* sv = *(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
+    if (((SPVM_OBJECT_HEADER*)address)->ref_count == 0) {
+      SPVM_SV* sv = ((SPVM_OBJECT_HEADER*)address)->array_length_or_sv;
       SPVM_SvREFCNT_dec(sv);
       SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
     }
@@ -2040,16 +2040,16 @@ void SPVM_API_dec_ref_count_array_string(SPVM* spvm, SPVM_ENV* env, void* addres
   
   if (address != NULL) {
     
-    assert(*(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) > 0);
+    assert(((SPVM_OBJECT_HEADER*)address)->ref_count > 0);
     
     // Decrement reference count
-    *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) -= 1;
+    ((SPVM_OBJECT_HEADER*)address)->ref_count -= 1;
     
     // If reference count is zero, free address.
-    if (*(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
+    if (((SPVM_OBJECT_HEADER*)address)->ref_count == 0) {
         
       // Array length
-      int64_t length = *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
+      int64_t length = ((SPVM_OBJECT_HEADER*)address)->array_length_or_sv;
       
       for (int64_t i = 0; i < length; i++) {
         void* element_address = *(void**)((intptr_t)address + sizeof(SPVM_OBJECT_HEADER) + sizeof(void*) * i);
@@ -2066,9 +2066,9 @@ void SPVM_API_inc_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)env;
   
   if (address != NULL) {
-    assert(*(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) >= 0);
+    assert(((SPVM_OBJECT_HEADER*)address)->ref_count >= 0);
     // Increment reference count
-    *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) += 1;
+    ((SPVM_OBJECT_HEADER*)address)->ref_count += 1;
   }
 }
 
@@ -2300,21 +2300,21 @@ int64_t SPVM_API_get_array_length(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)spvm;
   (void)env;
   
-  return *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
+  return ((SPVM_OBJECT_HEADER*)address)->array_length_or_sv;
 }
 
 int64_t SPVM_API_get_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)spvm;
   (void)env;
   
-  return *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET);
+  return ((SPVM_OBJECT_HEADER*)address)->ref_count;
 }
 
 SPVM_SV* SPVM_API_get_string_sv(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)spvm;
   (void)env;
   
-  return (SPVM_SV*)*(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
+  return (SPVM_SV*)((SPVM_OBJECT_HEADER*)address)->array_length_or_sv;
 }
 
 SPVM_SV* SPVM_API_get_string_value(SPVM* spvm, SPVM_ENV* env, void* address) {
@@ -2382,13 +2382,13 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_STRING;
   
   // Set byte size
-  *(int32_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = (int32_t)allocate_size;
+  ((SPVM_OBJECT_HEADER*)address)->byte_size = (int32_t)allocate_size;
   
   // Set reference count
-  *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) = 0;
+  ((SPVM_OBJECT_HEADER*)address)->ref_count = 0;
   
   // Set sv
-  *(SPVM_SV**)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET) = (SPVM_SV*)sv;
+  ((SPVM_OBJECT_HEADER*)address)->array_length_or_sv = (SPVM_SV*)sv;
   
   return address;
 }
