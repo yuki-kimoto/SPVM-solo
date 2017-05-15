@@ -197,6 +197,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_GET_FIELD_LONG,
     &&case_SPVM_BYTECODE_C_CODE_GET_FIELD_FLOAT,
     &&case_SPVM_BYTECODE_C_CODE_GET_FIELD_DOUBLE,
+    &&case_SPVM_BYTECODE_C_CODE_GET_FIELD_ADDRESS,
     &&case_SPVM_BYTECODE_C_CODE_SET_FIELD_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_SET_FIELD_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_SET_FIELD_INT,
@@ -1865,6 +1866,14 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
         *(double*)&call_stack[operand_stack_top] = *(double*)(*(void**)&call_stack[operand_stack_top] + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset);
+        pc += 5;
+        goto *jump[*pc];
+      }
+      case_SPVM_BYTECODE_C_CODE_GET_FIELD_ADDRESS: {
+        int32_t field_constant_pool_address
+          = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
+        SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+        *(void**)&call_stack[operand_stack_top] = *(void**)(*(void**)&call_stack[operand_stack_top] + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE + constant_pool_field->package_byte_offset);
         pc += 5;
         goto *jump[*pc];
       }
