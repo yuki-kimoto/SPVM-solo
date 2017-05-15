@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+/* object_header.h */
+struct SPVM_OBJECT_HEADER;
+typedef struct SPVM_object_header SPVM_OBJECT_HEADER;
+
 /* spvm_env.h */
 struct SPVM_sv;
 typedef struct SPVM_sv SPVM_SV;
