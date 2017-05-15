@@ -19,6 +19,9 @@ package Test {
     {
       my $strings : string[] = malloc string[5];
       $strings[0] = "abc";
+      $strings[1] = "ppp";
+      
+      std::println($strings[1]);
     }
     
     {
