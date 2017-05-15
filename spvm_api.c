@@ -31,7 +31,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   (void)spvm;
   (void)env;
   
-  
   // Jump table for direct threaded code
   static void* jump[] = {
     &&case_SPVM_BYTECODE_C_CODE_NOP,
@@ -770,10 +769,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           SPVM_API_inc_ref_count(spvm, env, (void*)call_stack[operand_stack_top]);
         }
         
-        // Decrement reference count if original object is not null
-        if ((void*)vars[vars_index] != NULL) {
-          SPVM_API_dec_ref_count(spvm, env, (void*)vars[vars_index]);
-        }
+        // Decrement reference count
+        SPVM_API_dec_ref_count(spvm, env, (void*)vars[vars_index]);
         
         // Store address
         vars[vars_index] = call_stack[operand_stack_top];
@@ -785,9 +782,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_DEC_REF_COUNT: {
         void* address = (void*)call_stack[operand_stack_top];
         
-        if (address != NULL) {
-          SPVM_API_dec_ref_count(spvm, env, address);
-        }
+        // Decrement reference count
+        SPVM_API_dec_ref_count(spvm, env, address);
         
         pc += 1;
         goto *jump[*pc];
@@ -846,10 +842,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           SPVM_API_inc_ref_count(spvm, env, *(void**)&call_stack[operand_stack_top]);
         }
         
-        // Decrement reference count if original object is not null
-        if (*(void**)(array_index) != NULL) {
-          SPVM_API_dec_ref_count(spvm, env, *(void**)(array_index));
-        }
+        // Decrement reference count
+        SPVM_API_dec_ref_count(spvm, env, *(void**)(array_index));
         
         // Store address
         *(void**)(array_index) = *(void**)&call_stack[operand_stack_top];
@@ -1804,9 +1798,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           }
           
           // Decrement reference count if original object is not null
-          if ((void*)vars[var_index] != NULL) {
-            SPVM_API_dec_ref_count(spvm, env, (void*)vars[var_index]);
-          }
+          SPVM_API_dec_ref_count(spvm, env, (void*)vars[var_index]);
           
           // Store address
           vars[var_index] = call_stack[operand_stack_top];
@@ -1955,10 +1947,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           SPVM_API_inc_ref_count(spvm, env, *(void**)&call_stack[operand_stack_top]);
         }
         
-        // Decrement reference count if original object is not null
-        if (*(void**)(field_index) != NULL) {
-          SPVM_API_dec_ref_count(spvm, env, *(void**)(field_index));
-        }
+        // Decrement reference count
+        SPVM_API_dec_ref_count(spvm, env, *(void**)(field_index));
         
         // Store object
         *(void**)(field_index) = *(void**)&call_stack[operand_stack_top];
