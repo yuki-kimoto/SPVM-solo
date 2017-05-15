@@ -1638,7 +1638,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         void* address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
         
         // Set type
-        *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_OBJECT;
+        ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_OBJECT;
         
         // Set byte size
         *(int32_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = allocate_size;
@@ -1671,59 +1671,59 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
           
           // Set type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
 
           // Set array type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE;
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE;
         }
         else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_SHORT) {
           allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int16_t) * length;
           address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
           // Set type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
           // Set array type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_SHORT;
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_SHORT;
         }
         else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_INT) {
           allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int32_t) * length;
           address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
           // Set type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
           // Set array type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_INT;
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_INT;
         }
         else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_LONG) {
           allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int64_t) * length;
           address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
           // Set type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
           // Set array type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_LONG;
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_LONG;
         }
         else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_FLOAT) {
           allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(float) * length;
           address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
           // Set type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
           // Set array type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_FLOAT;
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_FLOAT;
         }
         else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_DOUBLE) {
           allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(double) * length;
           address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
           // Set type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
           // Set array type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_DOUBLE;
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_DOUBLE;
         }
         else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_STRING) {
           allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(intptr_t) * length;
           address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
           memset(address, 0, allocate_size);
           // Set type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_ARRAY;
           // Set array type
-          *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_STRING;
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_STRING;
         }
         else {
           assert(0);
@@ -1971,14 +1971,14 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
     if (*(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_REF_COUNT_BYTE_OFFSET) == 0) {
       
       // Object is string
-      if (*(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) == SPVM_API_C_OBJECT_HEADER_TYPE_STRING) {
+      if (((SPVM_OBJECT_HEADER*)address)->type == SPVM_API_C_OBJECT_HEADER_TYPE_STRING) {
         
         SPVM_SV* sv = *(intmax_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
         SPVM_SvREFCNT_dec(sv);
         SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
       }
       // Object is array of string
-      else if (*(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_BYTE_OFFSET) == SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_STRING) {
+      else if (((SPVM_OBJECT_HEADER*)address)->array_type == SPVM_API_C_OBJECT_HEADER_ARRAY_TYPE_STRING) {
         
         // Array length
         int64_t length = *(int64_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_ARRAY_LENGTH_OR_SV_BYTE_OFFSET);
@@ -2379,7 +2379,7 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   void* address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
   
   // Set type
-  *(int8_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_TYPE_BYTE_OFFSET) = SPVM_API_C_OBJECT_HEADER_TYPE_STRING;
+  ((SPVM_OBJECT_HEADER*)address)->type = SPVM_API_C_OBJECT_HEADER_TYPE_STRING;
   
   // Set byte size
   *(int32_t*)((intptr_t)address + SPVM_API_C_OBJECT_HEADER_BYTE_SIZE_BYTE_OFFSET) = (int32_t)allocate_size;
