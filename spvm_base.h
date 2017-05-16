@@ -4,9 +4,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-/* object_header.h */
-struct SPVM_OBJECT_HEADER;
-typedef struct SPVM_object_header SPVM_OBJECT_HEADER;
+/* data_object_header.h */
+struct SPVM_DATA_OBJECT_HEADER;
+typedef struct SPVM_data_object_header SPVM_DATA_OBJECT_HEADER;
 
 /* spvm_env.h */
 struct SPVM_sv;
