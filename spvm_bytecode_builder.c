@@ -1346,7 +1346,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   
                   _Bool has_operand = 0;
                   
-                  if (SPVM_RESOLVED_TYPE_is_core_value(spvm, resolved_type)) {
+                  if (SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type)) {
                     if (my_var_address == 0) {
                       SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_STORE_0);
                     }
@@ -1646,7 +1646,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 if (op_first->code != SPVM_OP_C_CODE_ASSIGN && op_first->code != SPVM_OP_C_CODE_RETURN && !op_first->lvalue) {
                   SPVM_RESOLVED_TYPE* resolved_type = SPVM_OP_get_resolved_type(spvm, op_first);
                   
-                  if (SPVM_RESOLVED_TYPE_is_core_value(spvm, resolved_type)) {
+                  if (SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type)) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_POP);
                   }
                   else {

@@ -123,7 +123,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
             case SPVM_OP_C_CODE_FIELD: {
               SPVM_FIELD* field = op_cur->uv.field;
               SPVM_RESOLVED_TYPE* resolved_type = field->op_type->uv.type->resolved_type;
-              if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, resolved_type) && !SPVM_RESOLVED_TYPE_is_core_value_array(spvm, resolved_type)) {
+              if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type) && !SPVM_RESOLVED_TYPE_is_core_value_array(spvm, resolved_type)) {
                 SPVM_yyerror_format(spvm, "filed type must be core type or core type array at %s line %d\n", op_cur->file, op_cur->line);
                 parser->fatal_error = 1;
                 return;
@@ -176,7 +176,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   if (sub->op_return_type->code != SPVM_OP_C_CODE_VOID) {
                     SPVM_RESOLVED_TYPE* op_return_resolved_type = SPVM_OP_get_resolved_type(spvm, sub->op_return_type);
                     if (op_return_resolved_type) {
-                      if (SPVM_RESOLVED_TYPE_is_core_value(spvm, op_return_resolved_type)) {
+                      if (SPVM_RESOLVED_TYPE_is_numeric(spvm, op_return_resolved_type)) {
                         SPVM_OP* op_constant;
                         if (op_return_resolved_type->id <= SPVM_RESOLVED_TYPE_C_ID_INT) {
                           op_constant = SPVM_OP_new_op_constant_int(spvm, 0, op_cur->file, op_cur->line);
@@ -421,33 +421,33 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   // TERM == TERM
                   if (first_resolved_type && last_resolved_type) {
                     // core == core
-                    if (SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type) && SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                    if (SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type) && SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                       if (first_resolved_type->id != last_resolved_type->id) {
                         SPVM_yyerror_format(spvm, "== operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
                         break;
                       }
                     }
                     // core == OBJ
-                    else if (SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                    else if (SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                       SPVM_yyerror_format(spvm, "== left value must be object at %s line %d\n", op_cur->file, op_cur->line);
                       break;
                     }
                     // OBJ == core
-                    else if (SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                    else if (SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                       SPVM_yyerror_format(spvm, "== right value must be object at %s line %d\n", op_cur->file, op_cur->line);
                       break;
                     }
                   }
                   // undef == TERM
                   else if (!first_resolved_type) {
-                    if (SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                    if (SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                       SPVM_yyerror_format(spvm, "== right value must be object at %s line %d\n", op_cur->file, op_cur->line);
                       break;
                     }
                   }
                   // TERM == undef
                   else if (!last_resolved_type) {
-                    if (SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                    if (SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                       SPVM_yyerror_format(spvm, "== left value must be object at %s line %d\n", op_cur->file, op_cur->line);
                       break;
                     }
@@ -463,33 +463,33 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   // TERM == TERM
                   if (first_resolved_type && last_resolved_type) {
                     // core == core
-                    if (SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type) && SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                    if (SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type) && SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                       if (first_resolved_type->id != last_resolved_type->id) {
                         SPVM_yyerror_format(spvm, "!= operator two operands must be same type at %s line %d\n", op_cur->file, op_cur->line);
                         break;
                       }
                     }
                     // core == OBJ
-                    else if (SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                    else if (SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                       SPVM_yyerror_format(spvm, "!= left value must be object at %s line %d\n", op_cur->file, op_cur->line);
                       break;
                     }
                     // OBJ == core
-                    else if (SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                    else if (SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                       SPVM_yyerror_format(spvm, "!= right value must be object at %s line %d\n", op_cur->file, op_cur->line);
                       break;
                     }
                   }
                   // undef == TERM
                   else if (!first_resolved_type) {
-                    if (SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                    if (SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                       SPVM_yyerror_format(spvm, "!= right value must be object at %s line %d\n", op_cur->file, op_cur->line);
                       break;
                     }
                   }
                   // TERM == undef
                   else if (!last_resolved_type) {
-                    if (SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                    if (SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                       SPVM_yyerror_format(spvm, "!= left value must be object at %s line %d\n", op_cur->file, op_cur->line);
                       break;
                     }
@@ -513,11 +513,11 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                   
                   // Can receive only core type
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                     SPVM_yyerror_format(spvm, "< left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                     SPVM_yyerror_format(spvm, "< right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -545,11 +545,11 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                                   
                   // Can receive only core type
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                     SPVM_yyerror_format(spvm, "<= left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                     SPVM_yyerror_format(spvm, "<= right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -577,11 +577,11 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                   
                   // Can receive only core type
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                     SPVM_yyerror_format(spvm, "> left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                     SPVM_yyerror_format(spvm, "> right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -609,11 +609,11 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                   
                   // Can receive only core type
-                  if (SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type) && !SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                  if (SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type) && !SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                     SPVM_yyerror_format(spvm, ">= left value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type) && SPVM_RESOLVED_TYPE_is_core_value(spvm, last_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type) && SPVM_RESOLVED_TYPE_is_numeric(spvm, last_resolved_type)) {
                     SPVM_yyerror_format(spvm, ">= right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -705,7 +705,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                       break;
                     }
                     
-                    if (SPVM_RESOLVED_TYPE_is_core_value(spvm, resolved_type)) {
+                    if (SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type)) {
                       SPVM_yyerror_format(spvm,
                         "new operator can't receive core type at %s line %d\n", op_cur->file, op_cur->line);
                       break;
@@ -824,7 +824,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                   
                   // It is OK that left type is object and right is undef
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type) && !last_resolved_type) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type) && !last_resolved_type) {
                     // OK
                   }
                   // Invalid type
@@ -869,7 +869,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                         is_invalid = 1;
                       }
                       else {
-                        if (SPVM_RESOLVED_TYPE_is_core_value(spvm, sub_return_resolved_type)) {
+                        if (SPVM_RESOLVED_TYPE_is_numeric(spvm, sub_return_resolved_type)) {
                           is_invalid = 1;
                         }
                       }
@@ -903,7 +903,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     SPVM_RESOLVED_TYPE* resolved_type = SPVM_OP_get_resolved_type(spvm, op_my_var);
                     
                     // Decrement reference count at before return
-                    if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, resolved_type)) {
+                    if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type)) {
                       // If return target is variable, don't decrement reference count
                       _Bool do_dec_ref_count = 0;
                       if (op_term) {
@@ -936,7 +936,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   SPVM_RESOLVED_TYPE* first_resolved_type = SPVM_OP_get_resolved_type(spvm, op_cur->first);
                   
                   // Must be int, long, float, double
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                     SPVM_yyerror_format(spvm, "Type of - operator right value must be int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -947,7 +947,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   SPVM_RESOLVED_TYPE* first_resolved_type = SPVM_OP_get_resolved_type(spvm, op_cur->first);
                   
                   // Must be int, long, float, double
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                     SPVM_yyerror_format(spvm, "Type of + operator right value must be int, long, float, double at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -977,7 +977,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                                                   
                   // Value must be int, long, float, double
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                     SPVM_yyerror_format(spvm, "Type of + operator left and right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -1007,7 +1007,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                                                   
                   // Value must be int, long, float, double
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                     SPVM_yyerror_format(spvm, "Type of - operator left and right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -1037,7 +1037,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                                                   
                   // Value must be int, long, float, double
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                     SPVM_yyerror_format(spvm, "Type of * operator left and right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -1067,7 +1067,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                                                   
                   // Value must be int, long, float, double
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                     SPVM_yyerror_format(spvm, "Type of / operator left and right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -1097,7 +1097,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                                                   
                   // Value must be int, long, float, double
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type)) {
                     SPVM_yyerror_format(spvm, "Type of % operator left and right value must be core type at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
@@ -1154,7 +1154,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     SPVM_RESOLVED_TYPE* resolved_type = SPVM_OP_get_resolved_type(spvm, op_my_var);
                     
                     // Decrement reference count at end of scope
-                    if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, resolved_type)) {
+                    if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type)) {
                       SPVM_OP* op_decrefcount = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_DEC_REF_COUNT, op_cur->file, op_cur->line);
                       SPVM_OP* op_var = SPVM_OP_new_op_var_from_op_my_var(spvm, op_my_var);
                       SPVM_OP_sibling_splice(spvm, op_decrefcount, NULL, 0, op_var);
@@ -1215,7 +1215,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   // If argument my var is object, increment reference count
                   if (my_var->address < sub->op_args->length) {
                     SPVM_RESOLVED_TYPE* resolved_type = SPVM_OP_get_resolved_type(spvm, op_my_var);
-                    if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, resolved_type)) {
+                    if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type)) {
                       SPVM_OP* op_var = SPVM_OP_new_op_var_from_op_my_var(spvm, op_my_var);
                       
                       SPVM_OP* op_increfcount = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_INC_REF_COUNT, op_my_var->file, op_my_var->line);
@@ -1262,7 +1262,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   SPVM_RESOLVED_TYPE* first_resolved_type = SPVM_OP_get_resolved_type(spvm, op_cur);
                   
                   // Assign undef if left value is object and right value is nothing
-                  if (first_resolved_type && !SPVM_RESOLVED_TYPE_is_core_value(spvm, first_resolved_type) && !SPVM_OP_sibling(spvm, op_cur)) {
+                  if (first_resolved_type && !SPVM_RESOLVED_TYPE_is_numeric(spvm, first_resolved_type) && !SPVM_OP_sibling(spvm, op_cur)) {
                     // Only my declarations after subroutine arguments
                     if (my_var->address >= sub->op_args->length) {
                       SPVM_OP* op_assign = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_ASSIGN, op_cur->file, op_cur->line);
@@ -1327,7 +1327,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     
                     // Undef
                     if (op_term->code == SPVM_OP_C_CODE_UNDEF) {
-                      if (SPVM_RESOLVED_TYPE_is_core_value(spvm, sub_arg_resolved_type)) {
+                      if (SPVM_RESOLVED_TYPE_is_numeric(spvm, sub_arg_resolved_type)) {
                         is_invalid = 1;
                       }
                     }
@@ -1405,7 +1405,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   SPVM_RESOLVED_TYPE* op_type_resolved_type = SPVM_OP_get_resolved_type(spvm, op_type);;
                   
                   // Can receive only core type
-                  if (!SPVM_RESOLVED_TYPE_is_core_value(spvm, op_term_resolved_type) || !SPVM_RESOLVED_TYPE_is_core_value(spvm, op_type_resolved_type)) {
+                  if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, op_term_resolved_type)) {
                     SPVM_yyerror_format(spvm, "can't convert type %s to %s at %s line %d\n",
                       op_term_resolved_type->name, op_type_resolved_type->name, op_cur->file, op_cur->line);
                     break;

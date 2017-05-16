@@ -145,7 +145,7 @@ _Bool SPVM_RESOLVED_TYPE_is_core_array(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_
   }
 }
 
-_Bool SPVM_RESOLVED_TYPE_is_core_value(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
+_Bool SPVM_RESOLVED_TYPE_is_numeric(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
   (void)spvm;
   
   if (resolved_type && resolved_type->id <= SPVM_RESOLVED_TYPE_C_ID_DOUBLE) {
