@@ -1151,7 +1151,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
               case SPVM_OP_C_CODE_MALLOC: {
                 SPVM_RESOLVED_TYPE* resolved_type = SPVM_OP_get_resolved_type(spvm, op_cur->first);
                 
-                if (SPVM_RESOLVED_TYPE_is_core_array(spvm, resolved_type)) {
+                if (SPVM_RESOLVED_TYPE_is_array_numeric(spvm, resolved_type) || SPVM_RESOLVED_TYPE_is_array_string(spvm, resolved_type)) {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_NUMERIC);
                   
                   if (strcmp(resolved_type->name, "byte[]") == 0) {
