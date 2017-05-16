@@ -51,20 +51,6 @@ _Bool SPVM_RESOLVED_TYPE_is_array(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type)
   }
 }
 
-_Bool SPVM_RESOLVED_TYPE_contain_sub(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
-  (void)spvm;
-  
-  const char* name = resolved_type->name;
-  
-  const char* found = strchr(name, '(');
-  if (found) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
-
 _Bool SPVM_RESOLVED_TYPE_is_core_value_array(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
   (void)spvm;
   

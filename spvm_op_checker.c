@@ -699,12 +699,6 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     break;
                   }
                   else {
-                    if (SPVM_RESOLVED_TYPE_contain_sub(spvm, resolved_type)) {
-                      SPVM_yyerror_format(spvm,
-                        "new operator can't receive sub type at %s line %d\n", op_cur->file, op_cur->line);
-                      break;
-                    }
-                    
                     if (SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type)) {
                       SPVM_yyerror_format(spvm,
                         "new operator can't receive core type at %s line %d\n", op_cur->file, op_cur->line);
