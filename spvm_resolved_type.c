@@ -82,6 +82,19 @@ _Bool SPVM_RESOLVED_TYPE_is_core_array(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_
   }
 }
 
+_Bool SPVM_RESOLVED_TYPE_is_array_string(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
+  (void)spvm;
+  
+  const char* name = resolved_type->name;
+  
+  if (strcmp(name, "string[]") == 0) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 _Bool SPVM_RESOLVED_TYPE_is_integral(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
   (void)spvm;
   

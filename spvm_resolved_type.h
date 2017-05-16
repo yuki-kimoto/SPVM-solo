@@ -35,9 +35,10 @@ struct SPVM_resolved_type {
 };
 
 SPVM_RESOLVED_TYPE* SPVM_RESOLVED_TYPE_new(SPVM* spvm);
-_Bool SPVM_RESOLVED_TYPE_is_array(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
 _Bool SPVM_RESOLVED_TYPE_is_integral(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
-_Bool SPVM_RESOLVED_TYPE_is_array_numeric(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
 _Bool SPVM_RESOLVED_TYPE_is_numeric(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
+_Bool SPVM_RESOLVED_TYPE_is_array(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
+_Bool SPVM_RESOLVED_TYPE_is_array_numeric(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
+_Bool SPVM_RESOLVED_TYPE_is_array_string(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
 
 #endif
