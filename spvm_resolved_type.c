@@ -51,7 +51,7 @@ _Bool SPVM_RESOLVED_TYPE_is_array(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type)
   }
 }
 
-_Bool SPVM_RESOLVED_TYPE_is_core_value_array(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
+_Bool SPVM_RESOLVED_TYPE_is_array_numeric(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
   (void)spvm;
   
   const char* name = resolved_type->name;

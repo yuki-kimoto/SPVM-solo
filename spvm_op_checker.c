@@ -123,7 +123,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
             case SPVM_OP_C_CODE_FIELD: {
               SPVM_FIELD* field = op_cur->uv.field;
               SPVM_RESOLVED_TYPE* resolved_type = field->op_type->uv.type->resolved_type;
-              if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type) && !SPVM_RESOLVED_TYPE_is_core_value_array(spvm, resolved_type)) {
+              if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type) && !SPVM_RESOLVED_TYPE_is_array_numeric(spvm, resolved_type)) {
                 SPVM_yyerror_format(spvm, "filed type must be core type or core type array at %s line %d\n", op_cur->file, op_cur->line);
                 parser->fatal_error = 1;
                 return;
