@@ -40,6 +40,5 @@ _Bool SPVM_RESOLVED_TYPE_contain_sub(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_ty
 _Bool SPVM_RESOLVED_TYPE_is_integral(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
 _Bool SPVM_RESOLVED_TYPE_is_core_value_array(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
 _Bool SPVM_RESOLVED_TYPE_is_numeric(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
-int32_t SPVM_RESOLVED_TYPE_get_array_dimention(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type);
 
 #endif
