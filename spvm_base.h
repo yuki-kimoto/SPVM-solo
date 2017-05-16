@@ -4,8 +4,11 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+union SPVM_value;
+typedef union SPVM_value SPVM_VALUE;
+
 /* data_object_header.h */
-struct SPVM_DATA_OBJECT_HEADER;
+struct SPVM_data_object_header;
 typedef struct SPVM_data_object_header SPVM_DATA_OBJECT_HEADER;
 
 /* spvm_env.h */
