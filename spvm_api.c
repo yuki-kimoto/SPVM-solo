@@ -176,7 +176,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_POP_ADDRESS,
     &&case_SPVM_BYTECODE_C_CODE_MALLOC_OBJECT,
     &&case_SPVM_BYTECODE_C_CODE_MALLOC_STRING,
-    &&case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY,
+    &&case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_NUMERIC,
+    &&case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_STRING,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_INT,
@@ -1656,7 +1657,26 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 5;
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY: {
+      case_SPVM_BYTECODE_C_CODE_MALLOC_STRING: {
+        int64_t* string_info_ptr = &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
+        
+        int64_t length = string_info_ptr[0];
+        char* pv = (int8_t*)&string_info_ptr[1];
+
+        // New sv
+        SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, length);
+        
+        // Create string
+        void* address = SPVM_API_create_string_sv(spvm, env, sv);
+        
+        // Set string
+        operand_stack_top++;
+        *(void**)&call_stack[operand_stack_top] = address;
+        
+        pc += 5;
+        goto *jump[*pc];
+      }
+      case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_NUMERIC: {
         int32_t resolved_type_id = (int32_t)*(pc + 1);
         
         // Array length
@@ -1744,23 +1764,92 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 2;
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_MALLOC_STRING: {
-        int64_t* string_info_ptr = &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
+      case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_STRING: {
+        int32_t resolved_type_id = (int32_t)*(pc + 1);
         
-        int64_t length = string_info_ptr[0];
-        char* pv = (int8_t*)&string_info_ptr[1];
+        // Array length
+        int64_t length = call_stack[operand_stack_top];
+        
+        // Allocate array
+        void* address;
+        int64_t allocate_size;
+        
+        if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_BYTE) {
+          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int8_t) * length;
+          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+          
+          // Set type
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_OBJECT_HEADER_C_TYPE_ARRAY;
 
-        // New sv
-        SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, length);
+          // Set array type
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_OBJECT_HEADER_C_ARRAY_TYPE_BYTE;
+        }
+        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_SHORT) {
+          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int16_t) * length;
+          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+          // Set type
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_OBJECT_HEADER_C_TYPE_ARRAY;
+          // Set array type
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_OBJECT_HEADER_C_ARRAY_TYPE_SHORT;
+        }
+        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_INT) {
+          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int32_t) * length;
+          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+          // Set type
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_OBJECT_HEADER_C_TYPE_ARRAY;
+          // Set array type
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_OBJECT_HEADER_C_ARRAY_TYPE_INT;
+        }
+        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_LONG) {
+          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int64_t) * length;
+          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+          // Set type
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_OBJECT_HEADER_C_TYPE_ARRAY;
+          // Set array type
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_OBJECT_HEADER_C_ARRAY_TYPE_LONG;
+        }
+        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_FLOAT) {
+          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(float) * length;
+          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+          // Set type
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_OBJECT_HEADER_C_TYPE_ARRAY;
+          // Set array type
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_OBJECT_HEADER_C_ARRAY_TYPE_FLOAT;
+        }
+        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_DOUBLE) {
+          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(double) * length;
+          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+          // Set type
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_OBJECT_HEADER_C_TYPE_ARRAY;
+          // Set array type
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_OBJECT_HEADER_C_ARRAY_TYPE_DOUBLE;
+        }
+        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_STRING) {
+          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(intptr_t) * length;
+          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+          memset(address, 0, allocate_size);
+          // Set type
+          ((SPVM_OBJECT_HEADER*)address)->type = SPVM_OBJECT_HEADER_C_TYPE_ARRAY;
+          // Set array type
+          ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_OBJECT_HEADER_C_ARRAY_TYPE_STRING;
+        }
+        else {
+          assert(0);
+        }
         
-        // Create string
-        void* address = SPVM_API_create_string_sv(spvm, env, sv);
+        // Set byte size
+        ((SPVM_OBJECT_HEADER*)address)->byte_size = allocate_size;
         
-        // Set string
-        operand_stack_top++;
+        // Set reference count
+        ((SPVM_OBJECT_HEADER*)address)->ref_count = 0;
+        
+        // Set array length
+        ((SPVM_OBJECT_HEADER*)address)->array_length_or_sv = length;
+        
+        // Set array
         *(void**)&call_stack[operand_stack_top] = address;
         
-        pc += 5;
+        pc += 2;
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_ARRAY_LENGTH:
