@@ -1677,46 +1677,18 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_NUMERIC: {
-        int32_t resolved_type_id = (int32_t)*(pc + 1);
+        int32_t size = (int32_t)*(pc + 1);
         
         // Array length
-        int64_t length = call_stack[operand_stack_top];
+        int64_t length = *(int64_t*)&call_stack[operand_stack_top];
         
         // Allocate array
-        void* address;
-        int64_t allocate_size;
+        int64_t allocate_size = sizeof(SPVM_OBJECT_HEADER) + size * length;
+        void* address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
         
-        if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_BYTE) {
-          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int8_t) * length;
-          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
-        }
-        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_SHORT) {
-          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int16_t) * length;
-          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
-        }
-        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_INT) {
-          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int32_t) * length;
-          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
-        }
-        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_LONG) {
-          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(int64_t) * length;
-          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
-        }
-        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_FLOAT) {
-          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(float) * length;
-          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
-        }
-        else if (resolved_type_id == SPVM_RESOLVED_TYPE_C_ID_DOUBLE) {
-          allocate_size = sizeof(SPVM_OBJECT_HEADER) + sizeof(double) * length;
-          address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
-        }
-        else {
-          assert(0);
-        }
-          
         // Set type
         ((SPVM_OBJECT_HEADER*)address)->type = SPVM_OBJECT_HEADER_C_TYPE_ARRAY;
-
+        
         // Set array type
         ((SPVM_OBJECT_HEADER*)address)->array_type = SPVM_OBJECT_HEADER_C_ARRAY_TYPE_NUMERIC;
         
