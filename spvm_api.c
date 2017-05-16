@@ -1687,10 +1687,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         SPVM_DATA_OBJECT_HEADER* array = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
         
         // Set type
-        array->type = SPVM_DATA_OBJECT_HEADER_C_TYPE_ARRAY;
-        
-        // Set array type
-        array->array_type = SPVM_DATA_OBJECT_HEADER_C_ARRAY_TYPE_NUMERIC;
+        array->type = SPVM_DATA_OBJECT_HEADER_C_TYPE_ARRAY_NUMERIC;
         
         // Set byte size
         array->byte_size = allocate_size;
@@ -1717,10 +1714,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         memset(address, 0, allocate_size);
         
         // Set type
-        ((SPVM_DATA_OBJECT_HEADER*)address)->type = SPVM_DATA_OBJECT_HEADER_C_TYPE_ARRAY;
-
-        // Set array type
-        ((SPVM_DATA_OBJECT_HEADER*)address)->array_type = SPVM_DATA_OBJECT_HEADER_C_ARRAY_TYPE_STRING;
+        ((SPVM_DATA_OBJECT_HEADER*)address)->type = SPVM_DATA_OBJECT_HEADER_C_TYPE_ARRAY_STRING;
         
         // Set byte size
         ((SPVM_DATA_OBJECT_HEADER*)address)->byte_size = allocate_size;
@@ -1952,7 +1946,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
         SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
       }
       // Object is array of string
-      else if (((SPVM_DATA_OBJECT_HEADER*)address)->array_type == SPVM_DATA_OBJECT_HEADER_C_ARRAY_TYPE_STRING) {
+      else if (((SPVM_DATA_OBJECT_HEADER*)address)->type == SPVM_DATA_OBJECT_HEADER_C_TYPE_ARRAY_STRING) {
         
         // Array length
         int64_t length = ((SPVM_DATA_OBJECT_HEADER*)address)->array_length_or_sv;
