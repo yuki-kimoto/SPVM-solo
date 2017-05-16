@@ -155,14 +155,3 @@ _Bool SPVM_RESOLVED_TYPE_is_core_value(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_
     return 0;
   }
 }
-
-_Bool SPVM_RESOLVED_TYPE_is_calculatable_type(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
-  (void)spvm;
-  
-  if (resolved_type && resolved_type->id >= SPVM_RESOLVED_TYPE_C_ID_INT && resolved_type->id <= SPVM_RESOLVED_TYPE_C_ID_DOUBLE) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
