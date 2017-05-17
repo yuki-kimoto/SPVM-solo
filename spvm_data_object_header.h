@@ -5,7 +5,7 @@
 #include "spvm_base.h"
 
 struct SPVM_data_object_header {
-  intmax_t array_length_or_sv;
+  SPVM_VALUE array_length_or_sv;
   int64_t ref_count;
   int32_t byte_size;
   int8_t type;
