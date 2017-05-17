@@ -603,42 +603,42 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_0:
         operand_stack_top++;
-        *((float*)&call_stack[operand_stack_top]) = 0.F;
+        call_stack[operand_stack_top].float_value = 0.F;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_1:
         operand_stack_top++;
-        *((float*)&call_stack[operand_stack_top]) = 1.F;
+        call_stack[operand_stack_top].float_value = 1.F;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_2:
         operand_stack_top++;
-        *((float*)&call_stack[operand_stack_top]) = 2.F;
+        call_stack[operand_stack_top].float_value = 2.F;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_DOUBLE_0:
         operand_stack_top++;
-        *(double*)&call_stack[operand_stack_top] = 0.0;
+        call_stack[operand_stack_top].double_value = 0.0;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_DOUBLE_1:
         operand_stack_top++;
-        *(double*)&call_stack[operand_stack_top] = 1.0;
+        call_stack[operand_stack_top].double_value = 1.0;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_PUSH_BYTE:
         operand_stack_top++;
-        *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*(pc + 1);
+        call_stack[operand_stack_top].byte_value = (int8_t)*(pc + 1);
         pc += 2;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_SHORT:
         operand_stack_top++;
-        *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(pc + 1);
+        call_stack[operand_stack_top].short_value = (int16_t)*(pc + 1);
         pc += 2;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_PUSH_SHORT:
         operand_stack_top++;
-        *(int16_t*)&call_stack[operand_stack_top] = (int16_t)((int16_t)(*(pc + 1) << 8) +  *(pc + 2));
+        call_stack[operand_stack_top].short_value = (int16_t)((int16_t)(*(pc + 1) << 8) +  *(pc + 2));
         pc += 3;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_INT:
@@ -801,7 +801,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_SHORT:
         *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int16_t) * (size_t)*(int64_t*)&call_stack[operand_stack_top - 1])
-          = *(int16_t*)&call_stack[operand_stack_top];
+          = call_stack[operand_stack_top].short_value;
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
@@ -871,7 +871,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ADD_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top - 1] += *(int16_t*)&call_stack[operand_stack_top];
+        *(int16_t*)&call_stack[operand_stack_top - 1] += call_stack[operand_stack_top].short_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -901,7 +901,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_SUBTRACT_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top - 1] -= *(int16_t*)&call_stack[operand_stack_top];
+        *(int16_t*)&call_stack[operand_stack_top - 1] -= call_stack[operand_stack_top].short_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -931,7 +931,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_MULTIPLY_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top - 1] *= *(int16_t*)&call_stack[operand_stack_top];
+        *(int16_t*)&call_stack[operand_stack_top - 1] *= call_stack[operand_stack_top].short_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -961,7 +961,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_DIVIDE_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top - 1] /= *(int16_t*)&call_stack[operand_stack_top];
+        *(int16_t*)&call_stack[operand_stack_top - 1] /= call_stack[operand_stack_top].short_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -991,7 +991,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_REMAINDER_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top - 1] = *(int16_t*)&call_stack[operand_stack_top - 1] % *(int16_t*)&call_stack[operand_stack_top];
+        *(int16_t*)&call_stack[operand_stack_top - 1] = *(int16_t*)&call_stack[operand_stack_top - 1] % call_stack[operand_stack_top].short_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -1021,7 +1021,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_NEGATE_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top] = -*(int16_t*)&call_stack[operand_stack_top];
+        call_stack[operand_stack_top].short_value = -call_stack[operand_stack_top].short_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_NEGATE_INT:
@@ -1106,7 +1106,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_BIT_AND_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top - 1] &= *(int16_t*)&call_stack[operand_stack_top];
+        *(int16_t*)&call_stack[operand_stack_top - 1] &= call_stack[operand_stack_top].short_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -1126,7 +1126,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_BIT_OR_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top - 1] |= *(int16_t*)&call_stack[operand_stack_top];
+        *(int16_t*)&call_stack[operand_stack_top - 1] |= call_stack[operand_stack_top].short_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -1146,7 +1146,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_BIT_XOR_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top - 1] ^= *(int16_t*)&call_stack[operand_stack_top];
+        *(int16_t*)&call_stack[operand_stack_top - 1] ^= call_stack[operand_stack_top].short_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -1229,7 +1229,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top] = (int16_t)(*(int32_t*)&call_stack[operand_stack_top]);
+        call_stack[operand_stack_top].short_value = (int16_t)(*(int32_t*)&call_stack[operand_stack_top]);
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_INT:
@@ -1237,7 +1237,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_INT:
-        *(int32_t*)&call_stack[operand_stack_top] = (int32_t)*(int16_t*)&call_stack[operand_stack_top];
+        *(int32_t*)&call_stack[operand_stack_top] = (int32_t)call_stack[operand_stack_top].short_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_LONG:
@@ -1253,19 +1253,19 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_BYTE:
-        *(int8_t*)&call_stack[operand_stack_top] = (int8_t)*(int16_t*)&call_stack[operand_stack_top];
+        *(int8_t*)&call_stack[operand_stack_top] = (int8_t)call_stack[operand_stack_top].short_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_LONG:
-        *(int64_t*)&call_stack[operand_stack_top] = (int64_t)*(int16_t*)&call_stack[operand_stack_top];
+        *(int64_t*)&call_stack[operand_stack_top] = (int64_t)call_stack[operand_stack_top].short_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_FLOAT:
-        *(float*)&call_stack[operand_stack_top] = (float)*(int16_t*)&call_stack[operand_stack_top];
+        *(float*)&call_stack[operand_stack_top] = (float)call_stack[operand_stack_top].short_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_SHORT_TO_DOUBLE:
-        *(double*)&call_stack[operand_stack_top] = (double)*(int16_t*)&call_stack[operand_stack_top];
+        *(double*)&call_stack[operand_stack_top] = (double)call_stack[operand_stack_top].short_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_BYTE:
@@ -1273,7 +1273,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(int64_t*)&call_stack[operand_stack_top];
+        call_stack[operand_stack_top].short_value = (int16_t)*(int64_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_BYTE:
@@ -1283,7 +1283,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_SHORT:
         // TODO
-        *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(float*)&call_stack[operand_stack_top];
+        call_stack[operand_stack_top].short_value = (int16_t)*(float*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_BYTE:
@@ -1297,7 +1297,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_BYTE_TO_SHORT:
-        *(int16_t*)&call_stack[operand_stack_top] = (int16_t)*(int8_t*)&call_stack[operand_stack_top];
+        call_stack[operand_stack_top].short_value = (int16_t)*(int8_t*)&call_stack[operand_stack_top];
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CMP_BYTE:
@@ -1311,8 +1311,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_CMP_SHORT:
         // z = (x > y) + (x < y) * -1
         *(int32_t*)&call_stack[operand_stack_top - 1]
-          = (*(int16_t*)&call_stack[operand_stack_top - 1] > *(int16_t*)&call_stack[operand_stack_top])
-          + (*(int16_t*)&call_stack[operand_stack_top - 1] < *(int16_t*)&call_stack[operand_stack_top]) * -1;
+          = (*(int16_t*)&call_stack[operand_stack_top - 1] > call_stack[operand_stack_top].short_value)
+          + (*(int16_t*)&call_stack[operand_stack_top - 1] < call_stack[operand_stack_top].short_value) * -1;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -1803,7 +1803,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-        *(int16_t*)&call_stack[operand_stack_top] = *(int16_t*)(*(void**)&call_stack[operand_stack_top] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
+        call_stack[operand_stack_top].short_value = *(int16_t*)(*(void**)&call_stack[operand_stack_top] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
         pc += 5;
         goto *jump[*pc];
       }
@@ -1860,7 +1860,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-        *(int16_t*)(*(void**)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset) = *(int16_t*)&call_stack[operand_stack_top];
+        *(int16_t*)(*(void**)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset) = call_stack[operand_stack_top].short_value;
         operand_stack_top -= 2;
         pc += 5;
         goto *jump[*pc];
