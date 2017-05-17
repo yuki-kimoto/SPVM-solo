@@ -258,12 +258,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   uint8_t* bytecodes = spvm->bytecode_array->values;
   
   // Variables
-  intmax_t* vars = &env->call_stack[env->call_stack_base];
+  SPVM_VALUE* vars = &env->call_stack[env->call_stack_base];
   
   // Constant pool sub
   int32_t sub_constant_pool_address = (int32_t)(intptr_t)SPVM_HASH_search(spvm, spvm->constant_pool_sub_symtable, sub_abs_name, strlen(sub_abs_name));
   
-  intmax_t* call_stack = env->call_stack;
+  SPVM_VALUE* call_stack = env->call_stack;
   
   // Program counter
   register uint8_t* pc = NULL;

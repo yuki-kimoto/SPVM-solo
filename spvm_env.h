@@ -7,7 +7,7 @@
 
 struct SPVM_env {
   // Call stack
-  intmax_t* call_stack;
+  SPVM_VALUE* call_stack;
   
   // Call stack capacity
   int32_t call_stack_capacity;
