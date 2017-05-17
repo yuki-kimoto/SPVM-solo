@@ -310,17 +310,17 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
 
           // Save return address(operand + (throw or goto exception handler))
           if (call_stack_base == call_stack_base_start) {
-            *(void**)&call_stack[operand_stack_top + 1] = (void*)-1;
+            call_stack[operand_stack_top + 1].address_value = (void*)-1;
           }
           else {
-            *(void**)&call_stack[operand_stack_top + 1] = (void*)((intptr_t)pc + 5 + 3);
+            call_stack[operand_stack_top + 1].address_value = (void*)((intptr_t)pc + 5 + 3);
           }
           
           // Save sub_constant_pool_address
-          *(int32_t*)&call_stack[operand_stack_top + 2] = sub_constant_pool_address;
+          call_stack[operand_stack_top + 2].int_value = sub_constant_pool_address;
           
           // Save vars base before
-          *(int32_t*)&call_stack[operand_stack_top + 3] = call_stack_base;
+          call_stack[operand_stack_top + 3].int_value = call_stack_base;
           
           // Set vars base
           call_stack_base = operand_stack_top + 4;
@@ -379,10 +379,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 3];
         
         // Get sub_constant_pool_address
-        sub_constant_pool_address = *(int32_t*)&call_stack[call_stack_base - 2];
+        sub_constant_pool_address = call_stack[call_stack_base - 2].int_value;
         
         // Resotre call stack base
-        call_stack_base = *(int32_t*)&call_stack[call_stack_base - 1];
+        call_stack_base = call_stack[call_stack_base - 1].int_value;
         
         // Push return value
         operand_stack_top++;
@@ -412,10 +412,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 3];
 
         // Get sub_constant_pool_address
-        sub_constant_pool_address = *(int32_t*)&call_stack[call_stack_base - 2];
+        sub_constant_pool_address = call_stack[call_stack_base - 2].int_value;
 
         // Resotre vars base
-        call_stack_base = *(int32_t*)&call_stack[call_stack_base - 1];
+        call_stack_base = call_stack[call_stack_base - 1].int_value;
         
         // Finish call sub
         if (call_stack_base == call_stack_base_start) {
@@ -444,7 +444,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 3];
 
         // Get sub_constant_pool_address
-        sub_constant_pool_address = *(int32_t*)&call_stack[call_stack_base - 2];
+        sub_constant_pool_address = call_stack[call_stack_base - 2].int_value;
         
         // Get constant pool sub
         constant_pool_sub = (SPVM_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
@@ -481,7 +481,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         SPVM_COMPAT_sv_catpvn(new_sv_message, file_name, strlen(file_name));
         
         // Resotre vars base
-        call_stack_base = *(int32_t*)&call_stack[call_stack_base - 1];
+        call_stack_base = call_stack[call_stack_base - 1].int_value;
         
         // Push return value
         operand_stack_top++;
@@ -512,12 +512,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_BYTE_0:
         operand_stack_top++;
-        *(int8_t*)&call_stack[operand_stack_top] = 0;
+        call_stack[operand_stack_top].byte_value = 0;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_BYTE_1:
         operand_stack_top++;
-        *(int8_t*)&call_stack[operand_stack_top] = 1;
+        call_stack[operand_stack_top].byte_value = 1;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_SHORT_0:
