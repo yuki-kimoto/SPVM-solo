@@ -435,7 +435,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_DIE: {
         
         // Return value
-        void* return_value = *(void**)&call_stack[operand_stack_top];
+        void* return_value = call_stack[operand_stack_top].address_value;
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 4;
@@ -485,7 +485,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Push return value
         operand_stack_top++;
-        *(void**)&call_stack[operand_stack_top] = new_message_address;
+        call_stack[operand_stack_top].address_value = new_message_address;
         
         // Finish call sub with exception
         if (call_stack_base == call_stack_base_start) {
@@ -507,7 +507,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         assert(0);
       case_SPVM_BYTECODE_C_CODE_UNDEF:
         operand_stack_top++;
-        *(void**)&call_stack[operand_stack_top] = (void*)NULL;
+        call_stack[operand_stack_top].address_value = (void*)NULL;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_BYTE_0:
@@ -763,7 +763,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t vars_index = *(pc + 1);
 
         // Increment reference count
-        SPVM_API_inc_ref_count(spvm, env, *(void**)&call_stack[operand_stack_top]);
+        SPVM_API_inc_ref_count(spvm, env, call_stack[operand_stack_top].address_value);
         
         // Decrement reference count
         SPVM_API_dec_ref_count(spvm, env, *(void**)&vars[vars_index]);
@@ -776,7 +776,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_DEC_REF_COUNT: {
-        void* address = *(void**)&call_stack[operand_stack_top];
+        void* address = call_stack[operand_stack_top].address_value;
         
         // Decrement reference count
         SPVM_API_dec_ref_count(spvm, env, address);
@@ -785,7 +785,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_INC_REF_COUNT: {
-        void* address = *(void**)&call_stack[operand_stack_top];
+        void* address = call_stack[operand_stack_top].address_value;
         
         // Increment reference count
         SPVM_API_inc_ref_count(spvm, env, address);
@@ -833,13 +833,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         intptr_t array_index = *(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(void*) * (size_t)*(int64_t*)&call_stack[operand_stack_top - 1];
 
         // Increment reference count
-        SPVM_API_inc_ref_count(spvm, env, *(void**)&call_stack[operand_stack_top]);
+        SPVM_API_inc_ref_count(spvm, env, call_stack[operand_stack_top].address_value);
         
         // Decrement reference count
         SPVM_API_dec_ref_count(spvm, env, *(void**)(array_index));
         
         // Store address
-        *(void**)(array_index) = *(void**)&call_stack[operand_stack_top];
+        *(void**)(array_index) = call_stack[operand_stack_top].address_value;
         
         operand_stack_top -= 3;
         pc++;
@@ -851,13 +851,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_POP_ADDRESS: {
         
-        void* address = *(void**)&call_stack[operand_stack_top];
+        void* address = call_stack[operand_stack_top].address_value;
         
         // Free object
         if (address != NULL) {
           int64_t ref_count = ((SPVM_DATA_OBJECT_HEADER*)address)->ref_count;
           if (ref_count == 0) {
-            SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, *(void**)&call_stack[operand_stack_top]);
+            SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, call_stack[operand_stack_top].address_value);
           }
         }
         
@@ -1456,12 +1456,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top -= 2;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_IF_EQ_CMP_ADDRESS:
-        success = *(void**)&call_stack[operand_stack_top - 1] == *(void**)&call_stack[operand_stack_top];
+        success = *(void**)&call_stack[operand_stack_top - 1] == call_stack[operand_stack_top].address_value;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_IF_NE_CMP_ADDRESS:
-        success = *(void**)&call_stack[operand_stack_top - 1] != *(void**)&call_stack[operand_stack_top];
+        success = *(void**)&call_stack[operand_stack_top - 1] != call_stack[operand_stack_top].address_value;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top -= 2;
         goto *jump[*pc];
@@ -1653,7 +1653,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Push address
         operand_stack_top++;
-        *(void**)&call_stack[operand_stack_top] = address;
+        call_stack[operand_stack_top].address_value = address;
         
         pc += 5;
         goto *jump[*pc];
@@ -1672,7 +1672,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Set string
         operand_stack_top++;
-        *(void**)&call_stack[operand_stack_top] = address;
+        call_stack[operand_stack_top].address_value = address;
         
         pc += 5;
         goto *jump[*pc];
@@ -1700,7 +1700,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         *(int64_t*)&array->array_length_or_sv = length;
         
         // Set array
-        *(void**)&call_stack[operand_stack_top] = array;
+        call_stack[operand_stack_top].address_value = array;
         
         pc += 2;
         goto *jump[*pc];
@@ -1727,13 +1727,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         *(int64_t*)&((SPVM_DATA_OBJECT_HEADER*)address)->array_length_or_sv = length;
         
         // Set array
-        *(void**)&call_stack[operand_stack_top] = address;
+        call_stack[operand_stack_top].address_value = address;
         
         pc += 1;
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_ARRAY_LENGTH:
-        *(int64_t*)&call_stack[operand_stack_top] = *(int64_t*)&((SPVM_DATA_OBJECT_HEADER*)*(void**)&call_stack[operand_stack_top])->array_length_or_sv;
+        *(int64_t*)&call_stack[operand_stack_top] = *(int64_t*)&((SPVM_DATA_OBJECT_HEADER*)call_stack[operand_stack_top].address_value)->array_length_or_sv;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_WIDE:
@@ -1753,7 +1753,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           int32_t var_index = (*(pc + 2) << 8) + *(pc + 3);
 
           // Increment reference count
-          SPVM_API_inc_ref_count(spvm, env, *(void**)&call_stack[operand_stack_top]);
+          SPVM_API_inc_ref_count(spvm, env, call_stack[operand_stack_top].address_value);
           
           // Decrement reference count if original object is not null
           SPVM_API_dec_ref_count(spvm, env, *(void**)&vars[var_index]);
@@ -1782,12 +1782,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_IF_NULL:
-        success = *(void**)&call_stack[operand_stack_top] == (void*)NULL;
+        success = call_stack[operand_stack_top].address_value == (void*)NULL;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_IF_NON_NULL:
-        success = *(void**)&call_stack[operand_stack_top] != (void*)NULL;
+        success = call_stack[operand_stack_top].address_value != (void*)NULL;
         pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
         operand_stack_top--;
         goto *jump[*pc];
@@ -1795,7 +1795,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-        call_stack[operand_stack_top].byte_value = *(int8_t*)(*(void**)&call_stack[operand_stack_top] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
+        call_stack[operand_stack_top].byte_value = *(int8_t*)(call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
         pc += 5;
         goto *jump[*pc];
       }
@@ -1803,7 +1803,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-        call_stack[operand_stack_top].short_value = *(int16_t*)(*(void**)&call_stack[operand_stack_top] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
+        call_stack[operand_stack_top].short_value = *(int16_t*)(call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
         pc += 5;
         goto *jump[*pc];
       }
@@ -1811,7 +1811,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-        call_stack[operand_stack_top].int_value = *(int32_t*)(*(void**)&call_stack[operand_stack_top] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
+        call_stack[operand_stack_top].int_value = *(int32_t*)(call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
         pc += 5;
         goto *jump[*pc];
       }
@@ -1819,7 +1819,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-        *(int64_t*)&call_stack[operand_stack_top] = *(int64_t*)(*(void**)&call_stack[operand_stack_top] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
+        *(int64_t*)&call_stack[operand_stack_top] = *(int64_t*)(call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
         pc += 5;
         goto *jump[*pc];
       }
@@ -1827,7 +1827,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-        *(float*)&call_stack[operand_stack_top] = *(float*)(*(void**)&call_stack[operand_stack_top] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
+        *(float*)&call_stack[operand_stack_top] = *(float*)(call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
         pc += 5;
         goto *jump[*pc];
       }
@@ -1835,7 +1835,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-        *(double*)&call_stack[operand_stack_top] = *(double*)(*(void**)&call_stack[operand_stack_top] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
+        *(double*)&call_stack[operand_stack_top] = *(double*)(call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
         pc += 5;
         goto *jump[*pc];
       }
@@ -1843,7 +1843,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t field_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-        *(void**)&call_stack[operand_stack_top] = *(void**)(*(void**)&call_stack[operand_stack_top] + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
+        call_stack[operand_stack_top].address_value = *(void**)(call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT_HEADER) + constant_pool_field->package_byte_offset);
         pc += 5;
         goto *jump[*pc];
       }
@@ -1909,13 +1909,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         intptr_t field_index = (intptr_t)*(void**)&call_stack[operand_stack_top - 1] + constant_pool_field->package_byte_offset;
 
         // Increment reference count
-        SPVM_API_inc_ref_count(spvm, env, *(void**)&call_stack[operand_stack_top]);
+        SPVM_API_inc_ref_count(spvm, env, call_stack[operand_stack_top].address_value);
         
         // Decrement reference count
         SPVM_API_dec_ref_count(spvm, env, *(void**)(field_index));
         
         // Store object
-        *(void**)(field_index) = *(void**)&call_stack[operand_stack_top];
+        *(void**)(field_index) = call_stack[operand_stack_top].address_value;
         
         operand_stack_top -= 2;
         pc += 5;
