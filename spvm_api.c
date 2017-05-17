@@ -567,38 +567,38 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_M1:
         operand_stack_top++;
-        call_stack[operand_stack_top] = -1L;
+        *(int64_t*)&call_stack[operand_stack_top] = -1L;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_0:
         operand_stack_top++;
-        call_stack[operand_stack_top] = 0L;
+        *(int64_t*)&call_stack[operand_stack_top] = 0L;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_1:
         operand_stack_top++;
-        call_stack[operand_stack_top] = 1L;
+        *(int64_t*)&call_stack[operand_stack_top] = 1L;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_2:
         
         operand_stack_top++;
-        call_stack[operand_stack_top] = 2L;
+        *(int64_t*)&call_stack[operand_stack_top] = 2L;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_3:
         operand_stack_top++;
-        call_stack[operand_stack_top] = 3L;
+        *(int64_t*)&call_stack[operand_stack_top] = 3L;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_4:
         operand_stack_top++;
-        call_stack[operand_stack_top] = 4L;
+        *(int64_t*)&call_stack[operand_stack_top] = 4L;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_LONG_5:
         operand_stack_top++;
-        call_stack[operand_stack_top] = 5L;
+        *(int64_t*)&call_stack[operand_stack_top] = 5L;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONSTANT_FLOAT_0:
@@ -648,12 +648,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_PUSH_SHORT_TO_LONG:
         operand_stack_top++;
-        call_stack[operand_stack_top] = (int16_t)((int16_t)(*(pc + 1) << 8) +  *(pc + 2));
+        *(int64_t*)&call_stack[operand_stack_top] = (int64_t)((*(pc + 1) << 8) +  *(pc + 2));
         pc += 3;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_LONG:
         operand_stack_top++;
-        call_stack[operand_stack_top] = (int8_t)*(pc + 1);
+        *(int64_t*)&call_stack[operand_stack_top] = (int64_t)*(pc + 1);
         pc += 2;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_PUSH_SHORT_TO_INT:
@@ -693,44 +693,44 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_BYTE:
         *(int8_t*)&call_stack[operand_stack_top - 1]
-          = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int8_t) * (size_t)call_stack[operand_stack_top]);
+          = *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int8_t) * (size_t)*(int64_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_SHORT:
         *(int16_t*)&call_stack[operand_stack_top - 1]
-          = *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int16_t) * (size_t)call_stack[operand_stack_top]);
+          = *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int16_t) * (size_t)*(int64_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_INT:
         *(int32_t*)&call_stack[operand_stack_top - 1]
-          = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int32_t) * (size_t)call_stack[operand_stack_top]);
+          = *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int32_t) * (size_t)*(int64_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_LONG: {
         *(int64_t*)&call_stack[operand_stack_top - 1]
-          = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int64_t) * (size_t)call_stack[operand_stack_top]);
+          = *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int64_t) * (size_t)*(int64_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_FLOAT:
         *(float*)&call_stack[operand_stack_top - 1]
-          = *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(float) * (size_t)call_stack[operand_stack_top]);
+          = *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(float) * (size_t)*(int64_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_DOUBLE:
         *(double*)&call_stack[operand_stack_top - 1]
-          = *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(double) * (size_t)call_stack[operand_stack_top]);
+          = *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(double) * (size_t)*(int64_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_ADDRESS:
         *(void**)&call_stack[operand_stack_top - 1]
-          = *(void**)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(void*) * (size_t)call_stack[operand_stack_top]);
+          = *(void**)(*(intptr_t*)&call_stack[operand_stack_top - 1] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(void*) * (size_t)*(int64_t*)&call_stack[operand_stack_top]);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -763,10 +763,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t vars_index = *(pc + 1);
 
         // Increment reference count
-        SPVM_API_inc_ref_count(spvm, env, (void*)call_stack[operand_stack_top]);
+        SPVM_API_inc_ref_count(spvm, env, *(void**)&call_stack[operand_stack_top]);
         
         // Decrement reference count
-        SPVM_API_dec_ref_count(spvm, env, (void*)vars[vars_index]);
+        SPVM_API_dec_ref_count(spvm, env, *(void**)&vars[vars_index]);
         
         // Store address
         vars[vars_index] = call_stack[operand_stack_top];
@@ -785,7 +785,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_INC_REF_COUNT: {
-        void* address = (void*)call_stack[operand_stack_top];
+        void* address = *(void**)&call_stack[operand_stack_top];
         
         // Increment reference count
         SPVM_API_inc_ref_count(spvm, env, address);
@@ -794,43 +794,43 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_BYTE:
-        *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int8_t) * (size_t)call_stack[operand_stack_top - 1])
+        *(int8_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int8_t) * (size_t)*(int64_t*)&call_stack[operand_stack_top - 1])
           = *(int8_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_SHORT:
-        *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int16_t) * (size_t)call_stack[operand_stack_top - 1])
+        *(int16_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int16_t) * (size_t)*(int64_t*)&call_stack[operand_stack_top - 1])
           = *(int16_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_INT:
-        *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int32_t) * (size_t)call_stack[operand_stack_top - 1])
+        *(int32_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int32_t) * (size_t)*(int64_t*)&call_stack[operand_stack_top - 1])
           = *(int32_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_LONG:
-        *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int64_t) * (size_t)call_stack[operand_stack_top - 1])
-          = call_stack[operand_stack_top];
+        *(int64_t*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(int64_t) * (size_t)*(int64_t*)&call_stack[operand_stack_top - 1])
+          = *(int64_t*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_FLOAT:
-        *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(float) * (size_t)call_stack[operand_stack_top - 1])
+        *(float*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(float) * (size_t)*(int64_t*)&call_stack[operand_stack_top - 1])
           = *(float*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_DOUBLE:
-        *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(double) * (size_t)call_stack[operand_stack_top - 1])
+        *(double*)(*(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(double) * (size_t)*(int64_t*)&call_stack[operand_stack_top - 1])
           = *(double*)&call_stack[operand_stack_top];
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_ADDRESS: {
-        intptr_t array_index = *(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(void*) * (size_t)call_stack[operand_stack_top - 1];
+        intptr_t array_index = *(intptr_t*)&call_stack[operand_stack_top - 2] + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(void*) * (size_t)*(int64_t*)&call_stack[operand_stack_top - 1];
 
         // Increment reference count
         SPVM_API_inc_ref_count(spvm, env, *(void**)&call_stack[operand_stack_top]);
@@ -851,13 +851,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_POP_ADDRESS: {
         
-        void* address = (void*)call_stack[operand_stack_top];
+        void* address = *(void**)&call_stack[operand_stack_top];
         
         // Free object
         if (address != NULL) {
           int64_t ref_count = ((SPVM_DATA_OBJECT_HEADER*)address)->ref_count;
           if (ref_count == 0) {
-            SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, (void*)call_stack[operand_stack_top]);
+            SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, *(int64_t*)&call_stack[operand_stack_top]);
           }
         }
         
