@@ -28,6 +28,7 @@
 #include "spvm_compat.h"
 #include "spvm_data_object_header.h"
 
+
 void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   (void)spvm;
   (void)env;
@@ -309,17 +310,17 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
 
           // Save return address(operand + (throw or goto exception handler))
           if (call_stack_base == call_stack_base_start) {
-            call_stack[operand_stack_top + 1] = -1;
+            *(void**)&call_stack[operand_stack_top + 1] = (void*)-1;
           }
           else {
-            call_stack[operand_stack_top + 1] = (intptr_t)pc + 5 + 3;
+            *(void**)&call_stack[operand_stack_top + 1] = (void*)((intptr_t)pc + 5 + 3);
           }
           
           // Save sub_constant_pool_address
           *(int32_t*)&call_stack[operand_stack_top + 2] = sub_constant_pool_address;
           
           // Save vars base before
-          call_stack[operand_stack_top + 3] = call_stack_base;
+          *(int32_t*)&call_stack[operand_stack_top + 3] = call_stack_base;
           
           // Set vars base
           call_stack_base = operand_stack_top + 4;
@@ -369,7 +370,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_RETURN: {
         
         // Get return value
-        intmax_t return_value = call_stack[operand_stack_top];
+        intmax_t return_value = *(intmax_t*)&call_stack[operand_stack_top];
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 4;
@@ -381,11 +382,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         sub_constant_pool_address = *(int32_t*)&call_stack[call_stack_base - 2];
         
         // Resotre call stack base
-        call_stack_base = call_stack[call_stack_base - 1];
+        call_stack_base = *(int32_t*)&call_stack[call_stack_base - 1];
         
         // Push return value
         operand_stack_top++;
-        call_stack[operand_stack_top] = return_value;
+        *(intmax_t*)&call_stack[operand_stack_top] = return_value;
         
         // Finish call sub
         if (call_stack_base == call_stack_base_start) {
@@ -414,7 +415,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         sub_constant_pool_address = *(int32_t*)&call_stack[call_stack_base - 2];
 
         // Resotre vars base
-        call_stack_base = call_stack[call_stack_base - 1];
+        call_stack_base = *(int32_t*)&call_stack[call_stack_base - 1];
         
         // Finish call sub
         if (call_stack_base == call_stack_base_start) {
@@ -434,7 +435,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_DIE: {
         
         // Return value
-        void* return_value = call_stack[operand_stack_top];
+        void* return_value = *(void**)&call_stack[operand_stack_top];
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 4;
