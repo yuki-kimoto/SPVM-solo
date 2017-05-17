@@ -1181,11 +1181,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_FLOAT:
-        *((float*)&call_stack[operand_stack_top]) = (float)call_stack[operand_stack_top].int_value;
+        call_stack[operand_stack_top].float_value = (float)call_stack[operand_stack_top].int_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_DOUBLE:
-        *((double*)&call_stack[operand_stack_top]) = (double)call_stack[operand_stack_top].int_value;
+        call_stack[operand_stack_top].double_value = (double)call_stack[operand_stack_top].int_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_INT:
@@ -1193,35 +1193,35 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_FLOAT:
-        *((float*)&call_stack[operand_stack_top]) = (float)*((int64_t*)&call_stack[operand_stack_top]);
+        call_stack[operand_stack_top].float_value = (float)call_stack[operand_stack_top].long_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_LONG_TO_DOUBLE:
-        *((double*)&call_stack[operand_stack_top]) = (double)*((int64_t*)&call_stack[operand_stack_top]);
+        call_stack[operand_stack_top].double_value = (double)call_stack[operand_stack_top].long_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_INT:
-        call_stack[operand_stack_top].int_value = (int32_t)*((float*)&call_stack[operand_stack_top]);
+        call_stack[operand_stack_top].int_value = (int32_t)call_stack[operand_stack_top].float_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_LONG:
-        call_stack[operand_stack_top].long_value = (int64_t)*((float*)&call_stack[operand_stack_top]);
+        call_stack[operand_stack_top].long_value = (int64_t)call_stack[operand_stack_top].float_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_FLOAT_TO_DOUBLE:
-        *((double*)&call_stack[operand_stack_top]) = (double)*((float*)&call_stack[operand_stack_top]);
+        call_stack[operand_stack_top].double_value = (double)call_stack[operand_stack_top].float_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_INT:
-        call_stack[operand_stack_top].int_value = (int32_t)*((double*)&call_stack[operand_stack_top]);
+        call_stack[operand_stack_top].int_value = (int32_t)call_stack[operand_stack_top].double_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_LONG:
-        call_stack[operand_stack_top].long_value = (int64_t)*((double*)&call_stack[operand_stack_top]);
+        call_stack[operand_stack_top].long_value = (int64_t)call_stack[operand_stack_top].double_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_DOUBLE_TO_FLOAT:
-        *((float*)&call_stack[operand_stack_top]) = (float)*((double*)&call_stack[operand_stack_top]);
+        call_stack[operand_stack_top].float_value = (float)call_stack[operand_stack_top].double_value;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_BYTE:
