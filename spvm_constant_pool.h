@@ -5,7 +5,7 @@
 
 // Array
 struct SPVM_constant_pool {
-  intmax_t* values;
+  SPVM_VALUE* values;
   int32_t length;
   int32_t capacity;
 };

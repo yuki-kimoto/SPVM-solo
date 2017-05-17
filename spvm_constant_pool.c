@@ -14,6 +14,7 @@
 #include "spvm_allocator_util.h"
 #include "spvm_array.h"
 #include "spvm_op.h"
+#include "spvm_value.h"
 
 SPVM_CONSTANT_POOL* SPVM_CONSTANT_POOL_new(SPVM* spvm) {
   (void)spvm;
@@ -24,7 +25,7 @@ SPVM_CONSTANT_POOL* SPVM_CONSTANT_POOL_new(SPVM* spvm) {
   // index 0 is not used.
   constant_pool->length = 1;
   
-  intmax_t* values = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(constant_pool->capacity, sizeof(intmax_t));
+  SPVM_VALUE* values = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(constant_pool->capacity, sizeof(SPVM_VALUE));
   constant_pool->values = values;
   
   return constant_pool;
@@ -34,7 +35,7 @@ int32_t SPVM_CONSTANT_POOL_calculate_extend_length(SPVM* spvm, SPVM_CONSTANT_POO
   (void)spvm;
   (void)constant_pool;
   
-  int32_t length = (byte_size + (sizeof(intmax_t) - 1)) / sizeof(intmax_t);
+  int32_t length = (byte_size + (sizeof(SPVM_VALUE) - 1)) / sizeof(SPVM_VALUE);
   
   return length;
 }
@@ -46,7 +47,7 @@ void SPVM_CONSTANT_POOL_extend(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, in
   
   if (constant_pool->length + extend >= capacity) {
     int32_t new_capacity = capacity * 2;
-    constant_pool->values = SPVM_ALLOCATOR_UTIL_safe_realloc_i32(constant_pool->values, new_capacity, sizeof(intmax_t));
+    constant_pool->values = SPVM_ALLOCATOR_UTIL_safe_realloc_i32(constant_pool->values, new_capacity, sizeof(SPVM_VALUE));
     constant_pool->capacity = new_capacity;
   }
 }
@@ -148,7 +149,7 @@ void SPVM_CONSTANT_POOL_push_string(SPVM* spvm, SPVM_CONSTANT_POOL* constant_poo
   
   // Add string length
   SPVM_CONSTANT_POOL_extend(spvm, constant_pool, 1);
-  constant_pool->values[constant_pool->length] = string_length;
+  *(int64_t*)&constant_pool->values[constant_pool->length] = (int64_t)string_length;
   constant_pool->length++;
   
   int32_t extend_length = SPVM_CONSTANT_POOL_calculate_extend_length(spvm, constant_pool, string_length + 1);

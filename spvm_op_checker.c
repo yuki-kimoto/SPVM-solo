@@ -28,6 +28,7 @@
 #include "spvm_switch_info.h"
 #include "spvm_constant_pool.h"
 #include "spvm_limit.h"
+#include "spvm_value.h"
 
 void SPVM_OP_CHECKER_check(SPVM* spvm) {
   
