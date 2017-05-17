@@ -723,7 +723,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_DOUBLE:
-        *(double*)&call_stack[operand_stack_top - 1]
+        call_stack[operand_stack_top - 1].double_value
           = *(double*)((intptr_t)call_stack[operand_stack_top - 1].address_value + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(double) * (size_t)call_stack[operand_stack_top].long_value);
         operand_stack_top--;
         pc++;
@@ -951,7 +951,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_MULTIPLY_DOUBLE:
-        *(double*)&call_stack[operand_stack_top - 1] *= call_stack[operand_stack_top].double_value;
+        call_stack[operand_stack_top - 1].double_value *= call_stack[operand_stack_top].double_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -981,7 +981,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_DIVIDE_DOUBLE:
-        *(double*)&call_stack[operand_stack_top - 1] /= call_stack[operand_stack_top].double_value;
+        call_stack[operand_stack_top - 1].double_value /= call_stack[operand_stack_top].double_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -1012,7 +1012,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_REMAINDER_DOUBLE:
-        *((double*)&call_stack[operand_stack_top - 1]) = fmod(*(double*)&call_stack[operand_stack_top - 1], call_stack[operand_stack_top].double_value);
+        *((double*)&call_stack[operand_stack_top - 1]) = fmod(call_stack[operand_stack_top - 1].double_value, call_stack[operand_stack_top].double_value);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -1340,10 +1340,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CMP_DOUBLE_L:
         call_stack[operand_stack_top - 1].int_value
-          = (*(double*)&call_stack[operand_stack_top - 1] > call_stack[operand_stack_top].double_value)
-          + (*(double*)&call_stack[operand_stack_top - 1] < call_stack[operand_stack_top].double_value) * -1
+          = (call_stack[operand_stack_top - 1].double_value > call_stack[operand_stack_top].double_value)
+          + (call_stack[operand_stack_top - 1].double_value < call_stack[operand_stack_top].double_value) * -1
           + -!!(
-            isnan(*(double*)&call_stack[operand_stack_top - 1])
+            isnan(call_stack[operand_stack_top - 1].double_value)
             | isnan(call_stack[operand_stack_top].double_value)
           );
         operand_stack_top--;
@@ -1351,10 +1351,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CMP_DOUBLE_G:
         call_stack[operand_stack_top - 1].int_value
-          = (*(double*)&call_stack[operand_stack_top - 1] > call_stack[operand_stack_top].double_value)
-          + (*(double*)&call_stack[operand_stack_top - 1] < call_stack[operand_stack_top].double_value) * -1
+          = (call_stack[operand_stack_top - 1].double_value > call_stack[operand_stack_top].double_value)
+          + (call_stack[operand_stack_top - 1].double_value < call_stack[operand_stack_top].double_value) * -1
           + !!(
-            isnan(*(double*)&call_stack[operand_stack_top - 1])
+            isnan(call_stack[operand_stack_top - 1].double_value)
             | isnan(call_stack[operand_stack_top].double_value)
           );
         operand_stack_top--;
@@ -2046,7 +2046,7 @@ void SPVM_API_push_return_value_byte(SPVM* spvm, SPVM_ENV* env, int8_t value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(int8_t*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].byte_value = value;
 }
 
 void SPVM_API_push_return_value_short(SPVM* spvm, SPVM_ENV* env, int16_t value) {
@@ -2054,7 +2054,7 @@ void SPVM_API_push_return_value_short(SPVM* spvm, SPVM_ENV* env, int16_t value) 
   (void)env;
   
   env->operand_stack_top++;
-  *(int16_t*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].short_value = value;
 }
 
 void SPVM_API_push_return_value_int(SPVM* spvm, SPVM_ENV* env, int32_t value) {
@@ -2062,7 +2062,7 @@ void SPVM_API_push_return_value_int(SPVM* spvm, SPVM_ENV* env, int32_t value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(int32_t*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].int_value = value;
 }
 
 void SPVM_API_push_return_value_long(SPVM* spvm, SPVM_ENV* env, int64_t value) {
@@ -2070,7 +2070,7 @@ void SPVM_API_push_return_value_long(SPVM* spvm, SPVM_ENV* env, int64_t value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(int64_t*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].long_value = value;
 }
 
 void SPVM_API_push_return_value_float(SPVM* spvm, SPVM_ENV* env, float value) {
@@ -2078,7 +2078,7 @@ void SPVM_API_push_return_value_float(SPVM* spvm, SPVM_ENV* env, float value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(float*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].float_value = value;
 }
 
 void SPVM_API_push_return_value_double(SPVM* spvm, SPVM_ENV* env, double value) {
@@ -2086,7 +2086,7 @@ void SPVM_API_push_return_value_double(SPVM* spvm, SPVM_ENV* env, double value) 
   (void)env;
   
   env->operand_stack_top++;
-  *(double*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].double_value = value;
 }
 
 void SPVM_API_push_ret(SPVM* spvm, SPVM_ENV* env, void* value) {
@@ -2094,14 +2094,14 @@ void SPVM_API_push_ret(SPVM* spvm, SPVM_ENV* env, void* value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(void**)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].address_value = value;
 }
 
 int8_t SPVM_API_pop_return_value_byte(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  int8_t ret = *(int8_t*)&env->call_stack[env->operand_stack_top];
+  int8_t ret = env->call_stack[env->operand_stack_top].byte_value;
   env->operand_stack_top--;
   return ret;
 }
@@ -2110,7 +2110,7 @@ int16_t SPVM_API_pop_return_value_short(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  int16_t ret = *(int16_t*)&env->call_stack[env->operand_stack_top];
+  int16_t ret = env->call_stack[env->operand_stack_top].short_value;
   env->operand_stack_top--;
   return ret;
 }
@@ -2119,7 +2119,7 @@ int32_t SPVM_API_pop_return_value_int(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  int32_t ret = *(int32_t*)&env->call_stack[env->operand_stack_top];
+  int32_t ret = env->call_stack[env->operand_stack_top].int_value;
   env->operand_stack_top--;
   return ret;
 }
@@ -2128,7 +2128,7 @@ int64_t SPVM_API_pop_return_value_long(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
 
-  int64_t ret = *(int64_t*)&env->call_stack[env->operand_stack_top];
+  int64_t ret = env->call_stack[env->operand_stack_top].long_value;
   env->operand_stack_top--;
   return ret;
 }
@@ -2137,7 +2137,7 @@ float SPVM_API_pop_return_value_float(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  float ret = *(float*)&env->call_stack[env->operand_stack_top];
+  float ret = env->call_stack[env->operand_stack_top].float_value;
   env->operand_stack_top--;
   return ret;
 }
@@ -2146,7 +2146,7 @@ double SPVM_API_pop_return_value_double(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  double ret = *(double*)&env->call_stack[env->operand_stack_top];
+  double ret = env->call_stack[env->operand_stack_top].double_value;
   env->operand_stack_top--;
   return ret;
 }
@@ -2155,7 +2155,7 @@ void* SPVM_API_pop_return_value_address(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  void* ret = *(void**)&env->call_stack[env->operand_stack_top];
+  void* ret = env->call_stack[env->operand_stack_top].address_value;
   env->operand_stack_top--;
   return ret;
 }
@@ -2164,49 +2164,49 @@ int8_t SPVM_API_get_var_byte(SPVM* spvm, SPVM_ENV* env, int64_t index) {
   (void)spvm;
   (void)env;
   
-  return *(int8_t*)&env->call_stack[env->call_stack_base + (size_t)index];
+  return env->call_stack[env->call_stack_base + (size_t)index].byte_value;
 }
 
 int16_t SPVM_API_get_var_short(SPVM* spvm, SPVM_ENV* env, int64_t index) {
   (void)spvm;
   (void)env;
   
-  return *(int16_t*)&env->call_stack[env->call_stack_base + (size_t)index];
+  return env->call_stack[env->call_stack_base + (size_t)index].short_value;
 }
 
 int32_t SPVM_API_get_var_int(SPVM* spvm, SPVM_ENV* env, int64_t index) {
   (void)spvm;
   (void)env;
   
-  return *(int32_t*)&env->call_stack[env->call_stack_base + (size_t)index];
+  return env->call_stack[env->call_stack_base + (size_t)index].int_value;
 }
 
 int64_t SPVM_API_get_var_long(SPVM* spvm, SPVM_ENV* env, int64_t index) {
   (void)spvm;
   (void)env;
   
-  return *(int64_t*)&env->call_stack[env->call_stack_base + (size_t)index];
+  return env->call_stack[env->call_stack_base + (size_t)index].long_value;
 }
 
 float SPVM_API_get_var_float(SPVM* spvm, SPVM_ENV* env, int64_t index) {
   (void)spvm;
   (void)env;
   
-  return *(float*)&env->call_stack[env->call_stack_base + (size_t)index];
+  return env->call_stack[env->call_stack_base + (size_t)index].float_value;
 }
 
 double SPVM_API_get_var_double(SPVM* spvm, SPVM_ENV* env, int64_t index) {
   (void)spvm;
   (void)env;
   
-  return *(double*)&env->call_stack[env->call_stack_base + (size_t)index];
+  return env->call_stack[env->call_stack_base + (size_t)index].double_value;
 }
 
 void* SPVM_API_get_var_address(SPVM* spvm, SPVM_ENV* env, int64_t index) {
   (void)spvm;
   (void)env;
   
-  return *(void**)&env->call_stack[env->call_stack_base + (size_t)index];
+  return env->call_stack[env->call_stack_base + (size_t)index].address_value;
 }
 
 void SPVM_API_push_var_byte(SPVM* spvm, SPVM_ENV* env, int8_t value) {
@@ -2214,7 +2214,7 @@ void SPVM_API_push_var_byte(SPVM* spvm, SPVM_ENV* env, int8_t value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(int8_t*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].byte_value = value;
 }
 
 void SPVM_API_push_var_short(SPVM* spvm, SPVM_ENV* env, int16_t value) {
@@ -2222,7 +2222,7 @@ void SPVM_API_push_var_short(SPVM* spvm, SPVM_ENV* env, int16_t value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(int16_t*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].short_value = value;
 }
 
 void SPVM_API_push_var_int(SPVM* spvm, SPVM_ENV* env, int32_t value) {
@@ -2230,7 +2230,7 @@ void SPVM_API_push_var_int(SPVM* spvm, SPVM_ENV* env, int32_t value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(int32_t*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].int_value = value;
 }
 
 void SPVM_API_push_var_long(SPVM* spvm, SPVM_ENV* env, int64_t value) {
@@ -2238,7 +2238,7 @@ void SPVM_API_push_var_long(SPVM* spvm, SPVM_ENV* env, int64_t value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(int64_t*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].long_value = value;
 }
 
 void SPVM_API_push_var_float(SPVM* spvm, SPVM_ENV* env, float value) {
@@ -2246,7 +2246,7 @@ void SPVM_API_push_var_float(SPVM* spvm, SPVM_ENV* env, float value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(float*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].float_value = value;
 }
 
 void SPVM_API_push_var_double(SPVM* spvm, SPVM_ENV* env, double value) {
@@ -2254,7 +2254,7 @@ void SPVM_API_push_var_double(SPVM* spvm, SPVM_ENV* env, double value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(double*)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].double_value = value;
 }
 
 void SPVM_API_push_var_address(SPVM* spvm, SPVM_ENV* env, void* value) {
@@ -2262,7 +2262,7 @@ void SPVM_API_push_var_address(SPVM* spvm, SPVM_ENV* env, void* value) {
   (void)env;
   
   env->operand_stack_top++;
-  *(void**)&env->call_stack[env->operand_stack_top] = value;
+  env->call_stack[env->operand_stack_top].address_value = value;
 }
 
 int64_t SPVM_API_get_array_length(SPVM* spvm, SPVM_ENV* env, void* address) {
