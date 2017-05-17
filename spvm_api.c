@@ -1481,8 +1481,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // max
         int32_t max = *(int32_t*)(pc + padding + sizeof(int32_t) * 2 + 1);
         
-        if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
-          int32_t branch_offset = *(int32_t*)((pc + padding + sizeof(int32_t) * 3 + 1) + (call_stack[operand_stack_top] - min) * sizeof(int32_t));
+        if (*(int32_t*)&call_stack[operand_stack_top] >= min && *(int32_t*)&call_stack[operand_stack_top] <= max) {
+          int32_t branch_offset = *(int32_t*)((pc + padding + sizeof(int32_t) * 3 + 1) + (*(int32_t*)&call_stack[operand_stack_top] - min) * sizeof(int32_t));
           pc += branch_offset;
         }
         else {
@@ -1516,7 +1516,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // max
         int32_t max = *(int32_t*)(pc + padding + sizeof(int32_t) * 2 + 1 + ((pair_count - 1) * sizeof(int32_t) * 2));
         
-        if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
+        if (*(int32_t*)&call_stack[operand_stack_top] >= min && *(int32_t*)&call_stack[operand_stack_top] <= max) {
           // 2 branch searching
           int32_t cur_min_pos = 0;
           int32_t cur_max_pos = pair_count - 1;
@@ -1529,10 +1529,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
             int32_t cur_half_pos = cur_min_pos + (cur_max_pos - cur_min_pos) / 2;
             int32_t cur_half = *(int32_t*)(pc + padding + sizeof(int32_t) * 2 + 1 + (cur_half_pos * sizeof(int32_t) * 2));
             
-            if (call_stack[operand_stack_top] > cur_half) {
+            if (*(int32_t*)&call_stack[operand_stack_top] > cur_half) {
               cur_min_pos = cur_half_pos + 1;
             }
-            else if (call_stack[operand_stack_top] < cur_half) {
+            else if (*(int32_t*)&call_stack[operand_stack_top] < cur_half) {
               cur_max_pos = cur_half_pos - 1;
             }
             else {
@@ -1561,8 +1561,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // max
         int64_t max = *(int64_t*)(pc + padding + sizeof(int64_t) * 2 + 1);
         
-        if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
-          int64_t branch_offset = *(int64_t*)((pc + padding + sizeof(int64_t) * 3 + 1) + (call_stack[operand_stack_top] - min) * sizeof(int64_t));
+        if (*(int64_t*)&call_stack[operand_stack_top] >= min && *(int64_t*)&call_stack[operand_stack_top] <= max) {
+          int64_t branch_offset = *(int64_t*)((pc + padding + sizeof(int64_t) * 3 + 1) + (*(int64_t*)&call_stack[operand_stack_top] - min) * sizeof(int64_t));
           pc += branch_offset;
         }
         else {
@@ -1596,7 +1596,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // max
         int64_t max = *(int64_t*)(pc + padding + sizeof(int64_t) * 2 + 1 + ((pair_count - 1) * sizeof(int64_t) * 2));
         
-        if (call_stack[operand_stack_top] >= min && call_stack[operand_stack_top] <= max) {
+        if (*(int64_t*)&call_stack[operand_stack_top] >= min && *(int64_t*)&call_stack[operand_stack_top] <= max) {
           // 2 branch searching
           int64_t cur_min_pos = 0;
           int64_t cur_max_pos = pair_count - 1;
@@ -1609,10 +1609,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
             int64_t cur_half_pos = cur_min_pos + (cur_max_pos - cur_min_pos) / 2;
             int64_t cur_half = *(int64_t*)(pc + padding + sizeof(int64_t) * 2 + 1 + (cur_half_pos * sizeof(int64_t) * 2));
             
-            if (call_stack[operand_stack_top] > cur_half) {
+            if (*(int64_t*)&call_stack[operand_stack_top] > cur_half) {
               cur_min_pos = cur_half_pos + 1;
             }
-            else if (call_stack[operand_stack_top] < cur_half) {
+            else if (*(int64_t*)&call_stack[operand_stack_top] < cur_half) {
               cur_max_pos = cur_half_pos - 1;
             }
             else {
