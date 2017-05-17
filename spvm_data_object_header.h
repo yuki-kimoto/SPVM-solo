@@ -1,6 +1,7 @@
 #ifndef SPVM_DATA_OBJECT_HEADER_H
 #define SPVM_DATA_OBJECT_HEADER_H
 
+#include "spvm_value.h"
 #include "spvm_base.h"
 
 struct SPVM_data_object_header {
