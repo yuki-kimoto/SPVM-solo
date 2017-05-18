@@ -1008,12 +1008,12 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_REMAINDER_FLOAT:
-        *((float*)&call_stack[operand_stack_top - 1]) = (float)fmod((double)*((float*)&call_stack[operand_stack_top - 1]), (double)call_stack[operand_stack_top - 1].float_value);
+        call_stack[operand_stack_top - 1].float_value = (float)fmod((double)call_stack[operand_stack_top - 1].float_value, (double)call_stack[operand_stack_top - 1].float_value);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_REMAINDER_DOUBLE:
-        *((double*)&call_stack[operand_stack_top - 1]) = fmod(call_stack[operand_stack_top - 1].double_value, call_stack[operand_stack_top].double_value);
+        call_stack[operand_stack_top - 1].double_value = fmod(call_stack[operand_stack_top - 1].double_value, call_stack[operand_stack_top].double_value);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -1162,19 +1162,19 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_INC_BYTE:
-        *(int8_t*)&vars[*(pc + 1)] += (int8_t)*(pc + 2);
+        vars[*(pc + 1)].byte_value += (int8_t)*(pc + 2);
         pc += 3;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_INC_SHORT:
-        *(int16_t*)&vars[*(pc + 1)] += (int16_t)*(pc + 2);
+        vars[*(pc + 1)].short_value += (int8_t)*(pc + 2);
         pc += 3;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_INC_INT:
-        *(int32_t*)&vars[*(pc + 1)] += (int32_t)*(pc + 2);
+        vars[*(pc + 1)].int_value += (int8_t)*(pc + 2);
         pc += 3;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_INC_LONG:
-        *(int64_t*)&vars[*(pc + 1)] += (int64_t)*(pc + 2);
+        vars[*(pc + 1)].long_value += (int8_t)*(pc + 2);
         pc += 3;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_CONVERT_INT_TO_LONG:
