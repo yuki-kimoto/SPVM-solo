@@ -386,7 +386,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Push return value
         operand_stack_top++;
-        *(SPVM_VALUE*)&call_stack[operand_stack_top] = return_value;
+        call_stack[operand_stack_top] = return_value;
         
         // Finish call sub
         if (call_stack_base == call_stack_base_start) {
@@ -409,7 +409,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top = call_stack_base - 4;
         
         // Return address
-        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 3];
+        uint8_t* return_address = call_stack[call_stack_base - 3].address_value;
 
         // Get sub_constant_pool_address
         sub_constant_pool_address = call_stack[call_stack_base - 2].int_value;
@@ -441,7 +441,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top = call_stack_base - 4;
         
         // Return address
-        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 3];
+        uint8_t* return_address = call_stack[call_stack_base - 3].address_value;
 
         // Get sub_constant_pool_address
         sub_constant_pool_address = call_stack[call_stack_base - 2].int_value;
