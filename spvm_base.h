@@ -4,10 +4,23 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+/* spvm_value.h */
 union SPVM_value;
 typedef union SPVM_value SPVM_VALUE;
 
-/* data_object_header.h */
+/* spvm_data_header_array_string.h */
+struct SPVM_data_header_array_string;
+typedef struct SPVM_data_header_array_string SPVM_DATA_HEADER_ARRAY_STRING;
+
+/* spvm_data_header_array_numeric.h */
+struct SPVM_data_header_array_numeric;
+typedef struct SPVM_data_header_array_numeric SPVM_DATA_HEADER_ARRAY_NUMERIC;
+
+/* spvm_data_header_string.h */
+struct SPVM_data_header_string;
+typedef struct SPVM_data_header_string SPVM_DATA_HEADER_STRING;
+
+/* spvm_data_header_object.h */
 struct SPVM_data_header_object;
 typedef struct SPVM_data_header_object SPVM_DATA_HEADER_OBJECT;
 
