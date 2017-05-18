@@ -370,13 +370,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_RETURN: {
         
         // Get return value
-        SPVM_VALUE return_value = *(SPVM_VALUE*)&call_stack[operand_stack_top];
+        SPVM_VALUE return_value = call_stack[operand_stack_top];
         
         // Restore operand stack top
         operand_stack_top = call_stack_base - 4;
         
         // Get return address
-        uint8_t* return_address = *(uint8_t**)&call_stack[call_stack_base - 3];
+        uint8_t* return_address = call_stack[call_stack_base - 3].address_value;
         
         // Get sub_constant_pool_address
         sub_constant_pool_address = call_stack[call_stack_base - 2].int_value;
@@ -2292,7 +2292,7 @@ char* SPVM_API_get_string_value(SPVM* spvm, SPVM_ENV* env, void* address) {
   
   SPVM_SV* sv = SPVM_API_get_string_sv(spvm, env, address);
   assert(sv);
-  const char* value = SPVM_COMPAT_SVpv(sv);
+  char* value = SPVM_COMPAT_SVpv(sv);
   
   return value;
 }
@@ -2340,6 +2340,8 @@ double* SPVM_API_get_array_double_values(SPVM* spvm, SPVM_ENV* env, void* addres
 }
 
 void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
+  (void)spvm;
+  (void)env;
   
   SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
   
