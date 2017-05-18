@@ -766,7 +766,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         SPVM_API_inc_ref_count(spvm, env, call_stack[operand_stack_top].address_value);
         
         // Decrement reference count
-        SPVM_API_dec_ref_count(spvm, env, *(void**)&vars[vars_index]);
+        SPVM_API_dec_ref_count(spvm, env, vars[vars_index].address_value);
         
         // Store address
         vars[vars_index] = call_stack[operand_stack_top];
@@ -830,16 +830,17 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_ADDRESS: {
-        intptr_t array_index = (intptr_t)call_stack[operand_stack_top - 2].address_value + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(void*) * (size_t)call_stack[operand_stack_top - 1].long_value;
-
+        void** array_index
+          = (void**)((intptr_t)call_stack[operand_stack_top - 2].address_value + sizeof(SPVM_DATA_OBJECT_HEADER) + sizeof(void*) * (size_t)call_stack[operand_stack_top - 1].long_value);
+        
         // Increment reference count
         SPVM_API_inc_ref_count(spvm, env, call_stack[operand_stack_top].address_value);
         
         // Decrement reference count
-        SPVM_API_dec_ref_count(spvm, env, *(void**)(array_index));
+        SPVM_API_dec_ref_count(spvm, env, *array_index);
         
         // Store address
-        *(void**)(array_index) = call_stack[operand_stack_top].address_value;
+        *array_index = call_stack[operand_stack_top].address_value;
         
         operand_stack_top -= 3;
         pc++;
