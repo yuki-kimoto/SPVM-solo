@@ -8,8 +8,8 @@ union SPVM_value;
 typedef union SPVM_value SPVM_VALUE;
 
 /* data_object_header.h */
-struct SPVM_data_object_header;
-typedef struct SPVM_data_object_header SPVM_DATA_OBJECT_HEADER;
+struct SPVM_data_header_object;
+typedef struct SPVM_data_header_object SPVM_DATA_HEADER_OBJECT;
 
 /* spvm_env.h */
 struct SPVM_sv;
