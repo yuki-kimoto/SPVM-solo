@@ -1,6 +1,10 @@
 #ifndef SPVM_DATA_HEADER_H
 #define SPVM_DATA_HEADER_H
 
+struct SPVM_data_header {
+  int8_t type;
+};
+
 enum {
   SPVM_DATA_HEADER_C_TYPE_OBJECT,
   SPVM_DATA_HEADER_C_TYPE_STRING,
