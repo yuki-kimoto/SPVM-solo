@@ -635,8 +635,8 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     SPVM_yyerror_format(spvm, "<< operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
-                  if (last_resolved_type->id != SPVM_RESOLVED_TYPE_C_ID_LONG) {
-                    SPVM_yyerror_format(spvm, "<< operator right value must be long at %s line %d\n", op_cur->file, op_cur->line);
+                  if (last_resolved_type->id != SPVM_RESOLVED_TYPE_C_ID_INT) {
+                    SPVM_yyerror_format(spvm, "<< operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
                   
@@ -651,8 +651,8 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     SPVM_yyerror_format(spvm, ">> operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
-                  if (last_resolved_type->id != SPVM_RESOLVED_TYPE_C_ID_LONG) {
-                    SPVM_yyerror_format(spvm, ">> operator right value must be long at %s line %d\n", op_cur->file, op_cur->line);
+                  if (last_resolved_type->id != SPVM_RESOLVED_TYPE_C_ID_INT) {
+                    SPVM_yyerror_format(spvm, ">> operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
                   
@@ -667,8 +667,8 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     SPVM_yyerror_format(spvm, ">>> operator left value must be integral at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
-                  if (last_resolved_type->id > SPVM_RESOLVED_TYPE_C_ID_LONG) {
-                    SPVM_yyerror_format(spvm, ">>> operator right value must be long at %s line %d\n", op_cur->file, op_cur->line);
+                  if (last_resolved_type->id > SPVM_RESOLVED_TYPE_C_ID_INT) {
+                    SPVM_yyerror_format(spvm, ">>> operator right value must be int at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
                   

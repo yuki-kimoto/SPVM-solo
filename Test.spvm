@@ -393,9 +393,9 @@ package Test {
     
     100;
     1000;
-    1 << 2L;
-    1 >> 2L;
-    1 >>> 2L;
+    1 << 2;
+    1 >> 2;
+    1 >>> 2;
     
     Test::EnumA::ONE();
     Test::EnumA::TWO();

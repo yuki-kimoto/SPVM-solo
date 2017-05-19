@@ -1038,62 +1038,62 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_LEFT_SHIFT_BYTE:
-        call_stack[operand_stack_top - 1].byte_value <<= call_stack[operand_stack_top].long_value;
+        call_stack[operand_stack_top - 1].byte_value <<= call_stack[operand_stack_top].int_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_LEFT_SHIFT_SHORT:
-        call_stack[operand_stack_top - 1].short_value <<= call_stack[operand_stack_top].long_value;
+        call_stack[operand_stack_top - 1].short_value <<= call_stack[operand_stack_top].int_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_LEFT_SHIFT_INT:
-        call_stack[operand_stack_top - 1].int_value <<= call_stack[operand_stack_top].long_value;
+        call_stack[operand_stack_top - 1].int_value <<= call_stack[operand_stack_top].int_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_LEFT_SHIFT_LONG:
-        call_stack[operand_stack_top - 1].long_value <<= call_stack[operand_stack_top].long_value;
+        call_stack[operand_stack_top - 1].long_value <<= call_stack[operand_stack_top].int_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_BYTE:
-        call_stack[operand_stack_top - 1].byte_value >>= call_stack[operand_stack_top].long_value;
+        call_stack[operand_stack_top - 1].byte_value >>= call_stack[operand_stack_top].int_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_SHORT:
-        call_stack[operand_stack_top - 1].short_value >>= call_stack[operand_stack_top].long_value;
+        call_stack[operand_stack_top - 1].short_value >>= call_stack[operand_stack_top].int_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_INT:
-        call_stack[operand_stack_top - 1].int_value >>= call_stack[operand_stack_top].long_value;
+        call_stack[operand_stack_top - 1].int_value >>= call_stack[operand_stack_top].int_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_LONG:
-        call_stack[operand_stack_top - 1].long_value >>= call_stack[operand_stack_top].long_value;
+        call_stack[operand_stack_top - 1].long_value >>= call_stack[operand_stack_top].int_value;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_BYTE:
-        call_stack[operand_stack_top - 1].byte_value = (call_stack[operand_stack_top - 1].byte_value >> call_stack[operand_stack_top].long_value) & 0xFF;
+        call_stack[operand_stack_top - 1].byte_value = (call_stack[operand_stack_top - 1].byte_value >> call_stack[operand_stack_top].int_value) & 0xFF;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_SHORT:
-        call_stack[operand_stack_top - 1].byte_value = (call_stack[operand_stack_top - 1].short_value >> call_stack[operand_stack_top].long_value) & 0xFFFF;
+        call_stack[operand_stack_top - 1].byte_value = (call_stack[operand_stack_top - 1].short_value >> call_stack[operand_stack_top].int_value) & 0xFFFF;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_INT:
-        call_stack[operand_stack_top - 1].int_value = (call_stack[operand_stack_top - 1].int_value >> call_stack[operand_stack_top].long_value) & 0xFFFFFFFF;
+        call_stack[operand_stack_top - 1].int_value = (call_stack[operand_stack_top - 1].int_value >> call_stack[operand_stack_top].int_value) & 0xFFFFFFFF;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_RIGHT_SHIFT_UNSIGNED_LONG:
-        call_stack[operand_stack_top - 1].long_value = (call_stack[operand_stack_top - 1].long_value >> call_stack[operand_stack_top].long_value) & 0xFFFFFFFFFFFFFFFF;
+        call_stack[operand_stack_top - 1].long_value = (call_stack[operand_stack_top - 1].long_value >> call_stack[operand_stack_top].int_value) & 0xFFFFFFFFFFFFFFFF;
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
