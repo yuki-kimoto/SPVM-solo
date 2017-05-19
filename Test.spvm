@@ -17,7 +17,7 @@ package Test {
     }
     
     {
-      my $strings : string[] = malloc string[5L];
+      my $strings : string[] = malloc string[5];
       $strings[0L] = "abc";
       $strings[1L] = "ppp";
       
@@ -82,7 +82,7 @@ package Test {
     }
     
     {
-      my $nums = malloc int[3L];
+      my $nums = malloc int[3];
       $nums[0L] = 1;
       $nums[1L] = 2;
       $nums[2L] = 3;
@@ -365,7 +365,7 @@ package Test {
     if (1 != 2) { };
 
     {
-      my $nums = malloc int[3L];
+      my $nums = malloc int[3];
       $nums[0L] = 13;
       $nums[1L] = 14;
       std::printi($nums[0L]);
@@ -373,7 +373,7 @@ package Test {
     }
     
     {
-      my $nums : long[] = malloc long[3L];
+      my $nums : long[] = malloc long[3];
       $nums[0L] = 11L;
       $nums[1L] = 12L;
       std::printl($nums[0L]);

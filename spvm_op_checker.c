@@ -686,11 +686,11 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                       SPVM_yyerror_format(spvm, "new operator can't create array which don't have length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
                       break;
                     }
-                    else if (index_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_LONG) {
+                    else if (index_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_INT) {
                       // OK
                     }
                     else {
-                      SPVM_yyerror_format(spvm, "new operator can't create array which don't have long length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
+                      SPVM_yyerror_format(spvm, "new operator can't create array which don't have int length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
                       break;
                     }
                   }

@@ -1576,10 +1576,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t size = (int32_t)*(pc + 1);
         
         // Array length
-        int64_t length = call_stack[operand_stack_top].long_value;
+        int32_t length = call_stack[operand_stack_top].int_value;
         
         // Allocate array
-        int64_t allocate_size = sizeof(SPVM_DATA_HEADER_OBJECT) + size * length;
+        int32_t allocate_size = sizeof(SPVM_DATA_HEADER_OBJECT) + size * length;
         SPVM_DATA_HEADER_OBJECT* array = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
         
         // Set type
@@ -1601,10 +1601,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       }
       case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_STRING: {
         // Array length
-        int64_t length = call_stack[operand_stack_top].long_value;
+        int32_t length = call_stack[operand_stack_top].int_value;
         
         // Allocate array
-        int64_t allocate_size = sizeof(SPVM_DATA_HEADER_OBJECT) + sizeof(intptr_t) * length;
+        int32_t allocate_size = sizeof(SPVM_DATA_HEADER_OBJECT) + sizeof(intptr_t) * length;
         void* address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
         memset(address, 0, allocate_size);
         
