@@ -110,35 +110,33 @@ package Test {
       my $obj : Test::Minimal = undef;
     }
     
-    
     # increment long value
     {
-      my $var : long = 4L;
+      my $var = 4L;
       $var++;
       $var--;
       --$var;
       ++$var;
     }
     
-    if (1L) {
-      2L;
-      if (3L) {
-        4L;
+    if (1) {
+      2;
+      if (3) {
+        4;
       }
-      elsif (8L) {
-        9L;
+      elsif (8) {
+        9;
       }
       else {
-        5L;
+        5;
       }
     }
     else {
-      6L;
+      6;
     }
-    7L;
+    7;
     
     std::printi(sum0(1, 1));
-    std::printl(sum1(1L, 2L));
     std::printi(sum2(1, 2));
 
     # Constant float
@@ -208,9 +206,6 @@ package Test {
     std::printi(65535);
     std::printi(65536);
     std::printi(2147483647);
-    
-    std::printl(sum1(1L, 2L));
-    std::printl(sum1(1L, 5L));
     
     "abc";
     
@@ -458,37 +453,37 @@ package Test {
     # $title[3];
     # $title[3] = 4;
 
-    my $bar : double = (double)1L;
+    my $bar : double = (double)1;
     undef;
     
-    Test::sum1(1L, 2L);
-    sum1(1L, 2L);
+    Test::sum0(1, 2);
+    sum0(1, 2);
     
     test1();
     
-    while (1L) {
-      1L;
+    while (1) {
+      1;
       last;
     }
     
     # for (my $i : int = 0; $i < 5; $i = $i + 1) {
-    #   1L;
+    #   1;
     #   last;
     #   next;
     # }
 
     {
-      my $num0 = (byte)0L;
-      my $num1 = (byte)1L;
-      my $num2 = (byte)2L;
+      my $num0 = (byte)0;
+      my $num1 = (byte)1;
+      my $num2 = (byte)2;
       my $num3 = $num0 + $num1 + $num2;
       std::printb($num3);
     }
 
     {
-      my $num0 = (short)0L;
-      my $num1 = (short)1L;
-      my $num2 = (short)2L;
+      my $num0 = (short)0;
+      my $num1 = (short)1;
+      my $num2 = (short)2;
       my $num3 = $num0 + $num1 + $num2;
       std::prints($num3);
     }
@@ -499,57 +494,57 @@ package Test {
     return $mvar + 3;
   }
   
-  sub test1 () : long {
-    my $num0 = 1L;
-    my $num1 = 2L;
-    my $num2 = 3L;
-    my $num3 = 4L;
-    my $num4 = 5L;
+  sub test1 () : int {
+    my $num0 = 1;
+    my $num1 = 2;
+    my $num2 = 3;
+    my $num3 = 4;
+    my $num4 = 5;
     
-    return 0L;
+    return 0;
   }
   
   sub sum4($num1 : long, $num2 : long) : long {
     return $num1 + $num2;
   }
   
-  sub sum3 ($simple : Test::Simple, $foo : long, $bar : float) : long {
+  sub sum3 ($simple : Test::Simple, $foo : long, $bar : float) : int {
     
-    if (3L) {
+    if (3) {
     
     }
     
-    if (3L) {
+    if (3) {
       1;
     }
-    elsif (4L) {
+    elsif (4) {
       4;
     }
     else {
       
     }
 
-    if (3L) {
+    if (3) {
       1;
     }
-    elsif (4L) {
+    elsif (4) {
       4;
     }
-    elsif (5L) {
+    elsif (5) {
     
     }
     else {
       
     }
     
-    if (1L) {
+    if (1) {
       
     }
     else {
       
     }
 
-    return 2L;
+    return 2;
   }
   
   sub sum1 ($num1 : long, $num2 : long) : long {
