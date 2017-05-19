@@ -497,6 +497,10 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
             constant_code = SPVM_CONSTANT_C_CODE_INT;
             num_str[str_len - 1] = '\0';
           }
+          else if (num_str[str_len - 1] == 'L')  {
+            constant_code = SPVM_CONSTANT_C_CODE_LONG;
+            num_str[str_len - 1] = '\0';
+          }
           else if (num_str[str_len - 1] == 'f')  {
             constant_code = SPVM_CONSTANT_C_CODE_FLOAT;
             num_str[str_len - 1] = '\0';
