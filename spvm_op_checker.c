@@ -343,8 +343,8 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   SPVM_RESOLVED_TYPE* term_resolved_type = SPVM_OP_get_resolved_type(spvm, op_switch_condition->first);
                   
                   // Check type
-                  if (!term_resolved_type || !(term_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_INT || term_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_LONG)) {
-                    SPVM_yyerror_format(spvm, "Switch condition need int or long value at %s line %d\n", op_cur->file, op_cur->line);
+                  if (!term_resolved_type || !(term_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_INT)) {
+                    SPVM_yyerror_format(spvm, "Switch condition need int value at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
                   
@@ -382,12 +382,12 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     break;
                   }
                   
-                  int64_t min = INT64_MAX;
-                  int64_t max = INT64_MIN;
+                  int32_t min = INT32_MAX;
+                  int32_t max = INT32_MIN;
                   for (int32_t i = 0; i < length; i++) {
                     SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, op_cases, i);
                     SPVM_OP* op_constant = op_case->first;
-                    int64_t value = op_constant->uv.constant->uv.long_value;
+                    int32_t value = (int32_t)op_constant->uv.constant->uv.long_value;
                     
                     if (value < min) {
                       min = value;
