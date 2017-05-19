@@ -255,7 +255,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 
                 // tableswitch
                 if (switch_info->code == SPVM_SWITCH_INFO_C_CODE_TABLE_SWITCH) {
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_TABLE_SWITCH_INT);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_TABLE_SWITCH);
 
                   // This code is created by copying long logic and replacing int64_t with int32_t
                   // [START]
@@ -294,7 +294,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 }
                 // lookupswitch
                 else if (switch_info->code == SPVM_SWITCH_INFO_C_CODE_LOOKUP_SWITCH) {
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH_INT);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH);
                   
                   // Machine address to calculate padding
                   cur_switch_address = bytecode_array->length - 1;

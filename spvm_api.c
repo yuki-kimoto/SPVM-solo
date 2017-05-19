@@ -241,8 +241,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_IF_NE_CMP_ADDRESS,
     &&case_SPVM_BYTECODE_C_CODE_IF_NULL,
     &&case_SPVM_BYTECODE_C_CODE_IF_NON_NULL,
-    &&case_SPVM_BYTECODE_C_CODE_TABLE_SWITCH_INT,
-    &&case_SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH_INT,
+    &&case_SPVM_BYTECODE_C_CODE_TABLE_SWITCH,
+    &&case_SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH,
     &&case_SPVM_BYTECODE_C_CODE_GOTO,
     &&case_SPVM_BYTECODE_C_CODE_CALL_SUB,
     &&case_SPVM_BYTECODE_C_CODE_RETURN_VOID,
@@ -1471,7 +1471,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_GOTO:
         pc += (int16_t)((*(pc + 1) << 8) +  *(pc + 2));
         goto *jump[*pc];
-      case_SPVM_BYTECODE_C_CODE_TABLE_SWITCH_INT: {
+      case_SPVM_BYTECODE_C_CODE_TABLE_SWITCH: {
         // Padding
         int32_t padding = (sizeof(int32_t) - 1) - ((intptr_t)pc % sizeof(int32_t));
         
@@ -1494,7 +1494,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         goto *jump[*pc];
       }
-      case_SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH_INT: {
+      case_SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH: {
 
         // Padding
         int32_t padding = (sizeof(int32_t) - 1) - ((intptr_t)pc % sizeof(int32_t));
