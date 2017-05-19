@@ -182,6 +182,7 @@ const char* const SPVM_BYTECODE_C_CODE_NAMES[] = {
   "SET_FIELD_ADDRESS",
   "CMP_BYTE",
   "CMP_SHORT",
+  "CMP_LONG",
   "CMP_FLOAT_L",
   "CMP_FLOAT_G",
   "CMP_DOUBLE_L",
