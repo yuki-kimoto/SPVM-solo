@@ -2,7 +2,7 @@ package Test::EnumD {
   enum {
     ONE,
     TWO,
-    THREE = 3I,
+    THREE = 3,
     FORE
   }
 }
