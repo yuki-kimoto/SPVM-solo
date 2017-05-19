@@ -35,32 +35,50 @@ package Test {
       
       my $obj3 : Test::Minimal = undef;
     }
-
-    # byte increment
+    
+    # Increment byte
     {
       my $num = (byte)1;
       $num++;
       std::printb($num);
     }
-
-    # short increment
+    
+    # Increment short 
     {
       my $num = (short)1;
       $num++;
       std::prints($num);
     }
     
+    # increment int
+    {
+      my $var = 4;
+      $var++;
+      $var--;
+      --$var;
+      ++$var;
+    }
+    
+    # Increment long
+    {
+      my $var = (long)4;
+      $var++;
+      $var--;
+      --$var;
+      ++$var;
+    }
+    
     try {
       sum0(1, 2);
       
-      3L;
+      3;
       
       sum0(3, 4);
       
       1;
     } catch ($error : byte[]) {
       sum0(5, 6);
-      2L;
+      2;
     }
     
     {
@@ -80,10 +98,10 @@ package Test {
     }
     
     {
-      my $num = (byte)3L;
+      my $num = (byte)3;
       std::printb($num);
       
-      my $num2 = 1L + (long)$num;
+      my $num2 = (long)1 + (long)$num;
       
       std::printl($num2);
     }
@@ -108,15 +126,6 @@ package Test {
     # left is object, right is undef
     {
       my $obj : Test::Minimal = undef;
-    }
-    
-    # increment long value
-    {
-      my $var = 4L;
-      $var++;
-      $var--;
-      --$var;
-      ++$var;
     }
     
     if (1) {
@@ -149,6 +158,31 @@ package Test {
     std::printd(0d);
     std::printd(1d);
     std::printd(1.2);
+
+    # Constant int
+    std::printi(-2147483648);
+    std::printi(-32769);
+    std::printi(-32768);
+    std::printi(-129);
+    std::printi(-128);
+    std::printi(-2);
+    std::printi(-1);
+    std::printi(0);
+    std::printi(1);
+    std::printi(2);
+    std::printi(3);
+    std::printi(4);
+    std::printi(5);
+    std::printi(6);
+    std::printi(127);
+    std::printi(128);
+    std::printi(255);
+    std::printi(256);
+    std::printi(32767);
+    std::printi(32768);
+    std::printi(65535);
+    std::printi(65536);
+    std::printi(2147483647);
     
     # Constant long
     std::printl(-1L);
@@ -182,31 +216,6 @@ package Test {
     std::printl(2147483647L);
     std::printl(0xFFL);
     
-    # Constant int
-    std::printi(-2147483648);
-    std::printi(-32769);
-    std::printi(-32768);
-    std::printi(-129);
-    std::printi(-128);
-    std::printi(-2);
-    std::printi(-1);
-    std::printi(0);
-    std::printi(1);
-    std::printi(2);
-    std::printi(3);
-    std::printi(4);
-    std::printi(5);
-    std::printi(6);
-    std::printi(127);
-    std::printi(128);
-    std::printi(255);
-    std::printi(256);
-    std::printi(32767);
-    std::printi(32768);
-    std::printi(65535);
-    std::printi(65536);
-    std::printi(2147483647);
-    
     "abc";
     
     # Table switch int
@@ -215,13 +224,13 @@ package Test {
       
       switch($num) {
         case Test::EnumD->THREE:
-          std::printl(1L);
+          std::printi(1);
         case Test::EnumD->FORE:
-          std::printl(2L);
+          std::printi(2);
         case 5:
-          std::printl(3L);
+          std::printi(3);
         default:
-          std::printl(5L);
+          std::printi(5);
       }
     }
 
@@ -230,40 +239,35 @@ package Test {
       my $num = 3;
       switch ($num) {
         case 1:
-          std::printl(1L);
+          std::printi(1);
         case 3:
-          std::printl(2L);
+          std::printi(2);
         case 10000:
-          std::printl(2L);
+          std::printi(2);
         default:
-          std::printl(5L);
+          std::printi(5);
       }
     }
     
     # {
-    #   my $num = 5L;
+    #   my $num = 5;
     #   switch($num) {
     #     default:
-    #       std::printl(5L);
+    #       std::printi(5);
     #   }
     # }
     
     # my $num;
     # my $num1 = undef;
     
-    my $num1 : int;
-    $num1 = (int)5L;
-    
-    my $num = 5L;
-    
-    if (1L) {
-      3L;
-      if (2L) {
-        4L;
+    if (1) {
+      3;
+      if (2) {
+        4;
       }
-      5L;
+      5;
     }
-    6L;
+    6;
 
     my $simple3 : Test::Simple = malloc Test::Simple;
     
@@ -361,6 +365,14 @@ package Test {
     if (1 != 2) { };
 
     {
+      my $nums = malloc int[3L];
+      $nums[0L] = (int)13L;
+      $nums[1L] = (int)14L;
+      std::printi($nums[0L]);
+      std::printi($nums[1L]);
+    }
+    
+    {
       my $nums : long[] = malloc long[3L];
       $nums[0L] = 11L;
       $nums[1L] = 12L;
@@ -370,28 +382,20 @@ package Test {
       my $nums_length : long = len $nums;
     }
     
-    {
-      my $nums = malloc int[3L];
-      $nums[0L] = (int)13L;
-      $nums[1L] = (int)14L;
-      std::printi($nums[0L]);
-      std::printi($nums[1L]);
-    }
-    
     my $simple : Test::Simple = malloc Test::Simple;
     
     
-    my $v1 : long;
-    my $v2 : long;
-    my $v3 : long;
+    my $v1 : int;
+    my $v2 : int;
+    my $v3 : int;
     
-    $v3 = $v2 = $v1 = 5L;
+    $v3 = $v2 = $v1 = 5;
     
-    100L;
-    1000L;
-    1L << 2L;
-    1L >> 2L;
-    1L >>> 2L;
+    100;
+    1000;
+    1 << 2L;
+    1 >> 2L;
+    1 >>> 2L;
     
     Test::EnumA::ONE();
     Test::EnumA::TWO();
@@ -399,12 +403,6 @@ package Test {
     Test::EnumA->ONE();
     Test::EnumA->ONE;
     
-    my $var : long = 4L;
-    $var++;
-    $var--;
-    --$var;
-    ++$var;
-
     1L ^ 4L;
     1L & 2L;
     1L | 2L;

@@ -1585,7 +1585,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Set type
         array->type = SPVM_DATA_HEADER_C_TYPE_ARRAY_NUMERIC;
         
-        // Set byte size
         array->byte_size = allocate_size;
         
         // Set reference count
