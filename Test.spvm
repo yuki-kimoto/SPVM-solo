@@ -10,7 +10,7 @@ package Test {
     std::printi(Test::EnumD->THREE);
     std::printi(Test::EnumD->FORE);
 
-    std::printl(std::test_call1(4L));
+    std::printi(std::test_call1(4));
     
     {
       my $string : string = "abc";
@@ -45,21 +45,21 @@ package Test {
 
     # short increment
     {
-      my $num = (short)1L;
+      my $num = (short)1;
       $num++;
       std::prints($num);
     }
     
     try {
-      sum1(1L, 2L);
+      sum0(1, 2);
       
       3L;
       
-      sum1(3L, 4L);
+      sum0(3, 4);
       
-      1L;
+      1;
     } catch ($error : byte[]) {
-      sum1(5L, 6L);
+      sum0(5, 6);
       2L;
     }
     
