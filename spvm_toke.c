@@ -514,7 +514,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
               constant_code = SPVM_CONSTANT_C_CODE_DOUBLE;
             }
             else {
-              constant_code = SPVM_CONSTANT_C_CODE_LONG;
+              constant_code = SPVM_CONSTANT_C_CODE_INT;
             }
           }
           

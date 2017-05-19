@@ -15,12 +15,12 @@ package Test::Simple {
     my $var1 : long;
     my $var2 : long;
     
-    return 0;
+    return 0L;
   }
 
-  sub get3 () : long { return 0; }
-  sub get4 ($foo : long) : long { return 0; }
-  sub get7 ($foo : long, $bar : long) : long { return 0; }
+  sub get3 () : long { return 0L; }
+  sub get4 ($foo : long) : long { return 0L; }
+  sub get7 ($foo : long, $bar : long) : long { return 0L; }
 
   sub sum4 ($self : Test::Simple) : long {
     

@@ -824,7 +824,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                   // Invalid type
                   else if (first_resolved_type->id != last_resolved_type->id) {
-                    SPVM_yyerror_format(spvm, "Invalid type at %s line %d\n", op_cur->file, op_cur->line);
+                    SPVM_yyerror_format(spvm, "Invalid type value is assigned at %s line %d\n", op_cur->file, op_cur->line);
                     parser->fatal_error = 1;
                     return;
                   }
