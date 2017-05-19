@@ -137,9 +137,10 @@ package Test {
     }
     7L;
     
-    std::printi(sum0(1, 1));
+    std::printl(sum0(1L, 1L));
     std::printl(sum1(1L, 2L));
-    std::printi(sum2(1, 2));
+    
+    std::printl(sum2(1L, 2L));
 
     # Constant float
     std::printf(0.3f);
