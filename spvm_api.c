@@ -1554,11 +1554,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_MALLOC_STRING: {
-        int64_t* string_info_ptr = (int64_t*)&constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
+        SPVM_VALUE* string_data = (SPVM_VALUE*)&constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
         
-        int64_t length = string_info_ptr[0];
-        char* pv = (char*)&string_info_ptr[1];
-
+        int32_t length = string_data[0].int_value;
+        char* pv = (char*)&string_data[1];
+        
         // New sv
         SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, length);
         

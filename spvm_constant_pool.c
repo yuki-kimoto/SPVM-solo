@@ -149,7 +149,7 @@ void SPVM_CONSTANT_POOL_push_string(SPVM* spvm, SPVM_CONSTANT_POOL* constant_poo
   
   // Add string length
   SPVM_CONSTANT_POOL_extend(spvm, constant_pool, 1);
-  constant_pool->values[constant_pool->length].long_value = (int64_t)string_length;
+  constant_pool->values[constant_pool->length].int_value = string_length;
   constant_pool->length++;
   
   int32_t extend_length = SPVM_CONSTANT_POOL_calculate_extend_length(spvm, constant_pool, string_length + 1);
