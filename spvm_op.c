@@ -381,7 +381,7 @@ SPVM_RESOLVED_TYPE* SPVM_OP_get_resolved_type(SPVM* spvm, SPVM_OP* op) {
   
   switch (op->code) {
     case SPVM_OP_C_CODE_ARRAY_LENGTH:
-      resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "long", strlen("long"));
+      resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "int", strlen("int"));
     case SPVM_OP_C_CODE_ARRAY_ELEM: {
       SPVM_RESOLVED_TYPE* first_resolved_type = SPVM_OP_get_resolved_type(spvm, op->first);
      resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);

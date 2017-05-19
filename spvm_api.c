@@ -1627,7 +1627,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_ARRAY_LENGTH:
-        call_stack[operand_stack_top].long_value = *(int64_t*)&((SPVM_DATA_HEADER_OBJECT*)call_stack[operand_stack_top].address_value)->array_length_or_sv;
+        call_stack[operand_stack_top].int_value = (int32_t)*(int64_t*)&((SPVM_DATA_HEADER_OBJECT*)call_stack[operand_stack_top].address_value)->array_length_or_sv;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_WIDE:
