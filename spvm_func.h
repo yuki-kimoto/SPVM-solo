@@ -13,6 +13,6 @@ void SPVM_FUNC_std_printi(SPVM* spvm, SPVM_ENV* env);
 void SPVM_FUNC_std_printl(SPVM* spvm, SPVM_ENV* env);
 void SPVM_FUNC_std_printf(SPVM* spvm, SPVM_ENV* env);
 void SPVM_FUNC_std_printd(SPVM* spvm, SPVM_ENV* env);
-void SPVM_FUNC_std_suml(SPVM* spvm, SPVM_ENV* env);
+void SPVM_FUNC_std_sumi(SPVM* spvm, SPVM_ENV* env);
 
 #endif

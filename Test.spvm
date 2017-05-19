@@ -64,13 +64,13 @@ package Test {
     }
     
     {
-      my $nums = malloc long[3L];
-      $nums[0L] = 1L;
-      $nums[1L] = 2L;
-      $nums[2L] = 3L;
+      my $nums = malloc int[3L];
+      $nums[0L] = 1;
+      $nums[1L] = 2;
+      $nums[2L] = 3;
       
-      my $total = std::suml($nums);
-      std::printl($total);
+      my $total = std::sumi($nums);
+      std::printi($total);
     }
 
     {

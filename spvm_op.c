@@ -900,8 +900,8 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
             else if (strcmp(sub_abs_name, "std::println") == 0) {
               sub->native_address = SPVM_FUNC_std_println;
             }
-            else if (strcmp(sub_abs_name, "std::suml") == 0) {
-              sub->native_address = SPVM_FUNC_std_suml;
+            else if (strcmp(sub_abs_name, "std::sumi") == 0) {
+              sub->native_address = SPVM_FUNC_std_sumi;
             }
             else if (strcmp(sub_abs_name, "std::test_call1") == 0) {
               sub->native_address = SPVM_FUNC_std_test_call1;

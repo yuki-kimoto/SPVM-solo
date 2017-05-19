@@ -13,47 +13,47 @@ void SPVM_FUNC_std_test_call1(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  int64_t value =  SPVM_API_get_var_long(spvm, env, 0);
+  int32_t value =  SPVM_API_get_var_int(spvm, env, 0);
   
-  int64_t value2 = value * 2;
+  int32_t value2 = value * 2;
   
   // Call subroutine
   SPVM_ENV* new_env = SPVM_ENV_new(spvm);
-  SPVM_API_push_var_long(spvm, new_env, value2);
+  SPVM_API_push_var_int(spvm, new_env, value2);
   SPVM_API_call_sub(spvm, new_env, "std::test_call2");
-  int64_t value3 = SPVM_API_pop_return_value_long(spvm, new_env);
+  int32_t value3 = SPVM_API_pop_return_value_int(spvm, new_env);
   SPVM_ENV_free(spvm, new_env);
   
-  SPVM_API_push_return_value_long(spvm, env, value3);
+  SPVM_API_push_return_value_int(spvm, env, value3);
 }
 
 void SPVM_FUNC_std_test_call2(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  int64_t value =  SPVM_API_get_var_long(spvm, env, 0);
+  int32_t value =  SPVM_API_get_var_int(spvm, env, 0);
   
-  int64_t value2 = value * 3;
+  int32_t value2 = value * 3;
   
-  SPVM_API_push_return_value_long(spvm, env, value2);
+  SPVM_API_push_return_value_int(spvm, env, value2);
 }
 
-void SPVM_FUNC_std_suml(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_FUNC_std_sumi(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
-  void* long_array = SPVM_API_get_var_address(spvm, env, 0);
+  void* int_array = SPVM_API_get_var_address(spvm, env, 0);
   
-  int64_t length = SPVM_API_get_array_length(spvm, env, long_array);
+  int64_t length = SPVM_API_get_array_length(spvm, env, int_array);
   
-  int64_t* long_array_data = SPVM_API_get_array_long_values(spvm, env, long_array);
+  int64_t* int_array_data = SPVM_API_get_array_int_values(spvm, env, int_array);
   
   int64_t total = 0;
   for (int64_t i = 0; i < length; i++) {
-    total += long_array_data[i];
+    total += int_array_data[i];
   }
   
-  SPVM_API_push_return_value_long(spvm, env, total);
+  SPVM_API_push_return_value_int(spvm, env, total);
 }
 
 void SPVM_FUNC_std_println(SPVM* spvm, SPVM_ENV* env) {
