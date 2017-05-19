@@ -786,8 +786,8 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                   
                   // Last value must be integer
-                  if (last_resolved_type->id != SPVM_RESOLVED_TYPE_C_ID_LONG) {
-                    SPVM_yyerror_format(spvm, "array index must be long at %s line %d\n", op_cur->file, op_cur->line);
+                  if (last_resolved_type->id != SPVM_RESOLVED_TYPE_C_ID_INT) {
+                    SPVM_yyerror_format(spvm, "array index must be int at %s line %d\n", op_cur->file, op_cur->line);
                     break;
                   }
                   

@@ -18,10 +18,10 @@ package Test {
     
     {
       my $strings : string[] = malloc string[5];
-      $strings[0L] = "abc";
-      $strings[1L] = "ppp";
+      $strings[0] = "abc";
+      $strings[1] = "ppp";
       
-      std::println($strings[1L]);
+      std::println($strings[1]);
     }
     
     {
@@ -83,9 +83,9 @@ package Test {
     
     {
       my $nums = malloc int[3];
-      $nums[0L] = 1;
-      $nums[1L] = 2;
-      $nums[2L] = 3;
+      $nums[0] = 1;
+      $nums[1] = 2;
+      $nums[2] = 3;
       
       my $total = std::sumi($nums);
       std::printi($total);
@@ -366,18 +366,18 @@ package Test {
 
     {
       my $nums = malloc int[3];
-      $nums[0L] = 13;
-      $nums[1L] = 14;
-      std::printi($nums[0L]);
-      std::printi($nums[1L]);
+      $nums[0] = 13;
+      $nums[1] = 14;
+      std::printi($nums[0]);
+      std::printi($nums[1]);
     }
     
     {
       my $nums : long[] = malloc long[3];
-      $nums[0L] = 11L;
-      $nums[1L] = 12L;
-      std::printl($nums[0L]);
-      std::printl($nums[1L]);
+      $nums[0] = 11L;
+      $nums[1] = 12L;
+      std::printl($nums[0]);
+      std::printl($nums[1]);
       std::printl(len $nums);
       my $nums_length : long = len $nums;
     }
