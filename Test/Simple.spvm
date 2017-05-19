@@ -27,24 +27,24 @@ package Test::Simple {
     my $title : int;
    
     # $title->();
-    # $title->(1);
-    # $title->(1, 2);
+    # $title->(1L);
+    # $title->(1L, 2L);
 
     $self{x};
     $self->sum5();
 
     Test::Simple::sum5($self);
 
-    $self{x} = 3;
+    $self{x} = 3L;
 
     my $char : byte = 'a';
     
-    return 0;
+    return 0L;
   }
   
   sub sum5($self : Test::Simple) : long {
     $self{x};
     
-    return 0;
+    return 0L;
   }
 }
