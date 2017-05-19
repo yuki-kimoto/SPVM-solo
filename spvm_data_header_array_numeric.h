@@ -8,7 +8,7 @@ struct SPVM_data_header_array_numeric {
   int8_t type;
   int32_t ref_count;
   int64_t length;
-  int32_t byte_size;
+  int16_t byte_size;
 };
 
 #endif

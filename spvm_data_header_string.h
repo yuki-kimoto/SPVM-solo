@@ -6,6 +6,7 @@
 
 struct SPVM_data_header_string {
   int8_t type;
+  int16_t byte_size;
   int32_t ref_count;
   SPVM_SV* sv;
 };
