@@ -192,8 +192,8 @@ package Test {
     std::printi(-128);
     std::printi(-2);
     std::printi(-1);
-    std::printi(0I);
-    std::printi(1I);
+    std::printi(0);
+    std::printi(1);
     std::printi(2);
     std::printi(3);
     std::printi(4);
@@ -216,14 +216,14 @@ package Test {
     
     # Table switch int
     {
-      my $num = 3I;
+      my $num = 3;
       
       switch($num) {
         case Test::EnumD->THREE:
           std::printl(1L);
         case Test::EnumD->FORE:
           std::printl(2L);
-        case 5I:
+        case 5:
           std::printl(3L);
         default:
           std::printl(5L);
@@ -232,13 +232,13 @@ package Test {
 
     # Lookup switch int
     {
-      my $num = 3I;
+      my $num = 3;
       switch ($num) {
-        case 1I:
+        case 1:
           std::printl(1L);
-        case 3I:
+        case 3:
           std::printl(2L);
-        case 10000I:
+        case 10000:
           std::printl(2L);
         default:
           std::printl(5L);
@@ -471,7 +471,7 @@ package Test {
       last;
     }
     
-    # for (my $i : int = 0; $i < 5I; $i = $i + 1I) {
+    # for (my $i : int = 0; $i < 5; $i = $i + 1) {
     #   1L;
     #   last;
     #   next;
