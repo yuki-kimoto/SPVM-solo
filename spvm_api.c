@@ -28,6 +28,9 @@
 #include "spvm_compat.h"
 #include "spvm_data_header.h"
 #include "spvm_data_header_object.h"
+#include "spvm_data_header_string.h"
+#include "spvm_data_header_array_numeric.h"
+#include "spvm_data_header_array_string.h"
 #include "spvm_value.h"
 
 void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
