@@ -215,36 +215,6 @@ package Test {
     
     "abc";
     
-    # Table switch long
-    {
-      my $num = 3;
-      switch ($num) {
-        case 1:
-          std::printl(1);
-        case 3:
-          std::printl(2);
-        case 5:
-          std::printl(3);
-        default:
-          std::printl(5);
-      }
-    }
-
-    # Lookup switch long
-    {
-      my $num = 3;
-      switch ($num) {
-        case 1:
-          std::printl(1);
-        case 3:
-          std::printl(2);
-        case 10000:
-          std::printl(2);
-        default:
-          std::printl(5);
-      }
-    }
-    
     # Table switch int
     {
       my $num = 3I;
