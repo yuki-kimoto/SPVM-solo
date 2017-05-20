@@ -9,6 +9,10 @@ union SPVM_value;
 typedef union SPVM_value SPVM_VALUE;
 
 /* spvm_data_header_array_string.h */
+struct SPVM_data_header;
+typedef struct SPVM_data_header SPVM_DATA_HEADER;
+
+/* spvm_data_header_array_string.h */
 struct SPVM_data_header_array_string;
 typedef struct SPVM_data_header_array_string SPVM_DATA_HEADER_ARRAY_STRING;
 
