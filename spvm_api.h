@@ -1,8 +1,8 @@
 #ifndef SPVM_API_H
 #define SPVM_API_H
 
-void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address);
-void SPVM_API_inc_ref_count(SPVM* spvm, SPVM_ENV* env, void* address);
+void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER* data);
+void SPVM_API_inc_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER* data);
 
 void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_base_name);
 

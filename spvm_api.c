@@ -1814,18 +1814,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   // }
 }
 
-void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
+void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER* data) {
   (void)spvm;
   (void)env;
   
-  if (address != NULL) {
+  if (data != NULL) {
     
-    assert(((SPVM_DATA_HEADER_OBJECT*)address)->ref_count > 0);
+    assert(data->ref_count > 0);
     
     // Decrement reference count
-    ((SPVM_DATA_HEADER_OBJECT*)address)->ref_count -= 1;
-    
-    SPVM_DATA_HEADER* data = address;
+    data->ref_count -= 1;
     
     // If reference count is zero, free address.
     if (data->ref_count == 0) {
@@ -1848,14 +1846,14 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
         int32_t length = array_string->length;
         
         for (int32_t i = 0; i < length; i++) {
-          void* element_address = *(void**)((intptr_t)address + sizeof(SPVM_DATA_HEADER_ARRAY_STRING) + sizeof(void*) * i);
+          void* element_address = *(void**)((intptr_t)array_string + sizeof(SPVM_DATA_HEADER_ARRAY_STRING) + sizeof(void*) * i);
           SPVM_API_dec_ref_count(spvm, env, element_address);
         }
         
-        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
+        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, array_string);
       }
       else {
-        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
+        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, data);
       }
     }
   }
@@ -1924,14 +1922,14 @@ void SPVM_API_dec_ref_count_array_string(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HE
   }
 }
 
-void SPVM_API_inc_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
+void SPVM_API_inc_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER* data) {
   (void)spvm;
   (void)env;
   
-  if (address != NULL) {
-    assert(((SPVM_DATA_HEADER_OBJECT*)address)->ref_count >= 0);
+  if (data != NULL) {
+    assert(data->ref_count >= 0);
     // Increment reference count
-    ((SPVM_DATA_HEADER_OBJECT*)address)->ref_count += 1;
+    data->ref_count += 1;
   }
 }
 
