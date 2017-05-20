@@ -7,7 +7,7 @@ void SPVM_API_inc_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_DATA* data);
 void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_base_name);
 
 int32_t SPVM_API_get_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_DATA* data);
-int32_t SPVM_API_get_array_length(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_ARRAY_NUMERIC* array);
+int32_t SPVM_API_get_array_length(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_ARRAY* array);
 
 int8_t* SPVM_API_get_array_byte_values(SPVM* spvm, SPVM_ENV* env, void* address);
 int16_t* SPVM_API_get_array_short_values(SPVM* spvm, SPVM_ENV* env, void* address);

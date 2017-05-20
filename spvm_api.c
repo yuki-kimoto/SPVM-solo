@@ -27,6 +27,7 @@
 #include "spvm_sv.h"
 #include "spvm_compat.h"
 #include "spvm_data.h"
+#include "spvm_data_array.h"
 #include "spvm_data_object.h"
 #include "spvm_data_string.h"
 #include "spvm_data_array_numeric.h"
@@ -1622,7 +1623,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_ARRAY_LENGTH:
-        call_stack[operand_stack_top].int_value = (int32_t)((SPVM_DATA_ARRAY_NUMERIC*)call_stack[operand_stack_top].address_value)->length;
+        call_stack[operand_stack_top].int_value = (int32_t)((SPVM_DATA_ARRAY*)call_stack[operand_stack_top].address_value)->length;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_WIDE:
@@ -2157,7 +2158,7 @@ void SPVM_API_push_var_address(SPVM* spvm, SPVM_ENV* env, void* value) {
   env->call_stack[env->operand_stack_top].address_value = value;
 }
 
-int32_t SPVM_API_get_array_length(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_ARRAY_NUMERIC* array) {
+int32_t SPVM_API_get_array_length(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_ARRAY* array) {
   (void)spvm;
   (void)env;
   

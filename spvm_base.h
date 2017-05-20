@@ -8,7 +8,11 @@
 union SPVM_value;
 typedef union SPVM_value SPVM_VALUE;
 
-/* spvm_data_array_string.h */
+/* spvm_data_array.h */
+struct SPVM_data_array;
+typedef struct SPVM_data_array SPVM_DATA_ARRAY;
+
+/* spvm_data.h */
 struct SPVM_data;
 typedef struct SPVM_data SPVM_DATA;
 
