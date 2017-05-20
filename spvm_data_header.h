@@ -3,6 +3,8 @@
 
 struct SPVM_data_header {
   int8_t type;
+  int16_t byte_size;
+  int32_t ref_count;
 };
 
 enum {
