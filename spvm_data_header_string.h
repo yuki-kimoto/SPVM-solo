@@ -9,6 +9,7 @@ struct SPVM_data_header_string {
   int16_t byte_size;
   int32_t ref_count;
   SPVM_SV* sv;
+  int32_t length;
 };
 
 #endif

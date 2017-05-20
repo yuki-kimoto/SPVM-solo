@@ -8,8 +8,8 @@ struct SPVM_data_header_object {
   int8_t type;
   int16_t byte_size;
   int32_t ref_count;
-  int32_t length;
   SPVM_SV* sv;
+  int32_t length;
 };
 
 #endif
