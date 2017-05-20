@@ -2235,20 +2235,20 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
   
   // Allocate array
-  int32_t allocate_size = sizeof(SPVM_DATA_HEADER_OBJECT);
-  void* address = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+  int32_t allocate_size = sizeof(SPVM_DATA_HEADER_STRING);
+  SPVM_DATA_HEADER_STRING* string = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
   
   // Set type
-  ((SPVM_DATA_HEADER_OBJECT*)address)->type = SPVM_DATA_HEADER_C_TYPE_STRING;
+  string->type = SPVM_DATA_HEADER_C_TYPE_STRING;
   
   // Set byte size
-  ((SPVM_DATA_HEADER_OBJECT*)address)->byte_size = (int32_t)allocate_size;
+  string->byte_size = (int32_t)allocate_size;
   
   // Set reference count
-  ((SPVM_DATA_HEADER_OBJECT*)address)->ref_count = 0;
+  string->ref_count = 0;
   
   // Set sv
-  ((SPVM_DATA_HEADER_OBJECT*)address)->sv = sv;
+  string->sv = sv;
   
-  return address;
+  return string;
 }
