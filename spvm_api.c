@@ -1911,7 +1911,6 @@ void SPVM_API_dec_ref_count_array_string(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HE
     
     // If reference count is zero, free address.
     if (array_string->ref_count == 0) {
-        
       // Array length
       int32_t length = array_string->length;
       
@@ -2160,25 +2159,25 @@ void SPVM_API_push_var_address(SPVM* spvm, SPVM_ENV* env, void* value) {
   env->call_stack[env->operand_stack_top].address_value = value;
 }
 
-int32_t SPVM_API_get_array_length(SPVM* spvm, SPVM_ENV* env, void* address) {
+int32_t SPVM_API_get_array_length(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER_ARRAY_NUMERIC* array) {
   (void)spvm;
   (void)env;
   
-  return ((SPVM_DATA_HEADER_OBJECT*)address)->length;
+  return array->length;
 }
 
-int32_t SPVM_API_get_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
+int32_t SPVM_API_get_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER* data) {
   (void)spvm;
   (void)env;
   
-  return ((SPVM_DATA_HEADER_OBJECT*)address)->ref_count;
+  return data->ref_count;
 }
 
-SPVM_SV* SPVM_API_get_string_sv(SPVM* spvm, SPVM_ENV* env, void* address) {
+SPVM_SV* SPVM_API_get_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER_STRING* string) {
   (void)spvm;
   (void)env;
   
-  return ((SPVM_DATA_HEADER_OBJECT*)address)->sv;
+  return string->sv;
 }
 
 char* SPVM_API_get_string_value(SPVM* spvm, SPVM_ENV* env, void* address) {
@@ -2196,42 +2195,42 @@ int8_t* SPVM_API_get_array_byte_values(SPVM* spvm, SPVM_ENV* env, void* address)
   (void)spvm;
   (void)env;
   
-  return (int8_t*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_OBJECT));
+  return (int8_t*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_ARRAY_NUMERIC));
 }
 
 int16_t* SPVM_API_get_array_short_values(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)spvm;
   (void)env;
   
-  return (int16_t*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_OBJECT));
+  return (int16_t*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_ARRAY_NUMERIC));
 }
 
 int32_t* SPVM_API_get_array_int_values(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)spvm;
   (void)env;
   
-  return (int32_t*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_OBJECT));
+  return (int32_t*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_ARRAY_NUMERIC));
 }
 
 int64_t* SPVM_API_get_array_long_values(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)spvm;
   (void)env;
   
-  return (int64_t*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_OBJECT));
+  return (int64_t*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_ARRAY_NUMERIC));
 }
 
 float* SPVM_API_get_array_float_values(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)spvm;
   (void)env;
   
-  return (float*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_OBJECT));
+  return (float*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_ARRAY_NUMERIC));
 }
 
 double* SPVM_API_get_array_double_values(SPVM* spvm, SPVM_ENV* env, void* address) {
   (void)spvm;
   (void)env;
   
-  return (double*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_OBJECT));
+  return (double*)((intptr_t)address + sizeof(SPVM_DATA_HEADER_ARRAY_NUMERIC));
 }
 
 void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
