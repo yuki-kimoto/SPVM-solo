@@ -16,6 +16,6 @@ SPVM_ALLOCATOR_RUNTIME* SPVM_ALLOCATOR_RUNTIME_new(SPVM* spvm);
 void* SPVM_ALLOCATOR_RUNTIME_alloc(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, int64_t size);
 void SPVM_ALLOCATOR_RUNTIME_free(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator);
 int32_t SPVM_ALLOCATOR_RUNTIME_get_freelist_index(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, int64_t size);
-void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, void* address);
+void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, SPVM_DATA* data);
 
 #endif
