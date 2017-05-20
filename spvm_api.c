@@ -1861,19 +1861,19 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, void* address) {
   }
 }
 
-void SPVM_API_dec_ref_count_object(SPVM* spvm, SPVM_ENV* env, void* address) {
+void SPVM_API_dec_ref_count_object(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER_OBJECT* object) {
   (void)spvm;
   (void)env;
   
-  if (address != NULL) {
-    assert(((SPVM_DATA_HEADER_OBJECT*)address)->ref_count > 0);
+  if (object != NULL) {
+    assert(object->ref_count > 0);
     
     // Decrement reference count
-    ((SPVM_DATA_HEADER_OBJECT*)address)->ref_count -= 1;
+    object->ref_count -= 1;
     
     // If reference count is zero, free address.
-    if (((SPVM_DATA_HEADER_OBJECT*)address)->ref_count == 0) {
-      SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
+    if (object->ref_count == 0) {
+      SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, object);
     }
   }
 }
