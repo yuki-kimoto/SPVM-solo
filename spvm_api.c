@@ -1878,49 +1878,49 @@ void SPVM_API_dec_ref_count_object(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER_O
   }
 }
 
-void SPVM_API_dec_ref_count_string(SPVM* spvm, SPVM_ENV* env, void* address) {
+void SPVM_API_dec_ref_count_string(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER_STRING* string) {
   (void)spvm;
   (void)env;
   
-  if (address != NULL) {
+  if (string != NULL) {
     
-    assert(((SPVM_DATA_HEADER_OBJECT*)address)->ref_count > 0);
+    assert(string->ref_count > 0);
     
     // Decrement reference count
-    ((SPVM_DATA_HEADER_OBJECT*)address)->ref_count -= 1;
+    string->ref_count -= 1;
     
     // If reference count is zero, free address.
-    if (((SPVM_DATA_HEADER_OBJECT*)address)->ref_count == 0) {
-      SPVM_SV* sv = ((SPVM_DATA_HEADER_OBJECT*)address)->sv;
+    if (string->ref_count == 0) {
+      SPVM_SV* sv = string->sv;
       SPVM_SvREFCNT_dec(sv);
-      SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
+      SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, string);
     }
   }
 }
 
-void SPVM_API_dec_ref_count_array_string(SPVM* spvm, SPVM_ENV* env, void* address) {
+void SPVM_API_dec_ref_count_array_string(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_HEADER_ARRAY_STRING* array_string) {
   (void)spvm;
   (void)env;
   
-  if (address != NULL) {
+  if (array_string != NULL) {
     
-    assert(((SPVM_DATA_HEADER_OBJECT*)address)->ref_count > 0);
+    assert(array_string->ref_count > 0);
     
     // Decrement reference count
-    ((SPVM_DATA_HEADER_OBJECT*)address)->ref_count -= 1;
+    array_string->ref_count -= 1;
     
     // If reference count is zero, free address.
-    if (((SPVM_DATA_HEADER_OBJECT*)address)->ref_count == 0) {
+    if (array_string->ref_count == 0) {
         
       // Array length
-      int32_t length = ((SPVM_DATA_HEADER_OBJECT*)address)->length;
+      int32_t length = array_string->length;
       
       for (int32_t i = 0; i < length; i++) {
-        void* element_address = *(void**)((intptr_t)address + sizeof(SPVM_DATA_HEADER_OBJECT) + sizeof(void*) * i);
+        void* element_address = *(void**)((intptr_t)array_string + sizeof(SPVM_DATA_HEADER_ARRAY_STRING) + sizeof(void*) * i);
         SPVM_API_dec_ref_count_string(spvm, env, element_address);
       }
       
-      SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, address);
+      SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, array_string);
     }
   }
 }
