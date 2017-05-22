@@ -625,8 +625,44 @@ void SPVM_OP_check(SPVM* spvm) {
     return;
   }
   
-  // Resolve package
+  // Reorder fields. Reference types place before value types.
   SPVM_ARRAY* op_packages = spvm->parser->op_packages;
+  for (int32_t package_pos = 0; package_pos < op_packages->length; package_pos++) {
+    SPVM_OP* op_package = SPVM_ARRAY_fetch(spvm, op_packages, package_pos);
+    SPVM_PACKAGE* package = op_package->uv.package;
+    SPVM_ARRAY* op_fields = package->op_fields;
+    
+    SPVM_ARRAY* op_fields_ref = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, spvm->parser->allocator, 0);
+    SPVM_ARRAY* op_fields_value = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, spvm->parser->allocator, 0);
+    
+    // Separate reference type and value type
+    for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
+      SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields, field_pos);
+      SPVM_FIELD* field = op_field->uv.field;
+      SPVM_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
+      
+      if (SPVM_RESOLVED_TYPE_is_numeric(spvm, field_resolved_type)) {
+        SPVM_ARRAY_push(spvm, op_fields_value, op_field);
+      }
+      else {
+        SPVM_ARRAY_push(spvm, op_fields_ref, op_field);
+      }
+    }
+    
+    // Create ordered op fields
+    SPVM_ARRAY* ordered_op_fields = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, spvm->parser->allocator, 0);
+    for (int32_t field_pos = 0; field_pos < op_fields_ref->length; field_pos++) {
+      SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields_ref, field_pos);
+      SPVM_ARRAY_push(spvm, ordered_op_fields, op_field);
+    }
+    for (int32_t field_pos = 0; field_pos < op_fields_value->length; field_pos++) {
+      SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields_value, field_pos);
+      SPVM_ARRAY_push(spvm, ordered_op_fields, op_field);
+    }
+    package->op_fields = ordered_op_fields;
+  }
+  
+  // Resolve package
   for (int32_t package_pos = 0; package_pos < op_packages->length; package_pos++) {
     SPVM_OP* op_package = SPVM_ARRAY_fetch(spvm, op_packages, package_pos);
     SPVM_PACKAGE* package = op_package->uv.package;
