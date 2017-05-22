@@ -11,7 +11,7 @@ struct SPVM_package {
   int32_t byte_size;
   int32_t constant_pool_address;
   int32_t name_constant_pool_address;
-  int32_t ref_data_count;
+  int32_t ref_field_count;
 };
 
 SPVM_PACKAGE* SPVM_PACKAGE_new(SPVM* spvm);
