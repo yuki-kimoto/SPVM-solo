@@ -1568,7 +1568,33 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY: {
-        int32_t size = (int32_t)*(pc + 1);
+        int32_t type = (int32_t)*(pc + 1);
+        
+        int32_t size;
+        if (type == SPVM_DATA_C_TYPE_ARRAY_BYTE) {
+          size = sizeof(int8_t);
+        }
+        else if (type == SPVM_DATA_C_TYPE_ARRAY_SHORT) {
+          size = sizeof(int16_t);
+        }
+        else if (type == SPVM_DATA_C_TYPE_ARRAY_INT) {
+          size = sizeof(int32_t);
+        }
+        else if (type == SPVM_DATA_C_TYPE_ARRAY_LONG) {
+          size = sizeof(int64_t);
+        }
+        else if (type == SPVM_DATA_C_TYPE_ARRAY_FLOAT) {
+          size = sizeof(float);
+        }
+        else if (type == SPVM_DATA_C_TYPE_ARRAY_DOUBLE) {
+          size = sizeof(double);
+        }
+        else if (type == SPVM_DATA_C_TYPE_ARRAY_STRING) {
+          size = sizeof(void*);
+        }
+        else {
+          assert(0);
+        }
         
         // Array length
         int32_t length = call_stack[operand_stack_top].int_value;
@@ -1577,10 +1603,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t allocate_size = sizeof(SPVM_DATA_ARRAY) + size * length;
         SPVM_DATA_ARRAY* array = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
         
-        // Set type
-        array->type = SPVM_DATA_C_TYPE_ARRAY_NUMERIC;
+        // Init null if data is string
+        if (type == SPVM_DATA_C_TYPE_ARRAY_STRING) {
+          memset(array + sizeof(SPVM_DATA_ARRAY), 0, size * length);
+        }
         
-        array->byte_size = allocate_size;
+        // Set type
+        array->type = type;
+        
+        // Set byte size
+        array->byte_size = size;
         
         // Set reference count
         array->ref_count = 0;
