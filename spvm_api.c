@@ -1539,6 +1539,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Initialize fields area by 0
         memset((void*)((intptr_t)object + sizeof(SPVM_DATA_OBJECT)), 0, fields_byte_size);
         
+        // Package constant pool address
+        object->package_constant_pool_address = package_constant_pool_address;
+        
         // Push object
         operand_stack_top++;
         call_stack[operand_stack_top].address_value = object;

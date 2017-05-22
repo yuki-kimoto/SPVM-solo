@@ -8,7 +8,7 @@ struct SPVM_data_object {
   int8_t type;
   int16_t byte_size;
   int32_t ref_count;
-  int32_t length;
+  int32_t package_constant_pool_address;
 };
 
 #endif
