@@ -477,9 +477,9 @@ Use the following types in source codes. This is defined in the standard header 
 
 ## Type
 
-### Core type
+### Value type
 
-Core types are `byte`, `short`, `int`, `long`, `float`, `double`.
+Value types are `byte`, `short`, `int`, `long`, `float`, `double`.
 
     byte    signed integer          1byte
     short   signed integer          2byte
@@ -497,13 +497,26 @@ Declaration
     my $value : float;
     my $value : double;
 
-### Core array type
+### Reference type
+
+Reference types are String type, Array type, Object type.
+
+**String type**
+
+    string
+
+Declaration
+    
+    my $message : string;
+
+**Array type**
 
     byte[]   byte array
     short[]  short array
     int[]    int array array
     long[]   long array
     doube[]  double array
+    string[] string array
 
 Declaration
 
@@ -514,7 +527,7 @@ Declaration
     my $values : float[];
     my $values : double[];
     
-### Class type
+**Object type**
 
     ClassName
 
@@ -542,9 +555,9 @@ If the type of right value is known, the type of left value is automatically dec
 
 ### Constant type
 
-Type of constant default integral value is `long`.
+Type of constant default integral value is `int`.
     
-    # long type
+    # int type
     1;
     3;
 
@@ -555,7 +568,10 @@ Type of constant default floating-point value is `double`.
     5.3
     
 Type of constant is specified by type specifier.
-
+    
+    # long
+    3L
+    
     # float
     3.2f
     
