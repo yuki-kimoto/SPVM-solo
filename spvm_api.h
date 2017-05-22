@@ -56,6 +56,6 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv);
 
 void SPVM_API_dec_ref_count_object(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_OBJECT* address);
 void SPVM_API_dec_ref_count_string(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_STRING* string);
-void SPVM_API_dec_ref_count_array_string(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_ARRAY_STRING* );
+void SPVM_API_dec_ref_count_array_string(SPVM* spvm, SPVM_ENV* env, SPVM_DATA_ARRAY* array);
 
 #endif

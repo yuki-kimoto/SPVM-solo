@@ -16,14 +16,6 @@ typedef struct SPVM_data_array SPVM_DATA_ARRAY;
 struct SPVM_data;
 typedef struct SPVM_data SPVM_DATA;
 
-/* spvm_data_array_string.h */
-struct SPVM_data_array_string;
-typedef struct SPVM_data_array_string SPVM_DATA_ARRAY_STRING;
-
-/* spvm_data_array_numeric.h */
-struct SPVM_data_array_numeric;
-typedef struct SPVM_data_array_numeric SPVM_DATA_ARRAY_NUMERIC;
-
 /* spvm_data_string.h */
 struct SPVM_data_string;
 typedef struct SPVM_data_string SPVM_DATA_STRING;
