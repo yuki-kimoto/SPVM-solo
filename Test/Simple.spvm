@@ -3,6 +3,10 @@ use Test::EnumA;
 package Test::Simple {
   has x : int;
   has y : int;
+  has values1 : int[];
+  has values2 : long[];
+  has message : string;
+  has messages : string[];
   
   has title : int;
   
