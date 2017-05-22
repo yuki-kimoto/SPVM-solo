@@ -236,7 +236,7 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_a
       case SPVM_BYTECODE_C_CODE_STORE:
       case SPVM_BYTECODE_C_CODE_STORE_ADDRESS:
       case SPVM_BYTECODE_C_CODE_LOAD:
-      case SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_NUMERIC:
+      case SPVM_BYTECODE_C_CODE_MALLOC_ARRAY:
       {
         i++;
         bytecode = bytecode_array->values[i];

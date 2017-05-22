@@ -181,8 +181,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_MALLOC_OBJECT,
     &&case_SPVM_BYTECODE_C_CODE_MALLOC_STRING,
     &&case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY,
-    &&case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_NUMERIC,
-    &&case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_STRING,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_INT,
@@ -1624,60 +1622,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         call_stack[operand_stack_top].address_value = array;
         
         pc += 2;
-        goto *jump[*pc];
-      }
-      case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_NUMERIC: {
-        int32_t size = (int32_t)*(pc + 1);
-        
-        // Array length
-        int32_t length = call_stack[operand_stack_top].int_value;
-        
-        // Allocate array
-        int32_t allocate_size = sizeof(SPVM_DATA_ARRAY) + size * length;
-        SPVM_DATA_ARRAY* array = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
-        
-        // Set type
-        array->type = SPVM_DATA_C_TYPE_ARRAY_NUMERIC;
-        
-        array->byte_size = allocate_size;
-        
-        // Set reference count
-        array->ref_count = 0;
-        
-        // Set array length
-        array->length = length;
-        
-        // Set array
-        call_stack[operand_stack_top].address_value = array;
-        
-        pc += 2;
-        goto *jump[*pc];
-      }
-      case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY_STRING: {
-        // Array length
-        int32_t length = call_stack[operand_stack_top].int_value;
-        
-        // Allocate array
-        int32_t allocate_size = sizeof(SPVM_DATA_ARRAY) + sizeof(intptr_t) * length;
-        SPVM_DATA_ARRAY* array_string = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
-        memset(array_string, 0, allocate_size);
-        
-        // Set type
-        array_string->type = SPVM_DATA_C_TYPE_ARRAY_STRING;
-        
-        // Set byte size
-        array_string->byte_size = allocate_size;
-        
-        // Set reference count
-        array_string->ref_count = 0;
-        
-        // Set array length
-        array_string->length = length;
-        
-        // Set array
-        call_stack[operand_stack_top].address_value = array_string;
-        
-        pc += 1;
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_ARRAY_LENGTH:
