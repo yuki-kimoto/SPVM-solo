@@ -1544,20 +1544,22 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_MALLOC_STRING: {
-        SPVM_VALUE* string_ref = (SPVM_VALUE*)&constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
+        SPVM_VALUE* string_constant_pool_addresss = (SPVM_VALUE*)&constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
         
-        int32_t length = string_ref[0].int_value;
-        char* pv = (char*)&string_ref[1];
+        int32_t length = string_constant_pool_addresss[0].int_value;
+        char* pv = (char*)&string_constant_pool_addresss[1];
         
         // New sv
         SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, length);
         
         // Create string
-        SPVM_REF_STRING* string = SPVM_API_create_string_sv(spvm, env, sv);
+        SPVM_REF_STRING* ref_string = SPVM_API_create_string_sv(spvm, env, sv);
+        ref_string->type = SPVM_REF_C_TYPE_STRING;
+        ref_string->sub_type = SPVM_REF_C_SUB_TYPE_NULL;
         
         // Set string
         operand_stack_top++;
-        call_stack[operand_stack_top].address_value = string;
+        call_stack[operand_stack_top].address_value = ref_string;
         
         pc += 5;
         goto *jump[*pc];
