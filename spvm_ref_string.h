@@ -7,7 +7,6 @@
 struct SPVM_ref_string {
   int32_t ref_count;
   int8_t type;
-  int8_t sub_type;
   int16_t byte_size;
   SPVM_SV* sv;
 };

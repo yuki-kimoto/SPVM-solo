@@ -1524,9 +1524,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Set type
         object->type = SPVM_REF_C_TYPE_OBJECT;
         
-        // Set sub type
-        object->sub_type = SPVM_REF_C_SUB_TYPE_NULL;
-        
         // Set byte size
         object->byte_size = allocate_size;
         
@@ -1558,7 +1555,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Create string
         SPVM_REF_STRING* ref_string = SPVM_API_create_string_sv(spvm, env, sv);
         ref_string->type = SPVM_REF_C_TYPE_STRING;
-        ref_string->sub_type = SPVM_REF_C_SUB_TYPE_NULL;
         
         // Set string
         operand_stack_top++;
@@ -1568,28 +1564,28 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY: {
-        int32_t sub_type = (int32_t)*(pc + 1);
+        int32_t value_type = (int32_t)*(pc + 1);
         
         int32_t size;
-        if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_BYTE) {
+        if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_BYTE) {
           size = sizeof(int8_t);
         }
-        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_SHORT) {
+        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_SHORT) {
           size = sizeof(int16_t);
         }
-        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_INT) {
+        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_INT) {
           size = sizeof(int32_t);
         }
-        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_LONG) {
+        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_LONG) {
           size = sizeof(int64_t);
         }
-        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_FLOAT) {
+        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_FLOAT) {
           size = sizeof(float);
         }
-        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_DOUBLE) {
+        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_DOUBLE) {
           size = sizeof(double);
         }
-        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
+        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
           size = sizeof(void*);
         }
         else {
@@ -1604,7 +1600,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         SPVM_REF_ARRAY* array = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
         
         // Init null if sub type is array of reference
-        if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
+        if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
           memset(array + sizeof(SPVM_REF_ARRAY), 0, size * length);
         }
         
@@ -1612,7 +1608,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         array->type = SPVM_REF_C_TYPE_ARRAY;
         
         // Set sub type
-        array->sub_type = sub_type;
+        array->value_type = value_type;
         
         // Set byte size
         array->byte_size = size;
@@ -1846,8 +1842,8 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
       }
       // Reference is array
       else if (ref->type == SPVM_REF_C_TYPE_ARRAY) {
-        if (ref->sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
-          SPVM_REF_ARRAY* ref_array = ref;
+        SPVM_REF_ARRAY* ref_array = ref;
+        if (ref_array->value_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
           
           // Array length
           int32_t length = ref_array->length;
