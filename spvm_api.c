@@ -1838,12 +1838,11 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
       
       // Reference is string
       if (ref->type == SPVM_REF_C_TYPE_STRING) {
-        
         SPVM_REF_STRING* ref_string = ref;
         
         SPVM_SV* sv = ref_string->sv;
         SPVM_SvREFCNT_dec(sv);
-        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, ref_string);
+        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, (SPVM_REF*)ref_string);
       }
       // Reference is array
       else if (ref->type == SPVM_REF_C_TYPE_ARRAY) {
@@ -1854,82 +1853,28 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
           int32_t length = ref_array->length;
           
           for (int32_t i = 0; i < length; i++) {
-            void* element_address = *(void**)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(void*) * i);
-            SPVM_API_dec_ref_count(spvm, env, element_address);
+            SPVM_REF* ref_element = *(SPVM_REF**)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(void*) * i);
+            SPVM_API_dec_ref_count(spvm, env, ref_element);
           }
-          
-          SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, ref_array);
         }
-        else {
-          SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, ref);
-        }
-      }
-      else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
         SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, ref);
       }
-    }
-  }
-}
-
-void SPVM_API_dec_ref_count_object(SPVM* spvm, SPVM_ENV* env, SPVM_REF_OBJECT* object) {
-  (void)spvm;
-  (void)env;
-  
-  if (object != NULL) {
-    assert(object->ref_count > 0);
-    
-    // Decrement reference count
-    object->ref_count -= 1;
-    
-    // If reference count is zero, free address.
-    if (object->ref_count == 0) {
-      SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, object);
-    }
-  }
-}
-
-void SPVM_API_dec_ref_count_string(SPVM* spvm, SPVM_ENV* env, SPVM_REF_STRING* string) {
-  (void)spvm;
-  (void)env;
-  
-  if (string != NULL) {
-    
-    assert(string->ref_count > 0);
-    
-    // Decrement reference count
-    string->ref_count -= 1;
-    
-    // If reference count is zero, free address.
-    if (string->ref_count == 0) {
-      SPVM_SV* sv = string->sv;
-      SPVM_SvREFCNT_dec(sv);
-      SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, string);
-    }
-  }
-}
-
-void SPVM_API_dec_ref_count_array_string(SPVM* spvm, SPVM_ENV* env, SPVM_REF_ARRAY* array_string) {
-  (void)spvm;
-  (void)env;
-  
-  if (array_string != NULL) {
-    
-    assert(array_string->ref_count > 0);
-    
-    // Decrement reference count
-    array_string->ref_count -= 1;
-    
-    // If reference count is zero, free address.
-    if (array_string->ref_count == 0) {
-      // Array length
-      int32_t length = array_string->length;
-      
-      for (int32_t i = 0; i < length; i++) {
-        void* element_address = *(void**)((intptr_t)array_string + sizeof(SPVM_REF_ARRAY) + sizeof(void*) * i);
-        SPVM_API_dec_ref_count_string(spvm, env, element_address);
+      // Reference is object
+      else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
+        SPVM_REF_OBJECT* ref_object = ref;
+        
+        int32_t package_constant_pool_address = ref_object->package_constant_pool_address;
+        SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&spvm->constant_pool->values[package_constant_pool_address];
+        
+        int32_t ref_field_count = constant_pool_package->ref_field_count;
+        
+        for (int i = 0; i < ref_field_count; i++) {
+          SPVM_REF* ref_field = *(SPVM_REF**)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + sizeof(void*) * i);
+          SPVM_API_dec_ref_count(spvm, env, ref_field);
+        }
+        
+        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, (SPVM_REF*)ref_object);
       }
-      
-      SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, array_string);
     }
   }
 }
