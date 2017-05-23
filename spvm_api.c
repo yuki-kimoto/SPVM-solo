@@ -1524,6 +1524,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Set type
         object->type = SPVM_REF_C_TYPE_OBJECT;
         
+        // Set sub type
+        object->sub_type = SPVM_REF_C_SUB_TYPE_NULL;
+        
         // Set byte size
         object->byte_size = allocate_size;
         
