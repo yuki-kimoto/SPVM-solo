@@ -5,10 +5,10 @@
 #include "spvm_base.h"
 
 struct SPVM_ref_string {
+  int32_t ref_count;
   int8_t type;
   int8_t sub_type;
   int16_t byte_size;
-  int32_t ref_count;
   SPVM_SV* sv;
 };
 
