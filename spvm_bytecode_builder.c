@@ -28,6 +28,7 @@
 #include "spvm_limit.h"
 #include "spvm_value.h"
 #include "spvm_ref.h"
+#include "spvm_ref_array.h"
 
 void SPVM_BYTECODE_BUILDER_push_inc_bytecode(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_array, SPVM_OP* op_inc, int32_t value) {
   
@@ -1087,22 +1088,22 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_MALLOC_ARRAY);
                   
                   if (strcmp(resolved_type->name, "byte[]") == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_C_SUB_TYPE_ARRAY_BYTE);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_ARRAY_C_VALUE_TYPE_BYTE);
                   }
                   else if (strcmp(resolved_type->name, "short[]") == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_C_SUB_TYPE_ARRAY_SHORT);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_ARRAY_C_VALUE_TYPE_SHORT);
                   }
                   else if (strcmp(resolved_type->name, "int[]") == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_C_SUB_TYPE_ARRAY_INT);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_ARRAY_C_VALUE_TYPE_INT);
                   }
                   else if (strcmp(resolved_type->name, "long[]") == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_C_SUB_TYPE_ARRAY_LONG);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_ARRAY_C_VALUE_TYPE_LONG);
                   }
                   else if (strcmp(resolved_type->name, "float[]") == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_C_SUB_TYPE_ARRAY_FLOAT);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_ARRAY_C_VALUE_TYPE_FLOAT);
                   }
                   else if (strcmp(resolved_type->name, "double[]") == 0) {
-                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_C_SUB_TYPE_ARRAY_DOUBLE);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_ARRAY_C_VALUE_TYPE_DOUBLE);
                   }
                   else {
                     assert(0);
@@ -1110,7 +1111,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 }
                 else if (SPVM_RESOLVED_TYPE_is_array_string(spvm, resolved_type)) {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_MALLOC_ARRAY);
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_C_SUB_TYPE_ARRAY_REF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_REF_ARRAY_C_VALUE_TYPE_REF);
                 }
                 else {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_MALLOC_OBJECT);

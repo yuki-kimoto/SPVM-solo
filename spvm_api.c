@@ -1567,25 +1567,25 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t value_type = (int32_t)*(pc + 1);
         
         int32_t size;
-        if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_BYTE) {
+        if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_BYTE) {
           size = sizeof(int8_t);
         }
-        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_SHORT) {
+        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_SHORT) {
           size = sizeof(int16_t);
         }
-        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_INT) {
+        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_INT) {
           size = sizeof(int32_t);
         }
-        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_LONG) {
+        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_LONG) {
           size = sizeof(int64_t);
         }
-        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_FLOAT) {
+        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_FLOAT) {
           size = sizeof(float);
         }
-        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_DOUBLE) {
+        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_DOUBLE) {
           size = sizeof(double);
         }
-        else if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
+        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_REF) {
           size = sizeof(void*);
         }
         else {
@@ -1600,7 +1600,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         SPVM_REF_ARRAY* array = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
         
         // Init null if sub type is array of reference
-        if (value_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
+        if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_REF) {
           memset(array + sizeof(SPVM_REF_ARRAY), 0, size * length);
         }
         
@@ -1843,7 +1843,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
       // Reference is array
       else if (ref->type == SPVM_REF_C_TYPE_ARRAY) {
         SPVM_REF_ARRAY* ref_array = ref;
-        if (ref_array->value_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
+        if (ref_array->value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_REF) {
           
           // Array length
           int32_t length = ref_array->length;
