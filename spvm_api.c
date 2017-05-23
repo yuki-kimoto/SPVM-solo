@@ -1568,28 +1568,28 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY: {
-        int32_t type = (int32_t)*(pc + 1);
+        int32_t sub_type = (int32_t)*(pc + 1);
         
         int32_t size;
-        if (type == SPVM_REF_C_TYPE_ARRAY_BYTE) {
+        if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_BYTE) {
           size = sizeof(int8_t);
         }
-        else if (type == SPVM_REF_C_TYPE_ARRAY_SHORT) {
+        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_SHORT) {
           size = sizeof(int16_t);
         }
-        else if (type == SPVM_REF_C_TYPE_ARRAY_INT) {
+        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_INT) {
           size = sizeof(int32_t);
         }
-        else if (type == SPVM_REF_C_TYPE_ARRAY_LONG) {
+        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_LONG) {
           size = sizeof(int64_t);
         }
-        else if (type == SPVM_REF_C_TYPE_ARRAY_FLOAT) {
+        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_FLOAT) {
           size = sizeof(float);
         }
-        else if (type == SPVM_REF_C_TYPE_ARRAY_DOUBLE) {
+        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_DOUBLE) {
           size = sizeof(double);
         }
-        else if (type == SPVM_REF_C_TYPE_ARRAY_STRING) {
+        else if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
           size = sizeof(void*);
         }
         else {
@@ -1603,13 +1603,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t allocate_size = sizeof(SPVM_REF_ARRAY) + size * length;
         SPVM_REF_ARRAY* array = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
         
-        // Init null if data is string
-        if (type == SPVM_REF_C_TYPE_ARRAY_STRING) {
+        // Init null if sub type is array of reference
+        if (sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
           memset(array + sizeof(SPVM_REF_ARRAY), 0, size * length);
         }
         
         // Set type
-        array->type = type;
+        array->type = SPVM_REF_C_TYPE_ARRAY;
+        
+        // Set sub type
+        array->sub_type = sub_type;
         
         // Set byte size
         array->byte_size = size;
@@ -1819,46 +1822,50 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   // }
 }
 
-void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* data) {
+void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
   (void)spvm;
   (void)env;
   
-  if (data != NULL) {
+  if (ref != NULL) {
     
-    assert(data->ref_count > 0);
+    assert(ref->ref_count > 0);
     
     // Decrement reference count
-    data->ref_count -= 1;
+    ref->ref_count -= 1;
     
     // If reference count is zero, free address.
-    if (data->ref_count == 0) {
+    if (ref->ref_count == 0) {
       
-      // Object is string
-      if (data->type == SPVM_REF_C_TYPE_STRING) {
+      // Reference is string
+      if (ref->type == SPVM_REF_C_TYPE_STRING) {
         
-        SPVM_REF_STRING* string = data;
+        SPVM_REF_STRING* ref_string = ref;
         
-        SPVM_SV* sv = string->sv;
+        SPVM_SV* sv = ref_string->sv;
         SPVM_SvREFCNT_dec(sv);
-        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, string);
+        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, ref_string);
       }
-      // Object is array of string
-      else if (data->type == SPVM_REF_C_TYPE_ARRAY_STRING) {
-        
-        SPVM_REF_ARRAY* array_string = data;
-        
-        // Array length
-        int32_t length = array_string->length;
-        
-        for (int32_t i = 0; i < length; i++) {
-          void* element_address = *(void**)((intptr_t)array_string + sizeof(SPVM_REF_ARRAY) + sizeof(void*) * i);
-          SPVM_API_dec_ref_count(spvm, env, element_address);
+      // Reference is array
+      else if (ref->type == SPVM_REF_C_TYPE_ARRAY) {
+        if (ref->sub_type == SPVM_REF_C_SUB_TYPE_ARRAY_REF) {
+          SPVM_REF_ARRAY* ref_array = ref;
+          
+          // Array length
+          int32_t length = ref_array->length;
+          
+          for (int32_t i = 0; i < length; i++) {
+            void* element_address = *(void**)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(void*) * i);
+            SPVM_API_dec_ref_count(spvm, env, element_address);
+          }
+          
+          SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, ref_array);
         }
-        
-        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, array_string);
+        else {
+          SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, ref);
+        }
       }
-      else {
-        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, data);
+      else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
+        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, ref);
       }
     }
   }
@@ -1927,14 +1934,14 @@ void SPVM_API_dec_ref_count_array_string(SPVM* spvm, SPVM_ENV* env, SPVM_REF_ARR
   }
 }
 
-void SPVM_API_inc_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* data) {
+void SPVM_API_inc_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
   (void)spvm;
   (void)env;
   
-  if (data != NULL) {
-    assert(data->ref_count >= 0);
+  if (ref != NULL) {
+    assert(ref->ref_count >= 0);
     // Increment reference count
-    data->ref_count += 1;
+    ref->ref_count += 1;
   }
 }
 
