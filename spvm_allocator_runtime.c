@@ -10,7 +10,7 @@
 #include "spvm_memory_pool.h"
 #include "spvm_array.h"
 #include "spvm_api.h"
-#include "spvm_data.h"
+#include "spvm_ref.h"
 
 SPVM_ALLOCATOR_RUNTIME* SPVM_ALLOCATOR_RUNTIME_new(SPVM* spvm) {
   SPVM_ALLOCATOR_RUNTIME* allocator = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPVM_ALLOCATOR_RUNTIME));
@@ -87,13 +87,13 @@ void* SPVM_ALLOCATOR_RUNTIME_alloc(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator
   return block;
 }
 
-void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, SPVM_DATA* data) {
-  if (data == NULL) {
+void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, SPVM_REF* ref) {
+  if (ref == NULL) {
     return;
   }
   else {
     // Object byte size
-    int32_t byte_size = data->byte_size;
+    int32_t byte_size = ref->byte_size;
     
     assert(byte_size > 0);
     
@@ -101,7 +101,7 @@ void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* all
     int32_t freelist_index = SPVM_ALLOCATOR_RUNTIME_get_freelist_index(spvm, allocator, byte_size);
     
     // Push free address
-    SPVM_ARRAY_push(spvm, allocator->freelists[freelist_index], data);
+    SPVM_ARRAY_push(spvm, allocator->freelists[freelist_index], ref);
   }
 }
 

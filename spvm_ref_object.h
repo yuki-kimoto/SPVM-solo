@@ -1,10 +1,10 @@
-#ifndef SPVM_DATA_OBJECT_H
-#define SPVM_DATA_OBJECT_H
+#ifndef SPVM_REF_OBJECT_H
+#define SPVM_REF_OBJECT_H
 
 #include "spvm_value.h"
 #include "spvm_base.h"
 
-struct SPVM_data_object {
+struct SPVM_ref_object {
   int8_t type;
   int8_t sub_type;
   int16_t byte_size;

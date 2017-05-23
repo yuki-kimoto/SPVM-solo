@@ -1,7 +1,7 @@
-#ifndef SPVM_DATA_ARRAY_H
-#define SPVM_DATA_ARRAY_H
+#ifndef SPVM_REF_ARRAY_H
+#define SPVM_REF_ARRAY_H
 
-struct SPVM_data_array {
+struct SPVM_ref_array {
   int8_t type;
   int8_t sub_type;
   int16_t byte_size;
