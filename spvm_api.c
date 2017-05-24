@@ -1565,58 +1565,36 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
       case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY: {
         int32_t value_type = (int32_t)*(pc + 1);
         
-        int32_t size;
-        if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_BYTE) {
-          size = sizeof(int8_t);
-        }
-        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_SHORT) {
-          size = sizeof(int16_t);
-        }
-        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_INT) {
-          size = sizeof(int32_t);
-        }
-        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_LONG) {
-          size = sizeof(int64_t);
-        }
-        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_FLOAT) {
-          size = sizeof(float);
-        }
-        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_DOUBLE) {
-          size = sizeof(double);
-        }
-        else if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_REF) {
-          size = sizeof(void*);
-        }
-        else {
-          assert(0);
-        }
+        int32_t size = SPVM_REF_ARRAY_C_VALUE_SIZES[value_type];
         
         // Array length
         int32_t length = call_stack[operand_stack_top].int_value;
         
         // Allocate array
-        int32_t allocate_size = sizeof(SPVM_REF_ARRAY) + size * length;
-        SPVM_REF_ARRAY* array = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, allocate_size);
+        int32_t ref_array_byte_size = sizeof(SPVM_REF_ARRAY) + size * length;
+        SPVM_REF_ARRAY* ref_array = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_array_byte_size);
         
         // Init null if sub type is array of reference
         if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_REF) {
-          memset(array + sizeof(SPVM_REF_ARRAY), 0, size * length);
+          memset(ref_array + sizeof(SPVM_REF_ARRAY), 0, size * length);
         }
         
         // Set type
-        array->type = SPVM_REF_C_TYPE_ARRAY;
+        ref_array->type = SPVM_REF_C_TYPE_ARRAY;
         
         // Set sub type
-        array->value_type = value_type;
+        ref_array->value_type = value_type;
         
         // Set reference count
-        array->ref_count = 0;
+        ref_array->ref_count = 0;
         
         // Set array length
-        array->length = length;
+        ref_array->length = length;
+
+        assert(ref_array_byte_size == SPVM_REF_calcurate_byte_size(spvm, ref_array));
         
         // Set array
-        call_stack[operand_stack_top].address_value = array;
+        call_stack[operand_stack_top].address_value = ref_array;
         
         pc += 2;
         goto *jump[*pc];
