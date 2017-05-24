@@ -1610,9 +1610,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Set sub type
         array->value_type = value_type;
         
-        // Set byte size
-        array->byte_size = size;
-        
         // Set reference count
         array->ref_count = 0;
         

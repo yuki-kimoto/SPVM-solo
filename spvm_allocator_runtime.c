@@ -12,6 +12,8 @@
 #include "spvm_api.h"
 #include "spvm_ref.h"
 #include "spvm_ref_string.h"
+#include "spvm_ref_array.h"
+#include "spvm_ref_object.h"
 
 SPVM_ALLOCATOR_RUNTIME* SPVM_ALLOCATOR_RUNTIME_new(SPVM* spvm) {
   SPVM_ALLOCATOR_RUNTIME* allocator = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPVM_ALLOCATOR_RUNTIME));
@@ -102,7 +104,8 @@ void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* all
     }
     // Reference is array
     else if (ref->type == SPVM_REF_C_TYPE_ARRAY) {
-      byte_size = ref->byte_size;
+      SPVM_REF_ARRAY* ref_array = ref;
+      byte_size = ref_array->length * SPVM_REF_ARRAY_C_VALUE_SIZES[ref_array->value_type];
     }
     // Reference is object
     else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
