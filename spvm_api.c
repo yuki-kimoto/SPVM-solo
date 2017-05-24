@@ -1527,8 +1527,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Set reference count
         ref_object->ref_count = 0;
         
-        // Initialize fields area by 0
-        memset((void*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT)), 0, fields_byte_size);
+        // Initialize reference fields by 0
+        memset((void*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT)), 0, sizeof(void*) * constant_pool_package->ref_fields_count);
         
         // Package constant pool address
         ref_object->package_constant_pool_address = package_constant_pool_address;
@@ -1836,9 +1836,9 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
         int32_t package_constant_pool_address = ref_object->package_constant_pool_address;
         SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&spvm->constant_pool->values[package_constant_pool_address];
         
-        int32_t ref_field_count = constant_pool_package->ref_field_count;
+        int32_t ref_fields_count = constant_pool_package->ref_fields_count;
         
-        for (int i = 0; i < ref_field_count; i++) {
+        for (int i = 0; i < ref_fields_count; i++) {
           SPVM_REF* ref_field = *(SPVM_REF**)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + sizeof(void*) * i);
           SPVM_API_dec_ref_count(spvm, env, ref_field);
         }

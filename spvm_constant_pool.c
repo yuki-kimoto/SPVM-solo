@@ -63,7 +63,7 @@ void SPVM_CONSTANT_POOL_push_package(SPVM* spvm, SPVM_CONSTANT_POOL* constant_po
   SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&constant_pool->values[constant_pool->length];
   constant_pool_package->byte_size = package->byte_size;
   constant_pool_package->name_constant_pool_address = package->name_constant_pool_address;
-  constant_pool_package->ref_field_count = package->ref_field_count;
+  constant_pool_package->ref_fields_count = package->ref_fields_count;
   
   constant_pool->length += extend_length;
 }
