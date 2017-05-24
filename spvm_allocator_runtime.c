@@ -113,7 +113,7 @@ void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* all
     else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
       SPVM_REF_OBJECT* ref_object = ref;
       SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&spvm->constant_pool->values[ref_object->package_constant_pool_address];
-      byte_size = constant_pool_package->byte_size;
+      byte_size = sizeof(SPVM_REF_OBJECT) + constant_pool_package->byte_size;
     }
     else {
       assert(0);
@@ -121,11 +121,16 @@ void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* all
     
     assert(byte_size > 0);
     
-    // Freelist index
-    int32_t freelist_index = SPVM_ALLOCATOR_RUNTIME_get_freelist_index(spvm, allocator, byte_size);
-    
-    // Push free address
-    SPVM_ARRAY_push(spvm, allocator->freelists[freelist_index], ref);
+    if (byte_size > spvm->ref_max_byte_size_use_memory_pool) {
+      free(ref);
+    }
+    else {
+      // Freelist index
+      int32_t freelist_index = SPVM_ALLOCATOR_RUNTIME_get_freelist_index(spvm, allocator, byte_size);
+      
+      // Push free address
+      SPVM_ARRAY_push(spvm, allocator->freelists[freelist_index], ref);
+    }
   }
 }
 
