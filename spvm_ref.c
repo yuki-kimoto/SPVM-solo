@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include "spvm.h"
 #include "spvm_ref.h"
 #include "spvm_ref_array.h"

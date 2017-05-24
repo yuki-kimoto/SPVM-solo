@@ -454,7 +454,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           int32_t ref_count = SPVM_API_get_ref_count(spvm, env, return_value);
           if (ref_count == 0) {
             SPVM_SvREFCNT_dec(sv_message);
-            SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, return_value);
+            SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, return_value);
           }
         }
         
@@ -846,7 +846,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         if (data != NULL) {
           int32_t ref_count = data->ref_count;
           if (ref_count == 0) {
-            SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, call_stack[operand_stack_top].address_value);
+            SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, call_stack[operand_stack_top].address_value);
           }
         }
         
@@ -1519,7 +1519,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Allocate memory
         int32_t fields_byte_size = constant_pool_package->byte_size;
         int32_t allocate_size = sizeof(SPVM_REF_OBJECT) + fields_byte_size;
-        SPVM_REF_OBJECT* object = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+        SPVM_REF_OBJECT* object = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, allocate_size);
         
         // Set type
         object->type = SPVM_REF_C_TYPE_OBJECT;
@@ -1594,7 +1594,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Allocate array
         int32_t allocate_size = sizeof(SPVM_REF_ARRAY) + size * length;
-        SPVM_REF_ARRAY* array = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+        SPVM_REF_ARRAY* array = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, allocate_size);
         
         // Init null if sub type is array of reference
         if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_REF) {
@@ -1832,7 +1832,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
         
         SPVM_SV* sv = ref_string->sv;
         SPVM_SvREFCNT_dec(sv);
-        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, (SPVM_REF*)ref_string);
+        SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, (SPVM_REF*)ref_string);
       }
       // Reference is array
       else if (ref->type == SPVM_REF_C_TYPE_ARRAY) {
@@ -1847,7 +1847,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
             SPVM_API_dec_ref_count(spvm, env, ref_element);
           }
         }
-        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, ref);
+        SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, ref);
       }
       // Reference is object
       else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
@@ -1863,7 +1863,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
           SPVM_API_dec_ref_count(spvm, env, ref_field);
         }
         
-        SPVM_ALLOCATOR_RUNTIME_free_address(spvm, spvm->allocator_runtime, (SPVM_REF*)ref_object);
+        SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, (SPVM_REF*)ref_object);
       }
     }
   }
@@ -2186,7 +2186,7 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   
   // Allocate array
   int32_t allocate_size = sizeof(SPVM_REF_STRING);
-  SPVM_REF_STRING* string = SPVM_ALLOCATOR_RUNTIME_alloc(spvm, allocator, allocate_size);
+  SPVM_REF_STRING* string = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, allocate_size);
   
   // Set type
   string->type = SPVM_REF_C_TYPE_STRING;

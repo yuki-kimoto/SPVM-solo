@@ -68,7 +68,7 @@ int32_t SPVM_ALLOCATOR_RUNTIME_get_freelist_index(SPVM* spvm, SPVM_ALLOCATOR_RUN
   return index;
 }
 
-void* SPVM_ALLOCATOR_RUNTIME_alloc(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, int64_t size) {
+void* SPVM_ALLOCATOR_RUNTIME_malloc(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, int64_t size) {
   (void) spvm;
   
   assert(size > 0);
@@ -92,32 +92,13 @@ void* SPVM_ALLOCATOR_RUNTIME_alloc(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator
   return block;
 }
 
-void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, SPVM_REF* ref) {
+void SPVM_ALLOCATOR_RUNTIME_free_ref(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, SPVM_REF* ref) {
   if (ref == NULL) {
     return;
   }
   else {
-    // Object byte size
-    int32_t byte_size;
-    
-    // Reference is string
-    if (ref->type == SPVM_REF_C_TYPE_STRING) {
-      byte_size = sizeof(SPVM_REF_STRING);
-    }
-    // Reference is array
-    else if (ref->type == SPVM_REF_C_TYPE_ARRAY) {
-      SPVM_REF_ARRAY* ref_array = ref;
-      byte_size = sizeof(SPVM_REF_ARRAY) + ref_array->length * SPVM_REF_ARRAY_C_VALUE_SIZES[ref_array->value_type];
-    }
-    // Reference is object
-    else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
-      SPVM_REF_OBJECT* ref_object = ref;
-      SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&spvm->constant_pool->values[ref_object->package_constant_pool_address];
-      byte_size = sizeof(SPVM_REF_OBJECT) + constant_pool_package->byte_size;
-    }
-    else {
-      assert(0);
-    }
+    // Byte size
+    int64_t byte_size = SPVM_REF_calcurate_byte_size(spvm, ref);
     
     assert(byte_size > 0);
     

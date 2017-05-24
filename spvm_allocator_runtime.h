@@ -13,9 +13,9 @@ struct SPVM_allocator_runtime {
 };
 
 SPVM_ALLOCATOR_RUNTIME* SPVM_ALLOCATOR_RUNTIME_new(SPVM* spvm);
-void* SPVM_ALLOCATOR_RUNTIME_alloc(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, int64_t size);
-void SPVM_ALLOCATOR_RUNTIME_free(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator);
+void* SPVM_ALLOCATOR_RUNTIME_malloc(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, int64_t size);
+void SPVM_ALLOCATOR_RUNTIME_free_ref(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, SPVM_REF* ref);
 int32_t SPVM_ALLOCATOR_RUNTIME_get_freelist_index(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, int64_t size);
-void SPVM_ALLOCATOR_RUNTIME_free_address(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator, SPVM_REF* ref);
+void SPVM_ALLOCATOR_RUNTIME_free(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator);
 
 #endif
