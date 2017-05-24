@@ -1520,6 +1520,20 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         int32_t fields_byte_size = constant_pool_package->byte_size;
         int32_t ref_object_byte_size = sizeof(SPVM_REF_OBJECT) + fields_byte_size;
         SPVM_REF_OBJECT* ref_object = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_object_byte_size);
+
+        // Memory allocation error
+        if (!ref_object) {
+          // Sub name
+          int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
+          const char* sub_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, sub_name_constant_pool_address);
+          
+          // File name
+          int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
+          const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
+
+          fprintf(stderr, "Failed to allocate memory(malloc PACKAGE) from %s at %s", sub_name, file_name);
+          abort();
+        }
         
         // Set type
         ref_object->type = SPVM_REF_C_TYPE_OBJECT;
@@ -1554,6 +1568,20 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Create string
         SPVM_REF_STRING* ref_string = SPVM_API_create_string_sv(spvm, env, sv);
         
+        // Memory allocation error
+        if (!ref_string) {
+          // Sub name
+          int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
+          const char* sub_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, sub_name_constant_pool_address);
+          
+          // File name
+          int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
+          const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
+
+          fprintf(stderr, "Failed to allocate memory(malloc STRING) from %s at %s", sub_name, file_name);
+          abort();
+        }
+        
         // Set string
         operand_stack_top++;
         call_stack[operand_stack_top].address_value = ref_string;
@@ -1572,6 +1600,20 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Allocate array
         int32_t ref_array_byte_size = sizeof(SPVM_REF_ARRAY) + size * length;
         SPVM_REF_ARRAY* ref_array = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_array_byte_size);
+        
+        // Memory allocation error
+        if (!ref_array) {
+          // Sub name
+          int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
+          const char* sub_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, sub_name_constant_pool_address);
+          
+          // File name
+          int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
+          const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
+          
+          fprintf(stderr, "Failed to allocate memory(malloc ARRAY) from %s at %s", sub_name, file_name);
+          abort();
+        }
         
         // Init null if sub type is array of reference
         if (value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_REF) {
