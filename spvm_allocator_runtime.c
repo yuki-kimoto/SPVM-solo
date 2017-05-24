@@ -74,7 +74,7 @@ void* SPVM_ALLOCATOR_RUNTIME_alloc(SPVM* spvm, SPVM_ALLOCATOR_RUNTIME* allocator
   assert(size > 0);
   
   void* block;
-  if (size > 0xFFFF) {
+  if (size > spvm->ref_max_byte_size_use_memory_pool) {
     block = SPVM_ALLOCATOR_UTIL_safe_malloc_i64(1, size);
   }
   else {
