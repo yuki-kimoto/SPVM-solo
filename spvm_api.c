@@ -1518,24 +1518,26 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Allocate memory
         int32_t fields_byte_size = constant_pool_package->byte_size;
-        int32_t allocate_size = sizeof(SPVM_REF_OBJECT) + fields_byte_size;
-        SPVM_REF_OBJECT* object = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, allocate_size);
+        int32_t ref_object_byte_size = sizeof(SPVM_REF_OBJECT) + fields_byte_size;
+        SPVM_REF_OBJECT* ref_object = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_object_byte_size);
         
         // Set type
-        object->type = SPVM_REF_C_TYPE_OBJECT;
+        ref_object->type = SPVM_REF_C_TYPE_OBJECT;
         
         // Set reference count
-        object->ref_count = 0;
+        ref_object->ref_count = 0;
         
         // Initialize fields area by 0
-        memset((void*)((intptr_t)object + sizeof(SPVM_REF_OBJECT)), 0, fields_byte_size);
+        memset((void*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT)), 0, fields_byte_size);
         
         // Package constant pool address
-        object->package_constant_pool_address = package_constant_pool_address;
+        ref_object->package_constant_pool_address = package_constant_pool_address;
+        
+        assert(ref_object_byte_size == SPVM_REF_calcurate_byte_size(spvm, ref_object));
         
         // Push object
         operand_stack_top++;
-        call_stack[operand_stack_top].address_value = object;
+        call_stack[operand_stack_top].address_value = ref_object;
         
         pc += 5;
         goto *jump[*pc];
