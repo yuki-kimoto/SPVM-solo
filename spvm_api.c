@@ -1553,7 +1553,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Create string
         SPVM_REF_STRING* ref_string = SPVM_API_create_string_sv(spvm, env, sv);
-        ref_string->type = SPVM_REF_C_TYPE_STRING;
         
         // Set string
         operand_stack_top++;
@@ -2165,17 +2164,19 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
   
   // Allocate array
-  int32_t allocate_size = sizeof(SPVM_REF_STRING);
-  SPVM_REF_STRING* string = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, allocate_size);
+  int32_t ref_string_byte_size = sizeof(SPVM_REF_STRING);
+  SPVM_REF_STRING* ref_string = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_string_byte_size);
   
   // Set type
-  string->type = SPVM_REF_C_TYPE_STRING;
+  ref_string->type = SPVM_REF_C_TYPE_STRING;
   
   // Set reference count
-  string->ref_count = 0;
+  ref_string->ref_count = 0;
   
   // Set sv
-  string->sv = sv;
+  ref_string->sv = sv;
+
+  assert(ref_string_byte_size == SPVM_REF_calcurate_byte_size(spvm, ref_string));
   
-  return string;
+  return ref_string;
 }
