@@ -749,7 +749,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_STORE_ADDRESS: {
         int32_t vars_index = *(pc + 1);
-
+        
         // Increment reference count
         SPVM_API_inc_ref_count(spvm, env, call_stack[operand_stack_top].address_value);
         
@@ -2196,9 +2196,6 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   
   // Set type
   string->type = SPVM_REF_C_TYPE_STRING;
-  
-  // Set byte size
-  string->byte_size = (int32_t)allocate_size;
   
   // Set reference count
   string->ref_count = 0;

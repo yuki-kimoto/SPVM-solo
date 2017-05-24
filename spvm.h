@@ -31,6 +31,8 @@ struct spvm_ {
   
   // Runtime memory allocator
   SPVM_ALLOCATOR_RUNTIME* allocator_runtime;
+  
+  // use memory pool
 };
 
 SPVM* SPVM_new();
