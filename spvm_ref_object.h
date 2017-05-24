@@ -7,7 +7,6 @@
 struct SPVM_ref_object {
   int32_t ref_count;
   int8_t type;
-  int16_t byte_size;
   int32_t package_constant_pool_address;
 };
 
