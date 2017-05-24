@@ -1611,8 +1611,25 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
           const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
           
-          fprintf(stderr, "Failed to allocate memory(malloc ARRAY) from %s at %s", sub_name, file_name);
-          abort();
+          // Error message
+          const char* pv_error_message = "Failed to allocate memory(malloc ARRAY)";
+          SPVM_SV* sv_error_message = SPVM_COMPAT_newSVpvn(spvm, pv_error_message, strlen(pv_error_message));
+          SPVM_REF_STRING* ref_string_message = NULL;
+          if (sv_error_message) {
+            ref_string_message = SPVM_API_create_string_sv(spvm, env, sv_error_message);
+          }
+          
+          // Error is converted to exception
+          if (ref_string_message) {
+            operand_stack_top++;
+            call_stack[operand_stack_top].address_value = ref_string_message;
+            goto case_SPVM_BYTECODE_C_CODE_DIE;
+          }
+          // Error is fatal
+          else {
+            fprintf(stderr, "Failed to allocate memory(malloc ARRAY) from %s at %s", sub_name, file_name);
+            abort();
+          }
         }
         
         // Init null if sub type is array of reference
