@@ -19,6 +19,6 @@ enum {
   SPVM_REF_ARRAY_C_VALUE_TYPE_REF,
 };
 
-extern const int32_t SPVM_REF_ARRAY_C_VALUE_SIEZES[];
+extern const int32_t SPVM_REF_ARRAY_C_VALUE_SIZES[];
 
 #endif
