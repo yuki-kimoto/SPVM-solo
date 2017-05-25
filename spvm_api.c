@@ -265,6 +265,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   int32_t call_stack_base = env->call_stack_base;
   int32_t call_stack_base_start = call_stack_base;
   
+  SPVM_REF_ARRAY* ref_array;
+  int32_t index;
+  
   SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
   
   SPVM_CONSTANT_POOL_SUB* constant_pool_sub = NULL;
@@ -693,8 +696,15 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_INT:
-        call_stack[operand_stack_top - 1].int_value
-          = *(int32_t*)((intptr_t)call_stack[operand_stack_top - 1].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(int32_t) * call_stack[operand_stack_top].int_value);
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        index = call_stack[operand_stack_top].int_value;
+        if (!ref_array) {
+          assert(0);
+        }
+        if (index < 0 || index >= ref_array->length) {
+          assert(0);
+        }
+        call_stack[operand_stack_top - 1].int_value = *(int32_t*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(int32_t) * index);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
