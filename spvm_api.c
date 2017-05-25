@@ -684,14 +684,30 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_BYTE:
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        index = call_stack[operand_stack_top].int_value;
+        if (__builtin_expect(!ref_array, 0)) {
+          assert(0);
+        }
+        if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
+          assert(0);
+        }
         call_stack[operand_stack_top - 1].byte_value
-          = *(int8_t*)((intptr_t)call_stack[operand_stack_top - 1].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(int8_t) * call_stack[operand_stack_top].int_value);
+          = *(int8_t*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(int8_t) * index);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_SHORT:
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        index = call_stack[operand_stack_top].int_value;
+        if (__builtin_expect(!ref_array, 0)) {
+          assert(0);
+        }
+        if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
+          assert(0);
+        }
         call_stack[operand_stack_top - 1].short_value
-          = *(int16_t*)((intptr_t)call_stack[operand_stack_top - 1].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(int16_t) * call_stack[operand_stack_top].int_value);
+          = *(int16_t*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(int16_t) * index);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
@@ -709,27 +725,55 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_LONG: {
-        call_stack[operand_stack_top - 1].long_value
-          = *(int64_t*)((intptr_t)call_stack[operand_stack_top - 1].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(int64_t) * call_stack[operand_stack_top].int_value);
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        index = call_stack[operand_stack_top].int_value;
+        if (__builtin_expect(!ref_array, 0)) {
+          assert(0);
+        }
+        if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
+          assert(0);
+        }
+        call_stack[operand_stack_top - 1].long_value = *(int64_t*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(int64_t) * index);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_FLOAT:
-        call_stack[operand_stack_top - 1].float_value
-          = *(float*)((intptr_t)call_stack[operand_stack_top - 1].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(float) * call_stack[operand_stack_top].int_value);
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        index = call_stack[operand_stack_top].int_value;
+        if (__builtin_expect(!ref_array, 0)) {
+          assert(0);
+        }
+        if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
+          assert(0);
+        }
+        call_stack[operand_stack_top - 1].float_value = *(float*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(float) * index);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_DOUBLE:
-        call_stack[operand_stack_top - 1].double_value
-          = *(double*)((intptr_t)call_stack[operand_stack_top - 1].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(double) * call_stack[operand_stack_top].int_value);
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        index = call_stack[operand_stack_top].int_value;
+        if (__builtin_expect(!ref_array, 0)) {
+          assert(0);
+        }
+        if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
+          assert(0);
+        }
+        call_stack[operand_stack_top - 1].double_value = *(double*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(double) * index);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_ADDRESS:
-        call_stack[operand_stack_top - 1].address_value
-          = *(void**)((intptr_t)call_stack[operand_stack_top - 1].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(void*) * call_stack[operand_stack_top].int_value);
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        index = call_stack[operand_stack_top].int_value;
+        if (__builtin_expect(!ref_array, 0)) {
+          assert(0);
+        }
+        if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
+          assert(0);
+        }
+        call_stack[operand_stack_top - 1].address_value = *(void**)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(void*) * index);
         operand_stack_top--;
         pc++;
         goto *jump[*pc];
