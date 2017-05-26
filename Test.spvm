@@ -15,6 +15,12 @@ package Test {
     # Object to get long field is undef
     #{
     #  my $obj : Test::Minimal;
+    #  $obj{x} = 1L;
+    #}
+
+    # Object to get long field is undef
+    #{
+    #  my $obj : Test::Minimal;
     #  $obj{x};
     #}
 
