@@ -12,6 +12,15 @@ package Test {
 
     std::printi(std::test_call1(4));
     
+    {
+      my $nums = malloc int[4000];
+      my $len = len $nums;
+      my $i = 0;
+      for ($i = 0; $i < $len; $i++) {
+        $nums[$i] = $i;
+      }
+    }
+    
     # Object to get long field is undef
     #{
     #  my $obj : Test::Minimal;

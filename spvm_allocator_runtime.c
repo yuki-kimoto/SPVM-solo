@@ -54,7 +54,7 @@ int32_t SPVM_ALLOCATOR_RUNTIME_get_freelist_index(SPVM* spvm, SPVM_ALLOCATOR_RUN
   
   // Category
   int64_t div_size = Value;
-  int32_t index = 0;
+  int32_t index = -1;
   while (1) {
     div_size = div_size / 2;
     if (div_size == 0) {
@@ -64,6 +64,7 @@ int32_t SPVM_ALLOCATOR_RUNTIME_get_freelist_index(SPVM* spvm, SPVM_ALLOCATOR_RUN
       index++;
     }
   }
+  assert(index >= 0);
   
   return index;
 }
