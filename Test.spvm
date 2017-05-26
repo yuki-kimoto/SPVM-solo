@@ -12,6 +12,12 @@ package Test {
 
     std::printi(std::test_call1(4));
 
+    # Object is undef
+    #{
+    #  my $obj : Test::Minimal;
+    #  $obj{x};
+    #}
+
     # Index is out of range
     #{
     #  my $nums = malloc int[3];
