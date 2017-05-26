@@ -272,8 +272,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   
   SPVM_CONSTANT_POOL_SUB* constant_pool_sub = NULL;
   
-  const char* error_object_undef = "Object must be not null";
-  const char* error_array_index_over = "Array index boundary is over";
+  const char* pv_error_object_undef = "Object must be not null";
+  const char* pv_error_array_index_over = "Array index boundary is over";
   
   // Goto subroutine
   goto CALLSUB_COMMON;
@@ -718,7 +718,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, pv_error_object_undef);
+          operand_stack_top--;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
           assert(0);
