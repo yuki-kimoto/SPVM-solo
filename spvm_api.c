@@ -272,6 +272,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   
   SPVM_CONSTANT_POOL_SUB* constant_pool_sub = NULL;
   
+  const char* error_object_undef = "Object must be not null";
+  const char* error_array_index_over = "Array index boundary is over";
+  
   // Goto subroutine
   goto CALLSUB_COMMON;
   

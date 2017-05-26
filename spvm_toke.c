@@ -524,7 +524,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           if (constant->code == SPVM_CONSTANT_C_CODE_FLOAT) {
             float num = strtof(num_str, &end);
             if (*end != '\0') {
-              fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
+              fprintf(stderr, "Invalid float literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
               exit(EXIT_FAILURE);
             }
             constant->uv.float_value = num;
@@ -534,7 +534,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           else if (constant->code == SPVM_CONSTANT_C_CODE_DOUBLE) {
             double num = strtod(num_str, &end);
             if (*end != '\0') {
-              fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
+              fprintf(stderr, "Invalid double literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
               exit(EXIT_FAILURE);
             }
             constant->uv.double_value = num;
@@ -551,7 +551,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
               num = strtol(num_str, &end, 10);
             }
             if (*end != '\0') {
-              fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
+              fprintf(stderr, "Invalid int literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
               exit(EXIT_FAILURE);
             }
             else if (num == INT64_MAX && errno == ERANGE) {
@@ -572,7 +572,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
               num = strtol(num_str, &end, 10);
             }
             if (*end != '\0') {
-              fprintf(stderr, "Invalid number literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
+              fprintf(stderr, "Invalid long literal %s at %s line %" PRId32 "\n", num_str, parser->cur_module_path, parser->cur_line);
               exit(EXIT_FAILURE);
             }
             else if (num == INT64_MAX && errno == ERANGE) {
