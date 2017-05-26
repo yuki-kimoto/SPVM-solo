@@ -896,7 +896,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 2].address_value;
         index = call_stack[operand_stack_top - 1].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of reference to set the element must not be undef");
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of int to set the element must not be undef");
           operand_stack_top++;
           call_stack[operand_stack_top].address_value = ref_string_error;
           goto case_SPVM_BYTECODE_C_CODE_DIE;
@@ -913,26 +913,83 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_LONG:
-        *(int64_t*)((intptr_t)call_stack[operand_stack_top - 2].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(int64_t) * call_stack[operand_stack_top - 1].int_value)
-          = call_stack[operand_stack_top].long_value;
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 2].address_value;
+        index = call_stack[operand_stack_top - 1].int_value;
+        if (__builtin_expect(!ref_array, 0)) {
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of long to set the element must not be undef");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
+        }
+        if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index of the array of int to set the element is out of range");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
+        }
+
+        *(int64_t*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(int64_t) * index) = call_stack[operand_stack_top].long_value;
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_FLOAT:
-        *(float*)((intptr_t)call_stack[operand_stack_top - 2].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(float) * call_stack[operand_stack_top - 1].int_value)
-          = call_stack[operand_stack_top - 1].float_value;
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 2].address_value;
+        index = call_stack[operand_stack_top - 1].int_value;
+        if (__builtin_expect(!ref_array, 0)) {
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of float to set the element must not be undef");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
+        }
+        if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index of the array of float to set the element is out of range");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
+        }
+        
+        *(float*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(float) * index) = call_stack[operand_stack_top - 1].float_value;
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_DOUBLE:
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 2].address_value;
+        index = call_stack[operand_stack_top - 1].int_value;
+        if (__builtin_expect(!ref_array, 0)) {
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of double to set the element must not be undef");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
+        }
+        if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index of the array of double to set the element is out of range");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
+        }
+
         *(double*)((intptr_t)call_stack[operand_stack_top - 2].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(double) * call_stack[operand_stack_top - 1].int_value)
           = call_stack[operand_stack_top].double_value;
         operand_stack_top -= 3;
         pc++;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_ARRAY_STORE_ADDRESS: {
-        void** array_index
-          = (void**)((intptr_t)call_stack[operand_stack_top - 2].address_value + sizeof(SPVM_REF_ARRAY) + sizeof(void*) * call_stack[operand_stack_top - 1].int_value);
+        ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 2].address_value;
+        index = call_stack[operand_stack_top - 1].int_value;
+        if (__builtin_expect(!ref_array, 0)) {
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of reference to set the element must not be undef");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
+        }
+        if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index of the array of reference to set the element is out of range");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
+        }
+        
+        void** array_index = (void**)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(void*) * index);
         
         // Increment reference count
         SPVM_API_inc_ref_count(spvm, env, call_stack[operand_stack_top].address_value);
