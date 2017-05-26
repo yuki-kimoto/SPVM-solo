@@ -719,7 +719,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, pv_error_object_undef);
-          operand_stack_top--;
+          operand_stack_top++;
           call_stack[operand_stack_top].address_value = ref_string_error;
           goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
