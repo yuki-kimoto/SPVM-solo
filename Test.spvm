@@ -11,6 +11,18 @@ package Test {
     std::printi(Test::EnumD->FORE);
 
     std::printi(std::test_call1(4));
+
+    # Index is out of range
+    #{
+    #  my $nums = malloc int[3];
+    #  $nums[3];
+    #}
+    
+    # Index is out of range
+    #{
+    #  my $nums = malloc int[3];
+    #  $nums[-1];
+    #}
     
     # Array is undef
     #{

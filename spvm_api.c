@@ -689,13 +689,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "byte array loading element must be not undef");
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of byte to get the element must not be undef");
           operand_stack_top++;
           call_stack[operand_stack_top].address_value = ref_string_error;
           goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index is out of range of the array of byte");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         call_stack[operand_stack_top - 1].byte_value
           = *(int8_t*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(int8_t) * index);
@@ -706,13 +709,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "short array loading element must be not undef");
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of short to get the element must not be undef");
           operand_stack_top++;
           call_stack[operand_stack_top].address_value = ref_string_error;
           goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index is out of range of the array of short");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         call_stack[operand_stack_top - 1].short_value
           = *(int16_t*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(int16_t) * index);
@@ -723,13 +729,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "int array loading element must be not undef");
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of int to get the element must not be undef");
           operand_stack_top++;
           call_stack[operand_stack_top].address_value = ref_string_error;
           goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index is out of range of the array of int");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         call_stack[operand_stack_top - 1].int_value = *(int32_t*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(int32_t) * index);
         operand_stack_top--;
@@ -739,13 +748,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "long array loading element must be not undef");
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of long to get the element must not be undef");
           operand_stack_top++;
           call_stack[operand_stack_top].address_value = ref_string_error;
           goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index is out of range of the array of long");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         call_stack[operand_stack_top - 1].long_value = *(int64_t*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(int64_t) * index);
         operand_stack_top--;
@@ -756,13 +768,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "float array loading element must be not undef");
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of float to get the element must not be undef");
           operand_stack_top++;
           call_stack[operand_stack_top].address_value = ref_string_error;
           goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index is out of range of the array of float");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         call_stack[operand_stack_top - 1].float_value = *(float*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(float) * index);
         operand_stack_top--;
@@ -772,13 +787,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "double array loading element must be not undef");
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of double to get the element must not be undef");
           operand_stack_top++;
           call_stack[operand_stack_top].address_value = ref_string_error;
           goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index is out of range of the array of double");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         call_stack[operand_stack_top - 1].double_value = *(double*)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(double) * index);
         operand_stack_top--;
@@ -788,13 +806,16 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "reference array loading element must be not undef");
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The array of reference to get the element must not be undef");
           operand_stack_top++;
           call_stack[operand_stack_top].address_value = ref_string_error;
           goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The index is out of range of the array of reference");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         call_stack[operand_stack_top - 1].address_value = *(void**)((intptr_t)ref_array + sizeof(SPVM_REF_ARRAY) + sizeof(void*) * index);
         operand_stack_top--;
