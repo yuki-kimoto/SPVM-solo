@@ -1714,33 +1714,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Memory allocation error
         if (!ref_array) {
-          // Sub name
-          int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
-          const char* sub_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, sub_name_constant_pool_address);
-          
-          // File name
-          int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
-          const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
-          
           // Error message
-          const char* pv_error_message = "Failed to allocate memory(malloc ARRAY)";
-          SPVM_SV* sv_error_message = SPVM_COMPAT_newSVpvn(spvm, pv_error_message, strlen(pv_error_message));
-          SPVM_REF_STRING* ref_string_message = NULL;
-          if (sv_error_message) {
-            ref_string_message = SPVM_API_create_string_sv(spvm, env, sv_error_message);
-          }
+          SPVM_REF_STRING* ref_string_message = SPVM_API_create_ref_string_from_pv(spvm, env, "Failed to allocate memory(MALLOC_ARRAY)");
           
           // Error is converted to exception
-          if (ref_string_message) {
-            operand_stack_top++;
-            call_stack[operand_stack_top].address_value = ref_string_message;
-            goto case_SPVM_BYTECODE_C_CODE_DIE;
-          }
-          // Error is fatal
-          else {
-            fprintf(stderr, "Failed to allocate memory(malloc ARRAY) from %s at %s", sub_name, file_name);
-            abort();
-          }
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_message;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         
         // Init null if sub type is array of reference
@@ -2376,6 +2356,12 @@ void* SPVM_API_create_ref_string_from_pv(SPVM* spvm, SPVM_ENV* env, const char* 
   // Allocate array
   int32_t ref_string_byte_size = sizeof(SPVM_REF_STRING);
   SPVM_REF_STRING* ref_string = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_string_byte_size);
+  
+  // Fatal memory allocation error
+  if (!ref_string) {
+    fprintf(stderr, "Failed to allocate memory(create_ref_string_from_pv) from %s at %s");
+    abort();
+  }
   
   // Set type
   ref_string->type = SPVM_REF_C_TYPE_STRING;
