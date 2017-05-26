@@ -13,10 +13,10 @@ package Test {
     std::printi(std::test_call1(4));
     
     # Array is undef
-    {
-      my $nums : int[];
-      $nums[0];
-    }
+    #{
+    #  my $nums : int[];
+    #  $nums[0];
+    #}
     
     {
       my $string : string = "abc";

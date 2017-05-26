@@ -689,7 +689,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "byte array loading element must be not undef");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
           assert(0);
@@ -703,7 +706,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "short array loading element must be not undef");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
           assert(0);
@@ -733,7 +739,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "long array loading element must be not undef");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
           assert(0);
@@ -747,7 +756,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "float array loading element must be not undef");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
           assert(0);
@@ -760,7 +772,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "double array loading element must be not undef");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
           assert(0);
@@ -773,7 +788,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_array = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
         index = call_stack[operand_stack_top].int_value;
         if (__builtin_expect(!ref_array, 0)) {
-          assert(0);
+          SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "reference array loading element must be not undef");
+          operand_stack_top++;
+          call_stack[operand_stack_top].address_value = ref_string_error;
+          goto case_SPVM_BYTECODE_C_CODE_DIE;
         }
         if (__builtin_expect(index < 0 || index >= ref_array->length, 0)) {
           assert(0);
