@@ -2322,3 +2322,30 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   
   return ref_string;
 }
+
+void* SPVM_API_create_ref_string_from_pv(SPVM* spvm, SPVM_ENV* env, const char* pv) {
+  (void)spvm;
+  (void)env;
+  
+  // New sv
+  SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, strlen(pv));
+  
+  SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
+  
+  // Allocate array
+  int32_t ref_string_byte_size = sizeof(SPVM_REF_STRING);
+  SPVM_REF_STRING* ref_string = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_string_byte_size);
+  
+  // Set type
+  ref_string->type = SPVM_REF_C_TYPE_STRING;
+  
+  // Set reference count
+  ref_string->ref_count = 0;
+  
+  // Set sv
+  ref_string->sv = sv;
+
+  assert(ref_string_byte_size == SPVM_REF_calcurate_byte_size(spvm, ref_string));
+  
+  return ref_string;
+}
