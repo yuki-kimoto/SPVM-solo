@@ -463,6 +463,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
             SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, return_value);
           }
         }
+        warn("AAAAAAA %s", file_name);
         
         // New sv
         SPVM_SV* new_sv_message = SPVM_COMPAT_newSVpvn(spvm, pv_message, strlen(pv_message));
@@ -473,6 +474,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         SPVM_COMPAT_sv_catpvn(new_sv_message, sub_name, strlen(sub_name));
         SPVM_COMPAT_sv_catpvn(new_sv_message, " at ", strlen(" at "));
         SPVM_COMPAT_sv_catpvn(new_sv_message, file_name, strlen(file_name));
+
+        warn("BBBBBBBBBBBBBBBBB %s", new_sv_message->buffer);
         
         // Resotre vars base
         call_stack_base = call_stack[call_stack_base - 1].int_value;

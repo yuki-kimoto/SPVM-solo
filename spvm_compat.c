@@ -13,7 +13,7 @@ void SPVM_COMPAT_sv_catpvn(SPVM_SV* sv, const char* pv, size_t length) {
   strncpy(new_buffer, sv->buffer, sv->length);
   strncpy(new_buffer + sv->length, pv, length);
   sv->buffer = new_buffer;
-  sv->buffer[sv->length + length + 1] = '\0';
+  sv->buffer[sv->length + length] = '\0';
   sv->length = sv->length + length;
 }
 
