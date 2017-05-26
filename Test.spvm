@@ -11,7 +11,7 @@ package Test {
     std::printi(Test::EnumD->FORE);
 
     std::printi(std::test_call1(4));
-
+    
     # Object to get long field is undef
     #{
     #  my $obj : Test::Minimal;
