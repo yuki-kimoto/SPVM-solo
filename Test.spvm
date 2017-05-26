@@ -435,8 +435,8 @@ package Test {
       $nums[1] = 12L;
       std::printl($nums[0]);
       std::printl($nums[1]);
-      std::printl(len $nums);
-      my $nums_length : long = len $nums;
+      std::printi(len $nums);
+      my $nums_length : int = len $nums;
     }
     
     my $simple : Test::Simple = malloc Test::Simple;

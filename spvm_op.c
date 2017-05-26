@@ -361,6 +361,7 @@ SPVM_OP* SPVM_OP_build_if_statement(SPVM* spvm, SPVM_OP* op_if, SPVM_OP* op_term
 }
 
 SPVM_OP* SPVM_OP_build_array_length(SPVM* spvm, SPVM_OP* op_array_length, SPVM_OP* op_term) {
+  
   SPVM_OP_sibling_splice(spvm, op_array_length, NULL, 0, op_term);
   
   return op_array_length;
@@ -382,9 +383,10 @@ SPVM_RESOLVED_TYPE* SPVM_OP_get_resolved_type(SPVM* spvm, SPVM_OP* op) {
   switch (op->code) {
     case SPVM_OP_C_CODE_ARRAY_LENGTH:
       resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "int", strlen("int"));
+      break;
     case SPVM_OP_C_CODE_ARRAY_ELEM: {
       SPVM_RESOLVED_TYPE* first_resolved_type = SPVM_OP_get_resolved_type(spvm, op->first);
-     resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
+      resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
       break;
     }
     case SPVM_OP_C_CODE_ADD:
