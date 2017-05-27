@@ -2542,11 +2542,11 @@ SPVM_SV* SPVM_API_get_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_REF_STRING* stri
   return string->sv;
 }
 
-char* SPVM_API_get_string_value(SPVM* spvm, SPVM_ENV* env, void* address) {
+char* SPVM_API_get_string_value(SPVM* spvm, SPVM_ENV* env, SPVM_REF_STRING* ref_string) {
   (void)spvm;
   (void)env;
   
-  SPVM_SV* sv = SPVM_API_get_string_sv(spvm, env, address);
+  SPVM_SV* sv = SPVM_API_get_string_sv(spvm, env, ref_string);
   assert(sv);
   char* value = SPVM_COMPAT_SVpv(sv);
   
@@ -2619,7 +2619,7 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   return ref_string;
 }
 
-void* SPVM_API_create_ref_string_from_pv(SPVM* spvm, SPVM_ENV* env, const char* pv) {
+SPVM_REF_STRING* SPVM_API_create_ref_string_from_pv(SPVM* spvm, SPVM_ENV* env, const char* pv) {
   (void)spvm;
   (void)env;
   
