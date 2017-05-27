@@ -249,7 +249,7 @@ SPVM_OP* SPVM_OP_build_case_statement(SPVM* spvm, SPVM_OP* op_case, SPVM_OP* op_
   assert(parser->cur_op_cases->length <= SPVM_LIMIT_C_CASES);
   if (parser->cur_op_cases->length == SPVM_LIMIT_C_CASES) {
     SPVM_yyerror_format(spvm, "Too many case statements at %s line %d\n", op_case->file, op_case->line);
-    return;
+    return NULL;
   }
 
   SPVM_ARRAY_push(spvm, parser->cur_op_cases, op_case);

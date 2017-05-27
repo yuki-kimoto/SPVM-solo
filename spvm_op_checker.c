@@ -191,6 +191,9 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                         else if (op_return_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_DOUBLE) {
                           op_constant = SPVM_OP_new_op_constant_double(spvm, 0, op_cur->file, op_cur->line);
                         }
+                        else {
+                          assert(0);
+                        }
                         
                         SPVM_OP_sibling_splice(spvm, op_return, NULL, 0, op_constant);
                       }
@@ -326,9 +329,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   break;
                 }
                 case SPVM_OP_C_CODE_CASE: {
-                  
-                  SPVM_OP* op_term = op_cur->first;
-                  
+
                   if (!cur_case_ops) {
                     cur_case_ops = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
                   }
@@ -1412,9 +1413,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
               // [END]Postorder traversal position
               
               if (op_cur == op_base) {
-                
-                SPVM_OP* op_statements = op_cur->first;
-                
+
                 // Finish
                 finish = 1;
                 

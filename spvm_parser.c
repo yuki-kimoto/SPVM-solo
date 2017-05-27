@@ -46,7 +46,7 @@ SPVM_PARSER* SPVM_PARSER_new(SPVM* spvm) {
     // Resolved type
     SPVM_RESOLVED_TYPE* resolved_type = SPVM_RESOLVED_TYPE_new(spvm);
     const char* name = SPVM_RESOLVED_TYPE_C_CORE_NAMES[i];
-    SPVM_ARRAY_push(spvm, resolved_type->part_names, name);
+    SPVM_ARRAY_push(spvm, resolved_type->part_names, (char*)name);
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
