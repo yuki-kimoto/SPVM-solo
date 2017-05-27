@@ -273,8 +273,6 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   
   SPVM_CONSTANT_POOL_SUB* constant_pool_sub = NULL;
   
-  const char* pv_error_array_index_over = "Array index boundary is over";
-  
   // Goto subroutine
   goto CALLSUB_COMMON;
   
@@ -1808,7 +1806,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Package constant pool address
         ref_object->package_constant_pool_address = package_constant_pool_address;
         
-        assert(ref_object_byte_size == SPVM_REF_calcurate_byte_size(spvm, ref_object));
+        assert(ref_object_byte_size == SPVM_REF_calcurate_byte_size(spvm, (SPVM_REF*)ref_object));
         
         // Push object
         operand_stack_top++;
@@ -1891,7 +1889,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Set array length
         ref_array->length = length;
 
-        assert(ref_array_byte_size == SPVM_REF_calcurate_byte_size(spvm, ref_array));
+        assert(ref_array_byte_size == SPVM_REF_calcurate_byte_size(spvm, (SPVM_REF*)ref_array));
         
         // Set array
         call_stack[operand_stack_top].address_value = ref_array;
@@ -1959,7 +1957,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         operand_stack_top--;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_GET_FIELD_BYTE: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top - 1].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to get an byte field must not be undefined.");
           operand_stack_top++;
@@ -1977,7 +1975,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_GET_FIELD_SHORT: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to get an short field must not be undefined.");
           operand_stack_top++;
@@ -1995,7 +1993,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_GET_FIELD_INT: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to get an int field must not be undefined.");
           operand_stack_top++;
@@ -2013,7 +2011,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_GET_FIELD_LONG: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to get an long field must not be undefined.");
           operand_stack_top++;
@@ -2031,7 +2029,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_GET_FIELD_FLOAT: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to get an float field must not be undefined.");
           operand_stack_top++;
@@ -2049,7 +2047,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_GET_FIELD_DOUBLE: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to get an double field must not be undefined.");
           operand_stack_top++;
@@ -2067,7 +2065,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_GET_FIELD_ADDRESS: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to get an reference field must not be undefined.");
           operand_stack_top++;
@@ -2085,7 +2083,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_SET_FIELD_BYTE: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top - 1].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to set an byte field must not be undefined.");
           operand_stack_top++;
@@ -2104,7 +2102,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_SET_FIELD_SHORT: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top - 1].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to set an short field must not be undefined.");
           operand_stack_top++;
@@ -2123,7 +2121,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_SET_FIELD_INT: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top - 1].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to set an int field must not be undefined.");
           operand_stack_top++;
@@ -2142,7 +2140,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_SET_FIELD_LONG: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top - 1].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to set an long field must not be undefined.");
           operand_stack_top++;
@@ -2161,7 +2159,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_SET_FIELD_FLOAT: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top - 1].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to set an float field must not be undefined.");
           operand_stack_top++;
@@ -2180,7 +2178,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_SET_FIELD_DOUBLE: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top - 1].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to set an double field must not be undefined.");
           operand_stack_top++;
@@ -2199,7 +2197,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         }
       }
       case_SPVM_BYTECODE_C_CODE_SET_FIELD_ADDRESS: {
-        ref_object = (SPVM_REF_ARRAY*)call_stack[operand_stack_top - 1].address_value;
+        ref_object = (SPVM_REF_OBJECT*)call_stack[operand_stack_top - 1].address_value;
         if (__builtin_expect(!ref_object, 0)) {
           SPVM_REF_STRING* ref_string_error = SPVM_API_create_ref_string_from_pv(spvm, env, "The object to set an reference field must not be undefined.");
           operand_stack_top++;
@@ -2247,7 +2245,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
       
       // Reference is string
       if (ref->type == SPVM_REF_C_TYPE_STRING) {
-        SPVM_REF_STRING* ref_string = ref;
+        SPVM_REF_STRING* ref_string = (SPVM_REF_STRING*)ref;
         
         SPVM_SV* sv = ref_string->sv;
         SPVM_SvREFCNT_dec(sv);
@@ -2255,7 +2253,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
       }
       // Reference is array
       else if (ref->type == SPVM_REF_C_TYPE_ARRAY) {
-        SPVM_REF_ARRAY* ref_array = ref;
+        SPVM_REF_ARRAY* ref_array = (SPVM_REF_ARRAY*)ref;
         if (ref_array->value_type == SPVM_REF_ARRAY_C_VALUE_TYPE_REF) {
           
           // Array length
@@ -2270,7 +2268,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
       }
       // Reference is object
       else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
-        SPVM_REF_OBJECT* ref_object = ref;
+        SPVM_REF_OBJECT* ref_object = (SPVM_REF_OBJECT*)ref;
         
         int32_t package_constant_pool_address = ref_object->package_constant_pool_address;
         SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&spvm->constant_pool->values[package_constant_pool_address];
@@ -2616,7 +2614,7 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   // Set sv
   ref_string->sv = sv;
 
-  assert(ref_string_byte_size == SPVM_REF_calcurate_byte_size(spvm, ref_string));
+  assert(ref_string_byte_size == SPVM_REF_calcurate_byte_size(spvm, (SPVM_REF*)ref_string));
   
   return ref_string;
 }
@@ -2636,7 +2634,7 @@ void* SPVM_API_create_ref_string_from_pv(SPVM* spvm, SPVM_ENV* env, const char* 
   
   // Fatal memory allocation error
   if (!ref_string) {
-    fprintf(stderr, "Failed to allocate memory(create_ref_string_from_pv) from %s at %s");
+    fprintf(stderr, "Failed to allocate memory(create_ref_string_from_pv)");
     abort();
   }
   
@@ -2649,7 +2647,7 @@ void* SPVM_API_create_ref_string_from_pv(SPVM* spvm, SPVM_ENV* env, const char* 
   // Set sv
   ref_string->sv = sv;
 
-  assert(ref_string_byte_size == SPVM_REF_calcurate_byte_size(spvm, ref_string));
+  assert(ref_string_byte_size == SPVM_REF_calcurate_byte_size(spvm, (SPVM_REF*)ref_string));
   
   return ref_string;
 }
