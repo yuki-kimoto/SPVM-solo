@@ -38,7 +38,7 @@ void SPVM_FUNC_std_test_call2(SPVM* spvm, SPVM_ENV* env) {
   SPVM_API_push_return_value_int(spvm, env, value2);
 }
 
-void SPVM_FUNC_std_sumi(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_FUNC_std_sum_int(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -74,7 +74,7 @@ void SPVM_FUNC_std_println(SPVM* spvm, SPVM_ENV* env) {
   printf("\n");
 }
 
-void SPVM_FUNC_std_printb(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_FUNC_std_print_byte(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -83,7 +83,7 @@ void SPVM_FUNC_std_printb(SPVM* spvm, SPVM_ENV* env) {
   printf("TEST: %" PRId8 "\n", value);
 }
 
-void SPVM_FUNC_std_prints(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_FUNC_std_print_short(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -92,7 +92,7 @@ void SPVM_FUNC_std_prints(SPVM* spvm, SPVM_ENV* env) {
   printf("TEST: %" PRId16 "\n", value);
 }
 
-void SPVM_FUNC_std_printi(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_FUNC_std_print_int(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -101,7 +101,7 @@ void SPVM_FUNC_std_printi(SPVM* spvm, SPVM_ENV* env) {
   printf("TEST: %" PRId32 "\n", value);
 }
 
-void SPVM_FUNC_std_printl(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_FUNC_std_print_long(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -110,7 +110,7 @@ void SPVM_FUNC_std_printl(SPVM* spvm, SPVM_ENV* env) {
   printf("TEST: %" PRId64 "\n", value);
 }
 
-void SPVM_FUNC_std_printf(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_FUNC_std_print_float(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
@@ -119,7 +119,7 @@ void SPVM_FUNC_std_printf(SPVM* spvm, SPVM_ENV* env) {
   printf("TEST: %f\n", value);
 }
 
-void SPVM_FUNC_std_printd(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_FUNC_std_print_double(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   

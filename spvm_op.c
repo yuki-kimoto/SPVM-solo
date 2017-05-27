@@ -920,29 +920,29 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
         else {
           // Bind standard functions
           if (sub->is_native) {
-            if (strcmp(sub_abs_name, "std::printb") == 0) {
-              sub->native_address = SPVM_FUNC_std_printb;
+            if (strcmp(sub_abs_name, "std::print_byte") == 0) {
+              sub->native_address = SPVM_FUNC_std_print_byte;
             }
-            else if (strcmp(sub_abs_name, "std::prints") == 0) {
-              sub->native_address = SPVM_FUNC_std_prints;
+            else if (strcmp(sub_abs_name, "std::print_short") == 0) {
+              sub->native_address = SPVM_FUNC_std_print_short;
             }
-            else if (strcmp(sub_abs_name, "std::printi") == 0) {
-              sub->native_address = SPVM_FUNC_std_printi;
+            else if (strcmp(sub_abs_name, "std::print_int") == 0) {
+              sub->native_address = SPVM_FUNC_std_print_int;
             }
-            else if (strcmp(sub_abs_name, "std::printl") == 0) {
-              sub->native_address = SPVM_FUNC_std_printl;
+            else if (strcmp(sub_abs_name, "std::print_long") == 0) {
+              sub->native_address = SPVM_FUNC_std_print_long;
             }
-            else if (strcmp(sub_abs_name, "std::printf") == 0) {
-              sub->native_address = SPVM_FUNC_std_printf;
+            else if (strcmp(sub_abs_name, "std::print_float") == 0) {
+              sub->native_address = SPVM_FUNC_std_print_float;
             }
-            else if (strcmp(sub_abs_name, "std::printd") == 0) {
-              sub->native_address = SPVM_FUNC_std_printd;
+            else if (strcmp(sub_abs_name, "std::print_double") == 0) {
+              sub->native_address = SPVM_FUNC_std_print_double;
             }
             else if (strcmp(sub_abs_name, "std::println") == 0) {
               sub->native_address = SPVM_FUNC_std_println;
             }
-            else if (strcmp(sub_abs_name, "std::sumi") == 0) {
-              sub->native_address = SPVM_FUNC_std_sumi;
+            else if (strcmp(sub_abs_name, "std::sum_int") == 0) {
+              sub->native_address = SPVM_FUNC_std_sum_int;
             }
             else if (strcmp(sub_abs_name, "std::test_call1") == 0) {
               sub->native_address = SPVM_FUNC_std_test_call1;
