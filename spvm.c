@@ -14,6 +14,7 @@
 #include "spvm_parser.h"
 #include "spvm_env.h"
 #include "spvm_sv.h"
+#include "spvm_allocator_runtime.h"
 
 void SPVM_run(SPVM* spvm, const char* package_name) {
   

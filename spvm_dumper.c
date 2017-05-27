@@ -189,7 +189,7 @@ void SPVM_DUMPER_dump_constant_pool(SPVM* spvm, SPVM_CONSTANT_POOL* constant_poo
   (void)spvm;
 
   for (int32_t i = 0; i < constant_pool->length; i++) {
-    printf("      constant_pool[%" PRId32 "] %" PRIdMAX "\n", i, constant_pool->values[i]);
+    printf("      constant_pool[%" PRId32 "] %" PRIdMAX "\n", i, constant_pool->values[i].long_value);
   }
 }
 

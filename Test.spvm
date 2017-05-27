@@ -30,6 +30,7 @@ package Test {
         $nums[$i] = $i;
       }
       std::printi($i);
+      std::printi($nums[$i - 1]);
     }
     
     # Object to get long field is undef
