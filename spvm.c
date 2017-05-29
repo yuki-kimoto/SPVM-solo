@@ -41,6 +41,7 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   // Run
   SPVM_API_call_sub(spvm, env, entry_point_sub_name);
   
+#ifdef DEBUG
   if (env->abort) {
     void* message = SPVM_API_pop_return_value_address(spvm, env);
     
@@ -55,6 +56,8 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
     
     printf("TEST return_value: %ld\n", return_value);
   }
+#endif
+
   SPVM_ENV_free(spvm, env);
 }
 

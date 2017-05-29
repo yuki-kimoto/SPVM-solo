@@ -449,7 +449,7 @@ TEST return_value: 0
 
 ## Run
     
-    make && ./spvm Test
+    make DEFINE=-DDEBUG  && ./spvm Test
 
 ## Test
     
