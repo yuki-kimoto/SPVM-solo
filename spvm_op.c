@@ -281,8 +281,6 @@ SPVM_OP* SPVM_OP_build_for_statement(SPVM* spvm, SPVM_OP* op_FOR, SPVM_OP* op_st
     SPVM_OP_sibling_splice(spvm, op_statements, op_statements->last, 0, op_term_next_value);
   }
 
-  SPVM_OP* op_null = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NULL, op_FOR->file, op_FOR->line);
-  SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_null);
   SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_block);
   SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_condition);
   
@@ -304,9 +302,6 @@ SPVM_OP* SPVM_OP_build_while_statement(SPVM* spvm, SPVM_OP* op_WHILE, SPVM_OP* o
   // Set block flag
   op_block->flag |= SPVM_OP_C_FLAG_BLOCK_LOOP;
   
-  SPVM_OP* op_null = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NULL, op_WHILE->file, op_WHILE->line);
-  
-  SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_null);
   SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_block);
   SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_condition);
   
