@@ -258,28 +258,23 @@ SPVM_OP* SPVM_OP_build_case_statement(SPVM* spvm, SPVM_OP* op_case, SPVM_OP* op_
   return op_case;
 }
 
-SPVM_OP* SPVM_OP_build_for_statement(SPVM* spvm, SPVM_OP* op_for, SPVM_OP* op_statement_init, SPVM_OP* op_term_condition, SPVM_OP* op_term_next_value, SPVM_OP* op_block) {
+SPVM_OP* SPVM_OP_build_for_statement(SPVM* spvm, SPVM_OP* op_FOR, SPVM_OP* op_statement_init, SPVM_OP* op_term_condition, SPVM_OP* op_term_next_value, SPVM_OP* op_block) {
   
   // Loop
-  SPVM_OP* op_loop = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LOOP, op_for->file, op_for->line);
+  SPVM_OP* op_loop = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LOOP, op_FOR->file, op_FOR->line);
   
   // Condition
   SPVM_OP* op_condition = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_CONDITION, op_term_condition->file, op_term_condition->line);
+  op_condition->flag |= SPVM_OP_C_FLAG_CONDITION_LOOP;
   SPVM_OP_sibling_splice(spvm, op_condition, op_condition->last, 0, op_term_condition);
   
-  SPVM_OP* op_statements = op_block->first;
-  
+  // Set block flag
   op_block->flag |= SPVM_OP_C_FLAG_BLOCK_LOOP;
-  op_condition->flag |= SPVM_OP_C_FLAG_CONDITION_LOOP;
   
-  // Convert to while loop
+  // Push next value to the last of statements in block
+  SPVM_OP* op_statements = op_block->first;
   if (op_term_next_value->code != SPVM_OP_C_CODE_NULL) {
-    if (op_statements->last) {
-      SPVM_OP_sibling_splice(spvm, op_statements, op_statements->last, 0, op_term_next_value);
-    }
-    else {
-      SPVM_OP_sibling_splice(spvm, op_statements, op_statements->first, 0, op_term_next_value);
-    }
+    SPVM_OP_sibling_splice(spvm, op_statements, op_statements->last, 0, op_term_next_value);
   }
   
   SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_statement_init);
@@ -289,20 +284,20 @@ SPVM_OP* SPVM_OP_build_for_statement(SPVM* spvm, SPVM_OP* op_for, SPVM_OP* op_st
   return op_loop;
 }
 
-SPVM_OP* SPVM_OP_build_while_statement(SPVM* spvm, SPVM_OP* op_while, SPVM_OP* op_term, SPVM_OP* op_block) {
+SPVM_OP* SPVM_OP_build_while_statement(SPVM* spvm, SPVM_OP* op_WHILE, SPVM_OP* op_term, SPVM_OP* op_block) {
   
   // Loop
-  SPVM_OP* op_loop = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LOOP, op_while->file, op_while->line);
+  SPVM_OP* op_loop = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LOOP, op_WHILE->file, op_WHILE->line);
   
   // Condition
   SPVM_OP* op_condition = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_CONDITION, op_term->file, op_term->line);
+  op_condition->flag |= SPVM_OP_C_FLAG_CONDITION_LOOP;
   SPVM_OP_sibling_splice(spvm, op_condition, op_condition->last, 0, op_term);
   
+  // Set block flag
   op_block->flag |= SPVM_OP_C_FLAG_BLOCK_LOOP;
-  op_condition->flag |= SPVM_OP_C_FLAG_CONDITION_LOOP;
-
   
-  SPVM_OP* op_null = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NULL, op_while->file, op_while->line);
+  SPVM_OP* op_null = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NULL, op_WHILE->file, op_WHILE->line);
   
   SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_null);
   SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_block);
