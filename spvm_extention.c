@@ -74,56 +74,56 @@ void SPVM_EXTENTION_std__println(SPVM* spvm, SPVM_ENV* env) {
   printf("\n");
 }
 
-void SPVM_EXTENTION_std__print_byte(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_EXTENTION_std__println_byte(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
   int8_t value = SPVM_API_get_var_byte(spvm, env, 0);
   
-  printf("TEST: %" PRId8 "\n", value);
+  printf("%" PRId8 "\n", value);
 }
 
-void SPVM_EXTENTION_std__print_short(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_EXTENTION_std__println_short(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
   int16_t value = SPVM_API_get_var_short(spvm, env, 0);
   
-  printf("TEST: %" PRId16 "\n", value);
+  printf("%" PRId16 "\n", value);
 }
 
-void SPVM_EXTENTION_std__print_int(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_EXTENTION_std__println_int(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
   int32_t value = SPVM_API_get_var_int(spvm, env, 0);
   
-  printf("TEST: %" PRId32 "\n", value);
+  printf("%" PRId32 "\n", value);
 }
 
-void SPVM_EXTENTION_std__print_long(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_EXTENTION_std__println_long(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
   int64_t value = SPVM_API_get_var_long(spvm, env, 0);
   
-  printf("TEST: %" PRId64 "\n", value);
+  printf("%" PRId64 "\n", value);
 }
 
-void SPVM_EXTENTION_std__print_float(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_EXTENTION_std__println_float(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
   float value = SPVM_API_get_var_float(spvm, env, 0);
   
-  printf("TEST: %f\n", value);
+  printf("%f\n", value);
 }
 
-void SPVM_EXTENTION_std__print_double(SPVM* spvm, SPVM_ENV* env) {
+void SPVM_EXTENTION_std__println_double(SPVM* spvm, SPVM_ENV* env) {
   (void)spvm;
   (void)env;
   
   double value = SPVM_API_get_var_double(spvm, env, 0);
   
-  printf("TEST: %f\n", value);
+  printf("%f\n", value);
 }

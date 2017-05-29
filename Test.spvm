@@ -7,10 +7,10 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : int) : int {
-    std::print_int(Test::EnumD->THREE);
-    std::print_int(Test::EnumD->FORE);
+    std::println_int(Test::EnumD->THREE);
+    std::println_int(Test::EnumD->FORE);
 
-    std::print_int(std::test_call1(4));
+    std::println_int(std::test_call1(4));
 
     {
       my $nums = malloc int[258];
@@ -19,7 +19,7 @@ package Test {
       for ($i = 0; $i < $len; $i++) {
         $nums[$i] = $i;
       }
-      std::print_int($i);
+      std::println_int($i);
     }
     
     {
@@ -29,8 +29,8 @@ package Test {
       for ($i = 0; $i < $len; $i = $i + 1) {
         $nums[$i] = $i;
       }
-      std::print_int($i);
-      std::print_int($nums[$i - 1]);
+      std::println_int($i);
+      std::println_int($nums[$i - 1]);
     }
     
     # Object to get long field is undef
@@ -109,14 +109,14 @@ package Test {
     {
       my $num = (byte)1;
       $num++;
-      std::print_byte($num);
+      std::println_byte($num);
     }
     
     # Increment short 
     {
       my $num = (short)1;
       $num++;
-      std::print_short($num);
+      std::println_short($num);
     }
     
     # increment int
@@ -157,7 +157,7 @@ package Test {
       $nums[2] = 3;
       
       my $total = std::sum_int($nums);
-      std::print_int($total);
+      std::println_int($total);
     }
 
     {
@@ -168,11 +168,11 @@ package Test {
     
     {
       my $num = (byte)3;
-      std::print_byte($num);
+      std::println_byte($num);
       
       my $num2 = (long)1 + (long)$num;
       
-      std::print_long($num2);
+      std::println_long($num2);
     }
     
     # get and set field
@@ -182,8 +182,8 @@ package Test {
       $m{x} = 2L;
       $m{y} = 3L;
       
-      std::print_long($m{x});
-      std::print_long($m{y});
+      std::println_long($m{x});
+      std::println_long($m{y});
     }
 
     # Free when assignment
@@ -214,76 +214,76 @@ package Test {
     }
     7;
     
-    std::print_int(sum0(1, 1));
-    std::print_int(sum2(1, 2));
+    std::println_int(sum0(1, 1));
+    std::println_int(sum2(1, 2));
 
     # Constant float
-    std::print_float(0.3f);
-    std::print_float(1f);
-    std::print_float(2f);
-    std::print_float(1.2f);
+    std::println_float(0.3f);
+    std::println_float(1f);
+    std::println_float(2f);
+    std::println_float(1.2f);
     
     # Constant double
-    std::print_double(0d);
-    std::print_double(1d);
-    std::print_double(1.2);
+    std::println_double(0d);
+    std::println_double(1d);
+    std::println_double(1.2);
 
     # Constant int
-    std::print_int(-2147483648);
-    std::print_int(-32769);
-    std::print_int(-32768);
-    std::print_int(-129);
-    std::print_int(-128);
-    std::print_int(-2);
-    std::print_int(-1);
-    std::print_int(0);
-    std::print_int(1);
-    std::print_int(2);
-    std::print_int(3);
-    std::print_int(4);
-    std::print_int(5);
-    std::print_int(6);
-    std::print_int(127);
-    std::print_int(128);
-    std::print_int(255);
-    std::print_int(256);
-    std::print_int(32767);
-    std::print_int(32768);
-    std::print_int(65535);
-    std::print_int(65536);
-    std::print_int(2147483647);
+    std::println_int(-2147483648);
+    std::println_int(-32769);
+    std::println_int(-32768);
+    std::println_int(-129);
+    std::println_int(-128);
+    std::println_int(-2);
+    std::println_int(-1);
+    std::println_int(0);
+    std::println_int(1);
+    std::println_int(2);
+    std::println_int(3);
+    std::println_int(4);
+    std::println_int(5);
+    std::println_int(6);
+    std::println_int(127);
+    std::println_int(128);
+    std::println_int(255);
+    std::println_int(256);
+    std::println_int(32767);
+    std::println_int(32768);
+    std::println_int(65535);
+    std::println_int(65536);
+    std::println_int(2147483647);
     
     # Constant long
-    std::print_long(-1L);
-    std::print_long(0L);
-    std::print_long(1L);
-    std::print_long(2L);
-    std::print_long(9223372036854775807L);
-    std::print_long(-9223372036854775807L);
-    std::print_long(-2147483648L);
-    std::print_long(-32769L);
-    std::print_long(-32768L);
-    std::print_long(-129L);
-    std::print_long(-128L);
-    std::print_long(-2L);
-    std::print_long(-1L);
-    std::print_long(0L);
-    std::print_long(1L);
-    std::print_long(2L);
-    std::print_long(3L);
-    std::print_long(4L);
-    std::print_long(5L);
-    std::print_long(6L);
-    std::print_long(127L);
-    std::print_long(128L);
-    std::print_long(255L);
-    std::print_long(256L);
-    std::print_long(32767L);
-    std::print_long(32768L);
-    std::print_long(65535L);
-    std::print_long(65536L);
-    std::print_long(2147483647L);
-    std::print_long(0xFFL);
+    std::println_long(-1L);
+    std::println_long(0L);
+    std::println_long(1L);
+    std::println_long(2L);
+    std::println_long(9223372036854775807L);
+    std::println_long(-9223372036854775807L);
+    std::println_long(-2147483648L);
+    std::println_long(-32769L);
+    std::println_long(-32768L);
+    std::println_long(-129L);
+    std::println_long(-128L);
+    std::println_long(-2L);
+    std::println_long(-1L);
+    std::println_long(0L);
+    std::println_long(1L);
+    std::println_long(2L);
+    std::println_long(3L);
+    std::println_long(4L);
+    std::println_long(5L);
+    std::println_long(6L);
+    std::println_long(127L);
+    std::println_long(128L);
+    std::println_long(255L);
+    std::println_long(256L);
+    std::println_long(32767L);
+    std::println_long(32768L);
+    std::println_long(65535L);
+    std::println_long(65536L);
+    std::println_long(2147483647L);
+    std::println_long(0xFFL);
     
     "abc";
     
@@ -293,13 +293,13 @@ package Test {
       
       switch($num) {
         case Test::EnumD->THREE:
-          std::print_int(1);
+          std::println_int(1);
         case Test::EnumD->FORE:
-          std::print_int(2);
+          std::println_int(2);
         case 5:
-          std::print_int(3);
+          std::println_int(3);
         default:
-          std::print_int(5);
+          std::println_int(5);
       }
     }
 
@@ -308,13 +308,13 @@ package Test {
       my $num = 3;
       switch ($num) {
         case 1:
-          std::print_int(1);
+          std::println_int(1);
         case 3:
-          std::print_int(2);
+          std::println_int(2);
         case 10000:
-          std::print_int(2);
+          std::println_int(2);
         default:
-          std::print_int(5);
+          std::println_int(5);
       }
     }
     
@@ -322,7 +322,7 @@ package Test {
     #   my $num = 5;
     #   switch($num) {
     #     default:
-    #       std::print_int(5);
+    #       std::println_int(5);
     #   }
     # }
     
@@ -340,7 +340,7 @@ package Test {
 
     my $simple3 : Test::Simple = malloc Test::Simple;
     
-    std::print_int($simple3->get_x());
+    std::println_int($simple3->get_x());
     $simple3->get_x;
     
     $simple3{y} = 2;
@@ -437,17 +437,17 @@ package Test {
       my $nums = malloc int[3];
       $nums[0] = 13;
       $nums[1] = 14;
-      std::print_int($nums[0]);
-      std::print_int($nums[1]);
+      std::println_int($nums[0]);
+      std::println_int($nums[1]);
     }
     
     {
       my $nums : long[] = malloc long[3];
       $nums[0] = 11L;
       $nums[1] = 12L;
-      std::print_long($nums[0]);
-      std::print_long($nums[1]);
-      std::print_int(len $nums);
+      std::println_long($nums[0]);
+      std::println_long($nums[1]);
+      std::println_int(len $nums);
       my $nums_length : int = len $nums;
     }
     
@@ -555,7 +555,7 @@ package Test {
       my $num1 = (byte)1;
       my $num2 = (byte)2;
       my $num3 = $num0 + $num1 + $num2;
-      std::print_byte($num3);
+      std::println_byte($num3);
     }
 
     {
@@ -563,7 +563,7 @@ package Test {
       my $num1 = (short)1;
       my $num2 = (short)2;
       my $num3 = $num0 + $num1 + $num2;
-      std::print_short($num3);
+      std::println_short($num3);
     }
 
 
