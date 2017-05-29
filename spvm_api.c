@@ -9,7 +9,7 @@
 #include "spvm_hash.h"
 #include "spvm_allocator_util.h"
 #include "spvm_bytecode_array.h"
-#include "spvm_extention_sub.h"
+#include "spvm_extention.h"
 #include "spvm_bytecode.h"
 #include "spvm_allocator_runtime.h"
 #include "spvm_constant_pool.h"
