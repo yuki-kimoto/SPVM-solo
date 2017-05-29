@@ -921,34 +921,34 @@ SPVM_OP* SPVM_OP_build_package(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name
           // Bind standard functions
           if (sub->is_native) {
             if (strcmp(sub_abs_name, "std::print_byte") == 0) {
-              sub->native_address = SPVM_EXTENTION_SUB_std_print_byte;
+              sub->native_address = SPVM_EXTENTION_SUB_std__print_byte;
             }
             else if (strcmp(sub_abs_name, "std::print_short") == 0) {
-              sub->native_address = SPVM_EXTENTION_SUB_std_print_short;
+              sub->native_address = SPVM_EXTENTION_SUB_std__print_short;
             }
             else if (strcmp(sub_abs_name, "std::print_int") == 0) {
-              sub->native_address = SPVM_EXTENTION_SUB_std_print_int;
+              sub->native_address = SPVM_EXTENTION_SUB_std__print_int;
             }
             else if (strcmp(sub_abs_name, "std::print_long") == 0) {
-              sub->native_address = SPVM_EXTENTION_SUB_std_print_long;
+              sub->native_address = SPVM_EXTENTION_SUB_std__print_long;
             }
             else if (strcmp(sub_abs_name, "std::print_float") == 0) {
-              sub->native_address = SPVM_EXTENTION_SUB_std_print_float;
+              sub->native_address = SPVM_EXTENTION_SUB_std__print_float;
             }
             else if (strcmp(sub_abs_name, "std::print_double") == 0) {
-              sub->native_address = SPVM_EXTENTION_SUB_std_print_double;
+              sub->native_address = SPVM_EXTENTION_SUB_std__print_double;
             }
             else if (strcmp(sub_abs_name, "std::println") == 0) {
-              sub->native_address = SPVM_EXTENTION_SUB_std_println;
+              sub->native_address = SPVM_EXTENTION_SUB_std__println;
             }
             else if (strcmp(sub_abs_name, "std::sum_int") == 0) {
-              sub->native_address = SPVM_EXTENTION_SUB_std_sum_int;
+              sub->native_address = SPVM_EXTENTION_SUB_std__sum_int;
             }
             else if (strcmp(sub_abs_name, "std::test_call1") == 0) {
-              sub->native_address = SPVM_EXTENTION_SUB_std_test_call1;
+              sub->native_address = SPVM_EXTENTION_SUB_std__test_call1;
             }
             else if (strcmp(sub_abs_name, "std::test_call2") == 0) {
-              sub->native_address = SPVM_EXTENTION_SUB_std_test_call2;
+              sub->native_address = SPVM_EXTENTION_SUB_std__test_call2;
             }
           }
           
