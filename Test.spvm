@@ -9,8 +9,19 @@ package Test {
   sub main($mvar : int) : int {
     std::println_int(Test::EnumD->THREE);
     std::println_int(Test::EnumD->FORE);
-
+    
     std::println_int(std::test_call1(4));
+    
+    # Core functions
+    {
+      std::print_byte((byte)1);
+      std::print_short((short)1);
+      std::print_int(1);
+      std::print_long(1L);
+      std::print_float(1f);
+      std::print_double(1.0);
+      std::println("end");
+    }
 
     {
       my $nums = malloc int[258];

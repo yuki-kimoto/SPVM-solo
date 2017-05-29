@@ -127,3 +127,75 @@ void SPVM_EXTENTION_std__println_double(SPVM* spvm, SPVM_ENV* env) {
   
   printf("%f\n", value);
 }
+
+void SPVM_EXTENTION_std__print(SPVM* spvm, SPVM_ENV* env) {
+  (void)spvm;
+  (void)env;
+  
+  void* string = SPVM_API_get_var_address(spvm, env, 0);
+  
+  SPVM_SV* sv = SPVM_API_get_string_sv(spvm, env, string);
+  
+  char* buffer = sv->buffer;
+  int64_t length = sv->length;
+  
+  for (int64_t i = 0; i < length; i++) {
+    putchar((int)buffer[i]);
+  }
+  
+  printf("\n");
+}
+
+void SPVM_EXTENTION_std__print_byte(SPVM* spvm, SPVM_ENV* env) {
+  (void)spvm;
+  (void)env;
+  
+  int8_t value = SPVM_API_get_var_byte(spvm, env, 0);
+  
+  printf("%" PRId8, value);
+}
+
+void SPVM_EXTENTION_std__print_short(SPVM* spvm, SPVM_ENV* env) {
+  (void)spvm;
+  (void)env;
+  
+  int16_t value = SPVM_API_get_var_short(spvm, env, 0);
+  
+  printf("%" PRId16, value);
+}
+
+void SPVM_EXTENTION_std__print_int(SPVM* spvm, SPVM_ENV* env) {
+  (void)spvm;
+  (void)env;
+  
+  int32_t value = SPVM_API_get_var_int(spvm, env, 0);
+  
+  printf("%" PRId32, value);
+}
+
+void SPVM_EXTENTION_std__print_long(SPVM* spvm, SPVM_ENV* env) {
+  (void)spvm;
+  (void)env;
+  
+  int64_t value = SPVM_API_get_var_long(spvm, env, 0);
+  
+  printf("%" PRId64, value);
+}
+
+void SPVM_EXTENTION_std__print_float(SPVM* spvm, SPVM_ENV* env) {
+  (void)spvm;
+  (void)env;
+  
+  float value = SPVM_API_get_var_float(spvm, env, 0);
+  
+  printf("%f", value);
+}
+
+void SPVM_EXTENTION_std__print_double(SPVM* spvm, SPVM_ENV* env) {
+  (void)spvm;
+  (void)env;
+  
+  double value = SPVM_API_get_var_double(spvm, env, 0);
+  
+  printf("%f", value);
+}
