@@ -26,11 +26,13 @@ package Test {
     {
       my $nums = malloc int[258];
       my $len = len $nums;
-      my $i = 0;
-      for ($i = 100; $i < $len; $i++) {
+      for (my $i = 0; $i < $len; $i++) {
         $nums[$i] = $i;
       }
-      std::println_int($i);
+
+      for (my $i = 0; $i < $len; $i++) {
+        $nums[$i] = $i;
+      }
     }
     
     {
