@@ -57,8 +57,10 @@ grammar
         YYABORT;
       }
       else {
+#ifdef DEBUG
         // Dump spvm information
         SPVM_DUMPER_dump_spvm(spvm);
+#endif
       }
     }
 
