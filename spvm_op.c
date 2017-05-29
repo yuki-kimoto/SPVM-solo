@@ -280,9 +280,9 @@ SPVM_OP* SPVM_OP_build_for_statement(SPVM* spvm, SPVM_OP* op_for, SPVM_OP* op_st
     }
   }
   
-  SPVM_OP_sibling_splice(spvm, op_loop, NULL, 0, op_statement_init);
-  SPVM_OP_sibling_splice(spvm, op_loop, op_statement_init, 0, op_block);
-  SPVM_OP_sibling_splice(spvm, op_loop, op_block, 0, op_condition);
+  SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_statement_init);
+  SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_block);
+  SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_condition);
   
   return op_loop;
 }
@@ -299,9 +299,9 @@ SPVM_OP* SPVM_OP_build_while_statement(SPVM* spvm, SPVM_OP* op_while, SPVM_OP* o
   
   SPVM_OP* op_null = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NULL, op_while->file, op_while->line);
   
-  SPVM_OP_sibling_splice(spvm, op_loop, NULL, 0, op_null);
-  SPVM_OP_sibling_splice(spvm, op_loop, op_null, 0, op_block);
-  SPVM_OP_sibling_splice(spvm, op_loop, op_block, 0, op_condition);
+  SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_null);
+  SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_block);
+  SPVM_OP_sibling_splice(spvm, op_loop, op_loop->last, 0, op_condition);
   
   return op_loop;
 }
