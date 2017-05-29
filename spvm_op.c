@@ -260,11 +260,12 @@ SPVM_OP* SPVM_OP_build_case_statement(SPVM* spvm, SPVM_OP* op_case, SPVM_OP* op_
 
 SPVM_OP* SPVM_OP_build_for_statement(SPVM* spvm, SPVM_OP* op_for, SPVM_OP* op_statement_init, SPVM_OP* op_term_condition, SPVM_OP* op_term_next_value, SPVM_OP* op_block) {
   
+  // Loop
+  SPVM_OP* op_loop = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LOOP, op_for->file, op_for->line);
+  
   // Condition
   SPVM_OP* op_condition = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_CONDITION, op_term_condition->file, op_term_condition->line);
   SPVM_OP_sibling_splice(spvm, op_condition, op_condition->last, 0, op_term_condition);
-
-  SPVM_OP* op_loop = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LOOP, op_for->file, op_for->line);
   
   SPVM_OP* op_statements = op_block->first;
   
@@ -290,6 +291,9 @@ SPVM_OP* SPVM_OP_build_for_statement(SPVM* spvm, SPVM_OP* op_for, SPVM_OP* op_st
 
 SPVM_OP* SPVM_OP_build_while_statement(SPVM* spvm, SPVM_OP* op_while, SPVM_OP* op_term, SPVM_OP* op_block) {
   
+  // Loop
+  SPVM_OP* op_loop = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LOOP, op_while->file, op_while->line);
+  
   // Condition
   SPVM_OP* op_condition = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_CONDITION, op_term->file, op_term->line);
   SPVM_OP_sibling_splice(spvm, op_condition, op_condition->last, 0, op_term);
@@ -297,7 +301,6 @@ SPVM_OP* SPVM_OP_build_while_statement(SPVM* spvm, SPVM_OP* op_while, SPVM_OP* o
   op_block->flag |= SPVM_OP_C_FLAG_BLOCK_LOOP;
   op_condition->flag |= SPVM_OP_C_FLAG_CONDITION_LOOP;
 
-  SPVM_OP* op_loop = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LOOP, op_while->file, op_while->line);
   
   SPVM_OP* op_null = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NULL, op_while->file, op_while->line);
   
