@@ -1,6 +1,6 @@
 # SPVM - Fast calculation of number array, GC, static typing, VM with  perlish syntax
 
-Do you need a **fast Perl**? Static Perl is a fast calculation system of Perl.
+Do you need a **fast Perl**? SPVM is a fast calculation system build on Perl.
 
 - **Fast calculation** - The Perl's biggest weak point is the calculation performance. Static Perl provides fast calculations.
 - **GC** - You don't need to care about freeing memory
