@@ -2,12 +2,12 @@
 
 Do you need a **fast Perl**? SPVM is a fast calculation system build on Perl.
 
-- **Fast calculation** - The Perl's biggest weak point is the calculation performance. Static Perl provides fast calculations.
+- **Fast calculation** - The Perl's biggest weak point is the calculation performance. SPVM provides fast calculations.
 - **GC** - You don't need to care about freeing memory
 - **Static typing** - Static typing for performance
-- **VM** - Byte codes are generated so that you can run them on Static Perl VM
+- **VM** - Byte codes are generated so that you can run them on SPVM language
 - **Perlish syntax** - the syntax is very similar to that of Perl
-- **Perl module** - Static Perl will be used from Perl itself as module(Not implemented).
+- **Perl module** - Static Perl will be used from Perl itself as module(Not yet implemented).
 - **No memory limitation**
 
 This is now under **developing**.
