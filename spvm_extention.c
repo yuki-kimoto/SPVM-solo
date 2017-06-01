@@ -44,12 +44,13 @@ void SPVM_EXTENTION_std__sum_int(SPVM* spvm, SPVM_ENV* env) {
   
   void* int_array = SPVM_API_get_var_address(spvm, env, 0);
   
-  int64_t length = SPVM_API_get_array_length(spvm, env, int_array);
+  int32_t length = SPVM_API_get_array_length(spvm, env, int_array);
   
-  int64_t* int_array_data = SPVM_API_get_array_int_values(spvm, env, int_array);
+  int32_t* int_array_data = SPVM_API_get_array_int_values(spvm, env, int_array);
   
   int64_t total = 0;
-  for (int64_t i = 0; i < length; i++) {
+  for (int32_t i = 0; i < length; i++) {
+    printf("AAAAAAA %d\n", int_array_data[i]);
     total += int_array_data[i];
   }
   
@@ -65,9 +66,9 @@ void SPVM_EXTENTION_std__println(SPVM* spvm, SPVM_ENV* env) {
   SPVM_SV* sv = SPVM_API_get_string_sv(spvm, env, string);
   
   char* buffer = sv->buffer;
-  int64_t length = sv->length;
+  int32_t length = sv->length;
   
-  for (int64_t i = 0; i < length; i++) {
+  for (int32_t i = 0; i < length; i++) {
     putchar((int)buffer[i]);
   }
   
@@ -137,9 +138,9 @@ void SPVM_EXTENTION_std__print(SPVM* spvm, SPVM_ENV* env) {
   SPVM_SV* sv = SPVM_API_get_string_sv(spvm, env, string);
   
   char* buffer = sv->buffer;
-  int64_t length = sv->length;
+  int32_t length = sv->length;
   
-  for (int64_t i = 0; i < length; i++) {
+  for (int32_t i = 0; i < length; i++) {
     putchar((int)buffer[i]);
   }
   
