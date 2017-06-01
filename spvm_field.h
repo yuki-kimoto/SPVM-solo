@@ -14,6 +14,5 @@ struct SPVM_field {
 };
 
 SPVM_FIELD* SPVM_FIELD_new(SPVM* spvm);
-int32_t SPVM_FIELD_get_byte_size(SPVM* spvm, SPVM_FIELD* field);
 
 #endif

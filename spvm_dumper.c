@@ -489,7 +489,6 @@ void SPVM_DUMPER_dump_field(SPVM* spvm, SPVM_FIELD* field) {
     
     SPVM_TYPE* type = field->op_type->uv.type;
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);
-    printf("      byte_size => \"%" PRId32 "\"\n", SPVM_FIELD_get_byte_size(spvm, field));
     
     printf("      constant_pool_address => \"%" PRId32 "\"\n", field->constant_pool_address);
   }
