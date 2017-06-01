@@ -33,6 +33,7 @@
 #include "spvm_limit.h"
 #include "spvm_extention.h"
 #include "spvm_extention_bind.h"
+#include "spvm_value.h"
 
 const char* const SPVM_OP_C_CODE_NAMES[] = {
   "IF",
@@ -676,44 +677,15 @@ void SPVM_OP_check(SPVM* spvm) {
     SPVM_PACKAGE* package = op_package->uv.package;
     SPVM_ARRAY* op_fields = package->op_fields;
     
-    // Alignment is max size of field
-    int32_t alignment = 0;
-    for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
-      SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields, field_pos);
-      SPVM_FIELD* field = op_field->uv.field;
-      
-      // Alignment
-      int32_t field_byte_size = SPVM_FIELD_get_byte_size(spvm, field);
-      if (field_byte_size > alignment) {
-        alignment = field_byte_size;
-      }
-    }
-    
     // Calculate package byte size
     int32_t package_byte_size = 0;
     for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields, field_pos);
       SPVM_FIELD* field = op_field->uv.field;
-      
-      // Current byte size
-      
-      int32_t field_byte_size = SPVM_FIELD_get_byte_size(spvm, field);
-      int32_t next_alignment_base;
-      if (package_byte_size % alignment == 0) {
-        next_alignment_base = package_byte_size  + alignment;
-      }
-      else {
-        next_alignment_base = ((package_byte_size / alignment) + 1) * alignment;
-      }
-      
-      if (package_byte_size + field_byte_size > next_alignment_base) {
-        int32_t padding = alignment - (package_byte_size % alignment);
-        package_byte_size += padding;
-      }
-      field->package_byte_offset = package_byte_size;
-      package_byte_size += field_byte_size;
+
+      field->package_byte_offset = sizeof(SPVM_VALUE) * field_pos;
     }
-    package->byte_size = package_byte_size;
+    package->byte_size = sizeof(SPVM_VALUE) * op_fields->length;
   }
   
   // Check types
@@ -774,7 +746,7 @@ SPVM_OP* SPVM_OP_build_call_field(SPVM* spvm, SPVM_OP* op_var, SPVM_OP* op_name_
   
   SPVM_NAME_INFO* name_info = SPVM_NAME_INFO_new(spvm);
   
-  if (strchr(op_name_field->uv.name, ':')) {
+  if (strstr(op_name_field->uv.name, ":")) {
     SPVM_yyerror_format(spvm, "field name \"%s\" can't contain :: at %s line %d\n",
       op_name_field, op_name_field->file, op_name_field->line);
   }

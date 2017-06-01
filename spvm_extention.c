@@ -50,7 +50,6 @@ void SPVM_EXTENTION_std__sum_int(SPVM* spvm, SPVM_ENV* env) {
   
   int64_t total = 0;
   for (int32_t i = 0; i < length; i++) {
-    printf("AAAAAAA %d\n", int_array_data[i]);
     total += int_array_data[i];
   }
   
