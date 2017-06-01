@@ -682,7 +682,7 @@ void SPVM_OP_check(SPVM* spvm) {
     for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields, field_pos);
       SPVM_FIELD* field = op_field->uv.field;
-      field->package_byte_offset = sizeof(SPVM_VALUE) * field_pos;
+      field->index = field_pos;
     }
     package->byte_size = sizeof(SPVM_VALUE) * op_fields->length;
   }
