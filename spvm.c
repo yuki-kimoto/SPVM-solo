@@ -34,7 +34,6 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   
   // Create subroutine environment
   SPVM_ENV* env = SPVM_ENV_new(spvm);
-  env->bytecodes = spvm->bytecode_array->values;
   
   // Push argument
   SPVM_API_push_var_long(spvm, env, 2);
