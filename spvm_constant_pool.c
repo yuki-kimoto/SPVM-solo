@@ -85,9 +85,13 @@ void SPVM_CONSTANT_POOL_extend(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, in
 void SPVM_CONSTANT_POOL_push_package(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, SPVM_PACKAGE* package) {
   (void)spvm;
   
-  // Add package information
+  // Extend
   int32_t extend_length = SPVM_CONSTANT_POOL_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_PACKAGE));
   SPVM_CONSTANT_POOL_extend(spvm, constant_pool, extend_length);
+
+  // Extend
+  int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_PACKAGE));
+  SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
   
   // Constant pool package information
   SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&constant_pool->values[constant_pool->length];
@@ -96,6 +100,8 @@ void SPVM_CONSTANT_POOL_push_package(SPVM* spvm, SPVM_CONSTANT_POOL* constant_po
   constant_pool_package->ref_fields_count = package->ref_fields_count;
   
   constant_pool->length += extend_length;
+
+  constant_pool->int_length += int_extend_length;
 }
 
 void SPVM_CONSTANT_POOL_push_sub(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, SPVM_SUB* sub) {
