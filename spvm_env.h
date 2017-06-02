@@ -9,6 +9,12 @@ struct SPVM_env {
   // Call stack
   SPVM_VALUE* call_stack;
   
+  // Bytecode
+  uint8_t* bytecodes;
+  
+  // Constant pool
+  SPVM_VALUE* constant_pool;
+
   // Call stack capacity
   int32_t call_stack_capacity;
   
@@ -17,9 +23,6 @@ struct SPVM_env {
   
   // Operand stack top
   int32_t operand_stack_top;
-  
-  // Bytecode
-  uint8_t* bytecodes;
   
   // Exception
   _Bool abort;
