@@ -168,6 +168,7 @@ void SPVM_CONSTANT_POOL_push_string(SPVM* spvm, SPVM_CONSTANT_POOL* constant_poo
   int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, int_string_length + 1);
   SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
   memcpy(&constant_pool->int_values[constant_pool->int_length], string, int_string_length + 1);
+  
   constant_pool->int_length += int_extend_length;
 }
 

@@ -1820,10 +1820,10 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         goto *jump[*pc];
       }
       case_SPVM_BYTECODE_C_CODE_MALLOC_STRING: {
-        SPVM_VALUE* string_constant_pool_addresss
-          = (SPVM_VALUE*)&constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
+        int32_t* string_constant_pool_addresss
+          = &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
         
-        int32_t length = string_constant_pool_addresss[0].int_value;
+        int32_t length = string_constant_pool_addresss[0];
         char* pv = (char*)&string_constant_pool_addresss[1];
         
         // New sv
