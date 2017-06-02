@@ -33,6 +33,7 @@
 #include "spvm_limit.h"
 #include "spvm_extention.h"
 #include "spvm_extention_bind.h"
+#include "spvm_value.h"
 
 const char* const SPVM_OP_C_CODE_NAMES[] = {
   "IF",
@@ -676,18 +677,8 @@ void SPVM_OP_check(SPVM* spvm) {
     SPVM_PACKAGE* package = op_package->uv.package;
     SPVM_ARRAY* op_fields = package->op_fields;
     
-    // Alignment is max size of field
-    int32_t alignment = 0;
-    for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
-      SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields, field_pos);
-      SPVM_FIELD* field = op_field->uv.field;
-      
-      // Alignment
-      int32_t field_byte_size = SPVM_FIELD_get_byte_size(spvm, field);
-      if (field_byte_size > alignment) {
-        alignment = field_byte_size;
-      }
-    }
+    // Alignment is max size of SPVM data
+    int32_t alignment = sizeof(SPVM_VALUE);
     
     // Calculate package byte size
     int32_t package_byte_size = 0;

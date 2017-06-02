@@ -192,8 +192,8 @@ package Test {
     {
       my $m = malloc Test::Minimal;
       
-      $m{x} = 2L;
-      $m{y} = 3L;
+      $m{x} = 99L;
+      $m{y} = 100L;
       
       std::println_long($m{x});
       std::println_long($m{y});
