@@ -239,7 +239,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   };
   
   // Constant pool
-  SPVM_VALUE* constant_pool = spvm->constant_pool->values;
+  int32_t* constant_pool = spvm->constant_pool->int_values;
   
   // Bytecode
   uint8_t* bytecodes = spvm->bytecode_array->values;
@@ -2275,7 +2275,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
         SPVM_REF_OBJECT* ref_object = (SPVM_REF_OBJECT*)ref;
         
         int32_t package_constant_pool_address = ref_object->package_constant_pool_address;
-        SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&spvm->constant_pool->values[package_constant_pool_address];
+        SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&spvm->constant_pool->int_values[package_constant_pool_address];
         
         int32_t ref_fields_count = constant_pool_package->ref_fields_count;
         
