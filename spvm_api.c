@@ -271,6 +271,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
   
   SPVM_CONSTANT_POOL_SUB constant_pool_sub;
+  SPVM_CONSTANT_POOL_FIELD constant_pool_field;
   
   // Goto subroutine
   goto CALLSUB_COMMON;
@@ -1971,9 +1972,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
           call_stack[operand_stack_top].byte_value
-            = *(int8_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset);
+            = *(int8_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset);
           pc += 5;
           goto *jump[*pc];
         }
@@ -1989,9 +1990,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
           call_stack[operand_stack_top].short_value
-            = *(int16_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset);
+            = *(int16_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset);
           pc += 5;
           goto *jump[*pc];
         }
@@ -2007,9 +2008,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
           call_stack[operand_stack_top].int_value
-            = *(int32_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset);
+            = *(int32_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset);
           pc += 5;
           goto *jump[*pc];
         }
@@ -2025,9 +2026,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
           call_stack[operand_stack_top].long_value
-            = *(int64_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset);
+            = *(int64_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset);
           pc += 5;
           goto *jump[*pc];
         }
@@ -2043,9 +2044,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
           call_stack[operand_stack_top - 1].float_value
-            = *(float*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset);
+            = *(float*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset);
           pc += 5;
           goto *jump[*pc];
         }
@@ -2061,9 +2062,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
           call_stack[operand_stack_top].double_value
-            = *(double*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset);
+            = *(double*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset);
           pc += 5;
           goto *jump[*pc];
         }
@@ -2079,9 +2080,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
           call_stack[operand_stack_top].address_value
-            = *(void**)((intptr_t)call_stack[operand_stack_top].address_value + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset);
+            = *(void**)((intptr_t)call_stack[operand_stack_top].address_value + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset);
           pc += 5;
           goto *jump[*pc];
         }
@@ -2097,8 +2098,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-          *(int8_t*)((intptr_t)ref_object + constant_pool_field->package_byte_offset)
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+          *(int8_t*)((intptr_t)ref_object + constant_pool_field.package_byte_offset)
             = call_stack[operand_stack_top].byte_value;
           operand_stack_top -= 2;
           pc += 5;
@@ -2116,8 +2117,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-          *(int16_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset)
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+          *(int16_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset)
             = call_stack[operand_stack_top].short_value;
           operand_stack_top -= 2;
           pc += 5;
@@ -2135,8 +2136,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-          *(int32_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset)
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+          *(int32_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset)
             = call_stack[operand_stack_top].int_value;
           operand_stack_top -= 2;
           pc += 5;
@@ -2154,8 +2155,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-          *(int64_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset)
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+          *(int64_t*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset)
             = call_stack[operand_stack_top].long_value;
           operand_stack_top -= 2;
           pc += 5;
@@ -2173,8 +2174,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-          *(float*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset)
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+          *(float*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset)
             = call_stack[operand_stack_top - 1].float_value;
           operand_stack_top -= 2;
           pc += 5;
@@ -2192,8 +2193,8 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
-          *(double*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field->package_byte_offset)
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+          *(double*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + constant_pool_field.package_byte_offset)
             = call_stack[operand_stack_top].double_value;
           operand_stack_top -= 2;
           pc += 5;
@@ -2211,9 +2212,9 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         else {
           int32_t field_constant_pool_address
             = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-          SPVM_CONSTANT_POOL_FIELD* constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool[field_constant_pool_address];
+          memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
           
-          void** field_index = (void**)((intptr_t)ref_object + constant_pool_field->package_byte_offset);
+          void** field_index = (void**)((intptr_t)ref_object + constant_pool_field.package_byte_offset);
 
           // Increment reference count
           SPVM_API_inc_ref_count(spvm, env, call_stack[operand_stack_top].address_value);
