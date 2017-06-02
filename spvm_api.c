@@ -63,6 +63,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
     &&case_SPVM_BYTECODE_C_CODE_PUSH_BYTE_TO_LONG,
     &&case_SPVM_BYTECODE_C_CODE_PUSH_SHORT_TO_LONG,
     &&case_SPVM_BYTECODE_C_CODE_LOAD_CONSTANT,
+    &&case_SPVM_BYTECODE_C_CODE_LOAD_CONSTANT2,
     &&case_SPVM_BYTECODE_C_CODE_ADD_BYTE,
     &&case_SPVM_BYTECODE_C_CODE_ADD_SHORT,
     &&case_SPVM_BYTECODE_C_CODE_ADD_INT,
@@ -653,6 +654,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         pc += 3;
         goto *jump[*pc];
       case_SPVM_BYTECODE_C_CODE_LOAD_CONSTANT:
+        operand_stack_top++;
+        call_stack[operand_stack_top] = constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
+        pc += 5;
+        goto *jump[*pc];
+      case_SPVM_BYTECODE_C_CODE_LOAD_CONSTANT2:
         operand_stack_top++;
         call_stack[operand_stack_top] = constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
         pc += 5;

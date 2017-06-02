@@ -1875,7 +1875,16 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 }
                 
                 if (!bytecode_set) {
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LOAD_CONSTANT);
+                  if (constant->code == SPVM_CONSTANT_C_CODE_INT || constant->code == SPVM_CONSTANT_C_CODE_FLOAT) {
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LOAD_CONSTANT);
+                  }
+                  else if (constant->code == SPVM_CONSTANT_C_CODE_LONG || constant->code == SPVM_CONSTANT_C_CODE_DOUBLE) {
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_LOAD_CONSTANT2);
+                  }
+                  else {
+                    assert(0);
+                  }
+                  
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->constant_pool_address >> 24) & 0xFF);
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->constant_pool_address >> 16) & 0xFF);
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant->constant_pool_address >> 8) & 0xFF);
