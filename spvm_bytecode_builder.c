@@ -1921,9 +1921,9 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
       
       // Set bytecode base to sub
       SPVM_CONSTANT_POOL_SUB constant_pool_sub;
-      memcpy(&constant_pool_sub, &spvm->constant_pool->int_values[sub->constant_pool_address], sizeof(SPVM_CONSTANT_POOL_SUB));
+      memcpy(&constant_pool_sub, &spvm->constant_pool->values[sub->constant_pool_address], sizeof(SPVM_CONSTANT_POOL_SUB));
       constant_pool_sub.bytecode_base = sub->bytecode_base;
-      memcpy(&spvm->constant_pool->int_values[sub->constant_pool_address], &constant_pool_sub, sizeof(SPVM_CONSTANT_POOL_SUB));
+      memcpy(&spvm->constant_pool->values[sub->constant_pool_address], &constant_pool_sub, sizeof(SPVM_CONSTANT_POOL_SUB));
       
     }
   }

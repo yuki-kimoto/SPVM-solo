@@ -49,15 +49,15 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
     
     // Push package name to constant pool
     const char* package_name = package->op_name->uv.name;
-    package->name_constant_pool_address = constant_pool->int_length;
+    package->name_constant_pool_address = constant_pool->length;
     SPVM_CONSTANT_POOL_push_string(spvm, constant_pool, package_name);
     
     // Push package information to constant pool
-    package->constant_pool_address = constant_pool->int_length;
+    package->constant_pool_address = constant_pool->length;
     SPVM_CONSTANT_POOL_push_package(spvm, constant_pool, package);
     
     // Add constant pool sub to symbol table
-    const char* constant_pool_package_name = (char*)&spvm->constant_pool->int_values[package->name_constant_pool_address + 1];
+    const char* constant_pool_package_name = (char*)&spvm->constant_pool->values[package->name_constant_pool_address + 1];
     SPVM_HASH_insert(spvm, spvm->constant_pool_package_symtable, constant_pool_package_name, strlen(constant_pool_package_name), (void*)(intptr_t)package->constant_pool_address);
     
     // Push field information to constant pool
@@ -66,15 +66,15 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       SPVM_FIELD* field = op_field->uv.field;
       
       // Add field name to constant pool
-      field->abs_name_constant_pool_address = spvm->constant_pool->int_length;
+      field->abs_name_constant_pool_address = spvm->constant_pool->length;
       SPVM_CONSTANT_POOL_push_string(spvm, spvm->constant_pool, field->abs_name);
       
       // Add field to constant pool
-      field->constant_pool_address = spvm->constant_pool->int_length;
+      field->constant_pool_address = spvm->constant_pool->length;
       SPVM_CONSTANT_POOL_push_field(spvm, spvm->constant_pool, field);
       
       // Add constant pool field to symbol table
-      const char* constant_pool_field_name = (char*)&spvm->constant_pool->int_values[field->abs_name_constant_pool_address + 1];
+      const char* constant_pool_field_name = (char*)&spvm->constant_pool->values[field->abs_name_constant_pool_address + 1];
       SPVM_HASH_insert(spvm, spvm->constant_pool_field_symtable, constant_pool_field_name, strlen(constant_pool_field_name), (void*)(intptr_t)field->constant_pool_address);
     }
     
@@ -242,7 +242,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   
                   SPVM_CONSTANT_POOL* constant_pool = spvm->constant_pool;
                   
-                  constant->constant_pool_address = constant_pool->int_length;
+                  constant->constant_pool_address = constant_pool->length;
                   
                   switch (constant->code) {
                     case SPVM_CONSTANT_C_CODE_INT: {
@@ -1443,20 +1443,20 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       }
       
       // Push sub name to constant pool
-      sub->abs_name_constant_pool_address = spvm->constant_pool->int_length;
+      sub->abs_name_constant_pool_address = spvm->constant_pool->length;
       SPVM_CONSTANT_POOL_push_string(spvm, spvm->constant_pool, sub->abs_name);
       
       // Push file name to constant pool
-      sub->file_name_constant_pool_address = spvm->constant_pool->int_length;
+      sub->file_name_constant_pool_address = spvm->constant_pool->length;
       assert(sub->file_name);
       SPVM_CONSTANT_POOL_push_string(spvm, spvm->constant_pool, sub->file_name);
       
       // Push sub information to constant pool
-      sub->constant_pool_address = spvm->constant_pool->int_length;
+      sub->constant_pool_address = spvm->constant_pool->length;
       SPVM_CONSTANT_POOL_push_sub(spvm, spvm->constant_pool, sub);
       
       // Add constant pool sub to symbol table
-      const char* constant_pool_sub_name = (char*)&spvm->constant_pool->int_values[sub->abs_name_constant_pool_address + 1];
+      const char* constant_pool_sub_name = (char*)&spvm->constant_pool->values[sub->abs_name_constant_pool_address + 1];
       SPVM_HASH_insert(spvm, spvm->constant_pool_sub_symtable, constant_pool_sub_name, strlen(constant_pool_sub_name), (void*)(intptr_t)sub->constant_pool_address);
     }
   }

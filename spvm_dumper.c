@@ -188,8 +188,8 @@ void SPVM_DUMPER_dump_resolved_types(SPVM* spvm, SPVM_ARRAY* resolved_types) {
 void SPVM_DUMPER_dump_constant_pool(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool) {
   (void)spvm;
 
-  for (int32_t i = 0; i < constant_pool->int_length; i++) {
-    printf("      constant_pool[%" PRId32 "] %" PRId32 "\n", i, constant_pool->int_values[i]);
+  for (int32_t i = 0; i < constant_pool->length; i++) {
+    printf("      constant_pool[%" PRId32 "] %" PRId32 "\n", i, constant_pool->values[i]);
   }
 }
 
