@@ -270,7 +270,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   
   SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
   
-  SPVM_CONSTANT_POOL_SUB* constant_pool_sub = NULL;
+  SPVM_CONSTANT_POOL_SUB constant_pool_sub;
   
   // Goto subroutine
   goto CALLSUB_COMMON;
@@ -284,21 +284,20 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
         
         CALLSUB_COMMON: {
-
-          constant_pool_sub = (SPVM_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
+          memcpy(&constant_pool_sub, &constant_pool[sub_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_SUB));
 
           // Extend call stack(current size + 2(return address + call stack base before) + lexical variable area + operand_stack area)
-          int32_t call_stack_max = operand_stack_top + 2 + constant_pool_sub->my_vars_length + constant_pool_sub->operand_stack_max;
+          int32_t call_stack_max = operand_stack_top + 2 + constant_pool_sub.my_vars_length + constant_pool_sub.operand_stack_max;
           
           while (call_stack_max > env->call_stack_capacity) {
             env->call_stack_capacity = env->call_stack_capacity * 2;
             env->call_stack = call_stack = realloc(call_stack, sizeof(SPVM_VALUE) * env->call_stack_capacity);
           }
 
-          operand_stack_top -= constant_pool_sub->args_length;
+          operand_stack_top -= constant_pool_sub.args_length;
 
           // Prepare arguments
-          memmove(&call_stack[operand_stack_top + 4], &call_stack[operand_stack_top + 1], constant_pool_sub->args_length * sizeof(SPVM_VALUE));
+          memmove(&call_stack[operand_stack_top + 4], &call_stack[operand_stack_top + 1], constant_pool_sub.args_length * sizeof(SPVM_VALUE));
 
           // Save return address(operand + (throw or goto exception handler))
           if (call_stack_base == call_stack_base_start) {
@@ -318,22 +317,22 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           call_stack_base = operand_stack_top + 4;
           
           // Initialize my variables
-          memset(&call_stack[call_stack_base + constant_pool_sub->args_length], 0, (constant_pool_sub->my_vars_length - constant_pool_sub->args_length) * sizeof(SPVM_VALUE));
+          memset(&call_stack[call_stack_base + constant_pool_sub.args_length], 0, (constant_pool_sub.my_vars_length - constant_pool_sub.args_length) * sizeof(SPVM_VALUE));
           
           // Set variables to local variable
           vars = &call_stack[call_stack_base];
           
           // Set operant stack top
-          operand_stack_top = call_stack_base + constant_pool_sub->my_vars_length - 1;
+          operand_stack_top = call_stack_base + constant_pool_sub.my_vars_length - 1;
           
           // Call native sub
-          if (constant_pool_sub->is_native) {
+          if (constant_pool_sub.is_native) {
             // Set environment
             env->operand_stack_top = operand_stack_top;
             env->call_stack_base = call_stack_base;
             
             // Call native sub
-            void (*native_address)(SPVM* spvm, SPVM_ENV* env) = constant_pool_sub->native_address;
+            void (*native_address)(SPVM* spvm, SPVM_ENV* env) = constant_pool_sub.native_address;
             (*native_address)(spvm, env);
             
             // Get enviromnet
@@ -344,7 +343,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
               goto case_SPVM_BYTECODE_C_CODE_DIE;
             }
             else {
-              if (constant_pool_sub->has_return_value) {
+              if (constant_pool_sub.has_return_value) {
                 goto case_SPVM_BYTECODE_C_CODE_RETURN;
               }
               else {
@@ -354,7 +353,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           }
           // Call normal sub
           else {
-            pc = &bytecodes[constant_pool_sub->bytecode_base];
+            pc = &bytecodes[constant_pool_sub.bytecode_base];
           }
           goto *jump[*pc];
         }
@@ -439,14 +438,14 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         sub_constant_pool_address = call_stack[call_stack_base - 2].int_value;
         
         // Get constant pool sub
-        constant_pool_sub = (SPVM_CONSTANT_POOL_SUB*)&constant_pool[sub_constant_pool_address];
+        memcpy(&constant_pool_sub, &constant_pool[sub_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_SUB));
         
         // Sub name
-        int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
+        int32_t sub_name_constant_pool_address = constant_pool_sub.abs_name_constant_pool_address;
         const char* sub_name = (char*)&constant_pool[sub_name_constant_pool_address + 1];
         
         // File name
-        int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
+        int32_t file_name_constant_pool_address = constant_pool_sub.file_name_constant_pool_address;
         const char* file_name = (char*)&constant_pool[file_name_constant_pool_address + 1];
         
         SPVM_SV* sv_message = SPVM_API_get_string_sv(spvm, env, return_value);
@@ -1787,11 +1786,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Memory allocation error
         if (!ref_object) {
           // Sub name
-          int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
+          int32_t sub_name_constant_pool_address = constant_pool_sub.abs_name_constant_pool_address;
           const char* sub_name = (char*)&constant_pool[sub_name_constant_pool_address + 1];
           
           // File name
-          int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
+          int32_t file_name_constant_pool_address = constant_pool_sub.file_name_constant_pool_address;
           const char* file_name = (char*)&constant_pool[file_name_constant_pool_address + 1];
           
           fprintf(stderr, "Failed to allocate memory(malloc PACKAGE) from %s at %s\n", sub_name, file_name);
@@ -1835,11 +1834,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Memory allocation error
         if (!ref_string) {
           // Sub name
-          int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
+          int32_t sub_name_constant_pool_address = constant_pool_sub.abs_name_constant_pool_address;
           const char* sub_name = (char*)&constant_pool[sub_name_constant_pool_address + 1];
           
           // File name
-          int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
+          int32_t file_name_constant_pool_address = constant_pool_sub.file_name_constant_pool_address;
           const char* file_name = (char*)&constant_pool[file_name_constant_pool_address + 1];
           
           fprintf(stderr, "Failed to allocate memory(malloc STRING) from %s at %s\n", sub_name, file_name);
