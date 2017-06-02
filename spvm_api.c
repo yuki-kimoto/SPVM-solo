@@ -8,15 +8,12 @@
 #include "spvm_api.h"
 #include "spvm_hash.h"
 #include "spvm_allocator_util.h"
-#include "spvm_bytecode_array.h"
-#include "spvm_extention.h"
 #include "spvm_bytecode.h"
 #include "spvm_allocator_runtime.h"
 #include "spvm_constant_pool.h"
 #include "spvm_constant_pool_sub.h"
 #include "spvm_constant_pool_package.h"
 #include "spvm_constant_pool_field.h"
-#include "spvm_resolved_type.h"
 #include "spvm_env.h"
 #include "spvm_sv.h"
 #include "spvm_compat.h"
@@ -243,7 +240,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   SPVM_VALUE* constant_pool = spvm->constant_pool->values;
   
   // Bytecode
-  uint8_t* bytecodes = spvm->bytecode_array->values;
+  uint8_t* bytecodes = env->bytecodes;
   
   // Variables
   SPVM_VALUE* vars = &env->call_stack[env->call_stack_base];

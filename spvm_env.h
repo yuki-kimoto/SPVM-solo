@@ -18,6 +18,9 @@ struct SPVM_env {
   // Operand stack top
   int32_t operand_stack_top;
   
+  // Bytecode
+  uint8_t* bytecodes;
+  
   // Exception
   _Bool abort;
 };
