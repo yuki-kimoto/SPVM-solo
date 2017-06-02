@@ -104,10 +104,11 @@ void SPVM_CONSTANT_POOL_push_package(SPVM* spvm, SPVM_CONSTANT_POOL* constant_po
   SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
 
   // Constant pool package information
-  SPVM_CONSTANT_POOL_PACKAGE* int_constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&constant_pool->int_values[constant_pool->int_length];
-  int_constant_pool_package->byte_size = package->byte_size;
-  int_constant_pool_package->name_constant_pool_address = package->name_constant_pool_address;
-  int_constant_pool_package->ref_fields_count = package->ref_fields_count;
+  SPVM_CONSTANT_POOL_PACKAGE int_constant_pool_package;
+  int_constant_pool_package.byte_size = package->byte_size;
+  int_constant_pool_package.name_constant_pool_address = package->name_constant_pool_address;
+  int_constant_pool_package.ref_fields_count = package->ref_fields_count;
+  memcpy(&constant_pool->int_values[constant_pool->int_length], &int_constant_pool_package, sizeof(SPVM_CONSTANT_POOL_PACKAGE));
   
   // Add length
   constant_pool->int_length += int_extend_length;
@@ -145,21 +146,22 @@ void SPVM_CONSTANT_POOL_push_sub(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, 
   SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
 
   // Set subroutine information
-  SPVM_CONSTANT_POOL_SUB* int_constant_pool_sub = (SPVM_CONSTANT_POOL_SUB*)&constant_pool->int_values[constant_pool->int_length];
-  int_constant_pool_sub->native_address = sub->native_address;
-  int_constant_pool_sub->bytecode_base = sub->bytecode_base;
-  int_constant_pool_sub->my_vars_length = sub->op_my_vars->length;
-  int_constant_pool_sub->operand_stack_max = sub->operand_stack_max;
-  int_constant_pool_sub->args_length = sub->op_args->length;
-  int_constant_pool_sub->is_native = sub->is_native;
-  int_constant_pool_sub->abs_name_constant_pool_address = sub->abs_name_constant_pool_address;
-  int_constant_pool_sub->file_name_constant_pool_address = sub->file_name_constant_pool_address;
+  SPVM_CONSTANT_POOL_SUB int_constant_pool_sub;
+  int_constant_pool_sub.native_address = sub->native_address;
+  int_constant_pool_sub.bytecode_base = sub->bytecode_base;
+  int_constant_pool_sub.my_vars_length = sub->op_my_vars->length;
+  int_constant_pool_sub.operand_stack_max = sub->operand_stack_max;
+  int_constant_pool_sub.args_length = sub->op_args->length;
+  int_constant_pool_sub.is_native = sub->is_native;
+  int_constant_pool_sub.abs_name_constant_pool_address = sub->abs_name_constant_pool_address;
+  int_constant_pool_sub.file_name_constant_pool_address = sub->file_name_constant_pool_address;
   if (sub->op_return_type->code != SPVM_OP_C_CODE_VOID) {
-    int_constant_pool_sub->has_return_value = 1;
+    int_constant_pool_sub.has_return_value = 1;
   }
   else {
-    int_constant_pool_sub->has_return_value = 0;
+    int_constant_pool_sub.has_return_value = 0;
   }
+  memcpy(&constant_pool->int_values[constant_pool->int_length], &int_constant_pool_sub, sizeof(SPVM_CONSTANT_POOL_SUB));
   
   // Add length
   constant_pool->int_length += int_extend_length;
@@ -179,7 +181,7 @@ void SPVM_CONSTANT_POOL_push_field(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool
   constant_pool->length += extend_length;
 
   // Extend
-  int32_t int_extend_length = SPVM_CONSTANT_POOL_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_FIELD));
+  int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_FIELD));
   SPVM_CONSTANT_POOL_extend(spvm, constant_pool, int_extend_length);
   
   // Constant pool field information
@@ -197,6 +199,11 @@ void SPVM_CONSTANT_POOL_push_int(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, 
   SPVM_CONSTANT_POOL_extend(spvm, constant_pool, 1);
   constant_pool->values[constant_pool->length].int_value = value;
   constant_pool->length++;
+
+  // Add int value
+  SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, 1);
+  constant_pool->int_values[constant_pool->int_length] = value;
+  constant_pool->int_length++;
 }
 
 void SPVM_CONSTANT_POOL_push_long(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int64_t value) {
@@ -205,6 +212,12 @@ void SPVM_CONSTANT_POOL_push_long(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool,
   // Add long value
   SPVM_CONSTANT_POOL_extend(spvm, constant_pool, 1);
   constant_pool->values[constant_pool->length].long_value = value;
+  constant_pool->length++;
+
+  // Add long value
+  int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, sizeof(int64_t));
+  SPVM_CONSTANT_POOL_extend(spvm, constant_pool, int_extend_length);
+  memcpy(&constant_pool->values[constant_pool->length], &value, sizeof(int64_t));
   constant_pool->length++;
 }
 
