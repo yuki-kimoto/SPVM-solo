@@ -89,28 +89,38 @@ void SPVM_CONSTANT_POOL_push_package(SPVM* spvm, SPVM_CONSTANT_POOL* constant_po
   int32_t extend_length = SPVM_CONSTANT_POOL_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_PACKAGE));
   SPVM_CONSTANT_POOL_extend(spvm, constant_pool, extend_length);
 
-  // Extend
-  int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_PACKAGE));
-  SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
-  
   // Constant pool package information
   SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&constant_pool->values[constant_pool->length];
   constant_pool_package->byte_size = package->byte_size;
   constant_pool_package->name_constant_pool_address = package->name_constant_pool_address;
   constant_pool_package->ref_fields_count = package->ref_fields_count;
   
+  // Add length
   constant_pool->length += extend_length;
+  
 
+  // Extend
+  int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_PACKAGE));
+  SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
+
+  // Constant pool package information
+  SPVM_CONSTANT_POOL_PACKAGE* int_constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&constant_pool->int_values[constant_pool->int_length];
+  int_constant_pool_package->byte_size = package->byte_size;
+  int_constant_pool_package->name_constant_pool_address = package->name_constant_pool_address;
+  int_constant_pool_package->ref_fields_count = package->ref_fields_count;
+  
+  // Add length
   constant_pool->int_length += int_extend_length;
 }
 
 void SPVM_CONSTANT_POOL_push_sub(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, SPVM_SUB* sub) {
   (void)spvm;
   
-  // Add sub information
+  // Extend
   int32_t extend_length = SPVM_CONSTANT_POOL_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_SUB));
   SPVM_CONSTANT_POOL_extend(spvm, constant_pool, extend_length);
   
+  // Set subroutine information
   SPVM_CONSTANT_POOL_SUB* constant_pool_sub = (SPVM_CONSTANT_POOL_SUB*)&constant_pool->values[constant_pool->length];
   constant_pool_sub->native_address = sub->native_address;
   constant_pool_sub->bytecode_base = sub->bytecode_base;
@@ -128,12 +138,37 @@ void SPVM_CONSTANT_POOL_push_sub(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, 
   }
   
   constant_pool->length += extend_length;
+  
+  
+  // Extend
+  int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_SUB));
+  SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
+
+  // Set subroutine information
+  SPVM_CONSTANT_POOL_SUB* int_constant_pool_sub = (SPVM_CONSTANT_POOL_SUB*)&constant_pool->int_values[constant_pool->int_length];
+  int_constant_pool_sub->native_address = sub->native_address;
+  int_constant_pool_sub->bytecode_base = sub->bytecode_base;
+  int_constant_pool_sub->my_vars_length = sub->op_my_vars->length;
+  int_constant_pool_sub->operand_stack_max = sub->operand_stack_max;
+  int_constant_pool_sub->args_length = sub->op_args->length;
+  int_constant_pool_sub->is_native = sub->is_native;
+  int_constant_pool_sub->abs_name_constant_pool_address = sub->abs_name_constant_pool_address;
+  int_constant_pool_sub->file_name_constant_pool_address = sub->file_name_constant_pool_address;
+  if (sub->op_return_type->code != SPVM_OP_C_CODE_VOID) {
+    int_constant_pool_sub->has_return_value = 1;
+  }
+  else {
+    int_constant_pool_sub->has_return_value = 0;
+  }
+  
+  // Add length
+  constant_pool->int_length += int_extend_length;
 }
 
 void SPVM_CONSTANT_POOL_push_field(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, SPVM_FIELD* field) {
   (void)spvm;
   
-  // Add field information
+  // Extend
   int32_t extend_length = SPVM_CONSTANT_POOL_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_FIELD));
   SPVM_CONSTANT_POOL_extend(spvm, constant_pool, extend_length);
 
@@ -142,6 +177,17 @@ void SPVM_CONSTANT_POOL_push_field(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool
   constant_pool_field->package_byte_offset = field->package_byte_offset;
 
   constant_pool->length += extend_length;
+
+  // Extend
+  int32_t int_extend_length = SPVM_CONSTANT_POOL_calculate_extend_length(spvm, constant_pool, sizeof(SPVM_CONSTANT_POOL_FIELD));
+  SPVM_CONSTANT_POOL_extend(spvm, constant_pool, int_extend_length);
+  
+  // Constant pool field information
+  SPVM_CONSTANT_POOL_FIELD* int_constant_pool_field = (SPVM_CONSTANT_POOL_FIELD*)&constant_pool->int_values[constant_pool->int_length];
+  int_constant_pool_field->package_byte_offset = field->package_byte_offset;
+  
+  // Add length
+  constant_pool->int_length += int_extend_length;
 }
 
 void SPVM_CONSTANT_POOL_push_int(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int32_t value) {
