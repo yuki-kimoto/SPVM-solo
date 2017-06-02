@@ -12,7 +12,7 @@ struct SPVM_constant_pool {
 
 // Array function
 SPVM_CONSTANT_POOL* SPVM_CONSTANT_POOL_new(SPVM* spvm);
-void SPVM_CONSTANT_POOL_extend(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int32_t extend);
+void SPVM_CONSTANT_POOL_int_extend(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int32_t extend);
 
 void SPVM_CONSTANT_POOL_push_int(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int32_t value);
 void SPVM_CONSTANT_POOL_push_long(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int64_t value);

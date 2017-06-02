@@ -1776,10 +1776,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Get subroutine ID
         int32_t package_constant_pool_address
           = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-        SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&constant_pool[package_constant_pool_address];
+        SPVM_CONSTANT_POOL_PACKAGE constant_pool_package;
+        memcpy(&constant_pool_package, &constant_pool[package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
         
         // Allocate memory
-        int32_t fields_byte_size = constant_pool_package->byte_size;
+        int32_t fields_byte_size = constant_pool_package.byte_size;
         int32_t ref_object_byte_size = sizeof(SPVM_REF_OBJECT) + fields_byte_size;
         SPVM_REF_OBJECT* ref_object = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_object_byte_size);
 
@@ -1804,7 +1805,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         ref_object->ref_count = 0;
         
         // Initialize reference fields by 0
-        memset((void*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT)), 0, sizeof(void*) * constant_pool_package->ref_fields_count);
+        memset((void*)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT)), 0, sizeof(void*) * constant_pool_package.ref_fields_count);
         
         // Package constant pool address
         ref_object->package_constant_pool_address = package_constant_pool_address;
@@ -2274,9 +2275,10 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
         SPVM_REF_OBJECT* ref_object = (SPVM_REF_OBJECT*)ref;
         
         int32_t package_constant_pool_address = ref_object->package_constant_pool_address;
-        SPVM_CONSTANT_POOL_PACKAGE* constant_pool_package = (SPVM_CONSTANT_POOL_PACKAGE*)&spvm->constant_pool->int_values[package_constant_pool_address];
+        SPVM_CONSTANT_POOL_PACKAGE constant_pool_package;
+        memcpy(&constant_pool_package, &spvm->constant_pool->int_values[package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
         
-        int32_t ref_fields_count = constant_pool_package->ref_fields_count;
+        int32_t ref_fields_count = constant_pool_package.ref_fields_count;
         
         for (int i = 0; i < ref_fields_count; i++) {
           SPVM_REF* ref_field = *(SPVM_REF**)((intptr_t)ref_object + sizeof(SPVM_REF_OBJECT) + sizeof(void*) * i);
