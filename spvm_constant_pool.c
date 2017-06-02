@@ -28,6 +28,15 @@ SPVM_CONSTANT_POOL* SPVM_CONSTANT_POOL_new(SPVM* spvm) {
   SPVM_VALUE* values = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(constant_pool->capacity, sizeof(SPVM_VALUE));
   constant_pool->values = values;
   
+  
+  constant_pool->int_capacity = 64;
+  
+  // index 0 is not used.
+  constant_pool->int_length = 1;
+  
+  int32_t* int_values = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(constant_pool->int_capacity, sizeof(int32_t));
+  constant_pool->int_values = int_values;
+  
   return constant_pool;
 }
 
