@@ -40,6 +40,27 @@ SPVM_CONSTANT_POOL* SPVM_CONSTANT_POOL_new(SPVM* spvm) {
   return constant_pool;
 }
 
+int32_t SPVM_CONSTANT_POOL_int_calculate_extend_length(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int32_t byte_size) {
+  (void)spvm;
+  (void)constant_pool;
+  
+  int32_t length = (byte_size + (sizeof(int32_t) - 1)) / sizeof(int32_t);
+  
+  return length;
+}
+
+void SPVM_CONSTANT_POOL_int_extend(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int32_t extend) {
+  (void)spvm;
+  
+  int32_t int_capacity = constant_pool->int_capacity;
+  
+  if (constant_pool->int_length + extend >= int_capacity) {
+    int32_t new_int_capacity = int_capacity * 2;
+    constant_pool->int_values = SPVM_ALLOCATOR_UTIL_safe_realloc_i32(constant_pool->int_values, new_int_capacity, sizeof(int32_t));
+    constant_pool->int_capacity = new_int_capacity;
+  }
+}
+
 int32_t SPVM_CONSTANT_POOL_calculate_extend_length(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int32_t byte_size) {
   (void)spvm;
   (void)constant_pool;
