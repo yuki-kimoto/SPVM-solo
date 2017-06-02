@@ -30,6 +30,4 @@ void SPVM_CONSTANT_POOL_push_package(SPVM* spvm, SPVM_CONSTANT_POOL* constant_po
 void SPVM_CONSTANT_POOL_push_field(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, SPVM_FIELD* field);
 void SPVM_CONSTANT_POOL_free(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool);
 
-char* SPVM_CONSTANT_POOL_get_string_value(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int32_t address);
-
 #endif

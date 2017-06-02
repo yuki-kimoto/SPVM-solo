@@ -442,11 +442,11 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Sub name
         int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
-        const char* sub_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, sub_name_constant_pool_address);
+        const char* sub_name = (char*)&constant_pool[sub_name_constant_pool_address + 1];
         
         // File name
         int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
-        const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
+        const char* file_name = (char*)&constant_pool[file_name_constant_pool_address + 1];
         
         SPVM_SV* sv_message = SPVM_API_get_string_sv(spvm, env, return_value);
         
@@ -1782,13 +1782,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         if (!ref_object) {
           // Sub name
           int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
-          const char* sub_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, sub_name_constant_pool_address);
+          const char* sub_name = (char*)&constant_pool[sub_name_constant_pool_address + 1];
           
           // File name
           int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
-          const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
-
-          fprintf(stderr, "Failed to allocate memory(malloc PACKAGE) from %s at %s", sub_name, file_name);
+          const char* file_name = (char*)&constant_pool[file_name_constant_pool_address + 1];
+          
+          fprintf(stderr, "Failed to allocate memory(malloc PACKAGE) from %s at %s\n", sub_name, file_name);
           abort();
         }
         
@@ -1830,13 +1830,13 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         if (!ref_string) {
           // Sub name
           int32_t sub_name_constant_pool_address = constant_pool_sub->abs_name_constant_pool_address;
-          const char* sub_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, sub_name_constant_pool_address);
+          const char* sub_name = (char*)&constant_pool[sub_name_constant_pool_address + 1];
           
           // File name
           int32_t file_name_constant_pool_address = constant_pool_sub->file_name_constant_pool_address;
-          const char* file_name = SPVM_CONSTANT_POOL_get_string_value(spvm, spvm->constant_pool, file_name_constant_pool_address);
-
-          fprintf(stderr, "Failed to allocate memory(malloc STRING) from %s at %s", sub_name, file_name);
+          const char* file_name = (char*)&constant_pool[file_name_constant_pool_address + 1];
+          
+          fprintf(stderr, "Failed to allocate memory(malloc STRING) from %s at %s\n", sub_name, file_name);
           abort();
         }
         

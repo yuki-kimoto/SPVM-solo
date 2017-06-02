@@ -286,16 +286,6 @@ void SPVM_CONSTANT_POOL_push_string(SPVM* spvm, SPVM_CONSTANT_POOL* constant_poo
   constant_pool->int_length += int_extend_length;
 }
 
-char* SPVM_CONSTANT_POOL_get_string_value(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int32_t address) {
-  (void)spvm;
-  
-  assert(address);
-  
-  char* string_value = (char*)&constant_pool->values[address + 1];
-  
-  return string_value;
-}
-
 void SPVM_CONSTANT_POOL_free(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool) {
   (void)spvm;
   
