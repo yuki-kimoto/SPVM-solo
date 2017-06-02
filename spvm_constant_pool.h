@@ -8,9 +8,6 @@ struct SPVM_constant_pool {
   SPVM_VALUE* values;
   int32_t length;
   int32_t capacity;
-  uint8_t* bytecodes;
-  int32_t bytecodes_length;
-  int32_t bytecodes_capacity;
 };
 
 // Array function
