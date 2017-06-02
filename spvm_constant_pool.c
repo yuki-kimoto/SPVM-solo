@@ -123,7 +123,7 @@ void SPVM_CONSTANT_POOL_push_int(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, 
   int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, sizeof(int32_t));
   SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
   memcpy(&constant_pool->int_values[constant_pool->int_length], &value, sizeof(int32_t));
-  constant_pool->int_length++;
+  constant_pool->int_length += int_extend_length;
 }
 
 void SPVM_CONSTANT_POOL_push_long(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, int64_t value) {
@@ -133,7 +133,8 @@ void SPVM_CONSTANT_POOL_push_long(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool,
   int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, sizeof(int64_t));
   SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
   memcpy(&constant_pool->int_values[constant_pool->int_length], &value, sizeof(int64_t));
-  constant_pool->int_length++;
+  
+  constant_pool->int_length += int_extend_length;
 }
 
 void SPVM_CONSTANT_POOL_push_float(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, float value) {
@@ -143,7 +144,7 @@ void SPVM_CONSTANT_POOL_push_float(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool
   int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, sizeof(float));
   SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
   memcpy(&constant_pool->int_values[constant_pool->int_length], &value, sizeof(float));
-  constant_pool->int_length++;
+  constant_pool->int_length += int_extend_length;
 }
 
 void SPVM_CONSTANT_POOL_push_double(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, double value) {
@@ -153,7 +154,7 @@ void SPVM_CONSTANT_POOL_push_double(SPVM* spvm, SPVM_CONSTANT_POOL* constant_poo
   int32_t int_extend_length = SPVM_CONSTANT_POOL_int_calculate_extend_length(spvm, constant_pool, sizeof(double));
   SPVM_CONSTANT_POOL_int_extend(spvm, constant_pool, int_extend_length);
   memcpy(&constant_pool->int_values[constant_pool->int_length], &value, sizeof(double));
-  constant_pool->int_length++;
+  constant_pool->int_length += int_extend_length;
 }
 
 void SPVM_CONSTANT_POOL_push_string(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, const char* string) {
