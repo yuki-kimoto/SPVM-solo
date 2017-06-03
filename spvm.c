@@ -81,9 +81,6 @@ SPVM* SPVM_new() {
   // Bytecodes
   spvm->bytecode_array = SPVM_BYTECODE_ARRAY_new(spvm);
 
-  // Constant poll subroutine symbol table
-  spvm->constant_pool_sub_symtable = SPVM_HASH_new(spvm, 0);
-  
   // Runtime
   spvm->runtime = SPVM_RUNTIME_new(spvm);
   

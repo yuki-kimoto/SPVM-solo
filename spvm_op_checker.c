@@ -1446,10 +1446,6 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       // Push sub information to constant pool
       sub->constant_pool_address = spvm->constant_pool->length;
       SPVM_CONSTANT_POOL_push_sub(spvm, spvm->constant_pool, sub);
-      
-      // Add constant pool sub to symbol table
-      const char* constant_pool_sub_name = (char*)&spvm->constant_pool->values[sub->abs_name_constant_pool_address + 1];
-      SPVM_HASH_insert(spvm, spvm->constant_pool_sub_symtable, constant_pool_sub_name, strlen(constant_pool_sub_name), (void*)(intptr_t)sub->constant_pool_address);
     }
   }
 }

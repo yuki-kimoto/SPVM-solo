@@ -17,9 +17,6 @@ struct spvm_ {
   // Constant pool
   SPVM_CONSTANT_POOL* constant_pool;
   
-  // Constant pool subroutine symbol table
-  SPVM_HASH* constant_pool_sub_symtable;
-  
   // Bytecodes
   SPVM_BYTECODE_ARRAY* bytecode_array;
   
