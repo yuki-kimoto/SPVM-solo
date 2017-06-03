@@ -25,8 +25,6 @@
 #include "spvm_ref_string.h"
 #include "spvm_value.h"
 
-#include "spvm_parser.h"
-
 SPVM_RUNTIME* SPVM_RUNTIME_new(SPVM* spvm) {
   (void)spvm;
   
@@ -266,10 +264,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
   };
   
   // Constant pool
-  int32_t* constant_pool = spvm->parser->constant_pool->values;
+  int32_t* constant_pool = runtime->constant_pool;
   
   // Bytecode
-  uint8_t* bytecodes = spvm->parser->bytecode_array->values;
+  uint8_t* bytecodes = runtime->bytecodes;
   
   // Variables
   SPVM_VALUE* vars = &runtime->call_stack[runtime->call_stack_base];

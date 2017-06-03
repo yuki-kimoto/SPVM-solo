@@ -44,6 +44,7 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   runtime->constant_pool = constant_pool;
   runtime->bytecodes = bytecodes;
   
+  // Initialize runtime before push arguments and call subroutine
   SPVM_RUNTIME_init(spvm, runtime);
   
   // Push argument
