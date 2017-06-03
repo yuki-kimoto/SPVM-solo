@@ -19,22 +19,30 @@
 
 void SPVM_run(SPVM* spvm, const char* package_name) {
   
-  spvm->parser = SPVM_PARSER_new(spvm);
+  SPVM_PARSER* parser = spvm->parser;
   
-  SPVM_ARRAY_push(spvm, spvm->parser->include_pathes, ".");
-  SPVM_ARRAY_push(spvm, spvm->parser->include_pathes, "lib");
+  SPVM_ARRAY_push(spvm, parser->include_pathes, ".");
+  SPVM_ARRAY_push(spvm, parser->include_pathes, "lib");
   
   SPVM_PARSER_parse(spvm, package_name);
   
-  if (spvm->parser->error_count > 0) {
+  if (parser->error_count > 0) {
     return;
   }
   
   // Entry point
-  const char* entry_point_sub_name = spvm->parser->entry_point_sub_name;
+  const char* entry_point_sub_name = parser->entry_point_sub_name;
+  
+  // Constant pool
+  int32_t* constant_pool = parser->constant_pool->values;
+  
+  // Bytecodes
+  uint8_t* bytecodes = parser->bytecode_array->values;
   
   // Create subroutine runtimeironment
   SPVM_RUNTIME* runtime = spvm->runtime;
+  runtime->constant_pool = constant_pool;
+  runtime->bytecodes = bytecodes;
   
   SPVM_RUNTIME_init(spvm, runtime);
   
@@ -70,7 +78,7 @@ SPVM* SPVM_new() {
   SPVM* spvm = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(1, sizeof(SPVM));
   
   // Parser
-  spvm->parser = NULL;
+  spvm->parser = SPVM_PARSER_new(spvm);
   
   // Runtime
   spvm->runtime = SPVM_RUNTIME_new(spvm);
