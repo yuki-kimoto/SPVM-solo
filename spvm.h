@@ -11,9 +11,6 @@ struct spvm_ {
   // Parser
   SPVM_PARSER* parser;
   
-  // Entry point subroutine name
-  const char* entry_point_sub_name;
-  
   // Constant pool
   SPVM_CONSTANT_POOL* constant_pool;
   

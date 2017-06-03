@@ -7,6 +7,9 @@
 
 // Parser information
 struct SPVM_parser {
+  // Entry point subroutine name
+  const char* entry_point_sub_name;
+
   // Allocator
   SPVM_PARSER_ALLOCATOR* allocator;
   

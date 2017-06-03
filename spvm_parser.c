@@ -41,6 +41,9 @@ SPVM_PARSER* SPVM_PARSER_new(SPVM* spvm) {
   parser->cur_op_cases = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
   parser->cur_line = 0;
   
+  // Entry point sub name
+  parser->entry_point_sub_name = NULL;
+
   // Add core types
   for (int32_t i = 0; i < SPVM_RESOLVED_TYPE_C_CORE_LENGTH; i++) {
     // Resolved type
@@ -79,7 +82,7 @@ int32_t SPVM_PARSER_parse(SPVM* spvm, const char* package_name) {
   strncpy(entry_point_sub_name, package_name, package_name_length);
   strncpy(entry_point_sub_name + package_name_length, "::main", 6);
   entry_point_sub_name[entry_point_sub_name_length] = '\0';
-  spvm->entry_point_sub_name = entry_point_sub_name;
+  parser->entry_point_sub_name = entry_point_sub_name;
   
   // use standard module
   SPVM_OP* op_use_std = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_USE, "std", 0);

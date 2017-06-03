@@ -31,7 +31,7 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   }
   
   // Entry point
-  const char* entry_point_sub_name = spvm->entry_point_sub_name;
+  const char* entry_point_sub_name = spvm->parser->entry_point_sub_name;
   
   // Create subroutine runtimeironment
   SPVM_RUNTIME* runtime = spvm->runtime;
@@ -71,9 +71,6 @@ SPVM* SPVM_new() {
   
   // Parser
   spvm->parser = NULL;
-  
-  // Entry point sub name
-  spvm->entry_point_sub_name = NULL;
   
   // Constant pool
   spvm->constant_pool = SPVM_CONSTANT_POOL_new(spvm);
