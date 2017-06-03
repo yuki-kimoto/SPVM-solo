@@ -68,10 +68,6 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       // Add field to constant pool
       field->constant_pool_address = spvm->constant_pool->length;
       SPVM_CONSTANT_POOL_push_field(spvm, spvm->constant_pool, field);
-      
-      // Add constant pool field to symbol table
-      const char* constant_pool_field_name = (char*)&spvm->constant_pool->values[field->abs_name_constant_pool_address + 1];
-      SPVM_HASH_insert(spvm, spvm->constant_pool_field_symtable, constant_pool_field_name, strlen(constant_pool_field_name), (void*)(intptr_t)field->constant_pool_address);
     }
     
     for (int32_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
