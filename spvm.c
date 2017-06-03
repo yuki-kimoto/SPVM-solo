@@ -87,9 +87,6 @@ SPVM* SPVM_new() {
   // Runtime
   spvm->runtime = SPVM_RUNTIME_new(spvm);
   
-  // Runtime memory allocator
-  spvm->runtime_allocator = SPVM_RUNTIME_ALLOCATOR_new(spvm);
-  
   // use memory pool max reference byte size
   spvm->ref_max_byte_size_use_memory_pool = 0xFFFF;
   
@@ -105,9 +102,6 @@ void SPVM_free(SPVM* spvm) {
   
   // Free bytecode array
   SPVM_BYTECODE_ARRAY_free(spvm, spvm->bytecode_array);
-  
-  // Free runtime allocator
-  SPVM_RUNTIME_ALLOCATOR_free(spvm, spvm->runtime_allocator);
   
   free(spvm);
 }

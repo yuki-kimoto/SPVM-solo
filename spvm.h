@@ -32,9 +32,6 @@ struct spvm_ {
   // Runtime
   SPVM_RUNTIME* runtime;
   
-  // Runtime memory allocator
-  SPVM_RUNTIME_ALLOCATOR* runtime_allocator;
-  
   // use memory pool max reference byte size
   int64_t ref_max_byte_size_use_memory_pool;
 };

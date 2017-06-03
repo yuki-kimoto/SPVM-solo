@@ -2,6 +2,10 @@
 #define SPVM_RUNTIME_H
 
 struct SPVM_runtime {
+  
+  // Runtime memory allocator
+  SPVM_RUNTIME_ALLOCATOR* allocator;
+
   // Call stack
   SPVM_VALUE* call_stack;
   

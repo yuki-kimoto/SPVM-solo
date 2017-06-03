@@ -7,6 +7,7 @@
 #include "spvm.h"
 #include "spvm_runtime.h"
 #include "spvm_runtime_api.h"
+#include "spvm_runtime_allocator.h"
 #include "spvm_hash.h"
 #include "spvm_bytecode_array.h"
 #include "spvm_extention.h"
@@ -28,6 +29,9 @@ SPVM_RUNTIME* SPVM_RUNTIME_new(SPVM* spvm) {
   (void)spvm;
   
   SPVM_RUNTIME* runtime = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(1, sizeof(SPVM_RUNTIME));
+  
+  // Runtime memory allocator
+  runtime->allocator = SPVM_RUNTIME_ALLOCATOR_new(spvm);
   
   runtime->call_stack_capacity = 0xFF;
   runtime->call_stack = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(runtime->call_stack_capacity, sizeof(SPVM_VALUE));
@@ -289,7 +293,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, const char* sub_ab
   SPVM_REF_OBJECT* ref_object;
   int32_t index;
   
-  SPVM_RUNTIME_ALLOCATOR* allocator = spvm->runtime_allocator;
+  SPVM_RUNTIME_ALLOCATOR* allocator = runtime->allocator;
   
   SPVM_CONSTANT_POOL_SUB constant_pool_sub;
   SPVM_CONSTANT_POOL_FIELD constant_pool_field;
@@ -477,7 +481,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, const char* sub_ab
       int32_t ref_count = SPVM_RUNTIME_API_get_ref_count(spvm, runtime, return_value);
       if (ref_count == 0) {
         SPVM_SvREFCNT_dec(sv_message);
-        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, spvm->runtime_allocator, return_value);
+        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, runtime->allocator, return_value);
       }
     }
 
@@ -1117,7 +1121,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, const char* sub_ab
     if (data != NULL) {
       int32_t ref_count = data->ref_count;
       if (ref_count == 0) {
-        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, spvm->runtime_allocator, call_stack[operand_stack_top].address_value);
+        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, runtime->allocator, call_stack[operand_stack_top].address_value);
       }
     }
     
@@ -2257,5 +2261,8 @@ void SPVM_RUNTIME_free(SPVM* spvm, SPVM_RUNTIME* runtime) {
   // Free call stack
   free(runtime->call_stack);
   
+  // Free runtime allocator
+  SPVM_RUNTIME_ALLOCATOR_free(spvm, runtime->allocator);
+
   free(runtime);
 }

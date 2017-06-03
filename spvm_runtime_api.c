@@ -44,7 +44,7 @@ inline void SPVM_RUNTIME_API_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SP
         
         SPVM_SV* sv = ref_string->sv;
         SPVM_SvREFCNT_dec(sv);
-        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, spvm->runtime_allocator, (SPVM_REF*)ref_string);
+        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, runtime->allocator, (SPVM_REF*)ref_string);
       }
       // Reference is array
       else if (ref->type == SPVM_REF_C_TYPE_ARRAY) {
@@ -59,7 +59,7 @@ inline void SPVM_RUNTIME_API_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SP
             SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, ref_element);
           }
         }
-        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, spvm->runtime_allocator, ref);
+        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, runtime->allocator, ref);
       }
       // Reference is object
       else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
@@ -76,7 +76,7 @@ inline void SPVM_RUNTIME_API_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SP
           SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, ref_field);
         }
         
-        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, spvm->runtime_allocator, (SPVM_REF*)ref_object);
+        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, runtime->allocator, (SPVM_REF*)ref_object);
       }
     }
   }
@@ -395,7 +395,7 @@ inline void* SPVM_RUNTIME_API_create_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime
   (void)spvm;
   (void)runtime;
   
-  SPVM_RUNTIME_ALLOCATOR* allocator = spvm->runtime_allocator;
+  SPVM_RUNTIME_ALLOCATOR* allocator = runtime->allocator;
   
   // Allocate array
   int32_t ref_string_byte_size = sizeof(SPVM_REF_STRING);
@@ -422,7 +422,7 @@ inline SPVM_REF_STRING* SPVM_RUNTIME_API_create_ref_string_from_pv(SPVM* spvm, S
   // New sv
   SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, strlen(pv));
   
-  SPVM_RUNTIME_ALLOCATOR* allocator = spvm->runtime_allocator;
+  SPVM_RUNTIME_ALLOCATOR* allocator = runtime->allocator;
   
   // Allocate array
   int32_t ref_string_byte_size = sizeof(SPVM_REF_STRING);
