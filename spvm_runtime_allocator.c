@@ -31,6 +31,9 @@ SPVM_RUNTIME_ALLOCATOR* SPVM_RUNTIME_ALLOCATOR_new(SPVM* spvm) {
     allocator->freelists[i] = SPVM_ARRAY_new(spvm, 0);
   }
   
+  // use memory pool max reference byte size
+  allocator->ref_max_byte_size_use_memory_pool = 0xFFFF;
+  
   return allocator;
 }
 
@@ -75,7 +78,7 @@ inline void* SPVM_RUNTIME_ALLOCATOR_malloc(SPVM* spvm, SPVM_RUNTIME_ALLOCATOR* a
   assert(size > 0);
   
   void* block;
-  if (size > spvm->ref_max_byte_size_use_memory_pool) {
+  if (size > allocator->ref_max_byte_size_use_memory_pool) {
     block = SPVM_UTIL_ALLOCATOR_safe_malloc_i64(1, size);
   }
   else {
@@ -103,7 +106,7 @@ inline void SPVM_RUNTIME_ALLOCATOR_free_ref(SPVM* spvm, SPVM_RUNTIME_ALLOCATOR* 
     
     assert(byte_size > 0);
     
-    if (byte_size > spvm->ref_max_byte_size_use_memory_pool) {
+    if (byte_size > allocator->ref_max_byte_size_use_memory_pool) {
       free(ref);
     }
     else {

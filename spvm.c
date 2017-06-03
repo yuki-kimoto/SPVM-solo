@@ -81,9 +81,6 @@ SPVM* SPVM_new() {
   // Runtime
   spvm->runtime = SPVM_RUNTIME_new(spvm);
   
-  // use memory pool max reference byte size
-  spvm->ref_max_byte_size_use_memory_pool = 0xFFFF;
-  
   return spvm;
 }
 
