@@ -11,12 +11,6 @@ struct spvm_ {
   // Parser
   SPVM_PARSER* parser;
   
-  // Constant pool
-  SPVM_CONSTANT_POOL* constant_pool;
-  
-  // Bytecodes
-  SPVM_BYTECODE_ARRAY* bytecode_array;
-  
   // Runtime
   SPVM_RUNTIME* runtime;
 };

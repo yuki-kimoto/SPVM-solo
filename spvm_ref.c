@@ -8,6 +8,8 @@
 #include "spvm_constant_pool.h"
 #include "spvm_constant_pool_package.h"
 
+#include "spvm_parser.h"
+
 int64_t SPVM_REF_calcurate_byte_size(SPVM* spvm, SPVM_REF* ref) {
   
   int64_t byte_size;
@@ -25,7 +27,7 @@ int64_t SPVM_REF_calcurate_byte_size(SPVM* spvm, SPVM_REF* ref) {
   else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
     SPVM_REF_OBJECT* ref_object = (SPVM_REF_OBJECT*)ref;
     SPVM_CONSTANT_POOL_PACKAGE constant_pool_package;
-    memcpy(&constant_pool_package, &spvm->constant_pool->values[ref_object->package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
+    memcpy(&constant_pool_package, &spvm->parser->constant_pool->values[ref_object->package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
     byte_size = sizeof(SPVM_REF_OBJECT) + constant_pool_package.byte_size;
   }
   else {

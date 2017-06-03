@@ -40,7 +40,13 @@ SPVM_PARSER* SPVM_PARSER_new(SPVM* spvm) {
   parser->resolved_type_symtable = SPVM_PARSER_ALLOCATOR_alloc_hash(spvm, parser->allocator, 0);
   parser->cur_op_cases = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
   parser->cur_line = 0;
+
+  // Constant pool
+  parser->constant_pool = SPVM_CONSTANT_POOL_new(spvm);
   
+  // Bytecodes
+  parser->bytecode_array = SPVM_BYTECODE_ARRAY_new(spvm);
+
   // Entry point sub name
   parser->entry_point_sub_name = NULL;
 
@@ -83,7 +89,7 @@ int32_t SPVM_PARSER_parse(SPVM* spvm, const char* package_name) {
   strncpy(entry_point_sub_name + package_name_length, "::main", 6);
   entry_point_sub_name[entry_point_sub_name_length] = '\0';
   parser->entry_point_sub_name = entry_point_sub_name;
-  
+
   // use standard module
   SPVM_OP* op_use_std = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_USE, "std", 0);
   SPVM_OP* op_std_package_name = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NAME, "std", 0);
@@ -103,6 +109,12 @@ void SPVM_PARSER_free(SPVM* spvm, SPVM_PARSER* parser) {
   
   // Free allocator
   SPVM_PARSER_ALLOCATOR_free(spvm, parser->allocator);
+
+  // Free constant pool
+  SPVM_CONSTANT_POOL_free(spvm, parser->constant_pool);
+  
+  // Free bytecode array
+  SPVM_BYTECODE_ARRAY_free(spvm, parser->bytecode_array);
   
   free(parser);
 }

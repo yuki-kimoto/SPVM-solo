@@ -45,7 +45,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
     }
     
     // Constant pool
-    SPVM_CONSTANT_POOL* constant_pool = spvm->constant_pool;
+    SPVM_CONSTANT_POOL* constant_pool = parser->constant_pool;
     
     // Push package name to constant pool
     const char* package_name = package->op_name->uv.name;
@@ -62,12 +62,12 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       SPVM_FIELD* field = op_field->uv.field;
       
       // Add field name to constant pool
-      field->abs_name_constant_pool_address = spvm->constant_pool->length;
-      SPVM_CONSTANT_POOL_push_string(spvm, spvm->constant_pool, field->abs_name);
+      field->abs_name_constant_pool_address = parser->constant_pool->length;
+      SPVM_CONSTANT_POOL_push_string(spvm, parser->constant_pool, field->abs_name);
       
       // Add field to constant pool
-      field->constant_pool_address = spvm->constant_pool->length;
-      SPVM_CONSTANT_POOL_push_field(spvm, spvm->constant_pool, field);
+      field->constant_pool_address = parser->constant_pool->length;
+      SPVM_CONSTANT_POOL_push_field(spvm, parser->constant_pool, field);
     }
     
     for (int32_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
@@ -232,7 +232,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                 case SPVM_OP_C_CODE_CONSTANT: {
                   SPVM_CONSTANT* constant = op_cur->uv.constant;
                   
-                  SPVM_CONSTANT_POOL* constant_pool = spvm->constant_pool;
+                  SPVM_CONSTANT_POOL* constant_pool = parser->constant_pool;
                   
                   constant->constant_pool_address = constant_pool->length;
                   
@@ -1435,17 +1435,17 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       }
       
       // Push sub name to constant pool
-      sub->abs_name_constant_pool_address = spvm->constant_pool->length;
-      SPVM_CONSTANT_POOL_push_string(spvm, spvm->constant_pool, sub->abs_name);
+      sub->abs_name_constant_pool_address = parser->constant_pool->length;
+      SPVM_CONSTANT_POOL_push_string(spvm, parser->constant_pool, sub->abs_name);
       
       // Push file name to constant pool
-      sub->file_name_constant_pool_address = spvm->constant_pool->length;
+      sub->file_name_constant_pool_address = parser->constant_pool->length;
       assert(sub->file_name);
-      SPVM_CONSTANT_POOL_push_string(spvm, spvm->constant_pool, sub->file_name);
+      SPVM_CONSTANT_POOL_push_string(spvm, parser->constant_pool, sub->file_name);
       
       // Push sub information to constant pool
-      sub->constant_pool_address = spvm->constant_pool->length;
-      SPVM_CONSTANT_POOL_push_sub(spvm, spvm->constant_pool, sub);
+      sub->constant_pool_address = parser->constant_pool->length;
+      SPVM_CONSTANT_POOL_push_sub(spvm, parser->constant_pool, sub);
     }
   }
 }

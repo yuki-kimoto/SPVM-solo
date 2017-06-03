@@ -7,6 +7,12 @@
 
 // Parser information
 struct SPVM_parser {
+  // Constant pool
+  SPVM_CONSTANT_POOL* constant_pool;
+  
+  // Bytecodes
+  SPVM_BYTECODE_ARRAY* bytecode_array;
+  
   // Entry point subroutine name
   const char* entry_point_sub_name;
 

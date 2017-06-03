@@ -145,7 +145,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
   SPVM_PARSER* parser = spvm->parser;
   
   // Bytecode
-  SPVM_BYTECODE_ARRAY* bytecode_array = spvm->bytecode_array;
+  SPVM_BYTECODE_ARRAY* bytecode_array = parser->bytecode_array;
   
   for (int32_t package_pos = 0; package_pos < parser->op_packages->length; package_pos++) {
     SPVM_OP* op_package = SPVM_ARRAY_fetch(spvm, parser->op_packages, package_pos);
@@ -1921,9 +1921,9 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
       
       // Set bytecode base to sub
       SPVM_CONSTANT_POOL_SUB constant_pool_sub;
-      memcpy(&constant_pool_sub, &spvm->constant_pool->values[sub->constant_pool_address], sizeof(SPVM_CONSTANT_POOL_SUB));
+      memcpy(&constant_pool_sub, &parser->constant_pool->values[sub->constant_pool_address], sizeof(SPVM_CONSTANT_POOL_SUB));
       constant_pool_sub.bytecode_base = sub->bytecode_base;
-      memcpy(&spvm->constant_pool->values[sub->constant_pool_address], &constant_pool_sub, sizeof(SPVM_CONSTANT_POOL_SUB));
+      memcpy(&parser->constant_pool->values[sub->constant_pool_address], &constant_pool_sub, sizeof(SPVM_CONSTANT_POOL_SUB));
       
     }
   }

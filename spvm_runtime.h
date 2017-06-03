@@ -17,6 +17,12 @@ struct SPVM_runtime {
   
   // Operand stack top
   int32_t operand_stack_top;
+
+  // Constant pool
+  int32_t* constant_pool;
+  
+  // Bytecodes
+  uint8_t* bytecodes;
   
   // Exception
   _Bool abort;

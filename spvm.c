@@ -72,12 +72,6 @@ SPVM* SPVM_new() {
   // Parser
   spvm->parser = NULL;
   
-  // Constant pool
-  spvm->constant_pool = SPVM_CONSTANT_POOL_new(spvm);
-  
-  // Bytecodes
-  spvm->bytecode_array = SPVM_BYTECODE_ARRAY_new(spvm);
-
   // Runtime
   spvm->runtime = SPVM_RUNTIME_new(spvm);
   
@@ -87,12 +81,6 @@ SPVM* SPVM_new() {
 void SPVM_free(SPVM* spvm) {
   
   SPVM_PARSER_free(spvm, spvm->parser);
-  
-  // Free constant pool
-  SPVM_CONSTANT_POOL_free(spvm, spvm->constant_pool);
-  
-  // Free bytecode array
-  SPVM_BYTECODE_ARRAY_free(spvm, spvm->bytecode_array);
   
   free(spvm);
 }
