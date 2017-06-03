@@ -29,6 +29,9 @@ struct spvm_ {
   // Bytecodes
   SPVM_BYTECODE_ARRAY* bytecode_array;
   
+  // Runtime
+  SPVM_RUNTIME* runtime;
+  
   // Runtime memory allocator
   SPVM_RUNTIME_ALLOCATOR* runtime_allocator;
   

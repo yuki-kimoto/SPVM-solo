@@ -15,6 +15,4 @@ package std {
   sub print_double ($value : double) : native void;
 
   sub sum_int($values : int[]) : native int;
-  sub test_call1 ($value : int) : native int;
-  sub test_call2 ($value : int) : native int;
 }

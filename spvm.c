@@ -7,13 +7,12 @@
 #include "spvm_parser.h"
 #include "spvm_hash.h"
 #include "spvm_array.h"
-#include "spvm_runtime.h"
 #include "spvm_util_allocator.h"
 #include "spvm_constant_pool.h"
 #include "spvm_bytecode_array.h"
-#include "spvm_parser.h"
 #include "spvm_runtime.h"
 #include "spvm_sv.h"
+#include "spvm_runtime.h"
 #include "spvm_runtime_allocator.h"
 
 void SPVM_run(SPVM* spvm, const char* package_name) {
@@ -84,6 +83,9 @@ SPVM* SPVM_new() {
   
   // Constant poll subroutine symbol table
   spvm->constant_pool_sub_symtable = SPVM_HASH_new(spvm, 0);
+  
+  // Runtime
+  spvm->runtime = SPVM_RUNTIME_new(spvm);
   
   // Runtime memory allocator
   spvm->runtime_allocator = SPVM_RUNTIME_ALLOCATOR_new(spvm);

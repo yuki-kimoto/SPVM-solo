@@ -8,35 +8,6 @@
 #include "spvm_runtime.h"
 #include "spvm_sv.h"
 
-void SPVM_EXTENTION_std__test_call1(SPVM* spvm, SPVM_RUNTIME* runtime) {
-  (void)spvm;
-  (void)runtime;
-  
-  int32_t value =  SPVM_RUNTIME_get_var_int(spvm, runtime, 0);
-  
-  int32_t value2 = value * 2;
-  
-  // Call subroutine
-  SPVM_RUNTIME* new_runtime = SPVM_RUNTIME_new(spvm);
-  SPVM_RUNTIME_push_var_int(spvm, new_runtime, value2);
-  SPVM_RUNTIME_call_sub(spvm, new_runtime, "std::test_call2");
-  int32_t value3 = SPVM_RUNTIME_pop_return_value_int(spvm, new_runtime);
-  SPVM_RUNTIME_free(spvm, new_runtime);
-  
-  SPVM_RUNTIME_push_return_value_int(spvm, runtime, value3);
-}
-
-void SPVM_EXTENTION_std__test_call2(SPVM* spvm, SPVM_RUNTIME* runtime) {
-  (void)spvm;
-  (void)runtime;
-  
-  int32_t value =  SPVM_RUNTIME_get_var_int(spvm, runtime, 0);
-  
-  int32_t value2 = value * 3;
-  
-  SPVM_RUNTIME_push_return_value_int(spvm, runtime, value2);
-}
-
 void SPVM_EXTENTION_std__sum_int(SPVM* spvm, SPVM_RUNTIME* runtime) {
   (void)spvm;
   (void)runtime;

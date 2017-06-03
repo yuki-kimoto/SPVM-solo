@@ -10,8 +10,6 @@ package Test {
     std::println_int(Test::EnumD->THREE);
     std::println_int(Test::EnumD->FORE);
     
-    std::println_int(std::test_call1(4));
-    
     # Core functions
     {
       std::print_byte((byte)1);
