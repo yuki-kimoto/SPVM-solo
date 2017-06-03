@@ -37,23 +37,23 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   SPVM_RUNTIME_init(spvm, runtime);
   
   // Push argument
-  SPVM_RUNTIME_push_var_long(spvm, runtime, 2);
+  SPVM_RUNTIME_API_push_var_long(spvm, runtime, 2);
   
   // Run
   SPVM_RUNTIME_call_sub(spvm, runtime, entry_point_sub_name);
   
 #ifdef DEBUG
   if (runtime->abort) {
-    void* message = SPVM_RUNTIME_pop_return_value_address(spvm, runtime);
+    void* message = SPVM_RUNTIME_API_pop_return_value_address(spvm, runtime);
     
-    SPVM_SV* sv_message = SPVM_RUNTIME_get_string_sv(spvm, runtime, message);
+    SPVM_SV* sv_message = SPVM_RUNTIME_API_get_string_sv(spvm, runtime, message);
     
     printf("%s", sv_message->buffer);
     printf("\n");
   }
   else {
     // Get return value
-    int64_t return_value = SPVM_RUNTIME_pop_return_value_long(spvm, runtime);
+    int64_t return_value = SPVM_RUNTIME_API_pop_return_value_long(spvm, runtime);
     
     printf("TEST return_value: %ld\n", return_value);
   }
