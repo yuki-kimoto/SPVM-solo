@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "spvm.h"
-#include "spvm_api.h"
+#include "spvm_runtime.h"
 #include "spvm_hash.h"
 #include "spvm_bytecode_array.h"
 #include "spvm_extention.h"

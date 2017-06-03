@@ -9,7 +9,7 @@
 #include "spvm_util_allocator.h"
 #include "spvm_memory_pool.h"
 #include "spvm_array.h"
-#include "spvm_api.h"
+#include "spvm_runtime.h"
 #include "spvm_ref.h"
 #include "spvm_ref_string.h"
 #include "spvm_ref_array.h"

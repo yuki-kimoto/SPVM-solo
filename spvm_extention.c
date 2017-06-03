@@ -5,7 +5,7 @@
 
 #include "spvm.h"
 #include "spvm_extention.h"
-#include "spvm_api.h"
+#include "spvm_runtime.h"
 #include "spvm_env.h"
 #include "spvm_sv.h"
 

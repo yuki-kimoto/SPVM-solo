@@ -7,7 +7,7 @@
 #include "spvm_parser.h"
 #include "spvm_hash.h"
 #include "spvm_array.h"
-#include "spvm_api.h"
+#include "spvm_runtime.h"
 #include "spvm_util_allocator.h"
 #include "spvm_constant_pool.h"
 #include "spvm_bytecode_array.h"
