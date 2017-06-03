@@ -7,12 +7,7 @@
 #include "spvm.h"
 #include "spvm_runtime.h"
 #include "spvm_runtime_api.h"
-#include "spvm_hash.h"
-#include "spvm_bytecode_array.h"
-#include "spvm_extention.h"
-#include "spvm_bytecode.h"
 #include "spvm_runtime_allocator.h"
-#include "spvm_constant_pool.h"
 #include "spvm_constant_pool_sub.h"
 #include "spvm_constant_pool_package.h"
 #include "spvm_constant_pool_field.h"
@@ -23,8 +18,6 @@
 #include "spvm_ref_object.h"
 #include "spvm_ref_string.h"
 #include "spvm_value.h"
-
-#include "spvm_parser.h"
 
 inline void SPVM_RUNTIME_API_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_REF* ref) {
   (void)spvm;
@@ -69,7 +62,7 @@ inline void SPVM_RUNTIME_API_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SP
         
         int32_t package_constant_pool_address = ref_object->package_constant_pool_address;
         SPVM_CONSTANT_POOL_PACKAGE constant_pool_package;
-        memcpy(&constant_pool_package, &spvm->parser->constant_pool->values[package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
+        memcpy(&constant_pool_package, &runtime->constant_pool[package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
         
         int32_t ref_fields_count = constant_pool_package.ref_fields_count;
         
