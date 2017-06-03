@@ -26,6 +26,6 @@ SPVM_RUNTIME* SPVM_RUNTIME_init(SPVM* spvm, SPVM_RUNTIME* runtime);
 SPVM_RUNTIME* SPVM_RUNTIME_new(SPVM* spvm);
 void SPVM_RUNTIME_free(SPVM* spvm, SPVM_RUNTIME* runtime);
 
-void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, const char* sub_base_name);
+void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_constant_pool_address);
 
 #endif

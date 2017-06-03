@@ -14,6 +14,8 @@
 #include "spvm_sv.h"
 #include "spvm_runtime.h"
 #include "spvm_runtime_allocator.h"
+#include "spvm_op.h"
+#include "spvm_sub.h"
 
 void SPVM_run(SPVM* spvm, const char* package_name) {
   
@@ -39,8 +41,12 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   // Push argument
   SPVM_RUNTIME_API_push_var_long(spvm, runtime, 2);
   
+  // Start address
+  SPVM_OP* op_sub_start = SPVM_HASH_search(spvm, spvm->parser->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
+  int32_t sub_constant_pool_address = op_sub_start->uv.sub->constant_pool_address;
+  
   // Run
-  SPVM_RUNTIME_call_sub(spvm, runtime, entry_point_sub_name);
+  SPVM_RUNTIME_call_sub(spvm, runtime, sub_constant_pool_address);
   
 #ifdef DEBUG
   if (runtime->abort) {

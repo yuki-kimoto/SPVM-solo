@@ -49,7 +49,7 @@ SPVM_RUNTIME* SPVM_RUNTIME_init(SPVM* spvm, SPVM_RUNTIME* runtime) {
   runtime->abort = 0;
 }
 
-void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, const char* sub_abs_name) {
+void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_constant_pool_address) {
   (void)spvm;
   (void)runtime;
   
@@ -271,10 +271,6 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, const char* sub_ab
   
   // Variables
   SPVM_VALUE* vars = &runtime->call_stack[runtime->call_stack_base];
-  
-  // Constant pool sub
-  int32_t sub_constant_pool_address
-    = (int32_t)(intptr_t)SPVM_HASH_search(spvm, spvm->constant_pool_sub_symtable, sub_abs_name, strlen(sub_abs_name));
   
   SPVM_VALUE* call_stack = runtime->call_stack;
   
