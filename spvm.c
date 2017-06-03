@@ -76,9 +76,6 @@ SPVM* SPVM_new() {
   spvm->bytecode_array = SPVM_BYTECODE_ARRAY_new(spvm);
 
   // Constant poll subroutine symbol table
-  spvm->constant_pool_package_symtable = SPVM_HASH_new(spvm, 0);
-  
-  // Constant poll subroutine symbol table
   spvm->constant_pool_field_symtable = SPVM_HASH_new(spvm, 0);
   
   // Constant poll subroutine symbol table

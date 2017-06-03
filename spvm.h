@@ -17,9 +17,6 @@ struct spvm_ {
   // Constant pool
   SPVM_CONSTANT_POOL* constant_pool;
   
-  // Constant pool package symbol table
-  SPVM_HASH* constant_pool_package_symtable;
-
   // Constant pool field symbol table
   SPVM_HASH* constant_pool_field_symtable;
 
