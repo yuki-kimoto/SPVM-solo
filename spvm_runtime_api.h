@@ -1,6 +1,8 @@
 #ifndef SPVM_RUNTIME_API_API_H
 #define SPVM_RUNTIME_API_API_H
 
+int64_t SPVM_RUNTIME_API_calcurate_ref_byte_size(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_REF* ref);
+
 void SPVM_RUNTIME_API_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_REF* ref);
 void SPVM_RUNTIME_API_inc_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_REF* ref);
 

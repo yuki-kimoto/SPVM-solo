@@ -1825,7 +1825,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     // Package constant pool address
     ref_object->package_constant_pool_address = package_constant_pool_address;
     
-    assert(ref_object_byte_size == SPVM_REF_calcurate_byte_size(spvm, (SPVM_REF*)ref_object));
+    assert(ref_object_byte_size == SPVM_RUNTIME_API_calcurate_ref_byte_size(spvm, spvm->runtime, (SPVM_REF*)ref_object));
     
     // Push object
     operand_stack_top++;
@@ -1908,7 +1908,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     // Set array length
     ref_array->length = length;
 
-    assert(ref_array_byte_size == SPVM_REF_calcurate_byte_size(spvm, (SPVM_REF*)ref_array));
+    assert(ref_array_byte_size == SPVM_RUNTIME_API_calcurate_ref_byte_size(spvm, spvm->runtime, (SPVM_REF*)ref_array));
     
     // Set array
     call_stack[operand_stack_top].address_value = ref_array;

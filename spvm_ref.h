@@ -12,6 +12,4 @@ enum {
   SPVM_REF_C_TYPE_ARRAY,
 };
 
-int64_t SPVM_REF_calcurate_byte_size(SPVM* spvm, SPVM_REF* ref);
-
 #endif

@@ -6,6 +6,7 @@
 
 #include "spvm.h"
 #include "spvm_runtime_allocator.h"
+#include "spvm_runtime_api.h"
 #include "spvm_util_allocator.h"
 #include "spvm_memory_pool.h"
 #include "spvm_array.h"
@@ -102,7 +103,7 @@ inline void SPVM_RUNTIME_ALLOCATOR_free_ref(SPVM* spvm, SPVM_RUNTIME_ALLOCATOR* 
   }
   else {
     // Byte size
-    int64_t byte_size = SPVM_REF_calcurate_byte_size(spvm, ref);
+    int64_t byte_size = SPVM_RUNTIME_API_calcurate_ref_byte_size(spvm, spvm->runtime, ref);
     
     assert(byte_size > 0);
     
