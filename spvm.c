@@ -12,7 +12,7 @@
 #include "spvm_constant_pool.h"
 #include "spvm_bytecode_array.h"
 #include "spvm_parser.h"
-#include "spvm_env.h"
+#include "spvm_runtime.h"
 #include "spvm_sv.h"
 #include "spvm_runtime_allocator.h"
 
@@ -32,33 +32,33 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   // Entry point
   const char* entry_point_sub_name = spvm->entry_point_sub_name;
   
-  // Create subroutine environment
-  SPVM_ENV* env = SPVM_ENV_new(spvm);
+  // Create subroutine runtimeironment
+  SPVM_RUNTIME* runtime = SPVM_RUNTIME_new(spvm);
   
   // Push argument
-  SPVM_RUNTIME_push_var_long(spvm, env, 2);
+  SPVM_RUNTIME_push_var_long(spvm, runtime, 2);
   
   // Run
-  SPVM_RUNTIME_call_sub(spvm, env, entry_point_sub_name);
+  SPVM_RUNTIME_call_sub(spvm, runtime, entry_point_sub_name);
   
 #ifdef DEBUG
-  if (env->abort) {
-    void* message = SPVM_RUNTIME_pop_return_value_address(spvm, env);
+  if (runtime->abort) {
+    void* message = SPVM_RUNTIME_pop_return_value_address(spvm, runtime);
     
-    SPVM_SV* sv_message = SPVM_RUNTIME_get_string_sv(spvm, env, message);
+    SPVM_SV* sv_message = SPVM_RUNTIME_get_string_sv(spvm, runtime, message);
     
     printf("%s", sv_message->buffer);
     printf("\n");
   }
   else {
     // Get return value
-    int64_t return_value = SPVM_RUNTIME_pop_return_value_long(spvm, env);
+    int64_t return_value = SPVM_RUNTIME_pop_return_value_long(spvm, runtime);
     
     printf("TEST return_value: %ld\n", return_value);
   }
 #endif
 
-  SPVM_ENV_free(spvm, env);
+  SPVM_RUNTIME_free(spvm, runtime);
 }
 
 SPVM* SPVM_new() {
