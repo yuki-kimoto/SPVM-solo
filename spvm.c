@@ -8,13 +8,13 @@
 #include "spvm_hash.h"
 #include "spvm_array.h"
 #include "spvm_api.h"
-#include "spvm_allocator_util.h"
+#include "spvm_util_allocator.h"
 #include "spvm_constant_pool.h"
 #include "spvm_bytecode_array.h"
 #include "spvm_parser.h"
 #include "spvm_env.h"
 #include "spvm_sv.h"
-#include "spvm_allocator_runtime.h"
+#include "spvm_runtime_allocator.h"
 
 void SPVM_run(SPVM* spvm, const char* package_name) {
   
@@ -62,7 +62,7 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
 }
 
 SPVM* SPVM_new() {
-  SPVM* spvm = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPVM));
+  SPVM* spvm = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(1, sizeof(SPVM));
   
   // Parser
   spvm->parser = NULL;
@@ -86,7 +86,7 @@ SPVM* SPVM_new() {
   spvm->constant_pool_sub_symtable = SPVM_HASH_new(spvm, 0);
   
   // Runtime memory allocator
-  spvm->allocator_runtime = SPVM_ALLOCATOR_RUNTIME_new(spvm);
+  spvm->runtime_allocator = SPVM_RUNTIME_ALLOCATOR_new(spvm);
   
   // use memory pool max reference byte size
   spvm->ref_max_byte_size_use_memory_pool = 0xFFFF;
@@ -105,7 +105,7 @@ void SPVM_free(SPVM* spvm) {
   SPVM_BYTECODE_ARRAY_free(spvm, spvm->bytecode_array);
   
   // Free runtime allocator
-  SPVM_ALLOCATOR_RUNTIME_free(spvm, spvm->allocator_runtime);
+  SPVM_RUNTIME_ALLOCATOR_free(spvm, spvm->runtime_allocator);
   
   free(spvm);
 }

@@ -11,7 +11,7 @@
 #include "spvm_constant_pool_package.h"
 #include "spvm_constant_pool_field.h"
 #include "spvm_constant_pool_sub.h"
-#include "spvm_allocator_util.h"
+#include "spvm_util_allocator.h"
 #include "spvm_array.h"
 #include "spvm_op.h"
 #include "spvm_value.h"
@@ -19,14 +19,14 @@
 SPVM_CONSTANT_POOL* SPVM_CONSTANT_POOL_new(SPVM* spvm) {
   (void)spvm;
   
-  SPVM_CONSTANT_POOL* constant_pool = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(1, sizeof(SPVM_CONSTANT_POOL));
+  SPVM_CONSTANT_POOL* constant_pool = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(1, sizeof(SPVM_CONSTANT_POOL));
   
   constant_pool->capacity = 64;
   
   // index 0 is not used.
   constant_pool->length = 1;
   
-  int32_t* values = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(constant_pool->capacity, sizeof(int32_t));
+  int32_t* values = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(constant_pool->capacity, sizeof(int32_t));
   constant_pool->values = values;
   
   return constant_pool;
@@ -48,7 +48,7 @@ void SPVM_CONSTANT_POOL_extend(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool, in
   
   if (constant_pool->length + extend >= capacity) {
     int32_t new_capacity = capacity * 2;
-    constant_pool->values = SPVM_ALLOCATOR_UTIL_safe_realloc_i32(constant_pool->values, new_capacity, sizeof(int32_t));
+    constant_pool->values = SPVM_UTIL_ALLOCATOR_safe_realloc_i32(constant_pool->values, new_capacity, sizeof(int32_t));
     constant_pool->capacity = new_capacity;
   }
 }

@@ -30,7 +30,7 @@ struct spvm_ {
   SPVM_BYTECODE_ARRAY* bytecode_array;
   
   // Runtime memory allocator
-  SPVM_ALLOCATOR_RUNTIME* allocator_runtime;
+  SPVM_RUNTIME_ALLOCATOR* runtime_allocator;
   
   // use memory pool max reference byte size
   int64_t ref_max_byte_size_use_memory_pool;

@@ -8,7 +8,7 @@
 // Parser information
 struct SPVM_parser {
   // Allocator
-  SPVM_ALLOCATOR_PARSER* allocator;
+  SPVM_PARSER_ALLOCATOR* allocator;
   
   // Before buffer position
   const char* befbufptr;

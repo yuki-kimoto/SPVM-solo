@@ -10,7 +10,7 @@
 #include "spvm_bytecode_array.h"
 #include "spvm_extention.h"
 #include "spvm_bytecode.h"
-#include "spvm_allocator_runtime.h"
+#include "spvm_runtime_allocator.h"
 #include "spvm_constant_pool.h"
 #include "spvm_constant_pool_sub.h"
 #include "spvm_constant_pool_package.h"
@@ -268,7 +268,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
   SPVM_REF_OBJECT* ref_object;
   int32_t index;
   
-  SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
+  SPVM_RUNTIME_ALLOCATOR* allocator = spvm->runtime_allocator;
   
   SPVM_CONSTANT_POOL_SUB constant_pool_sub;
   SPVM_CONSTANT_POOL_FIELD constant_pool_field;
@@ -458,7 +458,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
           int32_t ref_count = SPVM_API_get_ref_count(spvm, env, return_value);
           if (ref_count == 0) {
             SPVM_SvREFCNT_dec(sv_message);
-            SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, return_value);
+            SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, spvm->runtime_allocator, return_value);
           }
         }
 
@@ -1098,7 +1098,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         if (data != NULL) {
           int32_t ref_count = data->ref_count;
           if (ref_count == 0) {
-            SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, call_stack[operand_stack_top].address_value);
+            SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, spvm->runtime_allocator, call_stack[operand_stack_top].address_value);
           }
         }
         
@@ -1783,7 +1783,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         // Allocate memory
         int32_t fields_byte_size = constant_pool_package.byte_size;
         int32_t ref_object_byte_size = sizeof(SPVM_REF_OBJECT) + fields_byte_size;
-        SPVM_REF_OBJECT* ref_object = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_object_byte_size);
+        SPVM_REF_OBJECT* ref_object = SPVM_RUNTIME_ALLOCATOR_malloc(spvm, allocator, ref_object_byte_size);
 
         // Memory allocation error
         if (!ref_object) {
@@ -1864,7 +1864,7 @@ void SPVM_API_call_sub(SPVM* spvm, SPVM_ENV* env, const char* sub_abs_name) {
         
         // Allocate array
         int32_t ref_array_byte_size = sizeof(SPVM_REF_ARRAY) + size * length;
-        SPVM_REF_ARRAY* ref_array = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_array_byte_size);
+        SPVM_REF_ARRAY* ref_array = SPVM_RUNTIME_ALLOCATOR_malloc(spvm, allocator, ref_array_byte_size);
         
         // Memory allocation error
         if (!ref_array) {
@@ -2254,7 +2254,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
         
         SPVM_SV* sv = ref_string->sv;
         SPVM_SvREFCNT_dec(sv);
-        SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, (SPVM_REF*)ref_string);
+        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, spvm->runtime_allocator, (SPVM_REF*)ref_string);
       }
       // Reference is array
       else if (ref->type == SPVM_REF_C_TYPE_ARRAY) {
@@ -2269,7 +2269,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
             SPVM_API_dec_ref_count(spvm, env, ref_element);
           }
         }
-        SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, ref);
+        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, spvm->runtime_allocator, ref);
       }
       // Reference is object
       else if (ref->type == SPVM_REF_C_TYPE_OBJECT) {
@@ -2286,7 +2286,7 @@ void SPVM_API_dec_ref_count(SPVM* spvm, SPVM_ENV* env, SPVM_REF* ref) {
           SPVM_API_dec_ref_count(spvm, env, ref_field);
         }
         
-        SPVM_ALLOCATOR_RUNTIME_free_ref(spvm, spvm->allocator_runtime, (SPVM_REF*)ref_object);
+        SPVM_RUNTIME_ALLOCATOR_free_ref(spvm, spvm->runtime_allocator, (SPVM_REF*)ref_object);
       }
     }
   }
@@ -2605,11 +2605,11 @@ void* SPVM_API_create_string_sv(SPVM* spvm, SPVM_ENV* env, SPVM_SV* sv) {
   (void)spvm;
   (void)env;
   
-  SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
+  SPVM_RUNTIME_ALLOCATOR* allocator = spvm->runtime_allocator;
   
   // Allocate array
   int32_t ref_string_byte_size = sizeof(SPVM_REF_STRING);
-  SPVM_REF_STRING* ref_string = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_string_byte_size);
+  SPVM_REF_STRING* ref_string = SPVM_RUNTIME_ALLOCATOR_malloc(spvm, allocator, ref_string_byte_size);
   
   // Set type
   ref_string->type = SPVM_REF_C_TYPE_STRING;
@@ -2632,11 +2632,11 @@ SPVM_REF_STRING* SPVM_API_create_ref_string_from_pv(SPVM* spvm, SPVM_ENV* env, c
   // New sv
   SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, strlen(pv));
   
-  SPVM_ALLOCATOR_RUNTIME* allocator = spvm->allocator_runtime;
+  SPVM_RUNTIME_ALLOCATOR* allocator = spvm->runtime_allocator;
   
   // Allocate array
   int32_t ref_string_byte_size = sizeof(SPVM_REF_STRING);
-  SPVM_REF_STRING* ref_string = SPVM_ALLOCATOR_RUNTIME_malloc(spvm, allocator, ref_string_byte_size);
+  SPVM_REF_STRING* ref_string = SPVM_RUNTIME_ALLOCATOR_malloc(spvm, allocator, ref_string_byte_size);
   
   // Fatal memory allocation error
   if (!ref_string) {

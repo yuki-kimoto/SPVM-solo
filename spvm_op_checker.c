@@ -8,7 +8,7 @@
 #include "spvm_parser.h"
 #include "spvm_array.h"
 #include "spvm_hash.h"
-#include "spvm_allocator_parser.h"
+#include "spvm_parser_allocator.h"
 #include "spvm_yacc_util.h"
 #include "spvm_op.h"
 #include "spvm_sub.h"
@@ -87,13 +87,13 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       if (!sub->is_constant && !sub->is_native) {
         
         // my var informations
-        SPVM_ARRAY* op_my_vars = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+        SPVM_ARRAY* op_my_vars = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
         
         // my variable stack
-        SPVM_ARRAY* op_my_var_stack = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+        SPVM_ARRAY* op_my_var_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
         
         // block base position stack
-        SPVM_ARRAY* block_base_stack = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+        SPVM_ARRAY* block_base_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
         int32_t block_base = 0;
         
         // In switch statement
@@ -217,7 +217,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
               }
               
               block_base = op_my_var_stack->length;
-              int32_t* block_base_ptr = SPVM_ALLOCATOR_PARSER_alloc_int(spvm, parser->allocator);
+              int32_t* block_base_ptr = SPVM_PARSER_ALLOCATOR_alloc_int(spvm, parser->allocator);
               *block_base_ptr = block_base;
               SPVM_ARRAY_push(spvm, block_base_stack, block_base_ptr);
               
@@ -331,7 +331,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                 case SPVM_OP_C_CODE_CASE: {
 
                   if (!cur_case_ops) {
-                    cur_case_ops = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+                    cur_case_ops = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
                   }
                   SPVM_ARRAY_push(spvm, cur_case_ops, op_cur);
                   

@@ -11,8 +11,8 @@
 #include "spvm_memory_pool.h"
 #include "spvm_hash.h"
 #include "spvm_array.h"
-#include "spvm_allocator_util.h"
-#include "spvm_allocator_parser.h"
+#include "spvm_util_allocator.h"
+#include "spvm_parser_allocator.h"
 #include "spvm_yacc_util.h"
 #include "spvm_array.h"
 #include "spvm_bytecode_array.h"
@@ -22,23 +22,23 @@ SPVM_PARSER* SPVM_PARSER_new(SPVM* spvm) {
   SPVM_PARSER* parser = malloc(sizeof(SPVM_PARSER));
 
   // Allocator
-  parser->allocator = SPVM_ALLOCATOR_PARSER_new(spvm);
+  parser->allocator = SPVM_PARSER_ALLOCATOR_new(spvm);
   
   spvm->parser = parser;
   
   // Parser information
-  parser->op_sub_symtable = SPVM_ALLOCATOR_PARSER_alloc_hash(spvm, parser->allocator, 0);
-  parser->op_packages = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
-  parser->op_package_symtable = SPVM_ALLOCATOR_PARSER_alloc_hash(spvm, parser->allocator, 0);
-  parser->op_types = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
-  parser->op_use_symtable = SPVM_ALLOCATOR_PARSER_alloc_hash(spvm, parser->allocator, 0);
-  parser->op_use_stack = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
-  parser->op_field_symtable = SPVM_ALLOCATOR_PARSER_alloc_hash(spvm, parser->allocator, 0);
-  parser->include_pathes = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+  parser->op_sub_symtable = SPVM_PARSER_ALLOCATOR_alloc_hash(spvm, parser->allocator, 0);
+  parser->op_packages = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
+  parser->op_package_symtable = SPVM_PARSER_ALLOCATOR_alloc_hash(spvm, parser->allocator, 0);
+  parser->op_types = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
+  parser->op_use_symtable = SPVM_PARSER_ALLOCATOR_alloc_hash(spvm, parser->allocator, 0);
+  parser->op_use_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
+  parser->op_field_symtable = SPVM_PARSER_ALLOCATOR_alloc_hash(spvm, parser->allocator, 0);
+  parser->include_pathes = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
   parser->bufptr = "";
-  parser->resolved_types = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
-  parser->resolved_type_symtable = SPVM_ALLOCATOR_PARSER_alloc_hash(spvm, parser->allocator, 0);
-  parser->cur_op_cases = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+  parser->resolved_types = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
+  parser->resolved_type_symtable = SPVM_PARSER_ALLOCATOR_alloc_hash(spvm, parser->allocator, 0);
+  parser->cur_op_cases = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
   parser->cur_line = 0;
   
   // Add core types
@@ -75,7 +75,7 @@ int32_t SPVM_PARSER_parse(SPVM* spvm, const char* package_name) {
   // Entry point
   int32_t package_name_length = (int32_t)strlen(package_name);
   int32_t entry_point_sub_name_length =  (int32_t)(package_name_length + 6);
-  char* entry_point_sub_name = SPVM_ALLOCATOR_UTIL_safe_malloc_i32(entry_point_sub_name_length + 1, sizeof(char));
+  char* entry_point_sub_name = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(entry_point_sub_name_length + 1, sizeof(char));
   strncpy(entry_point_sub_name, package_name, package_name_length);
   strncpy(entry_point_sub_name + package_name_length, "::main", 6);
   entry_point_sub_name[entry_point_sub_name_length] = '\0';
@@ -99,7 +99,7 @@ int32_t SPVM_PARSER_parse(SPVM* spvm, const char* package_name) {
 void SPVM_PARSER_free(SPVM* spvm, SPVM_PARSER* parser) {
   
   // Free allocator
-  SPVM_ALLOCATOR_PARSER_free(spvm, parser->allocator);
+  SPVM_PARSER_ALLOCATOR_free(spvm, parser->allocator);
   
   free(parser);
 }

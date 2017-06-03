@@ -16,7 +16,7 @@
 #include "spvm_sub.h"
 #include "spvm_var.h"
 #include "spvm_my_var.h"
-#include "spvm_allocator_parser.h"
+#include "spvm_parser_allocator.h"
 #include "spvm_package.h"
 #include "spvm_name_info.h"
 #include "spvm_hash.h"
@@ -167,22 +167,22 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
       _Bool finish = 0;
       
       // IFXXX Bytecode address(except loop)
-      SPVM_ARRAY* if_address_stack = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+      SPVM_ARRAY* if_address_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
 
       // GOTO Bytecode address for last
-      SPVM_ARRAY* goto_last_address_stack = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+      SPVM_ARRAY* goto_last_address_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
 
       // GOTO Bytecode address for end of if block
-      SPVM_ARRAY* goto_if_block_end_address_stack = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+      SPVM_ARRAY* goto_if_block_end_address_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
       
       // GOTO bytecode address for loop start
-      SPVM_ARRAY* goto_loop_start_address_stack = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+      SPVM_ARRAY* goto_loop_start_address_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
       
       // GOTO exception handler address
-      SPVM_ARRAY* goto_exception_handler_stack = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+      SPVM_ARRAY* goto_exception_handler_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
 
       // try stack
-      SPVM_ARRAY* try_stack = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+      SPVM_ARRAY* try_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
       
       // Current case addresses
       int32_t cur_switch_address = -1;
@@ -201,7 +201,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
             break;
           }
           case SPVM_OP_C_CODE_SWITCH: {
-            cur_case_addresses = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+            cur_case_addresses = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
             break;
           }
           case SPVM_OP_C_CODE_BLOCK: {
@@ -209,7 +209,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
               // Add goto
               SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_GOTO);
               
-              int32_t* address_ptr = SPVM_ALLOCATOR_PARSER_alloc_int(spvm, parser->allocator);
+              int32_t* address_ptr = SPVM_PARSER_ALLOCATOR_alloc_int(spvm, parser->allocator);
               *address_ptr = bytecode_array->length - 1;
               
               SPVM_ARRAY_push(spvm, goto_loop_start_address_stack, address_ptr);
@@ -442,12 +442,12 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                     
                     int32_t const length = (int32_t) switch_info->op_cases->length;
                     
-                    SPVM_ARRAY* ordered_op_cases = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+                    SPVM_ARRAY* ordered_op_cases = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
                     for (int32_t i = 0; i < length; i++) {
                       SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, switch_info->op_cases, i);
                       SPVM_ARRAY_push(spvm, ordered_op_cases, op_case);
                     }
-                    SPVM_ARRAY* ordered_case_addresses = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+                    SPVM_ARRAY* ordered_case_addresses = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
                     for (int32_t i = 0; i < length; i++) {
                       int32_t* case_address_ptr = SPVM_ARRAY_fetch(spvm, cur_case_addresses, i);
                       SPVM_ARRAY_push(spvm, ordered_case_addresses, case_address_ptr);
@@ -505,12 +505,12 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                     
                     int64_t const length = (int64_t) switch_info->op_cases->length;
                     
-                    SPVM_ARRAY* ordered_op_cases = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+                    SPVM_ARRAY* ordered_op_cases = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
                     for (int64_t i = 0; i < length; i++) {
                       SPVM_OP* op_case = SPVM_ARRAY_fetch(spvm, switch_info->op_cases, i);
                       SPVM_ARRAY_push(spvm, ordered_op_cases, op_case);
                     }
-                    SPVM_ARRAY* ordered_case_addresses = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, parser->allocator, 0);
+                    SPVM_ARRAY* ordered_case_addresses = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
                     for (int64_t i = 0; i < length; i++) {
                       int64_t* case_address_ptr = SPVM_ARRAY_fetch(spvm, cur_case_addresses, i);
                       SPVM_ARRAY_push(spvm, ordered_case_addresses, case_address_ptr);
@@ -562,7 +562,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
               }
               case SPVM_OP_C_CODE_CASE: {
                 
-                int32_t* address_ptr = SPVM_ALLOCATOR_PARSER_alloc_int(spvm, parser->allocator);
+                int32_t* address_ptr = SPVM_PARSER_ALLOCATOR_alloc_int(spvm, parser->allocator);
                 *address_ptr = bytecode_array->length;
                 
                 SPVM_ARRAY_push(spvm, cur_case_addresses, address_ptr);
@@ -637,7 +637,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 if (try_stack->length > 0) {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_GOTO);
                   
-                  int32_t* address_ptr = SPVM_ALLOCATOR_PARSER_alloc_int(spvm, parser->allocator);
+                  int32_t* address_ptr = SPVM_PARSER_ALLOCATOR_alloc_int(spvm, parser->allocator);
                   *address_ptr = bytecode_array->length - 1;
                   SPVM_ARRAY_push(spvm, goto_exception_handler_stack, address_ptr);
                   
@@ -661,7 +661,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 // Add goto
                 SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_GOTO);
                 
-                int32_t* address_ptr = SPVM_ALLOCATOR_PARSER_alloc_int(spvm, parser->allocator);
+                int32_t* address_ptr = SPVM_PARSER_ALLOCATOR_alloc_int(spvm, parser->allocator);
                 *address_ptr = bytecode_array->length - 1;
                 
                 SPVM_ARRAY_push(spvm, goto_last_address_stack, address_ptr);
@@ -693,7 +693,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                     // Prepare to jump to end of else block
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_GOTO);
                     
-                    int32_t* address_ptr = SPVM_ALLOCATOR_PARSER_alloc_int(spvm, parser->allocator);
+                    int32_t* address_ptr = SPVM_PARSER_ALLOCATOR_alloc_int(spvm, parser->allocator);
                     *address_ptr = bytecode_array->length - 1;
                     SPVM_ARRAY_push(spvm, goto_if_block_end_address_stack, address_ptr);
                     
@@ -996,7 +996,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 int32_t address = bytecode_array->length - 1;
                 
                 if (op_cur->flag & SPVM_OP_C_FLAG_CONDITION_IF) {
-                  int32_t* address_ptr = SPVM_ALLOCATOR_PARSER_alloc_int(spvm, parser->allocator);
+                  int32_t* address_ptr = SPVM_PARSER_ALLOCATOR_alloc_int(spvm, parser->allocator);
                   *address_ptr = address;
                   
                   SPVM_ARRAY_push(spvm, if_address_stack, address_ptr);

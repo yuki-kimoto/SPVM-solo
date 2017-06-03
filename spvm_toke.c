@@ -12,8 +12,8 @@
 #include "spvm_yacc_util.h"
 #include "spvm_yacc.h"
 #include "spvm_op.h"
-#include "spvm_allocator_parser.h"
-#include "spvm_allocator_util.h"
+#include "spvm_parser_allocator.h"
+#include "spvm_util_allocator.h"
 #include "spvm_constant.h"
 #include "spvm_var.h"
 #include "spvm_array.h"
@@ -71,7 +71,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
               
               // Change :: to / and add ".spvm"
               int32_t module_path_base_length = (int32_t)(strlen(package_name) + 6);
-              char* module_path_base = SPVM_ALLOCATOR_PARSER_alloc_string(spvm, parser->allocator, module_path_base_length);
+              char* module_path_base = SPVM_PARSER_ALLOCATOR_alloc_string(spvm, parser->allocator, module_path_base_length);
               const char* bufptr_orig = package_name;
               char* bufptr_to = module_path_base;
               while (*bufptr_orig) {
@@ -99,7 +99,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
                 
                 // File name
                 int32_t file_name_length = (int32_t)(strlen(include_path) + 1 + strlen(module_path_base));
-                cur_module_path = SPVM_ALLOCATOR_PARSER_alloc_string(spvm, parser->allocator, file_name_length);
+                cur_module_path = SPVM_PARSER_ALLOCATOR_alloc_string(spvm, parser->allocator, file_name_length);
                 sprintf(cur_module_path, "%s/%s", include_path, module_path_base);
                 cur_module_path[file_name_length] = '\0';
                 
@@ -132,7 +132,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
                 exit(EXIT_FAILURE);
               }
               fseek(fh, 0, SEEK_SET);
-              char* src = SPVM_ALLOCATOR_PARSER_alloc_string(spvm, parser->allocator, file_size);
+              char* src = SPVM_PARSER_ALLOCATOR_alloc_string(spvm, parser->allocator, file_size);
               if ((int32_t)fread(src, 1, file_size, fh) < file_size) {
                 if (op_use) {
                   fprintf(stderr, "Can't read file %s at %s line %" PRId32 "\n", cur_module_path, op_use->file, op_use->line);
@@ -404,7 +404,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
         
         char* str;
         if (*(parser->bufptr + 1) == '"') {
-          str = SPVM_ALLOCATOR_PARSER_alloc_string(spvm, parser->allocator, 0);
+          str = SPVM_PARSER_ALLOCATOR_alloc_string(spvm, parser->allocator, 0);
           str[0] = '\0';
           parser->bufptr++;
           parser->bufptr++;
@@ -419,7 +419,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           }
           
           int32_t str_len = (parser->bufptr - cur_token_ptr);
-          str = SPVM_ALLOCATOR_PARSER_alloc_string(spvm, parser->allocator, str_len);
+          str = SPVM_PARSER_ALLOCATOR_alloc_string(spvm, parser->allocator, str_len);
           memcpy(str, cur_token_ptr, str_len);
           str[str_len] = '\0';
           
@@ -450,7 +450,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           }
           
           int32_t str_len = (parser->bufptr - cur_token_ptr);
-          char* var_name = SPVM_ALLOCATOR_PARSER_alloc_string(spvm, parser->allocator, str_len);
+          char* var_name = SPVM_PARSER_ALLOCATOR_alloc_string(spvm, parser->allocator, str_len);
           memcpy(var_name, cur_token_ptr, str_len);
           var_name[str_len] = '\0';
 
@@ -487,7 +487,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           
           // Number literal(first is space for sign)
           int32_t str_len = (parser->bufptr - cur_token_ptr);
-          char* num_str = (char*) SPVM_ALLOCATOR_UTIL_safe_malloc_i32(str_len + 2, sizeof(char));
+          char* num_str = (char*) SPVM_UTIL_ALLOCATOR_safe_malloc_i32(str_len + 2, sizeof(char));
           memcpy(num_str, cur_token_ptr, str_len);
           num_str[str_len] = '\0';
           
@@ -609,7 +609,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           
           
           int32_t str_len = (parser->bufptr - cur_token_ptr);
-          char* keyword = SPVM_ALLOCATOR_PARSER_alloc_string(spvm, parser->allocator, str_len);
+          char* keyword = SPVM_PARSER_ALLOCATOR_alloc_string(spvm, parser->allocator, str_len);
           
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';

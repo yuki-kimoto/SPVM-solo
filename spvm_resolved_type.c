@@ -1,7 +1,7 @@
 #include <string.h>
 #include "spvm_resolved_type.h"
 #include "spvm.h"
-#include "spvm_allocator_parser.h"
+#include "spvm_parser_allocator.h"
 #include "spvm_package.h"
 #include "spvm_parser.h"
 
@@ -23,9 +23,9 @@ const char* const SPVM_RESOLVED_TYPE_C_CORE_NAMES[] = {
 };
 
 SPVM_RESOLVED_TYPE* SPVM_RESOLVED_TYPE_new(SPVM* spvm) {
-  SPVM_RESOLVED_TYPE* resolved_type = SPVM_ALLOCATOR_PARSER_alloc_memory_pool(spvm, spvm->parser->allocator, sizeof(SPVM_RESOLVED_TYPE));
+  SPVM_RESOLVED_TYPE* resolved_type = SPVM_PARSER_ALLOCATOR_alloc_memory_pool(spvm, spvm->parser->allocator, sizeof(SPVM_RESOLVED_TYPE));
   
-  resolved_type->part_names = SPVM_ALLOCATOR_PARSER_alloc_array(spvm, spvm->parser->allocator, 0);
+  resolved_type->part_names = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, spvm->parser->allocator, 0);
   
   return resolved_type;
 }
