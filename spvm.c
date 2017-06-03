@@ -32,7 +32,9 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   const char* entry_point_sub_name = spvm->entry_point_sub_name;
   
   // Create subroutine runtimeironment
-  SPVM_RUNTIME* runtime = SPVM_RUNTIME_new(spvm);
+  SPVM_RUNTIME* runtime = spvm->runtime;
+  
+  SPVM_RUNTIME_init(spvm, runtime);
   
   // Push argument
   SPVM_RUNTIME_push_var_long(spvm, runtime, 2);
@@ -56,8 +58,6 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
     printf("TEST return_value: %ld\n", return_value);
   }
 #endif
-
-  SPVM_RUNTIME_free(spvm, runtime);
 }
 
 SPVM* SPVM_new() {

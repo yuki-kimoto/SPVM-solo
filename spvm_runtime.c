@@ -23,14 +23,6 @@
 #include "spvm_ref_string.h"
 #include "spvm_value.h"
 
-SPVM_RUNTIME* SPVM_RUNTIME_init(SPVM* spvm, SPVM_RUNTIME* runtime) {
-  (void)spvm;
-  
-  runtime->call_stack_base = -1;
-  runtime->operand_stack_top = -1;
-  runtime->abort = 0;
-}
-
 SPVM_RUNTIME* SPVM_RUNTIME_new(SPVM* spvm) {
   (void)spvm;
   
@@ -44,13 +36,12 @@ SPVM_RUNTIME* SPVM_RUNTIME_new(SPVM* spvm) {
   return runtime;
 }
 
-void SPVM_RUNTIME_free(SPVM* spvm, SPVM_RUNTIME* runtime) {
+SPVM_RUNTIME* SPVM_RUNTIME_init(SPVM* spvm, SPVM_RUNTIME* runtime) {
   (void)spvm;
   
-  // Free call stack
-  free(runtime->call_stack);
-  
-  free(runtime);
+  runtime->call_stack_base = -1;
+  runtime->operand_stack_top = -1;
+  runtime->abort = 0;
 }
 
 void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, const char* sub_abs_name) {
@@ -2261,6 +2252,15 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, const char* sub_ab
       }
     // }
   // }
+}
+
+void SPVM_RUNTIME_free(SPVM* spvm, SPVM_RUNTIME* runtime) {
+  (void)spvm;
+  
+  // Free call stack
+  free(runtime->call_stack);
+  
+  free(runtime);
 }
 
 inline void SPVM_RUNTIME_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_REF* ref) {
