@@ -160,7 +160,7 @@ void SPVM_DUMPER_dump_packages(SPVM* spvm, SPVM_ARRAY* op_packages) {
       SPVM_DUMPER_dump_field(spvm, field);
     }
     
-    printf("  ref_fields_count => \"%" PRId32 "\"\n", package->ref_fields_count);
+    printf("  ref_fields_count => \"%" PRId32 "\"\n", package->data_fields_count);
     
     // Sub information
     printf("  subs\n");

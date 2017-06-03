@@ -12,21 +12,21 @@ typedef struct SPVM_runtime SPVM_RUNTIME;
 union SPVM_value;
 typedef union SPVM_value SPVM_VALUE;
 
-/* spvm_ref_array.h */
-struct SPVM_ref_array;
-typedef struct SPVM_ref_array SPVM_REF_ARRAY;
+/* spvm_data_array.h */
+struct SPVM_data_array;
+typedef struct SPVM_data_array SPVM_DATA_ARRAY;
 
-/* spvm_ref.h */
-struct SPVM_ref;
-typedef struct SPVM_ref SPVM_REF;
+/* spvm_data.h */
+struct SPVM_data;
+typedef struct SPVM_data SPVM_DATA;
 
-/* spvm_ref_string.h */
-struct SPVM_ref_string;
-typedef struct SPVM_ref_string SPVM_REF_STRING;
+/* spvm_data_string.h */
+struct SPVM_data_string;
+typedef struct SPVM_data_string SPVM_DATA_STRING;
 
-/* spvm_ref_object.h */
-struct SPVM_ref_object;
-typedef struct SPVM_ref_object SPVM_REF_OBJECT;
+/* spvm_data_object.h */
+struct SPVM_data_object;
+typedef struct SPVM_data_object SPVM_DATA_OBJECT;
 
 /* spvm_env.h */
 struct SPVM_sv;

@@ -1,7 +1,7 @@
 #include "spvm.h"
-#include "spvm_ref_array.h"
+#include "spvm_data_array.h"
 
-const int32_t SPVM_REF_ARRAY_C_VALUE_SIZES[] = {
+const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {
   sizeof(int8_t),
   sizeof(int16_t),
   sizeof(int32_t),

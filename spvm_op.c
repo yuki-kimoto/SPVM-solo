@@ -642,7 +642,7 @@ void SPVM_OP_check(SPVM* spvm) {
     SPVM_ARRAY* op_fields_value = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, spvm->parser->allocator, 0);
     
     // Separate reference type and value type
-    int32_t ref_fields_count = 0;
+    int32_t data_fields_count = 0;
     for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields, field_pos);
       SPVM_FIELD* field = op_field->uv.field;
@@ -653,10 +653,10 @@ void SPVM_OP_check(SPVM* spvm) {
       }
       else {
         SPVM_ARRAY_push(spvm, op_fields_ref, op_field);
-        ref_fields_count++;
+        data_fields_count++;
       }
     }
-    package->ref_fields_count = ref_fields_count;
+    package->data_fields_count = data_fields_count;
     
     // Create ordered op fields
     SPVM_ARRAY* ordered_op_fields = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, spvm->parser->allocator, 0);

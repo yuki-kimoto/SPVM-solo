@@ -11,10 +11,10 @@
 #include "spvm_memory_pool.h"
 #include "spvm_array.h"
 #include "spvm_runtime.h"
-#include "spvm_ref.h"
-#include "spvm_ref_string.h"
-#include "spvm_ref_array.h"
-#include "spvm_ref_object.h"
+#include "spvm_data.h"
+#include "spvm_data_string.h"
+#include "spvm_data_array.h"
+#include "spvm_data_object.h"
 #include "spvm_constant_pool.h"
 #include "spvm_constant_pool_package.h"
 
@@ -33,7 +33,7 @@ SPVM_RUNTIME_ALLOCATOR* SPVM_RUNTIME_ALLOCATOR_new(SPVM* spvm) {
   }
   
   // use memory pool max reference byte size
-  allocator->ref_max_byte_size_use_memory_pool = 0xFFFF;
+  allocator->data_max_byte_size_use_memory_pool = 0xFFFF;
   
   return allocator;
 }
@@ -79,7 +79,7 @@ inline void* SPVM_RUNTIME_ALLOCATOR_malloc(SPVM* spvm, SPVM_RUNTIME_ALLOCATOR* a
   assert(size > 0);
   
   void* block;
-  if (size > allocator->ref_max_byte_size_use_memory_pool) {
+  if (size > allocator->data_max_byte_size_use_memory_pool) {
     block = SPVM_UTIL_ALLOCATOR_safe_malloc_i64(1, size);
   }
   else {
@@ -97,25 +97,25 @@ inline void* SPVM_RUNTIME_ALLOCATOR_malloc(SPVM* spvm, SPVM_RUNTIME_ALLOCATOR* a
   return block;
 }
 
-inline void SPVM_RUNTIME_ALLOCATOR_free_ref(SPVM* spvm, SPVM_RUNTIME_ALLOCATOR* allocator, SPVM_REF* ref) {
-  if (ref == NULL) {
+inline void SPVM_RUNTIME_ALLOCATOR_free_data(SPVM* spvm, SPVM_RUNTIME_ALLOCATOR* allocator, SPVM_DATA* data) {
+  if (data == NULL) {
     return;
   }
   else {
     // Byte size
-    int64_t byte_size = SPVM_RUNTIME_API_calcurate_ref_byte_size(spvm, spvm->runtime, ref);
+    int64_t byte_size = SPVM_RUNTIME_API_calcurate_data_byte_size(spvm, spvm->runtime, data);
     
     assert(byte_size > 0);
     
-    if (byte_size > allocator->ref_max_byte_size_use_memory_pool) {
-      free(ref);
+    if (byte_size > allocator->data_max_byte_size_use_memory_pool) {
+      free(data);
     }
     else {
       // Freelist index
       int32_t freelist_index = SPVM_RUNTIME_ALLOCATOR_get_freelist_index(spvm, allocator, byte_size);
       
       // Push free address
-      SPVM_ARRAY_push(spvm, allocator->freelists[freelist_index], ref);
+      SPVM_ARRAY_push(spvm, allocator->freelists[freelist_index], data);
     }
   }
 }
