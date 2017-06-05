@@ -772,7 +772,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
         goto *jump[*pc];
       }
     }
-  case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_LONG: {
+  case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_LONG:
     data_array = (SPVM_DATA_ARRAY*)call_stack[operand_stack_top - 1].address_value;
     index = call_stack[operand_stack_top].int_value;
     if (__builtin_expect(!data_array, 0)) {
@@ -795,7 +795,6 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
         goto *jump[*pc];
       }
     }
-  }
   case_SPVM_BYTECODE_C_CODE_ARRAY_LOAD_FLOAT:
     data_array = (SPVM_DATA_ARRAY*)call_stack[operand_stack_top - 1].address_value;
     index = call_stack[operand_stack_top].int_value;
@@ -1023,16 +1022,16 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
         goto case_SPVM_BYTECODE_C_CODE_DIE;
       }
       else {
-        void** array_index = (void**)((intptr_t)data_array + sizeof(SPVM_DATA_ARRAY) + sizeof(void*) * index);
+        SPVM_DATA** data_address = (SPVM_DATA**)((intptr_t)data_array + sizeof(SPVM_DATA_ARRAY) + sizeof(void*) * index);
         
         // Increment reference count
         SPVM_RUNTIME_API_inc_ref_count(spvm, runtime, call_stack[operand_stack_top].address_value);
         
         // Decrement reference count
-        SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, *array_index);
+        SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, *data_address);
         
         // Store address
-        *array_index = call_stack[operand_stack_top].address_value;
+        *data_address = call_stack[operand_stack_top].address_value;
         
         operand_stack_top -= 3;
         pc++;
@@ -2186,16 +2185,16 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     }
     else {
       index = (*(pc + 1) << 8) + *(pc + 2);
-      void** field_index = (void**)((intptr_t)data_object + sizeof(SPVM_VALUE) * index);
+      SPVM_DATA** data_address = (SPVM_DATA**)((intptr_t)data_object + sizeof(SPVM_VALUE) * index);
 
       // Increment reference count
       SPVM_RUNTIME_API_inc_ref_count(spvm, runtime, call_stack[operand_stack_top].address_value);
       
       // Decrement reference count
-      SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, *field_index);
+      SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, *data_address);
       
       // Store object
-      *field_index = call_stack[operand_stack_top].address_value;
+      *data_address = call_stack[operand_stack_top].address_value;
       
       operand_stack_top -= 2;
       pc += 3;
