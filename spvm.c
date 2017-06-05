@@ -32,27 +32,31 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   
   // Entry point
   const char* entry_point_sub_name = parser->entry_point_sub_name;
-  
-  // Constant pool
-  int32_t* constant_pool = parser->constant_pool->values;
-  
-  // Bytecodes
-  uint8_t* bytecodes = parser->bytecode_array->values;
-  
+
   // Create subroutine runtimeironment
   SPVM_RUNTIME* runtime = spvm->runtime;
-  runtime->constant_pool = constant_pool;
-  runtime->bytecodes = bytecodes;
+
+  // Start address
+  SPVM_OP* op_sub_start = SPVM_HASH_search(spvm, spvm->parser->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
+  int32_t sub_constant_pool_address = op_sub_start->uv.sub->constant_pool_address;
+  
+  // Copy constant pool to runtime
+  runtime->constant_pool = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(parser->constant_pool->length, sizeof(int32_t));
+  memcpy(runtime->constant_pool, parser->constant_pool->values, parser->constant_pool->length * sizeof(int32_t));
+
+  // Copy bytecodes to runtime
+  runtime->bytecodes = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(parser->bytecode_array->length, sizeof(uint8_t));
+  memcpy(runtime->bytecodes, parser->bytecode_array->values, parser->bytecode_array->length * sizeof(uint8_t));
+  
+  // Free parser
+  SPVM_PARSER_free(spvm, spvm->parser);
+  spvm->parser = NULL;
   
   // Initialize runtime before push arguments and call subroutine
   SPVM_RUNTIME_init(spvm, runtime);
   
   // Push argument
   SPVM_RUNTIME_API_push_var_long(spvm, runtime, 2);
-  
-  // Start address
-  SPVM_OP* op_sub_start = SPVM_HASH_search(spvm, spvm->parser->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
-  int32_t sub_constant_pool_address = op_sub_start->uv.sub->constant_pool_address;
   
   // Run
   SPVM_RUNTIME_call_sub(spvm, runtime, sub_constant_pool_address);
@@ -89,7 +93,9 @@ SPVM* SPVM_new() {
 
 void SPVM_free(SPVM* spvm) {
   
-  SPVM_PARSER_free(spvm, spvm->parser);
+  if (spvm->parser) {
+    SPVM_PARSER_free(spvm, spvm->parser);
+  }
   
   free(spvm);
 }
