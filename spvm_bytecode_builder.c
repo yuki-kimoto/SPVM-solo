@@ -1373,11 +1373,13 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   const char* field_name = name_info->resolved_name;
                   SPVM_OP* op_field = SPVM_HASH_search(spvm, parser->op_field_symtable, field_name, strlen(field_name));
                   SPVM_FIELD* field = op_field->uv.field;
+
+                  SPVM_CONSTANT_POOL_FIELD constant_pool_field;
+                  memcpy(&constant_pool_field, &spvm->parser->constant_pool->values[field->constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+                  constant_pool_field.package_byte_offset;
                   
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (field->constant_pool_address >> 24) & 0xFF);
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (field->constant_pool_address >> 16) & 0xFF);
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (field->constant_pool_address >> 8) & 0xFF);
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, field->constant_pool_address & 0xFF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant_pool_field.package_byte_offset >> 8) & 0xFF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant_pool_field.package_byte_offset & 0xFF);
                 }
                 
                 break;
