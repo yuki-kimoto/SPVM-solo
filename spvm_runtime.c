@@ -1793,8 +1793,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     memcpy(&constant_pool_package, &constant_pool[package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
     
     // Allocate memory
-    int32_t fields_count = constant_pool_package.fields_count;
-    int32_t data_object_byte_size = sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * fields_count;
+    int32_t fields_length = constant_pool_package.fields_length;
+    int32_t data_object_byte_size = sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * fields_length;
     SPVM_DATA_OBJECT* data_object = SPVM_RUNTIME_ALLOCATOR_malloc(spvm, allocator, data_object_byte_size);
     
     // Memory allocation error
@@ -1818,7 +1818,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     data_object->ref_count = 0;
     
     // Initialize reference fields by 0
-    memset((void*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT)), 0, sizeof(void*) * constant_pool_package.ref_fields_count);
+    memset((void*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT)), 0, sizeof(void*) * constant_pool_package.ref_fields_length);
     
     // Package constant pool address
     data_object->package_constant_pool_address = package_constant_pool_address;

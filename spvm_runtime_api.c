@@ -37,7 +37,7 @@ inline int64_t SPVM_RUNTIME_API_calcurate_data_byte_size(SPVM* spvm, SPVM_RUNTIM
     SPVM_DATA_OBJECT* data_object = (SPVM_DATA_OBJECT*)data;
     SPVM_CONSTANT_POOL_PACKAGE constant_pool_package;
     memcpy(&constant_pool_package, &runtime->constant_pool[data_object->package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
-    byte_size = sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * constant_pool_package.fields_count;
+    byte_size = sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * constant_pool_package.fields_length;
   }
   else {
     assert(0);
@@ -91,9 +91,9 @@ inline void SPVM_RUNTIME_API_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SP
         SPVM_CONSTANT_POOL_PACKAGE constant_pool_package;
         memcpy(&constant_pool_package, &runtime->constant_pool[package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
         
-        int32_t ref_fields_count = constant_pool_package.ref_fields_count;
+        int32_t ref_fields_length = constant_pool_package.ref_fields_length;
         
-        for (int i = 0; i < ref_fields_count; i++) {
+        for (int i = 0; i < ref_fields_length; i++) {
           SPVM_DATA* data_field = *(SPVM_DATA**)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(void*) * i);
           SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, data_field);
         }
