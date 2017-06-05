@@ -684,7 +684,7 @@ void SPVM_OP_check(SPVM* spvm) {
       SPVM_FIELD* field = op_field->uv.field;
       field->index = field_pos;
     }
-    package->byte_size = sizeof(SPVM_VALUE) * op_fields->length;
+    package->fields_count = op_fields->length;
   }
   
   // Check types

@@ -8,9 +8,9 @@ struct SPVM_package {
   SPVM_OP* op_type;
   SPVM_ARRAY* op_fields;
   SPVM_ARRAY* op_subs;
-  int32_t byte_size;
   int32_t constant_pool_address;
   int32_t name_constant_pool_address;
+  int32_t fields_count;
   int32_t ref_fields_count;
 };
 

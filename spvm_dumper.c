@@ -148,7 +148,7 @@ void SPVM_DUMPER_dump_packages(SPVM* spvm, SPVM_ARRAY* op_packages) {
       printf("  resolved_type => \"%s\"\n", type->resolved_type->name);
     }
     
-    printf("  byte_size => %" PRId32 "\n", package->byte_size);
+    printf("  byte_size => %" PRId32 "\n", package->fields_count);
     
     // Field information
     printf("  fields\n");

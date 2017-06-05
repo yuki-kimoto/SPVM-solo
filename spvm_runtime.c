@@ -1793,10 +1793,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     memcpy(&constant_pool_package, &constant_pool[package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
     
     // Allocate memory
-    int32_t fields_byte_size = constant_pool_package.byte_size;
-    int32_t data_object_byte_size = sizeof(SPVM_DATA_OBJECT) + fields_byte_size;
+    int32_t fields_count = constant_pool_package.fields_count;
+    int32_t data_object_byte_size = sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * fields_count;
     SPVM_DATA_OBJECT* data_object = SPVM_RUNTIME_ALLOCATOR_malloc(spvm, allocator, data_object_byte_size);
-
+    
     // Memory allocation error
     if (!data_object) {
       // Sub name

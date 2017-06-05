@@ -37,7 +37,7 @@ inline int64_t SPVM_RUNTIME_API_calcurate_data_byte_size(SPVM* spvm, SPVM_RUNTIM
     SPVM_DATA_OBJECT* data_object = (SPVM_DATA_OBJECT*)data;
     SPVM_CONSTANT_POOL_PACKAGE constant_pool_package;
     memcpy(&constant_pool_package, &runtime->constant_pool[data_object->package_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_PACKAGE));
-    byte_size = sizeof(SPVM_DATA_OBJECT) + constant_pool_package.byte_size;
+    byte_size = sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * constant_pool_package.fields_count;
   }
   else {
     assert(0);
