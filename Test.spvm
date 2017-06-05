@@ -7,6 +7,11 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : int) : int {
+
+    # Malloc mutil array
+    {
+      # my $nums : int[][] = malloc int[][3];
+    }
     
     # Declare mutil array
     {

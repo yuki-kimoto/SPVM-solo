@@ -687,30 +687,11 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                       break;
                     }
                   }
-                  else if (SPVM_RESOLVED_TYPE_is_array(spvm, resolved_type)) {
-                    SPVM_yyerror_format(spvm,
-                      "new operator can't receive object array at %s line %d\n", op_cur->file, op_cur->line);
-                    break;
-                  }
                   else {
                     if (SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type)) {
                       SPVM_yyerror_format(spvm,
                         "new operator can't receive core type at %s line %d\n", op_cur->file, op_cur->line);
                       break;
-                    }
-                    
-                    SPVM_OP* op_package = SPVM_HASH_search(spvm, parser->op_package_symtable, resolved_type->name, strlen(resolved_type->name));
-                    
-                    if (!op_package) {
-                      SPVM_yyerror_format(spvm, "new operator can't receive non package name \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
-                      break;
-                    }
-                    else {
-                      SPVM_PACKAGE* package = op_package->uv.package;
-                      if (!package->op_fields->length) {
-                        SPVM_yyerror_format(spvm, "new operator can't receive package which don't have fields \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
-                        break;
-                      }
                     }
                   }
                   
