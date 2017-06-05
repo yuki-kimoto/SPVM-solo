@@ -676,7 +676,7 @@ void SPVM_OP_check(SPVM* spvm) {
     SPVM_OP* op_package = SPVM_ARRAY_fetch(spvm, op_packages, package_pos);
     SPVM_PACKAGE* package = op_package->uv.package;
     SPVM_ARRAY* op_fields = package->op_fields;
-
+    
     // Calculate package byte size
     int32_t package_byte_size = 0;
     for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
