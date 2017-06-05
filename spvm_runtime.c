@@ -279,13 +279,13 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
   
   int32_t call_stack_base = runtime->call_stack_base;
   int32_t call_stack_base_start = call_stack_base;
-  
-  SPVM_DATA_ARRAY* data_array;
-  SPVM_DATA_OBJECT* data_object;
-  int32_t index;
-  
+
   SPVM_RUNTIME_ALLOCATOR* allocator = runtime->allocator;
   
+  // Offten used variables
+  int32_t index;
+  SPVM_DATA_ARRAY* data_array;
+  SPVM_DATA_OBJECT* data_object;
   SPVM_CONSTANT_POOL_SUB constant_pool_sub;
   SPVM_CONSTANT_POOL_FIELD constant_pool_field;
   
