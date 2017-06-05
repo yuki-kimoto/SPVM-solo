@@ -1892,7 +1892,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     
     // Init null if sub type is array of reference
     if (value_type == SPVM_DATA_ARRAY_C_VALUE_TYPE_REF) {
-      memset(data_array + sizeof(SPVM_DATA_ARRAY), 0, size * length);
+      memset((intptr_t)data_array + sizeof(SPVM_DATA_ARRAY), 0, size * length);
+      SPVM_DATA* data_element = *(SPVM_DATA**)((intptr_t)data_array + sizeof(SPVM_DATA_ARRAY) + sizeof(void*) * 0);
     }
     
     // Set type

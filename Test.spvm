@@ -10,12 +10,13 @@ package Test {
 
     # Malloc mutil array
     {
-      # my $nums : int[][] = malloc int[][3];
+      my $nums : int[][] = malloc int[][3];
+      $nums[0] = malloc int[1];
     }
     
     # Declare mutil array
     {
-      # my $nums : int[][];
+      my $nums : int[][];
     }
     
     std::println_int(Test::EnumD->THREE);
