@@ -7,6 +7,12 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : int) : int {
+    
+    # Declare mutil array
+    {
+      my $nums : int[][];
+    }
+    
     std::println_int(Test::EnumD->THREE);
     std::println_int(Test::EnumD->FORE);
     
