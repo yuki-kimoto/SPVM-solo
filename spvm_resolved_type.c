@@ -66,22 +66,6 @@ _Bool SPVM_RESOLVED_TYPE_is_array_numeric(SPVM* spvm, SPVM_RESOLVED_TYPE* resolv
   }
 }
 
-_Bool SPVM_RESOLVED_TYPE_is_core_array(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
-  (void)spvm;
-  
-  const char* name = resolved_type->name;
-  
-  if (strcmp(name, "char[]") == 0 || strcmp(name, "byte[]") == 0 || strcmp(name, "short[]") == 0
-    || strcmp(name, "int[]") == 0 || strcmp(name, "long[]") == 0 || strcmp(name, "float[]") == 0 || strcmp(name, "double[]") == 0
-    || strcmp(name, "string[]") == 0)
-  {
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
-
 _Bool SPVM_RESOLVED_TYPE_is_array_string(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
   (void)spvm;
   
