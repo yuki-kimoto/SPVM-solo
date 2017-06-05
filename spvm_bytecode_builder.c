@@ -610,10 +610,10 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   
                   SPVM_CONSTANT_POOL_FIELD constant_pool_field;
                   memcpy(&constant_pool_field, &spvm->parser->constant_pool->values[field->constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
-                  constant_pool_field.package_byte_offset;
+                  constant_pool_field.index;
                   
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant_pool_field.package_byte_offset >> 8) & 0xFF);
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant_pool_field.package_byte_offset & 0xFF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant_pool_field.index >> 8) & 0xFF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant_pool_field.index & 0xFF);
                 }
                 
                 break;
@@ -1376,10 +1376,10 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
 
                   SPVM_CONSTANT_POOL_FIELD constant_pool_field;
                   memcpy(&constant_pool_field, &spvm->parser->constant_pool->values[field->constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
-                  constant_pool_field.package_byte_offset;
+                  constant_pool_field.index;
                   
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant_pool_field.package_byte_offset >> 8) & 0xFF);
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant_pool_field.package_byte_offset & 0xFF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant_pool_field.index >> 8) & 0xFF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant_pool_field.index & 0xFF);
                 }
                 
                 break;

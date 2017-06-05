@@ -490,7 +490,7 @@ void SPVM_DUMPER_dump_field(SPVM* spvm, SPVM_FIELD* field) {
   if (field) {
     printf("      name => \"%s\"\n", field->op_name->uv.name);
     
-    printf("      package_byte_offset => \"%" PRId32 "\"\n", field->package_byte_offset);
+    printf("      index => \"%" PRId32 "\"\n", field->index);
     
     SPVM_TYPE* type = field->op_type->uv.type;
     printf("      resolved_type => \"%s\"\n", type->resolved_type->name);

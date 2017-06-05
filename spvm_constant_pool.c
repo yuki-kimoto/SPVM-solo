@@ -109,7 +109,7 @@ void SPVM_CONSTANT_POOL_push_field(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool
   
   // Constant pool field information
   SPVM_CONSTANT_POOL_FIELD constant_pool_field;
-  constant_pool_field.package_byte_offset = field->package_byte_offset;
+  constant_pool_field.index = field->index;
   memcpy(&constant_pool->values[constant_pool->length], &constant_pool_field, sizeof(SPVM_CONSTANT_POOL_FIELD));
   
   // Add length
