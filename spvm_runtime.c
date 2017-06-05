@@ -292,8 +292,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
   // Goto subroutine
   goto CALLSUB_COMMON;
   
-  case_SPVM_BYTECODE_C_CODE_CALL_SUB:
-  {
+  case_SPVM_BYTECODE_C_CODE_CALL_SUB: {
     // Get subroutine ID
     sub_constant_pool_address
       = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
@@ -1869,7 +1868,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     goto *jump[*pc];
   }
   case_SPVM_BYTECODE_C_CODE_MALLOC_ARRAY: {
-    int32_t value_type = (int32_t)*(pc + 1);
+    int32_t value_type = *(pc + 1);
     
     int32_t size = SPVM_DATA_ARRAY_C_VALUE_SIZES[value_type];
     
@@ -1976,7 +1975,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     pc += success * (int16_t)((*(pc + 1) << 8) +  *(pc + 2)) + (~success & 1) * 3;
     operand_stack_top--;
     goto *jump[*pc];
-  case_SPVM_BYTECODE_C_CODE_GET_FIELD_BYTE: {
+  case_SPVM_BYTECODE_C_CODE_GET_FIELD_BYTE:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top - 1].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to get an byte field must not be undefined.");
@@ -1991,8 +1990,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_GET_FIELD_SHORT: {
+  case_SPVM_BYTECODE_C_CODE_GET_FIELD_SHORT:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to get an short field must not be undefined.");
@@ -2007,8 +2005,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_GET_FIELD_INT: {
+  case_SPVM_BYTECODE_C_CODE_GET_FIELD_INT:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to get an int field must not be undefined.");
@@ -2023,8 +2020,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_GET_FIELD_LONG: {
+  case_SPVM_BYTECODE_C_CODE_GET_FIELD_LONG:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to get an long field must not be undefined.");
@@ -2039,8 +2035,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_GET_FIELD_FLOAT: {
+  case_SPVM_BYTECODE_C_CODE_GET_FIELD_FLOAT:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to get an float field must not be undefined.");
@@ -2055,8 +2050,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_GET_FIELD_DOUBLE: {
+  case_SPVM_BYTECODE_C_CODE_GET_FIELD_DOUBLE:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to get an double field must not be undefined.");
@@ -2071,8 +2065,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_GET_FIELD_ADDRESS: {
+  case_SPVM_BYTECODE_C_CODE_GET_FIELD_ADDRESS:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to get an reference field must not be undefined.");
@@ -2087,8 +2080,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_SET_FIELD_BYTE: {
+  case_SPVM_BYTECODE_C_CODE_SET_FIELD_BYTE:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top - 1].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to set an byte field must not be undefined.");
@@ -2104,8 +2096,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_SET_FIELD_SHORT: {
+  case_SPVM_BYTECODE_C_CODE_SET_FIELD_SHORT:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top - 1].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to set an short field must not be undefined.");
@@ -2121,8 +2112,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_SET_FIELD_INT: {
+  case_SPVM_BYTECODE_C_CODE_SET_FIELD_INT:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top - 1].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to set an int field must not be undefined.");
@@ -2138,8 +2128,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_SET_FIELD_LONG: {
+  case_SPVM_BYTECODE_C_CODE_SET_FIELD_LONG:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top - 1].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to set an long field must not be undefined.");
@@ -2155,8 +2144,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_SET_FIELD_FLOAT: {
+  case_SPVM_BYTECODE_C_CODE_SET_FIELD_FLOAT:
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top - 1].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to set an float field must not be undefined.");
@@ -2172,8 +2160,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
-  case_SPVM_BYTECODE_C_CODE_SET_FIELD_DOUBLE: {
+  case_SPVM_BYTECODE_C_CODE_SET_FIELD_DOUBLE: 
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top - 1].address_value;
     if (__builtin_expect(!data_object, 0)) {
       data_string_error = SPVM_RUNTIME_API_create_data_string_from_pv(spvm, runtime, "The object to set an double field must not be undefined.");
@@ -2189,7 +2176,6 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       pc += 3;
       goto *jump[*pc];
     }
-  }
   case_SPVM_BYTECODE_C_CODE_SET_FIELD_ADDRESS: {
     data_object = (SPVM_DATA_OBJECT*)call_stack[operand_stack_top - 1].address_value;
     if (__builtin_expect(!data_object, 0)) {
