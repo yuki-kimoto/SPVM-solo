@@ -1819,7 +1819,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     data_object->ref_count = 0;
     
     // Initialize reference fields by 0
-    memset((void*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT)), 0, sizeof(void*) * constant_pool_package.data_fields_count);
+    memset((void*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT)), 0, sizeof(void*) * constant_pool_package.ref_fields_count);
     
     // Package constant pool address
     data_object->package_constant_pool_address = package_constant_pool_address;
