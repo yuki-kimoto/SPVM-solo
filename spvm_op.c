@@ -676,35 +676,15 @@ void SPVM_OP_check(SPVM* spvm) {
     SPVM_OP* op_package = SPVM_ARRAY_fetch(spvm, op_packages, package_pos);
     SPVM_PACKAGE* package = op_package->uv.package;
     SPVM_ARRAY* op_fields = package->op_fields;
-    
-    // Alignment is max size of SPVM data
-    int32_t alignment = sizeof(SPVM_VALUE);
-    
+
     // Calculate package byte size
     int32_t package_byte_size = 0;
     for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
       SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields, field_pos);
       SPVM_FIELD* field = op_field->uv.field;
-      
-      // Current byte size
-      
-      int32_t field_byte_size = SPVM_FIELD_get_byte_size(spvm, field);
-      int32_t next_alignment_base;
-      if (package_byte_size % alignment == 0) {
-        next_alignment_base = package_byte_size  + alignment;
-      }
-      else {
-        next_alignment_base = ((package_byte_size / alignment) + 1) * alignment;
-      }
-      
-      if (package_byte_size + field_byte_size > next_alignment_base) {
-        int32_t padding = alignment - (package_byte_size % alignment);
-        package_byte_size += padding;
-      }
-      field->package_byte_offset = package_byte_size;
-      package_byte_size += field_byte_size;
+      field->package_byte_offset = sizeof(SPVM_VALUE) * field_pos;
     }
-    package->byte_size = package_byte_size;
+    package->byte_size = sizeof(SPVM_VALUE) * op_fields->length;
   }
   
   // Check types
