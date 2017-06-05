@@ -1984,9 +1984,9 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
+      index = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].byte_value
-        = *(int8_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+        = *(int8_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index);
       pc += 3;
       goto *jump[*pc];
     }
@@ -2000,9 +2000,9 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
+      index = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].short_value
-        = *(int16_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+        = *(int16_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index);
       pc += 3;
       goto *jump[*pc];
     }
@@ -2016,9 +2016,9 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
+      index = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].int_value
-        = *(int32_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+        = *(int32_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index);
       pc += 3;
       goto *jump[*pc];
     }
@@ -2032,9 +2032,9 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
+      index = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].long_value
-        = *(int64_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+        = *(int64_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index);
       pc += 3;
       goto *jump[*pc];
     }
@@ -2048,9 +2048,9 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
+      index = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top - 1].float_value
-        = *(float*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+        = *(float*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index);
       pc += 3;
       goto *jump[*pc];
     }
@@ -2064,9 +2064,9 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
+      index = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].double_value
-        = *(double*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+        = *(double*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index);
       pc += 3;
       goto *jump[*pc];
     }
@@ -2080,9 +2080,9 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
+      index = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].address_value
-        = *(void**)((intptr_t)call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+        = *(void**)((intptr_t)call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index);
       pc += 3;
       goto *jump[*pc];
     }
@@ -2096,8 +2096,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
-      *(int8_t*)((intptr_t)data_object + byte_offset)
+      index = (*(pc + 1) << 8) + *(pc + 2);
+      *(int8_t*)((intptr_t)data_object + sizeof(SPVM_VALUE) * index)
         = call_stack[operand_stack_top].byte_value;
       operand_stack_top -= 2;
       pc += 3;
@@ -2113,8 +2113,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
-      *(int16_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset)
+      index = (*(pc + 1) << 8) + *(pc + 2);
+      *(int16_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index)
         = call_stack[operand_stack_top].short_value;
       operand_stack_top -= 2;
       pc += 3;
@@ -2130,8 +2130,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
-      *(int32_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset)
+      index = (*(pc + 1) << 8) + *(pc + 2);
+      *(int32_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index)
         = call_stack[operand_stack_top].int_value;
       operand_stack_top -= 2;
       pc += 3;
@@ -2147,8 +2147,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
-      *(int64_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset)
+      index = (*(pc + 1) << 8) + *(pc + 2);
+      *(int64_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index)
         = call_stack[operand_stack_top].long_value;
       operand_stack_top -= 2;
       pc += 3;
@@ -2164,8 +2164,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
-      *(float*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset)
+      index = (*(pc + 1) << 8) + *(pc + 2);
+      *(float*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index)
         = call_stack[operand_stack_top - 1].float_value;
       operand_stack_top -= 2;
       pc += 3;
@@ -2181,8 +2181,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
-      *(double*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset)
+      index = (*(pc + 1) << 8) + *(pc + 2);
+      *(double*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(SPVM_VALUE) * index)
         = call_stack[operand_stack_top].double_value;
       operand_stack_top -= 2;
       pc += 3;
@@ -2198,8 +2198,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
-      void** field_index = (void**)((intptr_t)data_object + byte_offset);
+      index = (*(pc + 1) << 8) + *(pc + 2);
+      void** field_index = (void**)((intptr_t)data_object + sizeof(SPVM_VALUE) * index);
 
       // Increment reference count
       SPVM_RUNTIME_API_inc_ref_count(spvm, runtime, call_stack[operand_stack_top].address_value);
