@@ -15,7 +15,7 @@ package Test {
     
     # Declare mutil array
     {
-      my $nums : int[][];
+      # my $nums : int[][];
     }
     
     std::println_int(Test::EnumD->THREE);

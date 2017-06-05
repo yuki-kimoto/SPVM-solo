@@ -1109,7 +1109,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                     assert(0);
                   }
                 }
-                else if (SPVM_RESOLVED_TYPE_is_array_string(spvm, resolved_type)) {
+                else if (SPVM_RESOLVED_TYPE_is_array(spvm, resolved_type)) {
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_MALLOC_ARRAY);
                   SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_DATA_ARRAY_C_VALUE_TYPE_REF);
                 }
