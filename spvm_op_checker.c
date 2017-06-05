@@ -671,7 +671,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   SPVM_OP* op_type = op_cur->first;
                   SPVM_RESOLVED_TYPE* resolved_type = op_type->uv.type->resolved_type;
                   
-                  if (SPVM_RESOLVED_TYPE_is_array_numeric(spvm, resolved_type) || SPVM_RESOLVED_TYPE_is_array_string(spvm, resolved_type)) {
+                  if (SPVM_RESOLVED_TYPE_is_array(spvm, resolved_type)) {
                     SPVM_OP* op_index_term = op_type->last;
                     SPVM_RESOLVED_TYPE* index_resolved_type = SPVM_OP_get_resolved_type(spvm, op_index_term);
                     
@@ -679,10 +679,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                       SPVM_yyerror_format(spvm, "new operator can't create array which don't have length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
                       break;
                     }
-                    else if (index_resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_INT) {
-                      // OK
-                    }
-                    else {
+                    else if (index_resolved_type->id != SPVM_RESOLVED_TYPE_C_ID_INT) {
                       SPVM_yyerror_format(spvm, "new operator can't create array which don't have int length \"%s\" at %s line %d\n", resolved_type->name, op_cur->file, op_cur->line);
                       break;
                     }
