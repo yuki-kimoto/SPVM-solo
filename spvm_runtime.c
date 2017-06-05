@@ -1984,12 +1984,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t field_constant_pool_address
-        = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-      memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].byte_value
-        = *(int8_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + constant_pool_field.package_byte_offset);
-      pc += 5;
+        = *(int8_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+      pc += 3;
       goto *jump[*pc];
     }
   }
@@ -2002,12 +2000,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t field_constant_pool_address
-        = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-      memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].short_value
-        = *(int16_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + constant_pool_field.package_byte_offset);
-      pc += 5;
+        = *(int16_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+      pc += 3;
       goto *jump[*pc];
     }
   }
@@ -2020,12 +2016,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t field_constant_pool_address
-        = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-      memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].int_value
-        = *(int32_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + constant_pool_field.package_byte_offset);
-      pc += 5;
+        = *(int32_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+      pc += 3;
       goto *jump[*pc];
     }
   }
@@ -2038,12 +2032,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t field_constant_pool_address
-        = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-      memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].long_value
-        = *(int64_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + constant_pool_field.package_byte_offset);
-      pc += 5;
+        = *(int64_t*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+      pc += 3;
       goto *jump[*pc];
     }
   }
@@ -2056,12 +2048,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t field_constant_pool_address
-        = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-      memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top - 1].float_value
-        = *(float*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + constant_pool_field.package_byte_offset);
-      pc += 5;
+        = *(float*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+      pc += 3;
       goto *jump[*pc];
     }
   }
@@ -2074,12 +2064,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t field_constant_pool_address
-        = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-      memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].double_value
-        = *(double*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + constant_pool_field.package_byte_offset);
-      pc += 5;
+        = *(double*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+      pc += 3;
       goto *jump[*pc];
     }
   }
@@ -2092,12 +2080,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       goto case_SPVM_BYTECODE_C_CODE_DIE;
     }
     else {
-      int32_t field_constant_pool_address
-        = (*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4);
-      memcpy(&constant_pool_field, &constant_pool[field_constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+      int32_t byte_offset = (*(pc + 1) << 8) + *(pc + 2);
       call_stack[operand_stack_top].address_value
-        = *(void**)((intptr_t)call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT) + constant_pool_field.package_byte_offset);
-      pc += 5;
+        = *(void**)((intptr_t)call_stack[operand_stack_top].address_value + sizeof(SPVM_DATA_OBJECT) + byte_offset);
+      pc += 3;
       goto *jump[*pc];
     }
   }

@@ -23,8 +23,9 @@
 #include "spvm_field.h"
 #include "spvm_switch_info.h"
 #include "spvm_constant_pool.h"
-#include "spvm_type.h"
 #include "spvm_constant_pool_sub.h"
+#include "spvm_constant_pool_field.h"
+#include "spvm_type.h"
 #include "spvm_limit.h"
 #include "spvm_value.h"
 #include "spvm_data.h"
@@ -580,8 +581,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                 if (!op_cur->lvalue) {
                   SPVM_RESOLVED_TYPE* resolved_type = SPVM_OP_get_resolved_type(spvm, op_cur);
                   
-                  if (resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_BYTE)
-                  {
+                  if (resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_BYTE) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_GET_FIELD_BYTE);
                   }
                   else if (resolved_type->id == SPVM_RESOLVED_TYPE_C_ID_SHORT) {
@@ -600,7 +600,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                     SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_GET_FIELD_DOUBLE);
                   }
                   else {
-                    assert(0);
+                    SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, SPVM_BYTECODE_C_CODE_GET_FIELD_ADDRESS);
                   }
                   
                   SPVM_NAME_INFO* name_info = op_cur->uv.name_info;
@@ -608,10 +608,12 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM* spvm) {
                   SPVM_OP* op_field = SPVM_HASH_search(spvm, parser->op_field_symtable, field_name, strlen(field_name));
                   SPVM_FIELD* field = op_field->uv.field;
                   
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (field->constant_pool_address >> 24) & 0xFF);
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (field->constant_pool_address >> 16) & 0xFF);
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (field->constant_pool_address >> 8) & 0xFF);
-                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, field->constant_pool_address & 0xFF);
+                  SPVM_CONSTANT_POOL_FIELD constant_pool_field;
+                  memcpy(&constant_pool_field, &spvm->parser->constant_pool->values[field->constant_pool_address], sizeof(SPVM_CONSTANT_POOL_FIELD));
+                  constant_pool_field.package_byte_offset;
+                  
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, (constant_pool_field.package_byte_offset >> 8) & 0xFF);
+                  SPVM_BYTECODE_ARRAY_push(spvm, bytecode_array, constant_pool_field.package_byte_offset & 0xFF);
                 }
                 
                 break;
