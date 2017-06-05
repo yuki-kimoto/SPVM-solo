@@ -46,19 +46,19 @@ inline int64_t SPVM_RUNTIME_API_calcurate_data_byte_size(SPVM* spvm, SPVM_RUNTIM
   return byte_size;
 }
 
-inline void SPVM_RUNTIME_API_dec_data_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
+inline void SPVM_RUNTIME_API_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
   (void)spvm;
   (void)runtime;
   
   if (data != NULL) {
     
-    assert(data->data_count > 0);
+    assert(data->ref_count > 0);
     
     // Decrement reference count
-    data->data_count -= 1;
+    data->ref_count -= 1;
     
     // If reference count is zero, free address.
-    if (data->data_count == 0) {
+    if (data->ref_count == 0) {
       
       // Reference is string
       if (data->type == SPVM_DATA_C_TYPE_STRING) {
@@ -78,7 +78,7 @@ inline void SPVM_RUNTIME_API_dec_data_count(SPVM* spvm, SPVM_RUNTIME* runtime, S
           
           for (int32_t i = 0; i < length; i++) {
             SPVM_DATA* data_element = *(SPVM_DATA**)((intptr_t)data_array + sizeof(SPVM_DATA_ARRAY) + sizeof(void*) * i);
-            SPVM_RUNTIME_API_dec_data_count(spvm, runtime, data_element);
+            SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, data_element);
           }
         }
         SPVM_RUNTIME_ALLOCATOR_free_data(spvm, runtime->allocator, data);
@@ -95,7 +95,7 @@ inline void SPVM_RUNTIME_API_dec_data_count(SPVM* spvm, SPVM_RUNTIME* runtime, S
         
         for (int i = 0; i < data_fields_count; i++) {
           SPVM_DATA* data_field = *(SPVM_DATA**)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT) + sizeof(void*) * i);
-          SPVM_RUNTIME_API_dec_data_count(spvm, runtime, data_field);
+          SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, data_field);
         }
         
         SPVM_RUNTIME_ALLOCATOR_free_data(spvm, runtime->allocator, (SPVM_DATA*)data_object);
@@ -104,14 +104,14 @@ inline void SPVM_RUNTIME_API_dec_data_count(SPVM* spvm, SPVM_RUNTIME* runtime, S
   }
 }
 
-inline void SPVM_RUNTIME_API_inc_data_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
+inline void SPVM_RUNTIME_API_inc_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
   (void)spvm;
   (void)runtime;
   
   if (data != NULL) {
-    assert(data->data_count >= 0);
+    assert(data->ref_count >= 0);
     // Increment reference count
-    data->data_count += 1;
+    data->ref_count += 1;
   }
 }
 
@@ -346,11 +346,11 @@ inline int32_t SPVM_RUNTIME_API_get_array_length(SPVM* spvm, SPVM_RUNTIME* runti
   return array->length;
 }
 
-inline int32_t SPVM_RUNTIME_API_get_data_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
+inline int32_t SPVM_RUNTIME_API_get_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
   (void)spvm;
   (void)runtime;
   
-  return data->data_count;
+  return data->ref_count;
 }
 
 inline SPVM_SV* SPVM_RUNTIME_API_get_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_STRING* string) {
@@ -427,7 +427,7 @@ inline void* SPVM_RUNTIME_API_create_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime
   data_string->type = SPVM_DATA_C_TYPE_STRING;
   
   // Set reference count
-  data_string->data_count = 0;
+  data_string->ref_count = 0;
   
   // Set sv
   data_string->sv = sv;
@@ -460,7 +460,7 @@ inline SPVM_DATA_STRING* SPVM_RUNTIME_API_create_data_string_from_pv(SPVM* spvm,
   data_string->type = SPVM_DATA_C_TYPE_STRING;
   
   // Set reference count
-  data_string->data_count = 0;
+  data_string->ref_count = 0;
   
   // Set sv
   data_string->sv = sv;

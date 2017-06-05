@@ -469,8 +469,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     
     // Free string if need
     if (return_value != NULL) {
-      int32_t data_count = SPVM_RUNTIME_API_get_data_count(spvm, runtime, return_value);
-      if (data_count == 0) {
+      int32_t ref_count = SPVM_RUNTIME_API_get_ref_count(spvm, runtime, return_value);
+      if (ref_count == 0) {
         SPVM_SvREFCNT_dec(sv_message);
         SPVM_RUNTIME_ALLOCATOR_free_data(spvm, runtime->allocator, return_value);
       }
@@ -1027,10 +1027,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
         void** array_index = (void**)((intptr_t)data_array + sizeof(SPVM_DATA_ARRAY) + sizeof(void*) * index);
         
         // Increment reference count
-        SPVM_RUNTIME_API_inc_data_count(spvm, runtime, call_stack[operand_stack_top].address_value);
+        SPVM_RUNTIME_API_inc_ref_count(spvm, runtime, call_stack[operand_stack_top].address_value);
         
         // Decrement reference count
-        SPVM_RUNTIME_API_dec_data_count(spvm, runtime, *array_index);
+        SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, *array_index);
         
         // Store address
         *array_index = call_stack[operand_stack_top].address_value;
@@ -1070,10 +1070,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     int32_t vars_index = *(pc + 1);
     
     // Increment reference count
-    SPVM_RUNTIME_API_inc_data_count(spvm, runtime, call_stack[operand_stack_top].address_value);
+    SPVM_RUNTIME_API_inc_ref_count(spvm, runtime, call_stack[operand_stack_top].address_value);
     
     // Decrement reference count
-    SPVM_RUNTIME_API_dec_data_count(spvm, runtime, vars[vars_index].address_value);
+    SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, vars[vars_index].address_value);
     
     // Store address
     vars[vars_index] = call_stack[operand_stack_top];
@@ -1086,7 +1086,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     void* address = call_stack[operand_stack_top].address_value;
     
     // Decrement reference count
-    SPVM_RUNTIME_API_dec_data_count(spvm, runtime, address);
+    SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, address);
     
     pc += 1;
     goto *jump[*pc];
@@ -1095,7 +1095,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     void* address = call_stack[operand_stack_top].address_value;
     
     // Increment reference count
-    SPVM_RUNTIME_API_inc_data_count(spvm, runtime, address);
+    SPVM_RUNTIME_API_inc_ref_count(spvm, runtime, address);
     
     pc += 1;
     goto *jump[*pc];
@@ -1110,8 +1110,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     
     // Free object
     if (data != NULL) {
-      int32_t data_count = data->data_count;
-      if (data_count == 0) {
+      int32_t ref_count = data->ref_count;
+      if (ref_count == 0) {
         SPVM_RUNTIME_ALLOCATOR_free_data(spvm, runtime->allocator, call_stack[operand_stack_top].address_value);
       }
     }
@@ -1817,7 +1817,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     data_object->type = SPVM_DATA_C_TYPE_OBJECT;
     
     // Set reference count
-    data_object->data_count = 0;
+    data_object->ref_count = 0;
     
     // Initialize reference fields by 0
     memset((void*)((intptr_t)data_object + sizeof(SPVM_DATA_OBJECT)), 0, sizeof(void*) * constant_pool_package.data_fields_count);
@@ -1903,7 +1903,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     data_array->value_type = value_type;
     
     // Set reference count
-    data_array->data_count = 0;
+    data_array->ref_count = 0;
     
     // Set array length
     data_array->length = length;
@@ -1937,10 +1937,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       int32_t var_index = (*(pc + 2) << 8) + *(pc + 3);
 
       // Increment reference count
-      SPVM_RUNTIME_API_inc_data_count(spvm, runtime, call_stack[operand_stack_top].address_value);
+      SPVM_RUNTIME_API_inc_ref_count(spvm, runtime, call_stack[operand_stack_top].address_value);
       
       // Decrement reference count if original object is not null
-      SPVM_RUNTIME_API_dec_data_count(spvm, runtime, vars[var_index].address_value);
+      SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, vars[var_index].address_value);
       
       // Store address
       vars[var_index] = call_stack[operand_stack_top];
@@ -2231,10 +2231,10 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       void** field_index = (void**)((intptr_t)data_object + constant_pool_field.package_byte_offset);
 
       // Increment reference count
-      SPVM_RUNTIME_API_inc_data_count(spvm, runtime, call_stack[operand_stack_top].address_value);
+      SPVM_RUNTIME_API_inc_ref_count(spvm, runtime, call_stack[operand_stack_top].address_value);
       
       // Decrement reference count
-      SPVM_RUNTIME_API_dec_data_count(spvm, runtime, *field_index);
+      SPVM_RUNTIME_API_dec_ref_count(spvm, runtime, *field_index);
       
       // Store object
       *field_index = call_stack[operand_stack_top].address_value;

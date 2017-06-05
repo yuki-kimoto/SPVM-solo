@@ -2,7 +2,7 @@
 #define SPVM_DATA_ARRAY_H
 
 struct SPVM_data_array {
-  int32_t data_count;
+  int32_t ref_count;
   int8_t type;
   int8_t value_type;
   int32_t length;
