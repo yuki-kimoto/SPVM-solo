@@ -125,15 +125,6 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
     // Constant pool
     SPVM_CONSTANT_POOL* constant_pool = parser->constant_pool;
     
-    // Push package name to constant pool
-    const char* package_name = package->op_name->uv.name;
-    package->name_constant_pool_address = constant_pool->length;
-    SPVM_CONSTANT_POOL_push_string(spvm, constant_pool, package_name);
-    
-    // Push package information to constant pool
-    package->constant_pool_address = constant_pool->length;
-    SPVM_CONSTANT_POOL_push_package(spvm, constant_pool, package);
-    
     // Push field information to constant pool
     for (int32_t field_pos = 0; field_pos < package->op_fields->length; field_pos++) {
       SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, package->op_fields, field_pos);
@@ -147,6 +138,17 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       field->constant_pool_address = parser->constant_pool->length;
       SPVM_CONSTANT_POOL_push_field(spvm, parser->constant_pool, field);
     }
+    
+    // Push package name to constant pool
+    const char* package_name = package->op_name->uv.name;
+    package->name_constant_pool_address = constant_pool->length;
+    SPVM_CONSTANT_POOL_push_string(spvm, constant_pool, package_name);
+    
+    // Push fields name indexes to constant pool
+    
+    // Push package information to constant pool
+    package->constant_pool_address = constant_pool->length;
+    SPVM_CONSTANT_POOL_push_package(spvm, constant_pool, package);
     
     for (int32_t sub_pos = 0; sub_pos < package->op_subs->length; sub_pos++) {
       

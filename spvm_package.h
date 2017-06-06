@@ -12,6 +12,7 @@ struct SPVM_package {
   int32_t name_constant_pool_address;
   int32_t fields_length;
   int32_t ref_fields_length;
+  int32_t field_name_indexes_constant_pool_address;
 };
 
 SPVM_PACKAGE* SPVM_PACKAGE_new(SPVM* spvm);
