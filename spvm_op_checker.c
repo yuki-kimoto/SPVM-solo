@@ -139,12 +139,19 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       SPVM_CONSTANT_POOL_push_field(spvm, parser->constant_pool, field);
     }
     
+    // Push fields name indexes to constant pool
+    package->field_name_indexes_constant_pool_address = constant_pool->length;
+    SPVM_CONSTANT_POOL_push_int(spvm, constant_pool, package->op_fields->length);
+    for (int32_t field_pos = 0; field_pos < package->op_fields->length; field_pos++) {
+      SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, package->op_fields, field_pos);
+      SPVM_FIELD* field = op_field->uv.field;
+      SPVM_CONSTANT_POOL_push_int(spvm, constant_pool, field->abs_name_constant_pool_address);
+    }
+    
     // Push package name to constant pool
     const char* package_name = package->op_name->uv.name;
     package->name_constant_pool_address = constant_pool->length;
     SPVM_CONSTANT_POOL_push_string(spvm, constant_pool, package_name);
-    
-    // Push fields name indexes to constant pool
     
     // Push package information to constant pool
     package->constant_pool_address = constant_pool->length;
