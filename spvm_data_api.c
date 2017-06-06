@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "spvm_value.h"
 #include "spvm_sv.h"
 #include "spvm_data_api.h"
 
@@ -17,6 +18,15 @@ const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {
   sizeof(double),
   sizeof(void*),
 };
+
+inline int32_t SPVM_DATA_API_get_object_field_value_int(SPVM_DATA_OBJECT* data_object, const char* name) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  int32_t int_value = fields[field_index].int_value;
+  
+  return int_value;
+}
 
 inline SPVM_VALUE* SPVM_DATA_API_get_object_fields(SPVM_DATA_OBJECT* data_object) {
   return (SPVM_VALUE*)((intptr_t)data_object + SPVM_DATA_C_HEADER_BYTE_SIZE);

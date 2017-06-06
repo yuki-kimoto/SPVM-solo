@@ -83,4 +83,6 @@ int32_t SPVM_DATA_API_dump_object_field_names(SPVM_DATA_OBJECT* data_object);
 int32_t SPVM_DATA_API_get_object_field_index(SPVM_DATA_OBJECT* data_object, const char* name);
 SPVM_VALUE* SPVM_DATA_API_get_object_fields(SPVM_DATA_OBJECT* data_object);
 
+int32_t SPVM_DATA_API_get_object_field_value_int(SPVM_DATA_OBJECT* data_object, const char* name);
+
 #endif
