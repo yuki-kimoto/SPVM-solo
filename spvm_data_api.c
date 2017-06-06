@@ -18,12 +18,14 @@ const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {
   sizeof(void*),
 };
 
+inline SPVM_VALUE* SPVM_DATA_API_get_object_fields(SPVM_DATA_OBJECT* data_object) {
+  return (SPVM_VALUE*)((intptr_t)data_object + SPVM_DATA_C_HEADER_BYTE_SIZE);
+}
+
 inline int32_t SPVM_DATA_API_get_object_field_index(SPVM_DATA_OBJECT* data_object, const char* name) {
   
   int32_t field_name_indexes_constant_pool_address = data_object->field_name_indexes_constant_pool_address;
-  
   int32_t* constant_pool = data_object->constant_pool;
-  
   int32_t length = constant_pool[field_name_indexes_constant_pool_address];
   
   int32_t field_index;
