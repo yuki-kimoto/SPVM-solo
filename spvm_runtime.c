@@ -1829,6 +1829,8 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     
     data_object->constant_pool = runtime->constant_pool;
     
+    data_object->field_name_indexes_constant_pool_address = constant_pool_package.field_name_indexes_constant_pool_address;
+    
     assert(data_object_byte_size == SPVM_RUNTIME_API_calcurate_data_byte_size(spvm, spvm->runtime, (SPVM_DATA*)data_object));
     
     // Push object
