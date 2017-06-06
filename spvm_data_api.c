@@ -17,6 +17,34 @@ const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {
   sizeof(void*),
 };
 
+inline int32_t SPVM_DATA_API_dump_object_field_names(SPVM_DATA_OBJECT* data_object) {
+  
+  int32_t field_name_indexes_constant_pool_address = data_object->field_name_indexes_constant_pool_address;
+  
+  int32_t* constant_pool = data_object->constant_pool;
+  
+  int32_t length = constant_pool[field_name_indexes_constant_pool_address];
+  
+  for (int32_t i = 0; i < length; i++) {
+    int32_t name_index = constant_pool[field_name_indexes_constant_pool_address + i + 1];
+    // char* name = (char*)&constant_pool[name_index];
+    // warn("AAAAAAAAAAAAAAAA %d %s", name_index, name);
+  }
+  
+  return length;
+}
+
+inline int32_t SPVM_DATA_API_get_object_fields_length(SPVM_DATA_OBJECT* data_object) {
+  
+  int32_t field_name_indexes_constant_pool_address = data_object->field_name_indexes_constant_pool_address;
+  
+  int32_t* constant_pool = data_object->constant_pool;
+  
+  int32_t length = constant_pool[field_name_indexes_constant_pool_address];
+  
+  return length;
+}
+
 inline SPVM_SV* SPVM_DATA_API_get_string_sv(SPVM_DATA_STRING* data_string) {
   
   return *(SPVM_SV**)((intptr_t)data_string + SPVM_DATA_C_HEADER_BYTE_SIZE);
