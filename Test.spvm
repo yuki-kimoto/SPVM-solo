@@ -202,11 +202,11 @@ package Test {
     {
       my $m = malloc Test::Minimal;
       
-      $m{x} = 99L;
-      $m{y} = 100L;
+      $m{x} = 99;
+      $m{y} = 100;
       
-      std::println_long($m{x});
-      std::println_long($m{y});
+      std::println_int($m{x});
+      std::println_int($m{y});
     }
 
     # Free when assignment
