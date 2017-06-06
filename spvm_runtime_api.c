@@ -424,6 +424,9 @@ inline void* SPVM_RUNTIME_API_create_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime
   int32_t data_string_byte_size = SPVM_DATA_C_HEADER_BYTE_SIZE + sizeof(SPVM_SV*);
   SPVM_DATA_STRING* data_string = SPVM_RUNTIME_ALLOCATOR_malloc(spvm, allocator, data_string_byte_size);
   
+  // Set constant pool
+  data_string->constant_pool = runtime->constant_pool;
+  
   // Set type
   data_string->type = SPVM_DATA_C_TYPE_STRING;
   

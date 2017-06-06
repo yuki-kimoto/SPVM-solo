@@ -1815,6 +1815,9 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       abort();
     }
     
+    // Set constant pool
+    data_object->constant_pool = runtime->constant_pool;
+    
     // Set type
     data_object->type = SPVM_DATA_C_TYPE_OBJECT;
     
