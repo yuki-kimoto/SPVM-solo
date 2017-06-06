@@ -67,6 +67,9 @@ void SPVM_CONSTANT_POOL_push_package(SPVM* spvm, SPVM_CONSTANT_POOL* constant_po
   constant_pool_package.ref_fields_length = package->ref_fields_length;
   memcpy(&constant_pool->values[constant_pool->length], &constant_pool_package, sizeof(SPVM_CONSTANT_POOL_PACKAGE));
   
+  // Add filed names indexes
+  
+  
   // Add length
   constant_pool->length += extend_length;
 }
@@ -110,6 +113,7 @@ void SPVM_CONSTANT_POOL_push_field(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool
   // Constant pool field information
   SPVM_CONSTANT_POOL_FIELD constant_pool_field;
   constant_pool_field.index = field->index;
+  constant_pool_field.abs_name_constant_pool_address = field->abs_name_constant_pool_address;
   memcpy(&constant_pool->values[constant_pool->length], &constant_pool_field, sizeof(SPVM_CONSTANT_POOL_FIELD));
   
   // Add length
