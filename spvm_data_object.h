@@ -5,10 +5,10 @@
 #include "spvm_base.h"
 
 struct SPVM_data_object {
+  int32_t* constant_pool;
   int8_t type;
   int32_t ref_count;
   int32_t package_constant_pool_address;
-  int32_t* constant_pool;
 };
 
 #endif

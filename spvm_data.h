@@ -6,6 +6,7 @@ enum {
 };
 
 struct SPVM_data {
+  int32_t* constant_pool;
   int8_t type;
   int32_t ref_count;
 };
