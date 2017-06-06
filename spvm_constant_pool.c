@@ -114,6 +114,7 @@ void SPVM_CONSTANT_POOL_push_field(SPVM* spvm, SPVM_CONSTANT_POOL* constant_pool
   SPVM_CONSTANT_POOL_FIELD constant_pool_field;
   constant_pool_field.index = field->index;
   constant_pool_field.abs_name_constant_pool_address = field->abs_name_constant_pool_address;
+  constant_pool_field.name_constant_pool_address = field->name_constant_pool_address;
   memcpy(&constant_pool->values[constant_pool->length], &constant_pool_field, sizeof(SPVM_CONSTANT_POOL_FIELD));
   
   // Add length

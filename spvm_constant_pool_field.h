@@ -6,6 +6,7 @@
 // Array
 struct SPVM_constant_pool_field {
   int32_t abs_name_constant_pool_address;
+  int32_t name_constant_pool_address;
   int32_t index;
 };
 
