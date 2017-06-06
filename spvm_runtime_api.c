@@ -25,7 +25,7 @@ inline int64_t SPVM_RUNTIME_API_calcurate_data_byte_size(SPVM* spvm, SPVM_RUNTIM
   
   // Reference is string
   if (data->type == SPVM_DATA_C_TYPE_STRING) {
-    byte_size = sizeof(SPVM_DATA_STRING);
+    byte_size = sizeof(SPVM_DATA_STRING) + sizeof(SPVM_SV*);
   }
   // Reference is array
   else if (data->type == SPVM_DATA_C_TYPE_ARRAY) {
@@ -64,7 +64,8 @@ inline void SPVM_RUNTIME_API_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SP
       if (data->type == SPVM_DATA_C_TYPE_STRING) {
         SPVM_DATA_STRING* data_string = (SPVM_DATA_STRING*)data;
         
-        SPVM_SV* sv = data_string->sv;
+        SPVM_SV* sv = *(SPVM_SV**)((intptr_t)data_string + sizeof(SPVM_DATA_STRING));
+        
         SPVM_SvREFCNT_dec(sv);
         SPVM_RUNTIME_ALLOCATOR_free_data(spvm, runtime->allocator, (SPVM_DATA*)data_string);
       }
@@ -353,11 +354,11 @@ inline int32_t SPVM_RUNTIME_API_get_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime,
   return data->ref_count;
 }
 
-inline SPVM_SV* SPVM_RUNTIME_API_get_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_STRING* string) {
+inline SPVM_SV* SPVM_RUNTIME_API_get_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_STRING* data_string) {
   (void)spvm;
   (void)runtime;
   
-  return string->sv;
+  return *(SPVM_SV**)((intptr_t)data_string + sizeof(SPVM_DATA_STRING));
 }
 
 inline char* SPVM_RUNTIME_API_get_string_value(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_STRING* data_string) {
@@ -420,7 +421,7 @@ inline void* SPVM_RUNTIME_API_create_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime
   SPVM_RUNTIME_ALLOCATOR* allocator = runtime->allocator;
   
   // Allocate array
-  int32_t data_string_byte_size = sizeof(SPVM_DATA_STRING);
+  int32_t data_string_byte_size = sizeof(SPVM_DATA_STRING) + sizeof(SPVM_SV*);
   SPVM_DATA_STRING* data_string = SPVM_RUNTIME_ALLOCATOR_malloc(spvm, allocator, data_string_byte_size);
   
   // Set type
@@ -430,8 +431,8 @@ inline void* SPVM_RUNTIME_API_create_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime
   data_string->ref_count = 0;
   
   // Set sv
-  data_string->sv = sv;
-
+  *(SPVM_SV**)((intptr_t)data_string + sizeof(SPVM_DATA_STRING)) = sv;
+  
   assert(data_string_byte_size == SPVM_RUNTIME_API_calcurate_data_byte_size(spvm, spvm->runtime, (SPVM_DATA*)data_string));
   
   return data_string;
@@ -463,7 +464,7 @@ inline SPVM_DATA_STRING* SPVM_RUNTIME_API_create_data_string_from_pv(SPVM* spvm,
   data_string->ref_count = 0;
   
   // Set sv
-  data_string->sv = sv;
+  *(SPVM_SV**)((intptr_t)data_string + sizeof(SPVM_DATA_STRING)) = sv;
 
   assert(data_string_byte_size == SPVM_RUNTIME_API_calcurate_data_byte_size(spvm, spvm->runtime, (SPVM_DATA*)data_string));
   
