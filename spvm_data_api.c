@@ -19,6 +19,24 @@ const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {
   sizeof(void*),
 };
 
+inline int8_t SPVM_DATA_API_get_object_field_value_byte(SPVM_DATA_OBJECT* data_object, const char* name) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  int8_t byte_value = fields[field_index].byte_value;
+  
+  return byte_value;
+}
+
+inline int16_t SPVM_DATA_API_get_object_field_value_short(SPVM_DATA_OBJECT* data_object, const char* name) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  int16_t short_value = fields[field_index].short_value;
+  
+  return short_value;
+}
+
 inline int32_t SPVM_DATA_API_get_object_field_value_int(SPVM_DATA_OBJECT* data_object, const char* name) {
   
   SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
@@ -26,6 +44,42 @@ inline int32_t SPVM_DATA_API_get_object_field_value_int(SPVM_DATA_OBJECT* data_o
   int32_t int_value = fields[field_index].int_value;
   
   return int_value;
+}
+
+inline int64_t SPVM_DATA_API_get_object_field_value_long(SPVM_DATA_OBJECT* data_object, const char* name) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  int64_t long_value = fields[field_index].long_value;
+  
+  return long_value;
+}
+
+inline float SPVM_DATA_API_get_object_field_value_float(SPVM_DATA_OBJECT* data_object, const char* name) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  float float_value = fields[field_index].float_value;
+  
+  return float_value;
+}
+
+inline double SPVM_DATA_API_get_object_field_value_double(SPVM_DATA_OBJECT* data_object, const char* name) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  double double_value = fields[field_index].double_value;
+  
+  return double_value;
+}
+
+inline SPVM_DATA* SPVM_DATA_API_get_object_field_value_ref(SPVM_DATA_OBJECT* data_object, const char* name) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  SPVM_DATA* address_value = fields[field_index].address_value;
+  
+  return address_value;
 }
 
 inline SPVM_VALUE* SPVM_DATA_API_get_object_fields(SPVM_DATA_OBJECT* data_object) {
@@ -133,4 +187,9 @@ inline float* SPVM_DATA_API_get_array_values_float(SPVM_DATA_ARRAY* data_array) 
 inline double* SPVM_DATA_API_get_array_values_double(SPVM_DATA_ARRAY* data_array) {
   
   return (double*)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE);
+}
+
+inline SPVM_DATA** SPVM_DATA_API_get_array_values_ref(SPVM_DATA_ARRAY* data_array) {
+  
+  return (SPVM_DATA**)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE);
 }

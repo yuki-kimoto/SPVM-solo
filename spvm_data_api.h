@@ -77,12 +77,19 @@ int32_t* SPVM_DATA_API_get_array_values_int(SPVM_DATA_ARRAY* data_array);
 int64_t* SPVM_DATA_API_get_array_values_long(SPVM_DATA_ARRAY* data_array);
 float* SPVM_DATA_API_get_array_values_float(SPVM_DATA_ARRAY* data_array);
 double* SPVM_DATA_API_get_array_values_double(SPVM_DATA_ARRAY* data_array);
+SPVM_DATA** SPVM_DATA_API_get_array_values_ref(SPVM_DATA_ARRAY* data_array);
 
 int32_t SPVM_DATA_API_get_object_fields_length(SPVM_DATA_OBJECT* data_object);
 int32_t SPVM_DATA_API_dump_object_field_names(SPVM_DATA_OBJECT* data_object);
 int32_t SPVM_DATA_API_get_object_field_index(SPVM_DATA_OBJECT* data_object, const char* name);
 SPVM_VALUE* SPVM_DATA_API_get_object_fields(SPVM_DATA_OBJECT* data_object);
 
-int32_t SPVM_DATA_API_get_object_field_value_int(SPVM_DATA_OBJECT* data_object, const char* name);
+inline int8_t SPVM_DATA_API_get_object_field_value_byte(SPVM_DATA_OBJECT* data_object, const char* name);
+inline int16_t SPVM_DATA_API_get_object_field_value_short(SPVM_DATA_OBJECT* data_object, const char* name);
+inline int32_t SPVM_DATA_API_get_object_field_value_int(SPVM_DATA_OBJECT* data_object, const char* name);
+inline int64_t SPVM_DATA_API_get_object_field_value_long(SPVM_DATA_OBJECT* data_object, const char* name);
+inline float SPVM_DATA_API_get_object_field_value_float(SPVM_DATA_OBJECT* data_object, const char* name);
+inline double SPVM_DATA_API_get_object_field_value_double(SPVM_DATA_OBJECT* data_object, const char* name);
+inline SPVM_DATA* SPVM_DATA_API_get_object_field_value_ref(SPVM_DATA_OBJECT* data_object, const char* name);
 
 #endif
