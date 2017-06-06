@@ -5,8 +5,8 @@
 #include "spvm_base.h"
 
 struct SPVM_data_string {
-  int32_t ref_count;
   int8_t type;
+  int32_t ref_count;
   SPVM_SV* sv;
 };
 

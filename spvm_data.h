@@ -2,8 +2,8 @@
 #define SPVM_DATA_H
 
 struct SPVM_data {
-  int32_t ref_count;
   int8_t type;
+  int32_t ref_count;
 };
 
 enum {
