@@ -28,8 +28,8 @@
 #include "spvm_type.h"
 #include "spvm_limit.h"
 #include "spvm_value.h"
-#include "spvm_data.h"
-#include "spvm_data_array.h"
+#include "spvm_data_api.h"
+
 
 void SPVM_BYTECODE_BUILDER_push_inc_bytecode(SPVM* spvm, SPVM_BYTECODE_ARRAY* bytecode_array, SPVM_OP* op_inc, int32_t value) {
   

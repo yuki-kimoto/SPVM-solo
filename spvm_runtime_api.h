@@ -1,6 +1,9 @@
 #ifndef SPVM_RUNTIME_API_API_H
 #define SPVM_RUNTIME_API_API_H
 
+#include "spvm_base.h"
+#include "spvm_data_api.h"
+
 int64_t SPVM_RUNTIME_API_calcurate_data_byte_size(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data);
 
 void SPVM_RUNTIME_API_dec_data_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data);

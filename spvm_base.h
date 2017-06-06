@@ -12,22 +12,6 @@ typedef struct SPVM_runtime SPVM_RUNTIME;
 union SPVM_value;
 typedef union SPVM_value SPVM_VALUE;
 
-/* spvm_data_array.h */
-struct SPVM_data_array;
-typedef struct SPVM_data_array SPVM_DATA_ARRAY;
-
-/* spvm_data.h */
-struct SPVM_data;
-typedef struct SPVM_data SPVM_DATA;
-
-/* spvm_data_string.h */
-struct SPVM_data_string;
-typedef struct SPVM_data_string SPVM_DATA_STRING;
-
-/* spvm_data_object.h */
-struct SPVM_data_object;
-typedef struct SPVM_data_object SPVM_DATA_OBJECT;
-
 /* spvm_env.h */
 struct SPVM_sv;
 typedef struct SPVM_sv SPVM_SV;

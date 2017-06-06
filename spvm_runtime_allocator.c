@@ -5,16 +5,13 @@
 #include <math.h>
 
 #include "spvm.h"
+#include "spvm_data_api.h"
 #include "spvm_runtime_allocator.h"
 #include "spvm_runtime_api.h"
 #include "spvm_util_allocator.h"
 #include "spvm_memory_pool.h"
 #include "spvm_array.h"
 #include "spvm_runtime.h"
-#include "spvm_data.h"
-#include "spvm_data_string.h"
-#include "spvm_data_array.h"
-#include "spvm_data_object.h"
 #include "spvm_constant_pool.h"
 #include "spvm_constant_pool_package.h"
 

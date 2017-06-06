@@ -4,15 +4,20 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include "spvm_sv.h"
 #include "spvm_data_api.h"
-#include "spvm_data.h"
-#include "spvm_data_array.h"
-#include "spvm_data_object.h"
-#include "spvm_data_string.h"
 
-inline SPVM_SV* SPVM_DATA_API_get_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_STRING* data_string) {
-  (void)spvm;
-  (void)runtime;
+const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {
+  sizeof(int8_t),
+  sizeof(int16_t),
+  sizeof(int32_t),
+  sizeof(int64_t),
+  sizeof(float),
+  sizeof(double),
+  sizeof(void*),
+};
+
+inline SPVM_SV* SPVM_DATA_API_get_string_sv(SPVM_DATA_STRING* data_string) {
   
   return *(SPVM_SV**)((intptr_t)data_string + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
 }
