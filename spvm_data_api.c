@@ -19,6 +19,48 @@ const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {
   sizeof(void*),
 };
 
+inline void SPVM_DATA_API_set_object_field_value_byte(SPVM_DATA_OBJECT* data_object, const char* name, int8_t value) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  fields[field_index].byte_value = value;
+}
+
+inline void SPVM_DATA_API_set_object_field_value_short(SPVM_DATA_OBJECT* data_object, const char* name, int16_t value) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  fields[field_index].short_value = value;
+}
+
+inline void SPVM_DATA_API_set_object_field_value_int(SPVM_DATA_OBJECT* data_object, const char* name, int32_t value) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  fields[field_index].int_value = value;
+}
+
+inline void SPVM_DATA_API_set_object_field_value_long(SPVM_DATA_OBJECT* data_object, const char* name, int64_t value) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  fields[field_index].long_value = value;
+}
+
+inline void SPVM_DATA_API_set_object_field_value_float(SPVM_DATA_OBJECT* data_object, const char* name, float value) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  fields[field_index].float_value = value;
+}
+
+inline void SPVM_DATA_API_set_object_field_value_double(SPVM_DATA_OBJECT* data_object, const char* name, double value) {
+  
+  SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);
+  int32_t field_index = SPVM_DATA_API_get_object_field_index(data_object, name);
+  fields[field_index].double_value = value;
+}
+
 inline int8_t SPVM_DATA_API_get_object_field_value_byte(SPVM_DATA_OBJECT* data_object, const char* name) {
   
   SPVM_VALUE* fields = SPVM_DATA_API_get_object_fields(data_object);

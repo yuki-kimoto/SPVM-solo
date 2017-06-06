@@ -84,12 +84,19 @@ int32_t SPVM_DATA_API_dump_object_field_names(SPVM_DATA_OBJECT* data_object);
 int32_t SPVM_DATA_API_get_object_field_index(SPVM_DATA_OBJECT* data_object, const char* name);
 SPVM_VALUE* SPVM_DATA_API_get_object_fields(SPVM_DATA_OBJECT* data_object);
 
-inline int8_t SPVM_DATA_API_get_object_field_value_byte(SPVM_DATA_OBJECT* data_object, const char* name);
-inline int16_t SPVM_DATA_API_get_object_field_value_short(SPVM_DATA_OBJECT* data_object, const char* name);
-inline int32_t SPVM_DATA_API_get_object_field_value_int(SPVM_DATA_OBJECT* data_object, const char* name);
-inline int64_t SPVM_DATA_API_get_object_field_value_long(SPVM_DATA_OBJECT* data_object, const char* name);
-inline float SPVM_DATA_API_get_object_field_value_float(SPVM_DATA_OBJECT* data_object, const char* name);
-inline double SPVM_DATA_API_get_object_field_value_double(SPVM_DATA_OBJECT* data_object, const char* name);
-inline SPVM_DATA* SPVM_DATA_API_get_object_field_value_ref(SPVM_DATA_OBJECT* data_object, const char* name);
+int8_t SPVM_DATA_API_get_object_field_value_byte(SPVM_DATA_OBJECT* data_object, const char* name);
+int16_t SPVM_DATA_API_get_object_field_value_short(SPVM_DATA_OBJECT* data_object, const char* name);
+int32_t SPVM_DATA_API_get_object_field_value_int(SPVM_DATA_OBJECT* data_object, const char* name);
+int64_t SPVM_DATA_API_get_object_field_value_long(SPVM_DATA_OBJECT* data_object, const char* name);
+float SPVM_DATA_API_get_object_field_value_float(SPVM_DATA_OBJECT* data_object, const char* name);
+double SPVM_DATA_API_get_object_field_value_double(SPVM_DATA_OBJECT* data_object, const char* name);
+SPVM_DATA* SPVM_DATA_API_get_object_field_value_ref(SPVM_DATA_OBJECT* data_object, const char* name);
+
+void SPVM_DATA_API_set_object_field_value_byte(SPVM_DATA_OBJECT* data_object, const char* name, int8_t value);
+void SPVM_DATA_API_set_object_field_value_short(SPVM_DATA_OBJECT* data_object, const char* name, int16_t value);
+void SPVM_DATA_API_set_object_field_value_int(SPVM_DATA_OBJECT* data_object, const char* name, int32_t value);
+void SPVM_DATA_API_set_object_field_value_long(SPVM_DATA_OBJECT* data_object, const char* name, int64_t value);
+void SPVM_DATA_API_set_object_field_value_float(SPVM_DATA_OBJECT* data_object, const char* name, float value);
+void SPVM_DATA_API_set_object_field_value_double(SPVM_DATA_OBJECT* data_object, const char* name, double value);
 
 #endif

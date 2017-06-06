@@ -2131,7 +2131,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
       index = (*(pc + 1) << 8) + *(pc + 2);
       *(int32_t*)((intptr_t)data_object + SPVM_DATA_C_HEADER_BYTE_SIZE + sizeof(SPVM_VALUE) * index)
         = call_stack[operand_stack_top].int_value;
-
+      
       operand_stack_top -= 2;
       pc += 3;
       goto *jump[*pc];
