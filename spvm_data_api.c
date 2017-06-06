@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "spvm_sv.h"
 #include "spvm_data_api.h"
@@ -27,8 +28,8 @@ inline int32_t SPVM_DATA_API_dump_object_field_names(SPVM_DATA_OBJECT* data_obje
   
   for (int32_t i = 0; i < length; i++) {
     int32_t name_index = constant_pool[field_name_indexes_constant_pool_address + i + 1];
-    char* name = (char*)&constant_pool[name_index];
-    warn("AAAAAAAAAAAAAAAA %d %s", name_index, name);
+    char* name = (char*)&constant_pool[name_index + 1];
+    fprintf(stderr, "%s\n", name);
   }
   
   return length;

@@ -1833,9 +1833,6 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     
     assert(data_object_byte_size == SPVM_RUNTIME_API_calcurate_data_byte_size(spvm, spvm->runtime, (SPVM_DATA*)data_object));
     
-    // SPVM_DATA_API_get_object_fields_length(data_object);
-    SPVM_DATA_API_dump_object_field_names(data_object);
-    
     // Push object
     operand_stack_top++;
     call_stack[operand_stack_top].address_value = data_object;
