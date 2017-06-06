@@ -19,7 +19,7 @@ const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {
 
 inline SPVM_SV* SPVM_DATA_API_get_string_sv(SPVM_DATA_STRING* data_string) {
   
-  return *(SPVM_SV**)((intptr_t)data_string + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
+  return *(SPVM_SV**)((intptr_t)data_string + SPVM_DATA_C_HEADER_BYTE_SIZE);
 }
 
 inline int32_t* SPVM_DATA_API_get_constant_pool(SPVM_DATA* data) {
@@ -39,30 +39,30 @@ inline int32_t SPVM_DATA_API_get_array_length(SPVM_DATA_ARRAY* data_array) {
 
 inline int8_t* SPVM_DATA_API_get_array_values_byte(SPVM_DATA_ARRAY* data_array) {
   
-  return (int8_t*)((intptr_t)data_array + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
+  return (int8_t*)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE);
 }
 
 inline int16_t* SPVM_DATA_API_get_array_values_short(SPVM_DATA_ARRAY* data_array) {
   
-  return (int16_t*)((intptr_t)data_array + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
+  return (int16_t*)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE);
 }
 
 inline int32_t* SPVM_DATA_API_get_array_values_int(SPVM_DATA_ARRAY* data_array) {
   
-  return (int32_t*)((intptr_t)data_array + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
+  return (int32_t*)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE);
 }
 
 inline int64_t* SPVM_DATA_API_get_array_values_long(SPVM_DATA_ARRAY* data_array) {
   
-  return (int64_t*)((intptr_t)data_array + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
+  return (int64_t*)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE);
 }
 
 inline float* SPVM_DATA_API_get_array_values_float(SPVM_DATA_ARRAY* data_array) {
   
-  return (float*)((intptr_t)data_array + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
+  return (float*)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE);
 }
 
 inline double* SPVM_DATA_API_get_array_values_double(SPVM_DATA_ARRAY* data_array) {
   
-  return (double*)((intptr_t)data_array + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
+  return (double*)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE);
 }

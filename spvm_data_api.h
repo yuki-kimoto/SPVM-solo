@@ -1,30 +1,21 @@
 #ifndef SPVM_DATA_API_H
 #define SPVM_DATA_API_H
 
-enum {
-  SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE = 32
-};
-
-/* spvm_data_array.h */
 struct SPVM_data_array;
 typedef struct SPVM_data_array SPVM_DATA_ARRAY;
 
-/* spvm_data.h */
 struct SPVM_data;
 typedef struct SPVM_data SPVM_DATA;
 
-/* spvm_data_string.h */
 struct SPVM_data_string;
 typedef struct SPVM_data_string SPVM_DATA_STRING;
 
-/* spvm_data_object.h */
 struct SPVM_data_object;
 typedef struct SPVM_data_object SPVM_DATA_OBJECT;
 
-struct SPVM_data {
-  int32_t* constant_pool;
-  int8_t type;
-  int32_t ref_count;
+// SPVM_DATA
+enum {
+  SPVM_DATA_C_HEADER_BYTE_SIZE = 32
 };
 
 enum {
@@ -33,6 +24,13 @@ enum {
   SPVM_DATA_C_TYPE_ARRAY = 2,
 };
 
+struct SPVM_data {
+  int32_t* constant_pool;
+  int8_t type;
+  int32_t ref_count;
+};
+
+// SPVM_DATA_ARRAY
 struct SPVM_data_array {
   int32_t* constant_pool;
   int8_t type;
@@ -53,6 +51,7 @@ enum {
 
 extern const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[];
 
+// SPVM_DATA_OBJECT
 struct SPVM_data_object {
   int32_t* constant_pool;
   int8_t type;
@@ -60,6 +59,7 @@ struct SPVM_data_object {
   int32_t package_constant_pool_address;
 };
 
+// SPVM_DATA_STRING
 struct SPVM_data_string {
   int32_t* constant_pool;
   int8_t type;
