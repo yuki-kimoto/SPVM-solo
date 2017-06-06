@@ -337,13 +337,6 @@ inline void SPVM_RUNTIME_API_push_var_address(SPVM* spvm, SPVM_RUNTIME* runtime,
   runtime->call_stack[runtime->operand_stack_top].address_value = value;
 }
 
-inline int32_t SPVM_RUNTIME_API_get_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
-  (void)spvm;
-  (void)runtime;
-  
-  return data->ref_count;
-}
-
 inline SPVM_SV* SPVM_RUNTIME_API_get_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_STRING* data_string) {
   (void)spvm;
   (void)runtime;

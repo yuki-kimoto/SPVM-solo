@@ -469,7 +469,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     
     // Free string if need
     if (return_value != NULL) {
-      int32_t ref_count = SPVM_RUNTIME_API_get_ref_count(spvm, runtime, return_value);
+      int32_t ref_count = SPVM_DATA_API_get_ref_count(return_value);
       if (ref_count == 0) {
         SPVM_SvREFCNT_dec(sv_message);
         SPVM_RUNTIME_ALLOCATOR_free_data(spvm, runtime->allocator, return_value);

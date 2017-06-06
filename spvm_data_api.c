@@ -27,9 +27,14 @@ inline int32_t* SPVM_DATA_API_get_constant_pool(SPVM_DATA* data) {
   return data->constant_pool;
 }
 
-inline int32_t SPVM_DATA_API_get_array_length(SPVM_DATA_ARRAY* array) {
+inline int32_t SPVM_DATA_API_get_ref_count(SPVM_DATA* data) {
   
-  return array->length;
+  return data->ref_count;
+}
+
+inline int32_t SPVM_DATA_API_get_array_length(SPVM_DATA_ARRAY* data_array) {
+  
+  return data_array->length;
 }
 
 inline int8_t* SPVM_DATA_API_get_array_values_byte(SPVM_DATA_ARRAY* data_array) {
