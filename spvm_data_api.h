@@ -57,6 +57,7 @@ struct SPVM_data_object {
   int8_t type;
   int32_t ref_count;
   int32_t package_constant_pool_address;
+  int32_t field_names_constant_pool_address;
 };
 
 // SPVM_DATA_STRING
