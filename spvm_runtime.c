@@ -23,6 +23,10 @@
 SPVM_RUNTIME* SPVM_RUNTIME_new(SPVM* spvm) {
   (void)spvm;
   
+  assert(sizeof(SPVM_DATA_ARRAY) <= SPVM_DATA_C_HEADER_SIZE);
+  assert(sizeof(SPVM_DATA_OBJECT) <= SPVM_DATA_C_HEADER_SIZE);
+  assert(sizeof(SPVM_DATA_STRING) <= SPVM_DATA_C_HEADER_SIZE);
+  
   SPVM_RUNTIME* runtime = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(1, sizeof(SPVM_RUNTIME));
   
   // Runtime memory allocator
