@@ -2,7 +2,7 @@
 #define SPVM_DATA_H
 
 enum {
-  SPVM_DATA_C_HEADER_SIZE = 32
+  SPVM_DATA_C_HEADER_BYTE_SIZE = 32
 };
 
 struct SPVM_data {
