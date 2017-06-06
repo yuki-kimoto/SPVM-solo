@@ -18,6 +18,33 @@ const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {
   sizeof(void*),
 };
 
+inline int32_t SPVM_DATA_API_get_object_field_index(SPVM_DATA_OBJECT* data_object, const char* name) {
+  
+  int32_t field_name_indexes_constant_pool_address = data_object->field_name_indexes_constant_pool_address;
+  
+  int32_t* constant_pool = data_object->constant_pool;
+  
+  int32_t length = constant_pool[field_name_indexes_constant_pool_address];
+  
+  int32_t field_index;
+  _Bool found = 0;
+  for (int32_t i = 0; i < length; i++) {
+    int32_t name_index = constant_pool[field_name_indexes_constant_pool_address + i + 1];
+    char* match_name = (char*)&constant_pool[name_index + 1];
+    if (strcmp(name, match_name) == 0) {
+      found = 1;
+      field_index = i;
+    }
+  }
+  
+  if (!found) {
+    fprintf(stderr, "Can't find filed name \"%s\"\n", name);
+    abort();
+  }
+  
+  return field_index;
+}
+
 inline int32_t SPVM_DATA_API_dump_object_field_names(SPVM_DATA_OBJECT* data_object) {
   
   int32_t field_name_indexes_constant_pool_address = data_object->field_name_indexes_constant_pool_address;
