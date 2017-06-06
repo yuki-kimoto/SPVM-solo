@@ -6,18 +6,10 @@
 
 int64_t SPVM_RUNTIME_API_calcurate_data_byte_size(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data);
 
-void SPVM_RUNTIME_API_dec_data_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data);
-void SPVM_RUNTIME_API_inc_data_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data);
+void SPVM_RUNTIME_API_dec_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data);
+void SPVM_RUNTIME_API_inc_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data);
 
-int32_t SPVM_RUNTIME_API_get_data_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data);
-int32_t SPVM_RUNTIME_API_get_array_length(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_ARRAY* array);
-
-int8_t* SPVM_RUNTIME_API_get_array_byte_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address);
-int16_t* SPVM_RUNTIME_API_get_array_short_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address);
-int32_t* SPVM_RUNTIME_API_get_array_int_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address);
-int64_t* SPVM_RUNTIME_API_get_array_long_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address);
-float* SPVM_RUNTIME_API_get_array_float_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address);
-double* SPVM_RUNTIME_API_get_array_double_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address);
+int32_t SPVM_RUNTIME_API_get_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data);
 
 SPVM_SV* SPVM_RUNTIME_API_get_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_STRING* string);
 

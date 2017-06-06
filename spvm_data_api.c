@@ -22,12 +22,12 @@ inline SPVM_SV* SPVM_DATA_API_get_string_sv(SPVM_DATA_STRING* data_string) {
   return *(SPVM_SV**)((intptr_t)data_string + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
 }
 
-int32_t* SPVM_DATA_API_get_constant_pool(SPVM_DATA* data) {
+inline int32_t* SPVM_DATA_API_get_constant_pool(SPVM_DATA* data) {
   
   return data->constant_pool;
 }
 
-inline int32_t SPVM_DATA_API_get_array_length(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_ARRAY* array) {
+inline int32_t SPVM_DATA_API_get_array_length(SPVM_DATA_ARRAY* array) {
   
   return array->length;
 }

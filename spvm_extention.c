@@ -8,20 +8,21 @@
 #include "spvm_runtime.h"
 #include "spvm_runtime_api.h"
 #include "spvm_sv.h"
+#include "spvm_data_api.h"
 
 void SPVM_EXTENTION_std__sum_int(SPVM* spvm, SPVM_RUNTIME* runtime) {
   (void)spvm;
   (void)runtime;
   
-  void* int_array = SPVM_RUNTIME_API_get_var_address(spvm, runtime, 0);
+  SPVM_DATA_ARRAY* data_array = SPVM_RUNTIME_API_get_var_address(spvm, runtime, 0);
   
-  int32_t length = SPVM_RUNTIME_API_get_array_length(spvm, runtime, int_array);
+  int32_t length = SPVM_DATA_API_get_array_length(data_array);
   
-  int32_t* int_array_data = SPVM_RUNTIME_API_get_array_int_values(spvm, runtime, int_array);
+  int32_t* values = SPVM_DATA_API_get_array_values_int(data_array);
   
   int64_t total = 0;
   for (int32_t i = 0; i < length; i++) {
-    total += int_array_data[i];
+    total += values[i];
   }
   
   SPVM_RUNTIME_API_push_return_value_int(spvm, runtime, total);

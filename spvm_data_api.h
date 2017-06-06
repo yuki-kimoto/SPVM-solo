@@ -68,7 +68,7 @@ struct SPVM_data_string {
 
 SPVM_SV* SPVM_DATA_API_get_string_sv(SPVM_DATA_STRING* data_string);
 int32_t* SPVM_DATA_API_get_constant_pool(SPVM_DATA* data);
-int32_t SPVM_DATA_API_get_array_length(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_ARRAY* array);
+int32_t SPVM_DATA_API_get_array_length(SPVM_DATA_ARRAY* data_array);
 int8_t* SPVM_DATA_API_get_array_values_byte(SPVM_DATA_ARRAY* data_array);
 int16_t* SPVM_DATA_API_get_array_values_short(SPVM_DATA_ARRAY* data_array);
 int32_t* SPVM_DATA_API_get_array_values_int(SPVM_DATA_ARRAY* data_array);

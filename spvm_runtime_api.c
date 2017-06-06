@@ -337,13 +337,6 @@ inline void SPVM_RUNTIME_API_push_var_address(SPVM* spvm, SPVM_RUNTIME* runtime,
   runtime->call_stack[runtime->operand_stack_top].address_value = value;
 }
 
-inline int32_t SPVM_RUNTIME_API_get_array_length(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA_ARRAY* array) {
-  (void)spvm;
-  (void)runtime;
-  
-  return array->length;
-}
-
 inline int32_t SPVM_RUNTIME_API_get_ref_count(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
   (void)spvm;
   (void)runtime;
@@ -367,48 +360,6 @@ inline char* SPVM_RUNTIME_API_get_string_value(SPVM* spvm, SPVM_RUNTIME* runtime
   char* value = SPVM_COMPAT_SVpv(sv);
   
   return value;
-}
-
-inline int8_t* SPVM_RUNTIME_API_get_array_byte_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address) {
-  (void)spvm;
-  (void)runtime;
-  
-  return (int8_t*)((intptr_t)address + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
-}
-
-inline int16_t* SPVM_RUNTIME_API_get_array_short_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address) {
-  (void)spvm;
-  (void)runtime;
-  
-  return (int16_t*)((intptr_t)address + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
-}
-
-inline int32_t* SPVM_RUNTIME_API_get_array_int_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address) {
-  (void)spvm;
-  (void)runtime;
-  
-  return (int32_t*)((intptr_t)address + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
-}
-
-inline int64_t* SPVM_RUNTIME_API_get_array_long_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address) {
-  (void)spvm;
-  (void)runtime;
-  
-  return (int64_t*)((intptr_t)address + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
-}
-
-inline float* SPVM_RUNTIME_API_get_array_float_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address) {
-  (void)spvm;
-  (void)runtime;
-  
-  return (float*)((intptr_t)address + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
-}
-
-inline double* SPVM_RUNTIME_API_get_array_double_values(SPVM* spvm, SPVM_RUNTIME* runtime, void* address) {
-  (void)spvm;
-  (void)runtime;
-  
-  return (double*)((intptr_t)address + SPVM_DATA_API_C_DATA_HEADER_BYTE_SIZE);
 }
 
 inline void* SPVM_RUNTIME_API_create_string_sv(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_SV* sv) {
