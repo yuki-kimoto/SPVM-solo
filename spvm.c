@@ -16,8 +16,6 @@
 #include "spvm_op.h"
 #include "spvm_sub.h"
 
-#include "perl.h"
-
 void SPVM_run(SPVM* spvm, const char* package_name) {
   
   SPVM_PARSER* parser = spvm->parser;
@@ -64,11 +62,10 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
   
 #ifdef DEBUG
   if (runtime->abort) {
-    void* message = SPVM_RUNTIME_API_pop_return_value_address(spvm, runtime);
+    void* message_address = SPVM_RUNTIME_API_pop_return_value_address(spvm, runtime);
+    char* message = SPVM_DATA_API_get_array_values_byte(message_address);
     
-    SPVM_SV* sv_message = SPVM_RUNTIME_API_get_string_sv(spvm, runtime, message);
-    
-    printf("%s", sv_message->buffer);
+    printf("%s", message);
     printf("\n");
   }
   else {

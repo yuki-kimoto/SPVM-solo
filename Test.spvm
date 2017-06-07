@@ -105,18 +105,6 @@ package Test {
     #}
     
     {
-      my $string : string = "abc";
-    }
-    
-    {
-      my $strings : string[] = malloc string[5];
-      $strings[0] = "abc";
-      $strings[1] = "ppp";
-      
-      std::println($strings[1]);
-    }
-    
-    {
       malloc Test::Minimal;
     }
     
@@ -182,12 +170,12 @@ package Test {
       my $total = std::sum_int($nums);
       std::println_int($total);
     }
-
-    {
-      my $string = "ace";
-      
-      std::println($string);
-    }
+    
+    # {
+    #  my $string = "ace";
+    #  
+    #  std::println($string);
+    # }
     
     {
       my $num = (byte)3;

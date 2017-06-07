@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "perl.h"
 #include "spvm_data_api.h"
 
 const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {
@@ -178,11 +177,6 @@ inline int32_t SPVM_DATA_API_get_object_fields_length(SPVM_DATA_OBJECT* data_obj
   int32_t length = constant_pool[field_name_indexes_constant_pool_address];
   
   return length;
-}
-
-inline SPVM_SV* SPVM_DATA_API_get_string_sv(SPVM_DATA_STRING* data_string) {
-  
-  return *(SPVM_SV**)((intptr_t)data_string + SPVM_DATA_C_HEADER_BYTE_SIZE);
 }
 
 inline int32_t* SPVM_DATA_API_get_constant_pool(SPVM_DATA* data) {

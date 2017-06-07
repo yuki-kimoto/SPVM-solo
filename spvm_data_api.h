@@ -1,8 +1,6 @@
 #ifndef SPVM_DATA_API_H
 #define SPVM_DATA_API_H
 
-#include "perl.h"
-
 union SPVM_value;
 typedef union SPVM_value SPVM_VALUE;
 
@@ -11,9 +9,6 @@ typedef struct SPVM_data SPVM_DATA;
 
 struct SPVM_data_array;
 typedef struct SPVM_data_array SPVM_DATA_ARRAY;
-
-struct SPVM_data_string;
-typedef struct SPVM_data_string SPVM_DATA_STRING;
 
 struct SPVM_data_object;
 typedef struct SPVM_data_object SPVM_DATA_OBJECT;
@@ -36,8 +31,7 @@ enum {
 
 enum {
   SPVM_DATA_C_TYPE_OBJECT = 0,
-  SPVM_DATA_C_TYPE_STRING = 1,
-  SPVM_DATA_C_TYPE_ARRAY = 2,
+  SPVM_DATA_C_TYPE_ARRAY = 1,
 };
 
 struct SPVM_data {
@@ -76,14 +70,6 @@ struct SPVM_data_object {
   int32_t field_name_indexes_constant_pool_address;
 };
 
-// SPVM_DATA_STRING
-struct SPVM_data_string {
-  int32_t* constant_pool;
-  int8_t type;
-  int32_t ref_count;
-};
-
-SPVM_SV* SPVM_DATA_API_get_string_sv(SPVM_DATA_STRING* data_string);
 int32_t* SPVM_DATA_API_get_constant_pool(SPVM_DATA* data);
 int32_t SPVM_DATA_API_get_ref_count(SPVM_DATA* data);
 int32_t SPVM_DATA_API_get_array_length(SPVM_DATA_ARRAY* data_array);

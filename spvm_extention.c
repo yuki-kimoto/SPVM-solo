@@ -9,8 +9,6 @@
 #include "spvm_runtime_api.h"
 #include "spvm_data_api.h"
 
-#include "perl.h"
-
 void SPVM_EXTENTION_std__sum_int(SPVM* spvm, SPVM_RUNTIME* runtime) {
   (void)spvm;
   (void)runtime;
@@ -33,15 +31,13 @@ void SPVM_EXTENTION_std__println(SPVM* spvm, SPVM_RUNTIME* runtime) {
   (void)spvm;
   (void)runtime;
   
-  void* string = SPVM_RUNTIME_API_get_var_address(spvm, runtime, 0);
-  
-  SPVM_SV* sv = SPVM_RUNTIME_API_get_string_sv(spvm, runtime, string);
-  
-  char* buffer = sv->buffer;
-  int32_t length = sv->length;
+  SPVM_DATA_ARRAY* data_array = SPVM_RUNTIME_API_get_var_address(spvm, runtime, 0);
+
+  int32_t length = SPVM_DATA_API_get_array_values_byte(data_array) - 1;
+  char* string = SPVM_DATA_API_get_array_values_byte(data_array);
   
   for (int32_t i = 0; i < length; i++) {
-    putchar((int)buffer[i]);
+    putchar((int)string[i]);
   }
   
   printf("\n");
@@ -105,18 +101,14 @@ void SPVM_EXTENTION_std__print(SPVM* spvm, SPVM_RUNTIME* runtime) {
   (void)spvm;
   (void)runtime;
   
-  void* string = SPVM_RUNTIME_API_get_var_address(spvm, runtime, 0);
-  
-  SPVM_SV* sv = SPVM_RUNTIME_API_get_string_sv(spvm, runtime, string);
-  
-  char* buffer = sv->buffer;
-  int32_t length = sv->length;
+  SPVM_DATA_ARRAY* data_array = SPVM_RUNTIME_API_get_var_address(spvm, runtime, 0);
+
+  int32_t length = SPVM_DATA_API_get_array_values_byte(data_array) - 1;
+  char* string = SPVM_DATA_API_get_array_values_byte(data_array);
   
   for (int32_t i = 0; i < length; i++) {
-    putchar((int)buffer[i]);
+    putchar((int)string[i]);
   }
-  
-  printf("\n");
 }
 
 void SPVM_EXTENTION_std__print_byte(SPVM* spvm, SPVM_RUNTIME* runtime) {
