@@ -613,21 +613,21 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           
           memcpy(keyword, cur_token_ptr, str_len);
           keyword[str_len] = '\0';
-
+          
           // Keyname
-          if (memcmp(keyword, "my", str_len) == 0) {
+          if (strcmp(keyword, "my") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_MY_VAR);
             return MY;
           }
-          else if (memcmp(keyword, "has", str_len) == 0) {
+          else if (strcmp(keyword, "has") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_FIELD);
             return HAS;
           }
-          else if (memcmp(keyword, "sub", str_len) == 0) {
+          else if (strcmp(keyword, "sub") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_SUB);
             return SUB;
           }
-          else if (memcmp(keyword, "package", str_len) == 0) {
+          else if (strcmp(keyword, "package") == 0) {
             // File can contains only one package
             if (parser->current_package_count) {
               fprintf(stderr, "Can't write second package declaration in file at %s line %" PRId32 "\n", parser->cur_module_path, parser->cur_line);
@@ -638,97 +638,97 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_PACKAGE);
             return PACKAGE;
           }
-          else if (memcmp(keyword, "switch", str_len) == 0) {
+          else if (strcmp(keyword, "switch") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_SWITCH);
             return SWITCH;
           }
-          else if (memcmp(keyword, "case", str_len) == 0) {
+          else if (strcmp(keyword, "case") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_CASE);
             return CASE;
           }
-          else if (memcmp(keyword, "default", str_len) == 0) {
+          else if (strcmp(keyword, "default") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_DEFAULT);
             return DEFAULT;
           }
-          else if (memcmp(keyword, "if", str_len) == 0) {
+          else if (strcmp(keyword, "if") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_IF);
             return IF;
           }
-          else if (memcmp(keyword, "elsif", str_len) == 0) {
+          else if (strcmp(keyword, "elsif") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_ELSIF);
             return ELSIF;
           }
-          else if (memcmp(keyword, "else", str_len) == 0) {
+          else if (strcmp(keyword, "else") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_ELSE);
             return ELSE;
           }
-          else if (memcmp(keyword, "return", str_len) == 0) {
+          else if (strcmp(keyword, "return") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_RETURN);
             return RETURN;
           }
-          else if (memcmp(keyword, "for", str_len) == 0) {
+          else if (strcmp(keyword, "for") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_FOR);
             return FOR;
           }
-          else if (memcmp(keyword, "last", str_len) == 0) {
+          else if (strcmp(keyword, "last") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_LAST);
             return LAST;
           }
-          else if (memcmp(keyword, "next", str_len) == 0) {
+          else if (strcmp(keyword, "next") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_NEXT);
             return NEXT;
           }
-          else if (memcmp(keyword, "use", str_len) == 0) {
+          else if (strcmp(keyword, "use") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_USE);
             return USE;
           }
-          else if (memcmp(keyword, "undef", str_len) == 0) {
+          else if (strcmp(keyword, "undef") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_UNDEF);
             return UNDEF;
           }
-          else if (memcmp(keyword, "void", str_len) == 0) {
+          else if (strcmp(keyword, "void") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_VOID);
             return VOID;
           }
-          else if (memcmp(keyword, "while", str_len) == 0) {
+          else if (strcmp(keyword, "while") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_WHILE);
             return WHILE;
           }
-          else if (memcmp(keyword, "malloc", str_len) == 0) {
+          else if (strcmp(keyword, "malloc") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_MALLOC);
             return MALLOC;
           }
-          else if (memcmp(keyword, "enum", str_len) == 0) {
+          else if (strcmp(keyword, "enum") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_ENUM);
             return ENUM;
           }
-          else if (memcmp(keyword, "die", str_len) == 0) {
+          else if (strcmp(keyword, "die") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_DIE);
             return DIE;
           }
-          else if (memcmp(keyword, "try", str_len) == 0) {
+          else if (strcmp(keyword, "try") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_TRY);
             return TRY;
           }
-          else if (memcmp(keyword, "catch", str_len) == 0) {
+          else if (strcmp(keyword, "catch") == 0) {
             yylvalp->opval = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_CATCH);
             return CATCH;
           }
-          else if (memcmp(keyword, "native", str_len) == 0) {
+          else if (strcmp(keyword, "native") == 0) {
             SPVM_OP* op = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_DESCRIPTOR);
             op->code = SPVM_DESCRIPTOR_C_CODE_NATIVE;
             yylvalp->opval = op;
             
             return DESCRIPTOR;
           }
-          else if (memcmp(keyword, "const", str_len) == 0) {
+          else if (strcmp(keyword, "const") == 0) {
             SPVM_OP* op = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_DESCRIPTOR);
             op->code = SPVM_DESCRIPTOR_C_CODE_CONST;
             yylvalp->opval = op;
             
             return DESCRIPTOR;
           }
-          else if (memcmp(keyword, "len", str_len) == 0) {
+          else if (strcmp(keyword, "len") == 0) {
             parser->bufptr++;
             SPVM_OP* op = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_ARRAY_LENGTH);
             yylvalp->opval = op;

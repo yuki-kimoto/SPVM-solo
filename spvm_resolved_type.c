@@ -66,6 +66,19 @@ _Bool SPVM_RESOLVED_TYPE_is_array_numeric(SPVM* spvm, SPVM_RESOLVED_TYPE* resolv
   }
 }
 
+_Bool SPVM_RESOLVED_TYPE_is_array_string(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
+  (void)spvm;
+  
+  const char* name = resolved_type->name;
+  
+  if (strcmp(name, "string[]") == 0) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 _Bool SPVM_RESOLVED_TYPE_is_integral(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
   (void)spvm;
   
@@ -81,6 +94,19 @@ _Bool SPVM_RESOLVED_TYPE_is_numeric(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_typ
   (void)spvm;
   
   if (resolved_type && resolved_type->id <= SPVM_RESOLVED_TYPE_C_ID_DOUBLE) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+_Bool SPVM_RESOLVED_TYPE_is_string(SPVM* spvm, SPVM_RESOLVED_TYPE* resolved_type) {
+  (void)spvm;
+
+  const char* name = resolved_type->name;
+
+  if (strcmp(name, "string") == 0){
     return 1;
   }
   else {
