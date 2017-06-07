@@ -7,8 +7,9 @@
 #include "spvm_extention.h"
 #include "spvm_runtime.h"
 #include "spvm_runtime_api.h"
-#include "spvm_sv.h"
 #include "spvm_data_api.h"
+
+#include "perl.h"
 
 void SPVM_EXTENTION_std__sum_int(SPVM* spvm, SPVM_RUNTIME* runtime) {
   (void)spvm;

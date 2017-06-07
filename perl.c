@@ -1,8 +1,9 @@
+// This source file is only contained in SPVM-solo
+
 #include <assert.h>
 #include <string.h>
 
-#include "spvm.h"
-#include "spvm_sv.h"
+#include "perl.h"
 #include "spvm_util_allocator.h"
 
 char* SPVM_COMPAT_SVpv(SPVM_SV* sv) {
@@ -27,8 +28,7 @@ SPVM_SV* SPVM_COMPAT_newSVsv(SPVM_SV* sv) {
   return sv;
 }
 
-SPVM_SV* SPVM_COMPAT_newSVpvn(SPVM* spvm, const char* pv, size_t length) {
-  (void)spvm;
+SPVM_SV* SPVM_COMPAT_newSVpvn(const char* pv, size_t length) {
   
   SPVM_SV* sv = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(1, sizeof(SPVM_SV));
   

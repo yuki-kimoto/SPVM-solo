@@ -8,10 +8,6 @@
 struct SPVM_runtime;
 typedef struct SPVM_runtime SPVM_RUNTIME;
 
-/* spvm_env.h */
-struct SPVM_sv;
-typedef struct SPVM_sv SPVM_SV;
-
 /* spvm_runtime_allocator.h */
 struct SPVM_runtime_allocator;
 typedef struct SPVM_runtime_allocator SPVM_RUNTIME_ALLOCATOR;

@@ -12,9 +12,9 @@
 #include "spvm_constant_pool_sub.h"
 #include "spvm_constant_pool_package.h"
 #include "spvm_constant_pool_field.h"
-#include "spvm_sv.h"
-#include "spvm_compat.h"
 #include "spvm_data_api.h"
+
+#include "perl.h"
 
 SPVM_RUNTIME* SPVM_RUNTIME_new(SPVM* spvm) {
   (void)spvm;
@@ -476,7 +476,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     }
 
     // New sv
-    SPVM_SV* new_sv_message = SPVM_COMPAT_newSVpvn(spvm, pv_message, strlen(pv_message));
+    SPVM_SV* new_sv_message = SPVM_COMPAT_newSVpvn(pv_message, strlen(pv_message));
     
     void* new_message_address = SPVM_RUNTIME_API_create_string_sv(spvm, runtime, new_sv_message);
     
@@ -1847,7 +1847,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     char* pv = (char*)&string_constant_pool_addresss[1];
     
     // New sv
-    SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, length);
+    SPVM_SV* sv = SPVM_COMPAT_newSVpvn(pv, length);
     
     // Create string
     SPVM_DATA_STRING* data_string = SPVM_RUNTIME_API_create_string_sv(spvm, runtime, sv);

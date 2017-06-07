@@ -11,9 +11,9 @@
 #include "spvm_constant_pool_sub.h"
 #include "spvm_constant_pool_package.h"
 #include "spvm_constant_pool_field.h"
-#include "spvm_sv.h"
-#include "spvm_compat.h"
 #include "spvm_data_api.h"
+
+#include "perl.h"
 
 inline int64_t SPVM_RUNTIME_API_calcurate_data_byte_size(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
   
@@ -386,7 +386,7 @@ inline SPVM_DATA_STRING* SPVM_RUNTIME_API_create_data_string_from_pv(SPVM* spvm,
   (void)runtime;
   
   // New sv
-  SPVM_SV* sv = SPVM_COMPAT_newSVpvn(spvm, pv, strlen(pv));
+  SPVM_SV* sv = SPVM_COMPAT_newSVpvn(pv, strlen(pv));
   
   SPVM_RUNTIME_ALLOCATOR* allocator = runtime->allocator;
   

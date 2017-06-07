@@ -1,6 +1,8 @@
 #ifndef SPVM_DATA_API_H
 #define SPVM_DATA_API_H
 
+#include "perl.h"
+
 union SPVM_value;
 typedef union SPVM_value SPVM_VALUE;
 

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "spvm_sv.h"
+#include "perl.h"
 #include "spvm_data_api.h"
 
 const int32_t SPVM_DATA_ARRAY_C_VALUE_SIZES[] = {

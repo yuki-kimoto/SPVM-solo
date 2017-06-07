@@ -11,11 +11,12 @@
 #include "spvm_constant_pool.h"
 #include "spvm_bytecode_array.h"
 #include "spvm_runtime.h"
-#include "spvm_sv.h"
 #include "spvm_runtime.h"
 #include "spvm_runtime_allocator.h"
 #include "spvm_op.h"
 #include "spvm_sub.h"
+
+#include "perl.h"
 
 void SPVM_run(SPVM* spvm, const char* package_name) {
   
