@@ -65,6 +65,30 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
     
     SPVM_ARRAY* op_fields_ref = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, spvm->parser->allocator, 0);
     SPVM_ARRAY* op_fields_value = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, spvm->parser->allocator, 0);
+
+    // Separate reference type and value type
+    _Bool field_type_error = 0;
+    for (int32_t field_pos = 0; field_pos < op_fields->length; field_pos++) {
+      SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields, field_pos);
+      SPVM_FIELD* field = op_field->uv.field;
+      SPVM_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
+      
+      // Check field type
+      if (SPVM_RESOLVED_TYPE_is_array(spvm, field_resolved_type)) {
+        if (!SPVM_RESOLVED_TYPE_is_array_numeric(spvm, field_resolved_type) && !SPVM_RESOLVED_TYPE_is_array_string(spvm, field_resolved_type)) {
+          SPVM_yyerror_format(spvm, "field type must not be object array at %s line %d\n", op_field->file, op_field->line);
+          field_type_error = 1;
+        }
+      }
+      else if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, field_resolved_type) && !SPVM_RESOLVED_TYPE_is_string(spvm, field_resolved_type)) {
+        SPVM_yyerror_format(spvm, "field type must not be object at %s line %d\n", op_field->file, op_field->line);
+        field_type_error = 1;
+      }
+    }
+    if (field_type_error) {
+      parser->fatal_error = 1;
+      return;
+    }
     
     // Separate reference type and value type
     int32_t ref_fields_length = 0;
@@ -72,6 +96,20 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields, field_pos);
       SPVM_FIELD* field = op_field->uv.field;
       SPVM_RESOLVED_TYPE* field_resolved_type = field->op_type->uv.type->resolved_type;
+      
+      // Check field type
+      if (SPVM_RESOLVED_TYPE_is_array(spvm, field_resolved_type)) {
+        if (!SPVM_RESOLVED_TYPE_is_array_numeric(spvm, field_resolved_type) && !SPVM_RESOLVED_TYPE_is_array_string(spvm, field_resolved_type)) {
+          SPVM_yyerror_format(spvm, "field type must be numeric or numeric array or string array at %s line %d\n", op_field->file, op_field->line);
+          parser->fatal_error = 1;
+          return;
+        }
+      }
+      else if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, field_resolved_type) && !SPVM_RESOLVED_TYPE_is_string(spvm, field_resolved_type)) {
+        SPVM_yyerror_format(spvm, "field type must be numeric or numeric array or string array at %s line %d\n", op_field->file, op_field->line);
+        parser->fatal_error = 1;
+        return;
+      }
       
       if (SPVM_RESOLVED_TYPE_is_numeric(spvm, field_resolved_type)) {
         SPVM_ARRAY_push(spvm, op_fields_value, op_field);
@@ -204,24 +242,6 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
           // [START]Preorder traversal position
           
           switch (op_cur->code) {
-            case SPVM_OP_C_CODE_FIELD: {
-              SPVM_FIELD* field = op_cur->uv.field;
-              SPVM_RESOLVED_TYPE* resolved_type = field->op_type->uv.type->resolved_type;
-              if (SPVM_RESOLVED_TYPE_is_array(spvm, resolved_type)) {
-                if (!SPVM_RESOLVED_TYPE_is_array_numeric(spvm, resolved_type) && !SPVM_RESOLVED_TYPE_is_array_string(spvm, resolved_type)) {
-                  SPVM_yyerror_format(spvm, "field type must be numeric or numeric array or string array at %s line %d\n", op_cur->file, op_cur->line);
-                  parser->fatal_error = 1;
-                  return;
-                }
-              }
-              else if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type) && !SPVM_RESOLVED_TYPE_is_string(spvm, resolved_type)) {
-                SPVM_yyerror_format(spvm, "field type must be numeric or numeric array or string array at %s line %d\n", op_cur->file, op_cur->line);
-                parser->fatal_error = 1;
-                return;
-              }
-              
-              break;
-            }
             case SPVM_OP_C_CODE_AND: {
               
               // Convert && to if statement

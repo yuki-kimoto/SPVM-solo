@@ -7,7 +7,8 @@ package Test::Simple {
   has values2 : long[];
   has message : string;
   has messages : string[];
-  has c : int;
+  # has c : Test::Simple;
+  # has d : Test::Simple[];
   
   has title : int;
   
