@@ -1,6 +1,8 @@
 #ifndef SPVM_RUNTIME_H
 #define SPVM_RUNTIME_H
 
+#include "spvm_data_api.h"
+
 struct SPVM_runtime {
   
   // Runtime memory allocator

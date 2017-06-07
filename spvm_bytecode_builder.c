@@ -27,7 +27,6 @@
 #include "spvm_constant_pool_field.h"
 #include "spvm_type.h"
 #include "spvm_limit.h"
-#include "spvm_value.h"
 #include "spvm_data_api.h"
 
 

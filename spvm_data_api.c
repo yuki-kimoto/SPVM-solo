@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "spvm_value.h"
 #include "spvm_sv.h"
 #include "spvm_data_api.h"
 

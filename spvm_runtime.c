@@ -14,7 +14,6 @@
 #include "spvm_constant_pool_field.h"
 #include "spvm_sv.h"
 #include "spvm_compat.h"
-#include "spvm_value.h"
 #include "spvm_data_api.h"
 
 SPVM_RUNTIME* SPVM_RUNTIME_new(SPVM* spvm) {

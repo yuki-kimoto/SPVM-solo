@@ -25,7 +25,6 @@
 #include "spvm_constant_pool.h"
 #include "spvm_bytecode.h"
 #include "spvm_bytecode_array.h"
-#include "spvm_value.h"
 
 void SPVM_DUMPER_dump_ast(SPVM* spvm, SPVM_OP* op_base) {
   int32_t depth = 0;

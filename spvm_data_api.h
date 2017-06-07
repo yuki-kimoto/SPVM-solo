@@ -1,17 +1,31 @@
 #ifndef SPVM_DATA_API_H
 #define SPVM_DATA_API_H
 
-struct SPVM_data_array;
-typedef struct SPVM_data_array SPVM_DATA_ARRAY;
+union SPVM_value;
+typedef union SPVM_value SPVM_VALUE;
 
 struct SPVM_data;
 typedef struct SPVM_data SPVM_DATA;
+
+struct SPVM_data_array;
+typedef struct SPVM_data_array SPVM_DATA_ARRAY;
 
 struct SPVM_data_string;
 typedef struct SPVM_data_string SPVM_DATA_STRING;
 
 struct SPVM_data_object;
 typedef struct SPVM_data_object SPVM_DATA_OBJECT;
+
+// SPVM_VALUE
+union SPVM_value {
+  int8_t byte_value;
+  int16_t short_value;
+  int32_t int_value;
+  int64_t long_value;
+  float float_value;
+  double double_value;
+  void* address_value;
+};
 
 // SPVM_DATA
 enum {

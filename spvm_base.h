@@ -8,10 +8,6 @@
 struct SPVM_runtime;
 typedef struct SPVM_runtime SPVM_RUNTIME;
 
-/* spvm_value.h */
-union SPVM_value;
-typedef union SPVM_value SPVM_VALUE;
-
 /* spvm_env.h */
 struct SPVM_sv;
 typedef struct SPVM_sv SPVM_SV;

@@ -33,7 +33,6 @@
 #include "spvm_limit.h"
 #include "spvm_extention.h"
 #include "spvm_extention_bind.h"
-#include "spvm_value.h"
 
 const char* const SPVM_OP_C_CODE_NAMES[] = {
   "IF",
