@@ -1901,7 +1901,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     char* pv = (char*)&string_constant_pool_addresss[1];
     
     SPVM_DATA_ARRAY* data_array = SPVM_RUNTIME_API_create_data_array_byte_from_pv(spvm, runtime, pv);
-    
+
     // Memory allocation error
     if (!data_array) {
       // Sub name

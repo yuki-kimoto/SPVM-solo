@@ -27,13 +27,28 @@ void SPVM_EXTENTION_std__sum_int(SPVM* spvm, SPVM_RUNTIME* runtime) {
   SPVM_RUNTIME_API_push_return_value_int(spvm, runtime, total);
 }
 
+void SPVM_EXTENTION_std__print(SPVM* spvm, SPVM_RUNTIME* runtime) {
+  (void)spvm;
+  (void)runtime;
+  
+  SPVM_DATA_ARRAY* data_array = SPVM_RUNTIME_API_get_var_address(spvm, runtime, 0);
+
+  int32_t length = SPVM_DATA_API_get_array_length(data_array) - 1;
+  char* string = SPVM_DATA_API_get_array_values_byte(data_array);
+  
+  for (int32_t i = 0; i < length; i++) {
+    putchar((int)string[i]);
+  }
+}
+
 void SPVM_EXTENTION_std__println(SPVM* spvm, SPVM_RUNTIME* runtime) {
   (void)spvm;
   (void)runtime;
   
   SPVM_DATA_ARRAY* data_array = SPVM_RUNTIME_API_get_var_address(spvm, runtime, 0);
 
-  int32_t length = SPVM_DATA_API_get_array_values_byte(data_array) - 1;
+  int32_t length = SPVM_DATA_API_get_array_length(data_array) - 1;
+  
   char* string = SPVM_DATA_API_get_array_values_byte(data_array);
   
   for (int32_t i = 0; i < length; i++) {
@@ -95,20 +110,6 @@ void SPVM_EXTENTION_std__println_double(SPVM* spvm, SPVM_RUNTIME* runtime) {
   double value = SPVM_RUNTIME_API_get_var_double(spvm, runtime, 0);
   
   printf("%f\n", value);
-}
-
-void SPVM_EXTENTION_std__print(SPVM* spvm, SPVM_RUNTIME* runtime) {
-  (void)spvm;
-  (void)runtime;
-  
-  SPVM_DATA_ARRAY* data_array = SPVM_RUNTIME_API_get_var_address(spvm, runtime, 0);
-
-  int32_t length = SPVM_DATA_API_get_array_values_byte(data_array) - 1;
-  char* string = SPVM_DATA_API_get_array_values_byte(data_array);
-  
-  for (int32_t i = 0; i < length; i++) {
-    putchar((int)string[i]);
-  }
 }
 
 void SPVM_EXTENTION_std__print_byte(SPVM* spvm, SPVM_RUNTIME* runtime) {

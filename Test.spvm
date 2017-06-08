@@ -171,11 +171,17 @@ package Test {
       std::println_int($total);
     }
     
-    # {
-    #  my $string = "ace";
-    #  
-    #  std::println($string);
-    # }
+    {
+      my $string = "ace";
+     
+      std::println($string);
+    }
+
+    {
+      my $string : byte[] = "ace";
+     
+      std::println($string);
+    }
     
     {
       my $num = (byte)3;

@@ -349,7 +349,12 @@ inline SPVM_DATA_ARRAY* SPVM_RUNTIME_API_create_data_array_byte_from_pv(SPVM* sp
   
   // Set array length
   data_array->length = length;
-
+  
+  // Copy string
+  memcpy((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE, pv, length);
+  
+  int8_t* string = SPVM_DATA_API_get_array_values_byte(data_array);
+  
   assert(data_array_byte_size == SPVM_RUNTIME_API_calcurate_data_byte_size(spvm, spvm->runtime, (SPVM_DATA*)data_array));
   
   return data_array;

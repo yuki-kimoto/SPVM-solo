@@ -195,7 +195,7 @@ inline int32_t SPVM_DATA_API_get_array_length(SPVM_DATA_ARRAY* data_array) {
 }
 
 inline int8_t* SPVM_DATA_API_get_array_values_byte(SPVM_DATA_ARRAY* data_array) {
-  
+
   return (int8_t*)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE);
 }
 

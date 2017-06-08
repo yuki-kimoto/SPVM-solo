@@ -430,7 +430,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
         SPVM_CONSTANT* constant = SPVM_CONSTANT_new(spvm);
         constant->code = SPVM_CONSTANT_C_CODE_STRING;
         constant->uv.string_value = str;
-        constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "string", strlen("string"));
+        constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
         op->uv.constant = constant;
         yylvalp->opval = (SPVM_OP*)op;
         
