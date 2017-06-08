@@ -76,8 +76,7 @@ Use the following types in source codes. This is defined in the standard header 
 
 # Limitation
 
-- Array can't have object except for string
-- Object can't have object except for array and string
+- Object can't have object and array of object
 
 # SPVM specification
 
@@ -107,13 +106,13 @@ Declaration
 
 Reference types are String type, Array type, Object type.
 
-**String type**
+**Object type**
 
-    string
+    ClassName
 
 Declaration
-    
-    my $message : string;
+
+    my $object : ClassName;
 
 **Array type**
 
@@ -121,8 +120,9 @@ Declaration
     short[]  short array
     int[]    int array array
     long[]   long array
+    float[]  float array
     doube[]  double array
-    string[] string array
+    ClassName[] object array
 
 Declaration
 
@@ -132,14 +132,7 @@ Declaration
     my $values : long[];
     my $values : float[];
     my $values : double[];
-    
-**Object type**
-
-    ClassName
-
-Declaration
-
-    my $object : ClassName;
+    my $values : ClassName[];
 
 ## Type inference
 
