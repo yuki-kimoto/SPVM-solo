@@ -74,12 +74,12 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       
       // Check field type
       if (SPVM_RESOLVED_TYPE_is_array(spvm, field_resolved_type)) {
-        if (!SPVM_RESOLVED_TYPE_is_array_numeric(spvm, field_resolved_type) && !SPVM_RESOLVED_TYPE_is_array_string(spvm, field_resolved_type)) {
+        if (!SPVM_RESOLVED_TYPE_is_array_numeric(spvm, field_resolved_type)) {
           SPVM_yyerror_format(spvm, "Type of field \"%s::%s\" must not be object array at %s line %d\n", package->op_name->uv.name, field->op_name->uv.name, op_field->file, op_field->line);
           field_type_error = 1;
         }
       }
-      else if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, field_resolved_type) && !SPVM_RESOLVED_TYPE_is_string(spvm, field_resolved_type)) {
+      else if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, field_resolved_type)) {
           SPVM_yyerror_format(spvm, "Type of field \"%s::%s\" must not be object at %s line %d\n", package->op_name->uv.name, field->op_name->uv.name, op_field->file, op_field->line);
         field_type_error = 1;
       }
@@ -98,13 +98,13 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
       
       // Check field type
       if (SPVM_RESOLVED_TYPE_is_array(spvm, field_resolved_type)) {
-        if (!SPVM_RESOLVED_TYPE_is_array_numeric(spvm, field_resolved_type) && !SPVM_RESOLVED_TYPE_is_array_string(spvm, field_resolved_type)) {
+        if (!SPVM_RESOLVED_TYPE_is_array_numeric(spvm, field_resolved_type)) {
           SPVM_yyerror_format(spvm, "field type must be numeric or numeric array or string array at %s line %d\n", op_field->file, op_field->line);
           parser->fatal_error = 1;
           return;
         }
       }
-      else if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, field_resolved_type) && !SPVM_RESOLVED_TYPE_is_string(spvm, field_resolved_type)) {
+      else if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, field_resolved_type)) {
         SPVM_yyerror_format(spvm, "field type must be numeric or numeric array or string array at %s line %d\n", op_field->file, op_field->line);
         parser->fatal_error = 1;
         return;

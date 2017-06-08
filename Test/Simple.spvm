@@ -5,8 +5,7 @@ package Test::Simple {
   has y : int;
   has values1 : int[];
   has values2 : long[];
-  has message : string;
-  has messages : string[];
+  has message : byte[];
   # has c : Test::Simple;
   # has d : Test::Simple[];
   
