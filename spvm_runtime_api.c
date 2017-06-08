@@ -326,7 +326,7 @@ inline SPVM_DATA_ARRAY* SPVM_RUNTIME_API_create_data_array_byte_from_pv(SPVM* sp
   
   SPVM_RUNTIME_ALLOCATOR* allocator = runtime->allocator;
   
-  int32_t length = strlen(pv) + 1;
+  int32_t length = strlen(pv);
   
   // Allocate array
   int32_t data_array_byte_size = SPVM_DATA_C_HEADER_BYTE_SIZE + sizeof(int8_t) * length;
