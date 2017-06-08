@@ -7,7 +7,19 @@ use Test::Minimal;
 
 package Test {
   sub main($mvar : int) : int {
-
+    
+    # Escape sequence
+    {
+      my $ch1 = '\"';
+      my $ch2 = '\'';
+      my $ch3 = '\\';
+      my $ch4 = '\n';
+      my $ch5 = '\t';
+      my $ch6 = '\b';
+      my $ch7 = '\r';
+      my $ch8 = '\f';
+    }
+    
     # char null string
     {
       my $ch : byte = (byte)0x04;

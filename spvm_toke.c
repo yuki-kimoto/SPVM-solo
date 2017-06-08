@@ -390,42 +390,53 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           parser->bufptr++;
         }
         else {
-          ch = *parser->bufptr;
-          parser->bufptr++;
           if (*parser->bufptr == '\\') {
             parser->bufptr++;
             if (*parser->bufptr == '"') {
-              
+              ch = '"';
+              parser->bufptr++;
             }
             else if (*parser->bufptr == '\'') {
-              
+              ch = '\'';
+              parser->bufptr++;
             }
             else if (*parser->bufptr == '\\') {
-              
-            }
-            else if (*parser->bufptr == 'n') {
-              
-            }
-            else if (*parser->bufptr == 't') {
-              
-            }
-            else if (*parser->bufptr == 'b') {
-              
+              ch = '\\';
+              parser->bufptr++;
             }
             else if (*parser->bufptr == 'r') {
-              
+              ch = 0x0D;
+              parser->bufptr++;
+            }
+            else if (*parser->bufptr == 'n') {
+              ch = 0x0A;
+              parser->bufptr++;
+            }
+            else if (*parser->bufptr == 't') {
+              ch = '\t';
+              parser->bufptr++;
+            }
+            else if (*parser->bufptr == 'b') {
+              ch = '\b';
+              parser->bufptr++;
             }
             else if (*parser->bufptr == 'f') {
-              
+              ch = '\f';
+              parser->bufptr++;
             }
             else if (*parser->bufptr == '0') {
-              
+              assert(0);
             }
             else if (*parser->bufptr == 'x') {
-              
+              assert(0);
             }
           }
-          else if (*parser->bufptr != '\'') {
+          else {
+            ch = *parser->bufptr;
+            parser->bufptr++;
+          }
+          
+          if (*parser->bufptr != '\'') {
             fprintf(stderr, "syntax error: string don't finish\n");
             exit(EXIT_FAILURE);
           }
