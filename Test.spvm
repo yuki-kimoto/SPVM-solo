@@ -18,6 +18,7 @@ package Test {
       my $ch6 = '\b';
       my $ch7 = '\r';
       my $ch8 = '\f';
+      # my $ch8 = '\p';
     }
     
     # char null string

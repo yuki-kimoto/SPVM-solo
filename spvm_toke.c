@@ -369,26 +369,13 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
       case '\'': {
         parser->bufptr++;
         
-        // Escape sequence
-        /*
-          \"
-          \'
-          \\
-          \n
-          \t
-          \b
-          \r
-          \f
-          \0
-          \0366
-          \xFF
-        */
-        
         int8_t ch;
+        // Null string
         if (*parser->bufptr == '\'') {
           ch = '\0';
           parser->bufptr++;
         }
+        // Escape sequence
         else {
           if (*parser->bufptr == '\\') {
             parser->bufptr++;
@@ -424,11 +411,9 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
               ch = '\f';
               parser->bufptr++;
             }
-            else if (*parser->bufptr == '0') {
-              assert(0);
-            }
-            else if (*parser->bufptr == 'x') {
-              assert(0);
+            else {
+              fprintf(stderr, "Invalid escape character \"%c%c\" at %s line %" PRId32 "\n", *(parser->bufptr -1),*parser->bufptr, parser->cur_module_path, parser->cur_line);
+              exit(EXIT_FAILURE);
             }
           }
           else {
