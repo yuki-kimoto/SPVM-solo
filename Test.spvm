@@ -8,6 +8,16 @@ use Test::Minimal;
 package Test {
   sub main($mvar : int) : int {
 
+    # char null string
+    {
+      my $ch : byte = (byte)0x04;
+    }
+    
+    # char
+    {
+      my $ch : byte = 'a';
+    }
+    
     # Malloc mutil array
     {
       my $nums : int[][] = malloc int[][3];

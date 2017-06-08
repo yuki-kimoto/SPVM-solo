@@ -369,6 +369,21 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
       case '\'': {
         parser->bufptr++;
         
+        // Escape sequence
+        /*
+          \"
+          \'
+          \\
+          \n
+          \t
+          \b
+          \r
+          \f
+          \0
+          \0366
+          \xFF
+        */
+        
         int8_t ch;
         if (*parser->bufptr == '\'') {
           ch = '\0';
@@ -377,7 +392,40 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
         else {
           ch = *parser->bufptr;
           parser->bufptr++;
-          if (*parser->bufptr != '\'') {
+          if (*parser->bufptr == '\\') {
+            parser->bufptr++;
+            if (*parser->bufptr == '"') {
+              
+            }
+            else if (*parser->bufptr == '\'') {
+              
+            }
+            else if (*parser->bufptr == '\\') {
+              
+            }
+            else if (*parser->bufptr == 'n') {
+              
+            }
+            else if (*parser->bufptr == 't') {
+              
+            }
+            else if (*parser->bufptr == 'b') {
+              
+            }
+            else if (*parser->bufptr == 'r') {
+              
+            }
+            else if (*parser->bufptr == 'f') {
+              
+            }
+            else if (*parser->bufptr == '0') {
+              
+            }
+            else if (*parser->bufptr == 'x') {
+              
+            }
+          }
+          else if (*parser->bufptr != '\'') {
             fprintf(stderr, "syntax error: string don't finish\n");
             exit(EXIT_FAILURE);
           }
