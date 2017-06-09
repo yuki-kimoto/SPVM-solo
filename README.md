@@ -1,23 +1,17 @@
-# SPVM - Fast calculation of number array, GC, static typing, VM with  perlish syntax
+# SPVM - Fast calculation, GC, static typing, VM with perlish syntax
 
-Do you need a **fast Perl**? SPVM is a fast calculation system build on Perl.
+Do you need **faster Perl**? SPVM provides fast calculation to Perl.
 
 - **Fast calculation** - The Perl's biggest weak point is the calculation performance. SPVM provides fast calculations.
 - **GC** - You don't need to care about freeing memory
 - **Static typing** - Static typing for performance
 - **VM** - Byte codes are generated so that you can run them on SPVM language
-- **Perlish syntax** - the syntax is very similar to that of Perl
-- **Perl module** - SPVM will be used from Perl itself as module(Not yet implemented).
-- **No memory limitation**
+- **Perlish syntax** - SPVM syntax is very similar to Perl
+- **Perl module** - SPVM function can be called from Perl itself (Not yet implemented).
 
 This is now under **developing**.
 
-I have implemented only the following parts.
-
-1. tokenizer
-1. abstract syntax tree builder
-1. bytecode builder
-1. some parts of virtual machine
+# SPVM examples
 
 ```
 package Main {
@@ -51,37 +45,13 @@ Output:
 
     7
 
-# Development
-
-## Run
-    
-    make DEFINE=-DDEBUG  && ./spvm Test
-
-## Test
-    
-    make test
-
-## Types
-
-Use the following types in source codes. This is defined in the standard header `<stdint.h>`.
-
-    _Bool
-    uint8_t
-    int8_t
-    int16_t
-    int32_t
-    int64_t
-    float
-    double
-
-
 # SPVM specification
 
 ## Type
 
-### Value type
+### Numeric type
 
-Value types are `byte`, `short`, `int`, `long`, `float`, `double`.
+Numeric types are `byte`, `short`, `int`, `long`, `float`, `double`.
 
     byte    signed integer          1byte
     short   signed integer          2byte
@@ -101,7 +71,7 @@ Declaration
 
 ### Reference type
 
-Reference types are String type, Array type, Object type.
+Reference types are `array` and `object`.
 
 **Object type**
 
@@ -223,25 +193,32 @@ Absolute name is combination of package name and subroutine name, or package nam
     ClassName1::foo
     ClassName1::ClassName2::foo_bar
 
-Array type
-
-    # SPVM name
-    byte[]
-    short[]
-    int[]
-    long[]
-    doube[]
-    
-    # C name
-    byte__array
-    short__array
-    int__array
-    long__array
-    doube__array
-
 ## Limitation
 
 - Object can't have object and array of object
+
+# Development
+
+## Run
+    
+    make DEFINE=-DDEBUG  && ./spvm Test
+
+## Test
+    
+    make test
+
+## Types
+
+Use the following types in source codes. This is defined in the standard header `<stdint.h>`.
+
+    _Bool
+    uint8_t
+    int8_t
+    int16_t
+    int32_t
+    int64_t
+    float
+    double
 
 # Contributors
 
