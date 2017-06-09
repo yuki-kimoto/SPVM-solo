@@ -185,7 +185,7 @@ package Test {
       sum0(3, 4);
       
       1;
-    } catch ($error : byte[]) {
+    } catch ($error) {
       sum0(5, 6);
       2;
       std::println("Catch Error");

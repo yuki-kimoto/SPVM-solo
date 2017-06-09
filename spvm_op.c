@@ -202,7 +202,20 @@ SPVM_OP* SPVM_OP_get_op_block_from_op_sub(SPVM* spvm, SPVM_OP* op_sub) {
   }
 }
 
-SPVM_OP* SPVM_OP_build_try_catch(SPVM* spvm, SPVM_OP* op_try, SPVM_OP* op_try_block, SPVM_OP* op_catch, SPVM_OP* op_my_var, SPVM_OP* op_catch_block) {
+SPVM_OP* SPVM_OP_build_try_catch(SPVM* spvm, SPVM_OP* op_try, SPVM_OP* op_try_block, SPVM_OP* op_catch, SPVM_OP* op_var, SPVM_OP* op_catch_block) {
+  
+  // Create op_my_var from op_var
+  SPVM_OP* op_type = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_TYPE, op_var->file, op_var->line);
+  SPVM_TYPE* type = SPVM_TYPE_new(spvm);
+  type->resolved_type = SPVM_HASH_search(spvm, spvm->parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
+  op_type->uv.type = type;
+  SPVM_MY_VAR* my_var = SPVM_MY_VAR_new(spvm);
+  SPVM_OP* op_name = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NAME, op_var->file, op_var->line);
+  op_name->uv.name = op_var->uv.var->op_name->uv.name;
+  my_var->op_name = op_name;
+  my_var->op_type = op_type;
+  SPVM_OP* op_my_var = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR, op_var->file, op_var->line);
+  op_my_var->uv.my_var = my_var;
   
   // insert var declaration into catch block top
   SPVM_OP_sibling_splice(spvm, op_catch_block->first, op_catch_block->first->first, 0, op_my_var);
