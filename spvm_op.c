@@ -118,6 +118,7 @@ const char* const SPVM_OP_C_CODE_NAMES[] = {
   "BEFORE_RETURN",
   "DIE_PROCESS",
   "BEFORE_DIE",
+  "STORE",
 };
 
 SPVM_OP* SPVM_OP_new_op_constant_int(SPVM* spvm, int32_t value, const char* file, int32_t line) {
@@ -217,8 +218,12 @@ SPVM_OP* SPVM_OP_build_try_catch(SPVM* spvm, SPVM_OP* op_try, SPVM_OP* op_try_bl
   SPVM_OP* op_my_var = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR, op_var->file, op_var->line);
   op_my_var->uv.my_var = my_var;
   
+  // Create op store
+  SPVM_OP* op_store = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_STORE, op_var->file, op_var->line);
+  SPVM_OP_sibling_splice(spvm, op_store, op_store->last, 0, op_my_var);
+  
   // insert var declaration into catch block top
-  SPVM_OP_sibling_splice(spvm, op_catch_block->first, op_catch_block->first->first, 0, op_my_var);
+  SPVM_OP_sibling_splice(spvm, op_catch_block->first, op_catch_block->first->first, 0, op_store);
   
   // Add block
   SPVM_OP_sibling_splice(spvm, op_try, op_try->last, 0, op_try_block);
