@@ -225,6 +225,9 @@ SPVM_OP* SPVM_OP_build_try_catch(SPVM* spvm, SPVM_OP* op_try, SPVM_OP* op_try_bl
   // insert var declaration into catch block top
   SPVM_OP_sibling_splice(spvm, op_catch_block->first, op_catch_block->first->first, 0, op_store);
   
+  // try block
+  op_try_block->flag |= SPVM_OP_C_FLAG_BLOCK_TRY;
+  
   // Add block
   SPVM_OP_sibling_splice(spvm, op_try, op_try->last, 0, op_try_block);
   SPVM_OP_sibling_splice(spvm, op_try, op_try->last, 0, op_catch);
