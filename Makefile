@@ -20,8 +20,8 @@ libspvm_SRCS := $(wildcard *.c) spvm_yacc.c
 libspvm_OBJS := $(libspvm_SRCS:%.c=$(OBJDIR)/%.o)
 -include $(libspvm_OBJS:%.o=%.Po)
 generated_sources += spvm_yacc.c spvm_yacc.h
-spvm_yacc.c: spvm_yacc.y
-	bison -t -p SPVM_yy -d spvm_yacc.y
+spvm_yacc.c: yacc/spvm_yacc.y
+	bison -t -p SPVM_yy -d yacc/spvm_yacc.y
 	mv -f spvm_yacc.tab.c $@
 	mv -f spvm_yacc.tab.h $(@:%.c=%.h)
 spvm_yacc.h: spvm_yacc.c
