@@ -188,6 +188,7 @@ package Test {
     } catch ($error : byte[]) {
       sum0(5, 6);
       2;
+      std::println("Catch Error");
     }
     
     {
