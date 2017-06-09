@@ -422,7 +422,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           }
           
           if (*parser->bufptr != '\'') {
-            fprintf(stderr, "syntax error: string don't finish\n");
+            fprintf(stderr, "syntax error: character literal don't finish with '\n");
             exit(EXIT_FAILURE);
           }
           parser->bufptr++;
@@ -454,20 +454,85 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM* spvm) {
           parser->bufptr++;
         }
         else {
-          while(*parser->bufptr != '"' && *parser->bufptr != '\0') {
-            parser->bufptr++;
+          _Bool finish = 0;
+          while(1) {
+            warn("AAAAAAAAAA %c", *parser->bufptr);
+            
+            if (*parser->bufptr == '"' && *(parser->bufptr - 1) != '\\') {
+              warn("BBBBBBBBBB");
+              finish = 1;
+            }
+            else if (*parser->bufptr == '\0') {
+              finish = 1;
+            }
+            if (finish) {
+              break;
+            }
+            else {
+              parser->bufptr++;
+            }
           }
           if (*parser->bufptr == '\0') {
-            fprintf(stderr, "syntax error: string don't finish\n");
+            fprintf(stderr, "syntax error: string don't finish with '\"'\n");
             exit(EXIT_FAILURE);
           }
           
-          int32_t str_len = (parser->bufptr - cur_token_ptr);
-          str = SPVM_PARSER_ALLOCATOR_alloc_string(spvm, parser->allocator, str_len);
-          memcpy(str, cur_token_ptr, str_len);
-          str[str_len] = '\0';
+          int32_t str_tmp_len = (int32_t)(parser->bufptr - cur_token_ptr);
           
+          char* str_tmp = SPVM_PARSER_ALLOCATOR_alloc_string(spvm, parser->allocator, str_tmp_len);
+          memcpy(str_tmp, cur_token_ptr, str_tmp_len);
+          str_tmp[str_tmp_len] = '\0';
+
           parser->bufptr++;
+          
+          str = SPVM_PARSER_ALLOCATOR_alloc_string(spvm, parser->allocator, str_tmp_len);
+          int32_t str_index = 0;
+          for (int32_t i = 0; i < str_tmp_len; i++) {
+            if (str_tmp[i] == '\\') {
+              i++;
+              if (str_tmp[i] == '"') {
+                str[str_index] = '"';
+                str_index++;
+              }
+              else if (str_tmp[i] == '\'') {
+                str[str_index] = '\'';
+                str_index++;
+              }
+              else if (str_tmp[i] == '\\') {
+                str[str_index] = '\\';
+                str_index++;
+              }
+              else if (str_tmp[i] == 'r') {
+                str[str_index] = 0x0D;
+                str_index++;
+              }
+              else if (str_tmp[i] == 'n') {
+                str[str_index] = 0x0A;
+                str_index++;
+              }
+              else if (str_tmp[i] == 't') {
+                str[str_index] = '\t';
+                str_index++;
+              }
+              else if (str_tmp[i] == 'b') {
+                str[str_index] = '\b';
+                str_index++;
+              }
+              else if (str_tmp[i] == 'f') {
+                str[str_index] = '\f';
+                str_index++;
+              }
+              else {
+                fprintf(stderr, "Invalid escape character \"%c%c\" at %s line %" PRId32 "\n", *(parser->bufptr -1),*parser->bufptr, parser->cur_module_path, parser->cur_line);
+                exit(EXIT_FAILURE);
+              }
+            }
+            else {
+              str[str_index] = str_tmp[i];
+              str_index++;
+            }
+          }
+          str[str_index] = '\0';
         }
         
         SPVM_OP* op = SPVM_TOKE_newOP(spvm, SPVM_OP_C_CODE_CONSTANT);
