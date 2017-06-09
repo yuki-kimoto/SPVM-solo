@@ -612,8 +612,8 @@ package Test {
       std::println_short($num3);
     }
 
-
-    # die "ERROR";
+    # my $error : byte[] = "Error";
+    # die $error;
     
     return $mvar + 3;
   }
