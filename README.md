@@ -74,9 +74,6 @@ Use the following types in source codes. This is defined in the standard header 
     float
     double
 
-# Limitation
-
-- Object can't have object and array of object
 
 # SPVM specification
 
@@ -226,18 +223,6 @@ Absolute name is combination of package name and subroutine name, or package nam
     ClassName1::foo
     ClassName1::ClassName2::foo_bar
 
-### Coresponding C name
-
-C name is corresponding to SPVM name, 1 by 1.
-
-    # SPVM name
-    ClassName1::foo
-    ClassName1::ClassName2::foo_bar
-    
-    # C name
-    ClassName1__foo
-    ClassName1__ClassName2__foo_bar
-
 Array type
 
     # SPVM name
@@ -254,7 +239,12 @@ Array type
     long__array
     doube__array
 
+## Limitation
+
+- Object can't have object and array of object
+
 # Contributors
 
 * [akinomyoga](https://github.com/akinomyoga) (Koichi Murase)
 * [NAGAYASU Shinya](https://github.com/nagayasu-shinya)
+* [Reini Urban](https://github.com/rurban)

@@ -8,6 +8,13 @@ use Test::Minimal;
 package Test {
   sub main($mvar : int) : int {
     
+    # String escape character
+    {
+      my $string : byte[] = "abc\"\'\\\n\t\b\r\fdef";
+     
+      std::println($string);
+    }
+    
     # Escape sequence
     {
       my $ch1 = '\"';
@@ -18,7 +25,6 @@ package Test {
       my $ch6 = '\b';
       my $ch7 = '\r';
       my $ch8 = '\f';
-      # my $ch8 = '\p';
     }
     
     # char null string
@@ -705,5 +711,4 @@ package Test {
       return $obj2;
     }
   }
-
 }

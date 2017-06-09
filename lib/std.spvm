@@ -13,6 +13,6 @@ package std {
   sub print_long ($value : long) : native void;
   sub print_float ($value : float) : native void;
   sub print_double ($value : double) : native void;
-
+  
   sub sum_int($values : int[]) : native int;
 }
