@@ -213,8 +213,8 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
         SPVM_ARRAY* op_my_var_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
         
         // block base position stack
-        SPVM_ARRAY* block_base_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
-        int32_t block_base = 0;
+        SPVM_ARRAY* block_my_var_base_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
+        int32_t block_my_var_base = 0;
         
         // In switch statement
         _Bool in_switch = 0;
@@ -325,10 +325,10 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                 }
               }
               
-              block_base = op_my_var_stack->length;
-              int32_t* block_base_ptr = SPVM_PARSER_ALLOCATOR_alloc_int(spvm, parser->allocator);
-              *block_base_ptr = block_base;
-              SPVM_ARRAY_push(spvm, block_base_stack, block_base_ptr);
+              block_my_var_base = op_my_var_stack->length;
+              int32_t* block_my_var_base_ptr = SPVM_PARSER_ALLOCATOR_alloc_int(spvm, parser->allocator);
+              *block_my_var_base_ptr = block_my_var_base;
+              SPVM_ARRAY_push(spvm, block_my_var_base_stack, block_my_var_base_ptr);
               
               break;
             }
@@ -1222,15 +1222,15 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   
                   SPVM_OP* op_list_statement = op_cur->first;
                   
-                  if (block_base_stack->length > 0) {
-                    int32_t* block_base_ptr = SPVM_ARRAY_pop(spvm, block_base_stack);
-                    block_base = *block_base_ptr;
+                  if (block_my_var_base_stack->length > 0) {
+                    int32_t* block_my_var_base_ptr = SPVM_ARRAY_pop(spvm, block_my_var_base_stack);
+                    block_my_var_base = *block_my_var_base_ptr;
                   }
                   
                   // Free my variables at end of block
                   SPVM_OP* op_block_end = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_BLOCK_END, op_cur->file, op_cur->line);
                   
-                  int32_t pop_count = op_my_var_stack->length - block_base;
+                  int32_t pop_count = op_my_var_stack->length - block_my_var_base;
                   for (int32_t j = 0; j < pop_count; j++) {
                     SPVM_OP* op_my_var = SPVM_ARRAY_pop(spvm, op_my_var_stack);
                     
@@ -1251,13 +1251,13 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     SPVM_OP_sibling_splice(spvm, op_list_statement, op_list_statement->last, 0, op_block_end);
                   }
                   
-                  if (block_base_stack->length > 0) {
-                    int32_t* before_block_base_ptr = SPVM_ARRAY_fetch(spvm, block_base_stack, block_base_stack->length - 1);
-                    int32_t before_block_base = *before_block_base_ptr;
-                    block_base = before_block_base;
+                  if (block_my_var_base_stack->length > 0) {
+                    int32_t* before_block_my_var_base_ptr = SPVM_ARRAY_fetch(spvm, block_my_var_base_stack, block_my_var_base_stack->length - 1);
+                    int32_t before_block_my_var_base = *before_block_my_var_base_ptr;
+                    block_my_var_base = before_block_my_var_base;
                   }
                   else {
-                    block_base = 0;
+                    block_my_var_base = 0;
                   }
                   
                   break;
@@ -1322,7 +1322,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   // Search same name variable
                   _Bool found = 0;
                   
-                  for (int32_t i = op_my_var_stack->length; i-- > block_base; ) {
+                  for (int32_t i = op_my_var_stack->length; i-- > block_my_var_base; ) {
                     SPVM_OP* op_bef_my_var = SPVM_ARRAY_fetch(spvm, op_my_var_stack, i);
                     SPVM_MY_VAR* bef_my_var = op_bef_my_var->uv.my_var;
                     if (strcmp(my_var->op_name->uv.name, bef_my_var->op_name->uv.name) == 0) {
