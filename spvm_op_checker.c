@@ -359,11 +359,24 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
             while (1) {
               // [START]Postorder traversal position
               switch (op_cur->code) {
+                case SPVM_OP_C_CODE_NEXT: {
+                  if (loop_block_my_var_base_stack->length == 0) {
+                    SPVM_yyerror_format(spvm, "next statement must be in loop block at %s line %d\n", op_cur->file, op_cur->line);
+                  }
+                  break;
+                }
+                case SPVM_OP_C_CODE_LAST: {
+                  if (loop_block_my_var_base_stack->length == 0) {
+                    SPVM_yyerror_format(spvm, "last statement must be in loop block at %s line %d\n", op_cur->file, op_cur->line);
+                  }
+                  break;
+                }
                 case SPVM_OP_C_CODE_NEXT_PROCESS: {
-                  
+                  assert(loop_block_my_var_base_stack->length > 0);
                   break;
                 }
                 case SPVM_OP_C_CODE_LAST_PROCESS: {
+                  assert(loop_block_my_var_base_stack->length > 0);
                   
                   break;
                 }
