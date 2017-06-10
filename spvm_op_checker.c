@@ -29,6 +29,42 @@
 #include "spvm_constant_pool.h"
 #include "spvm_limit.h"
 
+void SPVM_OP_CHECKER_build_leave_scope(SPVM* spvm, SPVM_OP* op_leave_scope, SPVM_ARRAY* op_my_var_stack, int32_t top, int32_t bottom, SPVM_OP* op_term_keep) {
+  
+  for (int32_t i = top; i >= bottom; i--) {
+    SPVM_OP* op_my_var = SPVM_ARRAY_fetch(spvm, op_my_var_stack, i);
+    assert(op_my_var);
+    
+    SPVM_RESOLVED_TYPE* resolved_type = SPVM_OP_get_resolved_type(spvm, op_my_var);
+    
+    // Decrement reference count when leaving scope
+    if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type)) {
+      // If return term is variable, don't decrement reference count
+      _Bool do_dec_ref_count = 0;
+      if (op_term_keep) {
+        if (op_term_keep->code == SPVM_OP_C_CODE_VAR) {
+          if (op_term_keep->uv.var->op_my_var->uv.my_var->address != op_my_var->uv.my_var->address) {
+            do_dec_ref_count = 1;
+          }
+        }
+        else {
+          do_dec_ref_count = 1;
+        }
+      }
+      else {
+        do_dec_ref_count = 1;
+      }
+      
+      if (do_dec_ref_count) {
+        SPVM_OP* op_dec_ref_count = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_DEC_REF_COUNT, op_leave_scope->file, op_leave_scope->line);
+        SPVM_OP* op_var = SPVM_OP_new_op_var_from_op_my_var(spvm, op_my_var);
+        SPVM_OP_sibling_splice(spvm, op_dec_ref_count, NULL, 0, op_var);
+        SPVM_OP_sibling_splice(spvm, op_leave_scope, NULL, 0, op_dec_ref_count);
+      }
+    }
+  }
+}
+
 void SPVM_OP_CHECKER_check(SPVM* spvm) {
   
   SPVM_PARSER* parser = spvm->parser;
@@ -1022,38 +1058,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   SPVM_OP* op_return = op_cur->last;
                   SPVM_OP* op_term = op_return->first;
                   
-                  for (int32_t i = op_my_var_stack->length - 1; i >= 0; i--) {
-                    SPVM_OP* op_my_var = SPVM_ARRAY_fetch(spvm, op_my_var_stack, i);
-                    assert(op_my_var);
-                    
-                    SPVM_RESOLVED_TYPE* resolved_type = SPVM_OP_get_resolved_type(spvm, op_my_var);
-                    
-                    // Decrement reference count when leaving scope
-                    if (!SPVM_RESOLVED_TYPE_is_numeric(spvm, resolved_type)) {
-                      // If return term is variable, don't decrement reference count
-                      _Bool do_dec_ref_count = 0;
-                      if (op_term) {
-                        if (op_term->code == SPVM_OP_C_CODE_VAR) {
-                          if (op_term->uv.var->op_my_var->uv.my_var->address != op_my_var->uv.my_var->address) {
-                            do_dec_ref_count = 1;
-                          }
-                        }
-                        else {
-                          do_dec_ref_count = 1;
-                        }
-                      }
-                      else {
-                        do_dec_ref_count = 1;
-                      }
-                      
-                      if (do_dec_ref_count) {
-                        SPVM_OP* op_dec_ref_count = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_DEC_REF_COUNT, op_cur->file, op_cur->line);
-                        SPVM_OP* op_var = SPVM_OP_new_op_var_from_op_my_var(spvm, op_my_var);
-                        SPVM_OP_sibling_splice(spvm, op_dec_ref_count, NULL, 0, op_var);
-                        SPVM_OP_sibling_splice(spvm, op_leave_scope, NULL, 0, op_dec_ref_count);
-                      }
-                    }
-                  }
+                  SPVM_OP_CHECKER_build_leave_scope(spvm, op_leave_scope, op_my_var_stack, op_my_var_stack->length - 1, 0, op_term);
                   
                   break;
                 }
