@@ -1,3 +1,8 @@
+use Test::EnumA;
+use Test::EnumB;
+use Test::EnumC;
+use Test::EnumD;
+use Test::Simple;
 use Test::Minimal;
 
 package Test {
