@@ -8,6 +8,19 @@ use Test::Minimal;
 package Test {
   sub main($mvar : int) : int {
     
+    my $obj1 = malloc Test::Minimal;
+    
+    # last
+    {
+      while (1) {
+        my $obj1 = malloc Test::Minimal;
+        my $obj2 = malloc Test::Minimal;
+        {
+          my $obj3 = malloc Test::Minimal;
+          last;
+        }
+      }
+    }
     # String escape character
     {
       my $string : byte[] = "abc\"\'\\\n\t\b\r\fdef";

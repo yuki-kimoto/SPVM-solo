@@ -359,6 +359,18 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
             while (1) {
               // [START]Postorder traversal position
               switch (op_cur->code) {
+                case SPVM_OP_C_CODE_NEXT_PROCESS: {
+                  
+                  break;
+                }
+                case SPVM_OP_C_CODE_LAST_PROCESS: {
+                  
+                  break;
+                }
+                case SPVM_OP_C_CODE_DIE_PROCESS: {
+                  
+                  break;
+                }
                 case SPVM_OP_C_CODE_CONSTANT: {
                   SPVM_CONSTANT* constant = op_cur->uv.constant;
                   
