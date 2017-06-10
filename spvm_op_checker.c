@@ -339,7 +339,7 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
               if (op_cur->flag & SPVM_OP_C_FLAG_BLOCK_LOOP) {
                 SPVM_ARRAY_push(spvm, loop_block_my_var_base_stack, block_my_var_base_ptr);
               }
-              else if (op_cur->flag & SPVM_OP_C_FLAG_BLOCK_LOOP) {
+              else if (op_cur->flag & SPVM_OP_C_FLAG_BLOCK_TRY) {
                 SPVM_ARRAY_push(spvm, try_block_my_var_base_stack, block_my_var_base_ptr);
               }
               
@@ -1246,10 +1246,10 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                     int32_t* loop_block_my_var_base_ptr = SPVM_ARRAY_pop(spvm, loop_block_my_var_base_stack);
                   }
                   // Pop try block my variable base
-                  else if (op_cur->flag & SPVM_OP_C_FLAG_BLOCK_LOOP) {
+                  else if (op_cur->flag & SPVM_OP_C_FLAG_BLOCK_TRY) {
                     assert(try_block_my_var_base_stack->length > 0);
                     int32_t* try_block_my_var_base_ptr = SPVM_ARRAY_pop(spvm, try_block_my_var_base_stack);
-                  }                  
+                  }
                   
                   // Free my variables at end of block
                   SPVM_OP* op_block_end = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_BLOCK_END, op_cur->file, op_cur->line);
