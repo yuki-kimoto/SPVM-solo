@@ -212,9 +212,15 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
         // my variable stack
         SPVM_ARRAY* op_my_var_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
         
-        // block base position stack
+        // block my variable base position stack
         SPVM_ARRAY* block_my_var_base_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
         int32_t block_my_var_base = 0;
+
+        // try block my variable base position stack
+        SPVM_ARRAY* try_block_my_var_base_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
+        
+        // loop block my variable base position stack
+        SPVM_ARRAY* loop_block_my_var_base_stack = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, parser->allocator, 0);
         
         // In switch statement
         _Bool in_switch = 0;
@@ -329,6 +335,13 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
               int32_t* block_my_var_base_ptr = SPVM_PARSER_ALLOCATOR_alloc_int(spvm, parser->allocator);
               *block_my_var_base_ptr = block_my_var_base;
               SPVM_ARRAY_push(spvm, block_my_var_base_stack, block_my_var_base_ptr);
+              
+              if (op_cur->flag & SPVM_OP_C_FLAG_BLOCK_LOOP) {
+                SPVM_ARRAY_push(spvm, loop_block_my_var_base_stack, block_my_var_base_ptr);
+              }
+              else if (op_cur->flag & SPVM_OP_C_FLAG_BLOCK_LOOP) {
+                SPVM_ARRAY_push(spvm, try_block_my_var_base_stack, block_my_var_base_ptr);
+              }
               
               break;
             }
@@ -1222,10 +1235,21 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   
                   SPVM_OP* op_list_statement = op_cur->first;
                   
-                  if (block_my_var_base_stack->length > 0) {
-                    int32_t* block_my_var_base_ptr = SPVM_ARRAY_pop(spvm, block_my_var_base_stack);
-                    block_my_var_base = *block_my_var_base_ptr;
+                  // Pop block my variable base
+                  assert(block_my_var_base_stack->length > 0);
+                  int32_t* block_my_var_base_ptr = SPVM_ARRAY_pop(spvm, block_my_var_base_stack);
+                  block_my_var_base = *block_my_var_base_ptr;
+
+                  // Pop loop block my variable base
+                  if (op_cur->flag & SPVM_OP_C_FLAG_BLOCK_LOOP) {
+                    assert(loop_block_my_var_base_stack->length > 0);
+                    int32_t* loop_block_my_var_base_ptr = SPVM_ARRAY_pop(spvm, loop_block_my_var_base_stack);
                   }
+                  // Pop try block my variable base
+                  else if (op_cur->flag & SPVM_OP_C_FLAG_BLOCK_LOOP) {
+                    assert(try_block_my_var_base_stack->length > 0);
+                    int32_t* try_block_my_var_base_ptr = SPVM_ARRAY_pop(spvm, try_block_my_var_base_stack);
+                  }                  
                   
                   // Free my variables at end of block
                   SPVM_OP* op_block_end = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_BLOCK_END, op_cur->file, op_cur->line);
