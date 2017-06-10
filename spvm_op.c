@@ -115,9 +115,8 @@ const char* const SPVM_OP_C_CODE_NAMES[] = {
   "FORMAL_ARGS",
   "BLOCK_END",
   "RETURN_PROCESS",
-  "BEFORE_RETURN",
+  "LEAVE_SCOPE",
   "DIE_PROCESS",
-  "BEFORE_DIE",
   "STORE",
 };
 
@@ -1219,13 +1218,13 @@ SPVM_OP* SPVM_OP_build_return(SPVM* spvm, SPVM_OP* op_return, SPVM_OP* op_term) 
   
   SPVM_OP* op_sub_end_process = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_RETURN_PROCESS, op_return->file, op_return->line);
   
-  SPVM_OP* op_before_sub_end = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_BEFORE_RETURN, op_return->file, op_return->line);
+  SPVM_OP* op_leave_scope = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LEAVE_SCOPE, op_return->file, op_return->line);
   
   if (op_term) {
     SPVM_OP_sibling_splice(spvm, op_return, NULL, 0, op_term);
   }
   
-  SPVM_OP_sibling_splice(spvm, op_sub_end_process, op_sub_end_process->last, 0, op_before_sub_end);
+  SPVM_OP_sibling_splice(spvm, op_sub_end_process, op_sub_end_process->last, 0, op_leave_scope);
   SPVM_OP_sibling_splice(spvm, op_sub_end_process, op_sub_end_process->last, 0, op_return);
   
   return op_sub_end_process;
@@ -1235,13 +1234,13 @@ SPVM_OP* SPVM_OP_build_die(SPVM* spvm, SPVM_OP* op_die, SPVM_OP* op_term) {
   
   SPVM_OP* op_die_process = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_DIE_PROCESS, op_die->file, op_die->line);
   
-  SPVM_OP* op_before_die = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_BEFORE_DIE, op_die->file, op_die->line);
+  SPVM_OP* op_leave_scope = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LEAVE_SCOPE, op_die->file, op_die->line);
   
   if (op_term) {
     SPVM_OP_sibling_splice(spvm, op_die, NULL, 0, op_term);
   }
   
-  SPVM_OP_sibling_splice(spvm, op_die_process, op_die_process->last, 0, op_before_die);
+  SPVM_OP_sibling_splice(spvm, op_die_process, op_die_process->last, 0, op_leave_scope);
   SPVM_OP_sibling_splice(spvm, op_die_process, op_die_process->last, 0, op_die);
   
   return op_die_process;

@@ -316,9 +316,9 @@ void SPVM_OP_CHECKER_check(SPVM* spvm) {
                   }
                   
                   SPVM_OP* op_return_process = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_RETURN_PROCESS, op_return->file, op_return->line);
-                  SPVM_OP* op_before_return = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_BEFORE_RETURN, op_return->file, op_return->line);
+                  SPVM_OP* op_leave_scope = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_LEAVE_SCOPE, op_return->file, op_return->line);
                   
-                  SPVM_OP_sibling_splice(spvm, op_return_process, op_return_process->last, 0, op_before_return);
+                  SPVM_OP_sibling_splice(spvm, op_return_process, op_return_process->last, 0, op_leave_scope);
                   SPVM_OP_sibling_splice(spvm, op_return_process, op_return_process->last, 0, op_return);
                   
                   SPVM_OP_sibling_splice(spvm, op_statements, op_statements->last, 0, op_return_process);
