@@ -728,4 +728,37 @@ package Test {
       return $obj2;
     }
   }
+
+  sub try_catch() : void {
+    my $obj0 = malloc Test::Minimal;
+    
+    try {
+      my $obj1 = malloc Test::Minimal;
+      
+      my $obj2 : Test::Minimal;
+      
+      my $obj3 : Test::Minimal = undef;
+      
+      my $obj_error1 = "Error1";
+      
+      die $obj_error1;
+      
+    }
+    catch ($error) {
+      
+    }
+
+    {
+      my $obj4 = malloc Test::Minimal;
+      
+      my $obj5 : Test::Minimal;
+      
+      my $obj6 : Test::Minimal = undef;
+      
+      my $obj_error2 = "Error2";
+      
+      die $obj_error2;
+    }
+  }
+
 }
