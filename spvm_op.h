@@ -130,6 +130,8 @@ enum {
   SPVM_OP_C_CODE_LEAVE_SCOPE,
   SPVM_OP_C_CODE_DIE_PROCESS,
   SPVM_OP_C_CODE_STORE,
+  SPVM_OP_C_CODE_LAST_PROCESS,
+  SPVM_OP_C_CODE_NEXT_PROCESS,
 };
 
 extern const char* const SPVM_OP_C_CODE_NAMES[];
@@ -197,6 +199,8 @@ void SPVM_OP_resolve_type(SPVM* spvm, SPVM_TYPE* type, int32_t name_length);
 void SPVM_OP_resolve_sub_name(SPVM* spvm, SPVM_OP* op_package, SPVM_OP* op_name);
 void SPVM_OP_resolve_field_name(SPVM* spvm, SPVM_OP* op_name);
 
+SPVM_OP* SPVM_OP_build_last(SPVM* spvm, SPVM_OP* op_last);
+SPVM_OP* SPVM_OP_build_next(SPVM* spvm, SPVM_OP* op_next);
 SPVM_OP* SPVM_OP_build_return(SPVM* spvm, SPVM_OP* op_return, SPVM_OP* op_term);
 SPVM_OP* SPVM_OP_build_die(SPVM* spvm, SPVM_OP* op_die, SPVM_OP* op_term);
 SPVM_OP* SPVM_OP_build_try_catch(SPVM* spvm, SPVM_OP* op_try, SPVM_OP* op_try_block, SPVM_OP* op_catch, SPVM_OP* op_my_var, SPVM_OP* op_catch_block);
