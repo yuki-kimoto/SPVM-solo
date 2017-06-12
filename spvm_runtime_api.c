@@ -14,6 +14,7 @@
 #include "spvm_data_api.h"
 
 inline int64_t SPVM_RUNTIME_API_calcurate_data_byte_size(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
+  (void)spvm;
   
   int64_t byte_size;
   
