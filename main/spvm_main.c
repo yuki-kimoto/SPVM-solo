@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../spvm.h"
+#include "../spvm_.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
   const char* package_name = argv[1];
   
   // Create spvm
-  SPVM* spvm = SPVM_new();
+  SPVM_* spvm = SPVM_new();
   
   // Run
   SPVM_run(spvm, package_name);
