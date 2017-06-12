@@ -220,6 +220,13 @@ Use the following types in source codes. This is defined in the standard header 
     float
     double
 
+## Copy SPVM-solo source files to SPVM
+
+cp *.h ../SPVM/
+cp *.c ../SPVM/
+cp yacc/*.y ../SPVM/yacc/
+cp lib/SPVM/*.spvm ../SPVM/lib/SPVM/
+
 # Contributors
 
 * [akinomyoga](https://github.com/akinomyoga) (Koichi Murase)
