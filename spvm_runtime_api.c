@@ -46,6 +46,22 @@ inline SPVM_DATA_ARRAY* SPVM_RUNTIME_API_create_data_array_byte(SPVM* spvm, SPVM
   return data_array;
 }
 
+inline SPVM_DATA_ARRAY* SPVM_RUNTIME_API_create_data_array_byte_from_pv(SPVM* spvm, SPVM_RUNTIME* runtime, const char* pv) {
+  (void)spvm;
+  (void)runtime;
+  
+  SPVM_RUNTIME_ALLOCATOR* allocator = runtime->allocator;
+  
+  int32_t length = strlen(pv);
+  
+  SPVM_DATA_ARRAY* data_array = SPVM_RUNTIME_API_create_data_array_byte(spvm, runtime, length);
+  
+  // Copy string
+  memcpy((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE, pv, length);
+  
+  return data_array;
+}
+
 inline int64_t SPVM_RUNTIME_API_calcurate_data_byte_size(SPVM* spvm, SPVM_RUNTIME* runtime, SPVM_DATA* data) {
   
   int64_t byte_size;
@@ -353,18 +369,3 @@ inline void SPVM_RUNTIME_API_push_var_address(SPVM* spvm, SPVM_RUNTIME* runtime,
   runtime->call_stack[runtime->operand_stack_top].address_value = value;
 }
 
-inline SPVM_DATA_ARRAY* SPVM_RUNTIME_API_create_data_array_byte_from_pv(SPVM* spvm, SPVM_RUNTIME* runtime, const char* pv) {
-  (void)spvm;
-  (void)runtime;
-  
-  SPVM_RUNTIME_ALLOCATOR* allocator = runtime->allocator;
-  
-  int32_t length = strlen(pv);
-  
-  SPVM_DATA_ARRAY* data_array = SPVM_RUNTIME_API_create_data_array_byte(spvm, runtime, length);
-  
-  // Copy string
-  memcpy((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE, pv, length);
-  
-  return data_array;
-}

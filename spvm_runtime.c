@@ -13,6 +13,7 @@
 #include "spvm_constant_pool_package.h"
 #include "spvm_constant_pool_field.h"
 #include "spvm_data_api.h"
+#include "spvm_util_allocator.h"
 
 SPVM_RUNTIME* SPVM_RUNTIME_new(SPVM* spvm) {
   (void)spvm;
@@ -460,9 +461,9 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     const char* file_name = (char*)&constant_pool[file_name_constant_pool_address + 1];
     
     // stack trace strings
-    char * exception = "Exception";
-    char* from = "\n  from ";
-    char* at = " at ";
+    const char* exception = "Exception";
+    const char* from = "\n  from ";
+    const char* at = " at ";
     
     // Total string length
     int32_t total_length = 0;

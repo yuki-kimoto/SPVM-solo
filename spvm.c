@@ -64,9 +64,9 @@ void SPVM_run(SPVM* spvm, const char* package_name) {
 #ifdef DEBUG
   if (runtime->abort) {
     void* message_address = SPVM_RUNTIME_API_pop_return_value_address(spvm, runtime);
-    uint8_t* message = SPVM_DATA_API_get_array_values_byte(message_address);
+    int8_t* message = SPVM_DATA_API_get_array_values_byte(message_address);
     
-    printf("%s", message);
+    printf("%s", (char*)message);
     printf("\n");
   }
   else {
