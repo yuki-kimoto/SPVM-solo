@@ -34,7 +34,7 @@ SPVM_RUNTIME* SPVM_RUNTIME_new(SPVM* spvm) {
   return runtime;
 }
 
-SPVM_RUNTIME* SPVM_RUNTIME_init(SPVM* spvm, SPVM_RUNTIME* runtime) {
+void SPVM_RUNTIME_init(SPVM* spvm, SPVM_RUNTIME* runtime) {
   (void)spvm;
   
   runtime->call_stack_base = -1;
@@ -482,7 +482,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     SPVM_DATA_ARRAY* new_data_array_message =  SPVM_RUNTIME_API_create_data_array_byte(spvm, runtime, total_length);
     if (return_value == NULL) {
       sprintf(
-        (intptr_t)new_data_array_message + SPVM_DATA_C_HEADER_BYTE_SIZE,
+        (char*)((intptr_t)new_data_array_message + SPVM_DATA_C_HEADER_BYTE_SIZE),
         "%s%s%s%s%s",
         exception,
         from,
@@ -493,12 +493,12 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     }
     else {
       memcpy(
-        (intptr_t)new_data_array_message + SPVM_DATA_C_HEADER_BYTE_SIZE,
-        (intptr_t)return_value + SPVM_DATA_C_HEADER_BYTE_SIZE,
+        (void*)((intptr_t)new_data_array_message + SPVM_DATA_C_HEADER_BYTE_SIZE),
+        (void*)((intptr_t)return_value + SPVM_DATA_C_HEADER_BYTE_SIZE),
         SPVM_DATA_API_get_array_length(return_value)
       );
       sprintf(
-        (intptr_t)new_data_array_message + SPVM_DATA_C_HEADER_BYTE_SIZE + SPVM_DATA_API_get_array_length(return_value),
+        (char*)((intptr_t)new_data_array_message + SPVM_DATA_C_HEADER_BYTE_SIZE + SPVM_DATA_API_get_array_length(return_value)),
         "%s%s%s%s",
         from,
         sub_name,
@@ -1894,8 +1894,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     
     // Init null if sub type is array of reference
     if (value_type == SPVM_DATA_ARRAY_C_VALUE_TYPE_REF) {
-      memset((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE, 0, size * length);
-      SPVM_DATA* data_element = *(SPVM_DATA**)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE + sizeof(void*) * 0);
+      memset((void*)((intptr_t)data_array + SPVM_DATA_C_HEADER_BYTE_SIZE), 0, size * length);
     }
     
     // Set type
@@ -1922,9 +1921,7 @@ void SPVM_RUNTIME_call_sub(SPVM* spvm, SPVM_RUNTIME* runtime, int32_t sub_consta
     int32_t* string_constant_pool_addresss
       = &constant_pool[(*(pc + 1) << 24) + (*(pc + 2) << 16) + (*(pc + 3) << 8) + *(pc + 4)];
     
-    int32_t length = string_constant_pool_addresss[0];
     char* pv = (char*)&string_constant_pool_addresss[1];
-    
     SPVM_DATA_ARRAY* data_array = SPVM_RUNTIME_API_create_data_array_byte_from_pv(spvm, runtime, pv);
 
     // Memory allocation error
