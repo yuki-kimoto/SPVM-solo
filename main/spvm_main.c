@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../spvm_parser.h"
+#include "../spvm_compiler.h"
 #include "../spvm_hash.h"
 #include "../spvm_array.h"
 #include "../spvm_util_allocator.h"
@@ -25,40 +25,40 @@ int main(int argc, char *argv[])
   // Package name
   const char* package_name = argv[1];
   
-  // Create parser
-  SPVM_PARSER* parser = SPVM_PARSER_new();
+  // Create compiler
+  SPVM_COMPILER* compiler = SPVM_COMPILER_new();
   
-  parser->entry_point_package_name = package_name;
+  compiler->entry_point_package_name = package_name;
   
-  SPVM_ARRAY_push(parser->include_pathes, ".");
-  SPVM_ARRAY_push(parser->include_pathes, "lib");
+  SPVM_ARRAY_push(compiler->include_pathes, ".");
+  SPVM_ARRAY_push(compiler->include_pathes, "lib");
   
-  SPVM_PARSER_parse(parser);
+  SPVM_COMPILER_compile(compiler);
   
-  if (parser->error_count > 0) {
+  if (compiler->error_count > 0) {
     return;
   }
   
   // Entry point
-  const char* entry_point_sub_name = parser->entry_point_sub_name;
+  const char* entry_point_sub_name = compiler->entry_point_sub_name;
 
   // Create run-time
   SPVM_RUNTIME* runtime = SPVM_RUNTIME_new();
 
   // Start address
-  SPVM_OP* op_sub_start = SPVM_HASH_search(parser->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
+  SPVM_OP* op_sub_start = SPVM_HASH_search(compiler->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
   int32_t sub_constant_pool_address = op_sub_start->uv.sub->constant_pool_address;
   
   // Copy constant pool to runtime
-  runtime->constant_pool = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(parser->constant_pool->length, sizeof(int32_t));
-  memcpy(runtime->constant_pool, parser->constant_pool->values, parser->constant_pool->length * sizeof(int32_t));
+  runtime->constant_pool = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(compiler->constant_pool->length, sizeof(int32_t));
+  memcpy(runtime->constant_pool, compiler->constant_pool->values, compiler->constant_pool->length * sizeof(int32_t));
 
   // Copy bytecodes to runtime
-  runtime->bytecodes = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(parser->bytecode_array->length, sizeof(uint8_t));
-  memcpy(runtime->bytecodes, parser->bytecode_array->values, parser->bytecode_array->length * sizeof(uint8_t));
+  runtime->bytecodes = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(compiler->bytecode_array->length, sizeof(uint8_t));
+  memcpy(runtime->bytecodes, compiler->bytecode_array->values, compiler->bytecode_array->length * sizeof(uint8_t));
   
-  // Free parser
-  SPVM_PARSER_free(parser);
+  // Free compiler
+  SPVM_COMPILER_free(compiler);
   
   // Initialize runtime before push arguments and call subroutine
   SPVM_RUNTIME_init(runtime);
