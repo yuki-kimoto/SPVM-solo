@@ -79,13 +79,12 @@ int32_t SPVM_COMPILER_compile(SPVM_COMPILER* compiler) {
   
   if (entyr_point_package_name) {
     // Create use op for entry point package
-    SPVM_OP* op_name_package = SPVM_OP_new_op(compiler, SPVM_OP_C_CODE_NAME, entyr_point_package_name, 1);
-    op_name_package->uv.name = entyr_point_package_name;
-    SPVM_OP* op_use = SPVM_OP_new_op(compiler, SPVM_OP_C_CODE_USE, entyr_point_package_name, 1);
-    SPVM_OP_sibling_splice(compiler, op_use, NULL, 0, op_name_package);
-    
-    // Push entry point package to use stack
-    SPVM_ARRAY_push(compiler->op_use_stack, op_use);
+    SPVM_OP* op_name_entry_point_package = SPVM_OP_new_op(compiler, SPVM_OP_C_CODE_NAME, entyr_point_package_name, 1);
+    op_name_entry_point_package->uv.name = entyr_point_package_name;
+    SPVM_OP* op_use_entry_point = SPVM_OP_new_op(compiler, SPVM_OP_C_CODE_USE, entyr_point_package_name, 1);
+    SPVM_OP_sibling_splice(compiler, op_use_entry_point, NULL, 0, op_name_entry_point_package);
+    SPVM_ARRAY_push(compiler->op_use_stack, op_use_entry_point);
+    SPVM_HASH_insert(compiler->op_use_symtable, op_name_entry_point_package->uv.name, strlen(op_name_entry_point_package->uv.name), op_use_entry_point);
     
     // Entry point
     int32_t entyr_point_package_name_length = (int32_t)strlen(entyr_point_package_name);
@@ -98,12 +97,12 @@ int32_t SPVM_COMPILER_compile(SPVM_COMPILER* compiler) {
   }
   
   // use standard module
-  SPVM_OP* op_use_std = SPVM_OP_new_op(compiler, SPVM_OP_C_CODE_USE, "std", 0);
-  SPVM_OP* op_std_package_name = SPVM_OP_new_op(compiler, SPVM_OP_C_CODE_NAME, "std", 0);
-  op_std_package_name->uv.name = "std";
-  SPVM_OP_sibling_splice(compiler, op_use_std, NULL, 0, op_std_package_name);
+  SPVM_OP* op_use_std = SPVM_OP_new_op(compiler, SPVM_OP_C_CODE_USE, "CORE", 0);
+  SPVM_OP* op_name_std_package = SPVM_OP_new_op(compiler, SPVM_OP_C_CODE_NAME, "CORE", 0);
+  op_name_std_package->uv.name = "std";
+  SPVM_OP_sibling_splice(compiler, op_use_std, NULL, 0, op_name_std_package);
   SPVM_ARRAY_push(compiler->op_use_stack, op_use_std);
-  SPVM_HASH_insert(compiler->op_use_symtable, op_std_package_name->uv.name, strlen(op_std_package_name->uv.name), op_use_std);
+  SPVM_HASH_insert(compiler->op_use_symtable, op_name_std_package->uv.name, strlen(op_name_std_package->uv.name), op_use_std);
   
   /* call SPVM_yyparse */
   SPVM_yydebug = 0;
