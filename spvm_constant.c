@@ -16,15 +16,13 @@ const char* const SPVM_CONSTANT_C_CODE_NAMES[] = {
   "STRING",
 };
 
-SPVM_CONSTANT* SPVM_CONSTANT_new(SPVM_* spvm) {
-  return SPVM_PARSER_ALLOCATOR_alloc_memory_pool(spvm, spvm->parser->allocator, sizeof(SPVM_CONSTANT));
+SPVM_CONSTANT* SPVM_CONSTANT_new(SPVM_PARSER* parser) {
+  return SPVM_PARSER_ALLOCATOR_alloc_memory_pool(parser, parser->allocator, sizeof(SPVM_CONSTANT));
 }
 
-SPVM_CONSTANT* SPVM_CONSTANT_create_int_1(SPVM_* spvm) {
+SPVM_CONSTANT* SPVM_CONSTANT_create_int_1(SPVM_PARSER* parser) {
   
-  SPVM_PARSER* parser = spvm->parser;
-  
-  SPVM_CONSTANT* constant = SPVM_CONSTANT_new(spvm);
+  SPVM_CONSTANT* constant = SPVM_CONSTANT_new(parser);
   
   constant->code = SPVM_CONSTANT_C_CODE_INT;
   constant->uv.long_value = 1;

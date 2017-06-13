@@ -24,7 +24,7 @@ void SPVM_run(SPVM_* spvm) {
   SPVM_ARRAY_push(parser->include_pathes, ".");
   SPVM_ARRAY_push(parser->include_pathes, "lib");
   
-  SPVM_PARSER_parse(spvm, parser);
+  SPVM_PARSER_parse(parser);
   
   if (parser->error_count > 0) {
     return;
@@ -37,7 +37,7 @@ void SPVM_run(SPVM_* spvm) {
   SPVM_RUNTIME* runtime = spvm->runtime;
 
   // Start address
-  SPVM_OP* op_sub_start = SPVM_HASH_search(spvm->parser->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
+  SPVM_OP* op_sub_start = SPVM_HASH_search(parser->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
   int32_t sub_constant_pool_address = op_sub_start->uv.sub->constant_pool_address;
   
   // Copy constant pool to runtime
@@ -49,7 +49,7 @@ void SPVM_run(SPVM_* spvm) {
   memcpy(runtime->bytecodes, parser->bytecode_array->values, parser->bytecode_array->length * sizeof(uint8_t));
   
   // Free parser
-  SPVM_PARSER_free(spvm, spvm->parser);
+  SPVM_PARSER_free(spvm->parser);
   spvm->parser = NULL;
   
   // Initialize runtime before push arguments and call subroutine
@@ -82,7 +82,7 @@ SPVM_* SPVM_new() {
   SPVM_* spvm = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(1, sizeof(SPVM_));
   
   // Parser
-  spvm->parser = SPVM_PARSER_new(spvm);
+  spvm->parser = SPVM_PARSER_new();
   
   // Runtime
   spvm->runtime = SPVM_RUNTIME_new();
@@ -93,7 +93,7 @@ SPVM_* SPVM_new() {
 void SPVM_free(SPVM_* spvm) {
   
   if (spvm->parser) {
-    SPVM_PARSER_free(spvm, spvm->parser);
+    SPVM_PARSER_free(spvm->parser);
   }
   
   free(spvm);

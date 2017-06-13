@@ -3,7 +3,7 @@
 
 #include "spvm_.h"
 
-int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_* spvm);
-SPVM_OP* SPVM_TOKE_newOP(SPVM_* spvm, int32_t type);
+int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_PARSER* parser);
+SPVM_OP* SPVM_TOKE_newOP(SPVM_PARSER* parser, int32_t type);
 
 #endif

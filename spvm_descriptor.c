@@ -8,6 +8,6 @@ const char* const SPVM_DESCRIPTOR_C_CODE_NAMES[] = {
   "const",
 };
 
-SPVM_DESCRIPTOR* SPVM_DESCRIPTOR_new(SPVM_* spvm) {
-  return SPVM_PARSER_ALLOCATOR_alloc_memory_pool(spvm, spvm->parser->allocator, sizeof(SPVM_DESCRIPTOR));
+SPVM_DESCRIPTOR* SPVM_DESCRIPTOR_new(SPVM_PARSER* parser) {
+  return SPVM_PARSER_ALLOCATOR_alloc_memory_pool(parser, parser->allocator, sizeof(SPVM_DESCRIPTOR));
 }
