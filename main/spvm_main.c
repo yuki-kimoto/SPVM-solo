@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
   // Create compiler
   SPVM_COMPILER* compiler = SPVM_COMPILER_new();
   
-  // compiler->entry_point_package_name = package_name;
+  compiler->entry_point_package_name = package_name;
   
   SPVM_ARRAY_push(compiler->include_pathes, ".");
   SPVM_ARRAY_push(compiler->include_pathes, "lib");
