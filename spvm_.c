@@ -37,7 +37,7 @@ void SPVM_run(SPVM_* spvm) {
   SPVM_RUNTIME* runtime = spvm->runtime;
 
   // Start address
-  SPVM_OP* op_sub_start = SPVM_HASH_search(spvm, spvm->parser->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
+  SPVM_OP* op_sub_start = SPVM_HASH_search(spvm->parser->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
   int32_t sub_constant_pool_address = op_sub_start->uv.sub->constant_pool_address;
   
   // Copy constant pool to runtime

@@ -128,7 +128,7 @@ SPVM_OP* SPVM_OP_new_op_constant_int(SPVM_* spvm, int32_t value, const char* fil
   
   constant->code = SPVM_CONSTANT_C_CODE_INT;
   constant->uv.long_value = value;
-  constant->resolved_type = SPVM_HASH_search(spvm, spvm->parser->resolved_type_symtable, "int", strlen("int"));
+  constant->resolved_type = SPVM_HASH_search(spvm->parser->resolved_type_symtable, "int", strlen("int"));
   
   op_constant->uv.constant = constant;
   
@@ -141,7 +141,7 @@ SPVM_OP* SPVM_OP_new_op_constant_long(SPVM_* spvm, int64_t value, const char* fi
   
   constant->code = SPVM_CONSTANT_C_CODE_LONG;
   constant->uv.long_value = value;
-  constant->resolved_type = SPVM_HASH_search(spvm, spvm->parser->resolved_type_symtable, "long", strlen("long"));
+  constant->resolved_type = SPVM_HASH_search(spvm->parser->resolved_type_symtable, "long", strlen("long"));
   
   op_constant->uv.constant = constant;
   
@@ -154,7 +154,7 @@ SPVM_OP* SPVM_OP_new_op_constant_float(SPVM_* spvm, float value, const char* fil
   
   constant->code = SPVM_CONSTANT_C_CODE_FLOAT;
   constant->uv.float_value = value;
-  constant->resolved_type = SPVM_HASH_search(spvm, spvm->parser->resolved_type_symtable, "float", strlen("float"));
+  constant->resolved_type = SPVM_HASH_search(spvm->parser->resolved_type_symtable, "float", strlen("float"));
   
   op_constant->uv.constant = constant;
   
@@ -167,7 +167,7 @@ SPVM_OP* SPVM_OP_new_op_constant_double(SPVM_* spvm, double value, const char* f
   
   constant->code = SPVM_CONSTANT_C_CODE_DOUBLE;
   constant->uv.double_value = value;
-  constant->resolved_type = SPVM_HASH_search(spvm, spvm->parser->resolved_type_symtable, "double", strlen("double"));
+  constant->resolved_type = SPVM_HASH_search(spvm->parser->resolved_type_symtable, "double", strlen("double"));
   
   op_constant->uv.constant = constant;
   
@@ -209,7 +209,7 @@ SPVM_OP* SPVM_OP_build_try_catch(SPVM_* spvm, SPVM_OP* op_try, SPVM_OP* op_try_b
   // Create op_my_var from op_var
   SPVM_OP* op_type = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_TYPE, op_var->file, op_var->line);
   SPVM_TYPE* type = SPVM_TYPE_new(spvm);
-  type->resolved_type = SPVM_HASH_search(spvm, spvm->parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
+  type->resolved_type = SPVM_HASH_search(spvm->parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
   op_type->uv.type = type;
   SPVM_MY_VAR* my_var = SPVM_MY_VAR_new(spvm);
   SPVM_OP* op_name = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NAME, op_var->file, op_var->line);
@@ -407,11 +407,11 @@ SPVM_RESOLVED_TYPE* SPVM_OP_get_resolved_type(SPVM_* spvm, SPVM_OP* op) {
   
   switch (op->code) {
     case SPVM_OP_C_CODE_ARRAY_LENGTH:
-      resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "int", strlen("int"));
+      resolved_type = SPVM_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
       break;
     case SPVM_OP_C_CODE_ARRAY_ELEM: {
       SPVM_RESOLVED_TYPE* first_resolved_type = SPVM_OP_get_resolved_type(spvm, op->first);
-      resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
+      resolved_type = SPVM_HASH_search(parser->resolved_type_symtable, first_resolved_type->name, strlen(first_resolved_type->name) - 2);
       break;
     }
     case SPVM_OP_C_CODE_ADD:
@@ -482,7 +482,7 @@ SPVM_RESOLVED_TYPE* SPVM_OP_get_resolved_type(SPVM_* spvm, SPVM_OP* op) {
     case SPVM_OP_C_CODE_CALL_SUB: {
       SPVM_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
-      SPVM_OP* op_sub = SPVM_HASH_search(spvm, parser->op_sub_symtable, abs_name, strlen(abs_name));
+      SPVM_OP* op_sub = SPVM_HASH_search(parser->op_sub_symtable, abs_name, strlen(abs_name));
       SPVM_SUB* sub = op_sub->uv.sub;
       if (sub->op_return_type->code != SPVM_OP_C_CODE_VOID) {
         resolved_type = sub->op_return_type->uv.type->resolved_type;
@@ -492,7 +492,7 @@ SPVM_RESOLVED_TYPE* SPVM_OP_get_resolved_type(SPVM_* spvm, SPVM_OP* op) {
     case SPVM_OP_C_CODE_CALL_FIELD: {
       SPVM_NAME_INFO* name_info = op->uv.name_info;
       const char* abs_name = name_info->resolved_name;
-      SPVM_OP* op_field = SPVM_HASH_search(spvm, parser->op_field_symtable, abs_name, strlen(abs_name));
+      SPVM_OP* op_field = SPVM_HASH_search(parser->op_field_symtable, abs_name, strlen(abs_name));
       SPVM_FIELD* field = op_field->uv.field;
       resolved_type = field->op_type->uv.type->resolved_type;
       break;
@@ -739,7 +739,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
   SPVM_HASH* op_package_symtable = parser->op_package_symtable;
   
   // Redeclaration package error
-  SPVM_OP* found_op_package = SPVM_HASH_search(spvm, op_package_symtable, package_name, strlen(package_name));
+  SPVM_OP* found_op_package = SPVM_HASH_search(op_package_symtable, package_name, strlen(package_name));
   if (found_op_package) {
     SPVM_yyerror_format(spvm, "redeclaration of package \"%s\" at %s line %d\n", package_name, op_package->file, op_package->line);
   }
@@ -776,7 +776,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
         const char* field_name = field->op_name->uv.name;
         
         const char* field_abs_name = SPVM_OP_create_abs_name(spvm, package_name, field_name);
-        SPVM_OP* found_op_field = SPVM_HASH_search(spvm, parser->op_field_symtable, field_abs_name, strlen(field_abs_name));
+        SPVM_OP* found_op_field = SPVM_HASH_search(parser->op_field_symtable, field_abs_name, strlen(field_abs_name));
         
         assert(op_fields->length <= SPVM_LIMIT_C_FIELDS);
         
@@ -794,7 +794,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
           field->abs_name = field_abs_name;
           
           // Add op field symtable
-          SPVM_HASH_insert(spvm, parser->op_field_symtable, field_abs_name, strlen(field_abs_name), op_field);
+          SPVM_HASH_insert(parser->op_field_symtable, field_abs_name, strlen(field_abs_name), op_field);
         }
       }
       else if (op_decl->code == SPVM_OP_C_CODE_SUB) {
@@ -805,7 +805,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
         const char* sub_name = op_name_sub->uv.name;
         const char* sub_abs_name = SPVM_OP_create_abs_name(spvm, package_name, sub_name);
         
-        SPVM_OP* found_op_sub = SPVM_HASH_search(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name));
+        SPVM_OP* found_op_sub = SPVM_HASH_search(parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name));
         
         assert(op_subs->length <= SPVM_LIMIT_C_SUBS);
         if (found_op_sub) {
@@ -828,7 +828,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
           
           sub->file_name = op_sub->file;
           
-          SPVM_HASH_insert(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
+          SPVM_HASH_insert(parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
           SPVM_ARRAY_push(op_subs, op_sub);
         }
       }
@@ -914,14 +914,14 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
           // Set sub
           op_sub->uv.sub = sub;
          
-          SPVM_OP* found_op_sub = SPVM_HASH_search(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name));
+          SPVM_OP* found_op_sub = SPVM_HASH_search(parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name));
           
           if (found_op_sub) {
             SPVM_yyerror_format(spvm, "redeclaration of sub \"%s\" at %s line %d\n", sub_abs_name, op_sub->file, op_sub->line);
           }
           // Unknown sub
           else {
-            SPVM_HASH_insert(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
+            SPVM_HASH_insert(parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
             SPVM_ARRAY_push(op_subs, op_sub);
           }
         }
@@ -933,7 +933,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
     // Add package
     op_package->uv.package = package;
     SPVM_ARRAY_push(parser->op_packages, op_package);
-    SPVM_HASH_insert(spvm, parser->op_package_symtable, package_name, strlen(package_name), op_package);
+    SPVM_HASH_insert(parser->op_package_symtable, package_name, strlen(package_name), op_package);
   }
   
   return op_package;
@@ -946,11 +946,11 @@ SPVM_OP* SPVM_OP_build_use(SPVM_* spvm, SPVM_OP* op_use, SPVM_OP* op_name_packag
   SPVM_OP_sibling_splice(spvm, op_use, NULL, 0, op_name_package);
   
   const char* package_name = op_name_package->uv.name;
-  SPVM_OP* found_op_use = SPVM_HASH_search(spvm, parser->op_use_symtable, package_name, strlen(package_name));
+  SPVM_OP* found_op_use = SPVM_HASH_search(parser->op_use_symtable, package_name, strlen(package_name));
   
   if (!found_op_use) {
     SPVM_ARRAY_push(parser->op_use_stack, op_use);
-    SPVM_HASH_insert(spvm, parser->op_use_symtable, package_name, strlen(package_name), op_use);
+    SPVM_HASH_insert(parser->op_use_symtable, package_name, strlen(package_name), op_use);
   }
   
   return op_use;

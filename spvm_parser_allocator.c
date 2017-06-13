@@ -39,7 +39,7 @@ SPVM_ARRAY* SPVM_PARSER_ALLOCATOR_alloc_array(SPVM_* spvm, SPVM_PARSER_ALLOCATOR
 }
 
 SPVM_HASH* SPVM_PARSER_ALLOCATOR_alloc_hash(SPVM_* spvm, SPVM_PARSER_ALLOCATOR* allocator, int32_t capacity) {
-  SPVM_HASH* hash = SPVM_HASH_new(spvm, capacity);
+  SPVM_HASH* hash = SPVM_HASH_new(capacity);
   
   SPVM_ARRAY_push(allocator->hashes, hash);
   
@@ -75,7 +75,7 @@ void SPVM_PARSER_ALLOCATOR_free(SPVM_* spvm, SPVM_PARSER_ALLOCATOR* allocator) {
   // Free hashes
   for (int32_t i = 0, len = allocator->hashes->length; i < len; i++) {
     SPVM_HASH* hash = SPVM_ARRAY_fetch(allocator->hashes, i);
-    SPVM_HASH_free(spvm, hash);
+    SPVM_HASH_free(hash);
   }
   SPVM_ARRAY_free(allocator->hashes);
   

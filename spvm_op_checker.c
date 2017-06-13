@@ -514,7 +514,7 @@ void SPVM_OP_CHECKER_check(SPVM_* spvm) {
                     
                     const char* sub_name = op_call_sub->uv.name_info->resolved_name;
                     
-                    SPVM_OP* op_sub= SPVM_HASH_search(spvm, 
+                    SPVM_OP* op_sub= SPVM_HASH_search(
                       parser->op_sub_symtable,
                       sub_name,
                       strlen(sub_name)
@@ -1462,7 +1462,7 @@ void SPVM_OP_CHECKER_check(SPVM_* spvm) {
                   
                   const char* sub_abs_name = op_cur->uv.name_info->resolved_name;
                   
-                  SPVM_OP* found_op_sub= SPVM_HASH_search(spvm, 
+                  SPVM_OP* found_op_sub= SPVM_HASH_search(
                     parser->op_sub_symtable,
                     sub_abs_name,
                     strlen(sub_abs_name)
@@ -1550,7 +1550,7 @@ void SPVM_OP_CHECKER_check(SPVM_* spvm) {
                   
                   const char* field_abs_name = op_cur->uv.name_info->resolved_name;
                   
-                  SPVM_OP* found_op_field= SPVM_HASH_search(spvm, 
+                  SPVM_OP* found_op_field= SPVM_HASH_search(
                     parser->op_field_symtable,
                     field_abs_name,
                     strlen(field_abs_name)

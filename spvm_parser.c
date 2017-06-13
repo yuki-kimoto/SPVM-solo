@@ -64,7 +64,7 @@ SPVM_PARSER* SPVM_PARSER_new(SPVM_* spvm) {
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
     SPVM_ARRAY_push(parser->resolved_types, resolved_type);
-    SPVM_HASH_insert(spvm, parser->resolved_type_symtable, name, strlen(name), resolved_type);
+    SPVM_HASH_insert(parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
   return parser;
@@ -100,7 +100,7 @@ int32_t SPVM_PARSER_parse(SPVM_* spvm, SPVM_PARSER* parser) {
   op_std_package_name->uv.name = "std";
   SPVM_OP_sibling_splice(spvm, op_use_std, NULL, 0, op_std_package_name);
   SPVM_ARRAY_push(parser->op_use_stack, op_use_std);
-  SPVM_HASH_insert(spvm, parser->op_use_symtable, op_std_package_name->uv.name, strlen(op_std_package_name->uv.name), op_use_std);
+  SPVM_HASH_insert(parser->op_use_symtable, op_std_package_name->uv.name, strlen(op_std_package_name->uv.name), op_use_std);
   
   /* call SPVM_yyparse */
   SPVM_yydebug = 0;

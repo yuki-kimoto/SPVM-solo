@@ -62,7 +62,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_* spvm) {
             SPVM_OP* op_name_package = op_use->first;
             const char* package_name = op_name_package->uv.name;
             
-            SPVM_OP* found_op_package = SPVM_HASH_search(spvm, parser->op_package_symtable, package_name, strlen(package_name));
+            SPVM_OP* found_op_package = SPVM_HASH_search(parser->op_package_symtable, package_name, strlen(package_name));
             
             if (found_op_package) {
               continue;
@@ -435,7 +435,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_* spvm) {
         SPVM_CONSTANT* constant = SPVM_CONSTANT_new(spvm);
         constant->code = SPVM_CONSTANT_C_CODE_INT;
         constant->uv.long_value = ch;
-        constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "byte", strlen("byte"));
+        constant->resolved_type = SPVM_HASH_search(parser->resolved_type_symtable, "byte", strlen("byte"));
         
         op->uv.constant = constant;
         yylvalp->opval = op;
@@ -538,7 +538,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_* spvm) {
         SPVM_CONSTANT* constant = SPVM_CONSTANT_new(spvm);
         constant->code = SPVM_CONSTANT_C_CODE_STRING;
         constant->uv.string_value = str;
-        constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
+        constant->resolved_type = SPVM_HASH_search(parser->resolved_type_symtable, "byte[]", strlen("byte[]"));
         op->uv.constant = constant;
         yylvalp->opval = (SPVM_OP*)op;
         
@@ -636,7 +636,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_* spvm) {
               exit(EXIT_FAILURE);
             }
             constant->uv.float_value = num;
-            constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "float", strlen("float"));
+            constant->resolved_type = SPVM_HASH_search(parser->resolved_type_symtable, "float", strlen("float"));
           }
           // double
           else if (constant->code == SPVM_CONSTANT_C_CODE_DOUBLE) {
@@ -646,7 +646,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_* spvm) {
               exit(EXIT_FAILURE);
             }
             constant->uv.double_value = num;
-            constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "double", strlen("double"));
+            constant->resolved_type = SPVM_HASH_search(parser->resolved_type_symtable, "double", strlen("double"));
           }
           // int
           else if (constant->code == SPVM_CONSTANT_C_CODE_INT) {
@@ -667,7 +667,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_* spvm) {
               exit(EXIT_FAILURE);
             }
             constant->uv.long_value = (int32_t)num;
-            constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "int", strlen("int"));
+            constant->resolved_type = SPVM_HASH_search(parser->resolved_type_symtable, "int", strlen("int"));
           }
           // long
           else if (constant->code == SPVM_CONSTANT_C_CODE_LONG) {
@@ -688,7 +688,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_* spvm) {
               exit(EXIT_FAILURE);
             }
             constant->uv.long_value = num;
-            constant->resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, "long", strlen("long"));
+            constant->resolved_type = SPVM_HASH_search(parser->resolved_type_symtable, "long", strlen("long"));
           }
           
           op->uv.constant = constant;

@@ -626,7 +626,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM_* spvm) {
                   
                   SPVM_NAME_INFO* name_info = op_cur->uv.name_info;
                   const char* field_name = name_info->resolved_name;
-                  SPVM_OP* op_field = SPVM_HASH_search(spvm, parser->op_field_symtable, field_name, strlen(field_name));
+                  SPVM_OP* op_field = SPVM_HASH_search(parser->op_field_symtable, field_name, strlen(field_name));
                   SPVM_FIELD* field = op_field->uv.field;
                   
                   SPVM_CONSTANT_POOL_FIELD constant_pool_field;
@@ -645,7 +645,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM_* spvm) {
                 SPVM_NAME_INFO* name_info = op_cur->uv.name_info;
                 const char* sub_name = name_info->resolved_name;
                 
-                SPVM_OP* op_sub = SPVM_HASH_search(spvm, parser->op_sub_symtable, sub_name, strlen(sub_name));
+                SPVM_OP* op_sub = SPVM_HASH_search(parser->op_sub_symtable, sub_name, strlen(sub_name));
                 SPVM_SUB* sub = op_sub->uv.sub;
                 
                 int32_t constant_pool_address = sub->constant_pool_address;
@@ -1154,7 +1154,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM_* spvm) {
                   
                   const char* package_name = op_cur->first->uv.type->resolved_type->name;
                   
-                  SPVM_OP* op_package = SPVM_HASH_search(spvm, parser->op_package_symtable, package_name, strlen(package_name));
+                  SPVM_OP* op_package = SPVM_HASH_search(parser->op_package_symtable, package_name, strlen(package_name));
                   SPVM_PACKAGE* package = op_package->uv.package;
                   
                   int32_t constant_pool_address = package->constant_pool_address;
@@ -1407,7 +1407,7 @@ void SPVM_BYTECODE_BUILDER_build_bytecode_array(SPVM_* spvm) {
                   // Call subroutine
                   SPVM_NAME_INFO* name_info = op_cur->first->uv.name_info;
                   const char* field_name = name_info->resolved_name;
-                  SPVM_OP* op_field = SPVM_HASH_search(spvm, parser->op_field_symtable, field_name, strlen(field_name));
+                  SPVM_OP* op_field = SPVM_HASH_search(parser->op_field_symtable, field_name, strlen(field_name));
                   SPVM_FIELD* field = op_field->uv.field;
 
                   SPVM_CONSTANT_POOL_FIELD constant_pool_field;

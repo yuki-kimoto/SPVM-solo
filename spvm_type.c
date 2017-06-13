@@ -59,7 +59,7 @@ _Bool SPVM_TYPE_resolve_type(SPVM_* spvm, SPVM_OP* op_type, int32_t name_length)
         }
         else {
           // Package
-          SPVM_OP* op_found_package = SPVM_HASH_search(spvm, op_package_symtable, part_name, strlen(part_name));
+          SPVM_OP* op_found_package = SPVM_HASH_search(op_package_symtable, part_name, strlen(part_name));
           if (op_found_package) {
             SPVM_ARRAY_push(resolved_type_part_names, (void*)part_name);
           }
@@ -83,7 +83,7 @@ _Bool SPVM_TYPE_resolve_type(SPVM_* spvm, SPVM_OP* op_type, int32_t name_length)
     resolved_type_name[cur_pos] = '\0';
     
     // Create resolved type id
-    SPVM_RESOLVED_TYPE* found_resolved_type = SPVM_HASH_search(spvm, parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name));
+    SPVM_RESOLVED_TYPE* found_resolved_type = SPVM_HASH_search(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name));
     if (found_resolved_type) {
       type->resolved_type = found_resolved_type;
     }
@@ -92,7 +92,7 @@ _Bool SPVM_TYPE_resolve_type(SPVM_* spvm, SPVM_OP* op_type, int32_t name_length)
       resolved_type->id = parser->resolved_types->length;
       resolved_type->name = resolved_type_name;
       SPVM_ARRAY_push(parser->resolved_types, resolved_type);
-      SPVM_HASH_insert(spvm, parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
+      SPVM_HASH_insert(parser->resolved_type_symtable, resolved_type_name, strlen(resolved_type_name), resolved_type);
       type->resolved_type = resolved_type;
     }
   }
