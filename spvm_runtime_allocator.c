@@ -19,7 +19,7 @@ SPVM_RUNTIME_ALLOCATOR* SPVM_RUNTIME_ALLOCATOR_new(SPVM_* spvm) {
   SPVM_RUNTIME_ALLOCATOR* allocator = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(1, sizeof(SPVM_RUNTIME_ALLOCATOR));
   
   // Memory pool
-  allocator->memory_pool = SPVM_MEMORY_POOL_new(spvm, 0);
+  allocator->memory_pool = SPVM_MEMORY_POOL_new(0);
   
   // Free lists
   allocator->freelists = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(16, sizeof(SPVM_ARRAY));
@@ -87,7 +87,7 @@ inline void* SPVM_RUNTIME_ALLOCATOR_malloc(SPVM_* spvm, SPVM_RUNTIME_ALLOCATOR* 
       return free_address;
     }
     else {
-      block = SPVM_MEMORY_POOL_alloc(spvm, allocator->memory_pool, size);
+      block = SPVM_MEMORY_POOL_alloc(allocator->memory_pool, size);
     }
   }
   
@@ -119,7 +119,7 @@ inline void SPVM_RUNTIME_ALLOCATOR_free_data(SPVM_* spvm, SPVM_RUNTIME_ALLOCATOR
 
 void SPVM_RUNTIME_ALLOCATOR_free(SPVM_* spvm, SPVM_RUNTIME_ALLOCATOR* allocator) {
   // Free memory pool */
-  SPVM_MEMORY_POOL_free(spvm, allocator->memory_pool);
+  SPVM_MEMORY_POOL_free(allocator->memory_pool);
   
   free(allocator->freelists);
   
