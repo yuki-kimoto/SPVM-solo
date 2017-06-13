@@ -59,11 +59,11 @@ SPVM_PARSER* SPVM_PARSER_new(SPVM_* spvm) {
     // Resolved type
     SPVM_RESOLVED_TYPE* resolved_type = SPVM_RESOLVED_TYPE_new(spvm);
     const char* name = SPVM_RESOLVED_TYPE_C_CORE_NAMES[i];
-    SPVM_ARRAY_push(spvm, resolved_type->part_names, (char*)name);
+    SPVM_ARRAY_push(resolved_type->part_names, (char*)name);
     resolved_type->name = name;
     resolved_type->name_length = strlen(name);
     resolved_type->id = i;
-    SPVM_ARRAY_push(spvm, parser->resolved_types, resolved_type);
+    SPVM_ARRAY_push(parser->resolved_types, resolved_type);
     SPVM_HASH_insert(spvm, parser->resolved_type_symtable, name, strlen(name), resolved_type);
   }
   
@@ -81,7 +81,7 @@ int32_t SPVM_PARSER_parse(SPVM_* spvm, SPVM_PARSER* parser) {
   SPVM_OP_sibling_splice(spvm, op_use, NULL, 0, op_name_package);
   
   /* Push entry point package to use stack */
-  SPVM_ARRAY_push(spvm, parser->op_use_stack, op_use);
+  SPVM_ARRAY_push(parser->op_use_stack, op_use);
   
   // Entry point
   if (entyr_point_package_name) {
@@ -99,7 +99,7 @@ int32_t SPVM_PARSER_parse(SPVM_* spvm, SPVM_PARSER* parser) {
   SPVM_OP* op_std_package_name = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NAME, "std", 0);
   op_std_package_name->uv.name = "std";
   SPVM_OP_sibling_splice(spvm, op_use_std, NULL, 0, op_std_package_name);
-  SPVM_ARRAY_push(spvm, parser->op_use_stack, op_use_std);
+  SPVM_ARRAY_push(parser->op_use_stack, op_use_std);
   SPVM_HASH_insert(spvm, parser->op_use_symtable, op_std_package_name->uv.name, strlen(op_std_package_name->uv.name), op_use_std);
   
   /* call SPVM_yyparse */

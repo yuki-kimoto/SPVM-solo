@@ -128,7 +128,7 @@ void SPVM_DUMPER_dump_spvm(SPVM_* spvm) {
 
 void SPVM_DUMPER_dump_constants(SPVM_* spvm, SPVM_ARRAY* op_constants) {
   for (int32_t i = 0, len = op_constants->length; i < len; i++) {
-    SPVM_OP* op_constant = SPVM_ARRAY_fetch(spvm, op_constants, i);
+    SPVM_OP* op_constant = SPVM_ARRAY_fetch(op_constants, i);
     SPVM_CONSTANT* constant = op_constant->uv.constant;
     printf("    constant[%" PRId32 "]\n", i);
     SPVM_DUMPER_dump_constant(spvm, constant);
@@ -138,7 +138,7 @@ void SPVM_DUMPER_dump_constants(SPVM_* spvm, SPVM_ARRAY* op_constants) {
 void SPVM_DUMPER_dump_packages(SPVM_* spvm, SPVM_ARRAY* op_packages) {
   for (int32_t i = 0, len = op_packages->length; i < len; i++) {
     printf("package[%" PRId32 "]\n", i);
-    SPVM_OP* op_package = SPVM_ARRAY_fetch(spvm, op_packages, i);
+    SPVM_OP* op_package = SPVM_ARRAY_fetch(op_packages, i);
     SPVM_PACKAGE* package = op_package->uv.package;
     printf("  name => \"%s\"\n", package->op_name->uv.name);
     
@@ -153,7 +153,7 @@ void SPVM_DUMPER_dump_packages(SPVM_* spvm, SPVM_ARRAY* op_packages) {
     printf("  fields\n");
     SPVM_ARRAY* op_fields = package->op_fields;
     for (int32_t j = 0, len2 = op_fields->length; j < len2; j++) {
-      SPVM_OP* op_field = SPVM_ARRAY_fetch(spvm, op_fields, j);
+      SPVM_OP* op_field = SPVM_ARRAY_fetch(op_fields, j);
       SPVM_FIELD* field = op_field->uv.field;
       printf("    field%" PRId32 "\n", j);
       SPVM_DUMPER_dump_field(spvm, field);
@@ -165,7 +165,7 @@ void SPVM_DUMPER_dump_packages(SPVM_* spvm, SPVM_ARRAY* op_packages) {
     printf("  subs\n");
     SPVM_ARRAY* op_subs = package->op_subs;
     for (int32_t i = 0, len = op_subs->length; i < len; i++) {
-      SPVM_OP* op_sub = SPVM_ARRAY_fetch(spvm, op_subs, i);
+      SPVM_OP* op_sub = SPVM_ARRAY_fetch(op_subs, i);
       SPVM_SUB* sub = op_sub->uv.sub;
       printf("    sub%" PRId32 "\n", i);
       SPVM_DUMPER_dump_sub(spvm, sub);
@@ -178,7 +178,7 @@ void SPVM_DUMPER_dump_resolved_types(SPVM_* spvm, SPVM_ARRAY* resolved_types) {
   
   for (int32_t i = 0, len = resolved_types->length; i < len; i++) {
     printf("resolved_type%" PRId32 "\n", i);
-    SPVM_RESOLVED_TYPE* resolved_type = SPVM_ARRAY_fetch(spvm, resolved_types, i);
+    SPVM_RESOLVED_TYPE* resolved_type = SPVM_ARRAY_fetch(resolved_types, i);
     printf("    name => \"%s\"\n", resolved_type->name);
     printf("    id => \"%" PRId32 "\"\n", resolved_type->id);
   }
@@ -456,7 +456,7 @@ void SPVM_DUMPER_dump_sub(SPVM_* spvm, SPVM_SUB* sub) {
     printf("      args\n");
     SPVM_ARRAY* op_args = sub->op_args;
     for (int32_t i = 0, len = op_args->length; i < len; i++) {
-      SPVM_OP* op_arg = SPVM_ARRAY_fetch(spvm, sub->op_args, i);
+      SPVM_OP* op_arg = SPVM_ARRAY_fetch(sub->op_args, i);
       SPVM_MY_VAR* my_var = op_arg->uv.my_var;
       printf("        arg[%" PRId32 "]\n", i);
       SPVM_DUMPER_dump_my_var(spvm, my_var);
@@ -466,7 +466,7 @@ void SPVM_DUMPER_dump_sub(SPVM_* spvm, SPVM_SUB* sub) {
       printf("      my_vars\n");
       SPVM_ARRAY* op_my_vars = sub->op_my_vars;
       for (int32_t i = 0, len = op_my_vars->length; i < len; i++) {
-        SPVM_OP* op_my_var = SPVM_ARRAY_fetch(spvm, sub->op_my_vars, i);
+        SPVM_OP* op_my_var = SPVM_ARRAY_fetch(sub->op_my_vars, i);
         SPVM_MY_VAR* my_var = op_my_var->uv.my_var;
         printf("        my_var[%" PRId32 "]\n", i);
         SPVM_DUMPER_dump_my_var(spvm, my_var);

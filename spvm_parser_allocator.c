@@ -18,10 +18,10 @@ SPVM_PARSER_ALLOCATOR* SPVM_PARSER_ALLOCATOR_new(SPVM_* spvm) {
   allocator->memory_pool = SPVM_MEMORY_POOL_new(spvm, 0);
   
   // Arrays - these arrays are created at compile time
-  allocator->arrays = SPVM_ARRAY_new(spvm, 0);
+  allocator->arrays = SPVM_ARRAY_new(0);
   
   // Hashed - these hashes are created at compile time
-  allocator->hashes = SPVM_ARRAY_new(spvm, 0);
+  allocator->hashes = SPVM_ARRAY_new(0);
   
   return allocator;
 }
@@ -31,9 +31,9 @@ void* SPVM_PARSER_ALLOCATOR_alloc_memory_pool(SPVM_* spvm, SPVM_PARSER_ALLOCATOR
 }
 
 SPVM_ARRAY* SPVM_PARSER_ALLOCATOR_alloc_array(SPVM_* spvm, SPVM_PARSER_ALLOCATOR* allocator, int32_t capacity) {
-  SPVM_ARRAY* array = SPVM_ARRAY_new(spvm, capacity);
+  SPVM_ARRAY* array = SPVM_ARRAY_new(capacity);
   
-  SPVM_ARRAY_push(spvm, allocator->arrays, array);
+  SPVM_ARRAY_push(allocator->arrays, array);
   
   return array;
 }
@@ -41,7 +41,7 @@ SPVM_ARRAY* SPVM_PARSER_ALLOCATOR_alloc_array(SPVM_* spvm, SPVM_PARSER_ALLOCATOR
 SPVM_HASH* SPVM_PARSER_ALLOCATOR_alloc_hash(SPVM_* spvm, SPVM_PARSER_ALLOCATOR* allocator, int32_t capacity) {
   SPVM_HASH* hash = SPVM_HASH_new(spvm, capacity);
   
-  SPVM_ARRAY_push(spvm, allocator->hashes, hash);
+  SPVM_ARRAY_push(allocator->hashes, hash);
   
   return hash;
 }
@@ -67,17 +67,17 @@ void SPVM_PARSER_ALLOCATOR_free(SPVM_* spvm, SPVM_PARSER_ALLOCATOR* allocator) {
   
   // Free arrays
   for (int32_t i = 0, len = allocator->arrays->length; i < len; i++) {
-    SPVM_ARRAY* array = SPVM_ARRAY_fetch(spvm, allocator->arrays, i);
-    SPVM_ARRAY_free(spvm, array);
+    SPVM_ARRAY* array = SPVM_ARRAY_fetch(allocator->arrays, i);
+    SPVM_ARRAY_free(array);
   }
-  SPVM_ARRAY_free(spvm, allocator->arrays);
+  SPVM_ARRAY_free(allocator->arrays);
   
   // Free hashes
   for (int32_t i = 0, len = allocator->hashes->length; i < len; i++) {
-    SPVM_HASH* hash = SPVM_ARRAY_fetch(spvm, allocator->hashes, i);
+    SPVM_HASH* hash = SPVM_ARRAY_fetch(allocator->hashes, i);
     SPVM_HASH_free(spvm, hash);
   }
-  SPVM_ARRAY_free(spvm, allocator->hashes);
+  SPVM_ARRAY_free(allocator->hashes);
   
   free(allocator);
 }

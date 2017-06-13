@@ -26,7 +26,7 @@ SPVM_RUNTIME_ALLOCATOR* SPVM_RUNTIME_ALLOCATOR_new(SPVM_* spvm) {
   
   // Initialize free list
   for (int32_t i = 0; i < 16; i++) {
-    allocator->freelists[i] = SPVM_ARRAY_new(spvm, 0);
+    allocator->freelists[i] = SPVM_ARRAY_new(0);
   }
   
   // use memory pool max reference byte size
@@ -82,7 +82,7 @@ inline void* SPVM_RUNTIME_ALLOCATOR_malloc(SPVM_* spvm, SPVM_RUNTIME_ALLOCATOR* 
   else {
     int32_t index = SPVM_RUNTIME_ALLOCATOR_get_freelist_index(spvm, allocator, size);
     
-    void* free_address = SPVM_ARRAY_pop(spvm, allocator->freelists[index]);
+    void* free_address = SPVM_ARRAY_pop(allocator->freelists[index]);
     if (free_address) {
       return free_address;
     }
@@ -112,7 +112,7 @@ inline void SPVM_RUNTIME_ALLOCATOR_free_data(SPVM_* spvm, SPVM_RUNTIME_ALLOCATOR
       int32_t freelist_index = SPVM_RUNTIME_ALLOCATOR_get_freelist_index(spvm, allocator, byte_size);
       
       // Push free address
-      SPVM_ARRAY_push(spvm, allocator->freelists[freelist_index], data);
+      SPVM_ARRAY_push(allocator->freelists[freelist_index], data);
     }
   }
 }

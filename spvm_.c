@@ -21,8 +21,8 @@ void SPVM_run(SPVM_* spvm) {
   
   SPVM_PARSER* parser = spvm->parser;
   
-  SPVM_ARRAY_push(spvm, parser->include_pathes, ".");
-  SPVM_ARRAY_push(spvm, parser->include_pathes, "lib");
+  SPVM_ARRAY_push(parser->include_pathes, ".");
+  SPVM_ARRAY_push(parser->include_pathes, "lib");
   
   SPVM_PARSER_parse(spvm, parser);
   

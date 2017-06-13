@@ -55,7 +55,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_* spvm) {
         while (1) {
           SPVM_OP* op_use = NULL;
           if (op_use_stack->length > 0) {
-            op_use = SPVM_ARRAY_pop(spvm, op_use_stack);
+            op_use = SPVM_ARRAY_pop(op_use_stack);
           }
           
           if (op_use) {
@@ -97,7 +97,7 @@ int SPVM_yylex(SPVM_YYSTYPE* yylvalp, SPVM_* spvm) {
               FILE* fh = NULL;
               int32_t include_pathes_length = parser->include_pathes->length;
               for (int32_t i = 0; i < include_pathes_length; i++) {
-                const char* include_path = (const char*) SPVM_ARRAY_fetch(spvm, parser->include_pathes, i);
+                const char* include_path = (const char*) SPVM_ARRAY_fetch(parser->include_pathes, i);
                 
                 // File name
                 int32_t file_name_length = (int32_t)(strlen(include_path) + 1 + strlen(module_path_base));

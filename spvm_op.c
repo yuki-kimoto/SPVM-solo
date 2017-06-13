@@ -275,7 +275,7 @@ SPVM_OP* SPVM_OP_build_case_statement(SPVM_* spvm, SPVM_OP* op_case, SPVM_OP* op
     return NULL;
   }
 
-  SPVM_ARRAY_push(spvm, parser->cur_op_cases, op_case);
+  SPVM_ARRAY_push(parser->cur_op_cases, op_case);
   
   return op_case;
 }
@@ -761,7 +761,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
     
     // Add type
     package->op_type = op_type;
-    SPVM_ARRAY_push(spvm, parser->op_types, op_type);
+    SPVM_ARRAY_push(parser->op_types, op_type);
     
     SPVM_ARRAY* op_fields = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, spvm->parser->allocator, 0);
     SPVM_ARRAY* op_subs = SPVM_PARSER_ALLOCATOR_alloc_array(spvm, spvm->parser->allocator, 0);
@@ -788,7 +788,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
           parser->fatal_error = 1;
         }
         else {
-          SPVM_ARRAY_push(spvm, op_fields, op_field);
+          SPVM_ARRAY_push(op_fields, op_field);
           
           const char* field_abs_name = SPVM_OP_create_abs_name(spvm, package_name, field_name);
           field->abs_name = field_abs_name;
@@ -829,7 +829,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
           sub->file_name = op_sub->file;
           
           SPVM_HASH_insert(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
-          SPVM_ARRAY_push(spvm, op_subs, op_sub);
+          SPVM_ARRAY_push(op_subs, op_sub);
         }
       }
       else if (op_decl->code == SPVM_OP_C_CODE_ENUM) {
@@ -922,7 +922,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
           // Unknown sub
           else {
             SPVM_HASH_insert(spvm, parser->op_sub_symtable, sub_abs_name, strlen(sub_abs_name), op_sub);
-            SPVM_ARRAY_push(spvm, op_subs, op_sub);
+            SPVM_ARRAY_push(op_subs, op_sub);
           }
         }
       }
@@ -932,7 +932,7 @@ SPVM_OP* SPVM_OP_build_package(SPVM_* spvm, SPVM_OP* op_package, SPVM_OP* op_nam
     
     // Add package
     op_package->uv.package = package;
-    SPVM_ARRAY_push(spvm, parser->op_packages, op_package);
+    SPVM_ARRAY_push(parser->op_packages, op_package);
     SPVM_HASH_insert(spvm, parser->op_package_symtable, package_name, strlen(package_name), op_package);
   }
   
@@ -949,7 +949,7 @@ SPVM_OP* SPVM_OP_build_use(SPVM_* spvm, SPVM_OP* op_use, SPVM_OP* op_name_packag
   SPVM_OP* found_op_use = SPVM_HASH_search(spvm, parser->op_use_symtable, package_name, strlen(package_name));
   
   if (!found_op_use) {
-    SPVM_ARRAY_push(spvm, parser->op_use_stack, op_use);
+    SPVM_ARRAY_push(parser->op_use_stack, op_use);
     SPVM_HASH_insert(spvm, parser->op_use_symtable, package_name, strlen(package_name), op_use);
   }
   
@@ -1056,7 +1056,7 @@ SPVM_OP* SPVM_OP_build_sub(SPVM_* spvm, SPVM_OP* op_sub, SPVM_OP* op_name_sub, S
   {
     SPVM_OP* op_arg = op_args->first;
     while ((op_arg = SPVM_OP_sibling(spvm, op_arg))) {
-      SPVM_ARRAY_push(spvm, sub->op_args, op_arg->first);
+      SPVM_ARRAY_push(sub->op_args, op_arg->first);
     }
   }
   
@@ -1065,7 +1065,7 @@ SPVM_OP* SPVM_OP_build_sub(SPVM_* spvm, SPVM_OP* op_sub, SPVM_OP* op_name_sub, S
     SPVM_OP* op_list_statement = op_block->first;
     SPVM_OP* op_formal_args = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_FORMAL_ARGS, op_list_statement->file, op_list_statement->line);
     for (int32_t i = 0; i < sub->op_args->length; i++) {
-      SPVM_OP* op_arg = SPVM_ARRAY_fetch(spvm, sub->op_args, i);
+      SPVM_OP* op_arg = SPVM_ARRAY_fetch(sub->op_args, i);
       SPVM_OP* op_my_var = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR, op_arg->file, op_arg->line);
       op_my_var->uv.my_var = op_arg->uv.my_var;
       SPVM_OP* op_my_var_parent = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_MY_VAR_INIT, op_arg->file, op_arg->line);
@@ -1211,7 +1211,7 @@ SPVM_OP* SPVM_OP_build_type_name(SPVM_* spvm, SPVM_OP* op_name) {
   op_type_name->file = op_name->file;
   op_type_name->line = op_name->line;
 
-  SPVM_ARRAY_push(spvm, parser->op_types, op_type_name);
+  SPVM_ARRAY_push(parser->op_types, op_type_name);
   
   return op_type_name;
 }
@@ -1302,7 +1302,7 @@ SPVM_OP* SPVM_OP_build_type_array(SPVM_* spvm, SPVM_OP* op_type, SPVM_OP* op_ter
   op_type_array->file = op_type->file;
   op_type_array->line = op_type->line;
   
-  SPVM_ARRAY_push(spvm, parser->op_types, op_type_array);
+  SPVM_ARRAY_push(parser->op_types, op_type_array);
   
   return op_type_array;
 }
