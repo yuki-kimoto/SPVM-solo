@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
   // Create compiler
   SPVM_COMPILER* compiler = SPVM_COMPILER_new();
   
-  compiler->entry_point_package_name = package_name;
+  // compiler->entry_point_package_name = package_name;
   
   SPVM_ARRAY_push(compiler->include_pathes, ".");
   SPVM_ARRAY_push(compiler->include_pathes, "lib");
@@ -39,15 +39,8 @@ int main(int argc, char *argv[])
     return;
   }
   
-  // Entry point
-  const char* entry_point_sub_name = compiler->entry_point_sub_name;
-
   // Create run-time
   SPVM_RUNTIME* runtime = SPVM_RUNTIME_new();
-
-  // Start address
-  SPVM_OP* op_sub_start = SPVM_HASH_search(compiler->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
-  int32_t sub_constant_pool_address = op_sub_start->uv.sub->constant_pool_address;
   
   // Copy constant pool to runtime
   runtime->constant_pool = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(compiler->constant_pool->length, sizeof(int32_t));
@@ -56,6 +49,25 @@ int main(int argc, char *argv[])
   // Copy bytecodes to runtime
   runtime->bytecodes = SPVM_UTIL_ALLOCATOR_safe_malloc_i32(compiler->bytecode_array->length, sizeof(uint8_t));
   memcpy(runtime->bytecodes, compiler->bytecode_array->values, compiler->bytecode_array->length * sizeof(uint8_t));
+
+  // Entry point subroutine address
+  const char* entry_point_sub_name = compiler->entry_point_sub_name;
+  SPVM_OP* op_sub_start;
+  int32_t sub_constant_pool_address;
+  if (entry_point_sub_name) {
+    op_sub_start = SPVM_HASH_search(compiler->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
+    if (op_sub_start) {
+      sub_constant_pool_address = op_sub_start->uv.sub->constant_pool_address;
+    }
+    else {
+      fprintf(stderr, "Can't find entry point subroutine %s", entry_point_sub_name);
+      exit(EXIT_FAILURE);
+    }
+  }
+  else {
+    fprintf(stderr, "Can't find entry point subroutine\n");
+    exit(EXIT_FAILURE);
+  }
   
   // Free compiler
   SPVM_COMPILER_free(compiler);
@@ -65,7 +77,7 @@ int main(int argc, char *argv[])
   
   // Push argument
   SPVM_RUNTIME_API_push_var_long(runtime, 2);
-  
+
   // Run
   SPVM_RUNTIME_call_sub(runtime, sub_constant_pool_address);
   
