@@ -5,7 +5,6 @@
 %{
   #include <stdio.h>
   
-  #include "spvm_.h"
   #include "spvm_parser.h"
   #include "spvm_yacc_util.h"
   #include "spvm_toke.h"

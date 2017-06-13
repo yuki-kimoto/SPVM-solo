@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "spvm_.h"
+
 #include "spvm_constant_pool.h"
 #include "spvm_constant.h"
 #include "spvm_package.h"

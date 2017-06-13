@@ -3,7 +3,7 @@
 #include "spvm_sub.h"
 #include "spvm_array.h"
 #include "spvm_hash.h"
-#include "spvm_.h"
+
 #include "spvm_parser_allocator.h"
 #include "spvm_bytecode_array.h"
 #include "spvm_parser.h"

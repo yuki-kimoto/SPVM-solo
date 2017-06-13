@@ -6,7 +6,7 @@
 #include <assert.h>
 #include <inttypes.h>
 
-#include "spvm_.h"
+
 #include "spvm_parser.h"
 #include "spvm_toke.h"
 #include "spvm_yacc_util.h"

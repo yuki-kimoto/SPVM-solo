@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "spvm_.h"
+
 #include "spvm_parser.h"
 #include "spvm_constant.h"
 #include "spvm_parser_allocator.h"

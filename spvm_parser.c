@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "spvm_.h"
+
 #include "spvm_parser.h"
 #include "spvm_resolved_type.h"
 #include "spvm_package.h"

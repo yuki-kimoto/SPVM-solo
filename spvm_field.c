@@ -1,7 +1,7 @@
 #include <assert.h>
 
 #include "spvm_field.h"
-#include "spvm_.h"
+
 #include "spvm_parser_allocator.h"
 #include "spvm_resolved_type.h"
 #include "spvm_type.h"

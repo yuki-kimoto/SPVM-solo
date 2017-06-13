@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include <inttypes.h>
 
-#include "spvm_.h"
+
 #include "spvm_parser.h"
 #include "spvm_yacc_util.h"
 #include "spvm_parser_allocator.h"

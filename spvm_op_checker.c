@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <assert.h>
 
-#include "spvm_.h"
+
 #include "spvm_parser.h"
 #include "spvm_array.h"
 #include "spvm_hash.h"

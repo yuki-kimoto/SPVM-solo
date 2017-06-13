@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "spvm_.h"
+
 #include "spvm_parser.h"
 #include "spvm_bytecode_builder.h"
 #include "spvm_bytecode.h"
