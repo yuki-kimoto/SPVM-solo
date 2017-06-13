@@ -87,7 +87,7 @@ struct SPVM_parser {
 };
 
 SPVM_PARSER* SPVM_PARSER_new(SPVM_* spvm);
-int32_t SPVM_PARSER_parse(SPVM_* spvm, const char* package_name);
+int32_t SPVM_PARSER_parse(SPVM_* spvm, SPVM_PARSER* parser);
 
 void SPVM_PARSER_free(SPVM_* spvm, SPVM_PARSER* parser);
 

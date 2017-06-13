@@ -70,10 +70,10 @@ SPVM_PARSER* SPVM_PARSER_new(SPVM_* spvm) {
   return parser;
 }
 
-int32_t SPVM_PARSER_parse(SPVM_* spvm, const char* package_name) {
+int32_t SPVM_PARSER_parse(SPVM_* spvm, SPVM_PARSER* parser) {
   
-  SPVM_PARSER* parser = spvm->parser;
-
+  const char* package_name = parser->entry_point_package_name;
+  
   /* Build use information */
   SPVM_OP* op_name_package = SPVM_OP_new_op(spvm, SPVM_OP_C_CODE_NAME, package_name, 1);
   op_name_package->uv.name = package_name;
