@@ -53,17 +53,17 @@ void SPVM_run(SPVM_* spvm) {
   spvm->parser = NULL;
   
   // Initialize runtime before push arguments and call subroutine
-  SPVM_RUNTIME_init(spvm, runtime);
+  SPVM_RUNTIME_init(runtime);
   
   // Push argument
-  SPVM_RUNTIME_API_push_var_long(spvm, runtime, 2);
+  SPVM_RUNTIME_API_push_var_long(runtime, 2);
   
   // Run
-  SPVM_RUNTIME_call_sub(spvm, runtime, sub_constant_pool_address);
+  SPVM_RUNTIME_call_sub(runtime, sub_constant_pool_address);
   
 #ifdef DEBUG
   if (runtime->abort) {
-    void* message_address = SPVM_RUNTIME_API_pop_return_value_address(spvm, runtime);
+    void* message_address = SPVM_RUNTIME_API_pop_return_value_address(runtime);
     int8_t* message = SPVM_DATA_API_get_array_values_byte(message_address);
     
     printf("%s", (char*)message);
@@ -71,7 +71,7 @@ void SPVM_run(SPVM_* spvm) {
   }
   else {
     // Get return value
-    int64_t return_value = SPVM_RUNTIME_API_pop_return_value_long(spvm, runtime);
+    int64_t return_value = SPVM_RUNTIME_API_pop_return_value_long(runtime);
     
     printf("TEST return_value: %ld\n", return_value);
   }
@@ -85,7 +85,7 @@ SPVM_* SPVM_new() {
   spvm->parser = SPVM_PARSER_new(spvm);
   
   // Runtime
-  spvm->runtime = SPVM_RUNTIME_new(spvm);
+  spvm->runtime = SPVM_RUNTIME_new();
   
   return spvm;
 }
