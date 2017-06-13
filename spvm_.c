@@ -17,9 +17,11 @@
 #include "spvm_sub.h"
 #include "spvm_data_api.h"
 
-void SPVM_run(SPVM_* spvm, const char* package_name) {
+void SPVM_run(SPVM_* spvm) {
   
   SPVM_PARSER* parser = spvm->parser;
+
+  const char* package_name = parser->entry_point_package_name;
   
   SPVM_ARRAY_push(spvm, parser->include_pathes, ".");
   SPVM_ARRAY_push(spvm, parser->include_pathes, "lib");

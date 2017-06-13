@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
   spvm->parser->entry_point_package_name = package_name;
   
   // Run
-  SPVM_run(spvm, package_name);
+  SPVM_run(spvm);
   
   // Free spvm
   SPVM_free(spvm);
