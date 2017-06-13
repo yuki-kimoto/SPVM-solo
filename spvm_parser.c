@@ -48,6 +48,9 @@ SPVM_PARSER* SPVM_PARSER_new(SPVM_* spvm) {
   // Bytecodes
   parser->bytecode_array = SPVM_BYTECODE_ARRAY_new(spvm);
 
+  // Entry point package name
+  parser->entry_point_package_name = NULL;
+
   // Entry point sub name
   parser->entry_point_sub_name = NULL;
 

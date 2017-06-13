@@ -12,6 +12,9 @@ struct SPVM_parser {
   
   // Bytecodes
   SPVM_BYTECODE_ARRAY* bytecode_array;
+
+  // Entry point package name
+  const char* entry_point_package_name;
   
   // Entry point subroutine name
   const char* entry_point_sub_name;

@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../spvm_.h"
+#include "../spvm_parser.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,6 +17,8 @@ int main(int argc, char *argv[])
   
   // Create spvm
   SPVM_* spvm = SPVM_new();
+  
+  spvm->parser->entry_point_package_name = package_name;
   
   // Run
   SPVM_run(spvm, package_name);
