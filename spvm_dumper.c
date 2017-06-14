@@ -60,7 +60,7 @@ void SPVM_DUMPER_dump_ast(SPVM_COMPILER* compiler, SPVM_OP* op_base) {
           printf(" \"%s\"", constant->uv.string_value);
           break;
       }
-      printf(" (address %" PRId32 ")", constant->constant_pool_index);
+      printf(" (index %" PRId32 ")", constant->constant_pool_index);
     }
     else if (code == SPVM_OP_C_CODE_VAR) {
       SPVM_VAR* var = op_cur->uv.var;
@@ -322,7 +322,7 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM_COMPILER* compiler, SPVM_BYTECODE_ARRA
       
       case SPVM_BYTECODE_C_CODE_TABLE_SWITCH: {
         
-        // Machine address to calculate padding
+        // Bytecode index to calculate padding
         int32_t pc = i;
         
         // Padding
@@ -369,7 +369,7 @@ void SPVM_DUMPER_dump_bytecode_array(SPVM_COMPILER* compiler, SPVM_BYTECODE_ARRA
       }
       case SPVM_BYTECODE_C_CODE_LOOKUP_SWITCH: {
         
-        // Machine address to calculate padding
+        // Bytecode index to calculate padding
         int32_t pc = i;
         
         // Padding
