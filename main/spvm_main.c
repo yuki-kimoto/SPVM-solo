@@ -60,11 +60,11 @@ int main(int argc, char *argv[])
   // Entry point subroutine address
   const char* entry_point_sub_name = compiler->entry_point_sub_name;
   SPVM_OP* op_sub_start;
-  int32_t sub_constant_pool_address;
+  int32_t sub_constant_pool_index;
   if (entry_point_sub_name) {
     op_sub_start = SPVM_HASH_search(compiler->op_sub_symtable, entry_point_sub_name, strlen(entry_point_sub_name));
     if (op_sub_start) {
-      sub_constant_pool_address = op_sub_start->uv.sub->constant_pool_address;
+      sub_constant_pool_index = op_sub_start->uv.sub->constant_pool_index;
     }
     else {
       fprintf(stderr, "Can't find entry point subroutine %s", entry_point_sub_name);
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
   SPVM_RUNTIME_API_push_var_long(runtime, 2);
 
   // Run
-  SPVM_RUNTIME_call_sub(runtime, sub_constant_pool_address);
+  SPVM_RUNTIME_call_sub(runtime, sub_constant_pool_index);
   
 #ifdef DEBUG
   if (runtime->abort) {
