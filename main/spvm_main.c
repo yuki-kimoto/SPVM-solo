@@ -38,6 +38,13 @@ int main(int argc, char *argv[])
   if (compiler->error_count > 0) {
     return;
   }
+  else {
+#ifdef DEBUG
+    // Dump spvm information
+    SPVM_DUMPER_dump_all(compiler);
+#endif
+  }
+
   
   // Create run-time
   SPVM_RUNTIME* runtime = SPVM_RUNTIME_new();
