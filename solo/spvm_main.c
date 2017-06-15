@@ -30,8 +30,8 @@ int main(int argc, char *argv[])
   
   compiler->entry_point_package_name = package_name;
   
-  SPVM_ARRAY_push(compiler->include_pathes, ".");
   SPVM_ARRAY_push(compiler->include_pathes, "lib");
+  SPVM_ARRAY_push(compiler->include_pathes, "solo");
   
   SPVM_COMPILER_compile(compiler);
   
