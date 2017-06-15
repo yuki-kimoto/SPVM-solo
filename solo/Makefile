@@ -10,7 +10,7 @@ LIBS   	 := -lm
 DIRS     :=
 CPPFLAGS  = -MD -MF $(@:%.o=%.Po)
 
-OBJDIR := objs
+OBJDIR := solo/objs
 DIRS += $(OBJDIR) $(OBJDIR)/solo $(OBJDIR)/t
 $(OBJDIR)/%.o: %.c | $(OBJDIR) $(OBJDIR)/solo $(OBJDIR)/t
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
