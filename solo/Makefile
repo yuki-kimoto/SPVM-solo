@@ -11,8 +11,8 @@ DIRS     :=
 CPPFLAGS  = -MD -MF $(@:%.o=%.Po)
 
 OBJDIR := objs
-DIRS += $(OBJDIR) $(OBJDIR)/main $(OBJDIR)/t
-$(OBJDIR)/%.o: %.c | $(OBJDIR) $(OBJDIR)/main $(OBJDIR)/t
+DIRS += $(OBJDIR) $(OBJDIR)/solo $(OBJDIR)/t
+$(OBJDIR)/%.o: %.c | $(OBJDIR) $(OBJDIR)/solo $(OBJDIR)/t
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 # libspvm
@@ -32,7 +32,7 @@ libspvm.a: $(libspvm_OBJS)
 all: libspvm.a
 
 # spvm
-spvm_SRCS    := main/spvm_main.c
+spvm_SRCS    := solo/spvm_main.c
 spvm_OBJS    := $(spvm_SRCS:%.c=$(OBJDIR)/%.o)
 spvm_LDFLAGS := $(LDFLAGS) -L .
 spvm_LIBS    := -lspvm $(LIBS)
