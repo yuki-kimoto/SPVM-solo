@@ -201,11 +201,11 @@ Absolute name is combination of package name and subroutine name, or package nam
 
 ## Run
     
-    make DEFINE=-DDEBUG  && ./spvm Test
+    make -f solo/Makefile DEFINE=-DDEBUG  && ./spvm Test
 
 ## Test
     
-    make test
+    make -f solo/Makefile test
 
 ## Types
 
