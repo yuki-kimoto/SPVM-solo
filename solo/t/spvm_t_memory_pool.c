@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "../spvm.h"
-#include "../spvm_memory_pool.h"
+#include "../../spvm_memory_pool.h"
 
 #define OK(condition) \
   if (condition) {\
@@ -20,14 +19,12 @@ struct test {
 
 int main()
 {
-  SPVM* spvm = SPVM_new();
-  
   // new and free
   {
-    SPVM_MEMORY_POOL* memory_pool = SPVM_MEMORY_POOL_new(spvm, 0);
+    SPVM_MEMORY_POOL* memory_pool = SPVM_MEMORY_POOL_new(0);
     
-    int64_t* int_ptr1 = SPVM_MEMORY_POOL_alloc(spvm, memory_pool, sizeof(int64_t));
-    int64_t* int_ptr2 = SPVM_MEMORY_POOL_alloc(spvm, memory_pool, sizeof(int64_t));
+    int64_t* int_ptr1 = SPVM_MEMORY_POOL_alloc(memory_pool, sizeof(int64_t));
+    int64_t* int_ptr2 = SPVM_MEMORY_POOL_alloc(memory_pool, sizeof(int64_t));
     
     *int_ptr1 = 1;
     *int_ptr2 = 2;
@@ -37,22 +34,22 @@ int main()
     OK(*(int64_t*)memory_pool->pages[0] == 1);
     OK(*(int64_t*)(memory_pool->pages[0] + sizeof(int64_t)) == 2);
     
-    SPVM_MEMORY_POOL_free(spvm, memory_pool);
+    SPVM_MEMORY_POOL_free(memory_pool);
     
   }
   
   // Create next memory node
   {
-    SPVM_MEMORY_POOL* memory_pool = SPVM_MEMORY_POOL_new(spvm, sizeof(int64_t) * 2);
+    SPVM_MEMORY_POOL* memory_pool = SPVM_MEMORY_POOL_new(sizeof(int64_t) * 2);
     
-    int64_t* int_ptr1 = SPVM_MEMORY_POOL_alloc(spvm, memory_pool, sizeof(int64_t));
-    int64_t* int_ptr2 = SPVM_MEMORY_POOL_alloc(spvm, memory_pool, sizeof(int64_t));
-    int64_t* int_ptr3 = SPVM_MEMORY_POOL_alloc(spvm, memory_pool, sizeof(int64_t));
-    int64_t* int_ptr4 = SPVM_MEMORY_POOL_alloc(spvm, memory_pool, sizeof(int64_t));
-    int64_t* int_ptr5 = SPVM_MEMORY_POOL_alloc(spvm, memory_pool, sizeof(int64_t));
-    int64_t* int_ptr6 = SPVM_MEMORY_POOL_alloc(spvm, memory_pool, sizeof(int64_t));
-    int64_t* int_ptr7 = SPVM_MEMORY_POOL_alloc(spvm, memory_pool, sizeof(int64_t));
-    int64_t* int_ptr8 = SPVM_MEMORY_POOL_alloc(spvm, memory_pool, sizeof(int64_t));
+    int64_t* int_ptr1 = SPVM_MEMORY_POOL_alloc(memory_pool, sizeof(int64_t));
+    int64_t* int_ptr2 = SPVM_MEMORY_POOL_alloc(memory_pool, sizeof(int64_t));
+    int64_t* int_ptr3 = SPVM_MEMORY_POOL_alloc(memory_pool, sizeof(int64_t));
+    int64_t* int_ptr4 = SPVM_MEMORY_POOL_alloc(memory_pool, sizeof(int64_t));
+    int64_t* int_ptr5 = SPVM_MEMORY_POOL_alloc(memory_pool, sizeof(int64_t));
+    int64_t* int_ptr6 = SPVM_MEMORY_POOL_alloc(memory_pool, sizeof(int64_t));
+    int64_t* int_ptr7 = SPVM_MEMORY_POOL_alloc(memory_pool, sizeof(int64_t));
+    int64_t* int_ptr8 = SPVM_MEMORY_POOL_alloc(memory_pool, sizeof(int64_t));
     
     *int_ptr1 = 1;
     *int_ptr2 = 2;
@@ -81,7 +78,7 @@ int main()
     OK(*(int64_t*)memory_pool->pages[3]);
     OK(*(int64_t*)(memory_pool->pages[3] + sizeof(int64_t)));
     
-    SPVM_MEMORY_POOL_free(spvm, memory_pool);
+    SPVM_MEMORY_POOL_free(memory_pool);
   }
   
   return 0;

@@ -41,18 +41,18 @@ spvm: $(spvm_OBJS) libspvm.a
 	$(CC) -o $@ $(spvm_LDFLAGS) $(spvm_OBJS) $(spvm_LIBS)
 all: spvm
 
-# test (t/spvm_t_*)
-test_names := $(wildcard t/spvm_t_*.c)
-test_names := $(test_names:t/spvm_t_%.c=spvm_t_%)
+# test (solo/t/spvm_t_*)
+test_names := $(wildcard solo/t/spvm_t_*.c)
+test_names := $(test_names:solo/t/spvm_t_%.c=spvm_t_%)
 
 spvm_t_LDFLAGS := $(LDFLAGS) -L .
 spvm_t_LIBS    := -lspvm $(LIBS)
--include $(test_names:spvm_t_%=$(OBJDIR)/t/spvm_t_%.Po)
-$(OBJDIR)/t/spvm_t_%: $(OBJDIR)/t/spvm_t_%.o libspvm.a
+-include $(test_names:spvm_t_%=$(OBJDIR)/solo/t/spvm_t_%.Po)
+$(OBJDIR)/solo/t/spvm_t_%: $(OBJDIR)/solo/t/spvm_t_%.o libspvm.a
 	$(CC) $(spvm_t_LDFLAGS) -o $@ $< $(spvm_t_LIBS)
-spvm_t_%: $(OBJDIR)/t/spvm_t_%
+spvm_t_%: $(OBJDIR)/solo/t/spvm_t_%
 	./$<
-.PRECIOUS: $(OBJDIR)/t/spvm_t_%.o $(OBJDIR)/t/spvm_t_%
+.PRECIOUS: $(OBJDIR)/solo/t/spvm_t_%.o $(OBJDIR)/solo/t/spvm_t_%
 test: $(test_names)
 .PHONY: test
 
